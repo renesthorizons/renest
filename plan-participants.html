@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add/Remove Plan Participants - Renest</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+        
+        body {
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            background-image: url('fb2.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        
+        .logo-font {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .content-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .input-container {
+            position: relative;
+            margin: 20px 0;
+        }
+
+        .input-style {
+            width: 100%;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .input-style::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .input-style:focus {
+            border-color: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .clear-button {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 4px;
+        }
+
+        .clear-button::after {
+            content: '×';
+        }
+
+        .email-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 20px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .email-item {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            color: white;
+            font-size: 14px;
+        }
+
+        .email-item:last-child {
+            border-bottom: none;
+        }
+
+        .submit-button {
+            background-color: white;
+            color: black;
+            padding: 16px 30px;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 15px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-top: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .submit-button:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.2);
+        }
+
+        .email-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .email-list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .email-list::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+
+        .email-list::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .bullet-point {
+            min-width: 4px;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            margin-right: 12px;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 13px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .back-button {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 20px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 300;
+            background: transparent;
+            border: none;
+            display: block;
+            width: 100%;
+        }
+
+        .back-button:hover {
+            color: white;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div class="content-container">
+        <div class="logo-wrapper mb-8">
+            <img src="white.png" alt="Renest Logo" class="mx-auto transform hover:scale-105 transition-transform duration-500" style="max-width: 320px;">
+        </div>
+
+        <div class="subtitle"> </div>
+        
+        <div class="input-container">
+            <input type="text" 
+                   id="emailInput" 
+                   class="input-style" 
+                   placeholder="Type or copy-paste participant emails..."
+                   autocomplete="off">
+            <button class="clear-button" id="clearInput"></button>
+        </div>
+
+        <div class="email-list" id="emailList">
+            <!-- Emails will be added here dynamically -->
+        </div>
+
+        <button type="button" class="submit-button" id="submitButton">
+            Submit
+        </button>
+
+        <button onclick="window.location.href='facilitatorview.html'" class="back-button">
+            Back to Dashboard
+        </button>
+    </div>
+
+    <script>
+        // Your existing JavaScript remains the same
+        const emailInput = document.getElementById('emailInput');
+        const emailList = document.getElementById('emailList');
+        const clearButton = document.getElementById('clearInput');
+        const submitButton = document.getElementById('submitButton');
+        let emails = new Set();
+
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function addEmail(email) {
+            if (isValidEmail(email) && !emails.has(email)) {
+                emails.add(email);
+                updateEmailList();
+            }
+        }
+
+        function updateEmailList() {
+            emailList.innerHTML = '';
+            emails.forEach(email => {
+                const div = document.createElement('div');
+                div.className = 'email-item';
+                
+                const bullet = document.createElement('div');
+                bullet.className = 'bullet-point';
+                
+                const text = document.createElement('span');
+                text.textContent = email;
+                
+                div.appendChild(bullet);
+                div.appendChild(text);
+                emailList.appendChild(div);
+            });
+        }
+
+        function parseEmails(input) {
+            return input.split(/[,;\n]/)
+                .map(email => email.trim())
+                .filter(email => email.length > 0);
+        }
+
+        emailInput.addEventListener('input', function(e) {
+            if (e.target.value.includes(',') || e.target.value.includes(';') || e.target.value.includes('\n')) {
+                const parsedEmails = parseEmails(e.target.value);
+                parsedEmails.forEach(addEmail);
+                emailInput.value = '';
+            }
+        });
+
+        emailInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const email = emailInput.value.trim();
+                if (email) {
+                    addEmail(email);
+                    emailInput.value = '';
+                }
+            }
+        });
+
+        emailInput.addEventListener('paste', function(e) {
+            e.preventDefault();
+            const paste = (e.clipboardData || window.clipboardData).getData('text');
+            const parsedEmails = parseEmails(paste);
+            parsedEmails.forEach(addEmail);
+            emailInput.value = '';
+        });
+
+        clearButton.addEventListener('click', function() {
+            emailInput.value = '';
+            emails.clear();
+            updateEmailList();
+        });
+
+        submitButton.addEventListener('click', function() {
+            if (emails.size > 0) {
+                console.log('Submitting emails:', Array.from(emails));
+                localStorage.setItem('emailCount', emails.size);
+                window.location.href = 'emailsubmission.html';
+            } else {
+                alert('Please add at least one email address.');
+            }
+        });
+    </script>
+</body>
+</html>

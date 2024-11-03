@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { 
+            font-family: system-ui, -apple-system, sans-serif; 
+            background: #f5f7f9; 
+        }
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 20px; 
+        }
+        .video-background {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1;
+            object-fit: cover;
+            filter: brightness(0.7);
+        }
+        .success-banner { 
+            background: #e8fff3; 
+            color: #085d3f; 
+            padding: 15px; 
+            border-left: 4px solid #0f9d58;
+            margin-bottom: 20px; 
+        }
+        .stats-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 20px; 
+            margin-bottom: 20px; 
+        }
+        .stat-card { 
+            background: white; 
+            padding: 24px; 
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .stat-number { 
+            font-size: 32px; 
+            font-weight: 600; 
+            color: #0f4c81;
+            margin-bottom: 8px;
+        }
+        .stat-label { 
+            color: #666;
+            font-size: 14px;
+        }
+        .calculator-card { 
+            background: white; 
+            padding: 24px; 
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .calculator-title { 
+            font-size: 20px; 
+            font-weight: 600;
+            color: #0f4c81;
+            margin-bottom: 24px; 
+        }
+        .graph-container { 
+            max-width: 1200px;
+            height: 400px; 
+            margin: 20px auto;
+            background: white;
+        }
+        .slider-container { 
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+        .slider-label { 
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            color: #444;
+        }
+        .values-container { 
+            max-width: 1200px;
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 20px;
+            margin: 20px auto;
+            margin-top: 24px;
+        }
+        .value-display { 
+            background: #f8f9fa;
+            padding: 16px;
+            border-radius: 6px;
+        }
+        .value-label { 
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        .value-number { 
+            font-size: 24px; 
+            font-weight: 600;
+            color: #0f4c81;
+        }
+        input[type="range"] { 
+            width: 100%;
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <video class="video-background" autoplay muted loop playsinline>
+        <source src="fly.mp4" type="video/mp4">
+    </video>
+    <div class="container">
+        <div class="success-banner">
+            Congratulations! Participants have been invited to the Renest Network
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div id="participantCount" class="stat-number">0</div>
+                <div class="stat-label">Number of Participants Added</div>
+            </div>
+            <div class="stat-card">
+                <div id="contributionAmount" class="stat-number">$0.00</div>
+                <div class="stat-label">Annual Potential Renest Contributions</div>
+            </div>
+        </div>
+
+        <h1 style="font-size: 40px; font-weight: 600; color: #0f4c81; margin: 40px 0 24px 0; text-align: center;">
+            Calculate Your Renest Benefit
+        </h1>
+
+        <div class="calculator-card">
+            <div class="values-container">
+                <div class="value-display">
+                    <div class="value-label">Renest Retirement Savings Created</div>
+                    <div id="yValue" class="value-number">$34K</div>
+                </div>
+                <div class="value-display">
+                    <div class="value-label">Your Retirement Contribution Value</div>
+                    <div id="contributionValue" class="value-number">$1.1M</div>
+                </div>
+            </div>
+            <div class="slider-container">
+                <div class="slider-label">
+                    <span>Monthly Contributions</span>
+                    <span>$<span id="xValue">0</span></span>
+                </div>
+                <input type="range" id="contributionSlider" min="0" max="2000" value="0" step="10" />
+            </div>
+
+            <div class="slider-container">
+                <div class="slider-label">
+                    <span>Years Invested with Renest</span>
+                    <span id="prValue">40</span>
+                </div>
+                <input type="range" id="prInput" min="1" max="50" value="40" step="1" />
+            </div>
+
+            <div class="graph-container">
+                <canvas id="benefitChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script>
+        // Constants for calculations
+        const I = 0.03;//inflation
+        const MG = 0.07;//market growth
+        const nb = 0.03;//percentage of unused contribution that goes to the nest
+        const TR = 0.20;//tax rate that the bird would face in a brokerage on the capital gains
+        const CL = 7000;//contribution limit at time=0
+        const dr= .015;//dividend tax rate
+        
+        // Initialize emailCount from localStorage
+        const emailCount = parseInt(localStorage.getItem('emailCount')) || 0;
+        
+        function updateParticipantStats() {
+            // Update participant count
+            document.getElementById('participantCount').textContent = emailCount;
+            
+            // Calculate and update annual potential contribution
+            const annualContribution = emailCount * 7000 * 0.03;
+            document.getElementById('contributionAmount').textContent = formatValue(annualContribution);
+        }
+
+        function CLI(t) {
+            return CL * Math.pow(1 + I, t);
+        }
+
+        function MCI(t, MC) {
+            return MC * Math.pow(1 + I, t);
+        }
+
+        function cBenefit(MC, PR) {
+            if (MC <= CL/12) {
+                let na = 0;
+                let nad=0;
+                for (let g = 0; g < PR; g++) {
+                    let nc = ((MCI(g, MC) * 12));
+                    nad=na*dr
+                    na *= (1 + MG);
+                    na+=nad
+                    na += nc;
+                }
+                return na;
+            }
+            
+            if (MC > CL/12) {
+                let ba = 0;
+                let bd = 0;
+                let rba = 0;
+                let rbd = 0;
+                let rbg = 0;
+                let bg = 0;
+                let bc = 0;
+                let rbc = 0;
+                let na = 0;
+                let nad=0;
+                let bad=0;
+                for (let g = 0; g < PR; g++) {
+                    let nc = ((MCI(g, MC) * 12));
+                    nad=na*dr;
+                    na *= (1 + MG);
+                    na+=nad;
+                    na += nc;
+                }
+                for (let g = 0; g < PR; g++) {
+                    bc = MCI(g, MC) * 12 - CLI(g);
+                    bad=ba*dr*(1-TR);
+                    bg = ba * (1 + MG);
+                    bd += bc;
+                    bg += bc;
+                    bg+=bad;
+                    ba = bg;
+                }
+                let bv = (bg - bd) * (1 - TR);
+                return bv+bd+na;
+            }
+        }
+
+        function renestBenefit(MC, PR) {
+            if (MC < CL/12) {
+                let na = 0;
+                let nad=0;
+                for (let g = 0; g < PR; g++) {
+                    let nc = (CLI(g) - (MCI(g, MC) * 12)) * nb;
+                    nad=na*dr;
+                    na *= (1 + MG);
+                    na+=nad;
+                    na += nc;
+                }
+                return na;
+            }
+            
+            if (MC === CL/12) {
+                return 0;
+            }
+            
+            if (MC > CL/12) {
+                let ba = 0;
+                let bd = 0;
+                let rba = 0;
+                let rbd = 0;
+                let rbg = 0;
+                let bg = 0;
+                let bc = 0;
+                let rbc = 0;
+                let bad=0;
+                let rbad=0;
+                for (let g = 0; g < PR; g++) {
+                    bc = MCI(g, MC) * 12 - CLI(g);
+                    bad=ba*dr*(1-TR);
+                    bg = ba * (1 + MG);
+                    bd += bc;
+                    bg += bc;
+                    bg+=bad;
+                    rbc = (MCI(g, MC) * 12 - CLI(g)) * (1 - nb);
+                    rbd += rbc;
+                    rbg = rba * (1 + MG);
+                    rbad=rba*dr;
+                    rbg+=rbad;
+                    rbg += rbc;
+                    ba = bg;
+                    rba = rbg;
+                }
+                let rbv = rbg - rbd;
+                let bv = (bg - bd) * (1 - TR);
+                return rbv - bv;
+            }
+        }
+
+        let benefitChart;
+
+        function formatValue(value) {
+            if (value >= 1e6) {
+                return `$${(value / 1e6).toFixed(1)}M`;
+            } else if (value >= 1e3) {
+                return `$${(value / 1e3).toFixed(0)}K`;
+            }
+            return `$${value.toFixed(0)}`;
+        }
+
+        function generateGraphData() {
+            const data = [];
+            const numPoints = 200; // Increased for smoother curve
+            const maxX = 2000;
+            const pr = parseInt(document.getElementById('prInput').value);
+
+            for (let i = 0; i <= numPoints; i++) {
+                const x = Math.round((i / numPoints) * maxX / 10) * 10; // Round to nearest $10
+                const y = renestBenefit(x, pr);
+                data.push({ x, y });
+            }
+            return data;
+        }
+
+        function updateAllValues() {
+            const currentX = parseFloat(document.getElementById('contributionSlider').value);
+            const pr = parseInt(document.getElementById('prInput').value);
+            
+            // Calculate all values
+            const renestValue = renestBenefit(currentX, pr);
+            const contributionValue = cBenefit(currentX, pr);
+            
+            // Update all displays
+            document.getElementById('xValue').textContent = currentX;
+            document.getElementById('yValue').textContent = formatValue(renestValue);
+            document.getElementById('contributionValue').textContent = formatValue(contributionValue);
+            
+            // Update the tracking dot
+            if (benefitChart) {
+                benefitChart.data.datasets[1].data = [{x: currentX, y: renestValue}];
+                benefitChart.update();
+            }
+        }
+
+        function updateGraphAndDisplays() {
+            const data = generateGraphData();
+            const currentX = parseFloat(document.getElementById('contributionSlider').value);
+            const pr = parseInt(document.getElementById('prInput').value);
+            const currentY = renestBenefit(currentX, pr);
+            
+            if (benefitChart) {
+                benefitChart.destroy();
+            }
+
+            const ctx = document.getElementById('benefitChart').getContext('2d');
+            benefitChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    datasets: [
+                        {
+                            label: 'Value',
+                            data: data,
+                            borderColor: '#0f4c81',
+                            backgroundColor: '#e8f0f7',
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 0,
+                            order: 2
+                        },
+                        {
+                            label: 'Current Position',
+                            data: [{x: currentX, y: currentY}],
+                            borderColor: 'red',
+                            backgroundColor: 'red',
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                            showLine: false,
+                            order: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                        duration: 0
+                    },
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            position: 'bottom',
+                            title: {
+                                display: true,
+                                text: 'Monthly Contributions'
+                            },
+                            grid: {
+                                display: false,
+                                color: '#f0f0f0'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Retirement Savings Created'
+                            },
+                            grid: {
+                                color: '#f0f0f0'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+            
+            updateAllValues();
+        }
+
+        // Event Listeners
+        document.getElementById('contributionSlider').addEventListener('input', function(e) {
+            updateAllValues();
+        });
+
+        document.getElementById('prInput').addEventListener('input', function(e) {
+            document.getElementById('prValue').textContent = this.value;
+            updateAllValues();
+            updateGraphAndDisplays();
+        });
+
+        // Initial setup
+        updateParticipantStats();
+        updateGraphAndDisplays();
+    </script>
+</body>
+</html>

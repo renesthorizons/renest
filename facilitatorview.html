@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facilitator View - Renest</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+        
+        body {
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            background-image: url('sb2.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .logo-font {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .button-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 420px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .nav-button {
+            background-color: white;
+            color: black;
+            padding: 16px 30px;
+            width: 100%;
+            max-width: 320px;
+            border-radius: 8px;
+            font-size: 15px;
+            margin: 8px 0;
+            display: block;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .nav-button:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-button:last-of-type {
+            background-color: transparent;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-button:last-of-type:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: white;
+        }
+
+        .logo-wrapper {
+            position: relative;
+            margin-bottom: 2.5rem;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .logo-wrapper::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 13px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-weight: 300;
+            width: 100%;
+            text-align: center;
+        }
+
+        .logout-button {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 20px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 300;
+            background: transparent;
+            border: none;
+        }
+
+        .logout-button:hover {
+            color: white;
+        }
+
+        .button-group {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div class="button-container">
+        <div class="logo-wrapper">
+            <img src="white.png" alt="Renest Logo" class="mx-auto transform hover:scale-105 transition-transform duration-500" style="max-width: 320px;">
+        </div>
+        
+        <div class="subtitle">Facilitator Dashboard</div>
+        
+        <div class="button-group">
+            <button onclick="goToExemptionCode()" class="nav-button">
+                Receive Employer Exemption Code
+            </button>
+            
+            <button onclick="goToPlanParticipants()" class="nav-button">
+                Add Plan Participants
+            </button>
+        </div>
+
+        <button onclick="logout()" class="logout-button">
+            Logout
+        </button>
+    </div>
+
+    <script>
+        function goToExemptionCode() {
+            window.location.href = 'exemption-code.html';
+        }
+        
+        function goToPlanParticipants() {
+            window.location.href = 'plan-participants.html';
+        }
+
+        function logout() {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
