@@ -2551,23 +2551,22 @@
 
             // Get last selected section from localStorage, default to 'individuals'
             const lastSelectedSection = localStorage.getItem('selectedSection') || 'individuals';
+
             
             // First, hide all sections
             contentSections.forEach(section => section.classList.add('hidden'));
             
             // Show the last selected section
+            // Show the last selected section
             const sectionId = `${lastSelectedSection}-content`;
             document.getElementById(sectionId)?.classList.remove('hidden');
-            
+
             // Update button states
             toggleButtons.forEach(button => {
                 if (button.dataset.section === lastSelectedSection) {
                     button.classList.add('active');
-                    // Scroll to the toggle container
-                    const toggleContainer = document.querySelector('.toggle-container');
-                    if (toggleContainer) {
-                        toggleContainer.scrollIntoView({ behavior: 'instant' });
-                    }
+                    // Scroll to top of page
+                    window.scrollTo(0, 0);
                 } else {
                     button.classList.remove('active');
                 }
@@ -2590,6 +2589,8 @@
 
                     // Store the selected section
                     localStorage.setItem('selectedSection', this.dataset.section);
+
+                    window.scrollTo(0, 0);
                 });
             });
 
