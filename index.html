@@ -939,6 +939,56 @@
         align-items: center;
         padding: .5 rem;
         text-align: center;
+        perspective: 1000px; /* Required for 3D effect */
+        height: 500px;
+    }
+
+
+    .progress-card {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.8s;
+        transform-style: preserve-3d;
+        cursor: pointer;
+    }
+
+    .progress-item:hover .progress-card {
+        transform: rotateY(180deg);
+    }
+
+    .progress-front, .progress-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        border-radius: 12px;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .progress-front {
+        background-color: inherit;
+    }
+
+    .progress-back {
+        background: rgba(255, 255, 255, 0.95);
+        transform: rotateY(180deg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .progress-back-content {
+        font-family: 'DM Sans', sans-serif;
+        color: #1A1A1A;
+        font-size: 1.1rem;
+        line-height: 1.6;
     }
 
     .progress-icon {
@@ -970,6 +1020,26 @@
         color: #22C55E;
         margin-top: 0.1rem;
     }
+
+    .progress-item .back-title {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 200;
+        color: #1A1A1A;
+        margin-bottom: 1rem;
+        text-align: center;  /* Change to 'left' or 'right' to align text */
+        margin-top: 2rem;    /* Adjust this to move title up/down */
+    }
+
+    .progress-item .back-example {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 100;
+        color: #1A1A1A;
+        text-align: justify;  /* Change to 'left' or 'right' to align text */
+        margin-top: 1rem;    /* Adjust this to control spacing below title */
+    }
+
         .progress-item:nth-child(1) {
         background-color: rgba(146, 192, 137, .3);  /* Light blue tint */
         border-radius: 12px;
@@ -1926,23 +1996,64 @@
             <div class="business-progress">
                     <!-- <img src="" alt="Progress graph" class="progress-background"> -->
                     <div class="progress-content">
-                        <div class="progress-item"> <img src="startingout.png" alt="Starting out icon" class="progress-icon">
-                                <h4>Starting out</h4>
-                                <p class="amount">Is saving<br>$0/month</p>
-                                <p class="amount">Renest Adds</p><p class="bonus">+$69,500</p>
+                        <div class="progress-item">
+                            <div class="progress-card">
+                                <!-- Front of card -->
+                                <div class="progress-front">
+                                    <img src="startingout.png" alt="Starting out icon" class="progress-icon">
+                                    <h4>Starting out</h4>
+                                    <p class="amount">Is saving<br>$0/month</p>
+                                    <p class="amount">Renest Adds</p>
+                                    <p class="bonus">+$70,000</p>
+                                </div>
+                                <!-- Back of card -->
+                                <div class="progress-back">
+                                    <div class="progress-back-content">
+                                        <p class='back-title'>Building your career? <br>Renest ensures you don't miss out on compound interest growth, even when you can't contribute</h4>
+                                    <p class="back-example">Ariella, a newly appointed professor at 30, hasn't been able to save for the past 10 years. With Renest, she'd have $4,000 now and an extra $70,000 by age 65.</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="progress-item"><img src="grind.png" alt="On the grind icon" class="progress-icon">
-                                <h4>On the grind</h4>
-                                <p class="amount">Is saving<br>$300/month</p>
-                                <p class="amount">Renest Adds</p>
-                                <p class="bonus">+$30,700</p>
+                        <div class="progress-item">
+                            <div class="progress-card">
+                                <!-- Front of card -->
+                                <div class="progress-front">
+                                    <img src="grind.png" alt="On the grind icon" class="progress-icon">
+                                    <h4>On the grind</h4>
+                                    <p class="amount">Is saving<br>$300/month</p>
+                                    <p class="amount">Renest Adds</p>
+                                    <p class="bonus">+$15,000</p>
+                                </div>
+                                <!-- Back of card -->
+                                <div class="progress-back">
+                                    <div class="progress-back-content">
+                                       <p class='back-title'>Working towards the top?<br> Renest supplements your savings so you stay invested in your future.</h4>
+                                    <p class="back-example">Jessica, an independent contractor at 40, makes varying contributions as work fluctuates. After 10 years with Renest averaging $300/month, she'll gain an extra $15,000 by age 65.</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="progress-item"><img src="made.png" alt="Made it icon" class="progress-icon">
-                                <h4>Made it</h4>
-                                <p class="amount">Is saving<br>$2000/month</p>
-                                <p class="amount">Renest Adds</p>
-                                <p class="bonus">+$121,000</p>
+
+                        <div class="progress-item">
+                            <div class="progress-card">
+                                <!-- Front of card -->
+                                <div class="progress-front">
+                                    <img src="made.png" alt="Made it icon" class="progress-icon">
+                                    <h4>Made it</h4>
+                                    <p class="amount">Is saving<br>$2000/month</p>
+                                    <p class="amount">Renest Adds</p>
+                                    <p class="bonus">+$121,000</p>
+                                </div>
+                                <!-- Back of card -->
+                                <div class="progress-back">
+                                    <div class="progress-back-content">
+                                        <p class='back-title'>Know the power of retirement investment? <br>Renest goes further than any other platform to optimize every dollar you save.</h4>
+                                    <p class="back-example">Zulch, a computer engineer at 50, balances saving for retirement and their kids future. With Renest, they'll gain an extra $121,000 by age 70.</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -2138,25 +2249,65 @@
                  <div class="business-progress">
                     <!-- <img src="" alt="Progress graph" class="progress-background"> -->
                     <div class="progress-content">
-                        <div class="progress-item"> <img src="startingout.png" alt="Starting out icon" class="progress-icon">
-                                <h4>Starting out</h4>
-                                <p class="amount">Is saving<br>$0/month</p>
-                                <p class="amount">Renest Adds</p><p class="bonus">+$69,500</p>
+                        <div class="progress-item">
+                            <div class="progress-card">
+                                <!-- Front of card -->
+                                <div class="progress-front">
+                                    <img src="startingout.png" alt="Starting out icon" class="progress-icon">
+                                    <h4>Starting out</h4>
+                                    <p class="amount">Is saving<br>$0/month</p>
+                                    <p class="amount">Renest Adds</p>
+                                    <p class="bonus">+$70,000</p>
+                                </div>
+                                <!-- Back of card -->
+                                <div class="progress-back">
+                                    <div class="progress-back-content">
+                                        <p class='back-title'>Building your career? <br>Renest ensures you don't miss out on compound interest growth, even when you can't contribute</h4>
+                                    <p class="back-example">Ariella, a newly appointed professor at 30, hasn't been able to save for the past 10 years. With Renest, she'd have $4,000 now and an extra $70,000 by age 65.</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="progress-item"><img src="grind.png" alt="On the grind icon" class="progress-icon">
-                                <h4>On the grind</h4>
-                                <p class="amount">Is saving<br>$300/month</p>
-                                <p class="amount">Renest Adds</p>
-                                <p class="bonus">+$30,700</p>
+                        <div class="progress-item">
+                            <div class="progress-card">
+                                <!-- Front of card -->
+                                <div class="progress-front">
+                                    <img src="grind.png" alt="On the grind icon" class="progress-icon">
+                                    <h4>On the grind</h4>
+                                    <p class="amount">Is saving<br>$300/month</p>
+                                    <p class="amount">Renest Adds</p>
+                                    <p class="bonus">+$15,000</p>
+                                </div>
+                                <!-- Back of card -->
+                                <div class="progress-back">
+                                    <div class="progress-back-content">
+                                       <p class='back-title'>Working towards the top?<br> Renest supplements your savings so you stay invested in your future.</h4>
+                                    <p class="back-example">Jessica, an independent contractor at 40, makes varying contributions as work fluctuates. After 10 years with Renest averaging $300/month, she'll gain an extra $15,000 by age 65.</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="progress-item"><img src="made.png" alt="Made it icon" class="progress-icon">
-                                <h4>Made it</h4>
-                                <p class="amount">Is saving<br>$2000/month</p>
-                                <p class="amount">Renest Adds</p>
-                                <p class="bonus">+$121,000</p>
+
+                        <div class="progress-item">
+                            <div class="progress-card">
+                                <!-- Front of card -->
+                                <div class="progress-front">
+                                    <img src="made.png" alt="Made it icon" class="progress-icon">
+                                    <h4>Made it</h4>
+                                    <p class="amount">Is saving<br>$2000/month</p>
+                                    <p class="amount">Renest Adds</p>
+                                    <p class="bonus">+$121,000</p>
+                                </div>
+                                <!-- Back of card -->
+                                <div class="progress-back">
+                                    <div class="progress-back-content">
+                                        <p class='back-title'>Know the power of retirement investment? <br>Renest goes further than any other platform to optimize every dollar you save.</h4>
+                                    <p class="back-example">Zulch, a computer engineer at 50, balances saving for retirement and their kids future. With Renest, they'll gain an extra $121,000 by age 70.</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
                 </div>
 
                
