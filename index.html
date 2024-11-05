@@ -3148,17 +3148,19 @@
             });
 
             // Login form functionality
-            document.getElementById('loginForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                const username = document.getElementById('username').value;
-                const password = document.getElementById('password').value;
+            // document.getElementById('loginForm').addEventListener('submit', function(e) {
+            //     e.preventDefault();
+            //     const username = document.getElementById('username').value;
+            //     const password = document.getElementById('password').value;
                 
-                if (username === 'thomas' && password === 'roth') {
-                    window.location.href = 'facilitatorview.html';
-                } else {
-                    alert('Invalid credentials. Please try again.');
-                }
-            });
+            //     if (username === 'thomas' && password === 'roth') {
+            //         window.location.href = 'facilitatorview.html';
+            //     } if (username === 'UCHealth' && password === 'uchxrenest'){
+            //         window.location.href='uchealth.html';
+            //     } else {
+            //         alert('Invalid credentials. Please try again.');
+            //     }
+            // });
 
             document.getElementById('password').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
@@ -3258,8 +3260,21 @@
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             
-            if (username === 'thomas' && password === 'roth') {
-                window.location.href = 'facilitatorview.html';
+            // Define credentials object for easier management
+            const credentials = {
+                'thomas': {
+                    password: 'roth',
+                    redirectUrl: 'facilitatorview.html'
+                },
+                'UCHealth': {
+                    password: 'uchxrenest',
+                    redirectUrl: 'uchealth.html'
+                }
+            };
+            
+            // Check if username exists and password matches
+            if (credentials[username] && credentials[username].password === password) {
+                window.location.href = credentials[username].redirectUrl;
             } else {
                 alert('Invalid credentials. Please try again.');
             }

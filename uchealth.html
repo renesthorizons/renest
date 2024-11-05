@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UCHealth x Renest Partnership</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<style>
+    /* Base Styles */
+    /* Base Styles */
+   /* Base Styles */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+    :root {
+        --primary-color: #E6A4B4;           /* Soft Rose Pink */
+        --primary-dark: #005EB8;            /* Darker Rose Pink */
+        --secondary-color: #F3D7CA;         /* Soft Peach */
+        --accent-color: #F8E8EE;            /* Light Pink */
+        --background-primary: #FDF6F6;      /* Off White Pink */
+        --background-secondary: #FFF5E4;    /* Warm Cream */
+        --text-primary: #846067;            /* Warm Gray */
+        --text-secondary: #9B7E83;          /* Light Warm Gray */
+        --text-tertiary: #B79B9B;          /* Softer Warm Gray */
+        --border-color: rgba(230, 164, 180, 0.2); /* Transparent Rose Pink */
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg, var(--background-primary) 0%, var(--background-secondary) 100%);
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        color: var(--text-primary);
+    }
+
+    /* Layout */
+    .container {
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+    .slide {
+        min-height: 100vh;
+        padding: 2rem;
+        margin-bottom: 100px;
+        display: none;
+    }
+
+    .slide.active {
+        display: block;
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    /* Cards */
+    .card {
+        background: rgba(255, 255, 255, 1);
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(230, 164, 180, 0.1);
+        margin-bottom: 1rem;
+        border: 1px solid var(--border-color);
+    }
+
+    .card-gradient {
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, var(--accent-color) 100%);
+    }
+
+    /* Grid */
+    .grid {
+        display: grid;
+        gap: 1rem;
+        margin: 1rem 0;
+    }
+
+    .grid-2 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid-3 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    /* Typography */
+    .title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary-dark);
+        margin-bottom: 1rem;
+    }
+
+    .subtitle {
+        font-size: 1.25rem;
+        color: var(--text-secondary);
+        margin-bottom: 2rem;
+    }
+
+    .text-lg {
+        font-size: 1.125rem;
+        color: var(--text-primary);
+    }
+
+    .text-sm {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+    }
+
+    .text-xs {
+        font-size: 0.75rem;
+        color: var(--text-tertiary);
+    }
+
+    /* Navigation */
+    .nav {
+        position: fixed;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 1rem;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 1rem 2rem;
+        border-radius: 100px;
+        box-shadow: 0 4px 15px rgba(230, 164, 180, 0.15);
+        z-index: 1000;
+    }
+
+    .counter {
+        color: var(--text-secondary);
+        font-size: 0.9375rem;
+        font-weight: 500;
+    }
+
+    .btn {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 100px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+        background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+        transform: translateY(-1px);
+    }
+
+    .btn:disabled {
+        background: linear-gradient(135deg, var(--text-tertiary) 0%, var(--text-secondary) 100%);
+        cursor: not-allowed;
+    }
+
+    /* Progress Bar */
+    .progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--secondary-color);
+        z-index: 1000;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        transition: width 0.3s ease;
+    }
+
+    /* Metrics Dashboard */
+    .metrics-dashboard {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-top: 1rem;
+        border: 1px solid var(--border-color);
+    }
+
+    .metrics-container {
+        display: flex;
+        justify-content: space-between;
+        gap: 2rem;
+        align-items: center;
+    }
+
+    .metric {
+        flex: 1;
+        text-align: center;
+        padding: 1rem;
+        border-right: 1px solid var(--border-color);
+    }
+
+    .metric:last-child {
+        border-right: none;
+    }
+
+    .metric-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary-dark);
+        line-height: 1;
+        margin-bottom: 0.5rem;
+    }
+
+    .metric-label {
+        font-size: 0.875rem;
+        color: var(--text-primary);
+        margin-bottom: 0.25rem;
+    }
+
+    .metric-sublabel {
+        font-size: 0.75rem;
+        color: var(--text-tertiary);
+    }
+
+    /* Header */
+    .header {
+        position: relative;
+        width: 100%;
+        margin-bottom: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .title-container {
+        flex: 1;
+    }
+
+    .logos {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding-top: 0.5rem;
+    }
+
+    .logo {
+        height: 40px;
+        width: auto;
+        object-fit: contain;
+    }
+
+    .logo-divider {
+        height: 40px;
+        width: 1px;
+        background-color: var(--text-tertiary);
+        opacity: 0.3;
+    }
+
+    .renest-logo {
+        height: 30px;
+    }
+
+    /* List Styles */
+    .list {
+        list-style: none;
+        padding-left: 0;
+        margin: 1rem 0;
+    }
+
+    .list li {
+        position: relative;
+        padding-left: 1.5rem;
+        margin-bottom: 0.75rem;
+        color: var(--text-primary);
+    }
+
+    .list li:before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.5rem;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--primary-color);
+    }
+
+    /* Timeline */
+    .timeline {
+        margin: 1.5rem 0;
+    }
+
+    .timeline-bar {
+        height: 8px;
+        background: var(--secondary-color);
+        border-radius: 4px;
+        margin: 0.5rem 0;
+        overflow: hidden;
+    }
+
+    .timeline-progress {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        border-radius: 4px;
+        transition: width 0.3s ease;
+    }
+
+    /* Quote */
+    .quote {
+        font-style: italic;
+        padding: 2rem;
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, var(--accent-color) 100%);
+        border-left: 4px solid var(--primary-color);
+    }
+
+    .quote p {
+        margin: 0;
+        font-size: 16px;
+        color: var(--text-primary);
+        line-height: 1.6;
+    }
+
+    /* Stats and Benefits */
+    .stat {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .icon {
+        width: 24px;
+        height: 24px;
+        object-fit: contain;
+    }
+
+    .benefit {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 12px;
+        transition: transform 0.2s ease;
+    }
+
+    .benefit:hover {
+        transform: translateY(-2px);
+    }
+
+    /* Phase Cards */
+    .phase {
+        text-align: left;
+    }
+
+    .phase h4 {
+        color: var(--text-primary);
+        margin: 0.5rem 0 1rem;
+        font-weight: 500;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Media Queries */
+    @media (max-width: 768px) {
+        .grid-2, .grid-3 {
+            grid-template-columns: 1fr;
+        }
+        
+        .title {
+            font-size: 1.5rem;
+        }
+        
+        .subtitle {
+            font-size: 1rem;
+        }
+
+        .metrics-container {
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .metric {
+            width: 100%;
+            border-right: none;
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+        }
+        
+        .metric:last-child {
+            border-bottom: none;
+        }
+
+        .header {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 1rem;
+        }
+        
+        .logos {
+            padding-top: 0;
+        }
+        
+        .logo {
+            height: 30px;
+        }
+
+        .container {
+            padding: 0.5rem;
+        }
+
+        .slide {
+            padding: 1.5rem;
+        }
+
+        .nav {
+            bottom: 1.5rem;
+            padding: 0.75rem 1.5rem;
+        }
+
+        .benefit {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 1.75rem;
+        }
+    }
+    .exit-button {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        background: white;
+        color: var(--primary-dark);
+        border: 2px solid var(--primary-color);
+        padding: 0.75rem 1.75rem;
+        border-radius: 100px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        font-size: 0.9375rem;
+        letter-spacing: 0.01em;
+        z-index: 1000;
+        text-decoration: none;
+    }
+
+    .exit-button:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(230, 164, 180, 0.2);
+    }
+
+    @media (max-width: 768px) {
+        .exit-button {
+            bottom: 1.5rem;
+            right: 1.5rem;
+            padding: 0.5rem 1.25rem;
+        }
+    }
+</style>
+<body>
+    <div class="progress">
+        <div class="progress-fill"></div>
+    </div>
+
+    <div class="container">
+        <!-- Combined Impact Slide -->
+        <div class="slide active">
+            <div class="header">
+                <div class="title-container">
+                    <h1 class="title">Complete Care: Health + Financial Wellness</h1>
+                    <h2 class="subtitle">Partnering to Build a Healthier, More Secure Community</h2>
+                </div>
+                <div class="logos">
+                    <img src="uchealth_logo.png" alt="UCHealth Logo" class="logo">
+                    <div class="logo-divider"></div>
+                    <img src="renest_logo.png" alt="Renest Logo" class="logo renest-logo">
+                </div>
+            </div>
+            <div class="quote card">
+                <p class="text-sm">"By uniting healthcare excellence with financial empowerment, we're creating a new standard of complete care. When our community is both healthy and financially secure, <br>everyone thrives."</p>
+            </div>
+            <div class="metrics-dashboard card-gradient">
+                <h3 class="text-lg">UCHealth: Empowering Community Health</h3>
+                <div class="metrics-container">
+                    <div class="metric">
+                        <div class="metric-value">4.2M+</div>
+                        <div class="metric-label">Lives Touched</div>
+                        <div class="metric-sublabel">Annual Patient Care</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">85%</div>
+                        <div class="metric-label">Community Access</div>
+                        <div class="metric-sublabel">Service Coverage</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">33K+</div>
+                        <div class="metric-label">Healthcare Heroes</div>
+                        <div class="metric-sublabel">Dedicated Staff</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">214+</div>
+                        <div class="metric-label">Care Locations</div>
+                        <div class="metric-sublabel">Hospitals & Clinics</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metrics-dashboard card-gradient">
+                <h3 class="text-lg">Renest: Building Financial Wellbeing</h3>
+                <div class="metrics-container">
+                    <div class="metric">
+                        <div class="metric-value">$1,200</div>
+                        <div class="metric-label">Annual Savings</div>
+                        <div class="metric-sublabel">Per Member</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">87%</div>
+                        <div class="metric-label">Emergency Ready</div>
+                        <div class="metric-sublabel">Within 6 Months</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">65%</div>
+                        <div class="metric-label">Less Financial Stress</div>
+                        <div class="metric-sublabel">Member Reported</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">92%</div>
+                        <div class="metric-label">Member Retention</div>
+                        <div class="metric-sublabel">Annual Rate</div>
+                    </div>
+                </div>
+            </div>
+            <div class="metrics-dashboard card-gradient">
+                <h3 class="text-lg">Patient Financial Outcomes</h3>
+                <div class="metrics-container">
+                    <div class="metric">
+                        <div class="metric-value">85%</div>
+                        <div class="metric-label">Bill Understanding</div>
+                        <div class="metric-sublabel">Financial Literacy</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">78%</div>
+                        <div class="metric-label">Emergency Ready</div>
+                        <div class="metric-sublabel">Medical Bill Coverage</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">92%</div>
+                        <div class="metric-label">Care Plan Ready</div>
+                        <div class="metric-sublabel">Financial Planning</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">24/7</div>
+                        <div class="metric-label">Resource Access</div>
+                        <div class="metric-sublabel">Financial Tools</div>
+                    </div>
+                </div>
+            </div>
+            <div class="metrics-dashboard card-gradient">
+                <h3 class="text-lg">UCHealth x Renest: Financial Impact</h3>
+                <div class="metrics-container">
+                    <div class="metric">
+                        <div class="metric-value">15-20%</div>
+                        <div class="metric-label">Reduced Bad Debt</div>
+                        <div class="metric-sublabel">Year 3 Target</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">-5d</div>
+                        <div class="metric-label">Days in A/R</div>
+                        <div class="metric-sublabel">Average Reduction</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">10-15%</div>
+                        <div class="metric-label">Cost Reduction</div>
+                        <div class="metric-sublabel">Charity Care</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">12%</div>
+                        <div class="metric-label">Margin Growth</div>
+                        <div class="metric-sublabel">Projected</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metrics-dashboard card-gradient">
+                <h3 class="text-lg">UCHealth x Renest: Employee Impact</h3>
+                <div class="metrics-container">
+                    <div class="metric">
+                        <div class="metric-value">15%</div>
+                        <div class="metric-label">Retention Boost</div>
+                        <div class="metric-sublabel">Year 1 Target</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">65%</div>
+                        <div class="metric-label">Reduced Stress</div>
+                        <div class="metric-sublabel">Financial Wellness</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">$0</div>
+                        <div class="metric-label">Implementation Cost</div>
+                        <div class="metric-sublabel">Premium Benefit</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">92%</div>
+                        <div class="metric-label">Satisfaction Rate</div>
+                        <div class="metric-sublabel">Employee Feedback</div>
+                    </div>
+                </div>
+            </div>
+
+            
+        </div>
+
+    <!-- Slide 2 -->
+    <!-- CFO Focus Slide -->
+    <div class="slide">
+        <div class="header">
+            <div class="title-container">
+                <h1 class="title">Financial Impact & ROI</h1>
+                <h2 class="subtitle">For CFO Consideration</h2>
+            </div>
+            <div class="logos">
+                <img src="uchealth_logo.png" alt="UCHealth Logo" class="logo">
+                <div class="logo-divider"></div>
+                <img src="renest_logo.png" alt="Renest Logo" class="logo renest-logo">
+            </div>
+        </div>
+    
+
+        <div class="metrics-dashboard card-gradient">
+            <h3 class="text-lg">Implementation Benefits</h3>
+            <div class="metrics-container">
+                <div class="metric">
+                    <div class="metric-value">$0</div>
+                    <div class="metric-label">Capital Required</div>
+                    <div class="metric-sublabel">No Infrastructure Cost</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">30d</div>
+                    <div class="metric-label">Setup Time</div>
+                    <div class="metric-sublabel">Quick Integration</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">100%</div>
+                    <div class="metric-label">Digital Solution</div>
+                    <div class="metric-sublabel">Cloud-Based Platform</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">24/7</div>
+                    <div class="metric-label">Availability</div>
+                    <div class="metric-sublabel">Always Accessible</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="metrics-dashboard card-gradient">
+            <h3 class="text-lg">Revenue Cycle Impact</h3>
+            <div class="metrics-container">
+                <div class="metric">
+                    <div class="metric-value">15-20%</div>
+                    <div class="metric-label">Bad Debt Reduction</div>
+                    <div class="metric-sublabel">Year 3 Target</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">8-12%</div>
+                    <div class="metric-label">Collection Rate</div>
+                    <div class="metric-sublabel">Improvement</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">-5d</div>
+                    <div class="metric-label">Days in A/R</div>
+                    <div class="metric-sublabel">Average Reduction</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">10-15%</div>
+                    <div class="metric-label">Charity Care</div>
+                    <div class="metric-sublabel">Cost Reduction</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="metrics-dashboard card-gradient">
+            <h3 class="text-lg">Financial Metrics Dashboard</h3>
+            <div class="metrics-container">
+                <div class="metric">
+                    <div class="metric-value">$2.1M</div>
+                    <div class="metric-label">Annual Savings</div>
+                    <div class="metric-sublabel">Bad Debt Reduction</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">0.3x</div>
+                    <div class="metric-label">Debt Coverage</div>
+                    <div class="metric-sublabel">Improvement Target</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">12%</div>
+                    <div class="metric-label">Operating Margin</div>
+                    <div class="metric-sublabel">Improvement Potential</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">AAA</div>
+                    <div class="metric-label">Rating Target</div>
+                    <div class="metric-sublabel">Long-term Goal</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- Slide 3 -->
+    <div class="slide">
+            <div class="header">
+                    <div class="title-container">
+                        <h1 class="title">HR & Employee Benefits</h1>
+                        <h2 class="subtitle">For CHRO Consideration</h2>
+                    </div>
+                    <div class="logos">
+                        <img src="uchealth_logo.png" alt="UCHealth Logo" class="logo">
+                        <div class="logo-divider"></div>
+                        <img src="renest_logo.png" alt="Renest Logo" class="logo renest-logo">
+                    </div>
+                </div>
+        
+        <div class="grid grid-2">
+            <div class="card card-gradient">
+                <h3 class="text-lg">Employee Satisfaction</h3>
+                <ul class="list">
+                    <li>Premium benefits at zero cost</li>
+                    <li>Improved financial wellness</li>
+                    <li>Enhanced employee engagement</li>
+                </ul>
+            </div>
+
+            <div class="card card-gradient">
+                <h3 class="text-lg">Talent Acquisition & Retention</h3>
+                <ul class="list">
+                    <li>Unique competitive advantage</li>
+                    <li>Reduced turnover rates</li>
+                    <li>Industry-leading benefits package</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card card-gradient">
+            <h3 class="text-lg">Strategic HR Advantages</h3>
+            <div class="grid grid-2">
+                <div class="benefit">
+                    <img src="employer-icon.png" alt="Employer Icon" class="icon">
+                    <div>
+                        <h4 class="text-lg">Employer of Choice</h4>
+                        <p class="text-sm">Strengthen UCHealth's position as a preferred employer</p>
+                    </div>
+                </div>
+                <div class="benefit">
+                    <img src="implementation-icon.png" alt="Implementation Icon" class="icon">
+                    <div>
+                        <h4 class="text-lg">Easy Implementation</h4>
+                        <p class="text-sm">Seamless integration with existing HR systems</p>
+                    </div>
+                </div>
+                <div class="benefit">
+                    <img src="metrics-icon.png" alt="Metrics Icon" class="icon">
+                    <div>
+                        <h4 class="text-lg">Measurable Impact</h4>
+                        <p class="text-sm">Clear metrics for employee satisfaction and retention</p>
+                    </div>
+                </div>
+                <div class="benefit">
+                    <img src="development-icon.png" alt="Development Icon" class="icon">
+                    <div>
+                        <h4 class="text-lg">Workforce Development</h4>
+                        <p class="text-sm">Support long-term career growth and stability</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Slide 4 -->
+    <div class="slide">
+        <div class="header">
+                    <div class="title-container">
+                        <h1 class="title">Implementation & Next Steps</h1>
+                        <h2 class="subtitle">Seamless Integration Strategy</h2>
+                    </div>
+                    <div class="logos">
+                        <img src="uchealth_logo.png" alt="UCHealth Logo" class="logo">
+                        <div class="logo-divider"></div>
+                        <img src="renest_logo.png" alt="Renest Logo" class="logo renest-logo">
+                    </div>
+                </div>
+
+        <div class="grid grid-3">
+            <div class="card card-gradient">
+                <div class="phase">
+                    <h3 class="text-lg">Phase One</h3>
+                    <h4>Employee Rollout</h4>
+                    <ul class="list">
+                        <li>Initial pilot program</li>
+                        <li>HR system integration</li>
+                        <li>Employee onboarding</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card card-gradient">
+                <div class="phase">
+                    <h3 class="text-lg">Phase Two</h3>
+                    <h4>Patient Integration</h4>
+                    <ul class="list">
+                        <li>Patient portal integration</li>
+                        <li>Financial counseling tools</li>
+                        <li>Payment system linkage</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card card-gradient">
+                <div class="phase">
+                    <h3 class="text-lg">Phase Three</h3>
+                    <h4>Community Expansion</h4>
+                    <ul class="list">
+                        <li>Community outreach</li>
+                        <li>Partner network growth</li>
+                        <li>Full market coverage</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-2">
+            <div class="card card-gradient">
+                <h3 class="text-lg">Implementation Timeline</h3>
+                <div class="timeline">
+                    <span class="text-sm">Month 1-2</span>
+                    <div class="timeline-bar">
+                        <div class="timeline-progress" style="width: 100%"></div>
+                    </div>
+                    <span class="text-sm">Employee Pilot</span>
+                </div>
+                <div class="timeline">
+                    <span class="text-sm">Month 3-4</span>
+                    <div class="timeline-bar">
+                        <div class="timeline-progress" style="width: 75%"></div>
+                    </div>
+                    <span class="text-sm">System Integration</span>
+                </div>
+                <div class="timeline">
+                    <span class="text-sm">Month 5-6</span>
+                    <div class="timeline-bar">
+                        <div class="timeline-progress" style="width: 50%"></div>
+                    </div>
+                    <span class="text-sm">Full Deployment</span>
+                </div>
+            </div>
+
+            <div class="card card-gradient">
+                <h3 class="text-lg">Key Success Metrics</h3>
+                <div class="grid grid-2">
+                    <div class="metric">
+                        <div class="text-sm">Employee Adoption</div>
+                        <div class="metric-value">80%</div>
+                        <div class="text-sm">Target Year 1</div>
+                    </div>
+                    <div class="metric">
+                        <div class="text-sm">Patient Engagement</div>
+                        <div class="metric-value">50%</div>
+                        <div class="text-sm">Target Year 1</div>
+                    </div>
+                    <div class="metric">
+                        <div class="text-sm">Satisfaction Rate</div>
+                        <div class="metric-value">90%</div>
+                        <div class="text-sm">Target Score</div>
+                    </div>
+                    <div class="metric">
+                        <div class="text-sm">ROI</div>
+                        <div class="metric-value">3x</div>
+                        <div class="text-sm">Year 2 Target</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Case Study Slide -->
+    <div class="slide">
+         <div class="header">
+                    <div class="title-container">
+                        <h1 class="title">Protect Your Health, Secure Your Future</h1>
+                        <h2 class="subtitle">UCHealth x Renest Flu Shot Campaign Case Study</h2>
+                    </div>
+                    <div class="logos">
+                        <img src="uchealth_logo.png" alt="UCHealth Logo" class="logo">
+                        <div class="logo-divider"></div>
+                        <img src="renest_logo.png" alt="Renest Logo" class="logo renest-logo">
+                    </div>
+                </div>
+        <div class="quote card">
+            <p class="text-sm">"By combining preventive health with preventive financial planning, every flu shot becomes an opportunity to build both immunity and financial security."</p>
+        </div>
+        <div class="grid grid-2">
+            <div class="card card-gradient">
+                <h3 class="text-lg">Campaign Overview</h3>
+                <div class="content">
+                    <div class="stat">
+                        <img src="syringe-icon.png" alt="Flu Shot Icon" class="icon">
+                        <span>125,000+ Annual Flu Shots Administered</span>
+                    </div>
+                    <div class="stat">
+                        <img src="clock-icon.png" alt="Time Icon" class="icon">
+                        <span>15 Minute Average Wait Time</span>
+                    </div>
+                    <div class="stat">
+                        <img src="reach-icon.png" alt="Reach Icon" class="icon">
+                        <span>$25-125k Income Range (85% of Recipients)</span>
+                    </div>
+                    <div class="stat">
+                        <img src="age-icon.png" alt="Age Icon" class="icon">
+                        <span>18-65 Primary Age Demographics</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-gradient">
+                <h3 class="text-lg">Implementation Strategy</h3>
+                <ul class="list">
+                    <li>Co-branded flu shot stations with Renest financial wellness messaging</li>
+                    <li>QR code signup during 15-minute post-shot observation period</li>
+                    <li>Immediate $50 investment match for new retirement accounts</li>
+                    <li>Digital financial health check-up while waiting</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card card-gradient">
+            <h3 class="text-lg">Projected Impact & Success Metrics</h3>
+            <div class="grid grid-3">
+                <div class="metric">
+                    <div class="metric-value">35%</div>
+                    <div class="text-sm">Conversion Rate</div>
+                    <div class="text-xs">43,750 new retirement accounts</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">$2.1M</div>
+                    <div class="text-sm">Community Savings</div>
+                    <div class="text-xs">First year projected</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">92%</div>
+                    <div class="text-sm">Brand Approval</div>
+                    <div class="text-xs">Expected positive sentiment</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">15,000</div>
+                    <div class="text-sm">Financial Checkups</div>
+                    <div class="text-xs">Q1 projection</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">$875K</div>
+                    <div class="text-sm">Match Value</div>
+                    <div class="text-xs">Initial commitment</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">8.5/10</div>
+                    <div class="text-sm">Patient Experience</div>
+                    <div class="text-xs">Expected rating</div>
+                </div>
+            </div>
+        </div>
+
+        
+    </div>
+    <div class="nav">
+        <button id="prevBtn" class="btn" disabled>Previous</button>
+        <span class="counter">1 / 4</span>
+        <button id="nextBtn" class="btn">Next</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const counter = document.querySelector('.counter');
+        const progress = document.querySelector('.progress-fill');
+
+        function updateSlides() {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[currentSlide].classList.add('active');
+            counter.textContent = `${currentSlide + 1} / ${slides.length}`;
+            progress.style.width = `${((currentSlide + 1) / slides.length) * 100}%`;
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+            
+            // Scroll to top of the page smoothly
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        prevBtn.addEventListener('click', () => {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlides();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                updateSlides();
+            }
+        });
+
+        // Initialize
+        updateSlides();
+    </script>
+    <a href="index.html" class="exit-button">Exit</a>
+</body>
+</html>
