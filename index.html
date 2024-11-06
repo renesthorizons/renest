@@ -1873,6 +1873,131 @@
             padding: 0.5rem 1rem;
         }
     }
+    .renest-benefits-container {
+        background: linear-gradient(145deg, rgba(218, 240, 247, 0.8), rgba(12, 209, 210, 0.6));
+        max-width: 1200px;
+        margin: 2rem auto;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px -5px rgba(78, 167, 46, 0.1);
+        padding: 3rem 2rem;
+        border: 1px solid rgba(78, 167, 46, 0.2);
+    }
+
+    .renest-benefits-title {
+        font-family: 'Spectral', serif;
+        font-size: 2.5rem;
+        text-align: center;
+        color: #1A1A1A;
+        margin-bottom: 2.5rem;
+        position: relative;
+        padding-bottom: 1rem;
+    }
+
+    .renest-benefits-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 3px;
+        background: linear-gradient(90deg, #92C089, #4EA72E);
+        border-radius: 2px;
+    }
+
+    .renest-benefits-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+        padding: 1rem;
+    }
+
+    .renest-benefit-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2.5rem 2rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(78, 167, 46, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .renest-benefit-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #92C089, #4EA72E);
+    }
+
+    .renest-benefit-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgba(78, 167, 46, 0.1), 0 10px 10px -5px rgba(78, 167, 46, 0.05);
+    }
+
+    .renest-benefit-heading {
+        color: #397D20;
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        font-family: 'DM Sans', sans-serif;
+        position: relative;
+    }
+
+    .renest-benefit-list {
+        color: #4B5563;
+        font-size: 1.1rem;
+        text-align:left;
+        line-height: 1.8;
+    }
+
+    .renest-benefit-list br {
+        margin-bottom: 0.8rem;
+    }
+
+    .renest-benefit-list::before {
+        color: #4EA72E;
+        margin-right: 0.5rem;
+    }
+
+    .renest-benefit-list .check {
+        color: #4EA72E;
+        font-weight: 600;
+        margin-right: 0.5rem;
+    }
+
+    .renest-benefit-footnotes {
+        font-size: 0.9rem;
+        color: #666;
+        margin-top: 2rem;
+        text-align: left;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 8px;
+    }
+
+    @media (max-width: 1024px) {
+        .renest-benefits-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .renest-benefits-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .renest-benefits-title {
+            font-size: 2rem;
+        }
+
+        .renest-benefits-container {
+            padding: 2rem 1rem;
+        }
+    }
     </style>
 </head>
 <body>
@@ -1918,7 +2043,7 @@
 
     <div class="sections-container">
         <div class="content-section" id="individuals-content">
-            <h1>Reinvent Investing: Guaranteed savings no matter who you are or what you do</h1>
+            <h1>Reinvent Investing: Guaranteed Savings No Matter Who You Are or What You Do</h1>
             <p>Renest, the first network investment platform where everyone benefits <br> whether you are able to contribute $0 or $1 million</p>
             
             <div class="comparison-container">
@@ -2081,7 +2206,7 @@
 
                 <div class="slider-container">
                     <div class="slider-label">
-                        <span>Your Monthly Contributions</span>
+                        <span>Your Monthly Retirement Contributions</span>
                         <span>$<span id="xValue">0</span></span>
                     </div>
                     <input type="range" id="contributionSlider" min="0" max="2000" value="0" step="10" />
@@ -2105,7 +2230,7 @@
 
 
         <div class="content-section hidden" id="businesses-content">
-            <h1>An enhanced retirement benefit for every organization</h1>
+            <h1>An Enhanced Retirement Benefit for Every Organization</h1>
             <p>Help your organization and community invest for the future</p>
             
             <div class="comparison-container">
@@ -2202,7 +2327,7 @@
                     <!-- Add the business modal here -->
                     <div id="businessModal" class="fixed inset-0 bg-black/50 hidden backdrop-blur-sm flex items-center justify-center z-50">
                         <div class="bg-white rounded-xl shadow-2xl max-w-md w-full m-4 transform transition-all">
-                            <form id="businessForm" class="p-6 space-y-4">
+                            <form id="businessForm" class="p-6 space-y-4" onsubmit="sendEmail(event)">
                                 <div class="email-input-container">
                                     <label for="businessEmail" class="input-label">Email</label>
                                     <input 
@@ -2328,11 +2453,61 @@
 
 
         <div class="content-section hidden" id="states-content">
-            <h1>State Solutions</h1>
-            <p>Renest can help your state or city create a more secure financial future for all residents</p>
-            <div class="states-container">        
-                <!-- State Search Section -->
-               <div class="state-search-card">
+            <h1>State and Local Government Solutions</h1>
+            <p>A more secure financial future for all residents</p>
+            <div class="crisis-section">
+                <h3 class="crisis-header" style="font-size: 2rem; margin-bottom: 2rem;">Nationwide Challenges</h3>
+                <div class="business-benefits-grid">
+                    <div class="benefit-item">
+                        <div class="step-icon organization-icon" style="width: 100px; height: 100px; margin-bottom: 1rem;">
+                            <img src="smb.png" alt="Business icon" style="width: 80px; height: 80px; object-fit: contain;">
+                        </div>
+                        <h3 style="font-size: 1.5rem; margin: 1rem 0; color: #1A1A1A;">56M</h3>
+                        <p style="font-size: 1rem; line-height: 1.5; color: #4B5563;">Americans lack access to an employer retirement plan</p>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="step-icon members-icon" style="width: 100px; height: 100px; margin-bottom: 1rem;">
+                            <img src="noira.png" alt="People icon" style="width: 80px; height: 80px; object-fit: contain;">
+                        </div>
+                        <h3 style="font-size: 1.5rem; margin: 1rem 0; color: #1A1A1A;">77M</h3>
+                        <p style="font-size: 1rem; line-height: 1.5; color: #4B5563;">Americans do not have an individual retirement account</p>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="step-icon email-icon" style="width: 100px; height: 100px; margin-bottom: 1rem;">
+                            <img src="selfemp.png" alt="Growth icon" style="width: 80px; height: 80px; object-fit: contain;">
+                        </div>
+                        <h3 style="font-size: 1.5rem; margin: 1rem 0; color: #1A1A1A;">86.5M</h3>
+                        <p style="font-size: 1rem; line-height: 1.5; color: #4B5563;">Workers predicted to be self-employed by 2027</p>
+                    </div>
+                </div>
+
+
+                <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(0, 0, 0, 0.03); border-radius: 16px;">
+                        <h4 style="font-size: 1.2rem; color: #1A1A1A; margin-bottom: 1rem; font-weight: 600;">Additional Adversity:</h4>
+                        <div style="display: grid; margin-bottom: 1rem; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
+                            <div style="text-align: center;background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                                <div style="color: #4B5563; line-height: 1.5;">
+                                    <span style="color: #EF4444; font-weight: 600;">✗</span>
+                                    87% of lowest-earning fifth of households lack retirement accounts (2022)
+                                </div>
+                            </div>
+                            <div style="text-align: center;background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                                <div style="color: #4B5563; line-height: 1.5;">
+                                    <span style="color: #EF4444; font-weight: 600;">✗</span>
+                                    Less than 50% of families in bottom half of income bracket save for retirement
+                                </div>
+                            </div>
+                        </div>
+                        <div style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 1.5rem;">
+                            <div style="color: #4B5563; line-height: 1.5; text-align: center;">
+                                <span style="color: #EF4444; font-weight: 600;">✗</span>
+                                Even with the massive 401(k) expansion, the % of workers (25-54 yo) participating in a retirement plan has remained roughly 50% since the 1970s
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="state-search-card">
                     <h2 class="state-search-title">State Program Costs and Demographics Search</h2>
                     <input 
                         type="text" 
@@ -2342,6 +2517,214 @@
                     >
                     <div id="stateResults" class="state-results"></div>
                 </div>
+                <div class="crisis-section">
+                    <h3 class="crisis-header" style="font-size: 2rem; margin-bottom: 2rem;">Current State Auto-IRA Program Challenges</h3>
+                    <div class="business-benefits-grid">
+                        <div class="benefit-item">
+                            <div class="step-icon organization-icon" style="width: 100px; height: 100px; margin-bottom: 1rem;">
+                                <img src="optout.png" alt="Opt out icon" style="width: 80px; height: 80px; object-fit: contain;">
+                            </div>
+                            <h3 style="font-size: 1.5rem; margin: 1rem 0; color: #1A1A1A;">30-35%</h3>
+                            <p style="font-size: 1rem; line-height: 1.5; color: #4B5563;">Workers opt out of state retirement programs</p>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="step-icon members-icon" style="width: 100px; height: 100px; margin-bottom: 1rem;">
+                                <img src="lowcontrib.png" alt="Low contribution icon" style="width: 80px; height: 80px; object-fit: contain;">
+                            </div>
+                            <h3 style="font-size: 1.5rem; margin: 1rem 0; color: #1A1A1A;">$30</h3>
+                            <p style="font-size: 1rem; line-height: 1.5; color: #4B5563;">Median monthly contribution amount across all accounts</p>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="step-icon email-icon" style="width: 100px; height: 100px; margin-bottom: 1rem;">
+                                <img src="lowbalance.png" alt="Low balance icon" style="width: 80px; height: 80px; object-fit: contain;">
+                            </div>
+                            <h3 style="font-size: 1.5rem; margin: 1rem 0; color: #1A1A1A;">$1,800</h3>
+                            <p style="font-size: 1rem; line-height: 1.5; color: #4B5563;">Average account balance after 3 years</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Additional Challenges Section -->
+                    <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(0, 0, 0, 0.03); border-radius: 16px;">
+                        <h4 style="font-size: 1.2rem; color: #1A1A1A; margin-bottom: 1rem; font-weight: 600;">Additional Program Limitations:</h4>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
+                            <div style="text-align: center;background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                                <div style="color: #4B5563; line-height: 1.5;">
+                                    <span style="color: #EF4444; font-weight: 600;">✗</span>
+                                    High number of small accounts creates poor economies of scale
+                                </div>
+                            </div>
+                            <div style="text-align: center;background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                                <div style="color: #4B5563; line-height: 1.5;">
+                                    <span style="color: #EF4444; font-weight: 600;">✗</span>
+                                    Only benefits people able to contribute
+                                </div>
+                            </div>
+                            <div style="text-align: center;background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                                <div style="color: #4B5563; line-height: 1.5;">
+                                    <span style="color: #EF4444; font-weight: 600;">✗</span>
+                                    Higher costs lead to lower account values and de minimis retirement outcomes
+                                </div>
+                            </div>
+                            <div style="text-align: center;background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                                <div style="color: #4B5563; line-height: 1.5;">
+                                    <span style="color: #EF4444; font-weight: 600;">✗</span>
+                                    Interstate partnerships reduce design control and influence
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+
+
+
+                <div class="renest-benefits-container">
+                    <h2 class="renest-benefits-title">Renest Solution: Benefits Overview</h2>
+                    <div class="renest-benefits-grid">
+                        <!-- Financial Impact Card -->
+                        <div class="renest-benefit-card">
+                            <div class="step-icon organization-icon" style="width: 100px; height: 100px; margin: 0 auto 1rem auto; background: linear-gradient(145deg, rgba(146, 192, 137, 0.1), rgba(78, 167, 46, 0.1)); border-radius: 50%; display: flex; justify-content: center; align-items: center;">
+                                <img src="people.png" alt="Financial impact icon" style="width: 80px; height: 80px; object-fit: contain;">
+                            </div>
+                            <div class="renest-benefit-heading">Financial Impact</div>
+                            <div class="renest-benefit-list">
+                                <span class="check">✓</span> Generates $45,000 - $70,000* for each saver<br>
+                                <span class="check">✓</span> 60-70% increase in savings vs. standalone programs<br>
+                                <span class="check">✓</span> $93,108 average savings by year 30
+                            </div>
+                        </div>
+                        
+                        <!-- Cost Structure Card -->
+                        <div class="renest-benefit-card">
+                            <div class="step-icon organization-icon" style="width: 100px; height: 100px; margin: 0 auto 1rem auto; background: linear-gradient(145deg, rgba(146, 192, 137, 0.1), rgba(78, 167, 46, 0.1)); border-radius: 50%; display: flex; justify-content: center; align-items: center;">
+                                <img src="fee.png" alt="Cost structure icon" style="width: 80px; height: 80px; object-fit: contain;">
+                            </div>
+                            <div class="renest-benefit-heading">Cost Structure</div>
+                            <div class="renest-benefit-list">
+                                <span class="check">✓</span> $0 upfront cost<br>
+                                <span class="check">✓</span> $0 implementation cost<br>
+                                <span class="check">✓</span> $0 annual cost<br>
+                                <span class="check">✓</span> Reduced asset-based fees<br>
+                                <span class="check">✓</span> Saves $80-90 Million† in fees                                
+                            </div>
+                        </div>
+
+                        <!-- Coverage Card -->
+                        <div class="renest-benefit-card">
+                            <div class="step-icon organization-icon" style="width: 100px; height: 100px; margin: 0 auto 1rem auto; background: linear-gradient(145deg, rgba(146, 192, 137, 0.1), rgba(78, 167, 46, 0.1)); border-radius: 50%; display: flex; justify-content: center; align-items: center;">
+                                <img src="family.png" alt="Coverage icon" style="width: 80px; height: 80px; object-fit: contain;">
+                            </div>
+                            <div class="renest-benefit-heading">Universal Coverage</div>
+                            <div class="renest-benefit-list">
+                                <span class="check">✓</span> People unable to contribute<br>
+                                <span class="check">✓</span> Self-employed, freelancers, gig-economy workers<br>
+                                <span class="check">✓</span> Middle Class Contributors<br>
+                                <span class="check">✓</span> Intergenerational planning
+                            </div>
+                        </div>
+                    </div>
+
+                        <h2 class="renest-benefits-title">Performance Analysis</h2>
+                        <div style="display: grid; grid-template-columns: 1fr; gap: 2rem; padding: 1rem;">
+                            <!-- Savings Chart -->
+                            <div style="width: 100%; height: 400px; background: white; padding: 1rem; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+                                <canvas id="savingsChart"></canvas>
+                            </div>
+                            <!-- Fees Chart -->
+                            <div style="width: 100%; height: 400px; background: white; padding: 1rem; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+                                <canvas id="feesChart"></canvas>
+                            </div>
+                        </div>
+                    <h2 class="renest-benefits-title">Together, we can help you increases <br>your citizens financial health</h2>
+                    <div class="renest-benefits-grid" style="margin-top: 2rem;">
+                        <div class="renest-benefit-card">
+                            <div class="renest-benefit-heading" style="color: #397D20;">Savings Growth</div>
+                            <div class="renest-benefit-list">
+                                <span class="check"></span> Renest solves the retirement gap by creating thousands of dollars in extra-savings for participants
+                            </div>
+                        </div>
+                        
+                        <div class="renest-benefit-card">
+                            <div class="renest-benefit-heading" style="color: #397D20;">Fee Reduction</div>
+                            <div class="renest-benefit-list">
+                                <span class="check"></span>Renest achieves lowers participant fees faster through enhanced economies of scale
+                            </div>
+                        </div>
+
+                        <div class="renest-benefit-card">
+                            <div class="renest-benefit-heading" style="color: #397D20;">Overall Impact</div>
+                            <div class="renest-benefit-list">
+                                <span class="check"></span>A more financially secure population, lowers costs to state programs and increases budget
+                            </div>
+                        </div>
+                    </div>
+                   <h2 class="renest-benefits-title">Integrate Renest</h2>
+                    <div class="state-search-card">
+                        <p class="integration-text">See how we can facilitate or plug into your state or city retirement mandate</p>
+                        <button id="integrateButton" class="sleek-button">
+                            <div class="button-content">
+                                <span class="button-text">Get Started</span>
+                                <img src="wlogo.png" alt="Logo" class="button-logo">
+                            </div>
+                        </button>
+                    </div>
+
+                    <div id="integrateModal" class="fixed inset-0 bg-black/50 hidden backdrop-blur-sm flex items-center justify-center z-50">
+                        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full m-4 transform transition-all">
+                            <form id="integrateForm" class="p-6 space-y-4" onsubmit="sendStateEmail(event)">
+                                <div class="email-input-container">
+                                    <label for="integrateEmail" class="input-label">Email</label>
+                                    <input 
+                                        type="email" 
+                                        id="integrateEmail" 
+                                        class="email-input"
+                                        placeholder="your@email.com" 
+                                        required
+                                    >
+                                </div>
+                                <div class="email-input-container">
+                                    <label for="position" class="input-label">Position in State/City Government</label>
+                                    <input 
+                                        type="text" 
+                                        id="position" 
+                                        class="email-input"
+                                        placeholder="Your position" 
+                                        required
+                                    >
+                                </div>
+                                <div class="email-input-container">
+                                    <label for="additionalInfo" class="input-label">Additional Information</label>
+                                    <textarea 
+                                        id="additionalInfo" 
+                                        class="email-input"
+                                        placeholder="Share any additional information..."
+                                        rows="4"
+                                    ></textarea>
+                                </div>
+                                <button type="submit" class="submit-button">
+                                    Submit
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Add this success modal -->
+                    <div id="integrateSuccessModal" class="fixed inset-0 bg-black/50 hidden backdrop-blur-sm flex items-center justify-center z-50">
+                        <div class="bg-white rounded-xl shadow-2xl p-6 max-w-md w-full m-4 transform transition-all text-center">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-4">Thank You!</h2>
+                            <p class="text-gray-600">Your information has been submitted. Our team will be in touch soon.</p>
+                        </div>
+                    </div>
+                        <div class="renest-benefit-footnotes">
+                            * Based on individual contribution levels and time horizon<br>
+                            † Compared to traditional state IRA programs<br>
+                            ** Results based on average participant data
+                        </div>
+                    </div>
+
+
+                
+                
+
 
                 <!-- Federal Overview Section -->
                <div class="state-search-card">
@@ -2382,41 +2765,68 @@
                     </div>
                 </div>
 
-                <!-- Crisis Section -->
-                <div class="crisis-section">
-                    <h3 class="crisis-header">Current Crisis</h3>
-                    <ul class="crisis-list">
-                        <li>87% of lowest-earning fifth of households lack retirement accounts (2022)</li>
-                        <li>Less than 50% of families in bottom half of income bracket save for retirement</li>
-                        <li>% of workers (25-54 yo) participating in a retirement plan has remained roughly 50% since 1970s</li>
-                        <li> 56 million Americans lack access to an employer retirement plan</li>
-                        <li>77 million Americans do not have an IRA</li>
-                        <li>86.5 million workers are predicted to be self-employed by 2027</li>
-                    </ul>
-                </div>
+                
 
                 <!-- Solution Comparison -->
                 <div class="state-search-card">
+
+
                     <h3 class="crisis-header">Current Programs  vs. Cost-Effective Private Solution</h3>
                     <div class="state-metrics-grid" style="grid-template-columns: repeat(3, 1fr); margin-top: 1.5rem;">
                         <div class="metric-card">
                             <div class="metric-label">Social Security</div>
                             <div class="metric-value">Cost: $1.2T</div>
-                            <div style="color: #666; font-size: 0.9rem; margin-top: 0.5rem;">61% of benefitst go the bottom 50%</div>
+                            <div style="color: #666; font-size: 0.9rem; margin-top: 0.5rem;">Benefit of program is not keeping up with costs</div>
                         </div>
                         <div class="metric-card">
-                            <div class="metric-label">Employer-Sponsored Retirement Plans</div>
+                            <div class="metric-label">Employer-Sponsored Plans</div>
                             <div class="metric-value">Cost: $280B</div>
-                            <div style="color: #666; font-size: 0.9rem; margin-top: 0.5rem;">17% of benefit goes to the bottom 50%</div>
+                            <div style="color: #666; font-size: 0.9rem; margin-top: 0.5rem;">80% of benefit goes to top 10% of Americans</div>
                         </div>
                         <div class="metric-card">
                             <div class="metric-label">Saver's Match (2027)</div>
                             <div class="metric-value">Cost $9.8B</div>
                             <div style="color: #666; font-size: 0.9rem; margin-top: 0.5rem;">Benefits only those able to contribute</div>
                         </div>
+                        <!-- Financial Impact Card -->
+                        <div class="renest-benefit-card">
+                            <div class="step-icon organization-icon" style="width: 100px; height: 100px; margin: 0 auto 1rem auto; background: linear-gradient(145deg, rgba(146, 192, 137, 0.1), rgba(78, 167, 46, 0.1)); border-radius: 50%; display: flex; justify-content: center; align-items: center;">
+                                <img src="people.png" alt="Financial impact icon" style="width: 80px; height: 80px; object-fit: contain;">
+                            </div>
+                            <div class="renest-benefit-heading">Financial Impact</div>
+                            <div class="renest-benefit-list">
+                                <span class="check">✓</span> Generates $45,000 - $70,000* for each saver<br>
+                                <span class="check">✓</span> $95 Billion in Benefits Created<br>
+                                <span class="check">✓</span> Saves Billions of Dollars through Reduced Federal Program Reliance
+                            </div>
+                        </div>
                         
+                        <!-- Cost Structure Card -->
+                        <div class="renest-benefit-card">
+                            <div class="step-icon organization-icon" style="width: 100px; height: 100px; margin: 0 auto 1rem auto; background: linear-gradient(145deg, rgba(146, 192, 137, 0.1), rgba(78, 167, 46, 0.1)); border-radius: 50%; display: flex; justify-content: center; align-items: center;">
+                                <img src="fee.png" alt="Cost structure icon" style="width: 80px; height: 80px; object-fit: contain;">
+                            </div>
+                            <div class="renest-benefit-heading">Cost Structure</div>
+                            <div class="renest-benefit-list">
+                                <span class="check">✓</span> $0 upfront cost<br>
+                                <span class="check">✓</span> $0 implementation cost<br>
+                                <span class="check">✓</span> $0 annual cost<br>                            
+                            </div>
+                        </div>
 
-                        <div class="metric-card" style="background: rgba(34, 197, 94, 0.1); border-color: rgba(34, 197, 94, 0.2);">
+                        <!-- Coverage Card -->
+                        <div class="renest-benefit-card">
+                            <div class="step-icon organization-icon" style="width: 100px; height: 100px; margin: 0 auto 1rem auto; background: linear-gradient(145deg, rgba(146, 192, 137, 0.1), rgba(78, 167, 46, 0.1)); border-radius: 50%; display: flex; justify-content: center; align-items: center;">
+                                <img src="family.png" alt="Coverage icon" style="width: 80px; height: 80px; object-fit: contain;">
+                            </div>
+                            <div class="renest-benefit-heading">Universal Coverage</div>
+                            <div class="renest-benefit-list">
+                                <span class="check">✓</span> People unable to contribute<br>
+                                <span class="check">✓</span> Self-employed, freelancers, gig-economy workers<br>
+                                <span class="check">✓</span> Middle Class Contributors<br>
+                            </div>
+                        </div>
+                        <!-- <div class="metric-card" style="background: rgba(34, 197, 94, 0.1); border-color: rgba(34, 197, 94, 0.2);">
                             <div class="metric-label" style="color: #166534;">Renest Network</div>
                             <div class="metric-value" style="color: #166534;">Creates $95B in total benefits</div>
                             <div style="color: #166534; font-size: 0.9rem; margin-top: 0.5rem;"></div>
@@ -2435,8 +2845,11 @@
                                 ✓ Self-employed, freelancers, gig-economy, independent contractors<br>
                                 ✓ Middle Class Contributors
                             </div>
-                        </div>
+                        </div> -->
                     </div>
+
+
+
                     <button onclick="openCaseStudy()" class="sleek-button" style="margin-top: 2rem;">
                         <div class="button-content">
                             <span class="button-text">View Case Study</span>
@@ -2446,63 +2859,7 @@
                 </div>
                 
                 <!-- Add this section between Solutions Comparison and Impact sections -->
-                <h1>Integrate Renest</h1>
-                <div class="state-search-card">
-                    <p class="integration-text">See how we can facilitate or plug into your state or city retirement mandate</p>
-                    <button id="integrateButton" class="sleek-button">
-                        <div class="button-content">
-                            <span class="button-text">Get Started</span>
-                            <img src="wlogo.png" alt="Logo" class="button-logo">
-                        </div>
-                    </button>
-                </div>
-
-                <div id="integrateModal" class="fixed inset-0 bg-black/50 hidden backdrop-blur-sm flex items-center justify-center z-50">
-                    <div class="bg-white rounded-xl shadow-2xl max-w-md w-full m-4 transform transition-all">
-                        <form id="integrateForm" class="p-6 space-y-4">
-                            <div class="email-input-container">
-                                <label for="integrateEmail" class="input-label">Email</label>
-                                <input 
-                                    type="email" 
-                                    id="integrateEmail" 
-                                    class="email-input"
-                                    placeholder="your@email.com" 
-                                    required
-                                >
-                            </div>
-                            <div class="email-input-container">
-                                <label for="position" class="input-label">Position in State/City Government</label>
-                                <input 
-                                    type="text" 
-                                    id="position" 
-                                    class="email-input"
-                                    placeholder="Your position" 
-                                    required
-                                >
-                            </div>
-                            <div class="email-input-container">
-                                <label for="additionalInfo" class="input-label">Additional Information</label>
-                                <textarea 
-                                    id="additionalInfo" 
-                                    class="email-input"
-                                    placeholder="Share any additional information..."
-                                    rows="4"
-                                ></textarea>
-                            </div>
-                            <button type="submit" class="submit-button">
-                                Submit
-                            </button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Add this success modal -->
-                <div id="integrateSuccessModal" class="fixed inset-0 bg-black/50 hidden backdrop-blur-sm flex items-center justify-center z-50">
-                    <div class="bg-white rounded-xl shadow-2xl p-6 max-w-md w-full m-4 transform transition-all text-center">
-                        <h2 class="text-2xl font-bold text-gray-800 mb-4">Thank You!</h2>
-                        <p class="text-gray-600">Your information has been submitted. Our team will be in touch soon.</p>
-                    </div>
-                </div>
+                
 
                 <!-- Impact Sections -->
                 <div class="state-metrics-grid" style="margin-top: 2rem;">
@@ -2679,7 +3036,223 @@
             'Wyoming': 'wy',
             'District of Columbia': 'dc'
           };
+          function sendStateEmail(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const email = document.getElementById('integrateEmail').value;
+            const position = document.getElementById('position').value;
+            const additionalInfo = document.getElementById('additionalInfo').value;
+            
+            // Construct email body
+            const emailBody = `
+        State/City Government Contact Information:
+        ---------------------------------------
+        Email: ${email}
+        Position: ${position}
+        Additional Information: ${additionalInfo}
+            `.trim();
+            
+            // Encode the body for mailto
+            const encodedBody = encodeURIComponent(emailBody);
+            
+            // Create mailto link
+            const mailtoLink = `mailto:thomas@renesthorizons.com?subject=State/City Integration Interest&body=${encodedBody}`;
+            
+            // Open default email client
+            window.location.href = mailtoLink;
+            
+            // Hide modal and show success message
+            document.getElementById('integrateModal').classList.add('hidden');
+            document.getElementById('integrateSuccessModal').classList.remove('hidden');
+            
+            // Reset form
+            document.getElementById('integrateForm').reset();
 
+            // Hide success message after 3 seconds
+            setTimeout(() => {
+                document.getElementById('integrateSuccessModal').classList.add('hidden');
+            }, 3000);
+        }
+
+
+          function sendEmail(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const email = document.getElementById('businessEmail').value;
+            const position = document.getElementById('businessPosition').value;
+            const businessName = document.getElementById('businessName').value;
+            const additionalInfo = document.getElementById('businessInfo').value;
+            
+            // Construct email body
+            const emailBody = `
+        Business Contact Information:
+        ---------------------------
+        Email: ${email}
+        Position: ${position}
+        Business Name: ${businessName}
+        Additional Information: ${additionalInfo}
+            `.trim();
+            
+            // Encode the body for mailto
+            const encodedBody = encodeURIComponent(emailBody);
+            
+            // Create mailto link
+            const mailtoLink = `mailto:thomas@renesthorizons.com?subject=Business Interest Form Submission&body=${encodedBody}`;
+            
+            // Open default email client
+            window.location.href = mailtoLink;
+            
+            // Hide modal and show success message
+            document.getElementById('businessModal').classList.add('hidden');
+            document.getElementById('successModal').classList.remove('hidden');
+            
+            // Reset form
+            document.getElementById('businessForm').reset();
+        }
+          const savingsCtx = document.getElementById('savingsChart').getContext('2d');
+            const savingsChart = new Chart(savingsCtx, {
+                type: 'line',
+                data: {
+                    labels: ['1', '2', '3', '4', '5', '10', '20', '30'],
+                    datasets: [
+                        {
+                            label: 'Renest Contributions',
+                            data: [210, 445, 707, 999, 1324, 3561, 13121, 37145],
+                            borderColor: '#22C55E',
+                            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                            fill: false,  // Changed to true for the area fill
+                            tension: 0.4,
+                            // pointRadius: 0  // Removes the points on the line
+                        },
+                        {
+                            label: 'Individual Contributions',
+                            data: [295, 629, 1005, 1427, 1901, 5218, 19702, 55964],
+                            borderColor: '#3B82F6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            fill: false,  // Changed to true for the area fill
+                            tension: 0.4,
+                            // pointRadius: 0  // Removes the points on the line
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Renest Enhances a Participants Retirement Account',
+                            font: {
+                                size: 16,
+                                family: "'DM Sans', sans-serif"
+                            }
+                        },
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,  // This makes the legend show lines instead of boxes
+                                pointStyle: 'line'    // This specifically sets it to show as a line
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Retirement Savings ($)',
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            },
+                            grid: {
+                                display: true,  // This removes horizontal grid lines
+                                drawBorder: false  // This removes the axis line
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Years'
+                            },
+                            grid: {
+                                display: true,  // This removes vertical grid lines
+                                drawBorder: false  // This removes the axis line
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Data for Fees Chart
+            const feesCtx = document.getElementById('feesChart').getContext('2d');
+            const feesChart = new Chart(feesCtx, {
+                type: 'line',
+                data: {
+                    labels: ['1', '3', '5', '7', '9', '11', '13', '15'],
+                    datasets: [
+                        {
+                            label: 'Fee with Renest',
+                            data: [0.75, 0.60, 0.60, 0.45, 0.35, 0.18, 0.15, 0.15],
+                            borderColor: '#22C55E',
+                            backgroundColor: 'transparent',
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Fee without Renest',
+                            data: [0.75, 0.75, 0.75, 0.75, 0.6, 0.45, 0.35, 0.23],
+                            borderColor: '#FF746C',
+                            backgroundColor: 'transparent',
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Renest Achieves Lower Fees for Participants Faster',
+                            font: {
+                                size: 16,
+                                family: "'DM Sans', sans-serif"
+                            }
+                        },
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,  // This makes the legend show lines instead of boxes
+                                pointStyle: 'line'    // This specifically sets it to show as a line
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Asset Based Fee %'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toFixed(2) + '%';
+                                }
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Years'
+                            }
+                        }
+                    }
+                }
+            });
         function formatNumber(num) {
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
