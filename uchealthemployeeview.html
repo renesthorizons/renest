@@ -21,6 +21,7 @@
                 --border-color: rgba(230, 164, 180, 0.2); /* Original transparent rose pink */
                 --success-green: #4CAF50;           /* Added professional green for positive values */
                 --employer-fill: #FFB6C1;           /* Light pink for employer contribution */
+                --renest-green: #B8D8BE;  
             }
 
             body {
@@ -464,41 +465,55 @@
 
 
             /* Contribution type indicators */
-            .contribution-type {
+            /* Contribution type indicators */
+            .contribution-legend {
                 position: absolute;
-                top: 0.5rem;
-                right: 0.5rem;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
                 display: flex;
                 flex-direction: column;
                 gap: 0.5rem;
-                z-index: 3;
-                background: rgba(255, 255, 255, 0.95);
-                padding: 0.5rem;
-                border-radius: 4px;
-                font-size: 0.75rem;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                background: white;
+                padding: 0.75rem;
+                border-radius: 6px;
+                border: 1px solid var(--border-color);
+                font-size: 0.8rem;
+                z-index: 4;
             }
 
-            .contribution-label {
+            .legend-item {
                 display: flex;
                 align-items: center;
-                gap: 0.25rem;
+                gap: 0.5rem;
+                color: var(--text-primary);
             }
 
-            .contribution-dot {
-                width: 8px;
-                height: 8px;
-                border-radius: 50%;
+            .legend-color {
+                width: 12px;
+                height: 12px;
+                border-radius: 3px;
             }
 
-            .contribution-dot.individual {
+            .legend-color.individual {
                 background-color: var(--primary-color);
+                opacity: 0.8;
             }
 
-            .contribution-dot.employer {
+            .legend-color.employer {
+                background-color: var(--primary-color);
+                opacity: 0.5;
+            }
+
+            .legend-color.renest {
+                background-color: var(--renest-green);
+                opacity: 0.8;
+            }
+
+            .legend-color.renest-alt {
                 background-color: var(--employer-fill);
+                opacity: 0.8;
             }
-
             /* Info icon */
             .info-icon {
                 height: 16px;
@@ -660,6 +675,20 @@
 
             <!-- Savings Buckets Section -->
             <div class="buckets-section">
+                <div class="contribution-legend">
+                    <div class="legend-item">
+                        <div class="legend-color individual"></div>
+                        <span>Your Contribution</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color employer"></div>
+                        <span>Employer Match</span>
+                    </div>
+                    <div class="legend-item" id="renest-legend-item">
+                        <div class="legend-color renest"></div>
+                        <span>Renest Contribution</span>
+                    </div>
+                </div>
                 <div class="eggs-container">
                     <div class="egg-container">
                         <h3>
@@ -725,7 +754,7 @@
 
                 <div class="result-box">
                     <h3>Renest Increase Your Retirement by:</h3>
-                    <span id="renest-difference">$0</span>
+                    <span id="renest-difference" style="color: var(--renest-green);">$0</span>
                 </div>
             </div>
         </div>
@@ -741,7 +770,7 @@
         const MAX_403B_CONTRIBUTION = 23500; // Maximum individual 403b contribution
         const MAX_403B_TOTAL = 47000; // Maximum total 403b contribution (including employer match)
         const MAX_RENEST_CONTRIBUTION_COMPANY = 210; // Maximum Renest contribution when company contributing
-        const MAX_RENEST_CONTRIBUTION_INDIVIDUAL = 90000; // Maximum Renest contribution when individual contributing
+        const MAX_RENEST_CONTRIBUTION_INDIVIDUAL = 50000; // Maximum Renest contribution when individual contributing
 
         // Tax and Growth Constants
         const INFLATION_RATE = 0.03; // Inflation rate
@@ -1034,15 +1063,11 @@
             updateBucketFills(results);
             
             // Update Renest bucket styling
+            // Update Renest bucket and legend styling
             if (results.arhs > 0) {
-                bucketRenest.classList.toggle('renest-contributing', 
-                    annualSavings <= MAX_403B_CONTRIBUTION || 
-                    (annualSavings - MAX_403B_CONTRIBUTION <= IRA_CONTRIBUTION_LIMIT)
-                );
-                bucketRenest.classList.toggle('individual-contributing',
-                    !(annualSavings <= MAX_403B_CONTRIBUTION || 
-                    (annualSavings - MAX_403B_CONTRIBUTION <= IRA_CONTRIBUTION_LIMIT))
-                );
+                const renestFill = document.getElementById('renest-fill');
+                renestFill.style.backgroundColor = results.asIra < IRA_CONTRIBUTION_LIMIT ? 
+                    'var(--renest-green)' : 'var(--primary-color)';
             }
         }
 
