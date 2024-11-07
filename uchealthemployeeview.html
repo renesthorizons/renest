@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retirement Savings Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles from styles artifact -->
+    <style>
+          :root {
+                --primary-color: #E6A4B4;           /* Original soft rose pink */
+                --primary-dark: #C4848F;            /* Slightly darker rose for professionalism */
+                --secondary-color: #F3D7CA;         /* Original soft peach */
+                --accent-color: #F8E8EE;            /* Original light pink */
+                --background-primary: #FDF6F6;      /* Original off white pink */
+                --background-secondary: #FFF5E4;    /* Original warm cream */
+                --text-primary: #846067;            /* Original warm gray */
+                --text-secondary: #9B7E83;          /* Original light warm gray */
+                --text-tertiary: #B79B9B;          /* Original softer warm gray */
+                --border-color: rgba(230, 164, 180, 0.2); /* Original transparent rose pink */
+                --success-green: #4CAF50;           /* Added professional green for positive values */
+                --employer-fill: #FFB6C1;           /* Light pink for employer contribution */
+            }
+
+            body {
+                font-family: 'Inter', sans-serif;
+                background: linear-gradient(135deg, var(--background-primary) 0%, var(--background-secondary) 100%);
+                margin: 0;
+                padding: 2rem;
+                min-height: 100vh;
+                color: var(--text-primary);
+                line-height: 1.5;
+            }
+            .calculator-grid {
+                padding: 1rem;
+            }
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                background: white;
+                padding: 2rem;
+                border-radius: 12px;
+                box-shadow: 0 4px 20px rgba(230, 164, 180, 0.15);
+            }
+
+            /* Header Styling */
+            .header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 2rem;
+                padding-bottom: 1rem;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+            .header-left {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .company-logo {
+                height: 40px;
+            }
+
+            .benefit-icon {
+                height: 24px;
+                margin-right: 0.5rem;
+            }
+
+            .title {
+                color: var(--primary-dark);
+                font-size: 1.75rem;
+                font-weight: 600;
+                margin: 0;
+                display: flex;
+                align-items: center;
+            }
+
+            .profile-section {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                padding: 0.75rem 1.5rem;
+                background: var(--accent-color);
+                border-radius: 8px;
+                font-weight: 500;
+            }
+
+            .profile-icon {
+                height: 32px;
+            }
+
+            /* Slider Section */
+            .sliders-section {
+                margin-bottom: 0rem;
+            }
+
+            .slider-container {
+                background: white;
+                padding: 1rem;
+                border-radius: 8px;
+                border: 1px solid var(--border-color);
+                margin-bottom: 0.75rem;
+            }
+
+            
+            .slider-container label {
+                display: flex;
+                align-items: center;
+                color: var(--text-primary);
+                font-weight: 500;
+                margin-bottom: 0.5rem;
+                font-size: 0.9rem;
+            }
+
+            .slider-icon {
+                height: 16px;
+                margin-right: 0.5rem;
+            }
+
+            input[type="range"] {
+                width: 100%;
+                height: 6px;
+                border-radius: 3px;
+                background: var(--border-color);
+                outline: none;
+                -webkit-appearance: none;
+                margin: 0.5rem 0;
+            }
+
+            input[type="range"]::-webkit-slider-runnable-track {
+                background: linear-gradient(to right, 
+                    var(--primary-color) 0%, 
+                    var(--primary-color) var(--slider-progress, 0%), 
+                    var(--border-color) var(--slider-progress, 0%));
+                height: 8px;
+                border-radius: 4px;
+            }
+
+            input[type="range"]::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                width: 16px;
+                height: 16px;
+                border-radius: 50%;
+                background: var(--primary-color);
+                cursor: pointer;
+                border: 2px solid white;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+                margin-top: -5px;
+            }
+
+            .slider-value {
+                display: block;
+                text-align: right;
+                color: var(--primary-dark);
+                font-weight: 600;
+                font-size: 0.9rem;
+                margin-top: 0.25rem;
+            }
+
+
+
+            .slider-container:last-child {
+                margin-bottom: 0;
+            }
+
+            /* Input Section */
+            .input-controls {
+                display: grid;
+                grid-template-columns: 2fr 1fr; /* 2/3 for sliders, 1/3 for other inputs */
+                gap: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+            .inputs-section {
+                display: flex;
+                flex-direction: column;
+                gap: 0.75rem;
+                margin-bottom: 0;
+            }
+
+            .input-group {
+                flex: 1;
+                background: white;
+                padding: 1rem;
+                border-radius: 8px;
+                border: 1px solid var(--border-color);
+                box-shadow: 0 2px 4px rgba(230, 164, 180, 0.1);
+            }
+
+            .input-group label {
+                display: block;
+                color: var(--text-primary);
+                margin-bottom: 0.5rem;
+                font-weight: 500;
+                font-size: 0.9rem;
+            }
+
+            select,
+            input[type="number"] {
+                width: 100%;
+                padding: 0.5rem;
+                border: 2px solid var(--border-color);
+                border-radius: 6px;
+                font-size: 0.9rem;
+                color: var(--text-primary);
+                background: white;
+                transition: all 0.2s ease;
+            }
+
+            select:focus,
+            input[type="number"]:focus {
+                border-color: var(--primary-color);
+                outline: none;
+                box-shadow: 0 0 0 3px var(--border-color);
+            }
+
+            select {
+                appearance: none;
+                padding-right: 2rem;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23846067' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+                background-repeat: no-repeat;
+                background-position: right 0.75rem center;
+                background-size: 1rem;
+            }
+
+            input[type="number"]::-webkit-outer-spin-button,
+            input[type="number"]::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+
+            input[type="number"] {
+                -moz-appearance: textfield;
+            }
+
+            /* Buckets Section */
+            
+
+            .bucket-container {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .bucket-container h3 {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5rem;
+                margin-bottom: 1rem;
+                font-size: 1.1rem;
+                color: var(--text-primary);
+                text-align: center;
+            }
+
+            .bucket {
+                position: relative;
+                height: 250px;
+                margin: 0 auto;
+                max-width: 300px;
+                background: white;
+                border: 2px solid var(--primary-color);
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 2px 4px rgba(230, 164, 180, 0.15);
+            }
+
+            .bucket-icon {
+                height: 24px;
+                margin-right: 0.5rem;
+            }
+
+            .buckets-section {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 2rem;
+                margin: 2rem 0;
+                position: relative;
+            }
+
+            .eggs-container {
+                display: flex;
+                justify-content: center;
+                gap: 40px;
+                margin-bottom: 20px;
+                z-index: 2;
+                width: 100%;
+            }
+
+            .egg-container {
+                flex: 1;
+                max-width: 300px;
+                text-align: center;
+            }
+
+            .egg-container h3 {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5rem;
+                margin-bottom: 1rem;
+                font-size: 1.1rem;
+                color: var(--text-primary);
+                text-align: center;
+            }
+
+            .egg {
+                position: relative;
+                width: 240px;
+                height: 320px;
+                margin: 0 auto;
+                background: white;
+                border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+                border: 2px solid var(--primary-color);
+                overflow: hidden;
+                box-shadow: 0 2px 4px rgba(230, 164, 180, 0.15);
+            }
+
+            .fill-level {
+                position: absolute;
+                bottom: 0;
+                width: 100%;
+                background: var(--primary-color);
+                transition: height 0.3s ease;
+                opacity: 0.8;
+                z-index: 1;
+            }
+
+            .employer-fill-level {
+                position: absolute;
+                bottom: 0;
+                width: 100%;
+                background: var(--employer-fill);
+                transition: height 0.3s ease;
+                opacity: 0.9;
+                z-index: 2;
+            }
+
+            .nest {
+                width: 90%;
+                height: 50px;
+                position: relative;
+                margin-top: -20px;
+                max-width: 1000px;
+            }
+
+            .nest-front {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(45deg, var(--text-primary), var(--text-secondary));
+                border-radius: 50% 50% 50% 50% / 0% 0% 100% 100%;
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                overflow: hidden;
+            }
+
+            .twigs {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background: repeating-linear-gradient(
+                    45deg,
+                    var(--text-primary),
+                    var(--text-primary) 10px,
+                    var(--text-secondary) 10px,
+                    var(--text-secondary) 20px
+                );
+                opacity: 0.7;
+            }
+
+            /* Keep all other styles the same but update these classes */
+            .bucket-label {
+                position: absolute;
+                bottom: 0;           /* Position from bottom of container */
+                left: 50%;
+                transform: translateX(-50%);
+                color: var(--text-primary);
+                font-weight: 600;
+                z-index: 3;
+                padding: 0.25rem 0.75rem;
+                border-radius: 4px;
+                white-space: nowrap;
+                font-size: 1.1rem;   /* Make text larger */
+            }
+            
+
+            .bucket-amount {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                color: var(--text-primary);
+                font-weight: 600;
+                z-index: 3;
+                background: rgba(255, 255, 255, 0.9);
+                padding: 0.25rem 0.75rem;
+                border-radius: 4px;
+                white-space: nowrap;
+            }
+
+            .employer-amount {
+                position: absolute;
+                top: 65%;
+                left: 50%;
+                transform: translateX(-50%);
+                color: var(--text-primary);
+                font-weight: 500;
+                z-index: 3;
+                background: rgba(255, 255, 255, 0.9);
+                padding: 0.25rem 0.75rem;
+                border-radius: 4px;
+                white-space: nowrap;
+            }
+
+            /* Results Section */
+            .results-section {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.5rem;
+                margin-top: 2rem;
+                background: var(--accent-color);
+                padding: 1.5rem;
+                border-radius: 8px;
+            }
+
+            .result-box {
+                background: white;
+                padding: 1.5rem;
+                border-radius: 8px;
+                border: 1px solid var(--border-color);
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                min-height: 120px;
+            }
+
+            .result-box h3 {
+                color: var(--text-secondary);
+                font-size: 0.875rem;
+                margin: 0 0 0.75rem 0;
+                line-height: 1.4;
+            }
+
+            .result-box span {
+                display: block;
+                color: var(--primary-dark);
+                font-size: 1.25rem;
+                font-weight: 600;
+                margin-top: auto;
+            }
+
+            /* Contribution type indicators */
+            .contribution-type {
+                position: absolute;
+                top: 0.5rem;
+                right: 0.5rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                z-index: 3;
+                background: rgba(255, 255, 255, 0.95);
+                padding: 0.5rem;
+                border-radius: 4px;
+                font-size: 0.75rem;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            .contribution-label {
+                display: flex;
+                align-items: center;
+                gap: 0.25rem;
+            }
+
+            .contribution-dot {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+            }
+
+            .contribution-dot.individual {
+                background-color: var(--primary-color);
+            }
+
+            .contribution-dot.employer {
+                background-color: var(--employer-fill);
+            }
+
+            /* Info icon */
+            .info-icon {
+                height: 16px;
+                margin-left: 0.5rem;
+                cursor: help;
+                opacity: 0.7;
+                transition: opacity 0.2s ease;
+            }
+
+            .info-icon:hover {
+                opacity: 1;
+            }
+
+            /* Responsive Design */
+            @media (max-width: 768px) {
+                body {
+                    padding: 1rem;
+                }
+
+                .container {
+                    padding: 1rem;
+                }
+
+                .header {
+                    flex-direction: column;
+                    text-align: center;
+                    gap: 1rem;
+                }
+                
+                .header-left {
+                    flex-direction: column;
+                    text-align: center;
+                }
+
+                .profile-section {
+                    width: 100%;
+                    justify-content: center;
+                }
+
+                .inputs-section,
+                .buckets-section,
+                .results-section {
+                    flex-direction: column;
+                    grid-template-columns: 1fr;
+                }
+
+                .bucket-container {
+                    margin-bottom: 2rem;
+                }
+
+                .bucket {
+                    max-width: none;
+                }
+                .input-controls {
+                    grid-template-columns: 1fr;
+                    gap: 1rem;
+                }
+                
+                .inputs-section {
+                    flex-direction: row;
+                    gap: 1rem;
+                }
+                
+                .input-group {
+                    flex: 1;
+                }
+                .eggs-container {
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 2rem;
+                }
+
+                .egg-container {
+                    width: 100%;
+                    max-width: none;
+                }
+
+                .egg {
+                    margin: 0 auto;
+                }
+
+                .nest {
+                    width: 100%;
+                    margin-top: -20px;
+                }
+            }
+            
+
+    </style>
+</head>
+<body>
+      <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <img src="uchealth_logo.png" alt="Company Logo" class="company-logo">
+                <h1 class="title" style="text-align: center;">
+                    <!-- <img src="blogo.png" alt="Benefits Icon" class="benefit-icon"> -->
+                    Retirement Benefits Portal
+                </h1>
+            </div>
+            <div class="profile-section">
+                <img src="blogo.png" alt="Profile" class="profile-icon">
+                <span>Welcome, [Employee Name]</span>
+            </div>
+        </div>
+
+        <div class="calculator-grid">
+            <!-- Sliders Section -->
+            <!-- Replace the existing sliders and inputs sections with this -->
+            <div class="input-controls">
+                <!-- Sliders Section -->
+                <div class="sliders-section">
+                    <div class="slider-container">
+                        <label for="annual-salary">
+                            <!-- <img src="slider-icons/salary.png" alt="Salary" class="slider-icon"> -->
+                            Annual salary
+                        </label>
+                        <input type="range" id="annual-salary" min="0" max="600000" step="1000" value="85000">
+                        <span class="slider-value" id="annual-salary-value">$0</span>
+                    </div>
+
+                    <div class="slider-container">
+                        <label for="monthly-savings">
+                            <!-- <img src="slider-icons/savings.png" alt="Savings" class="slider-icon"> -->
+                            Savings/month
+                        </label>
+                        <input type="range" id="monthly-savings" min="0" max="10000" step="100" value="300">
+                        <span class="slider-value" id="monthly-savings-value">$0</span>
+                    </div>
+                </div>
+
+                <!-- Input Boxes Section -->
+                <div class="inputs-section">
+                    <div class="input-group">
+                        <label for="years-employed">Years employed</label>
+                        <select id="years-employed">
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5+</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="age">Age</label>
+                        <input type="number" id="age" min="18" max="100" value="30">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Savings Buckets Section -->
+            <div class="buckets-section">
+                <div class="eggs-container">
+                    <div class="egg-container">
+                        <h3>
+                            403B Savings this year
+                            <!-- <img src="info.png" alt="Info" class="info-icon" title="Includes both your contributions and employer match"> -->
+                        </h3>
+                        <div class="egg" id="403b-bucket">
+                            <div class="contribution-type">
+                                <div class="contribution-label">
+                                    <span class="contribution-dot individual"></span>
+                                    Your Contribution
+                                </div>
+                                <div class="contribution-label">
+                                    <span class="contribution-dot employer"></span>
+                                    Employer Match
+                                </div>
+                            </div>
+                            <div class="fill-level" id="403b-fill"></div>
+                            <div class="employer-fill-level" id="403b-employer-fill"></div>
+                            <span class="bucket-label" id="403b-label">Traditional</span>
+                            <span class="bucket-amount" id="403b-amount">$0</span>
+                            <span class="employer-amount" id="403b-employer-amount">$0</span>
+                        </div>
+                    </div>
+
+                    <div class="egg-container">
+                        <h3>IRA Savings this year</h3>
+                        <div class="egg" id="ira-bucket">
+                            <div class="fill-level" id="ira-fill"></div>
+                            <span class="bucket-label" id="ira-label">Roth</span>
+                            <span class="bucket-amount" id="ira-amount">$0</span>
+                        </div>
+                    </div>
+
+                    <div class="egg-container">
+                        <h3>Renest Savings this year</h3>
+                        <div class="egg" id="renest-bucket">
+                            <div class="fill-level" id="renest-fill"></div>
+                            <span class="bucket-label" id="renest-label">Renest</span>
+                            <span class="bucket-amount" id="renest-amount">$0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="nest">
+                    <div class="nest-front">
+                        <div class="twigs"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section">
+                <div class="result-box card">
+                    <h3>Retirement savings created this year:</h3>
+                    <span id="retirement-savings">$0</span>
+                </div>
+
+                <div class="result-box card">
+                    <h3>Non optimized leads to possible retirement age losses of:</h3>
+                    <span id="retirement-losses">$0</span>
+                </div>
+
+                <div class="result-box card">
+                    <h3>Without Renest you would have less dollars:</h3>
+                    <span id="renest-difference">$0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+       // Financial Constants
+        const MAXIMUM_EMPLOYER_MATCH_RATE = 4; // Maximum Employer Match Rate as percentage of salary
+        const ANNUAL_VESTING_AMOUNT = 20; // Annual vesting amount, after year 5 vesting is 100%
+        let IRA_CONTRIBUTION_LIMIT = 7000; // IRA Contribution limit
+        const RENEST_GUARANTEED_SAVINGS_RATE = 0.03; // Renest guaranteed savings rate
+        const RETIREMENT_AGE = 65; // Retirement Age
+        const MAX_403B_CONTRIBUTION = 23500; // Maximum individual 403b contribution
+        const MAX_403B_TOTAL = 47000; // Maximum total 403b contribution (including employer match)
+        const MAX_RENEST_CONTRIBUTION_COMPANY = 210; // Maximum Renest contribution when company contributing
+        const MAX_RENEST_CONTRIBUTION_INDIVIDUAL = 90000; // Maximum Renest contribution when individual contributing
+
+        // Tax and Growth Constants
+        const INFLATION_RATE = 0.03; // Inflation rate
+        const MARKET_GROWTH_RATE = 0.07; // Market growth rate
+        const UNUSED_CONTRIBUTION_RATE = 0.03; // Percentage of unused contribution that goes to the nest
+        const TAX_RATE = 0.20; // Tax rate for brokerage capital gains
+        const DIVIDEND_RATE = 0.015; // Dividend tax rate
+
+        // Income Limits
+        const ROTH_IRA_SINGLE_LIMIT = 153000; // Phase-out starts at $138,000
+        const TRAD_IRA_DEDUCT_LIMIT = 83000; // Full deduction limit for workplace retirement plan participants
+
+        const ANIMATION_DURATION = 300; // milliseconds for animations
+        const UPDATE_INTERVAL = 100; // milliseconds for animation updates
+
+        class RetirementCalculator {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.annualSalary = 0;
+                this.monthlySavings = 0;
+                this.yearsEmployed = 0;
+                this.age = 30;
+                this.results = {
+                    as403b: 0,
+                    eas403b: 0,
+                    asIra: 0,
+                    arhs: 0,
+                    al403b: 'Traditional',
+                    alIra: 'Roth',
+                    svc403b: 0,
+                    svcIra: 0,
+                    svcr: 0,
+                    noptLoss: 0,
+                    renestDifference: 0
+                };
+            }
+
+
+            determineAccountTypes() {
+                if (this.annualSalary <= TRAD_IRA_DEDUCT_LIMIT) {
+                    if (this.age <= 30) {
+                        this.results.alIra = "Roth";
+                        this.results.al403b = "Roth";
+                    } else {
+                        this.results.alIra = "Traditional";
+                        this.results.al403b = "Traditional";
+                    }
+                } else if (this.annualSalary <= 100000) {
+                    if (this.age <= 30) {
+                        this.results.alIra = "Roth";
+                        this.results.al403b = "Roth";
+                    } else {
+                        this.results.alIra = "Traditional";
+                        this.results.al403b = "Traditional";
+                    }
+                } else if (this.annualSalary <= ROTH_IRA_SINGLE_LIMIT) {
+                    this.results.alIra = "Roth";
+                    this.results.al403b = "Traditional";
+                } else {
+                    this.results.alIra = "Backdoor Roth";
+                    this.results.al403b = "Traditional";
+                }
+            }
+
+            calculateEmployerMatch() {
+                const maxMatch = this.annualSalary * (MAXIMUM_EMPLOYER_MATCH_RATE / 100);
+                const vestingPercentage = Math.min(this.yearsEmployed * ANNUAL_VESTING_AMOUNT, 100);
+                const potentialMatch = Math.min(this.results.as403b, maxMatch) * (vestingPercentage / 100);
+                const availableForMatch = MAX_403B_TOTAL - this.results.as403b;
+                return Math.min(potentialMatch, availableForMatch);
+            }
+
+            calculateSavingsValues() {
+                const yearsToRetirement = RETIREMENT_AGE - this.age;
+                const growthFactor = Math.pow(1 + MARKET_GROWTH_RATE + DIVIDEND_RATE, yearsToRetirement);
+
+                // Calculate future values
+                this.results.svc403b = (this.results.as403b + this.results.eas403b) * growthFactor;
+                this.results.svcIra = this.results.asIra * growthFactor;
+                this.results.svcr = this.results.arhs * growthFactor;
+                
+                // Calculate non-optimized losses (20% of total retirement value)
+                const totalRetirementValue = this.results.svc403b + this.results.svcIra + this.results.svcr;
+                this.results.noptLoss = 0.2 * totalRetirementValue;
+                
+                if (this.results.asIra<=7000) {
+                    const withoutRenestGrowth = 0;
+                    const withoutRenestValue = 0;//this.results.arhs * withoutRenestGrowth * (1 - TAX_RATE) / (1- RENEST_GUARANTEED_SAVINGS_RATE);
+                    this.results.renestDifference = this.results.svcr - withoutRenestValue;
+                } else {
+                    const withoutRenestGrowth = Math.pow(1 + MARKET_GROWTH_RATE + DIVIDEND_RATE * (1 - TAX_RATE), yearsToRetirement);
+                    const withoutRenestValue = this.results.arhs * withoutRenestGrowth * (1 - TAX_RATE) / (1- RENEST_GUARANTEED_SAVINGS_RATE);
+                    this.results.renestDifference = this.results.svcr - withoutRenestValue;
+                }
+                // Calculate Renest difference
+                
+            }
+
+            calculate() {
+                const max403bAllowed = Math.min(MAX_403B_CONTRIBUTION, this.annualSalary);
+                if (this.yearsEmployed === 0) {
+                    this.yearsEmployed = 1;
+                }
+
+                if (this.annualSalary<=7000) {
+                    IRA_CONTRIBUTION_LIMIT = this.annualSalary;
+                }
+
+                this.totalSavings = this.monthlySavings * 12;
+                this.determineAccountTypes();
+                
+                // Calculate 403b contribution
+                if (this.totalSavings <= max403bAllowed) {
+                    this.results.as403b = this.totalSavings;
+                    this.results.asIra = 0;
+                    this.results.arhs = IRA_CONTRIBUTION_LIMIT * RENEST_GUARANTEED_SAVINGS_RATE;
+                } else {
+                    this.results.as403b = max403bAllowed;
+                    const remainingAfter403b = this.totalSavings - max403bAllowed;
+                    
+                    if (remainingAfter403b <= IRA_CONTRIBUTION_LIMIT) {
+                        this.results.asIra = remainingAfter403b;
+                        this.results.arhs = (IRA_CONTRIBUTION_LIMIT - remainingAfter403b) * RENEST_GUARANTEED_SAVINGS_RATE;
+                    } else {
+                        this.results.asIra = IRA_CONTRIBUTION_LIMIT;
+                        this.results.arhs = (remainingAfter403b - IRA_CONTRIBUTION_LIMIT) * (1 - RENEST_GUARANTEED_SAVINGS_RATE);
+                    }
+                }
+
+                // Calculate employer match
+                this.results.eas403b = this.calculateEmployerMatch();
+                
+                // Calculate final values
+                this.calculateSavingsValues();
+                
+                return this.results;
+            }
+        }
+
+        // Results section display update function
+
+    // Fixed bucket fills function
+    function updateBucketFills(results) {
+        const total403bMax = MAX_403B_TOTAL;
+        const individual403bFill = (results.as403b / total403bMax) * 100;
+        const employer403bFill = (results.eas403b / total403bMax) * 100;
+        
+        // Animate fills
+        const fill403b = document.getElementById('403b-fill');
+        const employerFill403b = document.getElementById('403b-employer-fill');
+        const fillIra = document.getElementById('ira-fill');
+        const fillRenest = document.getElementById('renest-fill');
+        
+        // Set initial heights if not set
+        if (!fill403b.style.height) fill403b.style.height = '0%';
+        if (!employerFill403b.style.height) employerFill403b.style.height = '0%';
+        if (!fillIra.style.height) fillIra.style.height = '0%';
+        if (!fillRenest.style.height) fillRenest.style.height = '0%';
+        
+        // Update fills
+        fill403b.style.height = `${individual403bFill}%`;
+        employerFill403b.style.height = `${employer403bFill}%`;
+        fillIra.style.height = `${(results.asIra / IRA_CONTRIBUTION_LIMIT) * 100}%`;
+        fillRenest.style.height = `${(results.arhs / MAX_RENEST_CONTRIBUTION_INDIVIDUAL) * 100}%`;
+    }
+
+    // Animation helper
+    function animateBucketFill(elementId, targetPercentage) {
+        const element = document.getElementById(elementId);
+        if (!element) return;
+        
+        const start = parseFloat(element.style.height) || 0;
+        const end = Math.min(targetPercentage, 100);
+        const duration = ANIMATION_DURATION;
+        const startTime = performance.now();
+        
+        function update(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            const currentHeight = start + (end - start) * progress;
+            element.style.height = `${currentHeight}%`;
+            
+            if (progress < 1) {
+                requestAnimationFrame(update);
+            }
+        }
+        
+        requestAnimationFrame(update);
+    }
+
+        // Create calculator instance
+        const calculator = new RetirementCalculator();
+    </script>
+    
+    <script>
+        // UI Elements
+        const annualSalarySlider = document.getElementById('annual-salary');
+        const monthlySavingsSlider = document.getElementById('monthly-savings');
+        const yearsEmployedSelect = document.getElementById('years-employed');
+        const ageInput = document.getElementById('age');
+
+        // Value displays
+        const annualSalaryValue = document.getElementById('annual-salary-value');
+        const monthlySavingsValue = document.getElementById('monthly-savings-value');
+
+        // Bucket elements
+        const bucket403b = document.getElementById('403b-bucket');
+        const bucketIra = document.getElementById('ira-bucket');
+        const bucketRenest = document.getElementById('renest-bucket');
+
+        // Format currency
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
+        // Update slider fill
+        function updateSliderFill(slider) {
+            const value = (slider.value - slider.min) / (slider.max - slider.min) * 100;
+            slider.style.setProperty('--slider-progress', `${value}%`);
+        }
+
+        // Update displays
+        function updateDisplays() {
+            // Update slider values and fills
+            annualSalaryValue.textContent = formatCurrency(annualSalarySlider.value);
+            monthlySavingsValue.textContent = formatCurrency(monthlySavingsSlider.value);
+            updateSliderFill(annualSalarySlider);
+            updateSliderFill(monthlySavingsSlider);
+            
+            // Update calculator with new values
+            calculator.annualSalary = Number(annualSalarySlider.value);
+            calculator.monthlySavings = Number(monthlySavingsSlider.value);
+            calculator.yearsEmployed = Number(yearsEmployedSelect.value);
+            calculator.age = Number(ageInput.value);
+            
+            // Calculate new results
+            const results = calculator.calculate();
+            
+            // Update 403b bucket
+            document.getElementById('403b-label').textContent = results.al403b;
+            document.getElementById('403b-amount').textContent = formatCurrency(results.as403b);
+            document.getElementById('403b-employer-amount').textContent = 
+                `Employer Match: ${formatCurrency(results.eas403b)}`;
+            
+            // Update IRA bucket
+            document.getElementById('ira-label').textContent = results.alIra;
+            document.getElementById('ira-amount').textContent = formatCurrency(results.asIra);
+            
+            // Always show Renest bucket with current balance
+            document.getElementById('renest-amount').textContent = formatCurrency(results.arhs);
+            document.getElementById('renest-bucket').style.display = 'block';
+            
+            // Update results section values
+            document.getElementById('retirement-savings').textContent = 
+                formatCurrency(results.svc403b+results.svcIra+results.svcr);
+            document.getElementById('retirement-losses').textContent = 
+                formatCurrency(results.noptLoss);
+            document.getElementById('renest-difference').textContent = 
+                formatCurrency(results.renestDifference);
+            
+            // Update bucket fills
+            updateBucketFills(results);
+            
+            // Update Renest bucket styling
+            if (results.arhs > 0) {
+                bucketRenest.classList.toggle('renest-contributing', 
+                    annualSavings <= MAX_403B_CONTRIBUTION || 
+                    (annualSavings - MAX_403B_CONTRIBUTION <= IRA_CONTRIBUTION_LIMIT)
+                );
+                bucketRenest.classList.toggle('individual-contributing',
+                    !(annualSavings <= MAX_403B_CONTRIBUTION || 
+                    (annualSavings - MAX_403B_CONTRIBUTION <= IRA_CONTRIBUTION_LIMIT))
+                );
+            }
+        }
+
+        // Debounce function
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Debounced update function
+        const debouncedUpdate = debounce(updateDisplays, 50); // 50ms delay
+
+        // Event listeners
+        annualSalarySlider.addEventListener('input', debouncedUpdate);
+        monthlySavingsSlider.addEventListener('input', debouncedUpdate);
+        yearsEmployedSelect.addEventListener('change', updateDisplays);
+        ageInput.addEventListener('input', updateDisplays);
+
+        // Initialize sliders
+
+        // Initialize sliders
+        [annualSalarySlider, monthlySavingsSlider].forEach(slider => {
+            updateSliderFill(slider);
+        });
+
+        // Initial update
+        document.addEventListener('DOMContentLoaded', updateDisplays);
+    </script>
+    
+    <script>
+        function updateBucketFills(results) {
+            // Calculate 403b fill percentages relative to total max
+            const total403bMax = MAX_403B_TOTAL;
+            const individual403bFill = (results.as403b / total403bMax) * 100;
+            const employer403bFill = (results.eas403b / total403bMax) * 100;
+            const total403bFill = individual403bFill + employer403bFill;
+            
+            // Calculate IRA fill percentage
+            const fillIra = (results.asIra / IRA_CONTRIBUTION_LIMIT) * 100;
+            
+            // Calculate Renest fill percentage based on who's contributing
+            const renestMax = calculator.totalSavings <= MAX_403B_CONTRIBUTION || 
+                             (calculator.totalSavings - MAX_403B_CONTRIBUTION <= IRA_CONTRIBUTION_LIMIT) 
+                             ? MAX_RENEST_CONTRIBUTION_COMPANY 
+                             : MAX_RENEST_CONTRIBUTION_INDIVIDUAL;
+            const fillRenest = (results.arhs / renestMax) * 100;
+
+            // Animate the fill levels
+            animateBucketFill('403b-fill', individual403bFill);
+            animateBucketFill('403b-employer-fill', total403bFill);
+            animateBucketFill('ira-fill', fillIra);
+            animateBucketFill('renest-fill', fillRenest);
+        }
+
+        function animateBucketFill(elementId, targetPercentage) {
+            const fillElement = document.getElementById(elementId);
+            const currentHeight = parseFloat(fillElement.style.height || '0');
+            const targetHeight = Math.min(targetPercentage, 100); // Cap at 100%
+            
+            // Calculate steps for smooth animation
+            const steps = ANIMATION_DURATION / UPDATE_INTERVAL;
+            const increment = (targetHeight - currentHeight) / steps;
+            let currentStep = 0;
+            
+            const animation = setInterval(() => {
+                currentStep++;
+                const newHeight = currentHeight + (increment * currentStep);
+                
+                if (currentStep >= steps) {
+                    clearInterval(animation);
+                    fillElement.style.height = `${targetHeight}%`;
+                } else {
+                    fillElement.style.height = `${newHeight}%`;
+                }
+            }, UPDATE_INTERVAL);
+        }
+
+        // Function to update bucket maximums in the UI
+        function updateBucketMaximums() {
+            const renestBucket = document.getElementById('renest-bucket');
+            const isCompanyContributing = calculator.totalSavings <= MAX_403B_CONTRIBUTION || 
+                                         (calculator.totalSavings - MAX_403B_CONTRIBUTION <= IRA_CONTRIBUTION_LIMIT);
+            
+            // Update max amount display
+            document.getElementById('403b-max').textContent = `Max: ${formatCurrency(MAX_403B_TOTAL)}`;
+            document.getElementById('ira-max').textContent = `Max: ${formatCurrency(IRA_CONTRIBUTION_LIMIT)}`;
+            document.getElementById('renest-max').textContent = `Max: ${formatCurrency(
+                isCompanyContributing ? MAX_RENEST_CONTRIBUTION_COMPANY : MAX_RENEST_CONTRIBUTION_INDIVIDUAL
+            )}`;
+        }
+    </script>
+</body>
+</html>
