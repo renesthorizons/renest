@@ -33,6 +33,7 @@
                 color: var(--text-primary);
                 line-height: 1.5;
             }
+
             .calculator-grid {
                 padding:0rem;
                 gap:0rem;
@@ -52,6 +53,11 @@
                 align-items: center;
                 white-space: nowrap;
                 font-size: 0.9rem;
+                padding: 0.375rem 0.75rem;    /* Adjusted padding */
+                font-size: 0.875rem;          /* Slightly smaller font */
+                min-height: 32px;             /* Fixed height */
+                display: flex;
+                align-items: center;
             }
 
             .exit-button:hover {
@@ -96,23 +102,37 @@
                 color: var(--primary-dark);
                 font-size: 1.75rem;
                 font-weight: 600;
-                margin: 0;
                 display: flex;
                 align-items: center;
+                position: absolute;
+                left: 50%;
+                transform: translateX(-80%);
+                margin: 0;
             }
 
             .profile-section {
                 display: flex;
                 align-items: center;
-                gap: 1rem;
-                padding: 0.75rem 1.5rem;
+                justify-content: flex-start;  /* Changed from space-between */
+                padding: 0.5rem 1rem;         /* Reduced padding */
                 background: var(--accent-color);
                 border-radius: 8px;
-                font-weight: 500;
+                gap: 1rem;                    /* Added consistent gap */
             }
 
             .profile-icon {
-                height: 32px;
+                width: 32px;                  /* Increased width */
+                height: 32px;                 /* Increased height */
+                display: block;               /* Prevent any extra space */
+                object-fit: contain;          /* Ensure image scales properly */
+            }
+
+
+            .profile-container {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;                 /* Slightly reduced gap */
+                flex: 1;                      /* Allow container to take available space */
             }
 
             /* Slider Section */
@@ -381,8 +401,13 @@
                 border-radius: 50% 50% 50% 50% / 0% 0% 100% 100%;
                 display: flex;
                 justify-content: center;
-                align-items: flex-start;
+                align-items: center;
                 overflow: hidden;
+                color: white;
+                font-weight: 500;
+                font-size: 1rem;
+                text-align: center;
+                z-index: 5;
             }
 
             .twigs {
@@ -491,7 +516,7 @@
                 position: absolute;
                 right: 1rem;
                 top: 50%;
-                transform: translateY(-50%);
+                transform: translateY(-150%);
                 display: flex;
                 flex-direction: column;
                 gap: 0.5rem;
@@ -642,7 +667,7 @@
             <div class="profile-section">
                 <div class="profile-container">
                     <img src="blogo.png" alt="Profile" class="profile-icon">
-                    <span>Welcome, [Employee Name]</span>
+                    <span>Welcome, [Employee]</span>
                 </div>
                 <a href="index.html" class="exit-button">
                     Exit
@@ -661,16 +686,16 @@
                             <!-- <img src="slider-icons/salary.png" alt="Salary" class="slider-icon"> -->
                             Annual salary
                         </label>
-                        <input type="range" id="annual-salary" min="0" max="600000" step="1000" value="85000">
+                        <input type="range" id="annual-salary" min="0" max="1000000" step="1000" value="85000">
                         <span class="slider-value" id="annual-salary-value">$0</span>
                     </div>
 
                     <div class="slider-container">
                         <label for="monthly-savings">
                             <!-- <img src="slider-icons/savings.png" alt="Savings" class="slider-icon"> -->
-                            Savings/month
+                            Retirement Savings / month
                         </label>
-                        <input type="range" id="monthly-savings" min="0" max="10000" step="100" value="300">
+                        <input type="range" id="monthly-savings" min="0" max="20000" step="100" value="300">
                         <span class="slider-value" id="monthly-savings-value">$0</span>
                     </div>
                 </div>
@@ -722,7 +747,7 @@
                 <div class="eggs-container">
                     <div class="egg-container">
                         <h3>
-                            403B Savings this year
+                            403B Contributions
                             <!-- <img src="info.png" alt="Info" class="info-icon" title="Includes both your contributions and employer match"> -->
                         </h3>
                         <div class="egg" id="403b-bucket">
@@ -745,7 +770,7 @@
                     </div>
 
                     <div class="egg-container">
-                        <h3>IRA Savings this year</h3>
+                        <h3>IRA Contributions</h3>
                         <div class="egg" id="ira-bucket">
                             <div class="fill-level" id="ira-fill"></div>
                             <span class="bucket-label" id="ira-label">Roth</span>
@@ -754,7 +779,7 @@
                     </div>
 
                     <div class="egg-container">
-                        <h3>Renest Savings this year</h3>
+                        <h3>Renest Tax-Optimized Account</h3>
                         <div class="egg" id="renest-bucket">
                             <div class="fill-level" id="renest-fill"></div>
                             <span class="bucket-label" id="renest-label">Renest</span>
@@ -766,6 +791,7 @@
                 <div class="nest">
                     <div class="nest-front">
                         <div class="twigs"></div>
+                        <span style="position: absolute; color: white; font-weight: 500; font-size: 1rem; z-index: 10; text-align: center; width: 30%; top: 50%; transform: translateY(-50%); background-color: rgba(132, 96, 103, 0.9); padding: 8px 16px; border-radius: 4px;">How to Optimize Your Savings</span>
                     </div>
                 </div>
             </div>
@@ -773,17 +799,17 @@
             <!-- Results Section -->
             <div class="results-section">
                 <div class="result-box">
-                    <h3>Total Retirement Savings This Year:</h3>
+                    <h3>Total Retirement Savings Created This Year:</h3>
                     <span id="retirement-savings">$0</span>
                 </div>
 
                 <div class="result-box">
-                    <h3>Wrong Accounts May Slow Growth by:</h3>
+                    <h3>Unoptimized Contributions May Slow Growth by:</h3>
                     <span id="retirement-losses">$0</span>
                 </div>
 
                 <div class="result-box">
-                    <h3>Renest Increase Your Retirement by:</h3>
+                    <h3>Renest Increases Your Retirement by:</h3>
                     <span id="renest-difference" style="color: var(--renest-green);">$0</span>
                 </div>
             </div>
@@ -1027,6 +1053,16 @@
             }).format(amount);
         }
 
+        // Format currency with k/M for results section
+        function formatResultCurrency(amount) {
+            if (Math.abs(amount) >= 1000000) {
+                return '$' + Math.round(amount / 1000000) + 'M';
+            } else if (Math.abs(amount) >= 1000) {
+                return '$' + Math.round(amount / 1000) + 'k';
+            }
+            return '$' + Math.round(amount);
+        }
+
         // Update slider fill
         function updateSliderFill(slider) {
             const value = (slider.value - slider.min) / (slider.max - slider.min) * 100;
@@ -1083,11 +1119,11 @@
             
             // Update results section values
             document.getElementById('retirement-savings').textContent = 
-                formatCurrency(results.svc403b+results.svcIra+results.svcr);
+                formatResultCurrency(results.svc403b+results.svcIra+results.svcr);
             document.getElementById('retirement-losses').textContent = 
-                formatCurrency(results.noptLoss);
+                formatResultCurrency(results.noptLoss);
             document.getElementById('renest-difference').textContent = 
-                formatCurrency(results.renestDifference);
+                formatResultCurrency(results.renestDifference);
             
             // Update bucket fills
             updateBucketFills(results);
