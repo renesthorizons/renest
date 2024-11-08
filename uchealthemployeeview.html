@@ -344,6 +344,53 @@
                 text-align: center;
                 margin-top: 0rem;
             }
+            .contribution-button {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: var(--primary-color);
+                color: white;
+                padding: clamp(0.5rem, 1.5vw, 1rem) clamp(1rem, 2vw, 2rem);
+                border-radius: 6px;
+                font-weight: 500;
+                cursor: pointer;
+                opacity: 0;
+                transition: all 0.3s ease;
+                z-index: 10;
+                border: none;
+                /* Responsive font size using the existing custom property */
+                font-size: var(--fs-md);
+                /* Responsive width and height using clamp */
+                width: clamp(120px, 10vw, 130px);
+                height: clamp(36px, 5vw, 56px);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .contribution-button img {
+                display: none;
+                width: clamp(30px, 2.5vw, 40px);
+                height: clamp(22px, 1.8vw, 32px);
+                position: absolute;
+            }
+
+            .egg-container:hover .contribution-button {
+                opacity: 1;
+            }
+
+            .contribution-button:hover span {
+                display: none;
+            }
+
+            .contribution-button:hover img {
+                display: block;
+            }
+
+            .contribution-button:hover {
+                background-color: var(--primary-dark);
+            }
 
             .egg-container h3 {
                 display: flex;
@@ -362,12 +409,25 @@
                 width: 240px;
                 height: 320px;
                 margin: 0 auto;
-                background: white;
+                background: linear-gradient(145deg, #ffffff 0%, #f8f8f8 100%);
                 border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
                 border: 2px solid var(--primary-color);
                 overflow: hidden;
-                box-shadow: 0 2px 4px rgba(230, 164, 180, 0.15);
-
+                box-shadow: 
+                    inset -15px -15px 25px rgba(0,0,0,0.05),
+                    inset 15px 15px 25px rgba(255,255,255,0.8),
+                    5px 5px 15px rgba(0,0,0,0.05);
+                transform-style: preserve-3d;
+                perspective: 1000px;
+            }
+            .egg::before {
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(145deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 60%);
+                border-radius: inherit;
+                z-index: 4;
             }
 
             .fill-level {
@@ -388,6 +448,14 @@
                 transition: height 0.3s ease;
                 opacity: 0.5;
                 z-index: 2;
+            }
+            .egg:hover {
+                transform: translateY(-2px);
+                box-shadow: 
+                    inset -15px -15px 25px rgba(0,0,0,0.05),
+                    inset 15px 15px 25px rgba(255,255,255,0.8),
+                    8px 8px 20px rgba(0,0,0,0.1);
+                transition: all 0.3s ease;
             }
 
             .nest {
@@ -672,6 +740,16 @@
                     width: 100%;
                     margin-top: -20px;
                 }
+                .contribution-button {
+                    width: clamp(120px, 20vw, 180px);
+                    height: clamp(32px, 6vw, 48px);
+                    font-size: var(--fs-sm);
+                }
+                
+                .contribution-button img {
+                    width: clamp(16px, 2vw, 24px);
+                    height: clamp(16px, 2vw, 24px);
+                }
             }
             @media (max-width: 480px) {
                 :root {
@@ -695,6 +773,26 @@
                 .result-box span {
                     font-size: var(--fs-lg);
                 }
+                .contribution-button {
+                    width: clamp(100px, 25vw, 160px);
+                    height: clamp(28px, 7vw, 40px);
+                    padding: clamp(0.25rem, 1vw, 0.75rem) clamp(0.75rem, 1.5vw, 1.5rem);
+                }
+            }
+            .egg-container:hover .contribution-button {
+                opacity: 1;
+            }
+
+            .contribution-button:hover {
+                background-color: var(--primary-dark);
+            }
+
+            .contribution-button:hover span {
+                display: none;
+            }
+
+            .contribution-button:hover img {
+                display: block;
             }
 
     </style>
@@ -810,6 +908,10 @@
                             <span class="bucket-label" id="403b-label">Traditional</span>
                             <span class="bucket-amount" id="403b-amount">$0</span>
                             <span class="employer-amount" id="403b-employer-amount">$0</span>
+                            <button class="contribution-button">
+                                <span style="font-size:var(--fs-md);">Make <br>Contribution</span>
+                                <img src="fidelity.png" alt="Contribution Logo" style="width: clamp(40px, 3.5vw, 80px); height: clamp(40px, 3.5vw, 80px);">
+                            </button>
                         </div>
                     </div>
 
@@ -819,6 +921,10 @@
                             <div class="fill-level" id="ira-fill"></div>
                             <span class="bucket-label" id="ira-label">Roth</span>
                             <span class="bucket-amount" id="ira-amount">$0</span>
+                            <button class="contribution-button">
+                                <span style="font-size:var(--fs-md);">Make <br>Contribution</span>
+                                <!-- <img src="fidelity.png" alt="Contribution Logo" style="width: clamp(40px, 3.5vw, 80px); height: clamp(40px, 3.5vw, 80px);"> -->
+                            </button>
                         </div>
                     </div>
 
@@ -828,6 +934,10 @@
                             <div class="fill-level" id="renest-fill"></div>
                             <span class="bucket-label" id="renest-label">Renest</span>
                             <span class="bucket-amount" id="renest-amount">$0</span>
+                            <button class="contribution-button">
+                                <span style="font-size:var(--fs-md);">Make <br>Contribution</span>
+                                <img src="blogo.png" alt="Contribution Logo">
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -835,7 +945,7 @@
                 <div class="nest">
                     <div class="nest-front">
                         <div class="twigs"></div>
-                        <span style="position: absolute; color: white; font-weight: 500; font-size: var(--fs-sm); z-index: 10; text-align: center; width: 30%; top: 50%; transform: translateY(-50%); background-color: rgba(132, 96, 103, 0.9); padding: 8px 16px; border-radius: 4px;">How to Optimize Your Savings</span>
+                        <span style="position: absolute; color: white; font-weight: 500; font-size: var(--fs-lg); z-index: 10; text-align: center; width: 30%; top: 50%; transform: translateY(-50%); background-color: rgba(132, 96, 103, 0.9); padding: 8px 16px; border-radius: 4px;">How to Optimize Your Savings</span>
                     </div>
                 </div>
             </div>
@@ -885,6 +995,10 @@
 
         const ANIMATION_DURATION = 300; // milliseconds for animations
         const UPDATE_INTERVAL = 100; // milliseconds for animation updates
+        const BASE_MAX_403B_CONTRIBUTION = 23500; // Base maximum individual 403b contribution
+        const CATCHUP_CONTRIBUTION_403B = 7500;   // Additional catch-up contribution for age 50+
+        const BASE_MAX_403B_TOTAL = 47000;        // Base maximum total 403b contribution
+        const CATCHUP_TOTAL_403B = 7500;  
 
         class RetirementCalculator {
             constructor() {
@@ -910,6 +1024,20 @@
                     noptLoss: 0,
                     renestDifference: 0
                 };
+            }
+
+
+
+            get max403bContribution() {
+                return this.age >= 50 
+                    ? BASE_MAX_403B_CONTRIBUTION + CATCHUP_CONTRIBUTION_403B 
+                    : BASE_MAX_403B_CONTRIBUTION;
+            }
+
+            get max403bTotal() {
+                return this.age >= 50 
+                    ? BASE_MAX_403B_TOTAL + CATCHUP_TOTAL_403B 
+                    : BASE_MAX_403B_TOTAL;
             }
 
 
@@ -943,7 +1071,7 @@
                 const maxMatch = this.annualSalary * (MAXIMUM_EMPLOYER_MATCH_RATE / 100);
                 const vestingPercentage = Math.min(this.yearsEmployed * ANNUAL_VESTING_AMOUNT, 100);
                 const potentialMatch = Math.min(this.results.as403b, maxMatch) * (vestingPercentage / 100);
-                const availableForMatch = MAX_403B_TOTAL - this.results.as403b;
+                const availableForMatch = this.max403bTotal - this.results.as403b;
                 return Math.min(potentialMatch, availableForMatch);
             }
 
@@ -974,12 +1102,12 @@
             }
 
             calculate() {
-                const max403bAllowed = Math.min(MAX_403B_CONTRIBUTION, this.annualSalary);
+                const max403bAllowed = Math.min(this.max403bContribution, this.annualSalary);
                 if (this.yearsEmployed === 0) {
                     this.yearsEmployed = 1;
                 }
 
-                if (this.annualSalary<=IRA_CONTRIBUTION_LIMIT) {
+                if (this.annualSalary <= IRA_CONTRIBUTION_LIMIT) {
                     IRA_CONTRIBUTION_LIMIT = this.annualSalary;
                 }
 
@@ -1018,7 +1146,8 @@
 
     // Fixed bucket fills function
     function updateBucketFills(results) {
-        const total403bMax = MAX_403B_TOTAL;
+        // Use the calculator instance to get the correct maximum based on age
+        const total403bMax = calculator.max403bTotal;
         const individual403bFill = (results.as403b / total403bMax) * 100;
         const employer403bFill = (results.eas403b / total403bMax) * 100;
         
@@ -1176,8 +1305,7 @@
             // Update Renest bucket and legend styling
             if (results.arhs > 0) {
                 const renestFill = document.getElementById('renest-fill');
-                renestFill.style.backgroundColor = results.asIra < IRA_CONTRIBUTION_LIMIT ? 
-                    'var(--renest-green)' : 'var(--primary-color)';
+                renestFill.style.background = results.asIra < IRA_CONTRIBUTION_LIMIT ? 'var(--renest-green)' : 'linear-gradient(165deg, var(--renest-green) 0%, rgba(230, 164, 180, 0.7) 40%, var(--renest-green) 100%)';
             }
         }
 
