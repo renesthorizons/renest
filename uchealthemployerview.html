@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retirement Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+        /* Your existing root styles */
+        :root {
+            --primary-color: #A6093D;
+            --primary-dark: #C4848F;
+            --secondary-color: #F3D7CA;
+            --accent-color: #F8E8EE;
+            --background-primary: #FDF6F6;
+            --background-secondary: #FFF5E4;
+            --text-primary: #846067;
+            --text-secondary: #9B7E83;
+            --text-tertiary: #B79B9B;
+            --border-color: rgba(230, 164, 180, 0.2);
+            --success-green: #4CAF50;
+            --employer-fill: #FFB6C1;
+            --renest-green: #B8D8BE;
+            --path-blue: #BBEAFF;
+            --fs-xxl: clamp(1.5rem, 2.5vw, 2rem);
+            --fs-xl: clamp(1.2rem, 2vw, 1.75rem);
+            --fs-lg: clamp(1rem, 1.5vw, 1.25rem);
+            --fs-md: clamp(0.875rem, 1.2vw, 1rem);
+            --fs-sm: clamp(0.75rem, 1vw, 0.875rem);
+            --fs-xs: clamp(0.7rem, 0.9vw, 0.75rem);
+        }
+
+        /* Your existing styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            font-size: var(--fs-md);
+            line-height: 1.5;
+            background: linear-gradient(135deg, var(--background-primary) 0%, var(--background-secondary) 100%);
+            margin: 0;
+            padding: 2rem;
+            min-height: 100vh;
+            color: var(--text-primary);
+        }
+
+        .logout-button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: var(--fs-sm);
+            margin-left: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .logout-button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 1rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(230, 164, 180, 0.15);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section-title {
+            color: var(--text-primary);
+            font-size: var(--fs-lg);
+            font-weight: 600;
+            margin: 2rem 0 1rem;
+            padding: 0.5rem;
+            background: var(--path-blue);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 4px rgba(230, 164, 180, 0.1);
+            position: relative;
+            height: 400px;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        .chart-title {
+            color: var(--text-primary);
+            font-size: var(--fs-lg);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 4px rgba(230, 164, 180, 0.1);
+        }
+
+        .metric-title {
+            color: var(--text-secondary);
+            font-size: var(--fs-sm);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            color: var(--text-primary);
+            font-size: var(--fs-xl);
+            font-weight: 600;
+        }
+
+        .metric-change {
+            color: var(--success-green);
+            font-size: var(--fs-xs);
+            margin-top: 0.5rem;
+        }
+
+        .activities-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            height: 400px;
+            overflow-y: auto;
+        }
+
+        .highlight-card {
+            background: var(--accent-color);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 style="color: var(--primary-dark); font-size: var(--fs-xxl); margin: 0;">Renest Dashboard</h1>
+            <div class="profile-section" style="background: var(--accent-color); padding: 0.5rem 1rem; border-radius: 8px;">
+                <span>Welcome, Admin</span>
+                <a href="uchxrenest.html" class="logout-button">Log Out</a>
+            </div>
+        </div>
+
+        <h2 class="section-title">Employee Retirement Program Performance</h2>
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-title">Renest Take-up Rate</div>
+                <div class="metric-value">68%</div>
+                <div class="metric-change">+12% from last quarter</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-title">403(b) Participation</div>
+                <div class="metric-value">62%</div>
+                <div class="metric-change">+5% from last quarter</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-title">Total Employee Savings</div>
+                <div class="metric-value">$4.8M</div>
+                <div class="metric-change">+22% YoY</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-title">Satisfaction Score</div>
+                <div class="metric-value">9.2/10</div>
+                <div class="metric-change">+0.2 from last quarter</div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-container">
+                <h3 class="chart-title">Retirement Plan Adoption Rates</h3>
+                <div class="chart-wrapper">
+                    <canvas id="adoptionChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Average Savings by Department</h3>
+                <div class="chart-wrapper">
+                    <canvas id="savingsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Community Impact Metrics</h2>
+        
+
+        <style>
+            .campaign-button {
+                background-color: var(--primary-color);
+                color: white;
+                padding: 0.75rem 1.5rem;
+                border-radius: 8px;
+                font-weight: 500;
+                text-decoration: none;
+                display: inline-block;
+                transition: all 0.2s ease;
+                font-size: var(--fs-md);
+                border: none;
+                box-shadow: 0 2px 4px rgba(230, 164, 180, 0.2);
+            }
+
+            .campaign-button:hover {
+                background-color: var(--primary-dark);
+                transform: translateY(-1px);
+                box-shadow: 0 4px 8px rgba(230, 164, 180, 0.3);
+            }
+
+            .campaign-button:active {
+                transform: translateY(0);
+                box-shadow: 0 2px 4px rgba(230, 164, 180, 0.2);
+            }
+        </style>
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-title">Community Members Reached</div>
+                <div class="metric-value">15.2K</div>
+                <div class="metric-change">+2.5K this quarter</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-title">New Accounts Created</div>
+                <div class="metric-value">3,458</div>
+                <div class="metric-change">+842 this quarter</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-title">Community Savings</div>
+                <div class="metric-value">$2.1M</div>
+                <div class="metric-change">+$480K this quarter</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-title">Financial Literacy Score</div>
+                <div class="metric-value">78%</div>
+                <div class="metric-change">+8% from baseline</div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-container">
+                <h3 class="chart-title">Community Engagement by Channel</h3>
+                <div class="chart-wrapper">
+                    <canvas id="engagementChart"></canvas>
+                </div>
+                        <div style="text-align: center; margin-bottom: 2rem;">
+                    <a href="campaign.html" class="campaign-button">
+                        Current Campaign
+                    </a>
+                </div>
+            </div>
+            <div class="activities-section">
+                <h3 class="chart-title">Key Insights</h3>
+                <div class="highlight-card">
+                    <h4 style="margin: 0 0 0.5rem 0">🎯 Employee Engagement</h4>
+                    <p style="margin: 0">Departments with Renest champions show 24% higher adoption rates</p>
+                </div>
+                <div class="highlight-card">
+                    <h4 style="margin: 0 0 0.5rem 0">💰 Savings Growth</h4>
+                    <p style="margin: 0">Combined retirement savings up 22% YoY, outpacing industry average by 8%</p>
+                </div>
+                <div class="highlight-card">
+                    <h4 style="margin: 0 0 0.5rem 0">🌟 Community Impact</h4>
+                    <p style="margin: 0">Financial wellness programs reaching 85% of target community members</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const commonOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: {
+                    duration: 0
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            };
+
+            // Adoption Rates Chart
+            new Chart(document.getElementById('adoptionChart').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                    datasets: [{
+                        label: 'Renest',
+                        data: [35, 42, 58, 68],
+                        borderColor: '#E6A4B4',
+                        fill: false
+                    }, {
+                        label: '403(b)',
+                        data: [50, 52, 55, 62],
+                        borderColor: '#9B7E83',
+                        fill: false
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                pointStyle: 'line',
+                                padding: 20,
+                                boxWidth: 50,
+                                font: {
+                                    size: 12,
+                                    family: "'Inter', sans-serif"
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Savings by Department Chart
+            new Chart(document.getElementById('savingsChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['Medical', 'Admin', 'Nursing', 'Technical', 'Support'],
+                    datasets: [{
+                        label: 'Average Monthly Savings',
+                        data: [850, 620, 780, 690, 580],
+                        backgroundColor: '#E6A4B4'
+                    }]
+                },
+                options: commonOptions
+            });
+
+            // Community Engagement Chart
+            new Chart(document.getElementById('engagementChart').getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Direct Outreach', 'Partner Programs', 'Digital Channels', 'Employee Referrals'],
+                    datasets: [{
+                        data: [40, 25, 20, 15],
+                        backgroundColor: [
+                            '#E6A4B4',
+                            '#B8D8BE',
+                            '#BBEAFF',
+                            '#F3D7CA'
+                        ]
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    cutout: '60%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                font: {
+                                    size: 12,
+                                    family: "'Inter', sans-serif"
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: false,
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            display: false,
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

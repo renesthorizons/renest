@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UCHealth x Renest Partnership</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #A6093D;
+            --primary-dark: #005EB8;
+            --secondary-color: #F3D7CA;
+            --accent-color: #F8E8EE;
+            --background-primary: #FDF6F6;
+            --background-secondary: #FFF5E4;
+            --text-primary: #846067;
+            --text-secondary: #9B7E83;
+            --text-tertiary: #B79B9B;
+            --border-color: rgba(230, 164, 180, 0.2);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--background-primary) 0%, var(--background-secondary) 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            color: var(--text-primary);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem; /* Reduced from 2rem */
+        }
+
+        /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem; /* Reduced from 2rem */
+        }
+
+        .title-container {
+            flex: 1;
+        }
+
+        .title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem; /* Reduced from 1rem */
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem; /* Reduced from 2rem */
+        }
+
+        /* Logo Section */
+        .header-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.5rem; /* Reduced from 1rem */
+        }
+
+        .logos {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding-top: 0.25rem; /* Reduced from 0.5rem */
+        }
+
+        .logo {
+            height: 40px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .logo-divider {
+            height: 40px;
+            width: 1px;
+            background-color: var(--text-tertiary);
+            opacity: 0.3;
+        }
+
+        /* Quote Section */
+        .quote-section {
+            position: relative;
+            width: 90vw;
+            max-width: 1200px;
+            margin: 1rem auto; /* Reduced from 2rem */
+            height: 500px;
+        }
+
+        .quote-text {
+            position: absolute;
+            color: var(--primary-color);
+            font-family: 'Inter', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1.3;
+            z-index: 2;
+        }
+
+        .quote-top {
+            top: 3%;
+            left: 10%;
+            max-width: 40%;
+        }
+
+        .quote-bottom {
+            bottom: 10%;
+            right: 5%;
+            max-width: 150%;
+            text-align: right;
+            color: #Ffffff;
+        }
+
+        /* Return Button */
+        .return-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--primary-dark);
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 94, 184, 0.2);
+        }
+
+        .return-btn:hover {
+            background: #004b92;
+            transform: translateY(-1px);
+        }
+
+        /* View Selection Buttons */
+        .view-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem; /* Reduced from 3rem */
+        }
+
+        .view-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 2rem;
+            min-width: 200px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .facilitator-btn {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .facilitator-btn:hover {
+            background: #8a072f;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(166, 9, 61, 0.2);
+        }
+
+        .employee-btn {
+            background: var(--primary-dark);
+            color: white;
+        }
+
+        .employee-btn:hover {
+            background: #004b92;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 94, 184, 0.2);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-text {
+            animation: fadeIn 1.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        .delay-1 { animation-delay: 0.5s; }
+        .delay-2 { animation-delay: 2s; }
+        .delay-3 { animation-delay: 3s; }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0.5rem; /* Reduced from 1rem */
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .title {
+                font-size: 1.5rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .header-right {
+                align-items: center;
+            }
+
+            .quote-section {
+                height: 400px;
+            }
+
+            .quote-text {
+                font-size: 18px;
+            }
+
+            .view-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .view-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <div class="title-container">
+                <h1 class="title">Complete Care<br><i>Partnering to Build a Healthier, Wealthier Community</i></h1>
+            </div>
+            <div class="header-right">
+                <div class="logos">
+                    <img src="uchealth_logo.png" alt="UCHealth Logo" class="logo">
+                    <div class="logo-divider"></div>
+                    <img src="Renest_Logo.png" alt="Renest Logo" class="logo renest-logo">
+                </div>
+                <a href="index.html" class="return-btn">
+                    Exit
+                </a>
+            </div>
+        </div>
+
+        <!-- Quote Section with Image -->
+        <div class="quote-section">
+            <div class="quote-text quote-top fade-in-text delay-1">
+                "By uniting healthcare excellence with financial empowerment, we're creating a new standard of complete care. 
+            </div>
+            <div class="quote-text quote-bottom fade-in-text delay-2">
+                When our community is both healthy and financially secure, everyone thrives"
+            </div>            
+            <img src="denverskyline.png" alt="denver-skyline" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+        <div class="view-buttons fade-in-text delay-3">
+            <a href="uchealthemployerview.html" class="view-btn facilitator-btn">
+                Facilitator View
+            </a>
+            <a href="uchealthemployeeview.html" class="view-btn employee-btn">
+                Employee View
+            </a>
+        </div>
+    </div>
+</body>
+</html>
