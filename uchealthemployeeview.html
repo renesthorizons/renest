@@ -796,7 +796,75 @@
             .contribution-button:hover img {
                 display: block;
             }
+            .info-icon-wrapper {
+            display: inline-block;
+            position: relative;
+            width: 0; /* This prevents the wrapper from taking up space */
+            height: 0;
+        }
 
+        .info-icon {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            cursor: help;
+            opacity: 0.6;
+            transition: opacity 0.2s ease;
+            left: 4px; /* Small offset from the text */
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .info-icon:hover {
+            opacity: 1;
+        }
+
+        .tooltip {
+            visibility: hidden;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: white;
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: var(--fs-sm);
+            white-space: normal;
+            width: max-content;
+            max-width: 200px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border-color);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+            margin-bottom: 8px; /* Space between tooltip and icon */
+        }
+
+        .info-icon-wrapper:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Add a small triangle at the bottom of the tooltip */
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 6px;
+            border-style: solid;
+            border-color: white transparent transparent transparent;
+        }
+
+        @media (max-width: 768px) {
+            .tooltip {
+                font-size: var(--fs-xs);
+                max-width: 150px;
+                padding: 0.4rem 0.8rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -891,7 +959,12 @@
                     <div class="egg-container">
                         <h3>
                             403(b) Contributions
-                            <!-- <img src="info.png" alt="Info" class="info-icon" title="Includes both your contributions and employer match"> -->
+                            <span class="info-icon-wrapper">
+                                <img src="info.png" alt="info" class="info-icon">
+                                <span class="tooltip">
+                                    A tax-advantaged retirement account offered by UCHealth. Contributions can be Traditional (pre-tax) or Roth (after-tax). Includes employer matching up to 4% of your salary, which vests over 5 years.
+                                </span>
+                            </span>
                         </h3>
                         <div class="egg" id="403b-bucket">
                             <!-- <div class="contribution-type">
@@ -917,7 +990,15 @@
                     </div>
 
                     <div class="egg-container">
-                        <h3>IRA Contributions</h3>
+                        <h3>
+                            IRA Contributions
+                            <span class="info-icon-wrapper">
+                                <img src="info.png" alt="info" class="info-icon">
+                                <span class="tooltip">
+                                    Individual Retirement Account with annual contribution limits. Can be Traditional (tax-deductible) or Roth (after-tax) based on your income and age. Consider this after maximizing your 403(b) match.
+                                </span>
+                            </span>
+                        </h3>
                         <div class="egg" id="ira-bucket">
                             <div class="fill-level" id="ira-fill"></div>
                             <span class="bucket-label" id="ira-label">Roth</span>
@@ -930,7 +1011,15 @@
                     </div>
 
                     <div class="egg-container">
-                        <h3>Tax-Optimized Account</h3>
+                        <h3>
+                            Tax-Optimized Account
+                            <span class="info-icon-wrapper">
+                                <img src="info.png" alt="info" class="info-icon">
+                                <span class="tooltip">
+                                    Renest provides guaranteed savings if you're unable to maximize your 403(b) and IRA contributions and tax-advantaged savings if you want to contribute more after maximizing your 403(b) and IRA contributions.
+                                </span>
+                            </span>
+                        </h3>
                         <div class="egg" id="renest-bucket">
                             <div class="fill-level" id="renest-fill"></div>
                             <span class="bucket-label" id="renest-label">Renest</span>
