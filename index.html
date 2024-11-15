@@ -2431,6 +2431,12 @@
                             </form>
                         </div>
                     </div>
+                    <div id="businessSuccessModal" class="fixed inset-0 bg-black/50 hidden backdrop-blur-sm flex items-center justify-center z-50">
+                        <div class="bg-white rounded-xl shadow-2xl p-6 max-w-md w-full m-4 transform transition-all text-center">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-4">Thank You!</h2>
+                            <p class="text-gray-600">We will contact you soon.</p>
+                        </div>
+                    </div>
                     
                 </div>
 
@@ -3018,6 +3024,58 @@
                 if (successModal) successModal.classList.add('hidden');
             }, 3000);
         }
+        // Business form submission
+        async function submitBusinessToGoogleSheets(email, position, businessName, additionalInfo) {
+            try {
+                const formData = new FormData();
+                formData.append('entry.110874108', email);
+                formData.append('entry.1718074849', position);
+                formData.append('entry.1316491564', businessName);
+                formData.append('entry.481504362', additionalInfo);
+                
+                await fetch(
+                    'https://docs.google.com/forms/d/e/1FAIpQLScsJg50nxH1ShI9QYeW8ZUFojvmcnpQoHTkoxFMdUNxoCELlQ/formResponse',
+                    {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        body: formData
+                    }
+                );
+                
+                handleBusinessFormSuccess();
+                return false;
+            } catch (error) {
+                console.error('Error submitting business form:', error);
+                handleBusinessFormSuccess();
+                return false;
+            }
+        }
+
+        // State form submission
+        async function submitStateToGoogleSheets(email, position, additionalInfo) {
+            try {
+                const formData = new FormData();
+                formData.append('entry.355309525', email);
+                formData.append('entry.96140659', position);
+                formData.append('entry.1760812363', additionalInfo);
+                
+                await fetch(
+                    'https://docs.google.com/forms/d/e/1FAIpQLScBgYf_ly41gWPoSl3bqs2mi6GpNZLvQuJK7zAoNfcjwYXTvg/formResponse',
+                    {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        body: formData
+                    }
+                );
+                
+                handleStateFormSuccess();
+                return false;
+            } catch (error) {
+                console.error('Error submitting state form:', error);
+                handleStateFormSuccess();
+                return false;
+            }
+        }
 
         
         // Constants for calculations
@@ -3139,77 +3197,53 @@
           function sendStateEmail(e) {
             e.preventDefault();
             
-            // Get form values
             const email = document.getElementById('integrateEmail').value;
             const position = document.getElementById('position').value;
             const additionalInfo = document.getElementById('additionalInfo').value;
             
-            // Construct email body
-            const emailBody = `
-        State/City Government Contact Information:
-        ---------------------------------------
-        Email: ${email}
-        Position: ${position}
-        Additional Information: ${additionalInfo}
-            `.trim();
-            
-            // Encode the body for mailto
-            const encodedBody = encodeURIComponent(emailBody);
-            
-            // Create mailto link
-            const mailtoLink = `mailto:thomas@renesthorizons.com?subject=State/City Integration Interest&body=${encodedBody}`;
-            
-            // Open default email client
-            window.location.href = mailtoLink;
-            
-            // Hide modal and show success message
-            document.getElementById('integrateModal').classList.add('hidden');
-            document.getElementById('integrateSuccessModal').classList.remove('hidden');
-            
-            // Reset form
-            document.getElementById('integrateForm').reset();
-
-            // Hide success message after 3 seconds
-            setTimeout(() => {
-                document.getElementById('integrateSuccessModal').classList.add('hidden');
-            }, 3000);
+            submitStateToGoogleSheets(email, position, additionalInfo);
         }
 
 
           function sendEmail(e) {
             e.preventDefault();
             
-            // Get form values
             const email = document.getElementById('businessEmail').value;
             const position = document.getElementById('businessPosition').value;
             const businessName = document.getElementById('businessName').value;
             const additionalInfo = document.getElementById('businessInfo').value;
             
-            // Construct email body
-            const emailBody = `
-        Business Contact Information:
-        ---------------------------
-        Email: ${email}
-        Position: ${position}
-        Business Name: ${businessName}
-        Additional Information: ${additionalInfo}
-            `.trim();
-            
-            // Encode the body for mailto
-            const encodedBody = encodeURIComponent(emailBody);
-            
-            // Create mailto link
-            const mailtoLink = `mailto:thomas@renesthorizons.com?subject=Business Interest Form Submission&body=${encodedBody}`;
-            
-            // Open default email client
-            window.location.href = mailtoLink;
-            
-            // Hide modal and show success message
-            document.getElementById('businessModal').classList.add('hidden');
-            document.getElementById('successModal').classList.remove('hidden');
-            
-            // Reset form
-            document.getElementById('businessForm').reset();
+            submitBusinessToGoogleSheets(email, position, businessName, additionalInfo);
+        }
+
+
+        function handleBusinessFormSuccess() {
+            const businessModal = document.getElementById('businessModal');
+            const businessSuccessModal = document.getElementById('businessSuccessModal');
+            const businessForm = document.getElementById('businessForm');
+
+            if (businessModal) businessModal.classList.add('hidden');
+            if (businessSuccessModal) businessSuccessModal.classList.remove('hidden');
+            if (businessForm) businessForm.reset();
+
+            setTimeout(() => {
+                if (businessSuccessModal) businessSuccessModal.classList.add('hidden');
+            }, 3000);
+        }
+
+
+        function handleStateFormSuccess() {
+            const integrateModal = document.getElementById('integrateModal');
+            const integrateSuccessModal = document.getElementById('integrateSuccessModal');
+            const integrateForm = document.getElementById('integrateForm');
+
+            if (integrateModal) integrateModal.classList.add('hidden');
+            if (integrateSuccessModal) integrateSuccessModal.classList.remove('hidden');
+            if (integrateForm) integrateForm.reset();
+
+            setTimeout(() => {
+                if (integrateSuccessModal) integrateSuccessModal.classList.add('hidden');
+            }, 3000);
         }
           const savingsCtx = document.getElementById('savingsChart').getContext('2d');
             const savingsChart = new Chart(savingsCtx, {
