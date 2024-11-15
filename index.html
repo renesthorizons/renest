@@ -2147,7 +2147,7 @@
                 <!-- Modal Dialog -->
                 <div id="emailModal" class="fixed inset-0 bg-black/50 hidden backdrop-blur-sm flex items-center justify-center z-50">
                     <div class="bg-white rounded-xl shadow-2xl max-w-md w-full m-4 transform transition-all">
-                        <form id="emailForm" class="p-6 space-y-4">
+                        <form id="emailForm" class="p-6 space-y-4" action="javascript:void(0)">
                             <div class="email-input-container">
                                 <label for="email" class="email-label"> </label>
                                 <input 
@@ -2158,6 +2158,7 @@
                                     required
                                 >
                             </div>
+                            <button type="submit" class="submit-button">Submit</button>
                         </form>
                     </div>
                 </div>
@@ -2167,9 +2168,6 @@
                     <div class="bg-white rounded-xl shadow-2xl p-6 max-w-md w-full m-4 transform transition-all text-center">
                         <h2 class="text-2xl font-bold text-gray-800 mb-4">Welcome to the Network!</h2>
                         <p class="text-gray-600">You've been added to the Renest Network. Please check your inbox to complete your registration.</p>
-                        <!-- <button id="closeSuccessModal" class="mt-6 bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors">
-                            Got it
-                        </button> -->
                     </div>
                 </div>
             </div>
@@ -2987,7 +2985,9 @@
                 const formData = new FormData();
                 formData.append('entry.1419532941', email);
 
-                await fetch(
+                // Add a loading state or disable the submit button here if desired
+                
+                const response = await fetch(
                     'https://docs.google.com/forms/d/e/1FAIpQLScvmIdqLYppKjzNxpQhnXTIprmHiQ_oZeXWGr3tseiAzHwiCA/formResponse',
                     {
                         method: 'POST',
@@ -2997,37 +2997,25 @@
                 );
 
                 handleFormSuccess();
+                return false; // Prevent form submission
             } catch (error) {
                 console.error('Error submitting form:', error);
                 handleFormSuccess();
+                return false; // Prevent form submission
             }
         }
 
-        // Success handler
         function handleFormSuccess() {
-            // Hide email modal
             const emailModal = document.getElementById('emailModal');
-            if (emailModal) {
-                emailModal.classList.add('hidden');
-            }
-
-            // Show success message
             const successModal = document.getElementById('successModal');
-            if (successModal) {
-                successModal.classList.remove('hidden');
-            }
+            const emailForm = document.getElementById('emailForm');
 
-            // Clear the form
-            const emailInput = document.getElementById('email');
-            if (emailInput) {
-                emailInput.value = '';
-            }
+            if (emailModal) emailModal.classList.add('hidden');
+            if (successModal) successModal.classList.remove('hidden');
+            if (emailForm) emailForm.reset();
 
-            // Hide success message after 3 seconds
             setTimeout(() => {
-                if (successModal) {
-                    successModal.classList.add('hidden');
-                }
+                if (successModal) successModal.classList.add('hidden');
             }, 3000);
         }
 
@@ -3756,20 +3744,15 @@
                 });
             }
 
+
             if (emailForm) {
-                emailForm.addEventListener('submit', async (e) => {
-                    e.preventDefault();
+                emailForm.addEventListener('submit', async function(e) {
+                    e.preventDefault(); // Prevent default form submission
+                    e.stopPropagation(); // Stop event bubbling
+                    
                     const email = emailInput.value;
                     await submitToGoogleSheets(email);
-                });
-            }
-
-            if (emailInput) {
-                emailInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        emailForm.dispatchEvent(new Event('submit'));
-                    }
+                    return false; // Extra prevention of form submission
                 });
             }
 
