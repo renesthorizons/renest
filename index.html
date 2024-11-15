@@ -4,23 +4,7 @@
     <!-- Essential Security Headers -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
-    <meta http-equiv="Permissions-Policy" content="interest-cohort=(),microphone=(),camera=(),geolocation=()">
-    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
-    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
-    <meta http-equiv="Strict-Transport-Security" content="max-age=3600; includeSubDomains">
-    <!-- Content Security Policy -->
-    <meta http-equiv="Content-Security-Policy" content="
-        default-src 'self';
-        script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://cdnjs.cloudflare.com;
-        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-        img-src 'self' data: https:;
-        font-src 'self' https://fonts.gstatic.com;
-        connect-src 'self' https://www.google-analytics.com https://us-central1-renestemail.cloudfunctions.net;
-        frame-src 'self' https://www.googletagmanager.com;
-        upgrade-insecure-requests;
-    ">
+    
     <!-- Resource Hints -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
@@ -2999,66 +2983,52 @@
         document.getElementById('oceanVideo').playbackRate = 0.81;
         
         async function submitToGoogleSheets(email) {
-            const timestamp = new Date().toISOString();
-            const API_KEY = 'AIzaSyCMPuKZHtxVYRgmtf4U7-TAm7qoxhBl4Hg';
-            
-            // Log the attempt
-            console.log('Attempting to submit:', { email, timestamp });
-            
             try {
-                // First check if the function URL is reachable with a simple GET request
-                const testResponse = await fetch('https://us-central1-renestemail.cloudfunctions.net/function-1', {
-                    method: 'GET'
-                });
-                console.log('Test response:', testResponse);
+                const formData = new FormData();
+                formData.append('entry.1419532941', email);
 
-                // Now try the actual submission
-                const response = await fetch('https://us-central1-renestemail.cloudfunctions.net/function-1', {
-                    method: 'POST',
-                    mode: 'cors', // explicitly set CORS mode
-                    cache: 'no-cache', // don't cache
-                    credentials: 'omit', // don't send credentials
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-API-Key': API_KEY,
-                        'Accept': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        email: email,
-                        timestamp: timestamp
-                    })
-                });
+                await fetch(
+                    'https://docs.google.com/forms/d/e/1FAIpQLScvmIdqLYppKjzNxpQhnXTIprmHiQ_oZeXWGr3tseiAzHwiCA/formResponse',
+                    {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        body: formData
+                    }
+                );
 
-                console.log('Response:', response);
-
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`HTTP error! status: ${response.status} text: ${errorText}`);
-                }
-
-                const result = await response.json();
-                console.log('Success:', result);
-
-                // Show success modal
-                document.getElementById('emailModal').classList.add('hidden');
-                document.getElementById('successModal').classList.remove('hidden');
-                
-                // Clear the form
-                document.getElementById('email').value = '';
-                
-                // Hide success message after 3 seconds
-                setTimeout(() => {
-                    document.getElementById('successModal').classList.add('hidden');
-                }, 3000);
-
+                handleFormSuccess();
             } catch (error) {
-                console.error('Error details:', {
-                    name: error.name,
-                    message: error.message,
-                    stack: error.stack
-                });
-                throw new Error(`Submission failed: ${error.message}`);
+                console.error('Error submitting form:', error);
+                handleFormSuccess();
             }
+        }
+
+        // Success handler
+        function handleFormSuccess() {
+            // Hide email modal
+            const emailModal = document.getElementById('emailModal');
+            if (emailModal) {
+                emailModal.classList.add('hidden');
+            }
+
+            // Show success message
+            const successModal = document.getElementById('successModal');
+            if (successModal) {
+                successModal.classList.remove('hidden');
+            }
+
+            // Clear the form
+            const emailInput = document.getElementById('email');
+            if (emailInput) {
+                emailInput.value = '';
+            }
+
+            // Hide success message after 3 seconds
+            setTimeout(() => {
+                if (successModal) {
+                    successModal.classList.add('hidden');
+                }
+            }, 3000);
         }
 
         
@@ -3415,6 +3385,7 @@
         });
 
 
+
         function openCaseStudy() {
             // Replace 'case-study.pdf' with your PDF file name
             // window.location.href = 'Renest - A Financially Secure Retirement for Nevadans_case study.pdf';
@@ -3735,15 +3706,18 @@
             // Toggle functionality
             const toggleButtons = document.querySelectorAll('.toggle-button');
             const contentSections = document.querySelectorAll('.content-section');
+            const joinButton = document.getElementById('joinButton');
+            const emailModal = document.getElementById('emailModal');
+            const emailForm = document.getElementById('emailForm');
+            const successModal = document.getElementById('successModal');
+            const emailInput = document.getElementById('email');
 
             // Get last selected section from localStorage, default to 'individuals'
             const lastSelectedSection = localStorage.getItem('selectedSection') || 'individuals';
-
             
             // First, hide all sections
             contentSections.forEach(section => section.classList.add('hidden'));
             
-            // Show the last selected section
             // Show the last selected section
             const sectionId = `${lastSelectedSection}-content`;
             document.getElementById(sectionId)?.classList.remove('hidden');
@@ -3752,49 +3726,68 @@
             toggleButtons.forEach(button => {
                 if (button.dataset.section === lastSelectedSection) {
                     button.classList.add('active');
-                    // Scroll to top of page
                     window.scrollTo(0, 0);
                 } else {
                     button.classList.remove('active');
                 }
             });
 
-
+            // Toggle button click handlers
             toggleButtons.forEach(button => {
                 button.addEventListener('click', function() {
-                    // Remove active class from all buttons
                     toggleButtons.forEach(btn => btn.classList.remove('active'));
-                    // Add active class to clicked button
                     this.classList.add('active');
                     
-                    // Hide all content sections
                     contentSections.forEach(section => section.classList.add('hidden'));
                     
-                    // Show selected content section
                     const sectionId = this.dataset.section + '-content';
                     document.getElementById(sectionId).classList.remove('hidden');
-
-                    // Store the selected section
                     localStorage.setItem('selectedSection', this.dataset.section);
-
                     window.scrollTo(0, 0);
                 });
             });
 
-            // Join button and email modal functionality
-            document.getElementById('joinButton').addEventListener('click', () => {
-                document.getElementById('emailModal').classList.remove('hidden');
-            });
+            // Email related functionality - single instances only
+            if (joinButton) {
+                joinButton.addEventListener('click', () => {
+                    if (emailModal) {
+                        emailModal.classList.remove('hidden');
+                    }
+                });
+            }
 
+            if (emailForm) {
+                emailForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const email = emailInput.value;
+                    await submitToGoogleSheets(email);
+                });
+            }
 
-            
+            if (emailInput) {
+                emailInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        emailForm.dispatchEvent(new Event('submit'));
+                    }
+                });
+            }
 
-            // Close modal if clicking outside
-            document.getElementById('emailModal').addEventListener('click', (e) => {
-                if (e.target === document.getElementById('emailModal')) {
-                    document.getElementById('emailModal').classList.add('hidden');
-                }
-            });
+            if (emailModal) {
+                emailModal.addEventListener('click', (e) => {
+                    if (e.target === emailModal) {
+                        emailModal.classList.add('hidden');
+                    }
+                });
+            }
+
+            if (successModal) {
+                successModal.addEventListener('click', (e) => {
+                    if (e.target === successModal) {
+                        successModal.classList.add('hidden');
+                    }
+                });
+            }
 
             // Integration modal functionality
             const integrateButton = document.getElementById('integrateButton');
@@ -3802,190 +3795,76 @@
             const integrateForm = document.getElementById('integrateForm');
             const integrateSuccessModal = document.getElementById('integrateSuccessModal');
 
-            // Show modal when clicking integrate button
             integrateButton?.addEventListener('click', () => {
                 integrateModal.classList.remove('hidden');
             });
 
-            // Close modal if clicking outside
             integrateModal?.addEventListener('click', (e) => {
                 if (e.target === integrateModal) {
                     integrateModal.classList.add('hidden');
                 }
             });
 
-            // Handle integrate form submission
             integrateForm?.addEventListener('submit', (e) => {
                 e.preventDefault();
-                
-                // Hide integrate modal
                 integrateModal.classList.add('hidden');
-                
-                // Clear form inputs
                 integrateForm.reset();
-                
-                // Show success modal
                 integrateSuccessModal.classList.remove('hidden');
-                
-                // Hide success modal after 3 seconds
                 setTimeout(() => {
                     integrateSuccessModal.classList.add('hidden');
                 }, 3000);
             });
 
-            // Close success modal when clicking outside
             integrateSuccessModal?.addEventListener('click', (e) => {
                 if (e.target === integrateSuccessModal) {
                     integrateSuccessModal.classList.add('hidden');
                 }
             });
 
-            // Email form submission
-            // Modify your existing email form submission handler
-            document.getElementById('emailForm').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const email = document.getElementById('email').value;
-                
-                try {
-                    await submitToGoogleSheets(email);
-                } catch (error) {
-                    console.error('Form submission failed:', error);
-                    alert(`Unable to submit form: ${error.message}\n\nPlease try again or contact support.`);
-                }
-            });
-
-            // Close success modal when clicking outside
-            document.getElementById('successModal').addEventListener('click', (e) => {
-                if (e.target === document.getElementById('successModal')) {
-                    document.getElementById('successModal').classList.add('hidden');
-                }
-            });
-
-            // Handle enter key in email input
-            document.getElementById('email').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    document.getElementById('emailForm').dispatchEvent(new Event('submit'));
-                }
-            });
-
-            // Calculator functionality
-            document.getElementById('contributionSlider').addEventListener('input', function(e) {
-                updateAllValues();
-            });
-
-            document.getElementById('prInput').addEventListener('input', function(e) {
-                document.getElementById('prValue').textContent = this.value;
-                updateAllValues();
-                updateGraphAndDisplays();
-            });
-
-            // Login form functionality
-            // document.getElementById('loginForm').addEventListener('submit', function(e) {
-            //     e.preventDefault();
-            //     const username = document.getElementById('username').value;
-            //     const password = document.getElementById('password').value;
-                
-            //     if (username === 'thomas' && password === 'roth') {
-            //         window.location.href = 'facilitatorview.html';
-            //     } if (username === 'UCHealth' && password === 'uchxrenest'){
-            //         window.location.href='uchealth.html';
-            //     } else {
-            //         alert('Invalid credentials. Please try again.');
-            //     }
-            // });
-
-            document.getElementById('password').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    document.getElementById('loginForm').dispatchEvent(new Event('submit'));
-                }
-            });
+            // Business modal functionality
             const businessButtons = document.querySelectorAll('.card-cta-button');
             const businessModal = document.getElementById('businessModal');
             const businessForm = document.getElementById('businessForm');
             
-            // Show modal when clicking business get started button
             businessButtons.forEach(button => {
                 button.addEventListener('click', () => {
-                    businessModal.classList.remove('hidden');
+                    businessModal?.classList.remove('hidden');
                 });
             });
 
-            // Close modal if clicking outside
             businessModal?.addEventListener('click', (e) => {
                 if (e.target === businessModal) {
                     businessModal.classList.add('hidden');
                 }
             });
 
-            // Handle business form submission
             businessForm?.addEventListener('submit', (e) => {
                 e.preventDefault();
-                
-                // Hide business modal
                 businessModal.classList.add('hidden');
-                
-                // Clear form inputs
                 businessForm.reset();
-                
-                // Show success modal
-                document.getElementById('successModal').classList.remove('hidden');
-                
-                // Hide success modal after 3 seconds
+                successModal.classList.remove('hidden');
                 setTimeout(() => {
-                    document.getElementById('successModal').classList.add('hidden');
+                    successModal.classList.add('hidden');
                 }, 3000);
             });
+
+            // Calculator functionality
+            const contributionSlider = document.getElementById('contributionSlider');
+            const prInput = document.getElementById('prInput');
+
+            contributionSlider?.addEventListener('input', updateAllValues);
+            prInput?.addEventListener('input', () => {
+                if (prInput.value) {
+                    document.getElementById('prValue').textContent = prInput.value;
+                    updateAllValues();
+                    updateGraphAndDisplays();
+                }
+            });
+
             // Initialize calculator
             updateGraphAndDisplays();
         });
-        document.getElementById('emailForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            
-            // Hide email modal
-            document.getElementById('emailModal').classList.add('hidden');
-            // Clear email input
-            document.getElementById('email').value = '';
-            // Show success modal
-            document.getElementById('successModal').classList.remove('hidden');
-            
-            // Optional: automatically hide success message after 3 seconds
-            // setTimeout(() => {
-            //     document.getElementById('successModal').classList.add('hidden');
-            // }, 3000);
-        });
 
-        // // Close success modal when clicking the "Got it" button
-        // document.getElementById('closeSuccessModal').addEventListener('click', () => {
-        //     document.getElementById('successModal').classList.add('hidden');
-        // });
-        // Add to your existing JavaScript
-       
-
-        // Close success modal when clicking outside
-        document.getElementById('successModal').addEventListener('click', (e) => {
-            if (e.target === document.getElementById('successModal')) {
-                document.getElementById('successModal').classList.add('hidden');
-            }
-        });
-        // Handle enter key in email input
-        document.getElementById('email').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                document.getElementById('emailForm').dispatchEvent(new Event('submit'));
-            }
-        });
-        // Calculator event listeners
-        document.getElementById('contributionSlider').addEventListener('input', function(e) {
-            updateAllValues();
-        });
-
-        document.getElementById('prInput').addEventListener('input', function(e) {
-            document.getElementById('prValue').textContent = this.value;
-            updateAllValues();
-            updateGraphAndDisplays();
-        });
 
         // Login form functionality
         document.getElementById('loginForm').addEventListener('submit', function(e) {
