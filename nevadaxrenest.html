@@ -15,6 +15,8 @@
             --egg-fill-bg: rgba(106, 183, 226, 0.7);
             --egg-fill-emergency: rgba(147, 215, 175, 0.7);
             --egg-fill-inactive: rgba(200, 200, 200, 0.3);
+            --daytime-sky: #87CEEB;    /* Light sky blue */
+            --nighttime-sky: #1a1a2e;  /* Dark blue/navy */
             --gray-border: #E2E2E2;
         }
 
@@ -26,7 +28,7 @@
         }
 
         body {
-            background-color: var(--background);
+            transition: background-color 1800s ease;
             color: var(--text);
             padding: 20px;
             max-width: 1400px;
@@ -51,30 +53,11 @@
         }
 
 
-        .egg-shape {
-            width: 300px;  /* Increased from 200px */
-            height: 400px; /* Increased from 260px */
-            background: transparent;
-            border: 3px solid var(--primary);
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: var(--text);
-            padding: 30px; /* Increased padding */
-            text-align: center;
-            margin: 20px 0;
-            transition: all 0.3s ease;
-            overflow: hidden;
-        }
-
         .contribution-controls {
             width: 100%;
-            margin-top: 30px;
+            margin-top:-40px;
             padding: 20px;
-            background: var(--background);
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 10px;
         }
 
@@ -83,16 +66,6 @@
             margin-bottom: 15px;
             color: var(--text);
             font-weight: 500;
-        }
-
-        .fill-level {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 0%;
-            transition: height 0.8s ease-out;
-            transform-origin: bottom;
         }
 
         .current-fill {
@@ -145,7 +118,7 @@
             position: absolute;
             top: 50%;
             left: 0;
-            top:20px;
+            top:12px;
             height: 8px;
             width: 0%; /* Start at 0% width */
             background-color: var(--primary);
@@ -180,7 +153,7 @@
 
         .egg-content {
             position: relative;
-            z-index: 2;
+            z-index: 5;
             width: 100%;
             height: 100%;
             display: flex;
@@ -200,20 +173,19 @@
             top: 10px; /* Adjusted position */
             right: 60px;
             font-size: 16px; /* Increased font size */
-            color: var(--text);
-            background: var(--card-bg);
+            color: rgba(255,255,255,1);
+            background: rgba(0,0,0,1);
             padding: 8px 15px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .retirement-projection {
-            margin-top: 20px;
-            padding: 15px;
-            background: var(--background);
+            display: grid;
+            gap: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 8px;
-            font-size: 18px; /* Increased font size */
-            text-align: center;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
@@ -271,10 +243,11 @@
             font-size: 16px;
             color: var(--text-secondary);
             margin-bottom: 20px;
+            z-index: 20;
         }
 
         .current-stats {
-            background: var(--background);
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 8px;
             padding: 15px;
             margin-bottom: 20px;
@@ -303,13 +276,37 @@
             color: var(--primary-dark);
             margin: 10px 0;
         }
-
-        .retirement-projection {
-            background: var(--background);
-            border-radius: 8px;
+        .projections-section {
             padding: 15px;
-            margin-top: 20px;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
+
+        .contribution-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .contribution-slider-container {
+            position: relative;
+            padding: 10px 0;
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .retirement-projection {
+                gap: 15px;
+                padding: 15px;
+            }
+        }
+
 
         .projection-title {
             font-size: 18px;
@@ -331,8 +328,7 @@
         }
 
         .age-selector {
-            margin-bottom: 20px;
-            padding: 10px;
+            padding: 15px;
             background: white;
             border-radius: 6px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
@@ -342,7 +338,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-top: 5px;
+            margin-top: 8px;
         }
 
         .age-input {
@@ -441,6 +437,37 @@
             background: var(--primary-dark);
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
         }
+        .slider-group {
+            padding: 10px 0;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .slider-with-labels {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .slider-container {
+            position: relative;
+            height: 24px;
+            display: flex;
+            align-items: center;
+        }
+
+        .contribution-slider {
+            width: 100%;
+            margin: 0;
+        }
+
 
         .payroll-stat {
             font-size: 14px;
@@ -542,12 +569,299 @@
                 padding: 0.4rem 0.8rem;
             }
         }
+        .header-section {
+            margin: 20px 10px 30px 10px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            text-align: center;
+        }
+
+        .logos-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            padding: 0 10px;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+        }
+
+        .header-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--text);
+            margin: 0;
+            padding: 0 10px;
+            line-height: 1.3;
+        }
+
+        .header-subtitle {
+            font-size: 16px;
+            color: var(--text);
+            opacity: 0.8;
+            line-height: 1.5;
+            padding: 0 10px;
+            max-width: 100%;
+        }
+
+        .separator {
+            width: 90%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--primary), transparent);
+            margin: 15px auto;
+        }
+
+        /* Tablet styles */
+        @media (min-width: 768px) {
+            .header-section {
+                margin: 30px 20px 40px 20px;
+                padding: 30px;
+            }
+
+            .header-content {
+                flex-direction: row;
+                text-align: left;
+                gap: 30px;
+            }
+
+            .logos-container {
+                min-width: 160px;
+                justify-content: flex-start;
+                padding: 0;
+            }
+
+            .logo {
+                width: 70px;
+                height: 70px;
+            }
+
+            .header-title {
+                font-size: 28px;
+                padding: 0;
+            }
+
+            .header-subtitle {
+                font-size: 17px;
+                padding: 0;
+            }
+        }
+
+        /* Desktop styles */
+        @media (min-width: 1024px) {
+            .header-section {
+                margin: 40px auto 50px auto;
+                max-width: 1200px;
+                padding: 40px;
+            }
+
+            .header-content {
+                gap: 40px;
+            }
+
+            .logos-container {
+                min-width: 200px;
+            }
+
+            .logo {
+                width: 80px;
+                height: 80px;
+            }
+
+            .header-title {
+                font-size: 32px;
+            }
+
+            .header-subtitle {
+                font-size: 18px;
+                max-width: 800px;
+            }
+
+            .separator {
+                margin: 20px auto;
+            }
+        }
+
+        /* Additional mobile optimizations */
+        @media (max-width: 360px) {
+            .header-section {
+                margin: 10px 5px 20px 5px;
+                padding: 15px;
+            }
+
+            .logo {
+                width: 50px;
+                height: 50px;
+            }
+
+            .header-title {
+                font-size: 22px;
+            }
+
+            .header-subtitle {
+                font-size: 14px;
+            }
+        }
+
+        /* Update the egg-shape class to set the transform-origin at the bottom */
+        .egg-shape {
+            width: 300px;
+            height: 400px;
+            background: linear-gradient(145deg, rgba(255,255,255,0.4) 0%, transparent 50%, rgba(0,0,0,0.1) 100%);
+            border: 3px solid var(--primary);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: var(--text);
+            padding: 30px;
+            text-align: center;
+            margin: 20px 0;
+            overflow: hidden;
+            transform-origin: bottom center;
+            animation: breathe 3s ease-in-out infinite;
+            box-shadow: 
+                inset -10px -10px 15px rgba(0,0,0,0.15),
+                inset 10px 10px 15px rgba(255,255,255,0.8),
+                12px 12px 20px rgba(0,0,0,0.2),
+                -2px -2px 10px rgba(255,255,255,0.8);
+            transition: all 0.3s ease;
+        }
+
+        /* Add a shine effect with a pseudo-element */
+        .egg-shape::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -50%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,0.2),
+                transparent
+            );
+            transform: skewX(-15deg);
+            z-index: 4;
+        }
+
+        /* Optional: Add a subtle bottom reflection */
+        .egg-shape::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 20px;
+            background: radial-gradient(ellipse at center, rgba(0,0,0,0.2) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        /* Update fill levels to have depth */
+        .fill-level {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0%;
+            transition: height 0.8s ease-out;
+            transform-origin: bottom;
+            background-image: linear-gradient(
+                to right,
+                rgba(0,0,0,0.1),
+                rgba(255,255,255,0.1) 50%,
+                rgba(0,0,0,0.1)
+            );
+        }
+
+        /* Update hover effect */
+        .egg-shape:hover {
+            box-shadow: 
+                inset -12px -12px 18px rgba(0,0,0,0.18),
+                inset 12px 12px 18px rgba(255,255,255,0.9),
+                15px 15px 25px rgba(0,0,0,0.25),
+                -3px -3px 12px rgba(255,255,255,0.9);
+            transform: translateY(-2px);
+        }
+
+        /* Update the keyframe animations to rock from the bottom */
+        @keyframes breathe {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+            }
+            50% {
+                transform: scale(1.01) rotate(0.3deg);
+            }
+        }
+
+        @keyframes wobbleSmall {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(1deg); }
+            50% { transform: rotate(-0.5deg); }
+            75% { transform: rotate(0.8deg); }
+        }
+
+        @keyframes wobbleMedium {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(2deg); }
+            50% { transform: rotate(-1.5deg); }
+            75% { transform: rotate(1.8deg); }
+        }
+
+        @keyframes wobbleLarge {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(3deg); }
+            50% { transform: rotate(-2.5deg); }
+            75% { transform: rotate(2.8deg); }
+        }
+
+        /* Update the wobble classes to keep the breathing animation subtle */
+        .egg-shape.wobble-small {
+            animation: breathe 3s ease-in-out infinite, wobbleSmall 0.5s ease-in-out;
+        }
+
+        .egg-shape.wobble-medium {
+            animation: breathe 3s ease-in-out infinite, wobbleMedium 0.7s ease-in-out;
+        }
+
+        .egg-shape.wobble-large {
+            animation: breathe 3s ease-in-out infinite, wobbleLarge 1s ease-in-out;
+        }
     </style>
 </head>
 
 
 <body>
-    <h1>Renest x Nevada Dashboard</h1>
+    <header class="header-section">
+    <div class="header-content">
+        <div class="logos-container">
+            <img src="blogo.png" alt="Renest Logo" class="logo">
+            <img src="Nevada_Logo.jpg" alt="Nevada Logo" class="logo">
+        </div>
+        <div class="title-container">
+            <h1 class="header-title">Retirement Dashboard</h1>
+            <p class="header-subtitle">Take control of your future with our intelligent retirement planning tools. Track your IRA contributions, emergency savings, and optimize your path to financial freedom.</p>
+        </div>
+    </div>
+    <div class="separator"></div>
+</header>
     <div class="dashboard">
         <!-- IRA Section -->
         <div class="section">
@@ -575,69 +889,71 @@
                     </div>
                 </div>
             </div>
-            <div class="contribution-controls">
-               <div class="current-stats">
-                    <div class="stat-row">
-                        <span class="stat-label">Monthly Contribution:</span>
-                        <span class="stat-value">$100</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Percent of Payroll:</span>
-                        <span class="stat-value" id="ira-payroll-percent">3.33%</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Year-End Projection:</span>
-                        <span class="stat-value" id="ira-projected-total">$1,200</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Growth This Year:</span>
-                        <span class="stat-value" id="ira-growth"></span>
-                    </div>
-                </div>
-                
-                <div class="contribution-label">Additional Monthly Contribution</div>
-                <div class="contribution-slider-container">
-                    <div class="slider-fill" id="slider-fill"></div>
-                    <input type="range" 
-                           class="contribution-slider" 
-                           id="ira-slider"
-                           min="0" 
-                           max="967" 
-                           value="0"
-                           step="10">
-                    <div class="slider-labels">
-                        <span>$0</span>
-                        <span id="max-additional">$967</span>
-                    </div>
-                </div>
-                <div class="slider-value" id="ira-monthly">$0/month</div>
-                
-                <div class="retirement-projection" id="ira-projection">
-                    <div class="age-selector">
-                        <label for="retirement-age">Projected Value at Age:</label>
-                        <div class="age-input-container">
-                            <input type="number" 
-                                   id="retirement-age" 
-                                   min="28" 
-                                   max="100" 
-                                   value="45" 
-                                   class="age-input">
-                            <span class="years-to-retire" id="years-to-retire">(37 years from now)</span>
-                        </div>
-                    <div class="projection-row">
-                        <span>With Current Savings:</span>
-                        <span id="ira-projection-current">$89,250</span>
-                    </div>
-                    <div class="projection-row">
-                        <span>With Additional Contributions:</span>
-                        <span id="ira-projection-with-contributions">$324,500</span>
-                    </div>
-                    </div>
-                    
-                </div>
-            </div>
+            <div class="retirement-projection" id="ira-projection">
+    <!-- Retirement Age Selector -->
+    <div class="age-selector">
+        <label for="retirement-age">Projected Value at Age:</label>
+        <div class="age-input-container">
+            <input type="number" 
+                   id="retirement-age" 
+                   min="28" 
+                   max="100" 
+                   value="45" 
+                   class="age-input">
+            <span class="years-to-retire" id="years-to-retire">(37 years from now)</span>
         </div>
+        <div class="projections-section">
+        <div class="projection-row">
+            <span>With Current Savings:</span>
+            <span id="ira-projection-current">$89,250</span>
+        </div>
+        <div class="projection-row">
+            <span>With Additional Contributions:</span>
+            <span id="ira-projection-with-contributions">$324,500</span>
+        </div>
+    </div>
+    </div>
 
+    <!-- Current Stats Section -->
+    <div class="current-stats">
+        <div class="stat-row">
+            <span class="stat-label">Monthly Contribution:</span>
+            <span class="stat-value">$50</span>
+        </div>
+        <div class="stat-row">
+            <span class="stat-label">Percent of Payroll:</span>
+            <span class="stat-value" id="ira-payroll-percent">3.33%</span>
+        </div>
+        <div class="stat-row">
+            <span class="stat-label">Year-End Projection:</span>
+            <span class="stat-value" id="ira-projected-total">$1,200</span>
+        </div>
+        <div class="stat-row">
+            <span class="stat-label">Growth This Year:</span>
+            <span class="stat-value" id="ira-growth"></span>
+        </div>
+    </div>
+
+    <!-- Projections Section -->
+    
+
+    <!-- Additional Contribution Slider -->
+    <div class="contribution-controls">
+    <div class="slider-group">
+        <label class="slider-label">Additional Monthly: <span id="ira-monthly">$0/month</span></label>
+        <div class="slider-with-labels">
+            <span>$0</span>
+            <div class="slider-container">
+                <div class="slider-fill" id="slider-fill"></div>
+                <input type="range" class="contribution-slider" id="ira-slider"
+                    min="0" max="967" value="0" step="10">
+            </div>
+            <span id="max-additional">$967</span>
+        </div>
+    </div>
+</div>
+</div>
+</div>
     <div class="section">
         <div class="title-container">
                 <h2 class="account-title">For Emergencies</h2>
@@ -662,6 +978,7 @@
                     </div>
                 </div>
             </div>
+            <div class="retirement-projection">
             <div class="contribution-controls">
                 <div class="current-stats">
                     <div class="stat-row">
@@ -681,7 +998,7 @@
                         <span class="stat-value" id="emergency-total">$5,113</span>
                     </div>
                 </div>
-                <div class="reallocation-controls">
+                <div class="reallocation-controls" style="margin-top: -20px;">
                     <button class="reallocation-button" id="contribute-interest">
                         Contribute Interest to Roth IRA
                     </button>
@@ -691,6 +1008,7 @@
                 </div>
             </div>
         </div>
+    </div>  
 
         <!-- Add Account Section -->
         <div class="section">
@@ -710,11 +1028,6 @@
             </div>
         </div>
     </div>
-
-    <div class="stats-section">
-        <h2>Optimization Recommendations</h2>
-        <div id="stats-content"></div>
-    </div>
 </body>
 
 <script>
@@ -732,8 +1045,8 @@ const CURRENT_AGE = 28;
 
 // Constants for Emergency Savings
 const MONTHLY_EXPENSES = 3000;
-const EMERGENCY_TARGET = MONTHLY_EXPENSES * 6;
-const CURRENT_EMERGENCY_SAVINGS = 5000;
+const EMERGENCY_TARGET = 1400;
+const CURRENT_EMERGENCY_SAVINGS = 600;
 const CURRENT_EMERGENCY_MONTHLY = 100;
 const INTEREST_RATE = 0.045;
 
@@ -838,6 +1151,70 @@ function calculateProjectedValue(principal, monthlyContribution, rate, years) {
 
     return futureValue;
 }
+
+function updateBackgroundColor() {
+    const now = new Date();
+    const hour = now.getHours();
+    const minute = now.getMinutes();
+    const time = hour + minute / 60;
+
+    // Define time ranges
+    const sunrise = 6;  // 6 AM
+    const day = 8;      // 8 AM
+    const sunset = 18;  // 6 PM
+    const night = 20;   // 8 PM
+
+    // Force the color directly instead of using CSS variables
+    let backgroundColor;
+    if (time >= day && time < sunset) {
+        // Daytime - sky blue
+        backgroundColor = '#87CEEB';
+    } else if (time >= night || time < sunrise) {
+        // Nighttime - dark blue
+        backgroundColor = '#1a1a2e';
+    } else {
+        // Transition periods (sunrise and sunset)
+        let progress;
+        if (time >= sunrise && time < day) {
+            // Sunrise transition
+            progress = (time - sunrise) / (day - sunrise);
+            backgroundColor = blendColors('#1a1a2e', '#87CEEB', progress);
+        } else {
+            // Sunset transition
+            progress = (time - sunset) / (night - sunset);
+            backgroundColor = blendColors('#87CEEB', '#1a1a2e', progress);
+        }
+    }
+
+    // Force the background color with !important
+    document.body.style.setProperty('background-color', backgroundColor, 'important');
+}
+
+// Simplified color blending function
+function blendColors(color1, color2, percentage) {
+    // Remove any spaces and '#' characters
+    color1 = color1.replace(/\s/g, '').replace('#', '');
+    color2 = color2.replace(/\s/g, '').replace('#', '');
+    
+    // Parse the colors
+    const r1 = parseInt(color1.substring(0, 2), 16);
+    const g1 = parseInt(color1.substring(2, 4), 16);
+    const b1 = parseInt(color1.substring(4, 6), 16);
+    
+    const r2 = parseInt(color2.substring(0, 2), 16);
+    const g2 = parseInt(color2.substring(2, 4), 16);
+    const b2 = parseInt(color2.substring(4, 6), 16);
+    
+    // Blend the colors
+    const r = Math.round(r1 + (r2 - r1) * percentage);
+    const g = Math.round(g1 + (g2 - g1) * percentage);
+    const b = Math.round(b1 + (b2 - b1) * percentage);
+    
+    // Convert back to hex
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+}
+
+
 
 // UI Update Functions for IRA
 function updateIRAEggFills(additionalMonthly) {
@@ -950,36 +1327,62 @@ function updateEmergencyEggFills(additionalMonthly = 0) {
     const withAdditional = projectedSavings + (additionalMonthly * MONTHS_REMAINING);
     const totalPercent = Math.min((withAdditional / EMERGENCY_TARGET) * 100, 100);
 
-    // Ensure the fills are visible and have transition
-    [currentFill, paceFill, additionalFill].forEach(fill => {
-        fill.style.opacity = '1';
-        fill.style.transition = 'height 0.8s ease-out';
-    });
-
-    // Set heights with requestAnimationFrame
     requestAnimationFrame(() => {
         currentFill.style.height = `${currentPercent}%`;
         paceFill.style.height = `${pacePercent}%`;
         additionalFill.style.height = `${totalPercent}%`;
     });
 
-    // Calculate interest and update displays
     const emergencyInterest = calculateEmergencyInterest();
     
-    // Always show the earned interest
-    document.getElementById('emergency-growth').textContent = 
-        formatCurrency(emergencyInterest);
+    // Update interest earned display
+    document.getElementById('emergency-growth').textContent = formatCurrency(emergencyInterest);
     
-    // For total value, only include interest if it's not being reallocated
-    document.getElementById('emergency-total').textContent = 
-        formatCurrency(CURRENT_EMERGENCY_SAVINGS + (isInterestReallocated ? 0 : emergencyInterest));
-        
-    // Update the big number display to show just principal when interest is reallocated
-    document.getElementById('emergency-contributed').textContent = 
-        formatCurrency(CURRENT_EMERGENCY_SAVINGS);
+    // Update total value display based on interest reallocation state
+    const totalValue = isInterestReallocated ? 
+        CURRENT_EMERGENCY_SAVINGS : 
+        CURRENT_EMERGENCY_SAVINGS + emergencyInterest;
+    
+    // Update total display
+    document.getElementById('emergency-total').textContent = formatCurrency(totalValue);
+    
+    // Update the principal display
+    document.getElementById('emergency-contributed').textContent = formatCurrency(CURRENT_EMERGENCY_SAVINGS);
 }
 
-// Event Handlers
+// Function to make eggs wobble
+function triggerEggWobble() {
+    const eggs = document.querySelectorAll('.egg-shape');
+    const wobbleTypes = ['wobble-small', 'wobble-medium', 'wobble-large'];
+    
+    // Random interval between 5 and 15 seconds
+    const nextWobbleDelay = Math.random() * 10000 + 5000;
+    
+    // Randomly select an egg
+    const randomEgg = eggs[Math.floor(Math.random() * eggs.length)];
+    
+    // Don't wobble inactive eggs
+    if (randomEgg.classList.contains('inactive-egg')) {
+        setTimeout(triggerEggWobble, nextWobbleDelay);
+        return;
+    }
+    
+    // Select random wobble intensity
+    const wobbleType = wobbleTypes[Math.floor(Math.random() * wobbleTypes.length)];
+    
+    // Add wobble class
+    randomEgg.classList.add(wobbleType);
+    
+    // Remove wobble class after animation completes
+    setTimeout(() => {
+        randomEgg.classList.remove(wobbleType);
+    }, 1000);
+    
+    // Schedule next wobble
+    setTimeout(triggerEggWobble, nextWobbleDelay);
+}
+
+// Update the handleInterestReallocation function
 function handleInterestReallocation() {
     const button = document.getElementById('contribute-interest');
     isInterestReallocated = !isInterestReallocated;
@@ -993,17 +1396,18 @@ function handleInterestReallocation() {
     // Update maximum additional monthly contribution
     updateMaxAdditionalMonthly();
     
-    // Update both IRA and Emergency savings displays
+    // Get current IRA slider value
     const iraSlider = document.getElementById('ira-slider');
     const currentIraValue = Number(iraSlider.value);
     
-    // Update IRA displays with reallocated interest
+    // Update Emergency savings first
+    updateEmergencyEggFills(0);
+    
+    // Then update IRA displays
     updateIRAProjections(currentIraValue);
     updateIRAEggFills(currentIraValue);
-    
-    // Update Emergency savings display to reflect the removed interest
-    updateEmergencyEggFills();
 }
+
 
 function handleMoneyMove() {
     alert('Money movement functionality coming soon!');
@@ -1095,12 +1499,21 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Add account functionality coming soon!');
         });
     }
+
+
+    updateBackgroundColor();
     
+    // Update background color every minute
+    // setInterval(updateBackgroundColor, 60000);
+    setInterval(updateBackgroundColor, 10000)
+
     // Initialize all displays with a slight delay to ensure DOM is ready
     setTimeout(() => {
         // Initial updates with zero additional contributions
         updateIRAEggFills(0);
         updateEmergencyEggFills(0);
+        // Start the egg wobbling
+triggerEggWobble();
         
         // Trigger initial slider events
         iraSlider.dispatchEvent(new Event('input'));
