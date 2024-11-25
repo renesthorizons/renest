@@ -332,6 +332,27 @@
             align-items: center;
             gap: 10px;
             margin-top: 8px;
+            position: relative;
+        }
+
+        .age-error {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            color: #e53e3e;
+            font-size: 14px;
+            margin-top: 4px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .age-error.visible {
+            opacity: 1;
+        }
+
+        .age-input.error {
+            border-color: #e53e3e;
+            box-shadow: 0 0 0 2px rgba(229, 62, 62, 0.2);
         }
 
         .age-input {
@@ -906,8 +927,7 @@
         <label for="retirement-age">Projected Value at Age:</label>
         <div class="age-input-container">
             <input type="number" 
-                   id="retirement-age" 
-                   min="28" 
+                   id="retirement-age"  
                    max="100" 
                    value="45" 
                    class="age-input">
@@ -1451,21 +1471,40 @@ function handleEmergencySliderChange(event) {
 
 function handleRetirementAgeChange(event) {
     const newAge = Number(event.target.value);
+    const input = event.target;
+    const container = input.closest('.age-input-container');
+    let errorEl = container.querySelector('.age-error');
     
-    if (newAge < CURRENT_AGE || newAge > 100) {
-        event.target.value = newAge < CURRENT_AGE ? CURRENT_AGE : 100;
+    // Create error element if it doesn't exist
+    if (!errorEl) {
+        errorEl = document.createElement('div');
+        errorEl.className = 'age-error';
+        errorEl.textContent = `Age must be at least ${CURRENT_AGE}`;
+        container.appendChild(errorEl);
+    }
+    
+    // Show error if age is too low
+    if (newAge < CURRENT_AGE) {
+        input.classList.add('error');
+        errorEl.classList.add('visible');
+        return;
+    }
+    
+    // Clear error state
+    input.classList.remove('error');
+    errorEl.classList.remove('visible');
+    
+    if (newAge > 100) {
+        input.value = 100;
         return;
     }
     
     retirementAge = newAge;
     yearsToRetirement = retirementAge - CURRENT_AGE;
     
-    // Update years to retirement display
     const yearsElement = document.getElementById('years-to-retire');
-    const yearsText = `(${yearsToRetirement} years from now)`;
-    yearsElement.textContent = yearsText;
+    yearsElement.textContent = `(${yearsToRetirement} years from now)`;
     
-    // Update all projections
     const iraSliderValue = Number(document.getElementById('ira-slider').value);
     updateIRAProjections(iraSliderValue);
 }
