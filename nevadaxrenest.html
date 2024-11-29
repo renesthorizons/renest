@@ -3,6 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
     <title>Renest x Nevada Dashboard</title>
     <style>
        :root {
@@ -28,6 +34,7 @@
         }
 
         body {
+            background-color: var(--daytime-sky) !important;
             transition: background-color 1800s ease;
             color: var(--text);
             padding: 20px;
@@ -174,12 +181,13 @@
         }
 
         .retirement-projection {
-            display: grid;
-            gap: 20px;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            gap: 25px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 1px solid rgba(106, 183, 226, 0.2);
+            margin-top: 20px;
         }
 
         @media (max-width: 768px) {
@@ -240,26 +248,37 @@
         }
 
         .current-stats {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 1px solid rgba(106, 183, 226, 0.2);
         }
 
         .stat-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 16px;
+            margin-bottom: 15px;
+            font-size: 15px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(106, 183, 226, 0.1);
+        }
+
+        .stat-row:last-child {
+            margin-bottom: 0;
+            border-bottom: none;
         }
 
         .stat-label {
-            color: var(--text-secondary);
+            color: #64748b;
+            font-weight: 500;
         }
 
         .stat-value {
-            font-weight: bold;
-            color: var(--text);
+            font-weight: 600;
+            color: #2D3748;
+            padding-left: 15px;
         }
 
         .slider-value {
@@ -270,10 +289,12 @@
             margin: 10px 0;
         }
         .projections-section {
-            padding: 15px;
-            background: white;
-            border-radius: 6px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            background: linear-gradient(to bottom right, rgba(255,255,255,0.95), rgba(250,250,250,0.95));
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            border: 1px solid rgba(106, 183, 226, 0.2);
+            margin-top: 15px;
         }
 
         .contribution-controls {
@@ -312,14 +333,26 @@
         .projection-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 16px;
+            padding: 12px 0;
+            font-size: 15px;
+            border-bottom: 1px solid rgba(106, 183, 226, 0.1);
+            transition: background-color 0.2s ease;
+        }
+        .projection-row:last-child {
+            border-bottom: none;
+        }
+        .projection-row:hover {
+            background-color: rgba(106, 183, 226, 0.05);
+        }
+        .projection-row span:first-child {
+            color: #64748b;
+            font-weight: 500;
         }
         .projection-row span:last-child {
-            font-weight: bold;
+            font-weight: 600;
             color: var(--primary-dark);
+            font-size: 16px;
         }
-
         .age-selector {
             padding: 15px;
             background: white;
@@ -607,6 +640,153 @@
             flex-wrap: wrap;
             padding: 0 10px;
         }
+        .income-dashboard {
+            grid-column: 1 / -1;
+            padding: 30px;
+            margin-top: 20px;
+        }
+
+        .income-chart-container {
+            height: 600px;
+            width:90%;
+            margin: 20px 0 40px 0;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 1px solid rgba(106, 183, 226, 0.2);
+        }
+
+        .actions-container {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            justify-content: center;
+        }
+
+        .action-button {
+            padding: 12px 24px;
+            border-radius: 8px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+        }
+
+        .current-recommendations {
+            background: linear-gradient(to bottom right, rgba(255,255,255,0.95), rgba(250,250,250,0.95));
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            border: 1px solid rgba(106, 183, 226, 0.2);
+        }
+
+        .current-recommendations h3 {
+            font-size: 20px;
+            color: var(--text);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .recommendation-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .rec-card {
+            flex: 1;
+            max-width: 300px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 1px solid rgba(106, 183, 226, 0.2);
+            transition: transform 0.2s ease;
+            text-align: center;
+        }
+
+        .rec-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        .rec-card h4 {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .rec-card .amount {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin: 10px 0;
+        }
+
+        .rec-card .details {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .recommendation-grid {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .rec-card {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+
+        /* Highcharts Customization */
+        .highcharts-tooltip {
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .highcharts-tooltip-box {
+            fill: rgba(255, 255, 255, 0.98);
+            stroke: rgba(106, 183, 226, 0.3);
+            stroke-width: 1px;
+            border-radius: 8px;
+        }
+
+        .highcharts-label text {
+            font-family: Arial, sans-serif;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            
+            .actions-container {
+                flex-direction: column;
+            }
+            
+            .income-chart-container {
+                height: 400px;
+                margin: 15px 0 30px 0;
+            }
+            
+            .current-recommendations {
+                padding: 20px;
+            }
+        }
 
         .logo {
             width: 60px;
@@ -874,6 +1054,85 @@
             z-index: 10;
             white-space: nowrap;
         }
+        .income-dashboard {
+            grid-column: 1 / -1;
+            padding: 30px;
+            margin-top: 20px;
+        }
+
+        .income-chart-container {
+            height: 500px;
+            margin: 20px 0 40px 0;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 1px solid rgba(106, 183, 226, 0.2);
+        }
+
+        .actions-container {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            justify-content: center;
+        }
+
+        .action-button {
+            padding: 12px 24px;
+            border-radius: 8px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+        }
+
+
+        /* Highcharts Customization */
+        .highcharts-tooltip {
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .highcharts-tooltip-box {
+            fill: rgba(255, 255, 255, 0.98);
+            stroke: rgba(106, 183, 226, 0.3);
+            stroke-width: 1px;
+            border-radius: 8px;
+        }
+
+        .highcharts-label text {
+            font-family: Arial, sans-serif;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .recommendation-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .actions-container {
+                flex-direction: column;
+            }
+            
+            .income-chart-container {
+                height: 400px;
+                margin: 15px 0 30px 0;
+            }
+            
+            .current-recommendations {
+                padding: 20px;
+            }
+        }
     </style>
 </head>
 
@@ -1066,6 +1325,42 @@
             </div>
         </div>
     </div>
+    <div class="section income-dashboard">
+    <div class="title-container">
+        <h2 class="account-title">Income & Expense Tracker</h2>
+        <div class="info-icon-wrapper">
+            <img src="info.png" alt="info" class="info-icon">
+            <div class="tooltip">
+                Track your income streams and expenses. Get personalized savings recommendations based on your income and expenses.
+            </div>
+        </div>
+    </div>
+        <div class="current-recommendations">
+    <h3>June Recommendations</h3>
+    <div class="recommendation-grid">
+        <div class="rec-card">
+            <h4>Add to Emergency Egg</h4>
+            <p class="amount">$45</p>
+        </div>
+        <div class="rec-card">
+            <h4>Add to Last Resort Egg</h4>
+            <p class="amount">$30</p>
+        </div>
+    </div>
+</div>
+    <div class="income-chart-container">
+        <div id="income-chart"></div>
+    </div>
+
+    <div class="actions-container">
+        <button class="action-button" id="add-income-btn">
+            <span class="plus-icon">+</span> Add Income Stream
+        </button>
+        <button class="action-button" id="link-expenses-btn">
+            <span class="link-icon">🔗</span> Link Expenses
+        </button>
+    </div>
+</div>
 </body>
 
 <script>
@@ -1096,6 +1391,135 @@ const EMERGENCY_MONTHLY_PERCENT = (CURRENT_EMERGENCY_MONTHLY / MONTHLY_PAYROLL) 
 // Calculate maximum additional monthly IRA contribution
 const REMAINING_ROOM = IRA_LIMIT - PROJECTED_ANNUAL;
 const MAX_ADDITIONAL_MONTHLY = Math.floor(REMAINING_ROOM / MONTHS_REMAINING);
+const incomeData = [
+    {
+        period: 'January 2024',
+        income: {
+            payroll: 2900,
+            uber: 600,
+            freelance: 100
+        },
+        expenses: {
+            rent: 1400,
+            groceries: 400,
+            utilities: 150
+        },
+        recommendations: {
+            hysa: 40,
+            roth: 25,
+            // transfer: 15
+        }
+    },
+    {
+        period: 'February 2024',
+        income: {
+            payroll: 2900,
+            uber: 550,
+            freelance: 90
+        },
+        expenses: {
+            rent: 1400,
+            groceries: 380,
+            utilities: 140
+        },
+        recommendations: {
+            hysa: 38,
+            roth: 28,
+            // transfer: 100
+        }
+    },
+    {
+        period: 'March 2024',
+        income: {
+            payroll: 2900,
+            uber: 70,
+            freelance: 100
+        },
+        expenses: {
+            rent: 1400,
+            groceries: 420,
+            utilities: 160
+        },
+        recommendations: {
+            hysa: 45,
+            roth: 30,
+            // transfer: 150
+        }
+    },
+    {
+        period: 'April 2024',
+        income: {
+            payroll: 2900,
+            uber: 250,
+            freelance: 95
+        },
+        expenses: {
+            rent: 1400,
+            groceries: 400,
+            utilities: 145
+        },
+        recommendations: {
+            hysa: 42,
+            roth: 27,
+            // transfer: 150
+        }
+    },
+    {
+        period: 'May 2024',
+        income: {
+            payroll: 2900,
+            uber: 300,
+            freelance: 50
+        },
+        expenses: {
+            rent: 1400,
+            groceries: 410,
+            utilities: 155
+        },
+        recommendations: {
+            hysa: 44,
+            roth: 29,
+            // transfer: 150
+        }
+    },
+    // Current month broken down biweekly
+    {
+        period: 'June 1-15',
+        income: {
+            payroll: 1450,
+            uber: 300,
+            freelance: 200
+        },
+        expenses: {
+            rent: 1400,
+            groceries: 200,
+            utilities: 150
+        },
+        recommendations: {
+            hysa: 22.5,
+            roth: 15,
+            // transfer: 7.5
+        },
+        isCurrent: true
+    },
+    {
+        period: 'June 16-30',
+        income: {
+            payroll: 1450,
+            uber: 350,
+            freelance: 600
+        },
+        expenses: {
+            groceries: 200
+        },
+        recommendations: {
+            hysa: 22.5,
+            roth: 15,
+            // transfer: 7.5
+        },
+        isCurrent: true
+    }
+];
 
 // State variables
 let retirementAge = 65;
@@ -1103,7 +1527,143 @@ let yearsToRetirement = retirementAge - CURRENT_AGE;
 let isInterestReallocated = false;
 let isMoneyMoved = false;
 let reallocatedInterestAmount = 0;
+function updateCurrentRecommendations() {
+    const currentMonth = incomeData.filter(d => d.isCurrent);
+    const totalIncome = currentMonth.reduce((sum, period) => {
+        return sum + Object.values(period.income).reduce((a, b) => a + b, 0);
+    }, 0);
+    
+    const totalRecs = currentMonth.reduce((sum, period) => ({
+        hysa: sum.hysa + period.recommendations.hysa,
+        roth: sum.roth + period.recommendations.roth,
+        // transfer: sum.transfer + period.recommendations.transfer
+    }), { hysa: 0, roth: 0 });
 
+    document.querySelector('.rec-card:nth-child(1) .amount').textContent = 
+        `$${totalRecs.hysa}`;
+    document.querySelector('.rec-card:nth-child(2) .amount').textContent = 
+        `$${totalRecs.roth}`;
+}
+
+function initIncomeChart() {
+   try {
+       const chartOptions = {
+           chart: {
+               renderTo: 'income-chart',
+               type: 'column',
+               backgroundColor: 'rgba(255, 255, 255, 0.9)',
+               style: {
+                   fontFamily: 'Arial, sans-serif'
+               }
+           },
+           title: {
+               text: '2024 Income & Expenses',
+               style: { 
+                   fontSize: '18px',
+                   color: '#2D3748'
+               }
+           },
+           xAxis: {
+               categories: incomeData.map(d => d.period),
+               labels: {
+                   rotation: -45,
+                   style: {
+                       fontSize: '12px',
+                       color: '#64748b'
+                   }
+               }
+           },
+           yAxis: {
+               title: {
+                   text: 'Amount ($)',
+                   style: {
+                       color: '#64748b'
+                   }
+               },
+               labels: {
+                   formatter: function() {
+                       return '$' + this.value.toLocaleString();
+                   },
+                   style: {
+                       color: '#64748b'
+                   }
+               },
+               gridLineColor: 'rgba(106, 183, 226, 0.1)'
+           },
+           tooltip: {
+               backgroundColor: 'rgba(255, 255, 255, 0.95)',
+               borderColor: 'rgba(106, 183, 226, 0.2)',
+               borderRadius: 8,
+               formatter: function() {
+                   const periodData = incomeData[this.point.index];
+                   const totalIncome = Object.values(periodData.income)
+                       .reduce((a, b) => a + b, 0);
+                   
+                   return `<b>${this.series.name}</b><br/>
+                           Amount: $${this.y.toLocaleString()}<br/>
+                           <hr style="margin: 5px 0"/>
+                           <b>This Month, What to Do</b><br/>
+                           Add to Emergency Egg: $${periodData.recommendations.hysa}<br/>
+                           Add to Last Resort Egg: $${periodData.recommendations.roth}<br/>
+                           <hr style="margin: 5px 0"/>
+                           <small></small>`;
+               }
+           },
+           plotOptions: {
+               column: {
+                   grouping: true,
+                   pointPadding: 0.1,
+                   groupPadding: 0.1,
+                   borderWidth: 0,
+                   borderRadius: 4,
+                   states: {
+                       hover: {
+                           brightness: 0.1
+                       }
+                   }
+               }
+           },
+           series: [
+               {
+                   name: 'Payroll',
+                   data: incomeData.map(d => d.income.payroll),
+                   color: '#6AB7E2'
+               },
+               {
+                   name: 'Uber',
+                   data: incomeData.map(d => d.income.uber),
+                   color: '#93D7AF'  
+               },
+               {
+                   name: 'Freelance',
+                   data: incomeData.map(d => d.income.freelance),
+                   color: '#FFB84C'
+               },
+               {
+                   name: 'Expenses',
+                   data: incomeData.map(d => 
+                       Object.values(d.expenses).reduce((sum, val) => sum + val, 0)
+                   ),
+                   color: '#F16B6B'
+               }
+           ],
+           credits: {
+               enabled: false
+           },
+           legend: {
+               itemStyle: {
+                   color: '#64748b'
+               }
+           }
+       };
+
+       const chart = new Highcharts.Chart(chartOptions);
+       console.log('Chart created successfully');
+       updateCurrentRecommendations();
+   } catch (error) {
+       console.error('Chart creation error:', error);
+   }
+}
 // Utility Functions
 function formatCurrency(amount) {
     return new Intl.NumberFormat('en-US', {
@@ -1196,35 +1756,27 @@ function updateBackgroundColor() {
     const minute = now.getMinutes();
     const time = hour + minute / 60;
 
-    // Define time ranges
     const sunrise = 6;  // 6 AM
     const day = 8;      // 8 AM
     const sunset = 18;  // 6 PM
     const night = 20;   // 8 PM
 
-    // Force the color directly instead of using CSS variables
     let backgroundColor;
     if (time >= day && time < sunset) {
-        // Daytime - sky blue
-        backgroundColor = '#87CEEB';
+        backgroundColor = 'var(--daytime-sky)';
     } else if (time >= night || time < sunrise) {
-        // Nighttime - dark blue
-        backgroundColor = '#1a1a2e';
+        backgroundColor = 'var(--nighttime-sky)';
     } else {
-        // Transition periods (sunrise and sunset)
         let progress;
         if (time >= sunrise && time < day) {
-            // Sunrise transition
             progress = (time - sunrise) / (day - sunrise);
-            backgroundColor = blendColors('#1a1a2e', '#87CEEB', progress);
+            backgroundColor = blendColors('var(--nighttime-sky)', 'var(--daytime-sky)', progress);
         } else {
-            // Sunset transition
             progress = (time - sunset) / (night - sunset);
-            backgroundColor = blendColors('#87CEEB', '#1a1a2e', progress);
+            backgroundColor = blendColors('var(--daytime-sky)', 'var(--nighttime-sky)', progress);
         }
     }
 
-    // Force the background color with !important
     document.body.style.setProperty('background-color', backgroundColor, 'important');
 }
 
@@ -1510,34 +2062,31 @@ function handleRetirementAgeChange(event) {
     updateIRAProjections(iraSliderValue);
 }
 
-// Initialize
+// Remove all existing DOMContentLoaded event listeners and replace with this single one:
 document.addEventListener('DOMContentLoaded', () => {
+    if (typeof Highcharts !== 'undefined') {
+        console.log('Initializing chart...');
+        initIncomeChart();
+    }
+
     // Initialize IRA displays
-    document.getElementById('ira-contributed').textContent = 
-        formatCurrency(CURRENT_CONTRIBUTION);
-    document.getElementById('ira-time-remaining').textContent = 
-        `${getDaysRemaining()} days left`;
-    document.getElementById('max-additional').textContent = 
-        formatCurrency(MAX_ADDITIONAL_MONTHLY);
-    document.getElementById('ira-projected-total').textContent = 
-    formatCurrency(PROJECTED_ANNUAL);
+    document.getElementById('ira-contributed').textContent = formatCurrency(CURRENT_CONTRIBUTION);
+    document.getElementById('ira-time-remaining').textContent = `${getDaysRemaining()} days left`;
+    document.getElementById('max-additional').textContent = formatCurrency(MAX_ADDITIONAL_MONTHLY);
+    document.getElementById('ira-projected-total').textContent = formatCurrency(PROJECTED_ANNUAL);
         
     // Initialize Emergency Savings displays
-    document.getElementById('emergency-contributed').textContent = 
-        formatCurrency(CURRENT_EMERGENCY_SAVINGS);
-    document.getElementById('emergency-target').textContent = 
-        `Target: ${formatCurrency(EMERGENCY_TARGET)}`;
-
+    document.getElementById('emergency-contributed').textContent = formatCurrency(CURRENT_EMERGENCY_SAVINGS);
+    document.getElementById('emergency-target').textContent = `Target: ${formatCurrency(EMERGENCY_TARGET)}`;
     document.getElementById('emergency-total').textContent = 
-    formatCurrency(CURRENT_EMERGENCY_SAVINGS + calculateEmergencyInterest());
+        formatCurrency(CURRENT_EMERGENCY_SAVINGS + calculateEmergencyInterest());
     
     // Initialize payroll percentages
-    document.getElementById('ira-payroll-percent').textContent = 
-        formatPercentage(IRA_MONTHLY_PERCENT / 100);
-    document.getElementById('emergency-payroll-percent').textContent = 
-        formatPercentage(EMERGENCY_MONTHLY_PERCENT / 100);
+    document.getElementById('ira-payroll-percent').textContent = formatPercentage(IRA_MONTHLY_PERCENT / 100);
+    document.getElementById('emergency-payroll-percent').textContent = formatPercentage(EMERGENCY_MONTHLY_PERCENT / 100);
     const initialGrowth = calculateYTDGrowth();
     document.getElementById('ira-growth').textContent = formatCurrency(initialGrowth);
+
     // Set up event listeners
     const iraSlider = document.getElementById('ira-slider');
     const retirementAgeInput = document.getElementById('retirement-age');
@@ -1548,6 +2097,15 @@ document.addEventListener('DOMContentLoaded', () => {
     retirementAgeInput.addEventListener('input', handleRetirementAgeChange);
     contributeInterestBtn.addEventListener('click', handleInterestReallocation);
     moveToRothBtn.addEventListener('click', handleMoneyMove);
+
+    // Income Chart buttons
+    document.getElementById('add-income-btn').addEventListener('click', () => {
+        alert('Add Income Stream functionality coming soon!');
+    });
+    
+    document.getElementById('link-expenses-btn').addEventListener('click', () => {
+        alert('Link Expenses functionality coming soon!');
+    });
     
     // Set up add account button
     const addAccountButton = document.getElementById('add-account-button');
@@ -1557,25 +2115,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-
     updateBackgroundColor();
-    
-    // Update background color every minute
-    // setInterval(updateBackgroundColor, 60000);
-    setInterval(updateBackgroundColor, 10000)
+    setInterval(updateBackgroundColor, 10000);
 
-    // Initialize all displays with a slight delay to ensure DOM is ready
+    // Initialize displays with delay
     setTimeout(() => {
-        // Initial updates with zero additional contributions
         updateIRAEggFills(0);
         updateEmergencyEggFills(0);
-        // Start the egg wobbling
-triggerEggWobble();
-        
-        // Trigger initial slider events
+        triggerEggWobble();
         iraSlider.dispatchEvent(new Event('input'));
-        
-        // Initial retirement age calculation
         handleRetirementAgeChange({ target: retirementAgeInput });
     }, 100);
 });
