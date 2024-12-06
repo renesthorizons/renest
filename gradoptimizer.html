@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graduate Student Finance Optimizer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+    <style>
+        body {
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          margin: 0;
+          padding: 20px;
+          line-height: 1.6;
+          color: #333;
+          background-color: #f4f4f4;
+          background-image: linear-gradient(135deg, #f4f4f4 0%, #e0e0e0 100%);
+        }
+
+        h1 {
+          color: #6600CC;
+          margin-bottom: 30px;
+          font-size: 2.5rem;
+          text-align: center;
+          text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h2, h3 {
+          color: #6600CC;  
+        }
+
+        .form-group {
+          margin-bottom: 30px;
+          position: relative;
+        }
+
+        label {
+          display: block;
+          margin-bottom: 10px;
+          font-weight: 600;
+          color: #444;
+        }
+
+        input {
+          width: 100%;
+          padding: 15px;
+          margin-bottom: 20px;
+          border: none;
+          border-radius: 4px;
+          font-size: 18px;
+          background-color: #f9f9f9;
+          box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+          transition: box-shadow 0.3s;
+        }
+
+        input:focus {
+          outline: none;
+          box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 0 8px rgba(102, 0, 204, 0.6);
+        }
+
+        .results {
+          margin-top: 30px;
+          padding: 30px;
+          background-color: #fff;
+          border-radius: 8px;
+          box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+
+        .optimization {
+          margin-bottom: 30px;
+          padding: 25px;
+          background-color: #f9f9f9;
+          border-left: 4px solid #6600CC;
+          border-radius: 4px;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .optimization h3 {
+          margin-top: 0;
+        }
+
+        .optimization ul {
+          padding-left: 20px;  
+        }
+
+        .hidden {
+          display: none;
+        }
+
+        .suggestions {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          background: white;
+          border-radius: 0 0 4px 4px;
+          max-height: 200px;
+          overflow-y: auto;
+          z-index: 1000;
+          box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+
+        .suggestion-item {
+          padding: 15px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+        }
+
+        .suggestion-item:last-child {
+          border-bottom-left-radius: 4px;
+          border-bottom-right-radius: 4px;
+        }
+
+        .suggestion-item:hover {
+          background-color: #f4f0ff;
+        }
+
+        .school-name {
+          font-weight: bold;
+        }
+
+        .state-name {
+          color: #777;
+          font-size: 0.9em;
+          margin-left: 10px;
+        }
+
+        #optimizeBtn {
+          display: block;
+          width: 200px;
+          padding: 15px;
+          margin: 30px auto;
+          font-size: 18px;
+          font-weight: bold;
+          color: #fff;
+          background-color: #6600CC;
+          border: none;
+          border-radius: 50px;
+          cursor: pointer;
+          transition: transform 0.3s;
+          box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        #optimizeBtn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        }
+
+        #optimizeBtn:active {
+          transform: translateY(1px);
+          box-shadow: 0 3px 4px rgba(0,0,0,0.1);
+        }
+
+        #optimizeBtn:disabled {
+          background-color: #cccccc;
+          cursor: not-allowed;
+          transform: none;
+          box-shadow: none;
+        }
+
+        #loadingAnimation {
+          display: none;
+          flex-direction: column;
+          align-items: center;
+          margin-top: 50px;
+        }
+
+        .spinner {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: radial-gradient(farthest-side,#6600CC 94%,#0000) top/8px 8px no-repeat,
+                    conic-gradient(#0000 30%,#6600CC);
+          -webkit-mask: radial-gradient(farthest-side,#0000 calc(100% - 8px),#000 0);
+          animation: spinner-c7wet2 1s infinite linear;
+        }
+
+        @keyframes spinner-c7wet2 {
+          100% {
+            transform: rotate(1turn);
+          }
+        }
+
+        .step {
+          margin-bottom: 30px;
+          padding: 25px;
+          background-color: #f9f9f9;
+          border-left: 4px solid #6600CC;
+          border-radius: 4px;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+          cursor: pointer;
+          transition: transform 0.3s;
+        }
+
+        .step:hover {
+          transform: translateY(-5px);
+        }
+
+        .step h3 {
+          margin-top: 0;
+        }
+
+        /* Media queries for mobile optimization */
+        @media screen and (max-width: 600px) {
+          body {
+            padding: 15px;
+          }
+
+          h1 {
+            font-size: 1.8rem;
+          }
+
+          input {
+            font-size: 16px;
+          }
+
+          .results {
+            padding: 20px;
+          }
+
+          .optimization {
+            padding: 20px;
+          }
+        }
+    </style>
+</head>
+<body>
+   <h1>Graduate Student Finance Optimizer</h1>
+
+        <div class="form-group">
+            <label for="schoolSearch">Search Your School:</label>
+            <input type="text" id="schoolSearch" placeholder="Start typing your school name..." oninput="handleSchoolSearch(event)">
+            <div id="schoolSuggestions" class="suggestions hidden"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="income">Annual Income ($):</label>
+            <input type="number" id="income" placeholder="Enter your annual income">
+        </div>
+
+        <button id="optimizeBtn" onclick="generatePlan()">Optimize</button>
+
+        <div id="loadingAnimation" class="hidden">
+            <div class="spinner"></div>
+            <p>Generating your personalized finance plan...</p>
+        </div>
+
+        <div class="results hidden" id="results">
+            <h2>Your Optimization Plan</h2>
+            <div id="planSteps"></div>
+        </div>
+
+    <script>
+        // School database (same as before)
+        const schoolsDB = {
+            'harvard': {
+                name: 'Harvard University',
+                state: 'MA',
+                retirementPlans: {
+                    has403b: true,
+                    has457b: false,
+                    employerMatch: '0%',
+                    vestingPeriod: 'n/a',
+                    notes: 'Grad students eligible for voluntary 403(b) contributions, no match'
+                }
+            },
+            'mit': {
+                name: 'Massachusetts Institute of Technology',
+                state: 'MA',
+                retirementPlans: {
+                    has403b: true,
+                    has457b: false,
+                    employerMatch: '0%',
+                    vestingPeriod: 'n/a',
+                    notes: 'Grad students eligible for voluntary 403(b) contributions, no match'
+                }
+            },
+            'tufts': {
+                name: 'Tufts University',
+                state: 'MA',
+                retirementPlans: {
+                    has403b: true,
+                    has457b: false,
+                    employerMatch: '0%',
+                    vestingPeriod: 'n/a',
+                    notes: 'Grad students eligible for voluntary 403(b) contributions, no match'
+                }
+            },
+            'bu': {
+                name: 'Boston University',
+                state: 'MA',
+                retirementPlans: {
+                    has403b: true,
+                    has457b: false,
+                    employerMatch: '0%',
+                    vestingPeriod: 'n/a',
+                    notes: 'Grad students eligible for voluntary 403(b) contributions, no match'
+                }
+            },
+            'columbia': {
+                name: 'Columbia University',
+                state: 'NY',
+                retirementPlans: {
+                    has403b: true,
+                    has457b: true,
+                    employerMatch: '0%',
+                    vestingPeriod: 'n/a',
+                    notes: 'Grad students eligible for voluntary 403(b) & 457(b) contributions, no match'
+                }
+            },
+            'princeton': {
+                name: 'Princeton University',
+                state: 'NJ',
+                retirementPlans: {
+                    has403b: true,
+                    has457b: false,
+                    employerMatch: '0%',
+                    vestingPeriod: 'n/a',
+                    notes: 'Grad students eligible for voluntary 403(b) contributions, no match'
+                }
+            },
+            'stanford': {
+                name: 'Stanford University',
+                state: 'CA',
+                retirementPlans: {
+                    has403b: true,
+                    has457b: true,
+                    employerMatch: '0%',
+                    vestingPeriod: 'n/a',
+                    notes: 'Grad students eligible for voluntary 403(b) & 457(b) contributions, no match'
+                }
+            },
+            'berkeley': {
+                name: 'UC Berkeley',
+                state: 'CA',
+                retirementPlans: {
+                    has403b: true,
+                    has457b: true,
+                    employerMatch: '0%',
+                    vestingPeriod: 'n/a',
+                    notes: 'Grad students eligible for voluntary 403(b) & 457(b) contributions, no match'
+                }
+            },
+            'davis': {
+                name: 'UC Davis',
+                state: 'CA',
+                retirementPlans: {
+                    has403b: true,
+                    has457b: true,
+                    employerMatch: '0%',
+                    vestingPeriod: 'n/a',
+                    notes: 'Grad students eligible for voluntary 403(b) & 457(b) contributions, no match'
+                }
+            },
+            'irvine': {
+                name: 'UC Irvine',
+                state: 'CA',
+                retirementPlans: {
+                    has403b: true,
+                    has457b: true,
+                    employerMatch: '0%',
+                    vestingPeriod: 'n/a',
+                    notes: 'Grad students eligible for voluntary 403(b) & 457(b) contributions, no match'
+                }
+            },
+            'ucla': {
+                name: 'UC Los Angeles',
+                state: 'CA',
+                retirementPlans: {
+                    has403b: true,
+                    has457b: true,
+                    employerMatch: '0%',
+                    vestingPeriod: 'n/a',
+                    notes: 'Grad students eligible for voluntary 403(b) & 457(b) contributions, no match'
+                }
+            },
+            'merced': {
+                name: 'UC Merced',
+                state: 'CA',
+                retirementPlans: {
+                    has403b: true,
+                    has457b: true,
+                    employerMatch: '0%',
+                    vestingPeriod: 'n/a',
+                    notes: 'Grad students eligible for voluntary 403(b) & 457(b) contributions, no match'
+                }
+            },
+            'riverside': {
+                name: 'UC Riverside',
+                state: 'CA',
+                retirementPlans: {
+                    has403b: true,
+                    has457b: true,
+                    employerMatch: '0%',
+                    vestingPeriod: 'n/a',
+                    notes: 'Grad students eligible for voluntary 403(b) & 457(b) contributions, no match'
+                }
+            },
+            'ucsd': {
+                name: 'UC San Diego',
+                state: 'CA',
+                retirementPlans: {
+                    has403b: true,
+                    has457b: true,
+                    employerMatch: '0%',
+                    vestingPeriod: 'n/a',
+                    notes: 'Grad students eligible for voluntary 403(b) & 457(b) contributions, no match'
+                }
+            },
+            'ucsf': {
+                name: 'UC San Francisco',
+                state: 'CA',
+                retirementPlans: {
+                    has403b: true,
+                    has457b: true,
+                    employerMatch: '0%',
+                    vestingPeriod: 'n/a',
+                    notes: 'Grad students eligible for voluntary 403(b) & 457(b) contributions, no match'
+                }
+            },
+            'ucsb': {
+                name: 'UC Santa Barbara',
+                state: 'CA',
+                retirementPlans: {
+                    has403b: true,
+                    has457b: true,
+                    employerMatch: '0%',
+                    vestingPeriod: 'n/a',
+                    notes: 'Grad students eligible for voluntary 403(b) & 457(b) contributions, no match'
+                }
+            },
+            'ucsc': {
+                name: 'UC Santa Cruz',
+                state: 'CA',
+                retirementPlans: {
+                    has403b: true,
+                    has457b: true,
+                    employerMatch: '0%',
+                    vestingPeriod: 'n/a',
+                    notes: 'Grad students eligible for voluntary 403(b) & 457(b) contributions, no match'
+                }
+            },
+            'uf': {
+                name: 'University of Florida',
+                state: 'FL',
+                retirementPlans: {
+                    has403b: true,
+                    has457b: true,
+                    employerMatch: '3%',
+                    vestingPeriod: '1 year'
+                }
+            },
+            'umich': {
+                name: 'University of Michigan',
+                state: 'MI',
+                retirementPlans: {
+                    has403b: true,
+                    has457b: true,
+                    employerMatch: '4%',
+                    vestingPeriod: '3 years'
+                }
+            },
+            'uchicago': {
+                name: 'University of Chicago',
+                state: 'IL',
+                retirementPlans: {
+                    has403b: true,
+                    has457b: true,
+                    employerMatch: '5%',
+                    vestingPeriod: '3 years'
+                }
+            },
+            'northwestern': {
+                name: 'Northwestern University',
+                state: 'IL',
+                retirementPlans: {
+                    has403b: true,
+                    has457b: true,
+                    employerMatch: '5%',
+                    vestingPeriod: '3 years'
+                }
+            }
+        };
+
+        // Database of state 529 plans and tax benefits
+        const stateTaxDB = {
+                    'CA': {
+                hasStateCapGains: true,
+                taxesWithZeroIncome: true,
+                brackets: [
+                    { threshold: 10099, rate: 1 },
+                    { threshold: 23942, rate: 2 },
+                    { threshold: 37788, rate: 4 },
+                    { threshold: 52455, rate: 6 },
+                    { threshold: 66295, rate: 8 },
+                    { threshold: 338639, rate: 9.3 },
+                    { threshold: 406364, rate: 10.3 },
+                    { threshold: 677275, rate: 11.3 },
+                    { threshold: 1000000, rate: 12.3 },
+                    { threshold: Infinity, rate: 13.3 }
+                ],
+                notes: 'California taxes capital gains as ordinary income with progressive rates from 1% to 13.3%. Capital gains are taxed even with $0 in other income.'
+            },
+            'NY': {
+                hasStateCapGains: true,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: 13900, rate: 4 },
+                    { threshold: 80650, rate: 5.97 },
+                    { threshold: 215400, rate: 6.33 },
+                    { threshold: 1077550, rate: 6.85 },
+                    { threshold: 5000000, rate: 9.65 },
+                    { threshold: 25000000, rate: 10.3 },
+                    { threshold: Infinity, rate: 10.9 }
+                ],
+                notes: 'New York taxes capital gains as ordinary income with progressive rates from 4% to 10.9%.'
+            },
+            'MA': {
+                hasStateCapGains: true,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: 24000, rate: 12 }
+                ],
+                notes: 'Massachusetts taxes capital gains at a flat 12% for income over $24,000.'
+            },
+            'FL': {
+                hasStateCapGains: false,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: Infinity, rate: 0 }
+                ],
+                notes: 'Florida has no state income tax or capital gains tax.'
+            },
+            'MI': {
+                hasStateCapGains: true,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: Infinity, rate: 4.25 }
+                ],
+                notes: 'Michigan taxes capital gains at a flat 4.25% rate.'
+            },
+            'IL': {
+                hasStateCapGains: true,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: Infinity, rate: 4.95 }
+                ],
+                notes: 'Illinois taxes capital gains at a flat 4.95% rate.'
+            },
+            'NJ': {
+                hasStateCapGains: true,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: 20000, rate: 1.4 },
+                    { threshold: 35000, rate: 1.75 },
+                    { threshold: 40000, rate: 3.5 },
+                    { threshold: 75000, rate: 5.525 },
+                    { threshold: 500000, rate: 6.37 },
+                    { threshold: 1000000, rate: 10.75 },
+                    { threshold: Infinity, rate: 10.75 }
+                ],
+                notes: 'New Jersey taxes capital gains as ordinary income with progressive rates from 1.4% to 10.75%.'
+            }
+        };              
+        const state529DB = {
+            'CA': {
+                planName: 'ScholarShare 529',
+                deduction: 0,
+                notes: 'California does not offer state tax deductions for 529 contributions, but earnings grow tax-free.'
+            },
+            'NY': {
+                planName: 'New Yorks 529 Plan',
+                deduction: 10000,
+                notes: 'New York taxpayers can deduct up to $5,000 per year ($10,000 for married filing jointly) of their 529 plan contributions.'
+            },
+            'MA': {
+                planName: 'U.Fund College Investing Plan',
+                deduction: 2000,
+                notes: 'Massachusetts taxpayers can deduct up to $1,000 per year ($2,000 for married filing jointly) of their 529 plan contributions.'
+            },
+            'FL': {
+                planName: 'Florida 529 Savings Plan',
+                deduction: 0,
+                notes: 'Florida has no state income tax, so there are no state tax deductions. However, earnings grow tax-free.'
+            },
+            'MI': {
+                planName: 'Michigan Education Savings Program (MESP)',
+                deduction: 10000,
+                notes: 'Michigan taxpayers can deduct up to $5,000 per year ($10,000 for married filing jointly) of their 529 plan contributions.'
+            },
+            'IL': {
+                planName: 'Bright Start College Savings',
+                deduction: 20000,
+                notes: 'Illinois taxpayers can deduct up to $10,000 per year ($20,000 for married filing jointly) of their 529 plan contributions.'
+            },
+            'NJ': {
+                planName: 'NJBEST 529 College Savings Plan',
+                deduction: 0,
+                notes: 'New Jersey does not offer state tax deductions for 529 contributions, but earnings grow tax-free.'
+            }
+};
+
+        const stateTaxHolidayDB = {
+            'MA': {
+                hasTaxHoliday: true,
+                holidays: [
+                    {
+                        name: 'Sales Tax Holiday',
+                        dates: 'August 16-17, 2025',
+                        details: 'Most items under $2,500 are tax-free',
+                        gradRelevance: 'Good time to buy laptops, tablets, and other tech equipment under $2,500',
+                        restrictions: 'Excludes meals, vehicles, motorboats, telecom items, gas, electricity, tobacco products, marijuana products'
+                    }
+                ]
+            },
+            'FL': {
+                hasTaxHoliday: true,
+                holidays: [
+                    {
+                        name: 'Back-to-School Sales Tax Holiday',
+                        dates: 'July 21 - August 3, 2025',
+                        details: 'Clothing up to $100 per item, school supplies up to $50 per item, computers up to $1,500',
+                        gradRelevance: 'Opportunity to save on computers, tablets, and computer accessories',
+                        restrictions: 'Computer restriction applies to single item, not total purchase'
+                    },
+                    {
+                        name: 'Disaster Preparedness Sales Tax Holiday',
+                        dates: 'May 24 - June 6, 2025',
+                        details: 'Disaster preparedness supplies including batteries, generators, radios',
+                        gradRelevance: 'Useful for research equipment backup power supplies and emergency preparedness',
+                        restrictions: 'Specific price limits per category: generators up to $3,000, radios up to $50'
+                    },
+                    {
+                        name: 'Tool Time Sales Tax Holiday',
+                        dates: 'September 7-13, 2025',
+                        details: 'Tools and equipment for home improvement',
+                        gradRelevance: 'Potential savings on lab equipment and tools for research',
+                        restrictions: 'Price limits vary by category: tools under $300, equipment under $2,000'
+                    },
+                    {
+                        name: 'Freedom Week',
+                        dates: 'July 1-7, 2025',
+                        details: 'Recreation and outdoor items',
+                        gradRelevance: 'Savings on outdoor and recreational equipment',
+                        restrictions: 'Various price limits per category'
+                    }
+                ]
+            },
+            'IL': {
+                hasTaxHoliday: false,
+                notes: 'Illinois does not currently have scheduled tax holidays'
+            },
+            'NY': {
+                hasTaxHoliday: false,
+                notes: 'New York does not currently have scheduled tax holidays'
+            },
+            'CA': {
+                hasTaxHoliday: false,
+                notes: 'California does not offer tax holidays'
+            },
+            'MI': {
+                hasTaxHoliday: false,
+                notes: 'Michigan does not currently have scheduled tax holidays'
+            },
+            'NJ': {
+                hasTaxHoliday: true,
+                holidays: [
+                    {
+                        name: 'Back-to-School Sales Tax Holiday',
+                        dates: 'August 26 - September 7, 2025',
+                        details: 'School supplies, art supplies, instructional materials, computers, and sport/recreational equipment',
+                        gradRelevance: 'Significant opportunity for computer and research equipment purchases',
+                        restrictions: 'Computers and computer supplies up to $3,000, sports equipment up to $1,000'
+                    }
+                ]
+            }
+        };
+
+
+        const ltcgBrackets = {
+            single: [
+                { threshold: 47025, rate: 0 },
+                { threshold: 518900, rate: 15 },
+                { threshold: Infinity, rate: 20 }
+            ]
+        };
+
+        let selectedSchool = null;
+
+        function handleSchoolSearch(event) {
+            const searchTerm = event.target.value.toLowerCase();
+            const suggestionsDiv = document.getElementById('schoolSuggestions');
+            
+            if (searchTerm.length < 2) {
+                suggestionsDiv.classList.add('hidden');
+                return;
+            }
+
+            const suggestions = Object.entries(schoolsDB)
+                .filter(([_, school]) => 
+                    school.name.toLowerCase().includes(searchTerm))
+                .slice(0, 10); // Limit to 10 suggestions
+
+            if (suggestions.length > 0) {
+                suggestionsDiv.innerHTML = suggestions
+                    .map(([id, school]) => `
+                        <div class="suggestion-item" onclick="selectSchool('${id}')">
+                            <span class="school-name">${school.name}</span>
+                            <span class="state-name">${getStateName(school.state)}</span>
+                        </div>
+                    `)
+                    .join('');
+                suggestionsDiv.classList.remove('hidden');
+            } else {
+                suggestionsDiv.classList.add('hidden');
+            }
+        }
+
+        function getStateName(stateAbbr) {
+            const states = {
+                'CA': 'California',
+                'FL': 'Florida',
+                'IL': 'Illinois',
+                'MA': 'Massachusetts',
+                'MI': 'Michigan',
+                'NJ': 'New Jersey',
+                'NY': 'New York'
+            };
+            return states[stateAbbr] || stateAbbr;
+        }
+
+        function selectSchool(schoolId) {
+            selectedSchool = schoolsDB[schoolId];
+            const searchInput = document.getElementById('schoolSearch');
+            searchInput.value = `${selectedSchool.name} (${getStateName(selectedSchool.state)})`;
+            document.getElementById('schoolSuggestions').classList.add('hidden');
+            updateResults();
+        }
+
+         function updateResults() {
+            const income = Number(document.getElementById('income').value);
+
+            if (!selectedSchool || !income) return;
+
+            // Show results section
+            document.getElementById('results').classList.remove('hidden');
+
+            // Update sections
+            updateRetirementAdvice(selectedSchool, income);
+            update529Advice(state529DB[selectedSchool.state]);
+            updateTaxStrategy(income, selectedSchool.state);
+        }
+
+        function updateRetirementAdvice(school, income) {
+            const retirementDiv = document.getElementById('retirement');
+            let html = '<h3>Retirement Plan</h3>';
+
+            if (school.retirementPlans.has457b) {
+                html += `
+                    <p><strong>Recommendation: Contribute to 457(b)</strong></p>
+                    <ul>
+                        <li>No early withdrawal penalties after leaving employment</li>
+                        <li>Separate contribution limit from 403(b)</li>
+                        <li>Consider Roth contributions for tax-free growth</li>
+                    </ul>
+                `;
+            } else {
+                html += `
+                    <p><strong>Recommendation: Contribute to Roth IRA</strong></p>
+                    <ul>
+                        <li>Prioritize Roth IRA contributions up to $6,500 (as of 2023)</li>
+                        <li>Take advantage of tax-free growth and withdrawals in retirement</li>
+                    </ul>
+                `;
+                if (school.retirementPlans.has403b) {
+                    html += `
+                        <p><strong>Next Step: Consider 403(b) contributions</strong></p>
+                        <ul>
+                            <li>After maxing out Roth IRA, contribute to 403(b)</li>
+                            <li>${school.retirementPlans.notes}</li>
+                        </ul>
+                    `;
+                }
+            }
+
+            retirementDiv.innerHTML = html;
+        }
+
+        function update529Advice(state529) {
+            const planDiv = document.getElementById('529plan');
+            let html = '<h3>529 Plan Strategy</h3>';
+
+            if (state529.deduction > 0) {
+                html += `
+                    <p><strong>Recommendation: Contribute to ${state529.planName}</strong></p>
+                    <ul>
+                        <li>Take advantage of state tax deduction up to $${state529.deduction.toLocaleString()}</li>
+                        <li>${state529.notes}</li>
+                    </ul>
+                    <p><em>Pro Tip: Consider contributing rent payments through 529 for tax benefits</em></p>
+                `;
+            } else {
+                html += `
+                    <p><strong>Recommendation: Research 529 plans</strong></p>
+                    <ul>
+                        <li>No state tax deduction available</li>
+                        <li>Compare investment options and fees across plans</li>
+                        <li>Consider out-of-state plans if they offer better benefits</li>
+                    </ul>
+                `;
+            }
+
+            planDiv.innerHTML = html;
+        }
+
+        function updateTaxStrategy(income, state) {
+            const taxDiv = document.getElementById('taxStrategy');
+            let html = '<h3>Tax Optimization Strategy</h3>';
+
+            const bracket = ltcgBrackets.single.find(b => income <= b.threshold);
+
+            const stateInfo = stateTaxDB[state];
+            const hasStateCapGainsTax = stateInfo.hasStateCapGains && (stateInfo.taxesWithZeroIncome || income > 0);
+
+            if (bracket.rate === 0 && !hasStateCapGainsTax) {
+                html += `
+                    <p><strong>Recommendation: Harvest capital gains</strong></p>
+                    <ul>
+                        <li>Realize gains up to ${(bracket.threshold - income).toLocaleString()} without federal or state tax</li>
+                        <li>Reset cost basis to reduce future tax liability</li>
+                    </ul>
+                `;
+            } else {
+                html += `
+                    <p><strong>Recommendation: Avoid realizing capital gains</strong></p>
+                    <ul>
+                        <li>Your capital gains would be taxed at ${bracket.rate}% federal rate</li>
+                        ${hasStateCapGainsTax ? `<li>You would also owe state capital gains tax (${stateInfo.notes})</li>` : ''}
+                    </ul>
+                `;
+            }
+
+            // Add state sales tax holiday information
+            const holidayInfo = stateTaxHolidayDB[state];
+            if (holidayInfo && holidayInfo.hasTaxHoliday) {
+                html += `
+                    <p><strong>Upcoming Sales Tax Holidays:</strong></p>
+                    <ul>
+                        ${holidayInfo.holidays.map(holiday => `
+                            <li>
+                                <strong>${holiday.name}</strong> (${holiday.dates})<br>
+                                ${holiday.details}<br>
+                                <em>Graduate student tip:</em> ${holiday.gradRelevance}
+                            </li>
+                        `).join('')}
+                    </ul>
+                `;
+            }
+
+            taxDiv.innerHTML = html;
+        }
+
+        // Add click listener to close suggestions when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#schoolSearch') && !e.target.closest('#schoolSuggestions')) {
+                document.getElementById('schoolSuggestions').classList.add('hidden');
+            }
+        });
+        function generatePlan() {
+            if (!selectedSchool) {
+                alert('Please select a school first.');
+                return;
+            }
+
+            document.getElementById('results').classList.add('hidden');
+            document.getElementById('loadingAnimation').style.display = 'flex';
+
+            setTimeout(() => {
+            const income = Number(document.getElementById('income').value);
+            const state = selectedSchool.state;
+            const planStepsDiv = document.getElementById('planSteps');
+            planStepsDiv.innerHTML = '';
+            
+            if (state529DB[state].deduction > 0) {
+                addPlanStep(
+                    planStepsDiv, 
+                    '529 Plan Optimization', 
+                    `Contribute rent payments to your ${state529DB[state].planName} to take advantage of state tax deduction up to $${state529DB[state].deduction.toLocaleString()}.`
+                );
+            }
+
+            if (selectedSchool.retirementPlans.has457b) {
+                addPlanStep(
+                    planStepsDiv,
+                    '457(b) Contributions',
+                    'Contribute to your 457(b) plan. This has no early withdrawal penalties after leaving employment and a separate contribution limit from 403(b) plans.'
+                );
+            } else {
+                addPlanStep(
+                    planStepsDiv,
+                    'Roth IRA Contributions',
+                    'Prioritize contributions to a Roth IRA up to the $6,500 annual limit to take advantage of tax-free growth and withdrawals in retirement.'        
+                );
+            }
+
+            const holidayInfo = stateTaxHolidayDB[state];
+            if (holidayInfo && holidayInfo.hasTaxHoliday) {
+                holidayInfo.holidays.forEach(holiday => {
+                    addPlanStep(
+                        planStepsDiv,
+                        `Take Advantage of ${holiday.name}`,
+                        `${holiday.details} This is a great opportunity for graduate students to ${holiday.gradRelevance.toLowerCase()}. Be mindful of these restrictions: ${holiday.restrictions}`
+                    );
+                });
+            }
+
+            const stateInfo = stateTaxDB[state];
+            if (stateInfo.hasStateCapGains && income > 0 && income <= ltcgBrackets.single[0].threshold) {
+                if (stateInfo.brackets[0].rate === 0) {
+                    addPlanStep(
+                        planStepsDiv,
+                        'Harvest Capital Gains',
+                        'Your income falls within the 0% federal and state long-term capital gains brackets. Consider realizing gains to reset your cost basis and avoid future taxes.'
+                    );
+                }
+            }
+
+            document.getElementById('loadingAnimation').style.display = 'none';
+        document.getElementById('results').classList.remove('hidden');
+    }, 2000);
+    }
+
+    function addPlanStep(stepsDiv, title, description) {
+        const stepDiv = document.createElement('div');
+        stepDiv.classList.add('step');
+        stepDiv.innerHTML = `
+            <h3>${title}</h3>
+            <p>${description}</p>
+        `;
+        stepsDiv.appendChild(stepDiv);
+    }
+
+    // Add click listener to close suggestions when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('#schoolSearch') && !e.target.closest('#schoolSuggestions')) {
+            document.getElementById('schoolSuggestions').classList.add('hidden');
+        }
+    });
+    </script>
+</body>
+</html>
