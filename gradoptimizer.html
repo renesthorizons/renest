@@ -217,7 +217,13 @@ input:focus {
     padding: 10px;
     background-color: rgba(75, 34, 122, 0.1);
     border-radius: 8px;
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+    max-width:  350px;
+    box-sizing: border-box;
 }
 
 .step .dates {
@@ -407,7 +413,6 @@ html {
             .view-details-btn {
                 display: block;
                 margin: 10px 0 0 0;
-                width: 100%;
                 text-align: center;
             }
         }
@@ -420,8 +425,9 @@ html {
     padding: 8px 16px;
     cursor: pointer;
     font-size: 14px;
-    margin-left: 16px;
     transition: all 0.3s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .view-details-btn:hover {
@@ -1251,7 +1257,7 @@ html {
             updateAccountTypeDetails();
             updateCalculatorLimits(); // Add this line
         }
-        
+
         const incomeInput = document.getElementById('income');
         incomeInput.addEventListener('input', function(e) {
             // Remove any non-digits
