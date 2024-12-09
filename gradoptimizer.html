@@ -6,248 +6,727 @@
     <title>Graduate Student Finance Optimizer</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
     <style>
-        body {
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          margin: 0;
-          padding: 20px;
-          line-height: 1.6;
-          color: #333;
-          background-color: #f4f4f4;
-          background-image: linear-gradient(135deg, #f4f4f4 0%, #e0e0e0 100%);
-        }
+       :root {
+    --primary-dark: #02153D;    /* Dark Navy */
+    --primary: #4B227A;         /* Purple */
+    --primary-light: #0197AF;   /* Turquoise */
+    --accent: #00EED0;          /* Mint */
+}
 
-        h1 {
-          color: #6600CC;
-          margin-bottom: 30px;
-          font-size: 2.5rem;
-          text-align: center;
-          text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+    color: var(--primary-dark);
+    background-color: #f5f2f8;
+    min-height: 100vh;
+}
 
-        h2, h3 {
-          color: #6600CC;  
-        }
+/* Change h1 styles */
+h1 {
+    color: var(--primary-dark);
+    margin-bottom: 30px;
+    font-size: 2.5rem;
+    text-align: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+    line-height: 1.2;
+}
 
-        .form-group {
-          margin-bottom: 30px;
-          position: relative;
-        }
+/* Change h2, h3 styles */
+h2, h3 {
+    color: var(--primary-dark);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+}
 
-        label {
-          display: block;
-          margin-bottom: 10px;
-          font-weight: 600;
-          color: #444;
-        }
+/* Change label styles */
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: var(--primary-dark);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+}
 
-        input {
-          width: 100%;
-          padding: 15px;
-          margin-bottom: 20px;
-          border: none;
-          border-radius: 4px;
-          font-size: 18px;
-          background-color: #f9f9f9;
-          box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
-          transition: box-shadow 0.3s;
-        }
+/* Change nav-tab styles */
+.nav-tab {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    background: transparent;
+    color: var(--primary-dark);
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+}
 
-        input:focus {
-          outline: none;
-          box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 0 8px rgba(102, 0, 204, 0.6);
-        }
+/* Change edu-title styles */
+.edu-title {
+    color: var(--primary-dark);
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+}
 
-        .results {
-          margin-top: 30px;
-          padding: 30px;
-          background-color: #fff;
-          border-radius: 8px;
-          box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-        }
+.form-group {
+    margin-bottom: 30px;
+    position: relative;
+}
 
-        .optimization {
-          margin-bottom: 30px;
-          padding: 25px;
-          background-color: #f9f9f9;
-          border-left: 4px solid #6600CC;
-          border-radius: 4px;
-          box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-        }
+input {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(75, 34, 122, 0.3);
+    border-radius: 12px;
+    font-size: 18px;
+    background-color: rgba(255, 255, 255, 0.9);
+    transition: all 0.3s ease;
+}
 
-        .optimization h3 {
-          margin-top: 0;
-        }
+input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(75, 34, 122, 0.2);
+}
 
-        .optimization ul {
-          padding-left: 20px;  
-        }
+.results {
+    margin-top: 30px;
+    padding: 30px;
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 20px rgba(2, 21, 61, 0.15);
+}
 
-        .hidden {
-          display: none;
-        }
+.optimization {
+    margin-bottom: 30px;
+    padding: 25px;
+    background-color: white;
+    border-left: 4px solid var(--primary);
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(2, 21, 61, 0.1);
+}
 
-        .suggestions {
-          position: absolute;
-          top: 100%;
-          left: 0;
-          right: 0;
-          background: white;
-          border-radius: 0 0 4px 4px;
-          max-height: 200px;
-          overflow-y: auto;
-          z-index: 1000;
-          box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-        }
+.suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 12px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 10px 20px rgba(2, 21, 61, 0.15);
+    border: 1px solid rgba(75, 34, 122, 0.2);
+}
 
-        .suggestion-item {
-          padding: 15px;
-          cursor: pointer;
-          transition: background-color 0.3s;
-        }
+.suggestion-item {
+    padding: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
 
-        .suggestion-item:last-child {
-          border-bottom-left-radius: 4px;
-          border-bottom-right-radius: 4px;
-        }
+.suggestion-item:hover {
+    background-color: rgba(75, 34, 122, 0.1);
+}
 
-        .suggestion-item:hover {
-          background-color: #f4f0ff;
-        }
+#optimizeBtn {
+    display: block;
+    width: 200px;
+    min-height: 50px;
+    margin: 30px auto;
+    font-size: 18px;
+    font-weight: 500;
+    color: white;
+    background: var(--primary);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+    box-shadow: 0 2px 4px rgba(2, 21, 61, 0.2);
+}
 
-        .school-name {
-          font-weight: bold;
-        }
+#optimizeBtn:hover {
+    transform: translateY(-2px);
+    background: var(--primary-light);
+    box-shadow: 0 4px 8px rgba(2, 21, 61, 0.25);
+}
 
-        .state-name {
-          color: #777;
-          font-size: 0.9em;
-          margin-left: 10px;
-        }
+#optimizeBtn:hover::before {
+    transform: translateX(100%);
+}
 
-        #optimizeBtn {
-          display: block;
-          width: 200px;
-          padding: 15px;
-          margin: 30px auto;
-          font-size: 18px;
-          font-weight: bold;
-          color: #fff;
-          background-color: #6600CC;
-          border: none;
-          border-radius: 50px;
-          cursor: pointer;
-          transition: transform 0.3s;
-          box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
+#optimizeBtn:hover .button-text {
+    opacity: 0;
+}
 
-        #optimizeBtn:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 8px rgba(0,0,0,0.15);
-        }
+#optimizeBtn:hover .button-logo {
+    opacity: 1;
+}
 
-        #optimizeBtn:active {
-          transform: translateY(1px);
-          box-shadow: 0 3px 4px rgba(0,0,0,0.1);
-        }
+#optimizeBtn .button-content {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+}
 
-        #optimizeBtn:disabled {
-          background-color: #cccccc;
-          cursor: not-allowed;
-          transform: none;
-          box-shadow: none;
-        }
+#optimizeBtn .button-text {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
 
-        #loadingAnimation {
-          display: none;
-          flex-direction: column;
-          align-items: center;
-          margin-top: 50px;
-        }
+#optimizeBtn .button-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 40px;
+    width: auto;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
 
-        .spinner {
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          background: radial-gradient(farthest-side,#6600CC 94%,#0000) top/8px 8px no-repeat,
-                    conic-gradient(#0000 30%,#6600CC);
-          -webkit-mask: radial-gradient(farthest-side,#0000 calc(100% - 8px),#000 0);
-          animation: spinner-c7wet2 1s infinite linear;
-        }
+.step {
+    margin-bottom: 30px;
+    padding: 25px;
+    background-color: white;
+    border-left: 4px solid var(--primary);
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(2, 21, 61, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s;
+}
 
-        @keyframes spinner-c7wet2 {
-          100% {
-            transform: rotate(1turn);
-          }
-        }
+.step:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(2, 21, 61, 0.2);
+}
 
-        .step {
-          margin-bottom: 30px;
-          padding: 25px;
-          background-color: #f9f9f9;
-          border-left: 4px solid #6600CC;
-          border-radius: 4px;
-          box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-          cursor: pointer;
-          transition: transform 0.3s;
-        }
+.step .savings-estimate {
+    color: var(--primary);
+    font-weight: 600;
+    margin-top: 15px;
+    padding: 10px;
+    background-color: rgba(75, 34, 122, 0.1);
+    border-radius: 8px;
+    display: inline-block;
+}
 
-        .step:hover {
-          transform: translateY(-5px);
-        }
+.step .dates {
+    color: #666;
+    font-style: italic;
+    margin-top: 10px;
+}
 
-        .step h3 {
-          margin-top: 0;
-        }
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(75, 34, 122, 0.2);
+    border-top: 4px solid var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
 
-        /* Media queries for mobile optimization */
-        @media screen and (max-width: 600px) {
-          body {
-            padding: 15px;
-          }
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
 
-          h1 {
-            font-size: 1.8rem;
-          }
+#loadingAnimation {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+    text-align: center;
+}
 
-          input {
-            font-size: 16px;
-          }
+#loadingAnimation p {
+    margin-top: 15px;
+    color: var(--primary);
+    font-weight: 500;
+}
 
-          .results {
-            padding: 20px;
-          }
+.hidden {
+    display: none !important;
+}
 
-          .optimization {
-            padding: 20px;
-          }
-        }
+.header-section {
+    background: linear-gradient(135deg, #f2e6ff, #e6f2ff);  /* Soft pastel gradient */
+    padding: 40px 20px 40px 20px;
+    margin: -20px -20px 0 -20px;
+    box-shadow: 0 4px 12px rgba(2, 21, 61, 0.15);
+    text-align: center;
+}
+
+.input-card {
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 8px 16px rgba(2, 21, 61, 0.15);
+    max-width: 600px;
+    margin: 0 auto 30px auto;
+    position: relative;
+    z-index: 1;
+    border: 1px solid rgba(75, 34, 122, 0.2);
+}
+
+.header-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.header-description {
+    font-size: 1.1rem;
+    color: var(--primary-dark);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.card-title {
+    font-size: 1.4rem;
+    color: var(--primary-dark);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.nav-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: white;
+    margin: -20px auto 30px auto;
+    max-width: 600px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(2, 21, 61, 0.1);
+    position: relative;
+    z-index: 2;
+}
+
+
+
+.nav-tab:hover {
+    color: var(--primary);
+    background: rgba(75, 34, 122, 0.1);
+}
+
+.nav-tab.active {
+    color: var(--primary);
+    background: rgba(75, 34, 122, 0.15);
+    font-weight: 600;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+@media screen and (max-width: 600px) {
+    body {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    input {
+        font-size: 16px;
+    }
+
+    .results {
+        padding: 20px;
+    }
+
+    .optimization {
+        padding: 20px;
+    }
+}
+
+.view-details-btn {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 16px;
+    transition: all 0.3s ease;
+}
+
+.view-details-btn:hover {
+    background-color: var(--primary-light);
+    transform: translateY(-2px);
+}
+
+.error-message {
+    color: #0d766b;               /* Darker teal for text */
+    background-color: #ccfbf1;    /* Light teal background */
+    border: 1px solid #5eead4;    /* Medium teal border */
+    padding: 12px;
+    border-radius: 8px;
+    margin: 10px 0;
+    display: none;
+}
+
+.edu-card {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.edu-section {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid var(--primary);
+    transition: transform 0.2s ease-in-out;
+}
+
+.edu-section:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+
+
+.edu-subtitle {
+    color: var(--primary);
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.edu-highlight {
+    background: linear-gradient(135deg, var(--primary-light), var(--accent));
+    color: white;
+    padding: 1.25rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.edu-highlight h4 {
+    color: white;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.calculator-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.calculator-value {
+    text-align: center;
+    padding: 1rem;
+    background: rgba(75, 34, 122, 0.05);
+    border-radius: 8px;
+}
+
+.calculator-value h3 {
+    font-size: 1rem;
+    color: var(--primary-dark);
+    margin-bottom: 0.5rem;
+}
+
+.calculator-value p {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--primary);
+    margin: 0;
+}
+
+.slider-group {
+    margin-bottom: 1.5rem;
+}
+
+.slider-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--primary-dark);
+    font-weight: 500;
+}
+
+.slider-group input[type="range"] {
+    width: 100%;
+    margin-bottom: 0.5rem;
+}
+
+.slider-group .value-display {
+    color: var(--primary);
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.edu-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 1rem 0;
+}
+
+.edu-list li {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(75, 34, 122, 0.1);
+}
+
+.edu-list li:last-child {
+    border-bottom: none;
+}
+
+.edu-list li strong {
+    color: var(--primary);
+    margin-right: 0.5rem;
+}
+
+@media (max-width: 640px) {
+    .edu-card {
+        padding: 1.25rem;
+        margin: 1rem;
+    }
+
+    .edu-title {
+        font-size: 1.5rem;
+    }
+
+    .edu-subtitle {
+        font-size: 1.2rem;
+    }
+
+    .calculator-grid {
+        grid-template-columns: 1fr;
+    }
+}
+#learnMoreBtn:hover {
+    background: var(--primary) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.info-tooltip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    margin-left: 0.5rem;
+}
+
+.info-icon {
+    width: 16px;
+    height: 16px;
+    cursor: help;
+}
+
+.info-tooltip .tooltip-text {
+    visibility: hidden;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--primary-dark);
+    color: white;
+    text-align: center;
+    padding: 8px 12px;
+    border-radius: 6px;
+    width: max-content;
+    max-width: 200px;
+    font-size: 0.9rem;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.info-tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
     </style>
 </head>
 <body>
-   <h1>Graduate Student Finance Optimizer</h1>
-
-        <div class="form-group">
-            <label for="schoolSearch">Search Your School:</label>
-            <input type="text" id="schoolSearch" placeholder="Start typing your school name..." oninput="handleSchoolSearch(event)">
-            <div id="schoolSuggestions" class="suggestions hidden"></div>
+    <div class="header-section">
+        <div class="header-content">
+            <h1>Graduate Student Finance Optimizer</h1>
+            <!-- <p class="header-description">
+                Optimize your finances with personalized recommendations for retirement accounts, 
+                tax-advantaged rent payments, and strategic spending opportunities.
+            </p> -->
         </div>
+    </div>
 
-        <div class="form-group">
-            <label for="income">Annual Income ($):</label>
-            <input type="number" id="income" placeholder="Enter your annual income">
+    <div class="nav-tabs">
+        <button class="nav-tab active" data-tab="optimize">Optimize</button>
+        <button class="nav-tab" data-tab="retirement">Retirement</button>
+        <button class="nav-tab" data-tab="rent-groceries">Rent & Groceries</button>
+        <button class="nav-tab" data-tab="other">Other Spending</button>
+    </div>
+
+    <!-- Optimize Tab Content -->
+    <div id="optimize-content" class="tab-content active">
+        <div class="input-card">
+            <h2 class="card-title">Enter Your Information</h2>
+            <div class="form-group">
+                <label for="schoolSearch">Search Your School:</label>
+                <input type="text" id="schoolSearch" placeholder="Start typing your school name..." oninput="handleSchoolSearch(event)">
+                <div id="schoolSuggestions" class="suggestions hidden"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="income">Annual Income ($):</label>
+                <input type="number" id="income" placeholder="Enter your annual income">
+            </div>
+
+            <button id="optimizeBtn" onclick="generatePlan()">
+                <div class="button-content">
+                    <span class="button-text">Optimize</span>
+                    <img src="blogo.png" alt="Logo" class="button-logo">
+                </div>
+            </button>
         </div>
-
-        <button id="optimizeBtn" onclick="generatePlan()">Optimize</button>
-
         <div id="loadingAnimation" class="hidden">
             <div class="spinner"></div>
-            <p>Generating your personalized finance plan...</p>
+        <p>Generating your personalized finance plan...</p>
         </div>
-
         <div class="results hidden" id="results">
             <h2>Your Optimization Plan</h2>
-            <div id="planSteps"></div>
+        <div id="planSteps"></div>
         </div>
+    </div>
+
+    <div id="retirement-content" class="tab-content">
+            <div class="edu-card">
+                <h2 class="edu-title">Your Retirement Account Options</h2>
+                
+                <!-- Essential Info Section -->
+                <div id="accountTypeDetails">
+                    <!-- Populated by JavaScript based on school type -->
+                </div>
+
+                <!-- Calculator Section -->
+                <div class="edu-section">
+                    <h3 class="edu-subtitle">Growth Calculator</h3>
+                    <div class="slider-group">
+                        <label for="monthlyContribution">Monthly Contribution ($):</label>
+                        <input type="range" id="monthlyContribution" min="10" max="1000" step="10" value="200">
+                        <span id="contributionDisplay" class="value-display">$200</span>
+                    </div>
+
+                    <div class="slider-group">
+                        <label for="yearsGrowth">Years to Grow:</label>
+                        <input type="range" id="yearsGrowth" min="1" max="30" step="1" value="5">
+                        <span id="yearsDisplay" class="value-display">5</span>
+                    </div>
+
+                    <div class="calculator-grid">
+                        <div class="calculator-value">
+                            <h3>
+                                Total Contributions
+                                <div class="info-tooltip">
+                                    <img src="info.png" alt="info" class="info-icon">
+                                    <span class="tooltip-text">This is money you put in, so you can take it out whenever</span>
+                                </div>
+                            </h3>
+                            <p id="totalContributions">$0</p>
+                        </div>
+                        <div class="calculator-value">
+                            <h3>
+                                Total Earnings
+                                <div class="info-tooltip">
+                                    <img src="info.png" alt="info" class="info-icon">
+                                    <span class="tooltip-text">These are predicted gains from any investments you make. You can take them out whenever but you'll pay a 10% penalty unless it's for a medical emergency or for your first house or other qualified expenses</span>
+                                </div>
+                            </h3>
+                            <p id="totalEarnings">$0</p>
+                        </div>
+                        <div class="calculator-value">
+                            <h3>Future Value</h3>
+                            <p id="futureValue">$0</p>
+                        </div>
+                    </div>
+                    <p style="text-align: center; color: gray; margin-top: 1rem;">Assuming 7% average annual return</p>
+                </div>
+
+                <!-- Learn More Button -->
+                <button onclick="toggleRetirementDetails()" id="learnMoreBtn" class="edu-section" style="width: 100%; text-align: center; cursor: pointer; background: var(--primary-light); color: white; border: none; padding: 1rem; margin-top: 1rem;">
+                    Learn More About Retirement Accounts ↓
+                </button>
+
+                <!-- Detailed Info Section (Hidden by Default) -->
+                <div id="retirementDetails" style="display: none;">
+                    <div class="edu-section">
+                        <h3 class="edu-subtitle">Understanding Retirement Basics</h3>
+                        <div style="background: rgba(75, 34, 122, 0.05); padding: 1rem; border-radius: 8px;">
+                            <h4 class="edu-subtitle">Why Roth Over Traditional</h4>
+                            <ul class="edu-list">
+                                <li><strong>When You Pay Taxes:</strong> Roth = Pay now at ~12% (student rate). Traditional = Pay later at ~22-35% (professional rate)</li>
+                                <li><strong>Which Is Better:</strong> Roth is typically better for grad students because you're in the lowest tax bracket you'll ever be in</li>
+                            </ul>
+                            <div class="edu-highlight">
+                                <h4>Pro Tip: Tax Bracket Math</h4>
+                                <p>A Roth lets you lock in your grad student tax rate of ~12%. Even if you only move up to the 22% bracket as a professional, that's like getting an instant 10% return on your money!</p>
+                            </div>
+                        </div>
+                        
+                        <div style="background: rgba(75, 34, 122, 0.05); padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                            <h4 class="edu-subtitle">Special Features</h4>
+                            <ul class="edu-list">
+                                <li><strong>Tax-Free Growth:</strong> All investment earnings grow tax-free forever</li>
+                                <li><strong>Flexible Access:</strong> Take out contributions anytime with no penalty</li>
+                                <li><strong>First Home:</strong> Use up to $10,000 in earnings tax-free for your first home</li>
+                                <li><strong>Emergencies:</strong> Access earnings penalty-free for medical emergencies</li>
+                            </ul>
+                            <div class="edu-highlight">
+                                <h4>Pro Tip: Emergency Fund First</h4>
+                                <p>Build a 3-month emergency fund in a high-yield savings account before starting retirement contributions. This way you won't need to tap into your retirement accounts for unexpected expenses.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<div id="rent-groceries-content" class="tab-content">
+    <div class="input-card">
+        <h2 class="card-title">Rent & Groceries Optimization</h2>
+        <div id="rent-grocery-details">
+            Please input your school and income details first to see personalized rent and grocery recommendations.
+        </div>
+    </div>
+</div>
+
+<div id="other-content" class="tab-content">
+    <div class="input-card">
+        <h2 class="card-title">Other Spending Optimization</h2>
+        <div id="other-details">
+            Please input your school and income details first to see personalized spending recommendations.
+        </div>
+    </div>
+</div>
 
     <script>
         // School database (same as before)
@@ -685,6 +1164,97 @@
         };
 
         let selectedSchool = null;
+        let hasOptimized = false;
+        function updateCalculatorLimits() {
+            const monthlyInput = document.getElementById('monthlyContribution');
+            const contributionDisplay = document.getElementById('contributionDisplay');
+            
+            if (selectedSchool && selectedSchool.retirementPlans.has457b) {
+                // 457(b) limit is $23,000 per year (2024)
+                monthlyInput.max = 1916; // $23,000 / 12 = $1,916.67 per month
+                monthlyInput.value = Math.min(monthlyInput.value, 1916);
+                // Add helper text
+                document.querySelector('.slider-group label[for="monthlyContribution"]')
+                    .innerHTML = 'Monthly Contribution ($): <span style="color: var(--primary-light);">Max $1,916/month (457(b) limit)</span>';
+            } else {
+                // Roth IRA limit is $7,000 per year (2024)
+                monthlyInput.max = 583; // $7,000 / 12 = $583.33 per month
+                monthlyInput.value = Math.min(monthlyInput.value, 583);
+                // Add helper text
+                document.querySelector('.slider-group label[for="monthlyContribution"]')
+                    .innerHTML = 'Monthly Contribution ($): <span style="color: var(--primary-light);">Max $583/month (Roth IRA limit)</span>';
+            }
+            
+            // Update the display and calculations
+            contributionDisplay.textContent = `$${monthlyInput.value}`;
+            updateCalculator();
+        }
+
+        // Update the selectSchool function to also update calculator limits
+        function selectSchool(schoolId) {
+            selectedSchool = schoolsDB[schoolId];
+            const searchInput = document.getElementById('schoolSearch');
+            searchInput.value = `${selectedSchool.name} (${getStateName(selectedSchool.state)})`;
+            document.getElementById('schoolSuggestions').classList.add('hidden');
+            updateResults();
+            updateAccountTypeDetails();
+            updateCalculatorLimits(); // Add this line
+        }
+
+        // Update the switchTab function to update calculator limits when switching to retirement tab
+        function switchTab(tabName) {
+            if (!hasOptimized && tabName !== 'optimize') {
+                showError('Please input your school and income details first.');
+                return;
+            }
+
+            const tabs = document.querySelectorAll('.nav-tab');
+            const contents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.getAttribute('data-tab') === tabName) {
+                    tab.classList.add('active');
+                }
+            });
+            
+            contents.forEach(content => {
+                content.classList.remove('active');
+                if (content.id === `${tabName}-content`) {
+                    content.classList.add('active');
+                    // Scroll to the top of the content section
+                    content.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+
+            if (tabName === 'retirement' && selectedSchool) {
+                updateAccountTypeDetails();
+                updateCalculatorLimits();
+                updateCalculator();
+            }
+        }
+
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.classList.add('error-message');
+            errorDiv.style.display = 'block';
+            errorDiv.textContent = message;
+            
+            // Remove any existing error messages
+            const existingError = document.querySelector('.error-message');
+            if (existingError) {
+                existingError.remove();
+            }
+            
+            // Insert error before the input card
+            const inputCard = document.querySelector('.input-card');
+            inputCard.parentNode.insertBefore(errorDiv, inputCard);
+            
+            // Auto-hide after 3 seconds
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 3000);
+        }
 
         function handleSchoolSearch(event) {
             const searchTerm = event.target.value.toLowerCase();
@@ -728,26 +1298,17 @@
             return states[stateAbbr] || stateAbbr;
         }
 
-        function selectSchool(schoolId) {
-            selectedSchool = schoolsDB[schoolId];
-            const searchInput = document.getElementById('schoolSearch');
-            searchInput.value = `${selectedSchool.name} (${getStateName(selectedSchool.state)})`;
-            document.getElementById('schoolSuggestions').classList.add('hidden');
-            updateResults();
-        }
-
-         function updateResults() {
-            const income = Number(document.getElementById('income').value);
-
-            if (!selectedSchool || !income) return;
-
-            // Show results section
-            document.getElementById('results').classList.remove('hidden');
-
-            // Update sections
-            updateRetirementAdvice(selectedSchool, income);
-            update529Advice(state529DB[selectedSchool.state]);
-            updateTaxStrategy(income, selectedSchool.state);
+        function toggleRetirementDetails() {
+            const detailsSection = document.getElementById('retirementDetails');
+            const button = document.getElementById('learnMoreBtn');
+            
+            if (detailsSection.style.display === 'none') {
+                detailsSection.style.display = 'block';
+                button.innerHTML = 'Show Less ↑';
+            } else {
+                detailsSection.style.display = 'none';
+                button.innerHTML = 'Learn More About Retirement Accounts ↓';
+            }
         }
 
         function updateRetirementAdvice(school, income) {
@@ -865,79 +1426,269 @@
                 document.getElementById('schoolSuggestions').classList.add('hidden');
             }
         });
+       // Calculate state tax rate based on income
+    function getStateTaxRate(income, state) {
+        const brackets = stateTaxDB[state].brackets;
+        for (let i = 0; i < brackets.length; i++) {
+            if (income <= brackets[i].threshold) {
+                return brackets[i].rate / 100;
+            }
+        }
+        return brackets[brackets.length - 1].rate / 100;
+    }
+
+    // Calculate 529 savings
+    function calculate529Savings(income, state) {
+        const deduction = state529DB[state].deduction;
+        if (deduction === 0) return 0;
+        
+        const stateTaxRate = getStateTaxRate(income, state);
+        return deduction * stateTaxRate;
+    }
+
+    // Calculate retirement savings comparison (457b/Roth vs Brokerage)
+    function calculateRetirementSavings(income, assumedContribution = 6000) {
+        // Assume 7% annual return over 30 years
+        const years = 5;
+        const annualReturn = 0.07;
+        
+        // Calculate growth in tax-advantaged account
+        const taxAdvantaged = assumedContribution * Math.pow(1 + annualReturn, years);
+        
+        // Calculate growth in brokerage with capital gains tax
+        // Assume 15% long-term capital gains tax rate for most grad student income levels
+        const brokerage = assumedContribution * Math.pow(1 + annualReturn * (1 - 0.15), years);
+        
+        return taxAdvantaged - brokerage;
+    }
+
+    // Calculate sales tax holiday savings
+    function calculateTaxHolidaySavings(state, holidayType) {
+        const salesTaxRates = {
+            'MA': 0.0625,
+            'FL': 0.06,
+            'NJ': 0.0625
+        };
+        
+        const taxRate = salesTaxRates[state] || 0;
+        
+        const maxSavings = {
+            'Back-to-School Sales Tax Holiday': {
+                'FL': 1500 * taxRate, // Computer limit
+                'NJ': 3000 * taxRate, // Computer and supplies limit
+                'MA': 2500 * taxRate  // General limit
+            },
+            'Disaster Preparedness Sales Tax Holiday': {
+                'FL': 3000 * taxRate  // Generator limit
+            },
+            'Tool Time Sales Tax Holiday': {
+                'FL': 2000 * taxRate  // Equipment limit
+            },
+            'Freedom Week': {
+                'FL': 500 * taxRate   // Estimated average
+            },
+            'Sales Tax Holiday': {
+                'MA': 2500 * taxRate  // Most items under $2,500
+            }
+        };
+        
+        // Find the holiday type in maxSavings and return the state's value
+        for (const [key, value] of Object.entries(maxSavings)) {
+            if (holidayType.includes(key) && value[state]) {
+                return value[state];
+            }
+        }
+        return 0;
+    }
+
+    function addPlanStep(stepsDiv, title, description, savings = 0, dates = '', tabName = '') {
+            const stepDiv = document.createElement('div');
+            stepDiv.classList.add('step');
+            
+            let savingsText = '';
+            let viewDetailsBtn = '';
+            
+            if (savings > 0) {
+                savingsText = `<p class="savings-estimate">
+                    Potential Savings: $${savings.toLocaleString(undefined, {maximumFractionDigits: 0})}
+                    ${tabName ? `<button class="view-details-btn" onclick="switchTab('${tabName}')">View Details</button>` : ''}
+                </p>`;
+            }
+            
+            let datesText = dates ? `<p class="dates">Dates: ${dates}</p>` : '';
+            
+            stepDiv.innerHTML = `
+                <h3>${title}</h3>
+                <p>${description}</p>
+                ${savingsText}
+                ${datesText}
+            `;
+            stepsDiv.appendChild(stepDiv);
+        }
+
+        // Modify the generatePlan function to include tab names
         function generatePlan() {
             if (!selectedSchool) {
                 alert('Please select a school first.');
                 return;
             }
 
+            const income = Number(document.getElementById('income').value);
+            if (!income) {
+                alert('Please enter your income.');
+                return;
+            }
+
+            const loadingElement = document.getElementById('loadingAnimation');
             document.getElementById('results').classList.add('hidden');
-            document.getElementById('loadingAnimation').style.display = 'flex';
+            loadingElement.classList.remove('hidden');
+            loadingElement.style.display = 'flex';
+
+            loadingElement.scrollIntoView({ behavior: 'smooth' });
 
             setTimeout(() => {
-            const income = Number(document.getElementById('income').value);
-            const state = selectedSchool.state;
-            const planStepsDiv = document.getElementById('planSteps');
-            planStepsDiv.innerHTML = '';
-            
-            if (state529DB[state].deduction > 0) {
-                addPlanStep(
-                    planStepsDiv, 
-                    '529 Plan Optimization', 
-                    `Contribute rent payments to your ${state529DB[state].planName} to take advantage of state tax deduction up to $${state529DB[state].deduction.toLocaleString()}.`
-                );
-            }
+                const state = selectedSchool.state;
+                const planStepsDiv = document.getElementById('planSteps');
+                planStepsDiv.innerHTML = '';
 
-            if (selectedSchool.retirementPlans.has457b) {
-                addPlanStep(
-                    planStepsDiv,
-                    '457(b) Contributions',
-                    'Contribute to your 457(b) plan. This has no early withdrawal penalties after leaving employment and a separate contribution limit from 403(b) plans.'
-                );
-            } else {
-                addPlanStep(
-                    planStepsDiv,
-                    'Roth IRA Contributions',
-                    'Prioritize contributions to a Roth IRA up to the $6,500 annual limit to take advantage of tax-free growth and withdrawals in retirement.'        
-                );
-            }
-
-            const holidayInfo = stateTaxHolidayDB[state];
-            if (holidayInfo && holidayInfo.hasTaxHoliday) {
-                holidayInfo.holidays.forEach(holiday => {
+                // 529 Plan Step
+                if (state529DB[state].deduction > 0) {
+                    const savings529 = calculate529Savings(income, state);
                     addPlanStep(
                         planStepsDiv,
-                        `Take Advantage of ${holiday.name}`,
-                        `${holiday.details} This is a great opportunity for graduate students to ${holiday.gradRelevance.toLowerCase()}. Be mindful of these restrictions: ${holiday.restrictions}`
-                    );
-                });
-            }
-
-            const stateInfo = stateTaxDB[state];
-            if (stateInfo.hasStateCapGains && income > 0 && income <= ltcgBrackets.single[0].threshold) {
-                if (stateInfo.brackets[0].rate === 0) {
-                    addPlanStep(
-                        planStepsDiv,
-                        'Harvest Capital Gains',
-                        'Your income falls within the 0% federal and state long-term capital gains brackets. Consider realizing gains to reset your cost basis and avoid future taxes.'
+                        '529 Plan Optimization',
+                        `Contribute rent payments to your ${state529DB[state].planName} to take advantage of state tax deduction up to $${state529DB[state].deduction.toLocaleString()}.`,
+                        savings529,
+                        '',
+                        'rent-groceries'
                     );
                 }
+
+                // Retirement Plan Step
+                if (selectedSchool.retirementPlans.has457b) {
+                    const retirementSavings = calculateRetirementSavings(income);
+                    addPlanStep(
+                        planStepsDiv,
+                        '457(b) Contributions',
+                        'Take advantage of your 457(b) access - a unique retirement account with no withdrawal penalties after leaving your program.',
+                        retirementSavings,
+                        '',
+                        'retirement'
+                    );
+                } else {
+                    const rothSavings = calculateRetirementSavings(income);
+                    addPlanStep(
+                        planStepsDiv,
+                        'Roth IRA Contributions',
+                        'Start building tax-free retirement savings with a Roth IRA while in your lower tax bracket.',
+                        rothSavings,
+                        '',
+                        'retirement'
+                    );
+                }
+
+                // Tax Holidays
+                const holidayInfo = stateTaxHolidayDB[state];
+                if (holidayInfo && holidayInfo.hasTaxHoliday) {
+                    holidayInfo.holidays.forEach(holiday => {
+                        const holidaySavings = calculateTaxHolidaySavings(state, holiday.name);
+                        addPlanStep(
+                            planStepsDiv,
+                            `Take Advantage of ${holiday.name}`,
+                            `${holiday.details} This is a great opportunity for graduate students to ${holiday.gradRelevance.toLowerCase()}. Be mindful of these restrictions: ${holiday.restrictions}`,
+                            holidaySavings,
+                            holiday.dates,
+                            'other'
+                        );
+                    });
+                }
+
+                loadingElement.style.display = 'none';
+                loadingElement.classList.add('hidden');
+                document.getElementById('results').classList.remove('hidden');
+                hasOptimized = true;
+            }, 2000);
+        }
+        function updateAccountTypeDetails() {
+            const accountTypeDetails = document.getElementById('accountTypeDetails');
+            if (!selectedSchool) return;
+
+            if (selectedSchool.retirementPlans.has457b) {
+                accountTypeDetails.innerHTML = `
+                    <div class="edu-section">
+                        <h4 class="edu-subtitle">Your Best Option: Roth contributions to your 457(b)</h4>
+                        <ul class="edu-list">
+                            <li><strong>457b Benefit:</strong> Take everything out penalty-free after leaving your program</li>
+                            <li><strong>Roth Benefit:</strong> Roth means you pay taxes now (grad student, tax rate: ~12%) instead of when you withdraw (usually when you are making more money, tax rate: ~20-30%)</li>
+                            <li><strong>Contribution:</strong> Up to $23,000 per year</li>
+                        </ul>
+                        <div class="edu-highlight">
+                            <h4>Pro Tip: Double Your Tax Benefits</h4>
+                            <p>Consider using both accounts: max your 457(b) first, then add Roth IRA contributions if you can save more.</p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                accountTypeDetails.innerHTML = `
+                    <div class="edu-section">
+                        <h4 class="edu-subtitle">Your Best Option: Roth Individual Retirement Account (IRA)</h4>
+                        <ul class="edu-list">
+                            <li><strong>IRA Benefit:</strong> Tax-free growth & flexible withdrawals</li>
+                            <li><strong>Roth Benefit:</strong> Roth means you pay taxes now (grad student tax rate: ~12%) instead of when you withdraw (usually when you are making more money tax rate: ~20-30%)</li>
+                            <li><strong>Contribution:</strong> Up to $7,000 per year (2024)</li>
+                        </ul>
+                        <div class="edu-highlight">
+                            <h4>Pro Tip: Start Small</h4>
+                            <p>Even $50-100 monthly adds up significantly over time thanks to tax-free growth. Consider automating your contributions.</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+            // Calculator functionality
+            function updateCalculator() {
+                const monthlyContribution = parseFloat(document.getElementById('monthlyContribution').value);
+                const years = parseFloat(document.getElementById('yearsGrowth').value);
+                
+                // Update displays
+                document.getElementById('contributionDisplay').textContent = `$${monthlyContribution}`;
+                document.getElementById('yearsDisplay').textContent = years;
+                
+                // Calculate values
+                const r = 0.07; // 7% annual return
+                const n = years * 12; // number of months
+                const PMT = monthlyContribution;
+                
+                // Total contributions
+                const totalContributions = PMT * n;
+                
+                // Future value calculation
+                const FV = PMT * ((Math.pow(1 + r/12, n) - 1) / (r/12));
+                
+                // Earnings = Future Value - Total Contributions
+                const totalEarnings = FV - totalContributions;
+                
+                // Update displays
+                document.getElementById('totalContributions').textContent = `$${Math.round(totalContributions).toLocaleString()}`;
+                document.getElementById('totalEarnings').textContent = `$${Math.round(totalEarnings).toLocaleString()}`;
+                document.getElementById('futureValue').textContent = `$${Math.round(FV).toLocaleString()}`;
             }
 
-            document.getElementById('loadingAnimation').style.display = 'none';
-        document.getElementById('results').classList.remove('hidden');
-    }, 2000);
-    }
+            // Add event listeners
+            document.getElementById('monthlyContribution').addEventListener('input', updateCalculator);
+            document.getElementById('yearsGrowth').addEventListener('input', updateCalculator);
 
-    function addPlanStep(stepsDiv, title, description) {
-        const stepDiv = document.createElement('div');
-        stepDiv.classList.add('step');
-        stepDiv.innerHTML = `
-            <h3>${title}</h3>
-            <p>${description}</p>
-        `;
-        stepsDiv.appendChild(stepDiv);
-    }
+            // Initial calculation
+            updateCalculator();
+
+        // Add click listeners for tab navigation
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabName = tab.getAttribute('data-tab');
+                switchTab(tabName);
+            });
+        });
 
     // Add click listener to close suggestions when clicking outside
     document.addEventListener('click', function(e) {
@@ -945,6 +1696,16 @@
             document.getElementById('schoolSuggestions').classList.add('hidden');
         }
     });
+    document.addEventListener('DOMContentLoaded', function() {
+    updateCalculator();
+    
+    // If there's a selected school, update the account type details
+    if (selectedSchool) {
+        updateAccountTypeDetails();
+        updateCalculatorLimits();
+    }
+});
     </script>
 </body>
 </html>
+
