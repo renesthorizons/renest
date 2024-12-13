@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Spectral:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      min-height: 100vh;
+      font-family: 'DM Sans', sans-serif;
+      color: #1A1A1A;
+      background-color: #efe2dd;
+      overflow-x: hidden;
+      width: 100%;
+      height: 100%;
+      max-width: 100vw;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <!-- Header Section -->
+      <div class="flex justify-between items-center mb-8">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900" style="font-family: 'Spectral', serif;">Investment Performance</h1>
+          <p class="text-gray-600 mt-1" style="font-family: 'Inter', sans-serif;">Outperforming Traditional Investment Strategies</p>
+        </div>
+        <div class="text-right">
+          <p class="text-3xl font-bold text-green-600" style="font-family: 'DM Sans', sans-serif;">+12% Returns</p>
+          <p class="text-lg text-gray-700" style="font-family: 'Inter', sans-serif;">vs. without Renest</p>
+        </div>
+      </div>
+
+      <!-- Performance Stats -->
+      <div class="bg-gray-50 rounded-lg p-6 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2" style="font-family: 'Spectral', serif;">Your Portfolio Performance</h3>
+            <p class="text-4xl font-bold text-green-600 mb-2" style="font-family: 'DM Sans', sans-serif;">$43,300</p>
+            <p class="text-lg text-gray-700" style="font-family: 'Inter', sans-serif;">Additional Returns Generated</p>
+          </div>
+          <div class="text-right">
+            <h3 class="text-xl font-semibold text-gray-900 mb-2" style="font-family: 'Spectral', serif;">Growth Rate</h3>
+            <p class="text-4xl font-bold text-blue-600 mb-2" style="font-family: 'DM Sans', sans-serif;">8.5%</p>
+            <p class="text-lg text-gray-700" style="font-family: 'Inter', sans-serif;">Annual Growth</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart -->
+      <div class="mb-8 h-96">
+        <canvas id="performanceChart" class="w-full h-full"></canvas>
+      </div>
+
+      <!-- Impact Section -->
+      <div class="bg-gray-50 rounded-lg p-6 mb-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-4" style="font-family: 'Spectral', serif;">Your Social Impact</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h3 class="text-lg font-medium text-gray-900 mb-2" style="font-family: 'DM Sans', sans-serif;">Total Impact Generated</h3>
+            <p class="text-3xl font-bold text-purple-600" style="font-family: 'DM Sans', sans-serif;">$38,500</p>
+            <p class="text-gray-600 mt-1" style="font-family: 'Inter', sans-serif;">Community Investment Impact</p>
+          </div>
+          <div>
+            <h3 class="text-lg font-medium text-gray-900 mb-2" style="font-family: 'DM Sans', sans-serif;">Lives Impacted</h3>
+            <p class="text-3xl font-bold text-purple-600" style="font-family: 'DM Sans', sans-serif;">62</p>
+            <p class="text-gray-600 mt-1" style="font-family: 'Inter', sans-serif;">Retirement Accounts Funded</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex justify-between items-center">
+        <button class="bg-green-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-green-700 transition-colors text-lg" style="font-family: 'DM Sans', sans-serif;">
+          Contribute
+        </button>
+        <button class="bg-gray-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-gray-700 transition-colors text-lg" style="font-family: 'DM Sans', sans-serif;">
+          View Full Analytics
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Initialize chart
+    const ctx = document.getElementById('performanceChart').getContext('2d');
+    
+    // Sample data
+    const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+    const platformData = [100000, 112000, 128000, 142000, 160000, 185000];
+    const traditionalData = [80000, 92000, 105000, 110000, 130000, 142000];
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Platform Returns',
+            data: platformData,
+            borderColor: '#10B981',
+            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+            tension: 0.4,
+            borderWidth: 3,
+            fill: true
+          },
+          {
+            label: 'Traditional Investment',
+            data: traditionalData,
+            borderColor: '#9CA3AF',
+            backgroundColor: 'rgba(156, 163, 175, 0.1)',
+            tension: 0.4,
+            borderWidth: 3,
+            fill: true
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                let label = context.dataset.label || '';
+                if (label) {
+                  label += ': ';
+                }
+                if (context.parsed.y !== null) {
+                  label += new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD'
+                  }).format(context.parsed.y);
+                }
+                return label;
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function(value, index, values) {
+                return new Intl.NumberFormat('en-US', {
+                  style: 'currency',
+                  currency: 'USD',
+                  maximumSignificantDigits: 3
+                }).format(value);
+              }
+            }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

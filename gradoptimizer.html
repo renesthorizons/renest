@@ -279,7 +279,7 @@ input:focus {
     border-radius: 16px;
     padding: 30px;
     box-shadow: 0 8px 16px rgba(2, 21, 61, 0.15);
-    max-width: 600px;
+    max-width: 800px;
     margin: 0 auto 30px auto;
     position: relative;
     z-index: 1;
@@ -313,7 +313,7 @@ input:focus {
             padding: 0.5rem;
             background: white;
             margin: -20px auto 30px auto;
-            max-width: 600px;
+            max-width: 800px;
             border-radius: 12px;
             box-shadow: 0 4px 6px rgba(2, 21, 61, 0.1);
             position: relative;
@@ -622,8 +622,115 @@ html {
     visibility: visible;
     opacity: 1;
 }
+.form-section {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+    border: 1px solid rgba(75, 34, 122, 0.1);
+}
 
-    </style>
+.section-title {
+    color: var(--primary-dark);
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.form-group.wide {
+    grid-column: span 2;
+}
+
+.form-group {
+    margin-bottom: 0;
+}
+
+.form-select {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid rgba(75, 34, 122, 0.3);
+    border-radius: 12px;
+    font-size: 16px;
+    background-color: rgba(255, 255, 255, 0.9);
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-group.wide {
+        grid-column: span 1;
+    }
+}
+/* Radio button styles */
+.radio-group {
+    display: flex;
+    gap: 2rem;
+    margin-top: 0.5rem;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-weight: normal;
+    margin: 0;
+}
+
+.radio-label input[type="radio"] {
+    display: none;
+}
+
+.radio-custom {
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid var(--primary);
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.radio-custom::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 0.75rem;
+    height: 0.75rem;
+    background: var(--primary);
+    border-radius: 50%;
+    transition: transform 0.2s ease;
+}
+
+.radio-label input[type="radio"]:checked + .radio-custom::after {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.radio-label:hover .radio-custom {
+    border-color: var(--primary-light);
+}
+
+.radio-label input[type="radio"]:checked + .radio-custom {
+    border-color: var(--primary);
+    background-color: var(--primary-light);
+    opacity: 0.1;
+}
+input::placeholder {
+    font-size:1rem;  /* Set different size for placeholder */
+}
+</style>
 </head>
 <body>
     <div class="header-section">
@@ -638,8 +745,9 @@ html {
 
     <div class="nav-tabs">
         <button class="nav-tab active" data-tab="optimize">Optimize</button>
-        <button class="nav-tab" data-tab="retirement">Retirement</button>
         <button class="nav-tab" data-tab="rent-groceries">Rent & Groceries</button>
+        <button class="nav-tab" data-tab="healthcare">Healthcare</button>
+         <button class="nav-tab" data-tab="retirement">Retirement</button>
         <button class="nav-tab" data-tab="other">Other Spending</button>
     </div>
 
@@ -647,16 +755,140 @@ html {
     <div id="optimize-content" class="tab-content active">
         <div class="input-card">
             <h2 class="card-title">Enter Your Information</h2>
-            <div class="form-group">
-                <label for="schoolSearch">Search Your School:</label>
-                <input type="text" id="schoolSearch" placeholder="Start typing your school name..." oninput="handleSchoolSearch(event)">
-                <div id="schoolSuggestions" class="suggestions hidden"></div>
+            
+            <!-- Required Information Section -->
+            <div class="form-section">
+                <div class="form-grid">
+                    <div class="form-group wide">
+                        <label for="schoolSearch">Search Your School:</label>
+                        <input type="text" id="schoolSearch" placeholder="Start typing your school name..." oninput="handleSchoolSearch(event)">
+                        <div id="schoolSuggestions" class="suggestions hidden"></div>
+                    </div>
+                    <div class="form-group wide">
+                        <label for="income">Annual Income ($):</label>
+                        <input type="text" id="income" placeholder="Estimate is okay">
+                    </div>
+                </div>
+            </div>
+                <h3 class="section-title">Optional Information 
+                    <div class="info-tooltip">
+                        <img src="info.png" alt="info" class="info-icon">
+                        <span class="tooltip-text">Additional information helps us provide more personalized recommendations. Fill in as many fields as you'd like.</span>
+                    </div>
+                </h3>
+            <!-- Optional Information Section -->
+            <div class="form-section optional-section">
+                <h3 class="section-title">Healthcare Information
+                <div class="info-tooltip">
+                                <img src="info.png" alt="info" class="info-icon">
+                                <span class="tooltip-text">This section will allow us to maximize the immediate tax benefits available to you as a student for essential spending</span>
+                            </div> </h3>               
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="monthlyRent">Monthly Rent + Utilities($):
+                        
+                        </label>
+                        <input type="text" id="monthlyRent" placeholder="Enter amount">
+                    </div>
+                    <div class="form-group">
+                        <label for="monthlyGroceries">Monthly Groceries ($):
+                        </label>
+                        <input type="text" id="monthlyGroceries" placeholder="Estimate is okay">
+                    </div>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="income">Annual Income ($):</label>
-                <input type="text" id="income" placeholder="Enter your annual income">
+            <!-- Healthcare Section -->
+            <div class="form-section">
+                <h3 class="section-title">Healthcare Information
+                <div class="info-tooltip">
+                                <img src="info.png" alt="info" class="info-icon">
+                                <span class="tooltip-text">This section will allow us to determine what health benefits you are eligible for, ie cost of urgent care, dental cleaning, free glasses, reduced contraceptive and drug prices, etc...</span>
+                            </div></h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="healthInsurance">Health Insurance:</label>
+                        <select id="healthInsurance" class="form-select">
+                            <option value="">Select</option>
+                            <option value="school">School Health Plan</option>
+                            <option value="parents">Parent's Insurance</option>
+                            <option value="marketplace">Marketplace Plan</option>
+                            <option value="parents+school">School Health Plan + Parent's Insurance</option>
+                            <option value="none">No Insurance</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="monthlyHealthCare">Monthly Healthcare ($):</label>
+                        <input type="text" id="monthlyHealthCare" placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <label>Do You Have Children?</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="children" value="yeschild">
+                                <span class="radio-custom"></span>
+                                Yes
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="children" value="nochild">
+                                <span class="radio-custom"></span>
+                                No
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Are You Married?</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="married" value="yesmarried">
+                                <span class="radio-custom"></span>
+                                Yes
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="married" value="nomarried">
+                                <span class="radio-custom"></span>
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <!-- Financial Section -->
+            <div class="form-section">
+                <h3 class="section-title">Financial Details
+                    <div class="info-tooltip">
+                                <img src="info.png" alt="info" class="info-icon">
+                                <span class="tooltip-text">This section will allow us to make suggestions on how to saver for retirement and invest optimally for a future career, house, family etc...</span>
+                            </div></h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="savings">Current Savings ($):</label>
+                        <input type="text" id="savings" placeholder="Amount you don't plan to use for the next 3 months">
+                    </div>
+                    <div class="form-group">
+                        <label for="bank">Primary Bank/Credit Union:</label>
+                        <input type="text" id="bank" placeholder="What bank do you primarily use">
+                    </div>
+                    <div class="form-group">
+                        <label for="bank">How Much You Set Aside Each Month ($):</label>
+                        <input type="text" id="bank" placeholder="Rough savings at end of month after expenses ">
+                    </div>
+                    <div class="form-group">
+                        <label for="spendingMethod">Primary Spending Method:</label>
+                        <select id="spendingMethod" class="form-select">
+                            <option value="">Select</option>
+                            <option value="credit">Credit Card</option>
+                            <option value="debit">Debit Card</option>
+                            <option value="cash">Cash</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            
+        </div>
 
             <button id="optimizeBtn" onclick="generatePlan()">
                 <div class="button-content">
@@ -674,7 +906,23 @@ html {
         <div id="planSteps"></div>
         </div>
     </div>
-
+    <div id="rent-groceries-content" class="tab-content">
+        <div class="input-card">
+            <h2 class="card-title">Rent & Groceries Optimization</h2>
+            <div id="rent-grocery-details">
+                Please input your school and income details first to see personalized rent and grocery recommendations.
+            </div>
+        </div>
+    </div>
+    <div id="healthcare-content" class="tab-content">
+        <div class="input-card">
+            <h2 class="card-title">Healthcare Optimization</h2>
+            <div id="healthcare-details">
+                Please input your school and income details first to see personalized healthcare recommendations.
+            </div>
+        </div>
+    </div>
+</div>
     <div id="retirement-content" class="tab-content">
             <div class="edu-card">
                 <h2 class="edu-title">Your Retirement Account Options</h2>
@@ -767,14 +1015,7 @@ html {
             </div>
         </div>
 
-<div id="rent-groceries-content" class="tab-content">
-    <div class="input-card">
-        <h2 class="card-title">Rent & Groceries Optimization</h2>
-        <div id="rent-grocery-details">
-            Please input your school and income details first to see personalized rent and grocery recommendations.
-        </div>
-    </div>
-</div>
+
 
 <div id="other-content" class="tab-content">
     <div class="input-card">
@@ -1280,6 +1521,17 @@ html {
 
             const tabs = document.querySelectorAll('.nav-tab');
             const contents = document.querySelectorAll('.tab-content');
+            const results = document.getElementById('results');
+            const loadingAnimation = document.getElementById('loadingAnimation');
+            
+            // Hide results and loading animation when switching away from optimize tab
+            if (tabName !== 'optimize') {
+                results.classList.add('hidden');
+                loadingAnimation.classList.add('hidden');
+            } else if (hasOptimized) {
+                // Show results if returning to optimize tab and optimization was done
+                results.classList.remove('hidden');
+            }
             
             tabs.forEach(tab => {
                 tab.classList.remove('active');
