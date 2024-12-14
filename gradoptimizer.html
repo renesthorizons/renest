@@ -7,10 +7,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
     <style>
        :root {
-    --primary-dark: #02153D;    /* Dark Navy */
-    --primary: #4B227A;         /* Purple */
-    --primary-light: #0197AF;   /* Turquoise */
-    --accent: #00EED0;          /* Mint */
+    --primary: #7c3aed;      /* Vivid purple */
+    --primary-light: #a78bfa; /* Light purple */
+    --primary-dark: #5b21b6;  /* Dark purple */
+    --accent: #0d9488;        /* Teal */
+    --accent-light: #2dd4bf;  /* Light teal */
+    --background: #f8fafc;    /* Light gray background */
+    --text: #1e293b;         /* Dark text */
+    --text-light: #64748b;   /* Light text */
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --transition: all 0.3s ease;
 }
 
 body {
@@ -19,13 +25,13 @@ body {
     padding: 20px;
     line-height: 1.6;
     color: var(--primary-dark);
-    background-color: #f5f2f8;
+    background-color: #ffdfd3;
     min-height: 100vh;
 }
 
 /* Change h1 styles */
 h1 {
-    color: var(--primary-dark);
+    color: white;
     margin-bottom: 30px;
     font-size: 2.5rem;
     text-align: center;
@@ -35,7 +41,7 @@ h1 {
 
 /* Change h2, h3 styles */
 h2, h3 {
-    color: var(--primary-dark);
+     color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
 }
 
@@ -44,22 +50,49 @@ label {
     display: block;
     margin-bottom: 10px;
     font-weight: 600;
-    color: var(--primary-dark);
+    color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
 }
 
 /* Change nav-tab styles */
+.nav-tabs {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: white;
+    border-radius: 1rem;
+    margin: -1.5rem auto 2rem;
+    max-width: 800px;
+    position: relative;
+    box-shadow: var(--card-shadow);
+    flex-wrap: wrap;
+    justify-content: center;
+    z-index: 10;
+}
+
 .nav-tab {
     padding: 0.75rem 1.5rem;
     border: none;
     background: transparent;
-    color: var(--primary-dark);
+    color: var(--text-light);
     cursor: pointer;
-    font-size: 1rem;
     font-weight: 500;
-    transition: all 0.3s ease;
-    border-radius: 8px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+    border-radius: 0.5rem;
+    transition: var(--transition);
+    white-space: nowrap;
+    flex: 1 1 auto;
+    min-width: 120px;
+    text-align: center;
+}
+
+.nav-tab:hover {
+    color: var(--primary);
+    background: rgba(124, 58, 237, 0.05);
+}
+
+.nav-tab.active {
+    background: var(--primary);
+    color: white;
 }
 
 /* Change edu-title styles */
@@ -77,7 +110,7 @@ label {
 }
 
 input {
-    width: 95%;
+    width: 80%;
     padding: 15px;
     margin-bottom: 20px;
     border: 1px solid rgba(75, 34, 122, 0.3);
@@ -203,6 +236,7 @@ input:focus {
     box-shadow: 0 2px 6px rgba(2, 21, 61, 0.1);
     cursor: pointer;
     transition: transform 0.3s;
+    color: var(--text);
 }
 
 .step:hover {
@@ -223,6 +257,7 @@ input:focus {
     gap: 10px;
     width: 100%;
     max-width:  350px;
+    color: var(--text);
     box-sizing: border-box;
 }
 
@@ -267,23 +302,46 @@ input:focus {
 }
 
 .header-section {
-    background: linear-gradient(135deg, #f2e6ff, #e6f2ff);  /* Soft pastel gradient */
-    padding: 40px 20px 40px 20px;
-    margin: -20px -20px 0 -20px;
-    box-shadow: 0 4px 12px rgba(2, 21, 61, 0.15);
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    padding: 4rem 2rem;
     text-align: center;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100vw;
+    margin: -20px -20px 0 -20px;
+}
+
+.header-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 30% 40%, rgba(255,255,255,0.1) 0%, transparent 60%);
 }
 
 .input-card {
-    background: white;
-    border-radius: 16px;
-    padding: 30px;
-    box-shadow: 0 8px 16px rgba(2, 21, 61, 0.15);
+    background: #fcf9ff; 
+    border-radius: 1rem;
+    padding: 2rem;
+    margin: 0 auto 2rem;
     max-width: 800px;
-    margin: 0 auto 30px auto;
+    box-shadow: var(--card-shadow);
+    border: 1px solid rgba(124, 58, 237, 0.1);
     position: relative;
-    z-index: 1;
-    border: 1px solid rgba(75, 34, 122, 0.2);
+    overflow: hidden;
+}
+
+.input-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
 }
 
 .header-content {
@@ -301,39 +359,9 @@ input:focus {
 
 .card-title {
     font-size: 1.4rem;
-    color: var(--primary-dark);
+    color: var(--text);
     margin-bottom: 20px;
     text-align: center;
-}
-
-        .nav-tabs {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            padding: 0.5rem;
-            background: white;
-            margin: -20px auto 30px auto;
-            max-width: 800px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(2, 21, 61, 0.1);
-            position: relative;
-            z-index: 2;
-            flex-wrap: wrap; /* Allow wrapping on mobile */
-        }
-
-        .nav-tab {
-            padding: 0.75rem 1rem; /* Reduced padding */
-            font-size: 0.9rem; /* Slightly smaller font */
-            white-space: nowrap; /* Prevent text wrapping within tabs */
-            flex: 1 1 auto; /* Allow tabs to grow and shrink */
-            text-align: center; /* Center text */
-            min-width: 80px; /* Minimum width for tabs */
-        }
-
-.nav-tab.active {
-    color: var(--primary);
-    background: rgba(75, 34, 122, 0.15);
-    font-weight: 600;
 }
 
 .tab-content {
@@ -473,7 +501,7 @@ html {
 
 
 .edu-subtitle {
-    color: var(--primary);
+    color: var(--text);
     font-size: 1.3rem;
     margin-bottom: 1rem;
     font-weight: 600;
@@ -510,7 +538,7 @@ html {
 
 .calculator-value h3 {
     font-size: 1rem;
-    color: var(--primary-dark);
+    color: var(--text);
     margin-bottom: 0.5rem;
 }
 
@@ -528,12 +556,12 @@ html {
 .slider-group label {
     display: block;
     margin-bottom: 0.5rem;
-    color: var(--primary-dark);
+    color: var(--text);
     font-weight: 500;
 }
 
 .slider-group input[type="range"] {
-    width: 100%;
+    width: 95%;
     margin-bottom: 0.5rem;
 }
 
@@ -547,19 +575,22 @@ html {
     list-style-type: none;
     padding: 0;
     margin: 1rem 0;
+    color: var(--text);
 }
 
 .edu-list li {
     padding: 0.75rem 0;
     border-bottom: 1px solid rgba(75, 34, 122, 0.1);
+    color: var(--text);
 }
 
 .edu-list li:last-child {
     border-bottom: none;
+    color: var(--text);
 }
 
 .edu-list li strong {
-    color: var(--primary);
+    color: var(--text);
     margin-right: 0.5rem;
 }
 
@@ -613,7 +644,7 @@ html {
     width: max-content;
     max-width: 200px;
     font-size: 0.9rem;
-    z-index: 1;
+    z-index: 10;
     opacity: 0;
     transition: opacity 0.3s;
 }
@@ -623,7 +654,7 @@ html {
     opacity: 1;
 }
 .form-section {
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, .9);
     border-radius: 12px;
     padding: 20px;
     margin-bottom: 25px;
@@ -653,7 +684,7 @@ html {
 }
 
 .form-select {
-    width: 100%;
+    width: 80%;
     padding: 15px;
     border: 1px solid rgba(75, 34, 122, 0.3);
     border-radius: 12px;
@@ -765,12 +796,14 @@ input::placeholder {
                         <div id="schoolSuggestions" class="suggestions hidden"></div>
                     </div>
                     <div class="form-group wide">
-                        <label for="income">Annual Income ($):</label>
-                        <input type="text" id="income" placeholder="Estimate is okay">
+                        <label for="income">Annual Income:</label>
+                        <input type="text" id="income" placeholder="Closest Guess">
                     </div>
                 </div>
             </div>
-                <h3 class="section-title">Optional Information 
+        </div>
+        <div class="input-card">
+                <h3 style=" color:  var(--text);" class="section-title">Optional Information
                     <div class="info-tooltip">
                         <img src="info.png" alt="info" class="info-icon">
                         <span class="tooltip-text">Additional information helps us provide more personalized recommendations. Fill in as many fields as you'd like.</span>
@@ -778,22 +811,22 @@ input::placeholder {
                 </h3>
             <!-- Optional Information Section -->
             <div class="form-section optional-section">
-                <h3 class="section-title">Healthcare Information
+                <h3 class="section-title">Spending Essentials
                 <div class="info-tooltip">
                                 <img src="info.png" alt="info" class="info-icon">
                                 <span class="tooltip-text">This section will allow us to maximize the immediate tax benefits available to you as a student for essential spending</span>
                             </div> </h3>               
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="monthlyRent">Monthly Rent + Utilities($):
+                        <label for="monthlyRent">Monthly Rent + Utilities:
                         
                         </label>
-                        <input type="text" id="monthlyRent" placeholder="Enter amount">
+                        <input type="text" id="monthlyRent" placeholder="Enter amount  ($)">
                     </div>
                     <div class="form-group">
-                        <label for="monthlyGroceries">Monthly Groceries ($):
+                        <label for="monthlyGroceries">Monthly Groceries:
                         </label>
-                        <input type="text" id="monthlyGroceries" placeholder="Estimate is okay">
+                        <input type="text" id="monthlyGroceries" placeholder="Best Estimate ($)">
                     </div>
                 </div>
             </div>
@@ -819,8 +852,8 @@ input::placeholder {
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="monthlyHealthCare">Monthly Healthcare ($):</label>
-                        <input type="text" id="monthlyHealthCare" placeholder="">
+                        <label for="monthlyHealthCare">Monthly Healthcare:</label>
+                        <input type="text" id="monthlyHealthCare" placeholder="Amount ($)">
                     </div>
                     <div class="form-group">
                         <label>Do You Have Children?</label>
@@ -864,16 +897,16 @@ input::placeholder {
                             </div></h3>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="savings">Current Savings ($):</label>
-                        <input type="text" id="savings" placeholder="Amount you don't plan to use for the next 3 months">
+                        <label for="savings">Savings You Don't Plan to Use in Next 3 Months:</label>
+                        <input type="text" id="savings" placeholder="Amount ($)">
                     </div>
                     <div class="form-group">
                         <label for="bank">Primary Bank/Credit Union:</label>
-                        <input type="text" id="bank" placeholder="What bank do you primarily use">
+                        <input type="text" id="bank" placeholder="">
                     </div>
                     <div class="form-group">
-                        <label for="bank">How Much You Set Aside Each Month ($):</label>
-                        <input type="text" id="bank" placeholder="Rough savings at end of month after expenses ">
+                        <label for="bank">How Much You Set Aside Each Month:</label>
+                        <input type="text" id="bank" placeholder="Amount ($)">
                     </div>
                     <div class="form-group">
                         <label for="spendingMethod">Primary Spending Method:</label>
