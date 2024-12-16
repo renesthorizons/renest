@@ -23,6 +23,7 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
     margin: 0;
     padding: 20px;
+    padding-bottom: 90px;
     line-height: 1.6;
     color: var(--primary-dark);
     background-color: #ffdfd3;
@@ -331,7 +332,7 @@ input:focus {
     box-shadow: var(--card-shadow);
     border: 1px solid rgba(124, 58, 237, 0.1);
     position: relative;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .input-card::before {
@@ -488,6 +489,7 @@ html {
     background: white;
     border-radius: 12px;
     padding: 1.5rem;
+    color: var(--text);
     margin-bottom: 1.5rem;
     border-left: 4px solid var(--primary);
     transition: transform 0.2s ease-in-out;
@@ -761,6 +763,168 @@ html {
 input::placeholder {
     font-size:1rem;  /* Set different size for placeholder */
 }
+
+.optimization-section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.summary-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.savings-estimate {
+    background: #f7f9fc;
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 16px;
+}
+
+.savings-amount-rent {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+.savings-amount-groceries {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.amount {
+    font-size: 32px;
+    font-weight: bold;
+    color: #7c3aed;
+}
+
+.period {
+    color: #64748b;
+}
+
+.input-prompt-btn {
+    background: none;
+    border: none;
+    color: #7c3aed;
+    padding: 8px 0;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.step-item {
+    background: white;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.step-header {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    cursor: pointer;
+    gap: 16px;
+}
+
+.step-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid #7c3aed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.step-circle.completed {
+    background: #7c3aed;
+    color: white;
+}
+
+.step-content {
+    padding: 16px;
+    border-top: 1px solid #e2e8f0;
+    color: var(--text);
+}
+
+.complete-step-btn {
+    background: #7c3aed;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 12px;
+}
+
+.progress-container {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    max-width: 800px;
+    background: white;
+    border: 4px solid var(--primary-light);
+    z-index: 1000;
+    border-radius: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.progress-bar {
+    width: 5%;
+    height: 20px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    border-radius: 20px;
+    transition: width 0.3s ease;
+    margin-top: 10px;
+}
+
+.progress-label {
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--text);
+    margin-bottom: 10px;
+}
+
+.learn-more-btn {
+    width: 100%;
+    background: #f7f9fc;
+    border: none;
+    padding: 16px;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 8px;
+    margin-top: 24px;
+}
+
+.hidden {
+    display: none;
+}
+
+.steps-container{
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background: var(--primary-light);
+}
+
 </style>
 </head>
 <body>
@@ -939,14 +1103,117 @@ input::placeholder {
         <div id="planSteps"></div>
         </div>
     </div>
+
+
+
+
     <div id="rent-groceries-content" class="tab-content">
-        <div class="input-card">
-            <h2 class="card-title">Rent & Groceries Optimization</h2>
-            <div id="rent-grocery-details">
-                Please input your school and income details first to see personalized rent and grocery recommendations.
+        <div class="optimization-section">
+            <!-- Summary Card -->
+            <div class="summary-card">
+                <h2>Rent Savings</h2>
+                <div class="savings-estimate" id="savingsEstimate">
+                    <!-- This section is populated by JavaScript -->
+                </div>
+                <div class="edu-section">
+                    <p>States want to help you by giving you tax-breaks for your education expenses. 529 plans are state-sponsored education savings programs that provide tax advantages for qualified education expenses. By opening a 529 account you can save hundreds or thousands per year on rent and groceries.</p>
+                    <button onclick="toggle529Details()" id="learnMoreBtn" class="learn-more-btn">
+                        Learn More About 529 Benefits ↓
+                    </button>
+                </div>
+
+                <div id="529Details" class="hidden">
+                    <div class="edu-section">
+                        <h3 class="edu-subtitle">How 529 Plans Work for Graduate Students</h3>
+                        <ul class="edu-list">
+                            <li><strong>Step 1:</strong> Deposit your rent/grocery money into your state's 529 plan</li>
+                            <li><strong>Step 2:</strong> Withdraw it (immediately or when you need it) for qualified expenses (including rent and meals)</li>
+                            <li><strong>Step 3:</strong> When you do your taxes you will easily indicate how much you contributed to your 529 and then state will reimburse your taxes on that amount (up to the state  limit)</li>
+                            <li><strong>Result:</strong> You get a tax-refund and money grows tax-free while in your 529 meaning even more money available for your needs.</li>
+                        </ul>
+                        
+                        <div class="edu-highlight">
+                            <h4 class="edu-subtitle">Qualified Expenses Include:</h4>
+                            <ul class="edu-list">
+                                <li><strong>Housing:</strong> Rent/housing while enrolled</li>
+                                <li><strong>Food:</strong> Meal plans and groceries</li>
+                                <li><strong>Services:</strong> Utilities and internet service</li>
+                                <li><strong>Materials:</strong> Required course materials</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- <div class="edu-highlight">
+                            <h4>Pro Tips:</h4>
+                            <ul class="edu-list" style="color: white;">
+                                <li style="color: white;">Keep receipts for all qualified expenses</li>
+                                <li>Contribute monthly before paying rent for maximum tax benefit</li>
+                                <li>Check your state's specific rules and contribution limits</li>
+                            </ul>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Rent Steps Section -->
+            <div class="steps-container">
+                <h3>Steps to Save on Rent</h3>
+                <!-- This div will be populated by generateRentSteps -->
+                <div id="rentStepsContainer"></div>
+            </div>
+
+            <div class="summary-card">
+                <h2>Grocery Savings</h2>
+                <div class="savings-estimate" id="savingsEstimate">
+                    <!-- This section is populated by JavaScript -->
+                </div>
+                <div class="edu-section">
+                    <p>Credit cards are a safe and easy way to save hundreds on groceries each year. If you only use your card for purchases you can afford you can accumulate cashback and bonuses worth upwards of a thousand dollars each year. Some cards offer particular benefits for spend in certain categories such as groceries, dinning, gas and travel.</p>
+                    <button onclick="toggleCCDetails()" id="learnMoreBtn" class="learn-more-btn">
+                        Learn More About Credit Card Benefits ↓
+                    </button>
+                </div>
+
+                <div id="CCDetails" class="hidden">
+                    <div class="edu-section">
+                        <h3 class="edu-subtitle">How Credit Cards Work for Graduate Students</h3>
+                        <ul class="edu-list">
+                        </ul>
+                        
+                        <div class="edu-highlight">
+                            <h4 class="edu-subtitle">Qualified Expenses Include:</h4>
+                            <ul class="edu-list">
+                            </ul>
+                        </div>
+                        
+                        <!-- <div class="edu-highlight">
+                            <h4>Pro Tips:</h4>
+                            <ul class="edu-list" style="color: white;">
+                                <li style="color: white;">Keep receipts for all qualified expenses</li>
+                                <li>Contribute monthly before paying rent for maximum tax benefit</li>
+                                <li>Check your state's specific rules and contribution limits</li>
+                            </ul>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+            <!-- Grocery Steps Section -->
+            <div class="steps-container">
+                <h3>Steps to Save on Groceries</h3>
+                <!-- This div will be populated by generateGrocerySteps -->
+                <div id="groceryStepsContainer"></div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-container">
+                <span class="progress-label">Track your optimization progress</span>
+                <div class="progress-bar" id="rentGroceryProgress"></div>
             </div>
         </div>
     </div>
+
+
+
     <div id="healthcare-content" class="tab-content">
         <div class="input-card">
             <h2 class="card-title">Healthcare Optimization</h2>
@@ -956,6 +1223,9 @@ input::placeholder {
         </div>
     </div>
 </div>
+
+
+
     <div id="retirement-content" class="tab-content">
             <div class="edu-card">
                 <h2 class="edu-title">Your Retirement Account Options</h2>
@@ -1060,6 +1330,26 @@ input::placeholder {
 </div>
 
     <script>
+        function setupCurrencyInput(inputId) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+
+            input.addEventListener('input', function(e) {
+                // Remove any non-digits
+                let value = this.value.replace(/[^\d]/g, '');
+                
+                // If there's a value, format it
+                if (value) {
+                    // Convert to number and format with commas and dollar sign
+                    this.value = '$' + Number(value).toLocaleString('en-US');
+                } else {
+                    this.value = '';
+                }
+            });
+        }
+
+        // Setup currency formatting for all money-related inputs
+        
         // School database (same as before)
         const schoolsDB = {
             'harvard': {
@@ -1522,14 +1812,18 @@ input::placeholder {
         }
 
         // Update the selectSchool function to also update calculator limits
-        function selectSchool(schoolId) {
+       function selectSchool(schoolId) {
             selectedSchool = schoolsDB[schoolId];
             const searchInput = document.getElementById('schoolSearch');
             searchInput.value = `${selectedSchool.name} (${getStateName(selectedSchool.state)})`;
             document.getElementById('schoolSuggestions').classList.add('hidden');
+            
+            // Run all necessary updates
             updateResults();
             updateAccountTypeDetails();
-            updateCalculatorLimits(); // Add this line
+            updateCalculatorLimits();
+            updateSavingsEstimate();
+            initializeRentGrocerySection();
         }
 
         const incomeInput = document.getElementById('income');
@@ -1544,6 +1838,38 @@ input::placeholder {
                 this.value = '';
             }
         });
+        function toggle529Details() {
+            const detailsSection = document.getElementById('529Details');
+            const button = document.getElementById('learnMoreBtn');
+            const isHidden = detailsSection.classList.contains('hidden');
+            
+            if (isHidden) {
+                detailsSection.classList.remove('hidden');
+                button.innerHTML = 'Show Less ↑';
+                setTimeout(() => {
+                    detailsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            } else {
+                detailsSection.classList.add('hidden');
+                button.innerHTML = 'Learn More About 529 Benefits ↓';
+            }
+        }
+        function toggleCCDetails() {
+            const detailsSection = document.getElementById('CCDetails');
+            const button = document.getElementById('learnMoreBtn');
+            const isHidden = detailsSection.classList.contains('hidden');
+            
+            if (isHidden) {
+                detailsSection.classList.remove('hidden');
+                button.innerHTML = 'Show Less ↑';
+                setTimeout(() => {
+                    detailsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            } else {
+                detailsSection.classList.add('hidden');
+                button.innerHTML = 'Learn More About Credit Card Benefits ↓';
+            }
+        }
 
         // Update the switchTab function to update calculator limits when switching to retirement tab
         function switchTab(tabName) {
@@ -1880,6 +2206,239 @@ input::placeholder {
             `;
             stepsDiv.appendChild(stepDiv);
         }
+        function toggleStep(stepNumber) {
+            const stepContent = document.querySelector(`[data-step="${stepNumber}"]`)
+                .closest('.step-item')
+                .querySelector('.step-content');
+            const arrow = document.querySelector(`[data-step="${stepNumber}"]`)
+                .closest('.step-item')
+                .querySelector('.expand-arrow');
+            
+            stepContent.classList.toggle('hidden');
+            arrow.style.transform = stepContent.classList.contains('hidden') ? 
+                'rotate(0deg)' : 'rotate(180deg)';
+        }
+
+         function updateProgress() {
+            const totalSteps = document.querySelectorAll('.step-circle').length;
+            const completedSteps = document.querySelectorAll('.step-circle.completed').length;
+            const progress = completedSteps / totalSteps * 100;
+            
+            document.querySelector('.progress-bar').style.width = `${progress}%`;
+        }
+
+        function completeStep(stepNumber) {
+            const stepCircle = document.querySelector(`[data-step="${stepNumber}"]`);
+            const checkmark = stepCircle.querySelector('.checkmark');
+            const number = stepCircle.querySelector('.step-number');
+            
+            stepCircle.classList.add('completed');
+            number.classList.add('hidden');
+            checkmark.classList.remove('hidden');
+            
+            updateProgress();
+        }
+
+       
+
+        function toggleLearnMore() {
+            const content = document.querySelector('.learn-more-content');
+            const arrow = document.querySelector('.learn-more-btn .arrow');
+            
+            content.classList.toggle('hidden');
+            arrow.style.transform = content.classList.contains('hidden') ? 
+                'rotate(0deg)' : 'rotate(180deg)';
+        }
+
+        function showInputPrompt() {
+            // Implementation for showing input modal/form
+            alert('Show input form for actual expenses');
+        }
+
+        function initializeRentGrocerySection() {
+            // Get the selected school's state
+            if (!selectedSchool) {
+                document.getElementById('rentStepsContainer').innerHTML = 
+                    '<p>Please select your school to see available benefits</p>';
+                return;
+            }
+
+            const state = selectedSchool.state;
+            
+            // Generate and insert rent steps only if state has 529 deduction
+            if (state529DB[state].deduction > 0) {
+                document.getElementById('rentStepsContainer').innerHTML = generateRentSteps(state);
+            } else {
+                document.getElementById('rentStepsContainer').innerHTML = '';
+            }
+            
+            // Generate and insert grocery steps
+            const spendingMethod = document.getElementById('spendingMethod')?.value || '';
+            document.getElementById('groceryStepsContainer').innerHTML = generateGrocerySteps(spendingMethod);
+        }
+
+        // Call this function when the tab is shown or when school is selected
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click listener for the rent-groceries tab
+            const rentGroceriesTab = document.querySelector('[data-tab="rent-groceries"]');
+            if (rentGroceriesTab) {
+                rentGroceriesTab.addEventListener('click', initializeRentGrocerySection);
+            }
+        });
+
+        // Add this to your existing selectSchool function
+        function selectSchool(schoolId) {
+            selectedSchool = schoolsDB[schoolId];
+            const searchInput = document.getElementById('schoolSearch');
+            searchInput.value = `${selectedSchool.name} (${getStateName(selectedSchool.state)})`;
+            document.getElementById('schoolSuggestions').classList.add('hidden');
+            
+            // Initialize the rent-groceries section if it's currently visible
+            const rentGroceriesContent = document.getElementById('rent-groceries-content');
+            if (rentGroceriesContent && !rentGroceriesContent.classList.contains('hidden')) {
+                initializeRentGrocerySection();
+            }
+        }
+
+
+        function updateSavingsEstimate() {
+            const savingsDiv = document.getElementById('savingsEstimate');
+            if (!selectedSchool) {
+                savingsDiv.innerHTML = `<div class="missing-info-prompt">Please select your school to see available benefits</div>`;
+                return;
+            }
+
+            // Get user inputs
+            const monthlyRent = parseFloat(document.getElementById('monthlyRent')?.value?.replace(/[^0-9.]/g, '') || '0');
+            const monthlyGroceries = parseFloat(document.getElementById('monthlyGroceries')?.value?.replace(/[^0-9.]/g, '') || '0');
+            const income = parseFloat(document.getElementById('income')?.value?.replace(/[^0-9.]/g, '') || '0');
+            const state = selectedSchool.state;
+            
+            // Calculate grocery card rewards (5% back on groceries)
+            const annualGroceries = monthlyGroceries * 12;
+            const groceryRewards = annualGroceries * 0.05;
+            
+            let html = '';
+            if (state529DB[state].deduction > 0) {
+                // Calculate potential savings
+                const annualRent = monthlyRent * 12;
+                const stateTaxRate = getStateTaxRate(income, state);
+                const maxDeduction = state529DB[state].deduction;
+                
+                // Calculate actual deductible amount based on actual expenses
+                const totalExpenses = annualRent + annualGroceries;
+                const deductibleAmount = Math.min(totalExpenses, maxDeduction);
+                const taxSavings = deductibleAmount * stateTaxRate;
+                
+                html = `
+                    <div class="savings-amount-rent">
+                        <span class="amount">$${Math.round(taxSavings).toLocaleString()}</span>
+                        <span class="period">/year</span>
+                    </div>`;
+                
+                    // <div class="savings-breakdown">
+                    //     <div class="savings-item">
+                    //         <span>Rent &amp; Grocery Tax Benefits:</span>
+                    //         <span>$${Math.round(taxSavings).toLocaleString()}/year</span>
+                    //     </div>
+                    //     <div class="savings-item">
+                    //         <span>Credit Card Rewards:</span>
+                    //         <span>$${Math.round(groceryRewards).toLocaleString()}/year</span>
+                    //     </div>
+                    // </div>
+                if (!monthlyRent && !monthlyGroceries) {
+                    html += `
+                        <div class="missing-info-prompt">
+                            Add your monthly rent and grocery expenses for a personalized savings estimate
+                        </div>`;
+                }
+            } else {
+                html += `
+                    <div class="savings-amount-groceries">
+                        <span class="amount">$${Math.round(0).toLocaleString()}</span>
+                        <span class="period">/year</span>
+                    </div>
+                    <p>Unfortunately your state does not offer tax-benefits to students paying for their rent. We are actively looking at other means to save on rent.</p>`;
+            }
+            
+            savingsDiv.innerHTML = html;
+        }
+
+        // Add event listeners for real-time updates
+        document.getElementById('monthlyRent')?.addEventListener('input', updateSavingsEstimate);
+        document.getElementById('monthlyGroceries')?.addEventListener('input', updateSavingsEstimate);
+        document.getElementById('income')?.addEventListener('input', updateSavingsEstimate);
+        function generateRentSteps(state) {
+            return `
+                <div class="step-item">
+                    <div class="step-header" onclick="toggleStep('rent1')">
+                        <div class="step-circle" data-step="rent1">
+                            <span class="step-number">1</span>
+                            <svg class="checkmark hidden" viewBox="0 0 24 24">
+                                <path d="M20 6L9 17l-5-5"/>
+                            </svg>
+                        </div>
+                        <div class="step-title">
+                            <h4>Open a ${state529DB[state].planName}</h4>
+                            <p class="time-estimate">Time: 15 minutes</p>
+                        </div>
+                        <span class="expand-arrow">▼</span>
+                    </div>
+                    <div class="step-content hidden">
+                        <p>Visit the ${state529DB[state].planName} website and complete the enrollment process.</p>
+                        <ul class="step-details">
+                            <li>Have your SSN ready</li>
+                            <li>Choose a basic investment option</li>
+                            <li>Link your bank account</li>
+                        </ul>
+                        <button class="complete-step-btn" onclick="completeStep('rent1')">Mark Complete</button>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-header" onclick="toggleStep('rent2')">
+                        <div class="step-circle" data-step="rent2">
+                            <span class="step-number">2</span>
+                            <svg class="checkmark hidden" viewBox="0 0 24 24">
+                                <path d="M20 6L9 17l-5-5"/>
+                            </svg>
+                        </div>
+                        <div class="step-title">
+                            <h4>Set Up Monthly Deposits</h4>
+                            <p class="time-estimate">Time: 10 minutes monthly</p>
+                        </div>
+                        <span class="expand-arrow">▼</span>
+                    </div>
+                    <div class="step-content hidden">
+                        <p>Configure automatic monthly transfers equal to your rent amount.</p>
+                        <button class="complete-step-btn" onclick="completeStep('rent2')">Mark Complete</button>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-header" onclick="toggleStep('rent3')">
+                        <div class="step-circle" data-step="rent3">
+                            <span class="step-number">3</span>
+                            <svg class="checkmark hidden" viewBox="0 0 24 24">
+                                <path d="M20 6L9 17l-5-5"/>
+                            </svg>
+                        </div>
+                        <div class="step-title">
+                            <h4>Withdraw for Rent Payment</h4>
+                            <p class="time-estimate">Time: 5 minutes monthly</p>
+                        </div>
+                        <span class="expand-arrow">▼</span>
+                    </div>
+                    <div class="step-content hidden">
+                        <p>Request withdrawal from your 529 account to pay rent each month.</p>
+                        <button class="complete-step-btn" onclick="completeStep('rent3')">Mark Complete</button>
+                    </div>
+                </div>
+            `;
+        }
+
+
+
 
         // Modify the generatePlan function to include tab names
         function generatePlan() {
@@ -1913,7 +2472,7 @@ input::placeholder {
                     const savings529 = calculate529Savings(income, state);
                     addPlanStep(
                         planStepsDiv,
-                        '529 Plan Optimization',
+                        'Rent & Groceries',
                         `Contribute rent payments to your ${state529DB[state].planName} to take advantage of state tax deduction up to $${state529DB[state].deduction.toLocaleString()}.`,
                         savings529,
                         '',
@@ -1926,7 +2485,7 @@ input::placeholder {
                     const retirementSavings = calculateRetirementSavings(income);
                     addPlanStep(
                         planStepsDiv,
-                        '457(b) Contributions',
+                        'Retirement Benefits',
                         'Take advantage of your 457(b) access - a unique retirement account with no withdrawal penalties after leaving your program.',
                         retirementSavings,
                         '',
@@ -1936,7 +2495,7 @@ input::placeholder {
                     const rothSavings = calculateRetirementSavings(income);
                     addPlanStep(
                         planStepsDiv,
-                        'Roth IRA Contributions',
+                        'Retirement Benefits',
                         'Start building tax-free retirement savings with a Roth IRA while in your lower tax bracket.',
                         rothSavings,
                         '',
@@ -1976,8 +2535,8 @@ input::placeholder {
                         <h4 class="edu-subtitle">Your Best Option: Roth contributions to your 457(b)</h4>
                         <ul class="edu-list">
                             <li><strong>457b Benefit:</strong> Take everything out penalty-free after leaving your program</li>
-                            <li><strong>Roth Benefit:</strong> Roth means you pay taxes now (grad student, tax rate: ~12%) instead of when you withdraw (usually when you are making more money, tax rate: ~20-30%)</li>
-                            <li><strong>Contribution:</strong> Up to $23,000 per year</li>
+                            <li><strong>Roth Benefit:</strong> Roth means you pay taxes now (grad student, tax rate: ~12%). Traditional means you pay taxes later when you withdraw (usually at a higher rate, tax rate: ~20-30%)</li>
+                            <li><strong>Contribution Limit:</strong> Up to $23,000 per year</li>
                         </ul>
                         <div class="edu-highlight">
                             <h4>Pro Tip: Double Your Tax Benefits</h4>
@@ -1991,7 +2550,7 @@ input::placeholder {
                         <h4 class="edu-subtitle">Your Best Option: Roth Individual Retirement Account (IRA)</h4>
                         <ul class="edu-list">
                             <li><strong>IRA Benefit:</strong> Tax-free growth & flexible withdrawals</li>
-                            <li><strong>Roth Benefit:</strong> Roth means you pay taxes now (grad student tax rate: ~12%) instead of when you withdraw (usually when you are making more money tax rate: ~20-30%)</li>
+                            <li><strong>Roth Benefit:</strong> Roth means you pay taxes now (grad student, tax rate: ~12%). Traditional means you pay taxes later when you withdraw (usually at a higher rate, tax rate: ~20-30%)</li>
                             <li><strong>Contribution:</strong> Up to $7,000 per year (2024)</li>
                         </ul>
                         <div class="edu-highlight">
@@ -2033,36 +2592,77 @@ input::placeholder {
             }
 
             // Add event listeners
-            document.getElementById('monthlyContribution').addEventListener('input', updateCalculator);
-            document.getElementById('yearsGrowth').addEventListener('input', updateCalculator);
+            
 
             // Initial calculation
             updateCalculator();
 
         // Add click listeners for tab navigation
-        document.querySelectorAll('.nav-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                const tabName = tab.getAttribute('data-tab');
-                switchTab(tabName);
-            });
-        });
+       
 
     // Add click listener to close suggestions when clicking outside
+   
+// Consolidate all DOM-ready initialization into a single function
+function initializeApp() {
+    // Setup currency formatting
+    ['income', 'monthlyRent', 'monthlyGroceries', 'monthlyHealthCare', 'savings'].forEach(id => {
+        setupCurrencyInput(id);
+    });
+
+    // Add tab navigation listeners
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            const tabName = tab.getAttribute('data-tab');
+            switchTab(tabName);
+        });
+    });
+
+    // Add calculator input listeners
+    const monthlyContribInput = document.getElementById('monthlyContribution');
+    const yearsGrowthInput = document.getElementById('yearsGrowth');
+    if (monthlyContribInput) monthlyContribInput.addEventListener('input', updateCalculator);
+    if (yearsGrowthInput) yearsGrowthInput.addEventListener('input', updateCalculator);
+
+    // Add rent/grocery expense listeners
+    const monthlyRentInput = document.getElementById('monthlyRent');
+    const monthlyGroceriesInput = document.getElementById('monthlyGroceries');
+    const incomeInput = document.getElementById('income');
+    if (monthlyRentInput) monthlyRentInput.addEventListener('input', updateSavingsEstimate);
+    if (monthlyGroceriesInput) monthlyGroceriesInput.addEventListener('input', updateSavingsEstimate);
+    if (incomeInput) incomeInput.addEventListener('input', updateSavingsEstimate);
+
+    // Add spending method change listener
+    const spendingMethodSelect = document.getElementById('spendingMethod');
+    if (spendingMethodSelect) {
+        spendingMethodSelect.addEventListener('change', () => {
+            const rentGroceriesContent = document.getElementById('rent-groceries-content');
+            if (rentGroceriesContent && !rentGroceriesContent.classList.contains('hidden')) {
+                initializeRentGrocerySection();
+            }
+        });
+    }
+
+    // Close suggestions on outside click
     document.addEventListener('click', function(e) {
         if (!e.target.closest('#schoolSearch') && !e.target.closest('#schoolSuggestions')) {
-            document.getElementById('schoolSuggestions').classList.add('hidden');
+            const suggestions = document.getElementById('schoolSuggestions');
+            if (suggestions) suggestions.classList.add('hidden');
         }
     });
-    document.addEventListener('DOMContentLoaded', function() {
-    updateCalculator();
-    
-    // If there's a selected school, update the account type details
+
+    // Initialize calculations if school is already selected
     if (selectedSchool) {
         updateAccountTypeDetails();
         updateCalculatorLimits();
+        updateCalculator();
+        updateSavingsEstimate();
+        initializeRentGrocerySection();
     }
-});
-    </script>
+}
+
+// Single DOMContentLoaded listener
+document.addEventListener('DOMContentLoaded', initializeApp);
+</script>
 </body>
 </html>
 
