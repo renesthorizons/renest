@@ -667,8 +667,24 @@ html {
         grid-template-columns: 1fr;
     }
 }
-#learnMoreBtn:hover {
-    background: var(--primary) !important;
+.learn-more-btn {
+    width: 100%;
+    background: #f7f9fc;
+    border: none;
+    padding: 16px;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 8px;
+    margin-top: 24px;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.learn-more-btn:hover {
+    background-color: var(--primary);
+    color: white;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
@@ -968,7 +984,7 @@ input::placeholder {
 }
 
 
-.learn-more-btn {
+/*.learn-more-btn {
     width: 100%;
     background: #f7f9fc;
     border: none;
@@ -980,7 +996,7 @@ input::placeholder {
     cursor: pointer;
     border-radius: 8px;
     margin-top: 24px;
-}
+}*/
 
 .hidden {
     display: none;
@@ -994,52 +1010,120 @@ input::placeholder {
     background: var(--accent);
 }
 
-.rating {
-    position: absolute;
-    bottom: -1rem;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 3rem;
-    height: 1.65rem;
-    background: white;
+.fixed-rating-box {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  background: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 3px solid var(--accent);
+  z-index: 2000;
+}
+
+.savings-info {
+  font-size: 18px;
+  margin-right: 20px;
+}
+
+.rating-wrapper {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.fixed-rating {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 3px solid var(--accent);
+}
+
+.fixed-rating .rating-letter {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: var(--primary);
+}
+
+.fixed-rating.AAA { border-color: #00aa00; }
+.fixed-rating.AA { border-color: #00ff00; }  
+.fixed-rating.A { border-color: #ffff00; }
+.fixed-rating.BBB { border-color: #ffaa00; }
+.fixed-rating.BB { border-color: #ff5500; } 
+.fixed-rating.B { border-color: #ff0000; }
+
+.account-icon {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
+.account-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.overlay-content {
+  background: white;
+  padding: 40px;
+  border-radius: 8px;
+  max-width: 500px;
+  text-align: center;
+}
+
+.savings-summary {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.savings-summary .savings-info {
+  font-size: 24px;
+  margin-right: 40px;
+}
+
+.create-account-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 18px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 40px;
+}
+
+.partner-logos {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+.account-icon {
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.account-icon:hover {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+    background-color: var(--accent-light);
     border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border: 3px solid var(--accent); /* Add this line */
+    padding: 4px;
 }
-
-.rating-letter {
-    font-size: 1.25srem;
-    font-weight: bold;
-    color: var(--primary);
-}
-
-.rating.AAA {
-    border-color: #00aa00; /* Green */
-}
-
-.rating.AA {
-    border-color: #00ff00; /* Lighter green */
-}
-
-.rating.A {
-    border-color: #ffff00; /* Yellow */
-}
-
-.rating.BBB {
-    border-color: #ffaa00; /* Orange */
-}
-
-.rating.BB {
-    border-color: #ff5500; /* Red-orange */
-}
-
-.rating.B {
-    border-color: #ff0000; /* Red */
-}
-
 </style>
 </head>
 <body>
@@ -1056,9 +1140,6 @@ input::placeholder {
     <div class="nav-tabs">
         <button class="nav-tab active" data-tab="optimize">
             Optimize
-            <div class="rating">
-                <span class="rating-letter"></span>
-            </div>
         </button>
         <button class="nav-tab" data-tab="rent-groceries">
             Rent & Groceries
@@ -1249,7 +1330,7 @@ input::placeholder {
                 </div>
                 <div class="edu-section">
                     <p>States want to help you by giving you tax-breaks for your education expenses. 529 plans are state-sponsored education savings programs that provide tax advantages for qualified education expenses. By opening a 529 account you can save hundreds or thousands per year on rent and groceries.</p>
-                    <button onclick="toggle529Details()" id="learnMoreBtn" class="learn-more-btn">
+                    <button onclick="toggle529Details()" id="learn529Btn" class="learn-more-btn">
                         Learn More About 529 Benefits ↓
                     </button>
                 </div>
@@ -1296,44 +1377,41 @@ input::placeholder {
 
             <div class="summary-card">
                 <h2>Grocery Savings</h2>
-                <div class="savings-estimate" id="savingsEstimate">
-                    <!-- This section is populated by JavaScript -->
+                <div class="savings-estimate" id="grocerySavingsEstimate">
+                    <div class="savings-amount-groceries">
+                        <span class="amount" id="groceryAmount">$0</span>
+                        <span class="period">/year</span>
+                    </div>
+                    <div class="savings-details">
+                        <p id="groceryLimitMessage"></p>
+                    </div>
                 </div>
                 <div class="edu-section">
-                    <p>Credit cards are a safe and easy way to save hundreds on groceries each year. If you only use your card for purchases you can afford you can accumulate cashback and bonuses worth upwards of a thousand dollars each year. Some cards offer particular benefits for spend in certain categories such as groceries, dinning, gas and travel.</p>
-                    <button onclick="toggleCCDetails()" id="learnMoreBtn" class="learn-more-btn">
-                        Learn More About Credit Card Benefits ↓
+                    <p>Credit cards are a safe and easy way to reduce expenses if used responsibly. The Citi Custom Cash Card automatically gives you 5% cash back on your highest spend category each month (up to $500 per month). For most grad students, groceries will naturally be your highest category, making this the perfect card. You'll earn 5% back on groceries up to $500 per month, and 1% on everything else. There is no annual fee. If you want you could only use this card for groceries and a different card for other categories.</p>
+                    <button onclick="toggleCreditCardInfo()" id="learnCreditCardBtn" class="learn-more-btn">
+                        I Don't Have a Credit Card ↓
                     </button>
-                </div>
-
-                <div id="CCDetails" class="hidden">
-                    <div class="edu-section">
-                        <h3 class="edu-subtitle">How Credit Cards Work for Graduate Students</h3>
-                        <ul class="edu-list">
-                        </ul>
-                        
+                    <div id="creditCardInfo" class="hidden">
                         <div class="edu-highlight">
-                            <h4 class="edu-subtitle">Qualified Expenses Include:</h4>
-                            <ul class="edu-list">
+                            <h4>Getting Started with Credit</h4>
+                            <ul class="edu-list" style="color: white;">
+                                <li>Building credit is super important and you need to get started as soon as possible. </li>
+                                <li>Building a credit score will lower interest rates on car and home purchases and allow you to open better and better credit cards with higher rewards.</li>
+                                <li>Only spend what you can pay off each month - the rewards are not worth paying interest</li>
+                                <li>Set up auto-pay to never miss a payment and build your credit score</li>
+                                <li>Your school status helps you qualify, even with limited credit history</li>
+                                <li>If you do not feel comfortable apply to the Citi Custom Cash Card there are plenty of other student cards you should apply to in order to start building credit at no risk. Choose one with no annual fee.</li>
                             </ul>
                         </div>
-                        
-                        <!-- <div class="edu-highlight">
-                            <h4>Pro Tips:</h4>
-                            <ul class="edu-list" style="color: white;">
-                                <li style="color: white;">Keep receipts for all qualified expenses</li>
-                                <li>Contribute monthly before paying rent for maximum tax benefit</li>
-                                <li>Check your state's specific rules and contribution limits</li>
-                            </ul>
-                        </div> -->
                     </div>
                 </div>
             </div>
-            <!-- Grocery Steps Section -->
+
             <div class="steps-container">
                 <h3>Steps to Save on Groceries</h3>
-                <!-- This div will be populated by generateGrocerySteps -->
-                <div id="groceryStepsContainer"></div>
+                <div id="groceryStepsContainer">
+                    <!-- Steps will be populated by JavaScript -->
+                </div>
             </div>
 
         </div>
@@ -1363,7 +1441,7 @@ input::placeholder {
                     </div>
                     <div class="edu-section">
                         <p>As a graduate student, you're in the lowest tax bracket you'll likely ever be in. This makes it the perfect time to start saving for retirement using a Roth account, where you pay taxes now at your low student rate instead of later at your higher professional rate.</p>
-                        <button onclick="toggleRetirementDetails()" id="learnMoreBtn" class="learn-more-btn">
+                        <button onclick="toggleRetirementDetails()" id="learnRetirementBtn" class="learn-more-btn">
                             Learn More About Retirement Benefits ↓
                         </button>
                     </div>
@@ -1372,7 +1450,7 @@ input::placeholder {
                         <div class="edu-section">
                             <h3 class="edu-subtitle">Understanding Your Retirement Options</h3>
                             <ul class="edu-list">
-                                <li><strong>Step 1:</strong> Choose between available retirement accounts (Roth IRA, 457(b), or 403(b))</li>
+                                <li><strong>Step 1:</strong> Choose between available retirement accounts (1st choice: Roth 457(b), 2nd Choice: Roth IRA, 3rd: Roth 403(b))</li>
                                 <li><strong>Step 2:</strong> Set up automatic monthly contributions</li>
                                 <li><strong>Step 3:</strong> Select low-cost index funds for long-term growth</li>
                                 <li><strong>Result:</strong> Your money grows tax-free and you lock in your current low tax rate</li>
@@ -1437,14 +1515,49 @@ input::placeholder {
 
 
 
-<div id="other-content" class="tab-content">
-    <div class="input-card">
-        <h2 class="card-title">Other Spending Optimization</h2>
-        <div id="other-details">
-            Please input your school and income details first to see personalized spending recommendations.
+    <div id="other-content" class="tab-content">
+        <div class="input-card">
+            <h2 class="card-title">Other Spending Optimization</h2>
+            <div id="other-details">
+                Please input your school and income details first to see personalized spending recommendations.
+            </div>
         </div>
     </div>
-</div>
+
+
+    <div class="fixed-rating-box">
+      <!-- <div class="savings-info">
+        <span class="savings-acquired">$0</span> / <span class="total-savings">$0</span>
+      </div> -->
+      <div class="rating-wrapper">
+        <div class="fixed-rating B">
+          <span class="rating-letter">B</span>
+        </div>
+      </div>
+      <img src="account.png" class="account-icon" alt="Account" onclick="openAccountOverlay()">
+    </div>
+
+    <div id="accountOverlay" class="account-overlay hidden">
+      <div class="overlay-content">
+        <h2>Track Your Progress</h2>
+        <div class="savings-summary">
+          <!-- <div class="savings-info">
+            <span class="savings-acquired">$0</span> / <span class="total-savings">$0</span>
+          </div> -->
+          <div class="rating-wrapper">  
+            <div class="fixed-rating B">
+              <span class="rating-letter">B</span>
+            </div>
+          </div>
+        </div>
+        <button class="create-account-btn">Create Account</button>
+        <h3>Our Partners</h3>
+        <p>The higher your optimization score the better deals our partners can offer you</p>
+        <div class="partner-logos">
+          <!-- Add partner logo images here -->
+        </div>
+      </div>
+    </div>
 
     <script>
         const ratingThresholds = {
@@ -1455,6 +1568,30 @@ input::placeholder {
             'BB': 3,
             'B': 1
         };
+        function updateRating() {
+            const totalPoints = calculateTotalPoints();
+            const rating = document.querySelector('.fixed-rating');
+            const ratingLetter = rating.querySelector('.rating-letter');
+
+            // Remove all possible rating classes
+            rating.classList.remove('AAA', 'AA', 'A', 'BBB', 'BB', 'B');
+
+            // If no steps are completed, always show B rating
+            if (totalPoints === 0) {
+                rating.classList.add('B');
+                ratingLetter.textContent = 'B';
+                return;
+            }
+
+            // Otherwise proceed with normal rating logic
+            for (const [bondRating, threshold] of Object.entries(ratingThresholds)) {
+                if (totalPoints >= threshold) {
+                    rating.classList.add(bondRating);
+                    ratingLetter.textContent = bondRating;
+                    break;
+                }
+            }
+        }
         function handleNavScroll() {
             const nav = document.querySelector('.nav-tabs');
             const navOffset = nav.offsetTop;
@@ -1931,7 +2068,30 @@ input::placeholder {
                 { threshold: Infinity, rate: 20 }
             ]
         };
+        function updateTotalSavings() {
+            const savingsAcquired = document.querySelectorAll('.savings-acquired');
+            const totalSavings = document.querySelectorAll('.total-savings');
+            
+            let totalPossibleSavings = 0;
+            document.querySelectorAll('.savings-estimate .amount').forEach(amt => {
+                totalPossibleSavings += parseFloat(amt.textContent.replace(/[^0-9.-]+/g,""));
+            });
+            
+            let acquiredSavings = 0;
+            document.querySelectorAll('.step-circle.completed').forEach(step => {
+                const savingsEst = step.closest('.step-item').querySelector('.savings-estimate .amount');
+                if (savingsEst) {
+                    acquiredSavings += parseFloat(savingsEst.textContent.replace(/[^0-9.-]+/g,""));
+                }
+            });
+            
+            savingsAcquired.forEach(el => el.textContent = '$' + Math.round(acquiredSavings).toLocaleString());
+            totalSavings.forEach(el => el.textContent = '$' + Math.round(totalPossibleSavings).toLocaleString());
+        }
 
+        function openAccountOverlay() {
+            document.getElementById('accountOverlay').classList.remove('hidden');
+        }
         let selectedSchool = null;
         let hasOptimized = false;
         function updateCalculatorLimits() {
@@ -1971,6 +2131,7 @@ input::placeholder {
             updateAccountTypeDetails();
             updateCalculatorLimits();
             updateSavingsEstimate();
+            updateGrocerySavings(); 
             initializeRentGrocerySection();
         }
 
@@ -1987,6 +2148,9 @@ input::placeholder {
             }
         });
         function calculateTotalPoints() {
+            // If we haven't optimized yet, return 0 to ensure B rating
+            if (!hasOptimized) return 0;
+
             const sections = ['rent-groceries', 'healthcare', 'retirement', 'other'];
             let totalPoints = 0;
             let completedSections = 0;
@@ -1998,15 +2162,10 @@ input::placeholder {
 
                 totalPoints += completedSteps;
 
-                if (completedSteps === totalSteps) {
-                    totalPoints += 2; // Bonus points for completing all steps in a section
+                if (completedSteps === totalSteps && totalSteps > 0) {
                     completedSections++;
                 }
             });
-
-            if (completedSections === sections.length) {
-                totalPoints += 5; // Bonus points for completing all sections
-            }
 
             return totalPoints;
         }
@@ -2014,52 +2173,46 @@ input::placeholder {
 
         function toggle529Details() {
             const detailsSection = document.getElementById('529Details');
-            const button = document.getElementById('learnMoreBtn');
+            const button = document.getElementById('learn529Btn');
             const isHidden = detailsSection.classList.contains('hidden');
             
+            detailsSection.classList.toggle('hidden');
+            button.textContent = isHidden ? 'Show Less ↑' : 'Learn More About 529 Benefits ↓';
+            
             if (isHidden) {
-                detailsSection.classList.remove('hidden');
-                button.innerHTML = 'Show Less ↑';
                 setTimeout(() => {
                     detailsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }, 100);
-            } else {
-                detailsSection.classList.add('hidden');
-                button.innerHTML = 'Learn More About 529 Benefits ↓';
             }
         }
 
-        function toggleCCDetails() {
-            const detailsSection = document.getElementById('CCDetails');
-            const button = document.getElementById('learnMoreBtn');
+        function toggleCreditCardInfo() {
+            const detailsSection = document.getElementById('creditCardInfo');
+            const button = document.getElementById('learnCreditCardBtn');
             const isHidden = detailsSection.classList.contains('hidden');
             
+            detailsSection.classList.toggle('hidden');
+            button.textContent = isHidden ? 'Show Less ↑' : 'I Don\'t Have a Credit Card ↓';
+            
             if (isHidden) {
-                detailsSection.classList.remove('hidden');
-                button.innerHTML = 'Show Less ↑';
                 setTimeout(() => {
                     detailsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }, 100);
-            } else {
-                detailsSection.classList.add('hidden');
-                button.innerHTML = 'Learn More About Credit Card Benefits ↓';
             }
         }
 
         function toggleRetirementDetails() {
             const detailsSection = document.getElementById('retirementDetails');
-            const button = document.getElementById('learnMoreBtn');
+            const button = document.getElementById('learnRetirementBtn');
             const isHidden = detailsSection.classList.contains('hidden');
             
+            detailsSection.classList.toggle('hidden');
+            button.textContent = isHidden ? 'Show Less ↑' : 'Learn More About Retirement Account Benefits ↓';
+            
             if (isHidden) {
-                detailsSection.classList.remove('hidden');
-                button.innerHTML = 'Show Less ↑';
                 setTimeout(() => {
                     detailsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }, 100);
-            } else {
-                detailsSection.classList.add('hidden');
-                button.innerHTML = 'Learn More About Retirement Benefits ↓';
             }
         }
 
@@ -2092,7 +2245,7 @@ input::placeholder {
                             <li>Choose "Roth" contributions for best tax advantages</li>
                             <li>Annual contribution limit: ${contributionLimit}</li>
                         </ul>
-                        <button class="complete-step-btn" onclick="completeStep('retirement1')">Mark Complete</button>
+                        <button class="complete-step-btn" onclick="completeStep('retirement1', 'retirement')">Mark Complete</button>
                     </div>
                 </div>
 
@@ -2117,7 +2270,7 @@ input::placeholder {
                             <li>Set up automatic transfers to make saving effortless</li>
                             <li>Consider increasing contributions when you receive raises or additional funding</li>
                         </ul>
-                        <button class="complete-step-btn" onclick="completeStep('retirement2')">Mark Complete</button>
+                        <button class="complete-step-btn" onclick="completeStep('retirement2', 'retirement')">Mark Complete</button>
                     </div>
                 </div>
 
@@ -2142,12 +2295,13 @@ input::placeholder {
                             <li>Choose funds with expense ratios under 0.2%</li>
                             <li>Consider a mix of stock and bond index funds if selecting your own portfolio</li>
                         </ul>
-                        <button class="complete-step-btn" onclick="completeStep('retirement3')">Mark Complete</button>
+                        <button class="complete-step-btn" onclick="completeStep('retirement3', 'retirement')">Mark Complete</button>
                     </div>
                 </div>
             `;
         }
 
+        
         
 
         function initializeRetirementSection() {
@@ -2491,16 +2645,12 @@ input::placeholder {
             stepsDiv.appendChild(stepDiv);
         }
         function toggleStep(stepNumber) {
-            const stepContent = document.querySelector(`[data-step="${stepNumber}"]`)
-                .closest('.step-item')
-                .querySelector('.step-content');
-            const arrow = document.querySelector(`[data-step="${stepNumber}"]`)
-                .closest('.step-item')
-                .querySelector('.expand-arrow');
+            const stepItem = document.querySelector(`[data-step="${stepNumber}"]`).closest('.step-item');
+            const stepContent = stepItem.querySelector('.step-content');
+            const arrow = stepItem.querySelector('.expand-arrow');
             
             stepContent.classList.toggle('hidden');
-            arrow.style.transform = stepContent.classList.contains('hidden') ? 
-                'rotate(0deg)' : 'rotate(180deg)';
+            arrow.style.transform = stepContent.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
         }
 
         //  function updateProgress() {
@@ -2510,6 +2660,40 @@ input::placeholder {
             
         //     document.querySelector('.progress-bar').style.width = `${progress}%`;
         // }
+
+        function updateGrocerySavings() {
+            const monthlyGroceriesInput = document.getElementById('monthlyGroceries')?.value?.replace(/[^0-9.]/g, '') || '';
+            const monthlyGroceries = monthlyGroceriesInput ? parseFloat(monthlyGroceriesInput) : 350;
+            const monthlyLimit = 500; 
+            const monthlyRewardableAmount = Math.min(monthlyGroceries, monthlyLimit);
+            const annualRewardableAmount = monthlyRewardableAmount * 12;
+            const monthlyExcess = Math.max(0, monthlyGroceries - monthlyLimit);
+            const annualExcess = monthlyExcess * 12;
+            
+            // Calculate rewards (5% on up to $500/month, 1% on excess)
+            const primaryRewards = annualRewardableAmount * 0.05;
+            const excessRewards = annualExcess * 0.01;
+            const totalRewards = primaryRewards + excessRewards;
+            
+            // Update the display
+            const groceryAmount = document.getElementById('groceryAmount');
+            const limitMessage = document.getElementById('groceryLimitMessage');
+            
+            groceryAmount.textContent = `$${Math.round(totalRewards).toLocaleString()}`;
+            
+            if (monthlyGroceriesInput) {
+                if (monthlyGroceries > monthlyLimit) {
+                    limitMessage.textContent = `Includes 5% on first $500/month and 1% on additional spending`;
+                } else {
+                    limitMessage.textContent = `Based on 5% cash back on your monthly grocery spending`;
+                }
+            } else {
+                limitMessage.textContent = `Please input your grocery spending for a customized estimate. Currently, we are assuming $350/month.`;
+            }
+        }
+        
+
+
         function updateTabProgressBar(tab) {
             if (tab.getAttribute('data-tab') === 'optimize') return;  // Add this line
 
@@ -2527,24 +2711,8 @@ input::placeholder {
                 tab.classList.remove('completed');
             }
         }
-        function updateRating() {
-            const totalPoints = calculateTotalPoints();
-            const optimizeTab = document.querySelector('[data-tab="optimize"]');
-            const rating = optimizeTab.querySelector('.rating');
-            const ratingLetter = rating.querySelector('.rating-letter');
 
-            rating.classList.remove(...Object.keys(ratingThresholds));
-
-            for (const [bondRating, threshold] of Object.entries(ratingThresholds)) {
-                if (totalPoints >= threshold) {
-                    rating.classList.add(bondRating);
-                    ratingLetter.textContent = bondRating;
-                    break;
-                }
-            }
-        }
-
-        function completeStep(stepNumber) {
+        function completeStep(stepNumber, tabName) {
             const stepCircle = document.querySelector(`[data-step="${stepNumber}"]`);
             const checkmark = stepCircle.querySelector('.checkmark');
             const number = stepCircle.querySelector('.step-number');
@@ -2553,10 +2721,9 @@ input::placeholder {
             number.classList.add('hidden');
             checkmark.classList.remove('hidden');
             
-            // updateProgress();
-            const currentTab = document.querySelector('.nav-tab.active');
-         updateTabProgressBar(currentTab);
-         updateRating(); 
+            const currentTab = document.querySelector(`[data-tab="${tabName}"]`);
+            updateTabProgressBar(currentTab);
+            updateRating();
         }
 
        
@@ -2576,35 +2743,36 @@ input::placeholder {
         }
 
         function initializeRentGrocerySection() {
-            // Get the selected school's state
             if (!selectedSchool) {
                 document.getElementById('rentStepsContainer').innerHTML = 
+                    '<p>Please select your school to see available benefits</p>';
+                document.getElementById('groceryStepsContainer').innerHTML = 
                     '<p>Please select your school to see available benefits</p>';
                 return;
             }
 
             const state = selectedSchool.state;
+            const rentContainer = document.getElementById('rentStepsContainer');
+            const groceryContainer = document.getElementById('groceryStepsContainer');
             
-            // Generate and insert rent steps only if state has 529 deduction
+            // Generate rent steps if state has 529 benefits
             if (state529DB[state].deduction > 0) {
-                document.getElementById('rentStepsContainer').innerHTML = generateRentSteps(state);
+                rentContainer.innerHTML = generateRentSteps(state);
             } else {
-                document.getElementById('rentStepsContainer').innerHTML = '';
+                rentContainer.innerHTML = '<p>Your state does not currently offer 529 plan tax benefits for rent payments.</p>';
             }
             
-            // Generate and insert grocery steps
-            const spendingMethod = document.getElementById('spendingMethod')?.value || '';
-            document.getElementById('groceryStepsContainer').innerHTML = generateGrocerySteps(spendingMethod);
+            // Always generate grocery steps
+            groceryContainer.innerHTML = generateGrocerySteps();
+
+            // Update progress bar
+            const currentTab = document.querySelector('[data-tab="rent-groceries"]');
+            updateTabProgressBar(currentTab);
+            updateRating();
         }
 
         // Call this function when the tab is shown or when school is selected
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add click listener for the rent-groceries tab
-            const rentGroceriesTab = document.querySelector('[data-tab="rent-groceries"]');
-            if (rentGroceriesTab) {
-                rentGroceriesTab.addEventListener('click', initializeRentGrocerySection);
-            }
-        });
+       
 
         // Add this to your existing selectSchool function
         function selectSchool(schoolId) {
@@ -2641,11 +2809,14 @@ input::placeholder {
                 return;
             }
 
-            // Get user inputs
-            const monthlyRent = parseFloat(document.getElementById('monthlyRent')?.value?.replace(/[^0-9.]/g, '') || '0');
-            const monthlyGroceries = parseFloat(document.getElementById('monthlyGroceries')?.value?.replace(/[^0-9.]/g, '') || '0');
+            // Get user inputs or use default values
+            const monthlyRentInput = document.getElementById('monthlyRent')?.value?.replace(/[^0-9.]/g, '') || '';
+            const monthlyGroceriesInput = document.getElementById('monthlyGroceries')?.value?.replace(/[^0-9.]/g, '') || '';
+            const monthlyRent = monthlyRentInput ? parseFloat(monthlyRentInput) : 1200;
+            const monthlyGroceries = monthlyGroceriesInput ? parseFloat(monthlyGroceriesInput) : 350;
             const income = parseFloat(document.getElementById('income')?.value?.replace(/[^0-9.]/g, '') || '0');
             const state = selectedSchool.state;
+
             
             // Calculate grocery card rewards (5% back on groceries)
             const annualGroceries = monthlyGroceries * 12;
@@ -2679,10 +2850,10 @@ input::placeholder {
                     //         <span>$${Math.round(groceryRewards).toLocaleString()}/year</span>
                     //     </div>
                     // </div>
-                if (!monthlyRent && !monthlyGroceries) {
+                if (!monthlyRentInput) {
                     html += `
                         <div class="missing-info-prompt">
-                            Add your monthly rent and grocery expenses for a personalized savings estimate
+                            Please input your rent so we can give a customized estimate. Currently, we are assuming $1,200/month rent.
                         </div>`;
                 }
             } else {
@@ -2708,7 +2879,7 @@ input::placeholder {
                         <div class="step-circle" data-step="rent1">
                             <span class="step-number">1</span>
                             <svg class="checkmark hidden" viewBox="0 0 24 24">
-                                <path d="M20 6L9 17l-5-5"/>
+                                <path fill="none" stroke="white" stroke-width="2" d="M20 6L9 17l-5-5"/>
                             </svg>
                         </div>
                         <div class="step-title">
@@ -2724,7 +2895,7 @@ input::placeholder {
                             <li>Choose a basic investment option</li>
                             <li>Link your bank account</li>
                         </ul>
-                        <button class="complete-step-btn" onclick="completeStep('rent1')">Mark Complete</button>
+                        <button class="complete-step-btn" onclick="completeStep('rent1', 'rent-groceries')">Mark Complete</button>
                     </div>
                 </div>
 
@@ -2733,7 +2904,7 @@ input::placeholder {
                         <div class="step-circle" data-step="rent2">
                             <span class="step-number">2</span>
                             <svg class="checkmark hidden" viewBox="0 0 24 24">
-                                <path d="M20 6L9 17l-5-5"/>
+                                <path fill="none" stroke="white" stroke-width="2" d="M20 6L9 17l-5-5"/>
                             </svg>
                         </div>
                         <div class="step-title">
@@ -2744,7 +2915,7 @@ input::placeholder {
                     </div>
                     <div class="step-content hidden">
                         <p>Configure automatic monthly transfers equal to your rent amount.</p>
-                        <button class="complete-step-btn" onclick="completeStep('rent2')">Mark Complete</button>
+                        <button class="complete-step-btn" onclick="completeStep('rent2', 'rent-groceries')">Mark Complete</button>
                     </div>
                 </div>
 
@@ -2753,7 +2924,7 @@ input::placeholder {
                         <div class="step-circle" data-step="rent3">
                             <span class="step-number">3</span>
                             <svg class="checkmark hidden" viewBox="0 0 24 24">
-                                <path d="M20 6L9 17l-5-5"/>
+                                <path fill="none" stroke="white" stroke-width="2" d="M20 6L9 17l-5-5"/>
                             </svg>
                         </div>
                         <div class="step-title">
@@ -2764,7 +2935,88 @@ input::placeholder {
                     </div>
                     <div class="step-content hidden">
                         <p>Request withdrawal from your 529 account to pay rent each month.</p>
-                        <button class="complete-step-btn" onclick="completeStep('rent3')">Mark Complete</button>
+                        <button class="complete-step-btn" onclick="completeStep('rent3', 'rent-groceries')">Mark Complete</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateGrocerySteps() {
+            return `
+                <div class="step-item">
+                    <div class="step-header" onclick="toggleStep('grocery1')">
+                        <div class="step-circle" data-step="grocery1">
+                            <span class="step-number">1</span>
+                            <svg class="checkmark hidden" viewBox="0 0 24 24">
+                                <path fill="none" stroke="white" stroke-width="2" d="M20 6L9 17l-5-5"/>
+                            </svg>
+                        </div>
+                        <div class="step-title">
+                            <h4>Apply for Citi Custom Cash</h4>
+                            <p class="time-estimate">Time: 15 minutes</p>
+                        </div>
+                        <span class="expand-arrow">▼</span>
+                    </div>
+                    <div class="step-content hidden">
+                        <p>The Citi Custom Cash offers the best grocery rewards for grad students:</p>
+                        <ul class="step-details">
+                            <li>5% back on your highest spend category (usually groceries for students)</li>
+                            <li>No annual fee</li>
+                            <li>$200 welcome bonus after spending $1500 in first 6 months</li>
+                            <li>Easy approval for students with limited credit history</li>
+                        </ul>
+                        <a href="https://www.citi.com/credit-cards/citi-custom-cash-credit-card?cmp=knc_acquire_2411_GGL_BR_CustomCash_PDP&app=unsol&HKOP=9e9fe575553abce8259e0de824d459d0e8773303eced1d50a14cb2a1943698fc&gclid=CjwKCAiA34S7BhAtEiwACZzv4TchHuGYDqtBrhDGHlNiwOK0cAPnuXGP2_dbbnSMH2l7EeivD7v0XBoChAkQAvD_BwE&gclsrc=aw.ds" target="_blank" class="complete-step-btn" style="display: inline-block; text-align: center; margin-top: 10px; text-decoration: none;">
+                            Link to Citi Custom Cash Card
+                        </a>
+                        <button class="complete-step-btn" onclick="completeStep('grocery1', 'rent-groceries')">Mark Complete</button>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-header" onclick="toggleStep('grocery2')">
+                        <div class="step-circle" data-step="grocery2">
+                            <span class="step-number">2</span>
+                            <svg class="checkmark hidden" viewBox="0 0 24 24">
+                                <path fill="none" stroke="white" stroke-width="2" d="M20 6L9 17l-5-5"/>
+                            </svg>
+                        </div>
+                        <div class="step-title">
+                            <h4>Activate Your Card</h4>
+                            <p class="time-estimate">Time: 5 minutes</p>
+                        </div>
+                        <span class="expand-arrow">▼</span>
+                    </div>
+                    <div class="step-content hidden">
+                        <p>When your card arrives:</p>
+                        <ul class="step-details">
+                            <li>Call the number on the sticker to activate</li>
+                            <li>Create your online account</li>
+                            <li>Download the Citi mobile app</li>
+                        </ul>
+                        <button class="complete-step-btn" onclick="completeStep('grocery2', 'rent-groceries')">Mark Complete</button>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-header" onclick="toggleStep('grocery3')">
+                        <div class="step-circle" data-step="grocery3">
+                            <span class="step-number">3</span>
+                            <svg class="checkmark hidden" viewBox="0 0 24 24">
+                                <path fill="none" stroke="white" stroke-width="2" d="M20 6L9 17l-5-5"/>
+                            </svg>
+                        </div>
+                        <div class="step-title">
+                            <h4>Set Up Auto-Pay</h4>
+                            <p class="time-estimate">Time: 10 minutes</p>
+                        </div>
+                        <span class="expand-arrow">▼</span>
+                    </div>
+                    <div class="step-content hidden">
+                        <p>Set up automatic payments to ensure you never miss a payment:</p>
+                        <ul class="step-details">
+                            <li>Link your bank account</li>
+                            <li>Set up automatic payments for the full balance</li>
+                            <li>Set payment date a few days before due date</li>
+                        </ul>
+                        <button class="complete-step-btn" onclick="completeStep('grocery3', 'rent-groceries')">Mark Complete</button>
                     </div>
                 </div>
             `;
@@ -2778,6 +3030,8 @@ input::placeholder {
                 alert('Please select a school first.');
                 return;
             }
+            hasOptimized = false;
+            updateRating();
 
             const incomeStr = document.getElementById('income').value;
             const income = Number(incomeStr.replace(/[$,]/g, '')); // Remove dollar signs and commas // Remove any non-numeric characters
@@ -2954,7 +3208,7 @@ function initializeApp() {
 
         });
     });
-
+    updateRating();
     // Add calculator input listeners
     const monthlyContribInput = document.getElementById('monthlyContribution');
     const yearsGrowthInput = document.getElementById('yearsGrowth');
@@ -2962,12 +3216,29 @@ function initializeApp() {
     if (yearsGrowthInput) yearsGrowthInput.addEventListener('input', updateCalculator);
 
     // Add rent/grocery expense listeners
+    // Add rent/grocery expense listeners
     const monthlyRentInput = document.getElementById('monthlyRent');
     const monthlyGroceriesInput = document.getElementById('monthlyGroceries');
     const incomeInput = document.getElementById('income');
-    if (monthlyRentInput) monthlyRentInput.addEventListener('input', updateSavingsEstimate);
-    if (monthlyGroceriesInput) monthlyGroceriesInput.addEventListener('input', updateSavingsEstimate);
-    if (incomeInput) incomeInput.addEventListener('input', updateSavingsEstimate);
+
+    if (monthlyRentInput) {
+        monthlyRentInput.addEventListener('input', function() {
+            updateSavingsEstimate();
+        });
+    }
+
+    if (monthlyGroceriesInput) {
+        monthlyGroceriesInput.addEventListener('input', function() {
+            updateGrocerySavings();
+        });
+    }
+
+    if (incomeInput) {
+        incomeInput.addEventListener('input', function() {
+            updateSavingsEstimate();
+            updateGrocerySavings();
+        });
+    }
     // Initialize sticky navigation
     initializeScrollBehavior();
     // Add spending method change listener
@@ -2988,7 +3259,11 @@ function initializeApp() {
             if (suggestions) suggestions.classList.add('hidden');
         }
     });
-
+    document.addEventListener('click', function(e) {
+            if (e.target == document.getElementById('accountOverlay')) {
+                document.getElementById('accountOverlay').classList.add('hidden');
+            }
+        });
     // Initialize calculations if school is already selected
     if (selectedSchool) {
         updateAccountTypeDetails();
