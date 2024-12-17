@@ -57,44 +57,97 @@ label {
 
 /* Change nav-tab styles */
 .nav-tabs {
-    display: flex;
-    gap: 0.5rem;
-    padding: 0.75rem;
-    background: white;
-    border-radius: 1rem;
-    margin: -1.5rem auto 2rem;
-    max-width: 800px;
-    position: relative;
-    box-shadow: var(--card-shadow);
-    flex-wrap: wrap;
-    justify-content: center;
-    z-index: 10;
-}
+            display: flex;
+            gap: 0.5rem;
+            padding: 1.25rem;
+            background: white;
+            border-radius: 1rem;
+            margin: -1.5rem auto 2rem;
+            max-width: 800px;
+            position: relative;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            flex-wrap: wrap;
+            justify-content: center;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            width: calc(100% - 40px);
+        }
 
-.nav-tab {
-    padding: 0.75rem 1.5rem;
-    border: none;
-    background: transparent;
-    color: var(--text-light);
-    cursor: pointer;
-    font-weight: 500;
-    border-radius: 0.5rem;
-    transition: var(--transition);
-    white-space: nowrap;
-    flex: 1 1 auto;
-    min-width: 120px;
-    text-align: center;
-}
+        /* Fixed navigation styles */
+        .nav-tabs.fixed {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            margin: 0 auto;
+        }
 
-.nav-tab:hover {
-    color: var(--primary);
-    background: rgba(124, 58, 237, 0.05);
-}
+        /* Add spacing when nav is fixed */
+        body.nav-is-fixed .input-card:first-of-type {
+            margin-top: 80px;
+        }
 
-.nav-tab.active {
-    background: var(--primary);
-    color: white;
-}
+        /* Navigation tab styles */
+        .nav-tab {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            position:   relative    ;
+            background: transparent;
+            color: #64748b;
+            cursor: pointer;
+            font-weight: 500;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            flex: 1 1 auto;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .nav-tab:hover {
+            color: #7c3aed;
+            background: rgba(124, 58, 237, 0.05);
+        }
+        .progress-bar {
+            position: absolute;
+            bottom: -15px;  /* Adjust this value to move the bar further down */
+            left: 0;
+            width: 0;
+            height: 8px;  /* Increase this value to make the bar bigger */
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transition: width 0.3s ease;
+            border-radius: 4px;  /* Add this line for rounded corners */
+        }
+
+        .nav-tab.completed .progress-bar {
+            background: #cd7f32; /* Bronze color */
+        }
+
+        .nav-tab.active {
+            background: #7c3aed;
+            color: white;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            .nav-tabs {
+                padding: 0.25rem;
+                gap: 0.25rem;
+                margin: -10px 10px 20px 10px;
+            }
+            
+            .nav-tabs.fixed {
+                margin: 0 auto;
+                width: calc(100% - 20px);
+                top: 10px;
+            }
+
+            .nav-tab {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+                min-width: 70px;
+            }
+        }
 
 /* Change edu-title styles */
 .edu-title {
@@ -874,30 +927,46 @@ input::placeholder {
     width: 80%;
     max-width: 800px;
     background: white;
-    border: 4px solid var(--primary-light);
+    border: 2px solid var(--accent);
     z-index: 1000;
-    border-radius: 20px;
+    border-radius: 12px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 10px;
+    padding: 15px;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-.progress-bar {
-    width: 5%;
-    height: 20px;
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    border-radius: 20px;
-    transition: width 0.3s ease;
-    margin-top: 10px;
+
+.progress-tabs {
+    display: flex;
+    width: 100%;
+    margin-bottom: 10px;
+    gap: 8px;
 }
 
-.progress-label {
+.progress-tab {
+    flex: 1;
+    padding: 8px;
+    text-align: center;
+    background: #f3f4f6;
+    border-radius: 6px;
     font-size: 14px;
-    font-weight: bold;
-    color: var(--text);
-    margin-bottom: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid #e5e7eb;
 }
+
+.progress-tab.active {
+    background: var(--primary);
+    color: white;
+}
+
+.progress-tab.completed {
+    background: #cd7f32; /* Bronze color */
+    color: white;
+}
+
 
 .learn-more-btn {
     width: 100%;
@@ -922,7 +991,53 @@ input::placeholder {
     padding: 24px;
     margin-bottom: 24px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    background: var(--primary-light);
+    background: var(--accent);
+}
+
+.rating {
+    position: absolute;
+    bottom: -1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3rem;
+    height: 1.65rem;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 3px solid var(--accent); /* Add this line */
+}
+
+.rating-letter {
+    font-size: 1.25srem;
+    font-weight: bold;
+    color: var(--primary);
+}
+
+.rating.AAA {
+    border-color: #00aa00; /* Green */
+}
+
+.rating.AA {
+    border-color: #00ff00; /* Lighter green */
+}
+
+.rating.A {
+    border-color: #ffff00; /* Yellow */
+}
+
+.rating.BBB {
+    border-color: #ffaa00; /* Orange */
+}
+
+.rating.BB {
+    border-color: #ff5500; /* Red-orange */
+}
+
+.rating.B {
+    border-color: #ff0000; /* Red */
 }
 
 </style>
@@ -939,11 +1054,28 @@ input::placeholder {
     </div>
 
     <div class="nav-tabs">
-        <button class="nav-tab active" data-tab="optimize">Optimize</button>
-        <button class="nav-tab" data-tab="rent-groceries">Rent & Groceries</button>
-        <button class="nav-tab" data-tab="healthcare">Healthcare</button>
-         <button class="nav-tab" data-tab="retirement">Retirement</button>
-        <button class="nav-tab" data-tab="other">Other Spending</button>
+        <button class="nav-tab active" data-tab="optimize">
+            Optimize
+            <div class="rating">
+                <span class="rating-letter"></span>
+            </div>
+        </button>
+        <button class="nav-tab" data-tab="rent-groceries">
+            Rent & Groceries
+            <div class="progress-bar"></div>
+        </button>
+        <button class="nav-tab" data-tab="healthcare">
+            Healthcare
+            <div class="progress-bar"></div>
+        </button>
+        <button class="nav-tab" data-tab="retirement">
+            Retirement
+            <div class="progress-bar"></div>
+        </button>
+        <button class="nav-tab" data-tab="other">
+            Other Spending
+            <div class="progress-bar"></div>
+        </button>
     </div>
 
     <!-- Optimize Tab Content -->
@@ -1204,11 +1336,6 @@ input::placeholder {
                 <div id="groceryStepsContainer"></div>
             </div>
 
-            <!-- Progress Bar -->
-            <div class="progress-container">
-                <span class="progress-label">Track your optimization progress</span>
-                <div class="progress-bar" id="rentGroceryProgress"></div>
-            </div>
         </div>
     </div>
 
@@ -1227,92 +1354,82 @@ input::placeholder {
 
 
     <div id="retirement-content" class="tab-content">
-            <div class="edu-card">
-                <h2 class="edu-title">Your Retirement Account Options</h2>
-                
-                <!-- Essential Info Section -->
-                <div id="accountTypeDetails">
-                    <!-- Populated by JavaScript based on school type -->
-                </div>
-
-                <!-- Calculator Section -->
-                <div class="edu-section">
-                    <h3 class="edu-subtitle">Growth Calculator</h3>
-                    <div class="slider-group">
-                        <label for="monthlyContribution">Monthly Contribution ($):</label>
-                        <input type="range" id="monthlyContribution" min="10" max="1000" step="10" value="200">
-                        <span id="contributionDisplay" class="value-display">$200</span>
+            <div class="optimization-section">
+                <!-- Summary Card -->
+                <div class="summary-card">
+                    <h2>Retirement Savings</h2>
+                    <div class="savings-estimate" id="retirementSavingsEstimate">
+                        <!-- This section is populated by JavaScript -->
                     </div>
-
-                    <div class="slider-group">
-                        <label for="yearsGrowth">Years to Grow:</label>
-                        <input type="range" id="yearsGrowth" min="1" max="30" step="1" value="5">
-                        <span id="yearsDisplay" class="value-display">5</span>
-                    </div>
-
-                    <div class="calculator-grid">
-                        <div class="calculator-value">
-                            <h3>
-                                Total Contributions
-                                <div class="info-tooltip">
-                                    <img src="info.png" alt="info" class="info-icon">
-                                    <span class="tooltip-text">This is money you put in, so you can take it out whenever</span>
-                                </div>
-                            </h3>
-                            <p id="totalContributions">$0</p>
-                        </div>
-                        <div class="calculator-value">
-                            <h3>
-                                Total Earnings
-                                <div class="info-tooltip">
-                                    <img src="info.png" alt="info" class="info-icon">
-                                    <span class="tooltip-text">These are predicted gains from any investments you make. You can take them out whenever but you'll pay a 10% penalty unless it's for a medical emergency or for your first house or other qualified expenses</span>
-                                </div>
-                            </h3>
-                            <p id="totalEarnings">$0</p>
-                        </div>
-                        <div class="calculator-value">
-                            <h3>Future Value</h3>
-                            <p id="futureValue">$0</p>
-                        </div>
-                    </div>
-                    <p style="text-align: center; color: gray; margin-top: 1rem;">Assuming 7% average annual return</p>
-                </div>
-
-                <!-- Learn More Button -->
-                <button onclick="toggleRetirementDetails()" id="learnMoreBtn" class="edu-section" style="width: 100%; text-align: center; cursor: pointer; background: var(--primary-light); color: white; border: none; padding: 1rem; margin-top: 1rem;">
-                    Learn More About Retirement Accounts ↓
-                </button>
-
-                <!-- Detailed Info Section (Hidden by Default) -->
-                <div id="retirementDetails" style="display: none;">
                     <div class="edu-section">
-                        <h3 class="edu-subtitle">Understanding Retirement Basics</h3>
-                        <div style="background: rgba(75, 34, 122, 0.05); padding: 1rem; border-radius: 8px;">
-                            <h4 class="edu-subtitle">Why Roth Over Traditional</h4>
+                        <p>As a graduate student, you're in the lowest tax bracket you'll likely ever be in. This makes it the perfect time to start saving for retirement using a Roth account, where you pay taxes now at your low student rate instead of later at your higher professional rate.</p>
+                        <button onclick="toggleRetirementDetails()" id="learnMoreBtn" class="learn-more-btn">
+                            Learn More About Retirement Benefits ↓
+                        </button>
+                    </div>
+
+                    <div id="retirementDetails" class="hidden">
+                        <div class="edu-section">
+                            <h3 class="edu-subtitle">Understanding Your Retirement Options</h3>
                             <ul class="edu-list">
-                                <li><strong>When You Pay Taxes:</strong> Roth = Pay now at ~12% (student rate). Traditional = Pay later at ~22-35% (professional rate)</li>
-                                <li><strong>Which Is Better:</strong> Roth is typically better for grad students because you're in the lowest tax bracket you'll ever be in</li>
+                                <li><strong>Step 1:</strong> Choose between available retirement accounts (Roth IRA, 457(b), or 403(b))</li>
+                                <li><strong>Step 2:</strong> Set up automatic monthly contributions</li>
+                                <li><strong>Step 3:</strong> Select low-cost index funds for long-term growth</li>
+                                <li><strong>Result:</strong> Your money grows tax-free and you lock in your current low tax rate</li>
                             </ul>
+                            
                             <div class="edu-highlight">
-                                <h4>Pro Tip: Tax Bracket Math</h4>
-                                <p>A Roth lets you lock in your grad student tax rate of ~12%. Even if you only move up to the 22% bracket as a professional, that's like getting an instant 10% return on your money!</p>
+                                <h4 class="edu-subtitle">Key Benefits:</h4>
+                                <ul class="edu-list">
+                                    <li><strong>Tax Savings:</strong> Pay ~12% tax now vs. ~22-35% later</li>
+                                    <li><strong>Flexibility:</strong> Access contributions anytime without penalty</li>
+                                    <li><strong>First Home:</strong> Use up to $10,000 tax-free for first home purchase</li>
+                                    <li><strong>Emergency Access:</strong> Available for medical emergencies</li>
+                                </ul>
                             </div>
                         </div>
-                        
-                        <div style="background: rgba(75, 34, 122, 0.05); padding: 1rem; border-radius: 8px; margin-top: 1rem;">
-                            <h4 class="edu-subtitle">Special Features</h4>
-                            <ul class="edu-list">
-                                <li><strong>Tax-Free Growth:</strong> All investment earnings grow tax-free forever</li>
-                                <li><strong>Flexible Access:</strong> Take out contributions anytime with no penalty</li>
-                                <li><strong>First Home:</strong> Use up to $10,000 in earnings tax-free for your first home</li>
-                                <li><strong>Emergencies:</strong> Access earnings penalty-free for medical emergencies</li>
-                            </ul>
-                            <div class="edu-highlight">
-                                <h4>Pro Tip: Emergency Fund First</h4>
-                                <p>Build a 3-month emergency fund in a high-yield savings account before starting retirement contributions. This way you won't need to tap into your retirement accounts for unexpected expenses.</p>
+                    </div>
+                </div>
+
+                <!-- Retirement Steps Section -->
+                <div class="steps-container">
+                    <h3>Steps to Optimize Retirement</h3>
+                    <div id="retirementStepsContainer">
+                        <!-- This div will be populated by generateRetirementSteps -->
+                    </div>
+                </div>
+
+                <!-- Calculator Section (existing calculator moved here) -->
+                <div class="edu-card">
+                    <h2 class="edu-title">Growth Calculator</h2>
+                    <div class="edu-section">
+                        <div class="slider-group">
+                            <label for="monthlyContribution">Monthly Contribution ($):</label>
+                            <input type="range" id="monthlyContribution" min="10" max="1000" step="10" value="200">
+                            <span id="contributionDisplay" class="value-display">$200</span>
+                        </div>
+
+                        <div class="slider-group">
+                            <label for="yearsGrowth">Years to Grow:</label>
+                            <input type="range" id="yearsGrowth" min="1" max="30" step="1" value="5">
+                            <span id="yearsDisplay" class="value-display">5</span>
+                        </div>
+
+                        <div class="calculator-grid">
+                            <div class="calculator-value">
+                                <h3>Total Contributions</h3>
+                                <p id="totalContributions">$0</p>
+                            </div>
+                            <div class="calculator-value">
+                                <h3>Total Earnings</h3>
+                                <p id="totalEarnings">$0</p>
+                            </div>
+                            <div class="calculator-value">
+                                <h3>Future Value</h3>
+                                <p id="futureValue">$0</p>
                             </div>
                         </div>
+                        <p style="text-align: center; color: gray; margin-top: 1rem;">Assuming 7% average annual return</p>
                     </div>
                 </div>
             </div>
@@ -1330,6 +1447,37 @@ input::placeholder {
 </div>
 
     <script>
+        const ratingThresholds = {
+            'AAA': 15,
+            'AA': 12,
+            'A': 9,
+            'BBB': 6,
+            'BB': 3,
+            'B': 1
+        };
+        function handleNavScroll() {
+            const nav = document.querySelector('.nav-tabs');
+            const navOffset = nav.offsetTop;
+            
+            if (window.scrollY >= navOffset) {
+                nav.classList.add('fixed');
+                document.body.classList.add('nav-is-fixed');
+            } else {
+                nav.classList.remove('fixed');
+                document.body.classList.remove('nav-is-fixed');
+            }
+        }
+
+        // Initialize scroll handler
+        function initializeScrollBehavior() {
+            const nav = document.querySelector('.nav-tabs');
+            if (nav) {
+                // Add scroll event listener
+                window.addEventListener('scroll', handleNavScroll);
+                // Check initial position
+                handleNavScroll();
+            }
+        }
         function setupCurrencyInput(inputId) {
             const input = document.getElementById(inputId);
             if (!input) return;
@@ -1838,6 +1986,32 @@ input::placeholder {
                 this.value = '';
             }
         });
+        function calculateTotalPoints() {
+            const sections = ['rent-groceries', 'healthcare', 'retirement', 'other'];
+            let totalPoints = 0;
+            let completedSections = 0;
+
+            sections.forEach(section => {
+                const tabContent = document.getElementById(`${section}-content`);
+                const totalSteps = tabContent.querySelectorAll('.step-circle').length;
+                const completedSteps = tabContent.querySelectorAll('.step-circle.completed').length;
+
+                totalPoints += completedSteps;
+
+                if (completedSteps === totalSteps) {
+                    totalPoints += 2; // Bonus points for completing all steps in a section
+                    completedSections++;
+                }
+            });
+
+            if (completedSections === sections.length) {
+                totalPoints += 5; // Bonus points for completing all sections
+            }
+
+            return totalPoints;
+        }
+
+
         function toggle529Details() {
             const detailsSection = document.getElementById('529Details');
             const button = document.getElementById('learnMoreBtn');
@@ -1854,6 +2028,7 @@ input::placeholder {
                 button.innerHTML = 'Learn More About 529 Benefits ↓';
             }
         }
+
         function toggleCCDetails() {
             const detailsSection = document.getElementById('CCDetails');
             const button = document.getElementById('learnMoreBtn');
@@ -1871,6 +2046,123 @@ input::placeholder {
             }
         }
 
+        function toggleRetirementDetails() {
+            const detailsSection = document.getElementById('retirementDetails');
+            const button = document.getElementById('learnMoreBtn');
+            const isHidden = detailsSection.classList.contains('hidden');
+            
+            if (isHidden) {
+                detailsSection.classList.remove('hidden');
+                button.innerHTML = 'Show Less ↑';
+                setTimeout(() => {
+                    detailsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            } else {
+                detailsSection.classList.add('hidden');
+                button.innerHTML = 'Learn More About Retirement Benefits ↓';
+            }
+        }
+
+
+        function generateRetirementSteps(school) {
+            const has457b = school.retirementPlans.has457b;
+            const accountType = has457b ? '457(b)' : 'Roth IRA';
+            const contributionLimit = has457b ? '$23,000' : '$7,000';
+            const providerInfo = has457b ? 'through your school\'s retirement portal' : 'with providers like Fidelity or Vanguard';
+            
+            return `
+                <div class="step-item">
+                    <div class="step-header" onclick="toggleStep('retirement1')">
+                        <div class="step-circle" data-step="retirement1">
+                            <span class="step-number">1</span>
+                            <svg class="checkmark hidden" viewBox="0 0 24 24">
+                                <path fill="none" stroke="white" stroke-width="2" d="M20 6L9 17l-5-5"/>
+                            </svg>
+                        </div>
+                        <div class="step-title">
+                            <h4>Open Your ${accountType} Account</h4>
+                            <p class="time-estimate">Time: 20 minutes</p>
+                        </div>
+                        <span class="expand-arrow">▼</span>
+                    </div>
+                    <div class="step-content hidden">
+                        <p>Open a ${accountType} account ${providerInfo}.</p>
+                        <ul class="step-details">
+                            <li>Have your SSN and bank information ready</li>
+                            <li>Choose "Roth" contributions for best tax advantages</li>
+                            <li>Annual contribution limit: ${contributionLimit}</li>
+                        </ul>
+                        <button class="complete-step-btn" onclick="completeStep('retirement1')">Mark Complete</button>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-header" onclick="toggleStep('retirement2')">
+                        <div class="step-circle" data-step="retirement2">
+                            <span class="step-number">2</span>
+                            <svg class="checkmark hidden" viewBox="0 0 24 24">
+                                <path fill="none" stroke="white" stroke-width="2" d="M20 6L9 17l-5-5"/>
+                            </svg>
+                        </div>
+                        <div class="step-title">
+                            <h4>Set Up Monthly Contributions</h4>
+                            <p class="time-estimate">Time: 10 minutes</p>
+                        </div>
+                        <span class="expand-arrow">▼</span>
+                    </div>
+                    <div class="step-content hidden">
+                        <p>Configure automatic monthly transfers from your bank account.</p>
+                        <ul class="step-details">
+                            <li>Start with what you can afford, even if it's just $50/month</li>
+                            <li>Set up automatic transfers to make saving effortless</li>
+                            <li>Consider increasing contributions when you receive raises or additional funding</li>
+                        </ul>
+                        <button class="complete-step-btn" onclick="completeStep('retirement2')">Mark Complete</button>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-header" onclick="toggleStep('retirement3')">
+                        <div class="step-circle" data-step="retirement3">
+                            <span class="step-number">3</span>
+                            <svg class="checkmark hidden" viewBox="0 0 24 24">
+                                <path fill="none" stroke="white" stroke-width="2" d="M20 6L9 17l-5-5"/>
+                            </svg>
+                        </div>
+                        <div class="step-title">
+                            <h4>Choose Your Investments</h4>
+                            <p class="time-estimate">Time: 15 minutes</p>
+                        </div>
+                        <span class="expand-arrow">▼</span>
+                    </div>
+                    <div class="step-content hidden">
+                        <p>Select low-cost index funds or target date funds for long-term growth.</p>
+                        <ul class="step-details">
+                            <li>Look for "Target Date" funds matching your retirement year</li>
+                            <li>Choose funds with expense ratios under 0.2%</li>
+                            <li>Consider a mix of stock and bond index funds if selecting your own portfolio</li>
+                        </ul>
+                        <button class="complete-step-btn" onclick="completeStep('retirement3')">Mark Complete</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        
+
+        function initializeRetirementSection() {
+            if (!selectedSchool) {
+                document.getElementById('retirementStepsContainer').innerHTML = 
+                    '<p>Please select your school to see available benefits</p>';
+                return;
+            }
+
+            // Generate retirement steps based on selected school
+            document.getElementById('retirementStepsContainer').innerHTML = generateRetirementSteps(selectedSchool);
+            
+            // Initialize progress bar
+            // updateProgress();
+        }
         // Update the switchTab function to update calculator limits when switching to retirement tab
         function switchTab(tabName) {
             if (!hasOptimized && tabName !== 'optimize') {
@@ -1904,7 +2196,7 @@ input::placeholder {
                 if (content.id === `${tabName}-content`) {
                     content.classList.add('active');
                     // Scroll to the top of the content section
-                    content.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    document.body.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             });
 
@@ -1912,6 +2204,10 @@ input::placeholder {
                 updateAccountTypeDetails();
                 updateCalculatorLimits();
                 updateCalculator();
+            }
+            if (tabName !== 'optimize' && selectedSchool) {
+                const currentTab = document.querySelector(`[data-tab="${tabName}"]`);
+                updateTabProgressBar(currentTab);
             }
         }
 
@@ -1979,18 +2275,6 @@ input::placeholder {
             return states[stateAbbr] || stateAbbr;
         }
 
-        function toggleRetirementDetails() {
-            const detailsSection = document.getElementById('retirementDetails');
-            const button = document.getElementById('learnMoreBtn');
-            
-            if (detailsSection.style.display === 'none') {
-                detailsSection.style.display = 'block';
-                button.innerHTML = 'Show Less ↑';
-            } else {
-                detailsSection.style.display = 'none';
-                button.innerHTML = 'Learn More About Retirement Accounts ↓';
-            }
-        }
 
         function updateRetirementAdvice(school, income) {
             const retirementDiv = document.getElementById('retirement');
@@ -2219,12 +2503,45 @@ input::placeholder {
                 'rotate(0deg)' : 'rotate(180deg)';
         }
 
-         function updateProgress() {
-            const totalSteps = document.querySelectorAll('.step-circle').length;
-            const completedSteps = document.querySelectorAll('.step-circle.completed').length;
-            const progress = completedSteps / totalSteps * 100;
+        //  function updateProgress() {
+        //     const totalSteps = document.querySelectorAll('.step-circle').length;
+        //     const completedSteps = document.querySelectorAll('.step-circle.completed').length;
+        //     const progress = completedSteps / totalSteps * 100;
             
-            document.querySelector('.progress-bar').style.width = `${progress}%`;
+        //     document.querySelector('.progress-bar').style.width = `${progress}%`;
+        // }
+        function updateTabProgressBar(tab) {
+            if (tab.getAttribute('data-tab') === 'optimize') return;  // Add this line
+
+            const tabContent = document.getElementById(tab.getAttribute('data-tab') + '-content');
+            const totalSteps = tabContent.querySelectorAll('.step-circle').length;
+            const completedSteps = tabContent.querySelectorAll('.step-circle.completed').length;
+            const progressBar = tab.querySelector('.progress-bar');
+            const progress = completedSteps / totalSteps;
+            
+            progressBar.style.width = `${progress * 100}%`;
+            
+            if (progress === 1) {
+                tab.classList.add('completed');
+            } else {
+                tab.classList.remove('completed');
+            }
+        }
+        function updateRating() {
+            const totalPoints = calculateTotalPoints();
+            const optimizeTab = document.querySelector('[data-tab="optimize"]');
+            const rating = optimizeTab.querySelector('.rating');
+            const ratingLetter = rating.querySelector('.rating-letter');
+
+            rating.classList.remove(...Object.keys(ratingThresholds));
+
+            for (const [bondRating, threshold] of Object.entries(ratingThresholds)) {
+                if (totalPoints >= threshold) {
+                    rating.classList.add(bondRating);
+                    ratingLetter.textContent = bondRating;
+                    break;
+                }
+            }
         }
 
         function completeStep(stepNumber) {
@@ -2236,7 +2553,10 @@ input::placeholder {
             number.classList.add('hidden');
             checkmark.classList.remove('hidden');
             
-            updateProgress();
+            // updateProgress();
+            const currentTab = document.querySelector('.nav-tab.active');
+         updateTabProgressBar(currentTab);
+         updateRating(); 
         }
 
        
@@ -2293,11 +2613,24 @@ input::placeholder {
             searchInput.value = `${selectedSchool.name} (${getStateName(selectedSchool.state)})`;
             document.getElementById('schoolSuggestions').classList.add('hidden');
             
-            // Initialize the rent-groceries section if it's currently visible
+            // Initialize sections if they're currently visible
+            const retirementContent = document.getElementById('retirement-content');
+            if (retirementContent && !retirementContent.classList.contains('hidden')) {
+                initializeRetirementSection();
+            }
+            
+            // Initialize rent/groceries section if it's visible
             const rentGroceriesContent = document.getElementById('rent-groceries-content');
             if (rentGroceriesContent && !rentGroceriesContent.classList.contains('hidden')) {
                 initializeRentGrocerySection();
             }
+            
+            // Run all necessary updates
+            updateResults();
+            updateAccountTypeDetails();
+            updateCalculatorLimits();
+            updateSavingsEstimate();
+            initializeRentGrocerySection();
         }
 
 
@@ -2439,7 +2772,6 @@ input::placeholder {
 
 
 
-
         // Modify the generatePlan function to include tab names
         function generatePlan() {
             if (!selectedSchool) {
@@ -2519,10 +2851,12 @@ input::placeholder {
                     });
                 }
 
+
                 loadingElement.style.display = 'none';
                 loadingElement.classList.add('hidden');
                 document.getElementById('results').classList.remove('hidden');
                 hasOptimized = true;
+                updateRating();
             }, 2000);
         }
         function updateAccountTypeDetails() {
@@ -2614,6 +2948,10 @@ function initializeApp() {
         tab.addEventListener('click', () => {
             const tabName = tab.getAttribute('data-tab');
             switchTab(tabName);
+            if (tabName === 'retirement') {
+            initializeRetirementSection();
+        }
+
         });
     });
 
@@ -2630,7 +2968,8 @@ function initializeApp() {
     if (monthlyRentInput) monthlyRentInput.addEventListener('input', updateSavingsEstimate);
     if (monthlyGroceriesInput) monthlyGroceriesInput.addEventListener('input', updateSavingsEstimate);
     if (incomeInput) incomeInput.addEventListener('input', updateSavingsEstimate);
-
+    // Initialize sticky navigation
+    initializeScrollBehavior();
     // Add spending method change listener
     const spendingMethodSelect = document.getElementById('spendingMethod');
     if (spendingMethodSelect) {
@@ -2657,6 +2996,10 @@ function initializeApp() {
         updateCalculator();
         updateSavingsEstimate();
         initializeRentGrocerySection();
+        const retirementContent = document.getElementById('retirement-content');
+        if (retirementContent && !retirementContent.classList.contains('hidden')) {
+            initializeRetirementSection();
+        }
     }
 }
 
