@@ -183,7 +183,7 @@ input:focus {
 .results {
     margin-top: 30px;
     padding: 30px;
-    background-color: white;
+    background-color: #fcf9ff; 
     border-radius: 16px;
     box-shadow: 0 10px 20px rgba(2, 21, 61, 0.15);
 }
@@ -715,7 +715,7 @@ html {
     width: max-content;
     max-width: 200px;
     font-size: 0.9rem;
-    z-index: 10;
+    z-index: 10000;
     opacity: 0;
     transition: opacity 0.3s;
 }
@@ -1059,9 +1059,20 @@ input::placeholder {
 .fixed-rating.B { border-color: #ff0000; }
 
 .account-icon {
-  width: 32px;
-  height: 32px;
-  cursor: pointer;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    padding: 8px;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.account-icon:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: var(--accent-light);
 }
 
 .account-overlay {
@@ -1117,13 +1128,141 @@ input::placeholder {
     transition: transform 0.3s ease, filter 0.3s ease;
 }
 
-.account-icon:hover {
-    transform: scale(1.1);
-    filter: brightness(1.2);
-    background-color: var(--accent-light);
-    border-radius: 50%;
-    padding: 4px;
+.countdown-text {
+        margin-top: 4px;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .countdown-alert {
+        color: #dc2626;
+        font-weight: 600;
+    }
+
+    .countdown-urgent {
+        color: #ea580c;
+        font-weight: 600;
+    }
+
+    .countdown-soon {
+        color: #0284c7;
+    }
+
+    .countdown-upcoming {
+        color: #0891b2;
+    }
+
+    .countdown-future {
+        color: #64748b;
+    }
+html, body {
+    height: 100%;
+    margin: 0;
 }
+
+
+.footnote {
+    background-color: #ffd1b3;
+    padding: 15px;
+    text-align: center;
+    border-top: 1px solid rgba(124, 58, 237, 0.1);
+    margin: 0;
+    margin-top: auto;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.footnote-branding {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.footnote-contact {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.feedback-btn {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.feedback-btn:hover {
+    background-color: var(--primary-light);
+    transform: translateY(-2px);
+}
+
+@media screen and (max-width: 600px) {
+    .footnote {
+        padding: 10px;
+    }
+    
+    .footnote-contact {
+        flex-direction: column;
+    }
+    
+    .feedback-btn {
+        width: 100%;
+        max-width: 300px;
+        margin: 5px 0;
+    }
+}
+.summary-card {
+        background: white;
+        border-radius: 1rem;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border-top: 3px solid var(--primary);
+        box-shadow: var(--card-shadow);
+    }
+
+    .summary-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 2rem;
+        padding: 1.5rem;
+    }
+
+    .savings-amount {
+        font-size: 2.5rem;
+        font-weight: 600;
+        color: var(--primary);
+    }
+
+    .time-investment {
+        background: var(--background);
+        padding: 1.5rem 2rem;
+        border-radius: 0.5rem;
+        text-align: center;
+    }
+
+    .summary-footer {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background: rgba(124, 58, 237, 0.05);
+        border-radius: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .summary-content {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+
 </style>
 </head>
 <body>
@@ -1145,16 +1284,20 @@ input::placeholder {
             Rent & Groceries
             <div class="progress-bar"></div>
         </button>
-        <button class="nav-tab" data-tab="healthcare">
+        <!-- <button class="nav-tab" data-tab="healthcare">
             Healthcare
             <div class="progress-bar"></div>
-        </button>
+        </button> -->
         <button class="nav-tab" data-tab="retirement">
             Retirement
             <div class="progress-bar"></div>
         </button>
-        <button class="nav-tab" data-tab="other">
-            Other Spending
+        <button class="nav-tab" data-tab="savings">
+            Saving
+            <div class="progress-bar"></div>
+        </button>
+        <button class="nav-tab" data-tab="s&s">
+            Spending
             <div class="progress-bar"></div>
         </button>
     </div>
@@ -1162,7 +1305,12 @@ input::placeholder {
     <!-- Optimize Tab Content -->
     <div id="optimize-content" class="tab-content active">
         <div class="input-card">
-            <h2 class="card-title">Enter Your Information</h2>
+            <h2 class="card-title">Enter Your Information
+            <div class="info-tooltip">
+                <img src="info.png" alt="info" class="info-icon">
+                <span class="tooltip-text">We use your school and income to identify state-specific benefits and tax advantages available to you as a graduate student.</span>
+            </div>
+        </h2>
             
             <!-- Required Information Section -->
             <div class="form-section">
@@ -1207,7 +1355,7 @@ input::placeholder {
                     </div>
                 </div>
                 <div class="form-group">
-                        <label>Do you pay some of your tuition out of pocket?</label>
+                        <label>Do you pay some or all of your tuition out of pocket (e.g., savings, loans, etc...)?</label>
                         <div class="radio-group">
                             <label class="radio-label">
                                 <input type="radio" name="tuition" value="yesoutofpocket">
@@ -1224,7 +1372,7 @@ input::placeholder {
             </div>
 
             <!-- Healthcare Section -->
-            <div class="form-section">
+            <!-- <div class="form-section">
                 <h3 class="section-title">Healthcare Information
                 <div class="info-tooltip">
                                 <img src="info.png" alt="info" class="info-icon">
@@ -1278,29 +1426,29 @@ input::placeholder {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Financial Section -->
             <div class="form-section">
-                <h3 class="section-title">Financial Details
+                <h3 class="section-title">Savings Details
                     <div class="info-tooltip">
                                 <img src="info.png" alt="info" class="info-icon">
                                 <span class="tooltip-text">This section will allow us to make suggestions on how to saver for retirement and invest optimally for a future career, house, family etc...</span>
                             </div></h3>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="savings">Savings You Don't Plan to Use in Next 3 Months:</label>
-                        <input type="text" id="savings" placeholder="Amount ($)">
+                        <label for="savings">Money You Haven't Used in Past 3 Months:</label>
+                        <input type="text" id="savings" placeholder="Estimated Savings Amount ($)">
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="bank">Primary Bank/Credit Union:</label>
                         <input type="text" id="bank" placeholder="">
-                    </div>
+                    </div> -->
                     <div class="form-group">
                         <label for="bank">How Much You Set Aside Each Month:</label>
-                        <input type="text" id="bank" placeholder="Amount ($)">
+                        <input type="text" id="bank" placeholder="Average Amount ($)">
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="spendingMethod">Primary Spending Method:</label>
                         <select id="spendingMethod" class="form-select">
                             <option value="">Select</option>
@@ -1308,7 +1456,7 @@ input::placeholder {
                             <option value="debit">Debit Card</option>
                             <option value="cash">Cash</option>
                         </select>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
@@ -1344,7 +1492,7 @@ input::placeholder {
                     <!-- This section is populated by JavaScript -->
                 </div>
                 <div class="edu-section">
-                    <p>States want to help you by giving you tax-breaks for your education expenses. 529 plans are state-sponsored education savings programs that provide tax advantages for qualified education expenses. By opening a 529 account you can save hundreds or thousands per year on rent and groceries.</p>
+                    <p>States want to help you by giving you tax-breaks for your education expenses. If you contribute to your states 529 plan your state will give you a tax break. By opening a 529 account you can save hundreds per year on rent.</p>
                     <button onclick="toggle529Details()" id="learn529Btn" class="learn-more-btn">
                         Learn More About 529 Benefits ↓
                     </button>
@@ -1363,10 +1511,11 @@ input::placeholder {
                         <div class="edu-highlight">
                             <h4 class="edu-subtitle">Qualified Expenses Include:</h4>
                             <ul class="edu-list">
-                                <li><strong>Housing:</strong> Rent/housing while enrolled</li>
-                                <li><strong>Food:</strong> Meal plans and groceries</li>
-                                <li><strong>Services:</strong> Utilities and internet service</li>
-                                <li><strong>Materials:</strong> Required course materials</li>
+                                <li>Rent/housing while enrolled</li>
+                                <li>Tuition</li>
+                                <li>Meal plans and groceries</li>
+                                <li>Utilities and internet service</li>
+                                <li>Required course materials</li>
                             </ul>
                         </div>
                         
@@ -1402,7 +1551,7 @@ input::placeholder {
                     </div>
                 </div>
                 <div class="edu-section">
-                    <p>Credit cards are a safe and easy way to reduce expenses if used responsibly. The Citi Custom Cash Card automatically gives you 5% cash back on your highest spend category each month (up to $500 per month). For most grad students, groceries will naturally be your highest category, making this the perfect card. You'll earn 5% back on groceries up to $500 per month, and 1% on everything else. There is no annual fee. If you want you could only use this card for groceries and a different card for other categories.</p>
+                    <p>Credit cards are a safer, easier and more responsible way to spend and reduce expenses than cash and debit cards. Start by only using your credit card to buy groceries and pay it off everytime you use it. If you use the Citi Custom Cash Card you will get 5% cash back on your groceries each month. That the easiest few hundred dollars you will ever make.</p>
                     <button onclick="toggleCreditCardInfo()" id="learnCreditCardBtn" class="learn-more-btn">
                         I Don't Have a Credit Card ↓
                     </button>
@@ -1410,11 +1559,10 @@ input::placeholder {
                         <div class="edu-highlight">
                             <h4>Getting Started with Credit</h4>
                             <ul class="edu-list" style="color: white;">
-                                <li>Building credit is super important and you need to get started as soon as possible. </li>
-                                <li>Building a credit score will lower interest rates on car and home purchases and allow you to open better and better credit cards with higher rewards.</li>
-                                <li>Only spend what you can pay off each month - the rewards are not worth paying interest</li>
-                                <li>Set up auto-pay to never miss a payment and build your credit score</li>
-                                <li>Your school status helps you qualify, even with limited credit history</li>
+                                <li>Building a credit history is super important and you need to get started as soon as possible. </li>
+                                <li>Building credit will lower interest rates on car and home purchases.</li>
+                                <li>Only spend what you can pay off each month - credit cards are only problematic if you spend more than you make.</li>
+                                <li>Set up auto-pay to never miss a payment and build your credit score.</li>
                                 <li>If you do not feel comfortable apply to the Citi Custom Cash Card there are plenty of other student cards you should apply to in order to start building credit at no risk. Choose one with no annual fee.</li>
                             </ul>
                         </div>
@@ -1434,7 +1582,7 @@ input::placeholder {
 
 
 
-    <div id="healthcare-content" class="tab-content">
+    <!-- <div id="healthcare-content" class="tab-content">
         <div class="input-card">
             <h2 class="card-title">Healthcare Optimization</h2>
             <div id="healthcare-details">
@@ -1442,18 +1590,18 @@ input::placeholder {
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 
 
     <div id="retirement-content" class="tab-content">
-            <div class="optimization-section">
-                <!-- Summary Card -->
-                <div class="summary-card">
-                    <h2>Retirement Savings</h2>
-                    <div class="savings-estimate" id="retirementSavingsEstimate">
-                        <!-- This section is populated by JavaScript -->
-                    </div>
+        <div class="optimization-section">
+            <!-- Summary Card -->
+            <div class="summary-card">
+                <h2>Monthly Retirement Account Contribution</h2>
+                <div id="retirementContributionRecommendation" class="savings-estimate">
+                    <!-- Recommended contribution will be dynamically inserted here -->
+                </div>
                     <div class="edu-section">
                         <p>As a graduate student, you're in the lowest tax bracket you'll likely ever be in. This makes it the perfect time to start saving for retirement using a Roth account, where you pay taxes now at your low student rate instead of later at your higher professional rate.</p>
                         <button onclick="toggleRetirementDetails()" id="learnRetirementBtn" class="learn-more-btn">
@@ -1527,14 +1675,77 @@ input::placeholder {
                 </div>
             </div>
         </div>
+    <div id="savings-content" class="tab-content">
+      <div class="optimization-section">
+        <!-- Summary Card -->
+        <div class="summary-card">
+          <h2>Interest Earnings</h2>
+          <div class="savings-estimate" id="savingsStrategyEstimate">
+            <!-- This section will be populated by JavaScript -->
+            </div>
+            <div>
+            
+            <button onclick="toggleSavingsDetails()" id="learnSavingsBtn" class="learn-more-btn">
+              Learn More About Savings Strategy ↓ 
+            </button>
+          </div>
+          <div id="savingsDetails" class="hidden">
+            <div class="edu-section">  
+              <h3 class="edu-subtitle">Personalized Savings Approach</h3>
+              <ul class="edu-list">
+                <li><strong>Step 1:</strong> Move existing savings into a high-yield savings account</li>
+                <li><strong>Step 2:</strong> Contribute 20% of monthly savings to the HYSA</li>
+                <li><strong>Step 3:</strong> If paying tuition, move tuition savings into 529 plan for tax benefits</li>
+                <li><strong>Result:</strong> Optimized savings growth and strategic use of tax advantages</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Savings Steps Section --> 
+        <div class="steps-container">
+          <h3>Steps to Optimize Savings</h3>
+          <!-- This div will be populated by generateSavingsSteps -->
+          <div id="savingsStepsContainer"></div>
+        </div>
+      </div>
+    </div>
 
 
+    <div id="s&s-content" class="tab-content">
+        <div class="optimization-section">
+            <!-- Summary Card -->
+            <div class="summary-card">
+                <h2>Tax Holiday Savings</h2>
+                <div class="savings-estimate" id="taxHolidaySavingsEstimate">
+                    <!-- This section is populated by JavaScript -->
+                </div>
+                <div class="edu-section">
+                    <p>Many states offer tax holidays where you can buy certain items tax-free during specific periods. As a graduate student, you can save significantly on essential purchases by planning around these dates.</p>
+                    <button onclick="toggleTaxHolidayDetails()" id="learnTaxHolidayBtn" class="learn-more-btn">
+                        Learn More About Tax Holidays ↓
+                    </button>
+                </div>
 
-    <div id="other-content" class="tab-content">
-        <div class="input-card">
-            <h2 class="card-title">Other Spending Optimization</h2>
-            <div id="other-details">
-                Please input your school and income details first to see personalized spending recommendations.
+                <div id="taxHolidayDetails" class="hidden">
+                    <div class="edu-section">
+                        <h3 class="edu-subtitle">Understanding Tax Holidays</h3>
+                        <ul class="edu-list">
+                            <li><strong>What:</strong> Specific days when certain items can be purchased tax-free</li>
+                            <li><strong>When:</strong> Usually during back-to-school season or specific state-designated periods</li>
+                            <li><strong>Benefits:</strong> Save 4-7% on qualifying purchases (varies by state)</li>
+                            <li><strong>Strategy:</strong> Plan major purchases around these dates for maximum savings</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tax Holiday Steps Section -->
+            <div class="steps-container">
+                <h3>Steps to Save with Tax Holidays</h3>
+                <div id="taxHolidayStepsContainer">
+                    <!-- This div will be populated by generateTaxHolidaySteps -->
+                </div>
             </div>
         </div>
     </div>
@@ -1554,7 +1765,7 @@ input::placeholder {
 
     <div id="accountOverlay" class="account-overlay hidden">
       <div class="overlay-content">
-        <h2>Track Your Progress</h2>
+        <h2>Track Your Optimization Score Progress</h2>
         <div class="savings-summary">
           <!-- <div class="savings-info">
             <span class="savings-acquired">$0</span> / <span class="total-savings">$0</span>
@@ -1566,15 +1777,51 @@ input::placeholder {
           </div>
         </div>
         <button class="create-account-btn">Create Account</button>
-        <h3>Our Partners</h3>
-        <p>The higher your optimization score the better deals our partners can offer you</p>
+        <h3>Next Steps:</h3>
+        <p style="color: black;">What other optimization tools do you use that we should let others know about? Contact us and we will add it and give you credit! The higher the score the better offers you can access. Think of it as a credit score you can change in one day.</p>
+        <button class="feedback-btn" onclick="navigator.clipboard.writeText('renestinfo@gmail.com'); alert('Email copied to clipboard!')">Copy Our Email</button>
         <div class="partner-logos">
           <!-- Add partner logo images here -->
         </div>
       </div>
     </div>
 
+
+
+<div class="footnote">
+    <div class="footnote-branding">
+        <span style="font-size: 0.9rem; color: #666;">An optimizer tool built for graduate students by</span>
+        <a href="https://www.renesthorizons.com" target="_blank">
+            <img src="Renest_Logo.png" alt="Renest Logo" style="height: 20px;">
+        </a>
+    </div>
+    <div class="footnote-contact">
+        <span>Have questions, feedback or suggestions? Contact us!</span>
+        <button class="feedback-btn" onclick="navigator.clipboard.writeText('renestinfo@gmail.com'); alert('Email copied to clipboard!')">Copy Our Email</button>
+    </div>
+</div>
+
+
     <script>
+        const initializedTabs = {
+            retirement: false,
+            'rent-groceries': false,
+            's&s': false,
+            savings: false
+        };
+        function calculateFederalTaxRate(income) {
+            // 2024 Federal Tax Brackets (Single)
+            if (income <= 11600) return 0.10;
+            if (income <= 47150) return 0.12;
+            if (income <= 100525) return 0.22;
+            if (income <= 191950) return 0.24;
+            if (income <= 243725) return 0.32;
+            if (income <= 609350) return 0.35;
+            return 0.37;
+        }
+        function formatCurrency(amount) {
+            return `$${Math.round(amount).toLocaleString()}`;
+        }
         const ratingThresholds = {
             'AAA': 15,
             'AA': 12,
@@ -1583,29 +1830,50 @@ input::placeholder {
             'BB': 3,
             'B': 1
         };
-        function updateRating() {
-            const totalPoints = calculateTotalPoints();
-            const rating = document.querySelector('.fixed-rating');
-            const ratingLetter = rating.querySelector('.rating-letter');
-
-            // Remove all possible rating classes
-            rating.classList.remove('AAA', 'AA', 'A', 'BBB', 'BB', 'B');
-
-            // If no steps are completed, always show B rating
-            if (totalPoints === 0) {
-                rating.classList.add('B');
-                ratingLetter.textContent = 'B';
-                return;
+        function calculateStateTaxRate(income, state) {
+            if (income < 0) income = 0;
+            
+            const stateTaxInfo = stateTaxDB[state];
+            if (!stateTaxInfo || !stateTaxInfo.brackets || stateTaxInfo.brackets.length === 0) {
+                console.warn(`No tax bracket information found for state: ${state}`);
+                return 0;
             }
-
-            // Otherwise proceed with normal rating logic
-            for (const [bondRating, threshold] of Object.entries(ratingThresholds)) {
-                if (totalPoints >= threshold) {
-                    rating.classList.add(bondRating);
-                    ratingLetter.textContent = bondRating;
-                    break;
+            
+            // Find applicable tax bracket
+            for (const bracket of stateTaxInfo.brackets) {
+                if (income <= bracket.threshold) {
+                    return bracket.rate / 100;
                 }
             }
+            
+            // If income exceeds all thresholds, use the highest bracket
+            return stateTaxInfo.brackets[stateTaxInfo.brackets.length - 1].rate / 100;
+        }
+        function updateRating() {
+            const totalPoints = calculateTotalPoints();
+            const rating = document.querySelectorAll('.fixed-rating');
+            const ratingLetters = document.querySelectorAll('.rating-letter');
+            
+            // Remove all possible rating classes from all rating elements
+            rating.forEach(r => {
+                r.classList.remove('AAA', 'AA', 'A', 'BBB', 'BB', 'B');
+                
+                // If no steps are completed or not optimized, show B rating
+                if (totalPoints === 0 || !hasOptimized) {
+                    r.classList.add('B');
+                    r.querySelector('.rating-letter').textContent = 'B';
+                    return;
+                }
+
+                // Otherwise proceed with normal rating logic
+                for (const [bondRating, threshold] of Object.entries(ratingThresholds)) {
+                    if (totalPoints >= threshold) {
+                        r.classList.add(bondRating);
+                        r.querySelector('.rating-letter').textContent = bondRating;
+                        break;
+                    }
+                }
+            });
         }
         function handleNavScroll() {
             const nav = document.querySelector('.nav-tabs');
@@ -1960,7 +2228,51 @@ input::placeholder {
                 ],
                 notes: 'New Jersey taxes capital gains as ordinary income with progressive rates from 1.4% to 10.75%.'
             }
-        };              
+        };           
+
+        const OPTIMIZATION_CONFIG = {
+            'rent-groceries': {
+                rent: {
+                    steps: [
+                        { name: 'Open 529 Account', time: 8 },
+                        { name: 'Set Up Monthly Deposits', time: 2 },
+                        { name: 'Withdraw for Rent Payment', time: 3 }
+                    ],
+                    totalTime: 13
+                },
+                groceries: {
+                    steps: [
+                        { name: 'Apply for Citi Custom Cash', time: 2 },
+                        { name: 'Activate Card', time: 2 },
+                        { name: 'Set Up Auto-Pay', time: 1 }
+                    ],
+                    totalTime: 5
+                }
+            },
+            'retirement': {
+                steps: [
+                    { name: 'Open Retirement Account', time: 4 },
+                    { name: 'Set Up Monthly Contributions', time: 2 },
+                    { name: 'Choose Investments', time: 3 }
+                ],
+                totalTime: 9
+            },
+            'savings': {
+                steps: [
+                    { name: 'Move Savings to High-Yield Account', time: 4 },
+                    { name: 'Set Up Auto-Savings', time: 2 },
+                    { name: 'Configure 529 for Tuition', time: 8 }
+                ],
+                totalTime: 14
+            },
+            's&s': {
+                steps: [
+                    { name: 'Plan Tax Holiday Purchases', time: 5 }
+                ],
+                totalTime: 5
+            }
+        };
+
         const state529DB = {
             'CA': {
                 planName: 'ScholarShare 529',
@@ -2083,6 +2395,93 @@ input::placeholder {
                 { threshold: Infinity, rate: 20 }
             ]
         };
+        function toggleTaxHolidayDetails() {
+            const detailsSection = document.getElementById('taxHolidayDetails');
+            const button = document.getElementById('learnTaxHolidayBtn');
+            const isHidden = detailsSection.classList.contains('hidden');
+            
+            detailsSection.classList.toggle('hidden');
+            button.textContent = isHidden ? 'Show Less ↑' : 'Learn More About Tax Holidays ↓';
+            
+            if (isHidden) {
+                setTimeout(() => {
+                    detailsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            }
+        }
+        function toggleSavingsDetails() {
+            const detailsSection = document.getElementById('savingsDetails');
+            const button = document.getElementById('learnSavingsBtn');
+            const isHidden = detailsSection.classList.contains('hidden');
+            
+            detailsSection.classList.toggle('hidden');
+            button.textContent = isHidden ? 'Show Less ↑' : 'Learn More About Savings Strategy ↓';
+            
+            if (isHidden) {
+                setTimeout(() => {
+                    detailsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            }
+        }
+  
+        function updateTaxHolidaySavings() {
+            const savingsDiv = document.getElementById('taxHolidaySavingsEstimate');
+            if (!selectedSchool) {
+                savingsDiv.innerHTML = `<div class="missing-info-prompt">Please select your school to see available benefits</div>`;
+                return;
+            }
+
+            const state = selectedSchool.state;
+            const holidayInfo = stateTaxHolidayDB[state];
+            
+            if (holidayInfo && holidayInfo.hasTaxHoliday) {
+                let totalSavings = 0;
+                holidayInfo.holidays.forEach(holiday => {
+                    totalSavings += calculateTaxHolidaySavings(state, holiday.name);
+                });
+
+                savingsDiv.innerHTML = `
+                    <div class="savings-amount-rent">
+                        <span class="amount">${formatCurrency(totalSavings)}</span>
+                        <span class="period">/year</span>
+                    </div>
+                    <div class="savings-details">
+                        <p>Potential savings if you plan major purchases during tax holidays</p>
+                    </div>
+                `;
+            } else {
+                savingsDiv.innerHTML = `
+                    <div class="savings-amount-rent">
+                        <span class="amount">$0</span>
+                        <span class="period">/year</span>
+                    </div>
+                    <div class="savings-details">
+                        <p>Your state does not currently offer tax holidays</p>
+                    </div>
+                `;
+            }
+        }
+
+        function initializeSAndSSection() {
+            if (!selectedSchool) {
+                document.getElementById('taxHolidayStepsContainer').innerHTML = 
+                    '<p>Please select your school to see available benefits</p>';
+                return;
+            }
+
+            const state = selectedSchool.state;
+            const stepsContainer = document.getElementById('taxHolidayStepsContainer');
+            
+            // Generate steps
+            stepsContainer.innerHTML = generateTaxHolidaySteps(state);
+
+            // Update savings estimate
+            updateTaxHolidaySavings();
+
+            // Update progress bar
+            const currentTab = document.querySelector('[data-tab="s&s"]');
+            updateTabProgressBar(currentTab);
+        }
         function updateTotalSavings() {
             const savingsAcquired = document.querySelectorAll('.savings-acquired');
             const totalSavings = document.querySelectorAll('.total-savings');
@@ -2134,12 +2533,18 @@ input::placeholder {
             updateCalculator();
         }
 
+
         // Update the selectSchool function to also update calculator limits
+
        function selectSchool(schoolId) {
             selectedSchool = schoolsDB[schoolId];
             const searchInput = document.getElementById('schoolSearch');
             searchInput.value = `${selectedSchool.name} (${getStateName(selectedSchool.state)})`;
             document.getElementById('schoolSuggestions').classList.add('hidden');
+            const savingsContent = document.getElementById('savings-content');
+            if (savingsContent && !savingsContent.classList.contains('hidden')) {
+                initializeSavingsSection();
+            }
             
             // Run all necessary updates
             updateResults();
@@ -2163,27 +2568,18 @@ input::placeholder {
             }
         });
         function calculateTotalPoints() {
-            // If we haven't optimized yet, return 0 to ensure B rating
-            if (!hasOptimized) return 0;
+                // If we haven't optimized yet, return 0 to ensure B rating
+                if (!hasOptimized) return 0;
 
-            const sections = ['rent-groceries', 'healthcare', 'retirement', 'other'];
-            let totalPoints = 0;
-            let completedSections = 0;
+                let totalPoints = 0;
+                
+                // Get all completed steps across all tabs
+                document.querySelectorAll('.step-circle.completed').forEach(step => {
+                    totalPoints += 1;
+                });
 
-            sections.forEach(section => {
-                const tabContent = document.getElementById(`${section}-content`);
-                const totalSteps = tabContent.querySelectorAll('.step-circle').length;
-                const completedSteps = tabContent.querySelectorAll('.step-circle.completed').length;
-
-                totalPoints += completedSteps;
-
-                if (completedSteps === totalSteps && totalSteps > 0) {
-                    completedSections++;
-                }
-            });
-
-            return totalPoints;
-        }
+                return totalPoints;
+            }
 
 
         function toggle529Details() {
@@ -2214,6 +2610,200 @@ input::placeholder {
                     detailsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }, 100);
             }
+        }
+        function calculateSavingsStrategy(currentSavings, monthlySavings, paysTuition, state) {
+          const HYSA_APY = 0.04;
+
+          // Step 1: Move current savings to HYSA 
+          const hysaBalance = currentSavings;
+          const hysaInterestEarnings = hysaBalance * HYSA_APY;
+
+          // Step 2: Contribute 20% of monthly savings to HYSA
+          const hysaMonthlyContribution = monthlySavings * 0.2;  
+          const hysaAnnualContribution = hysaMonthlyContribution * 12;
+          const hysaFutureValue = hysaBalance * (1 + HYSA_APY) + hysaAnnualContribution;
+
+          // Step 3: Move tuition savings to 529 if applicable
+          let state529Contribution = 0;
+          if (paysTuition && state529DB[state]?.deduction > 0) {
+            state529Contribution = Math.min(currentSavings, state529DB[state].deduction);
+          }
+
+          const totalInterestEarnings = hysaInterestEarnings;
+
+          return {
+            hysaBalance,
+            hysaMonthlyContribution,
+            hysaFutureValue,
+            state529Contribution,
+            totalInterestEarnings
+          };
+        }
+
+        function generateSavingsSteps() {
+          if (!selectedSchool) return '';
+
+          const savingsInput = document.getElementById('savings')?.value || '0'; 
+          const monthlySavingsInput = document.getElementById('bank')?.value || '0';
+          const paysTuitionInput = document.querySelector('input[name="tuition"]:checked')?.value === 'yesoutofpocket';
+
+          const strategy = calculateSavingsStrategy(
+            parseFloat(savingsInput.replace(/[^0-9.-]+/g, '')),
+            parseFloat(monthlySavingsInput.replace(/[^0-9.-]+/g, '')),
+            paysTuitionInput,
+            selectedSchool.state
+          );
+
+          return `
+            <div class="step-item">
+              <div class="step-header" onclick="toggleStep('savings1')">
+                <div class="step-circle" data-step="savings1">
+                  <span class="step-number">1</span>
+                  <svg class="checkmark hidden" viewBox="0 0 24 24">
+                    <path fill="none" stroke="white" stroke-width="2" d="M20 6L9 17l-5-5"/>
+                  </svg>
+                </div>
+                <div class="step-title">
+                  <h4>Move Savings to High-Yield Account</h4>
+                  <p class="time-estimate">Time: 4 minutes</p>
+                </div>
+                <span class="expand-arrow">▼</span>
+              </div>
+              <div class="step-content hidden">
+                <p>Transfer your existing savings of $${strategy.hysaBalance.toLocaleString()} into a high-yield savings account.</p>
+                <ul class="step-details">
+                  <li>Look for accounts with APY around 4%</li>
+                  <li>Citizen's is a trusted bank that offers consistent high interest on savings with no fees or hidden costs. </li>
+                  <li>This will allow your savings to grow faster</li>
+                </ul>
+
+                        <a href="https://www.secure.citizensaccess.com/Citizens/save?mrkgadid=1&mrkgen=mtext&mrkgbflag=1&ctzMode=MKL-SEM--BNG--SAV--CAX--BR--43700071876580474--Group1_BR_Citizens_Deposits_Savings_PHR&&acctid=21700000002029063&dskeywordid=43700071876580474&lid=43700071876580474&ds_s_kwgid=58700007906794393&ds_a_cid=975551231&ds_a_caid=17621005165&ds_a_agid=137912480043&ds_a_lid=kwd-483731438318&&device=c&network=o&matchtype=e&locationid=89660&creative=&targetid=kwd-77996989483976:loc-190&campaignid=287840010&adgroupid=1247946314891189&gclid=9e3344e6ef89195d2edd238db9386f8b&gclsrc=3p.ds&msclkid=9e3344e6ef89195d2edd238db9386f8b" target="_blank" class="complete-step-btn" style="display: inline-block; text-align: center; margin-top: 10px; text-decoration: none;">
+                            Link to Citizen's High Yield Savings Account
+                        </a>
+                <button class="complete-step-btn" onclick="completeStep('savings1', 'savings')">Mark Complete</button>
+              </div>
+            </div>
+
+            <div class="step-item">
+              <div class="step-header" onclick="toggleStep('savings2')">  
+                <div class="step-circle" data-step="savings2">
+                  <span class="step-number">2</span>
+                  <svg class="checkmark hidden" viewBox="0 0 24 24">
+                    <path fill="none" stroke="white" stroke-width="2" d="M20 6L9 17l-5-5"/> 
+                  </svg>
+                </div>
+                <div class="step-title">
+                  <h4>Set Up Auto-Savings to HYSA</h4>  
+                  <p class="time-estimate">Time: 2 minutes</p>
+                </div>
+                <span class="expand-arrow">▼</span>
+              </div>
+              <div class="step-content hidden">  
+                <p>Configure automatic monthly transfers of $${strategy.hysaMonthlyContribution.toLocaleString()} (20% of your monthly savings) into your high-yield account.</p>
+                <ul class="step-details">
+                  <li>This will grow your savings consistently over time</li>
+                  <li>Set it and forget it to make saving a habit</li> 
+                </ul>
+                <button class="complete-step-btn" onclick="completeStep('savings2', 'savings')">Mark Complete</button>
+              </div>
+            </div>
+
+
+            ${strategy.state529Contribution > 0 ? `
+              <div class="step-item">
+                <div class="step-header" onclick="toggleStep('savings3')">
+                  <div class="step-circle" data-step="savings3">
+                    <span class="step-number">3</span>  
+                    <svg class="checkmark hidden" viewBox="0 0 24 24">
+                      <path fill="none" stroke="white" stroke-width="2" d="M20 6L9 17l-5-5"/>
+                    </svg>
+                  </div>
+                  <div class="step-title">  
+                    <h4>Open and Contribute to a 529 Plan</h4>
+                    <p class="time-estimate">Time: 8 minutes</p>  
+                  </div>
+                  <span class="expand-arrow">▼</span>
+                </div>
+                <div class="step-content hidden">
+                  <p>Since you're paying tuition, contribute at least $${strategy.state529Contribution.toLocaleString()} of your savings to your state's 529 plan for tax benefits. If you can put as much of your tuition into the 529 as soon as possible. This could save you hundreds in taxes on interest and income.</p>
+                  <ul class="step-details">  
+                    <li>Open a ${state529DB[selectedSchool.state].planName} if you haven't already</li>
+                    <li>This allows you to deduct contributions on your state taxes</li>
+                    <li>Invest in your 529 plan's capital preservation or fixed income fund. This essentially will act as a tax free HYSA</li>
+                  </ul>
+                  <button class="complete-step-btn" onclick="completeStep('savings3', 'savings')">Mark Complete</button>
+                </div>  
+              </div>
+            ` : ''}
+            ${paysTuitionInput && state529DB[selectedSchool.state].deduction === 0 ?  `
+              <div class="step-item">
+                <div class="step-header" onclick="toggleStep('savings3')">
+                  <div class="step-circle" data-step="savings3">
+                    <span class="step-number">3</span>
+                    <svg class="checkmark hidden" viewBox="0 0 24 24">
+                      <path fill="none" stroke="white" stroke-width="2" d="M20 6L9 17l-5-5"/>
+                    </svg>
+                  </div>
+                  <div class="step-title">
+                    <h4>Use a 529 Plan for Tuition Savings</h4>
+                    <p class="time-estimate">Time: 4 minutes</p>
+                  </div>
+                  <span class="expand-arrow">▼</span>
+                </div>
+                <div class="step-content hidden">
+                  <p>Since you're paying tuition out of pocket, consider contributing some of your tuition savings to New York's 529 plan (anyone can contribute regardless of which state you live in). Benefits include:</p>
+                  <ul class="step-details">
+                    <li>Earnings grow tax-free, so more of your money goes towards tuition</li>
+                    <li>New York's 529 plan offers capital preservation or fixed income investment options that act like a tax-free high-yield savings account</li>
+                    <li>You can withdraw funds tax-free for qualified education expenses like tuition</li>
+                  </ul>
+                  <p>The more tuition savings you can contribute, the more you'll benefit from tax-free growth.</p>
+                  <button class="complete-step-btn" onclick="completeStep('savings3', 'savings')">Mark Complete</button>
+                </div>
+              </div>
+            ` : ''}
+          `;
+        }
+
+        function updateSavingsStrategyDisplay() {
+            if (!selectedSchool) {
+                document.getElementById('savingsStrategyEstimate').innerHTML = 
+                    '<div class="missing-info-prompt">Please select your school to see available benefits</div>';
+                return;
+            }
+
+            const savingsInput = document.getElementById('savings')?.value || '0';
+            const incomeInput = document.getElementById('income')?.value || '0';
+            const monthlySavingsInput = document.getElementById('bank')?.value || '0';
+            
+            const strategy = calculateSavingsStrategy(
+                savingsInput,
+                incomeInput,
+                monthlySavingsInput,
+                selectedSchool.state
+            );
+
+            const savingsDiv = document.getElementById('savingsStrategyEstimate');
+            
+            savingsDiv.innerHTML = `
+                <div class="savings-amount-rent">
+                    <span class="amount">$${Math.round(strategy.state529InterestEarnings).toLocaleString()}</span>
+                    <span class="period">/year</span>
+                </div>
+                <div class="savings-details">
+                    <p>Projected interest earnings by putting savings in a high-yield 529 plan</p> 
+                </div>
+            `;
+
+            const taxSavingsDiv = document.getElementById('taxSavingsEstimate');
+
+            taxSavingsDiv.innerHTML = `
+                <div class="savings-details">
+                    <p>Federal tax savings on 529 earnings: $${Math.round(strategy.federal529Savings).toLocaleString()}/year</p>
+                    ${strategy.state529Savings > 0 ? 
+                        `<p>State tax savings on 529 earnings: $${Math.round(strategy.state529Savings).toLocaleString()}/year</p>` : ''}
+                </div>
+            `;
         }
 
         function toggleRetirementDetails() {
@@ -2249,7 +2839,7 @@ input::placeholder {
                         </div>
                         <div class="step-title">
                             <h4>Open Your ${accountType} Account</h4>
-                            <p class="time-estimate">Time: 20 minutes</p>
+                            <p class="time-estimate">Time: 4 minutes</p>
                         </div>
                         <span class="expand-arrow">▼</span>
                     </div>
@@ -2274,7 +2864,7 @@ input::placeholder {
                         </div>
                         <div class="step-title">
                             <h4>Set Up Monthly Contributions</h4>
-                            <p class="time-estimate">Time: 10 minutes</p>
+                            <p class="time-estimate">Time: 2 minutes</p>
                         </div>
                         <span class="expand-arrow">▼</span>
                     </div>
@@ -2299,7 +2889,7 @@ input::placeholder {
                         </div>
                         <div class="step-title">
                             <h4>Choose Your Investments</h4>
-                            <p class="time-estimate">Time: 15 minutes</p>
+                            <p class="time-estimate">Time: 3 minutes</p>
                         </div>
                         <span class="expand-arrow">▼</span>
                     </div>
@@ -2353,6 +2943,7 @@ input::placeholder {
                 results.classList.remove('hidden');
             }
             
+            // Update active tab
             tabs.forEach(tab => {
                 tab.classList.remove('active');
                 if (tab.getAttribute('data-tab') === tabName) {
@@ -2360,6 +2951,7 @@ input::placeholder {
                 }
             });
             
+            // Update visible content
             contents.forEach(content => {
                 content.classList.remove('active');
                 if (content.id === `${tabName}-content`) {
@@ -2369,17 +2961,37 @@ input::placeholder {
                 }
             });
 
-            if (tabName === 'retirement' && selectedSchool) {
-                updateAccountTypeDetails();
-                updateCalculatorLimits();
-                updateCalculator();
+            // Initialize appropriate section based on tab, but only if not already initialized
+            if (selectedSchool && !initializedTabs[tabName]) {
+                switch(tabName) {
+                    case 'retirement':
+                        initializeRetirementSection();
+                        updateAccountTypeDetails();
+                        updateCalculatorLimits();
+                        updateCalculator();
+                        calculateRecommendedContribution();
+                        initializedTabs.retirement = true;
+                        break;
+                    case 'rent-groceries':
+                        initializeRentGrocerySection();
+                        initializedTabs['rent-groceries'] = true;
+                        break;
+                    case 's&s':
+                        initializeSAndSSection();
+                        initializedTabs['s&s'] = true;
+                        break;
+                    case 'savings':
+                        initializeSavingsSection();
+                        initializedTabs.savings = true;
+                        break;
+                }
             }
+
             if (tabName !== 'optimize' && selectedSchool) {
                 const currentTab = document.querySelector(`[data-tab="${tabName}"]`);
                 updateTabProgressBar(currentTab);
             }
         }
-
         function showError(message) {
             const errorDiv = document.createElement('div');
             errorDiv.classList.add('error-message');
@@ -2560,24 +3172,105 @@ input::placeholder {
                 document.getElementById('schoolSuggestions').classList.add('hidden');
             }
         });
-       // Calculate state tax rate based on income
-    function getStateTaxRate(income, state) {
-        const brackets = stateTaxDB[state].brackets;
-        for (let i = 0; i < brackets.length; i++) {
-            if (income <= brackets[i].threshold) {
-                return brackets[i].rate / 100;
+       // Calculate state tax rate based on incom
+    function calculateTotalOptimizationTime() {
+        let totalTime = 0;
+        Object.values(OPTIMIZATION_CONFIG).forEach(section => {
+            if (section.steps) {
+                totalTime += section.totalTime;
+            } else {
+                Object.values(section).forEach(subsection => {
+                    totalTime += subsection.totalTime;
+                });
             }
+        });
+        return totalTime;
+    }
+
+    // Calculate total potential savings
+    function calculateTotalSavings(income, state, monthlyRent, monthlyGroceries, savingsAmount) {
+        // Parse inputs safely
+        const annualIncome = parseFloat(income) || 0;
+        
+        // 1. Rent Savings (529 plan)
+        const rentSavings = calculateRentSavings(income, state, monthlyRent);
+        
+        // 2. Grocery Savings
+        const grocerySavings = calculateGrocerySavings(monthlyGroceries);
+        
+        // 3. Retirement Savings
+        const retirementSavings = calculateRetirementSavings(annualIncome);
+        
+        // 4. Tax Holiday Savings
+        let taxHolidaySavings = 0;
+        if (stateTaxHolidayDB[state]?.hasTaxHoliday) {
+            stateTaxHolidayDB[state].holidays.forEach(holiday => {
+                taxHolidaySavings += calculateTaxHolidaySavings(state, holiday.name);
+            });
         }
-        return brackets[brackets.length - 1].rate / 100;
+        
+        // 5. Savings Account Interest
+        const hysaInterest = calculateSavingsInterest(document.getElementById('savings')?.value);
+        
+        // Total savings
+        return Math.round(
+            rentSavings + 
+            grocerySavings + 
+            retirementSavings + 
+            taxHolidaySavings + 
+            hysaInterest
+        );
+    }
+    function calculateGrocerySavings(monthlyGroceries) {
+        const monthlyGroceriesValue = parseFloat(monthlyGroceries) || 350;
+        const monthlyLimit = 500;
+        const monthlyRewardableAmount = Math.min(monthlyGroceriesValue, monthlyLimit);
+        const monthlyExcess = Math.max(0, monthlyGroceriesValue - monthlyLimit);
+        const annualRewardableAmount = monthlyRewardableAmount * 12;
+        const annualExcess = monthlyExcess * 12;
+        return Math.round((annualRewardableAmount * 0.05) + (annualExcess * 0.01));
+    }
+
+    // Generate summary card HTML
+    function generateSummaryCard(totalSavings, totalMinutes) {
+        return `
+            <div class="summary-card">
+                <div class="summary-content">
+                    <div>
+                        <h3 class="card-title">Total Potential Savings</h3>
+                        <div class="savings-amount">
+                            $${totalSavings.toLocaleString()}
+                            <span style="font-size: 1rem; color: var(--text-light)">/year</span>
+                        </div>
+                    </div>
+                    
+                    <div class="time-investment">
+                        <h4 style="color: var(--text); margin-bottom: 0.5rem">Time Investment</h4>
+                        <div style="font-size: 1.5rem; font-weight: 600; color: var(--primary)">
+                            ${totalMinutes} minutes
+                        </div>
+                        <div style="color: var(--text-light); font-size: 0.875rem">one-time setup</div>
+                    </div>
+                </div>
+                
+                <div class="summary-footer">
+                    <p style="color: var(--text)">
+                        Follow the easy steps below to unlock these savings. Each section provides detailed guidance to help you maximize your benefits.
+                    </p>
+                </div>
+            </div>
+        `;
     }
 
     // Calculate 529 savings
-    function calculate529Savings(income, state) {
-        const deduction = state529DB[state].deduction;
-        if (deduction === 0) return 0;
+    function calculate529Savings(income, state, expenses) {
+        const deduction = state529DB[state]?.deduction;
+        if (!deduction) return 0;
         
-        const stateTaxRate = getStateTaxRate(income, state);
-        return deduction * stateTaxRate;
+        const taxRate = calculateStateTaxRate(income, state);
+        const deductibleAmount = Math.min(expenses, deduction);
+        
+        return deductibleAmount * taxRate;
     }
 
     // Calculate retirement savings comparison (457b/Roth vs Brokerage)
@@ -2597,6 +3290,96 @@ input::placeholder {
     }
 
     // Calculate sales tax holiday savings
+    function parseDateString(dateString) {
+    // Extract month, day, and year
+    const match = dateString.match(/([A-Za-z]+)\s+(\d+)(?:-\d+)?,\s+(\d{4})/);
+    if (!match) return null;
+    
+    const [_, month, day, year] = match;
+    const date = new Date(`${month} ${day}, ${year}`);
+    return date;
+}
+
+// Helper function to calculate days until a date
+function calculateDaysUntil(dateString) {
+    const targetDate = parseDateString(dateString);
+    if (!targetDate || isNaN(targetDate.getTime())) {
+        console.error('Invalid date format:', dateString);
+        return null;
+    }
+    
+    const today = new Date();
+    
+    // Reset time portion for accurate day calculation
+    targetDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+    
+    // Calculate days difference
+    let timeDiff = targetDate.getTime() - today.getTime();
+    let daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    
+    // If the date has passed, calculate days until next year's occurrence
+    if (daysDiff < 0) {
+        targetDate.setFullYear(today.getFullYear() + 1);
+        timeDiff = targetDate.getTime() - today.getTime();
+        daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    }
+    
+    return daysDiff;
+}
+
+// Function to get appropriate countdown message
+function getCountdownMessage(days) {
+    if (days === null) return '<span class="countdown-future">Date to be announced</span>';
+    if (days === 0) return '<span class="countdown-alert">Starts today!</span>';
+    if (days === 1) return '<span class="countdown-urgent">Starts tomorrow!</span>';
+    if (days <= 7) return `<span class="countdown-soon">Starts in ${days} days</span>`;
+    if (days <= 30) return `<span class="countdown-upcoming">Starts in ${days} days</span>`;
+    return `<span class="countdown-future">${days} days away</span>`;
+}
+
+// Function to generate the steps for tax holidays
+function generateTaxHolidaySteps(state) {
+    const holidayInfo = stateTaxHolidayDB[state];
+    if (!holidayInfo || !holidayInfo.hasTaxHoliday) {
+        return '<p>Your state does not currently offer tax holidays.</p>';
+    }
+
+    let stepsHtml = '';
+    holidayInfo.holidays.forEach((holiday, index) => {
+        const daysUntil = calculateDaysUntil(holiday.dates);
+        const countdownMessage = getCountdownMessage(daysUntil);
+        
+        stepsHtml += `
+            <div class="step-item">
+                <div class="step-header" onclick="toggleStep('holiday${index + 1}')">
+                    <div class="step-circle" data-step="holiday${index + 1}">
+                        <span class="step-number">${index + 1}</span>
+                        <svg class="checkmark hidden" viewBox="0 0 24 24">
+                            <path fill="none" stroke="white" stroke-width="2" d="M20 6L9 17l-5-5"/>
+                        </svg>
+                    </div>
+                    <div class="step-title">
+                        <h4>Plan for ${holiday.name}</h4>
+                        <p class="time-estimate">Dates: ${holiday.dates}</p>
+                        <p class="countdown-text">${countdownMessage}</p>
+                    </div>
+                    <span class="expand-arrow">▼</span>
+                </div>
+                <div class="step-content hidden">
+                    <p>${holiday.details}</p>
+                    <ul class="step-details">
+                        <li><strong>Graduate Student Benefit:</strong> ${holiday.gradRelevance}</li>
+                        <li><strong>Restrictions:</strong> ${holiday.restrictions}</li>
+                        <li><strong>Action:</strong> Make a list of qualifying items you need and wait to purchase during this period</li>
+                    </ul>
+                    <button class="complete-step-btn" onclick="completeStep('holiday${index + 1}', 's&s')">Mark Complete</button>
+                </div>
+            </div>
+        `;
+    });
+    return stepsHtml;
+}
     function calculateTaxHolidaySavings(state, holidayType) {
         const salesTaxRates = {
             'MA': 0.0625,
@@ -2635,20 +3418,25 @@ input::placeholder {
         return 0;
     }
 
-    function addPlanStep(stepsDiv, title, description, savings = 0, dates = '', tabName = '') {
+    function addPlanStep(stepsDiv, title, description, savings = 0, dates = '', tabName = '', time = 0) {
             const stepDiv = document.createElement('div');
             stepDiv.classList.add('step');
             
             let savingsText = '';
-            let viewDetailsBtn = '';
-            
             if (savings > 0) {
-                savingsText = `<p class="savings-estimate">
-                    Potential Savings: $${savings.toLocaleString(undefined, {maximumFractionDigits: 0})}
-                    ${tabName ? `<button class="view-details-btn" onclick="switchTab('${tabName}')">View Details</button>` : ''}
-                </p>`;
+                savingsText = `
+                    <p class="savings-estimate">
+                        Potential Savings: $${savings.toLocaleString(undefined, {maximumFractionDigits: 0})}
+                        ${tabName ? `<button class="view-details-btn" onclick="switchTab('${tabName}')">View Details </button>` : ''}
+                    </p>`;
+            } else if (tabName) {
+                savingsText = `
+                    <p class="savings-estimate">
+                     <button class="view-details-btn" onclick="switchTab('${tabName}')">View Details </button>
+                        
+                    </p>`;
             }
-            
+            // <button class="view-details-btn" onclick="switchTab('${tabName}')">View Details (${time} min)</button>
             let datesText = dates ? `<p class="dates">Dates: ${dates}</p>` : '';
             
             stepDiv.innerHTML = `
@@ -2729,15 +3517,26 @@ input::placeholder {
 
         function completeStep(stepNumber, tabName) {
             const stepCircle = document.querySelector(`[data-step="${stepNumber}"]`);
+            const stepItem = stepCircle.closest('.step-item');
+            const stepContent = stepItem.querySelector('.step-content');
             const checkmark = stepCircle.querySelector('.checkmark');
             const number = stepCircle.querySelector('.step-number');
             
+            // Update step appearance
             stepCircle.classList.add('completed');
             number.classList.add('hidden');
             checkmark.classList.remove('hidden');
             
+            // Close the step content
+            stepContent.classList.add('hidden');
+            const arrow = stepItem.querySelector('.expand-arrow');
+            arrow.style.transform = 'rotate(0deg)';
+            
+            // Update tab progress bar
             const currentTab = document.querySelector(`[data-tab="${tabName}"]`);
             updateTabProgressBar(currentTab);
+            
+            // Update rating
             updateRating();
         }
 
@@ -2816,71 +3615,126 @@ input::placeholder {
             initializeRentGrocerySection();
         }
 
+        function updateSavingsDisplay() {
+          if (!selectedSchool) {
+            document.getElementById('savingsStrategyEstimate').innerHTML = 
+              '<div class="missing-info-prompt">Please select your school to see available benefits</div>';
+            return;
+          }
 
-        function updateSavingsEstimate() {
+          const savingsInput = document.getElementById('savings')?.value || '0';
+          const monthlySavingsInput = document.getElementById('bank')?.value || '0';  
+          const paysTuitionInput = document.querySelector('input[name="tuition"]:checked')?.value === 'yesoutofpocket';
+
+          const strategy = calculateSavingsStrategy(
+            parseFloat(savingsInput.replace(/[^0-9.-]+/g, '')), 
+            parseFloat(monthlySavingsInput.replace(/[^0-9.-]+/g, '')),
+            paysTuitionInput,  
+            selectedSchool.state
+          );
+
+          const savingsDiv = document.getElementById('savingsStrategyEstimate');
+          const earningsDiv = document.getElementById('interestEarningsEstimate');
+
+          // earningsDiv.innerHTML = `
+          //   <div class="savings-amount-rent">  
+          //     <span class="amount">$${Math.round(strategy.hysaFutureValue).toLocaleString()}</span>
+          //     <span class="period">Future Value</span>
+          //   </div>
+          //   <div class="savings-details">  
+          //     <p>Projected HYSA balance after one year with monthly contributions</p>
+          //   </div>
+          // `;
+
+          savingsDiv.innerHTML = `
+            <div class="savings-amount-rent">
+              <span class="amount">$${Math.round(strategy.totalInterestEarnings).toLocaleString()}</span> 
+              <span class="period">/year</span>
+            </div>
+            <div class="savings-details">
+              <p>Interest you'll earn by moving savings to a high-yield account.</p>
+            </div>  
+          `;
+        }
+
+        function initializeSavingsSection() {
+            if (!selectedSchool) {
+                document.getElementById('savingsStrategyEstimate').innerHTML = 
+                    '<div class="missing-info-prompt">Please select your school to see available benefits</div>';
+                document.getElementById('savingsStepsContainer').innerHTML = 
+                    '<p>Please select your school to see available benefits</p>';
+                return;
+            }
+
+            // Update the savings display
+            updateSavingsDisplay();
+            
+            // Generate steps
+            document.getElementById('savingsStepsContainer').innerHTML = generateSavingsSteps();
+            
+            // Update progress bar
+            const currentTab = document.querySelector('[data-tab="savings"]');
+            updateTabProgressBar(currentTab);
+        }
+        function setupSavingsEventListeners() {
+            // Listen for changes in savings inputs
+            const inputIds = ['savings', 'bank', 'income'];
+            inputIds.forEach(id => {
+                const input = document.getElementById(id);
+                if (input) {
+                    input.addEventListener('input', () => {
+                        if (document.getElementById('savings-content')?.classList.contains('active')) {
+                            updateSavingsDisplay();
+                        }
+                    });
+                }
+            });
+        }
+       function updateSavingsEstimate() {
             const savingsDiv = document.getElementById('savingsEstimate');
             if (!selectedSchool) {
                 savingsDiv.innerHTML = `<div class="missing-info-prompt">Please select your school to see available benefits</div>`;
                 return;
             }
 
-            // Get user inputs or use default values
+            // Safely parse inputs, using default values and removing non-numeric characters
             const monthlyRentInput = document.getElementById('monthlyRent')?.value?.replace(/[^0-9.]/g, '') || '';
             const monthlyGroceriesInput = document.getElementById('monthlyGroceries')?.value?.replace(/[^0-9.]/g, '') || '';
+            const incomeInput = document.getElementById('income')?.value?.replace(/[^0-9.]/g, '') || '';
+            
+            // Use default values if not provided
             const monthlyRent = monthlyRentInput ? parseFloat(monthlyRentInput) : 1200;
             const monthlyGroceries = monthlyGroceriesInput ? parseFloat(monthlyGroceriesInput) : 350;
-            const income = parseFloat(document.getElementById('income')?.value?.replace(/[^0-9.]/g, '') || '0');
+            const income = parseFloat(incomeInput) || 0;
+            
             const state = selectedSchool.state;
-
             
-            // Calculate grocery card rewards (5% back on groceries)
-            const annualGroceries = monthlyGroceries * 12;
-            const groceryRewards = annualGroceries * 0.05;
+            // Calculate specific rent savings
+            const rentSavings = calculateRentSavings(income, state, monthlyRent);
             
-            let html = '';
             if (state529DB[state].deduction > 0) {
-                // Calculate potential savings
-                const annualRent = monthlyRent * 12;
-                const stateTaxRate = getStateTaxRate(income, state);
-                const maxDeduction = state529DB[state].deduction;
-                
-                // Calculate actual deductible amount based on actual expenses
-                const totalExpenses = annualRent + annualGroceries;
-                const deductibleAmount = Math.min(totalExpenses, maxDeduction);
-                const taxSavings = deductibleAmount * stateTaxRate;
-                
-                html = `
+                let html = `
                     <div class="savings-amount-rent">
-                        <span class="amount">$${Math.round(taxSavings).toLocaleString()}</span>
+                        <span class="amount">${formatCurrency(rentSavings)}</span>
                         <span class="period">/year</span>
                     </div>`;
                 
-                    // <div class="savings-breakdown">
-                    //     <div class="savings-item">
-                    //         <span>Rent &amp; Grocery Tax Benefits:</span>
-                    //         <span>$${Math.round(taxSavings).toLocaleString()}/year</span>
-                    //     </div>
-                    //     <div class="savings-item">
-                    //         <span>Credit Card Rewards:</span>
-                    //         <span>$${Math.round(groceryRewards).toLocaleString()}/year</span>
-                    //     </div>
-                    // </div>
                 if (!monthlyRentInput) {
                     html += `
                         <div class="missing-info-prompt">
-                            Please input your rent so we can give a customized estimate. Currently, we are assuming $1,200/month rent.
+                            Please input your rent for a customized estimate. Currently assuming $1,200/month rent.
                         </div>`;
                 }
+                
+                savingsDiv.innerHTML = html;
             } else {
-                html += `
+                savingsDiv.innerHTML = `
                     <div class="savings-amount-groceries">
-                        <span class="amount">$${Math.round(0).toLocaleString()}</span>
+                        <span class="amount">${formatCurrency(0)}</span>
                         <span class="period">/year</span>
                     </div>
-                    <p>Unfortunately your state does not offer tax-benefits to students paying for their rent. We are actively looking at other means to save on rent.</p>`;
+                    <p>Your state does not offer rent tax benefits for 529 plan contributions, but you can still benefit from 529s. See the savings section.</p>`;
             }
-            
-            savingsDiv.innerHTML = html;
         }
 
         // Add event listeners for real-time updates
@@ -2899,7 +3753,7 @@ input::placeholder {
                         </div>
                         <div class="step-title">
                             <h4>Open a ${state529DB[state].planName}</h4>
-                            <p class="time-estimate">Time: 15 minutes</p>
+                            <p class="time-estimate">Time: 8 minutes</p>
                         </div>
                         <span class="expand-arrow">▼</span>
                     </div>
@@ -2924,7 +3778,7 @@ input::placeholder {
                         </div>
                         <div class="step-title">
                             <h4>Set Up Monthly Deposits</h4>
-                            <p class="time-estimate">Time: 10 minutes monthly</p>
+                            <p class="time-estimate">Time: 2 minutes monthly</p>
                         </div>
                         <span class="expand-arrow">▼</span>
                     </div>
@@ -2944,7 +3798,7 @@ input::placeholder {
                         </div>
                         <div class="step-title">
                             <h4>Withdraw for Rent Payment</h4>
-                            <p class="time-estimate">Time: 5 minutes monthly</p>
+                            <p class="time-estimate">Time: 3 minutes monthly</p>
                         </div>
                         <span class="expand-arrow">▼</span>
                     </div>
@@ -2968,7 +3822,7 @@ input::placeholder {
                         </div>
                         <div class="step-title">
                             <h4>Apply for Citi Custom Cash</h4>
-                            <p class="time-estimate">Time: 15 minutes</p>
+                            <p class="time-estimate">Time: 2 minutes</p>
                         </div>
                         <span class="expand-arrow">▼</span>
                     </div>
@@ -2978,7 +3832,6 @@ input::placeholder {
                             <li>5% back on your highest spend category (usually groceries for students)</li>
                             <li>No annual fee</li>
                             <li>$200 welcome bonus after spending $1500 in first 6 months</li>
-                            <li>Easy approval for students with limited credit history</li>
                         </ul>
                         <a href="https://www.citi.com/credit-cards/citi-custom-cash-credit-card?cmp=knc_acquire_2411_GGL_BR_CustomCash_PDP&app=unsol&HKOP=9e9fe575553abce8259e0de824d459d0e8773303eced1d50a14cb2a1943698fc&gclid=CjwKCAiA34S7BhAtEiwACZzv4TchHuGYDqtBrhDGHlNiwOK0cAPnuXGP2_dbbnSMH2l7EeivD7v0XBoChAkQAvD_BwE&gclsrc=aw.ds" target="_blank" class="complete-step-btn" style="display: inline-block; text-align: center; margin-top: 10px; text-decoration: none;">
                             Link to Citi Custom Cash Card
@@ -2996,7 +3849,7 @@ input::placeholder {
                         </div>
                         <div class="step-title">
                             <h4>Activate Your Card</h4>
-                            <p class="time-estimate">Time: 5 minutes</p>
+                            <p class="time-estimate">Time: 2 minutes</p>
                         </div>
                         <span class="expand-arrow">▼</span>
                     </div>
@@ -3020,7 +3873,7 @@ input::placeholder {
                         </div>
                         <div class="step-title">
                             <h4>Set Up Auto-Pay</h4>
-                            <p class="time-estimate">Time: 10 minutes</p>
+                            <p class="time-estimate">Time: 1 minute</p>
                         </div>
                         <span class="expand-arrow">▼</span>
                     </div>
@@ -3036,98 +3889,286 @@ input::placeholder {
                 </div>
             `;
         }
+        function calculateRentSavings(income, state, monthlyRent) {
+            // Parse inputs safely
+            const rent = parseFloat(monthlyRent) || 1200;
+            const annualIncome = parseFloat(income) || 0;
+            
+            // Rent Savings (529 plan)
+            if (state529DB[state]?.deduction > 0) {
+                const taxRate = calculateStateTaxRate(annualIncome, state);
+                const deductibleAmount = Math.min(rent * 12, state529DB[state].deduction);
+                return Math.round(deductibleAmount * taxRate);
+            }
+            
+            return 0;
+        }
 
+       function calculateRecommendedContribution() {
+            // Robust input parsing function
+            function parseInputValue(inputId, defaultValue = 0) {
+                const input = document.getElementById(inputId);
+                if (!input) return defaultValue;
+                
+                // Remove non-numeric characters, including $ and commas
+                const cleanValue = input.value.replace(/[^\d.-]/g, '');
+                const parsedValue = parseFloat(cleanValue);
+                
+                return isNaN(parsedValue) ? defaultValue : parsedValue;
+            }
 
+            // Get input values with robust parsing
+            const monthlySavings = parseInputValue('bank');
+            const monthlyRent = parseInputValue('monthlyRent', 1200);
+            const monthlyGroceries = parseInputValue('monthlyGroceries', 350);
+            const annualIncome = parseInputValue('income');
+            
+            // Calculate monthly income
+            const monthlyIncome = annualIncome / 12;
+            
+            // Calculate disposable income (use defaults if not provided)
+            const disposableIncome = monthlyIncome - monthlyRent - monthlyGroceries;
+            
+            // Calculate potential contribution options
+            const contributionOptions = [
+                disposableIncome * 0.2,  // 20% of disposable income
+                monthlySavings*.5,           // Amount they set aside monthly
+                monthlyIncome * 0.1     // 10% of monthly income
+            ].filter(value => value > 0);  // Remove zero or negative values
+            
+            // Find the minimum positive contribution
+            const recommendedContribution = contributionOptions.length > 0 
+                ? Math.round(Math.min(...contributionOptions))
+                : null;
+            
+            // Update DOM
+            const recommendationDiv = document.getElementById('retirementContributionRecommendation');
+                if (contributionOptions.length > 1) {
+            // Multiple inputs provided
+            const recommendedContribution = Math.round(Math.min(...contributionOptions));
+            recommendationDiv.innerHTML = `
+                    <div class="savings-amount-rent">
+                        <span class="amount">$${recommendedContribution.toLocaleString()}</span>
+                        <span class="period">/month</span>
+                    </div>
+                    <div class="savings-details">
+                        <p>Recommended monthly retirement contribution</p>
+                        <div class="edu-highlight" style="background-color: rgba(124, 58, 237, 0.1); color: var(--text); margin-top: 12px;">
+                            <strong>Tip:</strong> This is a conservative estimate. If you feel able to you should contribute more. Use the calculator below to see the benefits.
+                        </div>
+                    </div>
+                `;
+            } else {
+                recommendationDiv.innerHTML = `
+                    <div class="savings-amount-rent">
+                        <span class="amount">$${Math.round(monthlyIncome * 0.15).toLocaleString()}</span>
+                        <span class="period">/month</span>
+                    </div>
+                    <div class="savings-details">
+                        <p>Recommended based on 10% of your income</p>
+                        <div class="edu-highlight" style="background-color: rgba(124, 58, 237, 0.1); color: var(--text); margin-top: 12px;">
+                            <strong>Tip:</strong> Input your income, rent, groceries, and monthly savings for a personalized recommendation.
+                        </div>
+                    </div>
+                `;
+            }
+            
+            return recommendedContribution || Math.round(monthlyIncome * 0.15);
+        }
+        function calculateSavingsInterest(savingsAmount) {
+            // If savingsAmount is already a number, use it directly
+            if (typeof savingsAmount === 'number') {
+                return Math.round(savingsAmount * 0.04);
+            }
+
+            // Remove any non-numeric characters, including currency symbols and commas
+            const cleanAmount = savingsAmount 
+                ? savingsAmount.replace(/[^\d.-]/g, '')  // Remove non-numeric characters
+                : '0';
+            
+            // Parse the cleaned amount
+            const amount = parseFloat(cleanAmount);
+            
+            // Validate the parsed amount
+            if (isNaN(amount)) {
+                console.warn('Invalid savings amount:', savingsAmount);
+                return 0;
+            }
+            
+            // Assume 4% APY for high-yield savings account
+            const annualInterestRate = 0.04;
+            
+            // Calculate annual interest
+            return Math.round(amount * annualInterestRate);
+        }
+
+        function initializeRetirementSection() {
+            if (!selectedSchool) {
+                document.getElementById('retirementStepsContainer').innerHTML = 
+                    '<p>Please select your school to see available benefits</p>';
+                document.getElementById('retirementContributionRecommendation').innerHTML = 
+                    '<p>Please select your school to see recommended contribution</p>';
+                return;
+            }
+
+            // Generate retirement steps based on selected school
+            document.getElementById('retirementStepsContainer').innerHTML = generateRetirementSteps(selectedSchool);
+            
+            // Calculate and display recommended contribution
+            calculateRecommendedContribution();
+        }
+
+        // Update recommended contribution when relevant inputs change
+        ['savings', 'income', 'monthlyRent', 'monthlyGroceries'].forEach(id => {
+            const input = document.getElementById(id);
+            if (input) {
+                input.addEventListener('input', () => {
+                    if (document.getElementById('retirement-content')?.classList.contains('active')) {
+                        calculateRecommendedContribution();
+                    }
+                });
+            }
+        });
 
         // Modify the generatePlan function to include tab names
+        // Update the generatePlan function with proper loading sequence
         function generatePlan() {
-            if (!selectedSchool) {
-                alert('Please select a school first.');
+                   if (!selectedSchool || !document.getElementById('income').value) {
+                showError('Please select your school and enter your income first.');
                 return;
             }
-            hasOptimized = false;
-            updateRating();
 
-            const incomeStr = document.getElementById('income').value;
-            const income = Number(incomeStr.replace(/[$,]/g, '')); // Remove dollar signs and commas // Remove any non-numeric characters
+            const income = parseFloat(document.getElementById('income').value.replace(/[^0-9.]/g, ''));
+            const state = selectedSchool.state;
+            const monthlyRent = parseFloat(document.getElementById('monthlyRent')?.value?.replace(/[^0-9.]/g, '') || '1200');
+            const monthlyGroceries = parseFloat(document.getElementById('monthlyGroceries')?.value?.replace(/[^0-9.]/g, '') || '350');
             
-            if (!income) {
-                alert('Please enter your income.');
-                return;
-            }
-
+            // Calculate totals
+            const totalSavings = calculateTotalSavings(income, state, monthlyRent, monthlyGroceries);
+            const totalMinutes = calculateTotalOptimizationTime();
+            
+            // Get DOM elements
             const loadingElement = document.getElementById('loadingAnimation');
-            document.getElementById('results').classList.add('hidden');
-            loadingElement.classList.remove('hidden');
+            const resultsDiv = document.getElementById('results');
+            const planStepsDiv = document.getElementById('planSteps');
+            
+            // Show loading, hide results
             loadingElement.style.display = 'flex';
-
+            loadingElement.classList.remove('hidden');
+            resultsDiv.classList.add('hidden');
+            
+            // Scroll to show loading animation
             loadingElement.scrollIntoView({ behavior: 'smooth' });
 
+            // Process after delay
             setTimeout(() => {
-                const state = selectedSchool.state;
-                const planStepsDiv = document.getElementById('planSteps');
-                planStepsDiv.innerHTML = '';
+                try {
+                    // Generate the summary card HTML
+                    planStepsDiv.innerHTML = generateSummaryCard(totalSavings, totalMinutes);
+                    
+                    // Add sections
+                    const sections = [
+                        {
+                            title: 'Rent',
+                            description: state529DB[state].deduction > 0 
+                                ? `Use your state's 529 plan to save ${(calculateStateTaxRate(income, state) * 100).toFixed(1)}% in taxes on up to $${state529DB[state].deduction.toLocaleString()} of qualified education expenses.`
+                                : 'Your state does not offer 529 tax deductions, but you can still benefit from tax-free growth.',
+                            savings: state529DB[state].deduction > 0 ? calculate529Savings(income, state, monthlyRent * 12) : 0,
+                            tab: 'rent-groceries',
+                            time: OPTIMIZATION_CONFIG['rent-groceries'].rent.totalTime
+                        },
+                        {
+                            title: 'Grocery Rewards',
+                            description: 'Get 5% cash back on groceries with the right credit card strategy.',
+                            savings: calculateGrocerySavings(monthlyGroceries),
+                            tab: 'rent-groceries',
+                            time: OPTIMIZATION_CONFIG['rent-groceries'].groceries.totalTime
+                        },
+                        {
+                            title: 'Retirement Benefits',
+                            description: selectedSchool.retirementPlans.has457b 
+                                ? 'Take advantage of your 457(b) access - a unique retirement account with no withdrawal penalties after leaving your program.'
+                                : 'Start building tax-free retirement savings with a Roth IRA while in your lower tax bracket.',
+                            savings: calculateRetirementSavings(income),
+                            tab: 'retirement',
+                            time: OPTIMIZATION_CONFIG.retirement.totalTime
+                        },
+                        {
+                            title: 'Savings Strategy',
+                            description: 'Optimize your savings with high-yield accounts and tax-advantaged options.',
+                            savings: calculateSavingsInterest(document.getElementById('savings')?.value),
+                            tab: 'savings',
+                            time: OPTIMIZATION_CONFIG.savings.totalTime
+                        }
+                    ];
 
-                // 529 Plan Step
-                if (state529DB[state].deduction > 0) {
-                    const savings529 = calculate529Savings(income, state);
-                    addPlanStep(
-                        planStepsDiv,
-                        'Rent & Groceries',
-                        `Contribute rent payments to your ${state529DB[state].planName} to take advantage of state tax deduction up to $${state529DB[state].deduction.toLocaleString()}.`,
-                        savings529,
-                        '',
-                        'rent-groceries'
-                    );
-                }
+                    // Add Tax Holiday section if applicable
+                    const holidayInfo = stateTaxHolidayDB[state];
+                    if (holidayInfo?.hasTaxHoliday) {
+                        let totalHolidaySavings = 0;
+                        let holidayNames = [];
+                        holidayInfo.holidays.forEach(holiday => {
+                            totalHolidaySavings += calculateTaxHolidaySavings(state, holiday.name);
+                            holidayNames.push(holiday.name);
+                        });
 
-                // Retirement Plan Step
-                if (selectedSchool.retirementPlans.has457b) {
-                    const retirementSavings = calculateRetirementSavings(income);
-                    addPlanStep(
-                        planStepsDiv,
-                        'Retirement Benefits',
-                        'Take advantage of your 457(b) access - a unique retirement account with no withdrawal penalties after leaving your program.',
-                        retirementSavings,
-                        '',
-                        'retirement'
-                    );
-                } else {
-                    const rothSavings = calculateRetirementSavings(income);
-                    addPlanStep(
-                        planStepsDiv,
-                        'Retirement Benefits',
-                        'Start building tax-free retirement savings with a Roth IRA while in your lower tax bracket.',
-                        rothSavings,
-                        '',
-                        'retirement'
-                    );
-                }
+                        sections.push({
+                            title: 'Tax Holidays',
+                            description: `Your state offers ${holidayNames.length} tax holidays: ${holidayNames.join(', ')}. Plan your purchases during these periods to save on sales tax.`,
+                            savings: totalHolidaySavings,
+                            tab: 's&s',
+                            time: OPTIMIZATION_CONFIG['s&s'].totalTime
+                        });
+                    }
 
-                // Tax Holidays
-                const holidayInfo = stateTaxHolidayDB[state];
-                if (holidayInfo && holidayInfo.hasTaxHoliday) {
-                    holidayInfo.holidays.forEach(holiday => {
-                        const holidaySavings = calculateTaxHolidaySavings(state, holiday.name);
-                        addPlanStep(
-                            planStepsDiv,
-                            `Take Advantage of ${holiday.name}`,
-                            `${holiday.details} This is a great opportunity for graduate students to ${holiday.gradRelevance.toLowerCase()}. Be mindful of these restrictions: ${holiday.restrictions}`,
-                            holidaySavings,
-                            holiday.dates,
-                            'other'
-                        );
+                    // Create and append each section
+                    sections.forEach(section => {
+                        const stepDiv = document.createElement('div');
+                        stepDiv.classList.add('step');
+                        
+                        let savingsText = '';
+                        if (section.savings > 0) {
+                            savingsText = `
+                                <p class="savings-estimate">
+                                    Potential Savings: $${Math.round(section.savings).toLocaleString()}
+                                    ${section.tab ? `<button class="view-details-btn" onclick="switchTab('${section.tab}')">View Details </button>` : ''}
+                                </p>`;
+                        } else if (section.tab) {
+                            savingsText = `
+                                <p class="savings-estimate">
+                                    <button class="view-details-btn" onclick="switchTab('${section.tab}')">View Details</button>
+                                </p>`;
+                        }
+                        
+                        stepDiv.innerHTML = `
+                            <h3>${section.title}</h3>
+                            <p>${section.description}</p>
+                            ${savingsText}
+                        `;
+                        planStepsDiv.appendChild(stepDiv);
                     });
+                    
+                    // Hide loading, show results
+                    loadingElement.style.display = 'none';
+                    loadingElement.classList.add('hidden');
+                    resultsDiv.classList.remove('hidden');
+                    
+                    // Mark as optimized and update rating
+                    hasOptimized = true;
+                    updateRating();
+                    
+                    // Scroll to results
+                    resultsDiv.scrollIntoView({ behavior: 'smooth' });
+                    
+                } catch (error) {
+                    console.error('Error generating plan:', error);
+                    loadingElement.style.display = 'none';
+                    loadingElement.classList.add('hidden');
+                    showError('An error occurred while generating your plan. Please try again.');
                 }
-
-
-                loadingElement.style.display = 'none';
-                loadingElement.classList.add('hidden');
-                document.getElementById('results').classList.remove('hidden');
-                hasOptimized = true;
-                updateRating();
             }, 2000);
         }
+
         function updateAccountTypeDetails() {
             const accountTypeDetails = document.getElementById('accountTypeDetails');
             if (!selectedSchool) return;
@@ -3205,9 +4246,8 @@ input::placeholder {
 
     // Add click listener to close suggestions when clicking outside
    
-// Consolidate all DOM-ready initialization into a single function
 function initializeApp() {
-    // Setup currency formatting
+    // Setup currency formatting for money inputs
     ['income', 'monthlyRent', 'monthlyGroceries', 'monthlyHealthCare', 'savings'].forEach(id => {
         setupCurrencyInput(id);
     });
@@ -3218,44 +4258,57 @@ function initializeApp() {
             const tabName = tab.getAttribute('data-tab');
             switchTab(tabName);
             if (tabName === 'retirement') {
-            initializeRetirementSection();
-        }
-
+                initializeRetirementSection();
+            }
         });
     });
-    updateRating();
+    setupSavingsEventListeners();
+    
+    // Add savings section initialization to the tab switching logic
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            const tabName = tab.getAttribute('data-tab');
+            if (tabName === 'savings' && selectedSchool) {
+                initializeSavingsSection();
+            }
+        });
+    });
+
     // Add calculator input listeners
     const monthlyContribInput = document.getElementById('monthlyContribution');
     const yearsGrowthInput = document.getElementById('yearsGrowth');
-    if (monthlyContribInput) monthlyContribInput.addEventListener('input', updateCalculator);
-    if (yearsGrowthInput) yearsGrowthInput.addEventListener('input', updateCalculator);
+    if (monthlyContribInput) {
+        monthlyContribInput.addEventListener('input', updateCalculator);
+    }
+    if (yearsGrowthInput) {
+        yearsGrowthInput.addEventListener('input', updateCalculator);
+    }
 
-    // Add rent/grocery expense listeners
-    // Add rent/grocery expense listeners
+    // Add expense input listeners with proper validation
     const monthlyRentInput = document.getElementById('monthlyRent');
     const monthlyGroceriesInput = document.getElementById('monthlyGroceries');
     const incomeInput = document.getElementById('income');
 
     if (monthlyRentInput) {
-        monthlyRentInput.addEventListener('input', function() {
+        monthlyRentInput.addEventListener('input', () => {
             updateSavingsEstimate();
         });
     }
 
     if (monthlyGroceriesInput) {
-        monthlyGroceriesInput.addEventListener('input', function() {
+        monthlyGroceriesInput.addEventListener('input', () => {
+            updateSavingsEstimate();
             updateGrocerySavings();
         });
     }
 
     if (incomeInput) {
-        incomeInput.addEventListener('input', function() {
+        incomeInput.addEventListener('input', () => {
             updateSavingsEstimate();
             updateGrocerySavings();
         });
     }
-    // Initialize sticky navigation
-    initializeScrollBehavior();
+
     // Add spending method change listener
     const spendingMethodSelect = document.getElementById('spendingMethod');
     if (spendingMethodSelect) {
@@ -3267,34 +4320,66 @@ function initializeApp() {
         });
     }
 
-    // Close suggestions on outside click
+    // Initialize sticky navigation
+    initializeScrollBehavior();
+
+    // Initialize ratings and progress
+    updateRating();
+
+    // Set up UI event handlers
     document.addEventListener('click', function(e) {
+        // Close account overlay when clicking outside
+        if (e.target == document.getElementById('accountOverlay')) {
+            document.getElementById('accountOverlay').classList.add('hidden');
+        }
+
+        // Close school suggestions when clicking outside
         if (!e.target.closest('#schoolSearch') && !e.target.closest('#schoolSuggestions')) {
             const suggestions = document.getElementById('schoolSuggestions');
-            if (suggestions) suggestions.classList.add('hidden');
+            if (suggestions) {
+                suggestions.classList.add('hidden');
+            }
         }
     });
-    document.addEventListener('click', function(e) {
-            if (e.target == document.getElementById('accountOverlay')) {
-                document.getElementById('accountOverlay').classList.add('hidden');
+
+    // Initialize calculator if present
+    if (document.getElementById('monthlyContribution')) {
+        updateCalculator()
             }
-        });
-    // Initialize calculations if school is already selected
+
+    // Initialize sections if school is already selected
     if (selectedSchool) {
         updateAccountTypeDetails();
         updateCalculatorLimits();
         updateCalculator();
         updateSavingsEstimate();
         initializeRentGrocerySection();
+        
         const retirementContent = document.getElementById('retirement-content');
         if (retirementContent && !retirementContent.classList.contains('hidden')) {
             initializeRetirementSection();
         }
     }
 }
+['savings', 'bank'].forEach(id => {
+  const input = document.getElementById(id);
+  if (input) {
+    input.addEventListener('input', updateSavingsDisplay);
+  }  
+});
 
-// Single DOMContentLoaded listener
-document.addEventListener('DOMContentLoaded', initializeApp);
+document.querySelectorAll('input[name="tuition"]').forEach(input => {
+  input.addEventListener('change', updateSavingsDisplay);
+});
+
+// Generate initial savings strategy steps 
+document.getElementById('savingsStepsContainer').innerHTML = generateSavingsSteps();
+document.addEventListener('DOMContentLoaded', () => {
+    // Your existing initializeApp call
+    initializeApp();
+    // Add the new savings-specific initialization
+    // updateInitializeApp();
+});
 </script>
 </body>
 </html>
