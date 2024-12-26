@@ -3471,6 +3471,50 @@ const stateTaxDB = {
             </div>
           `;
         }
+        function resetPageStateOnRefresh() {
+            // Check if the page was reloaded using the browser's refresh
+            if (performance.navigation.type === 1) {
+                // Clear all form inputs
+                document.querySelectorAll('input').forEach(input => {
+                    if (input.type === 'text' || input.type === 'number') {
+                        input.value = '';
+                    } else if (input.type === 'radio') {
+                        input.checked = false;
+                    }
+                });
+
+                // Reset select elements
+                document.querySelectorAll('select').forEach(select => {
+                    select.selectedIndex = 0;
+                });
+
+                // Reset global variables
+                selectedSchool = null;
+                hasOptimized = false;
+
+                // Clear any visible suggestions or states
+                const schoolSearch = document.getElementById('schoolSearch');
+                if (schoolSearch) schoolSearch.value = '';
+                
+                const schoolSuggestions = document.getElementById('schoolSuggestions');
+                if (schoolSuggestions) schoolSuggestions.classList.add('hidden');
+                
+                // Reset results and loading state
+                const resultsDiv = document.getElementById('results');
+                const loadingAnimation = document.getElementById('loadingAnimation');
+                if (resultsDiv) resultsDiv.classList.add('hidden');
+                if (loadingAnimation) loadingAnimation.classList.add('hidden');
+
+                // Reset tabs to initial state
+                const optimizeTab = document.querySelector('[data-tab="optimize"]');
+                if (optimizeTab) {
+                    switchTab('optimize');
+                }
+
+                // Reset rating
+                updateRating();
+            }
+        }
 
         function update529Calculator() {
           const contributionInput = document.getElementById('contribution529');
@@ -5781,6 +5825,7 @@ document.addEventListener('click', function(event) {
     });
   }
 });
+window.addEventListener('load', resetPageStateOnRefresh);
 </script>
 
 </html>
