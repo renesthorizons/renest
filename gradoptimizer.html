@@ -3905,7 +3905,7 @@ function selectState(stateAbbr, stateName) {
           <li>This will allow your savings to grow faster</li>
         </ul>
 
-        <a href="https://www.secure.citizensaccess.com/Citizens/save?mrkgadid=1&mrkgen=mtext&mrkgbflag=1&ctzMode=MKL-SEM--BNG--SAV--CAX--BR--43700071876580474--Group1_BR_Citizens_Deposits_Savings_PHR&&acctid=21700000002029063&dskeywordid=43700071876580474&lid=43700071876580474&ds_s_kwgid=58700007906794393&ds_a_cid=975551231&ds_a_caid=17621005165&ds_a_agid=137912480043&ds_a_lid=kwd-483731438318&&device=c&network=o&matchtype=e&locationid=89660&creative=&targetid=kwd-77996989483976:loc-190&campaignid=287840010&adgroupid=1247946314891189&gclid=9e3344e6ef89195d2edd238db9386f8b&gclsrc=3p.ds&msclkid=9e3344e6ef89195d2edd238db9386f8b" target="_blank" class="complete-step-btn" style="display: inline-block; text-align: center; margin-top: 10px; text-decoration: none;">
+        <a href="https://www.secure.citizensaccess.com/Citizens/save?mrkgadid=1&mrkgen=mtext&mrkgbflag=1&ctzMode=MKL-SEM--BNG--SAV--CAX--BR--43700071876580474--Group1_BR_Citizens_Deposits_Savings_PHR&&acctid=21700000002029063&dskeywordid=43700071876580474&lid=43700071876580474&ds_s_kwgid=58700007906794393&ds_a_cid=975551231&ds_a_caid=17621005165&ds_a_agid=137912480043&ds_a_lid=kwd-483731438318&&device=c&network=o&matchtype=e&locationid=89660&creative=&targetid=kwd-77996989483976:loc-190&campaignid=287840010&adgroupid=1247946314891189&gclid=9e3344e6ef89195d2edd238db9386f8b&gclsrc=3p.ds&msclkid=9e3344e6ef89195d2edd238db9386f8b" target="_blank" data-gtm-event="click" data-gtm-category="External Links" data-gtm-action="Click" data-gtm-label="Citizens High Yield Savings" class="complete-step-btn" style="display: inline-block; text-align: center; margin-top: 10px; text-decoration: none;">
           Link to Citizen's High Yield Savings Account
         </a>
         <button class="complete-step-btn" onclick="completeStep('savings1', 'savings')">Mark Complete</button>
@@ -5133,7 +5133,7 @@ function generateTaxHolidaySteps(state) {
                             <li>No annual fee</li>
                             <li>$200 welcome bonus after spending $1500 in first 6 months</li>
                         </ul>
-                        <a href="https://www.citi.com/credit-cards/citi-custom-cash-credit-card?cmp=knc_acquire_2411_GGL_BR_CustomCash_PDP&app=unsol&HKOP=9e9fe575553abce8259e0de824d459d0e8773303eced1d50a14cb2a1943698fc&gclid=CjwKCAiA34S7BhAtEiwACZzv4TchHuGYDqtBrhDGHlNiwOK0cAPnuXGP2_dbbnSMH2l7EeivD7v0XBoChAkQAvD_BwE&gclsrc=aw.ds" target="_blank" class="complete-step-btn" style="display: inline-block; text-align: center; margin-top: 10px; text-decoration: none;">
+                        <a href="https://www.citi.com/credit-cards/citi-custom-cash-credit-card?cmp=knc_acquire_2411_GGL_BR_CustomCash_PDP&app=unsol&HKOP=9e9fe575553abce8259e0de824d459d0e8773303eced1d50a14cb2a1943698fc&gclid=CjwKCAiA34S7BhAtEiwACZzv4TchHuGYDqtBrhDGHlNiwOK0cAPnuXGP2_dbbnSMH2l7EeivD7v0XBoChAkQAvD_BwE&gclsrc=aw.ds"target="_blank" data-gtm-event="click" data-gtm-category="External Links" data-gtm-action="Click" data-gtm-label="Citi Custom Cash" class="complete-step-btn" style="display: inline-block; text-align: center; margin-top: 10px; text-decoration: none;">
                             Link to Citi Custom Cash Card
                         </a>
                         <button class="complete-step-btn" onclick="completeStep('grocery1', 'rent-groceries')">Mark Complete</button>
@@ -5769,6 +5769,17 @@ document.querySelectorAll('button').forEach(button => {
             'button_text': this.textContent.trim()
         });
     });
+});
+document.addEventListener('click', function(event) {
+  if (event.target.closest('a[data-gtm-event="click"]')) {
+    const link = event.target.closest('a[data-gtm-event="click"]');
+    window.dataLayer.push({
+      'event': link.getAttribute('data-gtm-event'),
+      'eventCategory': link.getAttribute('data-gtm-category'),
+      'eventAction': link.getAttribute('data-gtm-action'),
+      'eventLabel': link.getAttribute('data-gtm-label')
+    });
+  }
 });
 </script>
 
