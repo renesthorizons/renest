@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-NB3QMQCW');</script>
+    <!-- End Google Tag Manager -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Graduate Student Finance Optimizer</title>
@@ -1380,6 +1387,10 @@ html, body {
 </style>
 </head>
 <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NB3QMQCW"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     <div class="header-section">
         <div class="header-content">
             <h1>Graduate Student Finance Optimizer</h1>
@@ -2016,6 +2027,36 @@ html, body {
 </body>
 
     <script>
+        function trackUserInput(fieldName, value) {
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+                'event': 'user_input',
+                'input_field': fieldName,
+                'input_value': value
+            });
+        }
+
+        // Function to track time spent on tabs
+        let tabStartTime;
+        function trackTabEngagement(tabName, action) {
+            if (action === 'enter') {
+                tabStartTime = new Date();
+            } else if (action === 'exit' && tabStartTime) {
+                const timeSpent = new Date() - tabStartTime;
+                window.dataLayer.push({
+                    'event': 'tab_engagement',
+                    'tab_name': tabName,
+                    'time_spent': timeSpent / 1000  // Convert to seconds
+                });
+            }
+        }
+        function trackSliderInteraction(sliderId, value) {
+            window.dataLayer.push({
+                'event': 'slider_interaction',
+                'slider_id': sliderId,
+                'slider_value': value
+            });
+        }
         const initializedTabs = {
             retirement: false,
             'rent-groceries': false,
@@ -3690,6 +3731,8 @@ const stateTaxDB = {
         // Hide suggestions
         document.getElementById('schoolSuggestions').classList.add('hidden');
     }
+    trackUserInput('school', schoolsDB[schoolId].name);
+    trackUserInput('state', schoolsDB[schoolId].state);
 }
 
 function selectState(stateAbbr, stateName) {
@@ -4066,7 +4109,10 @@ function selectState(stateAbbr, stateName) {
             const contents = document.querySelectorAll('.tab-content');
             const results = document.getElementById('results');
             const loadingAnimation = document.getElementById('loadingAnimation');
-            
+            const currentTab = document.querySelector('.tab-content.active');
+            if (currentTab) {
+                trackTabEngagement(currentTab.id.replace('-content', ''), 'exit');
+            }
             // Hide results and loading animation when switching away from optimize tab
             if (tabName !== 'optimize') {
                 results.classList.add('hidden');
@@ -4124,6 +4170,7 @@ function selectState(stateAbbr, stateName) {
                 const currentTab = document.querySelector(`[data-tab="${tabName}"]`);
                 updateTabProgressBar(currentTab);
             }
+            trackTabEngagement(tabName, 'enter');
         }
         function showError(message) {
             const errorDiv = document.createElement('div');
@@ -4783,6 +4830,11 @@ function generateTaxHolidaySteps(state) {
             
             // Update rating
             updateRating();
+            window.dataLayer.push({
+                'event': 'step_complete',
+                'step_number': stepNumber,
+                'tab_name': tabName
+            });
         }
 
        
@@ -5677,6 +5729,47 @@ document.querySelectorAll('.feedback-btn').forEach(button => {
                 closeForm();
             }
         });
+document.getElementById('income').addEventListener('change', function() {
+    trackUserInput('annual_income', this.value);
+});
+
+// Track monthly expenses
+document.getElementById('monthlyRent').addEventListener('change', function() {
+    trackUserInput('monthly_rent', this.value);
+});
+
+document.getElementById('monthlyGroceries').addEventListener('change', function() {
+    trackUserInput('monthly_groceries', this.value);
+});
+
+// Track savings
+document.getElementById('savings').addEventListener('change', function() {
+    trackUserInput('savings', this.value);
+});
+
+// Track tuition selection
+document.querySelectorAll('input[name="tuition"]').forEach(input => {
+    input.addEventListener('change', function() {
+        trackUserInput('pays_tuition', this.value);
+    });
+});
+document.getElementById('monthlyContribution').addEventListener('change', function() {
+    trackSliderInteraction('monthly_contribution', this.value);
+});
+
+document.getElementById('yearsGrowth').addEventListener('change', function() {
+    trackSliderInteraction('years_growth', this.value);
+});
+
+document.querySelectorAll('button').forEach(button => {
+    button.addEventListener('click', function() {
+        window.dataLayer.push({
+            'event': 'button_click',
+            'button_id': this.id,
+            'button_text': this.textContent.trim()
+        });
+    });
+});
 </script>
 
 </html>
