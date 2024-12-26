@@ -1262,6 +1262,40 @@ html, body {
             text-align: center;
         }
     }
+    .state-selection {
+    margin-top: 10px;
+    position: relative;
+    width: 80%;
+}
+
+.state-select {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid rgba(75, 34, 122, 0.3);
+    border-radius: 12px;
+    font-size: 1rem;
+    background-color: rgba(255, 255, 255, 0.9);
+    transition: all 0.3s ease;
+    color: var(--text);
+}
+
+.state-select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(75, 34, 122, 0.2);
+}
+
+/* Match the existing form-select styles */
+.state-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+    padding-right: 2.5rem;
+}
 
 </style>
 </head>
@@ -1319,6 +1353,13 @@ html, body {
                         <label for="schoolSearch">Search Your School:</label>
                         <input type="text" id="schoolSearch" placeholder="Start typing your school name..." oninput="handleSchoolSearch(event)">
                         <div id="schoolSuggestions" class="suggestions hidden"></div>
+                    </div>
+                    <div id="stateSelection" class="state-selection hidden">
+                        <label for="stateSuggestions">Choose the state where you go to school:</label>
+                        <div id="stateSuggestions" class="suggestions hidden">
+
+                            <!-- State suggestions will be dynamically populated here -->
+                        </div>
                     </div>
                     <div class="form-group wide">
                         <label for="income">Annual Income:</label>
@@ -1708,7 +1749,81 @@ html, body {
           <!-- This div will be populated by generateSavingsSteps -->
           <div id="savingsStepsContainer"></div>
         </div>
+  
+  <div class="summary-card">
+  <h2>529 Tax Free Savings Account</h2>
+  
+  <div class="savings-estimate" id="529SavingsEstimate">
+    <div class="savings-amount-rent">
+      <span class="amount">$0</span>
+      <span class="period">/year</span>  
+    </div>
+    <div class="savings-details">
+      <p>Recommended contribution based on your savings and expenses</p>
+    </div>
+  </div>
+
+  <div id="tuitionMessage" class="edu-highlight hidden">
+    <p><strong>Tuition Savings Tip:</strong> You should contribute as much of your savings that you will spend on tuition into your 529 plan. The suggested 529 contribution below does not take into account your tuition costs.</p>
+  </div>
+
+  <div class="edu-section">
+    <div class="slider-group">
+      <label for="contribution529">Recommended Savings Contribution to 529 ($):</label>
+      <input type="range" id="contribution529" min="0" max="100000" step="50" value="500">
+      <span id="contribution529Display" class="value-display">$1000</span>
+    </div>
+    
+    <div class="calculator-grid">
+      <div class="calculator-value"> 
+        <h3>Annual Interest Earned</h3>
+        <p id="interestEarned">$0</p>
       </div>
+      <div class="calculator-value">
+        <h3>Annual Tax Savings</h3> 
+        <p id="taxSavings">$0</p>
+      </div>
+    </div>
+
+    <div>
+      <button onclick="toggle529SavingsDetails()" id="learn529SBtn" class="learn-more-btn">
+        Learn More About 529 Benefits ↓
+      </button>
+    </div>
+    
+    <div id="529SDetails" class="hidden">
+      <div class="edu-highlight">                        
+        <h4>How 529 Plans Work</h4>
+        <p>Contributing to a 529 plan allows your savings to grow tax-free. It is essentially a tax free savings account only for students.</p>
+        <ul class="edu-list">
+          <li><strong>Step 1:</strong> Deposit your rent/grocery/tuition money into your state's 529 plan</li>
+          <li><strong>Step 2:</strong> Select the interest earning option or capital preservation option. This will essentially create a tax free High Yield Savings account because the interest earned is not subject to federal or state income taxes.</li>
+          <li><strong>Step 3:</strong> Then when you pay for qualified expenses withdraw the money from your 529 to pay it off.</li>
+          <li><strong>Result:</strong> Don't pay taxes on your savings</li>
+        </ul>
+        <div class="edu-highlight">
+          <h4 class="edu-subtitle">Qualified Expenses Include:</h4>
+          <ul class="edu-list">
+            <li>Rent/housing while enrolled</li>
+            <li>Tuition</li>
+            <li>Meal plans and groceries</li>
+            <li>Utilities and internet service</li>
+            <li>Required course materials</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="steps-container">
+  <h3>529 Contribution Steps</h3>
+  <div id="529StepsContainer">
+    <!-- Steps will be dynamically generated here -->
+  </div>
+</div>
+      </div>
+      
     </div>
 
 
@@ -1773,12 +1888,15 @@ html, body {
           <div class="rating-wrapper">  
             <div class="fixed-rating B">
               <span class="rating-letter">B</span>
+
             </div>
+
           </div>
+           <p>The higher the score the better offers you can access. Think of it as a credit score you can change in one day.</p>
         </div>
-        <button class="create-account-btn">Create Account</button>
-        <h3>Next Steps:</h3>
-        <p style="color: black;">What other optimization tools do you use that we should let others know about? Contact us and we will add it and give you credit! The higher the score the better offers you can access. Think of it as a credit score you can change in one day.</p>
+        <!-- <button class="create-account-btn">Create Account</button> -->
+        <!-- <h3>Next Steps:</h3> -->
+        <p style="color: black;">What other optimization tools do you use that we should let others know about? Contact us and we will add it! Are there other areas you would like to see us address? Please send us your feedback, suggestions and questions.</p>
         <button class="feedback-btn" onclick="navigator.clipboard.writeText('renestinfo@gmail.com'); alert('Email copied to clipboard!')">Copy Our Email</button>
         <div class="partner-logos">
           <!-- Add partner logo images here -->
@@ -1799,6 +1917,11 @@ html, body {
         <span>Have questions, feedback or suggestions? Contact us!</span>
         <button class="feedback-btn" onclick="navigator.clipboard.writeText('renestinfo@gmail.com'); alert('Email copied to clipboard!')">Copy Our Email</button>
     </div>
+    <div style="display: flex; justify-content: center; width: 100%; padding: 0 20px;">
+        <div class="footnote-disclaimer" style="font-size: 0.8rem; color: #666; text-align: center; margin-top: 10px; max-width: 600px; width: 100%;">
+        <strong>Disclaimer:</strong> We strive to provide the most accurate and up-to-date recommendations possible. However, our tool may not capture every nuance. Always double check and verify information. We hope this serves as a guide as you conduct your own research before making any financial decisions.
+    </div>
+</div>
 </div>
 
 
@@ -1920,6 +2043,17 @@ html, body {
         
         // School database (same as before)
         const schoolsDB = {
+            'other': {
+                name: 'My School Isn\'t Listed',
+                state: null,
+                retirementPlans: {
+                    has403b: false,
+                    has457b: false,
+                    employerMatch: '0%',
+                    vestingPeriod: 'n/a',
+                    notes: 'Grad students eligible for Roth IRA contributions'
+                }
+            },
             'harvard': {
                 name: 'Harvard University',
                 state: 'MA',
@@ -2148,9 +2282,107 @@ html, body {
                 }
             }
         };
+        const stateOptions = {
+            'AL': 'Alabama',
+            'AK': 'Alaska',
+            'AZ': 'Arizona',
+            'AR': 'Arkansas',
+            'CA': 'California',
+            'CO': 'Colorado',
+            'CT': 'Connecticut',
+            'DE': 'Delaware',
+            'DC': 'District of Columbia',
+            'FL': 'Florida',
+            'GA': 'Georgia',
+            'HI': 'Hawaii',
+            'ID': 'Idaho',
+            'IL': 'Illinois',
+            'IN': 'Indiana',
+            'IA': 'Iowa',
+            'KS': 'Kansas',
+            'KY': 'Kentucky',
+            'LA': 'Louisiana',
+            'ME': 'Maine',
+            'MD': 'Maryland',
+            'MA': 'Massachusetts',
+            'MI': 'Michigan',
+            'MN': 'Minnesota',
+            'MS': 'Mississippi',
+            'MO': 'Missouri',
+            'MT': 'Montana',
+            'NE': 'Nebraska',
+            'NV': 'Nevada',
+            'NH': 'New Hampshire',
+            'NJ': 'New Jersey',
+            'NM': 'New Mexico',
+            'NY': 'New York',
+            'NC': 'North Carolina',
+            'ND': 'North Dakota',
+            'OH': 'Ohio',
+            'OK': 'Oklahoma',
+            'OR': 'Oregon',
+            'PA': 'Pennsylvania',
+            'PR': 'Puerto Rico',
+            'RI': 'Rhode Island',
+            'SC': 'South Carolina',
+            'SD': 'South Dakota',
+            'TN': 'Tennessee',
+            'TX': 'Texas',
+            'UT': 'Utah',
+            'VT': 'Vermont',
+            'VA': 'Virginia',
+            'WA': 'Washington',
+            'WV': 'West Virginia',
+            'WI': 'Wisconsin',
+            'WY': 'Wyoming'
+        };
 
         // Database of state 529 plans and tax benefits
-        const stateTaxDB = {
+                
+
+        const OPTIMIZATION_CONFIG = {
+            'rent-groceries': {
+                rent: {
+                    steps: [
+                        { name: 'Open 529 Account', time: 8 },
+                        { name: 'Set Up Monthly Deposits', time: 2 },
+                        { name: 'Withdraw for Rent Payment', time: 3 }
+                    ],
+                    totalTime: 13
+                },
+                groceries: {
+                    steps: [
+                        { name: 'Apply for Citi Custom Cash', time: 2 },
+                        { name: 'Activate Card', time: 2 },
+                        { name: 'Set Up Auto-Pay', time: 1 }
+                    ],
+                    totalTime: 5
+                }
+            },
+            'retirement': {
+                steps: [
+                    { name: 'Open Retirement Account', time: 4 },
+                    { name: 'Set Up Monthly Contributions', time: 2 },
+                    { name: 'Choose Investments', time: 3 }
+                ],
+                totalTime: 9
+            },
+            'savings': {
+                steps: [
+                    { name: 'Move Savings to High-Yield Account', time: 4 },
+                    { name: 'Set Up Auto-Savings', time: 2 },
+                    { name: 'Configure 529 for Tuition', time: 8 }
+                ],
+                totalTime: 14
+            },
+            's&s': {
+                steps: [
+                    { name: 'Plan Tax Holiday Purchases', time: 5 }
+                ],
+                totalTime: 5
+            }
+        };
+const stateTaxDB = {
                     'CA': {
                 hasStateCapGains: true,
                 taxesWithZeroIncome: true,
@@ -2227,52 +2459,302 @@ html, body {
                     { threshold: Infinity, rate: 10.75 }
                 ],
                 notes: 'New Jersey taxes capital gains as ordinary income with progressive rates from 1.4% to 10.75%.'
-            }
-        };           
-
-        const OPTIMIZATION_CONFIG = {
-            'rent-groceries': {
-                rent: {
-                    steps: [
-                        { name: 'Open 529 Account', time: 8 },
-                        { name: 'Set Up Monthly Deposits', time: 2 },
-                        { name: 'Withdraw for Rent Payment', time: 3 }
-                    ],
-                    totalTime: 13
-                },
-                groceries: {
-                    steps: [
-                        { name: 'Apply for Citi Custom Cash', time: 2 },
-                        { name: 'Activate Card', time: 2 },
-                        { name: 'Set Up Auto-Pay', time: 1 }
-                    ],
-                    totalTime: 5
-                }
             },
-            'retirement': {
-                steps: [
-                    { name: 'Open Retirement Account', time: 4 },
-                    { name: 'Set Up Monthly Contributions', time: 2 },
-                    { name: 'Choose Investments', time: 3 }
+            'CO': {
+                hasStateCapGains: true,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: Infinity, rate: 4.4 }
                 ],
-                totalTime: 9
+                notes: 'Colorado has a flat tax rate of 4.4% for all income including capital gains.'
             },
-            'savings': {
-                steps: [
-                    { name: 'Move Savings to High-Yield Account', time: 4 },
-                    { name: 'Set Up Auto-Savings', time: 2 },
-                    { name: 'Configure 529 for Tuition', time: 8 }
+            'CT': {
+                hasStateCapGains: true,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: 10000, rate: 3 },
+                    { threshold: 50000, rate: 5 },
+                    { threshold: 100000, rate: 5.5 },
+                    { threshold: 200000, rate: 6 },
+                    { threshold: 250000, rate: 6.5 },
+                    { threshold: 500000, rate: 6.9 },
+                    { threshold: Infinity, rate: 6.99 }
                 ],
-                totalTime: 14
+                notes: 'Connecticut taxes capital gains as ordinary income with progressive rates.'
             },
-            's&s': {
-                steps: [
-                    { name: 'Plan Tax Holiday Purchases', time: 5 }
+            'DE': {
+                hasStateCapGains: true,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: 2000, rate: 0 },
+                    { threshold: 5000, rate: 2.2 },
+                    { threshold: 10000, rate: 3.9 },
+                    { threshold: 20000, rate: 4.8 },
+                    { threshold: 25000, rate: 5.2 },
+                    { threshold: 60000, rate: 5.55 },
+                    { threshold: Infinity, rate: 6.6 }
                 ],
-                totalTime: 5
+                notes: 'Delaware taxes capital gains as ordinary income with progressive rates.'
+            },
+            'FL': {
+                hasStateCapGains: false,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: Infinity, rate: 0 }
+                ],
+                notes: 'Florida has no state income tax or capital gains tax.'
+            },
+            'GA': {
+                hasStateCapGains: true,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: 750, rate: 1 },
+                    { threshold: 2250, rate: 2 },
+                    { threshold: 3750, rate: 3 },
+                    { threshold: 5250, rate: 4 },
+                    { threshold: 7000, rate: 5 },
+                    { threshold: Infinity, rate: 5.75 }
+                ],
+                notes: 'Georgia taxes capital gains as ordinary income with progressive rates.'
+            },
+            'HI': {
+                hasStateCapGains: true,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: 2400, rate: 1.4 },
+                    { threshold: 4800, rate: 3.2 },
+                    { threshold: 9600, rate: 5.5 },
+                    { threshold: 14400, rate: 6.4 },
+                    { threshold: 19200, rate: 6.8 },
+                    { threshold: 24000, rate: 7.2 },
+                    { threshold: 36000, rate: 7.6 },
+                    { threshold: 48000, rate: 7.9 },
+                    { threshold: 150000, rate: 8.25 },
+                    { threshold: 175000, rate: 9 },
+                    { threshold: 200000, rate: 10 },
+                    { threshold: Infinity, rate: 11 }
+                ],
+                notes: 'Hawaii has one of the highest state tax rates with multiple brackets.'
+            },
+            'ID': {
+                hasStateCapGains: true,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: Infinity, rate: 5.8 }
+                ],
+                notes: 'Idaho has a flat tax rate of 5.8% as of 2024.'
+            },
+            'AK': {
+                hasStateCapGains: false,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: Infinity, rate: 0 }
+                ],
+                notes: 'Alaska has no state income tax.'
+            },
+            'AZ': {
+                hasStateCapGains: true,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: 27272, rate: 2.55 },
+                    { threshold: 54544, rate: 2.98 },
+                    { threshold: 163692, rate: 4.50 },
+                    { threshold: Infinity, rate: 4.80 }
+                ],
+                notes: 'Arizona taxes capital gains as ordinary income with progressive rates.'
+            },
+            'AR': {
+                hasStateCapGains: true,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: 4300, rate: 2 },
+                    { threshold: 8500, rate: 3 },
+                    { threshold: 12700, rate: 4.4 },
+                    { threshold: 21300, rate: 4.6 },
+                    { threshold: 26500, rate: 4.9 },
+                    { threshold: Infinity, rate: 5.5 }
+                ],
+                notes: 'Arkansas taxes capital gains as ordinary income with multiple tax brackets.'
+            },
+            'TX': {
+                hasStateCapGains: false,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: Infinity, rate: 0 }
+                ],
+                notes: 'Texas has no state income tax.'
+            },
+            'WA': {
+                hasStateCapGains: false,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: Infinity, rate: 0 }
+                ],
+                notes: 'Washington has no state income tax.'
+            },
+            'WY': {
+                hasStateCapGains: false,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: Infinity, rate: 0 }
+                ],
+                notes: 'Wyoming has no state income tax.'
+            },
+            'AL': {
+                hasStateCapGains: true,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: 3000, rate: 2 },
+                    { threshold: 6000, rate: 4 },
+                    { threshold: 12000, rate: 5 },
+                    { threshold: Infinity, rate: 5.5 }
+                ],
+                notes: 'Alabama taxes capital gains as ordinary income with progressive rates.'
+            },
+            'NM': {
+                hasStateCapGains: true,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: 5500, rate: 1.7 },
+                    { threshold: 11000, rate: 3.2 },
+                    { threshold: 16000, rate: 4.7 },
+                    { threshold: 24000, rate: 4.9 },
+                    { threshold: Infinity, rate: 5.9 }
+                ],
+                notes: 'New Mexico taxes capital gains as ordinary income with progressive rates.'
+            },
+            'ND': {
+                hasStateCapGains: true,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: 41775, rate: 1.1 },
+                    { threshold: 100450, rate: 2.04 },
+                    { threshold: 221050, rate: 2.64 },
+                    { threshold: Infinity, rate: 2.90 }
+                ],
+                notes: 'North Dakota taxes capital gains as ordinary income with progressive rates.'
+            },
+            'OH': {
+                hasStateCapGains: true,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: Infinity, rate: 3.75 }
+                ],
+                notes: 'Ohio has a flat tax rate and taxes capital gains as ordinary income.'
+            },
+            'OK': {
+                hasStateCapGains: true,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: 1000, rate: 0.5 },
+                    { threshold: 2500, rate: 1 },
+                    { threshold: 3750, rate: 2 },
+                    { threshold: 4900, rate: 3 },
+                    { threshold: 7200, rate: 4 },
+                    { threshold: Infinity, rate: 5 }
+                ],
+                notes: 'Oklahoma taxes capital gains as ordinary income with progressive rates.'
+            },
+            'OR': {
+                hasStateCapGains: true,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: 3750, rate: 4.75 },
+                    { threshold: 9450, rate: 6.75 },
+                    { threshold: 125000, rate: 8.75 },
+                    { threshold: 250000, rate: 9.9 },
+                    { threshold: Infinity, rate: 9.9 }
+                ],
+                notes: 'Oregon taxes capital gains as ordinary income with progressive rates.'
+            },
+            'PA': {
+                hasStateCapGains: true,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: Infinity, rate: 3.07 }
+                ],
+                notes: 'Pennsylvania has a flat tax rate and taxes capital gains as ordinary income.'
+            },
+            'RI': {
+                hasStateCapGains: true,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: 66200, rate: 3.75 },
+                    { threshold: 155950, rate: 4.75 },
+                    { threshold: Infinity, rate: 5.99 }
+                ],
+                notes: 'Rhode Island taxes capital gains as ordinary income with progressive rates.'
+            },
+            'SC': {
+                hasStateCapGains: true,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: 3000, rate: 0 },
+                    { threshold: 6000, rate: 3 },
+                    { threshold: 15000, rate: 4 },
+                    { threshold: Infinity, rate: 5 }
+                ],
+                notes: 'South Carolina taxes capital gains as ordinary income with progressive rates.'
+            },
+            'SD': {
+                hasStateCapGains: false,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: Infinity, rate: 0 }
+                ],
+                notes: 'South Dakota has no state income tax.'
+            },
+            'TN': {
+                hasStateCapGains: false,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: Infinity, rate: 0 }
+                ],
+                notes: 'Tennessee has no state income tax.'
+            },
+            'UT': {
+                hasStateCapGains: true,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: Infinity, rate: 4.85 }
+                ],
+                notes: 'Utah has a flat tax rate and taxes capital gains as ordinary income.'
+            },
+            'VT': {
+                hasStateCapGains: true,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: 42550, rate: 3.35 },
+                    { threshold: 103200, rate: 6.6 },
+                    { threshold: 203600, rate: 7.6 },
+                    { threshold: Infinity, rate: 8.75 }
+                ],
+                notes: 'Vermont taxes capital gains as ordinary income with progressive rates.'
+            },
+            'VA': {
+                hasStateCapGains: true,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: 3000, rate: 2 },
+                    { threshold: 5000, rate: 3 },
+                    { threshold: 17000, rate: 5 },
+                    { threshold: Infinity, rate: 5.75 }
+                ],
+                notes: 'Virginia taxes capital gains as ordinary income with progressive rates.'
+            },
+            'WV': {
+                hasStateCapGains: true,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: 10000, rate: 3 },
+                    { threshold: 25000, rate: 4 },
+                    { threshold: 40000, rate: 4.5 },
+                    { threshold: 60000, rate: 6 },
+                    { threshold: Infinity, rate: 6.5 }
+                ],
+                notes: 'West Virginia taxes capital gains as ordinary income with progressive rates.'
             }
         };
-
         const state529DB = {
             'CA': {
                 planName: 'ScholarShare 529',
@@ -2308,6 +2790,146 @@ html, body {
                 planName: 'NJBEST 529 College Savings Plan',
                 deduction: 0,
                 notes: 'New Jersey does not offer state tax deductions for 529 contributions, but earnings grow tax-free.'
+            },
+            'CO': {
+                planName: 'CollegeInvest 529 Plan',
+                deduction: Infinity,
+                notes: 'Colorado offers a full deduction for contributions to its 529 plan, with no limit.'
+            },
+            'CT': {
+                planName: 'CHET 529 College Savings Program',
+                deduction: 10000,
+                notes: 'Connecticut taxpayers can deduct up to $5,000 ($10,000 if married filing jointly) of contributions.'
+            },
+            'DE': {
+                planName: 'Delaware College Investment Plan',
+                deduction: 0,
+                notes: 'Delaware does not offer state tax deductions for 529 contributions.'
+            },
+            'FL': {
+                planName: 'Florida 529 Savings Plan',
+                deduction: 0,
+                notes: 'No state tax benefit as Florida has no state income tax.'
+            },
+            'GA': {
+                planName: 'Path2College 529 Plan',
+                deduction: 8000,
+                notes: 'Georgia taxpayers can deduct up to $4,000 per beneficiary ($8,000 if married filing jointly).'
+            },
+            'HI': {
+                planName: 'HI529 College Savings Program',
+                deduction: 0,
+                notes: 'Hawaii does not offer state tax deductions for 529 contributions.'
+            },
+            'ID': {
+                planName: 'IDeal - Idaho College Savings Program',
+                deduction: 12000,
+                notes: 'Idaho taxpayers can deduct up to $6,000 ($12,000 if married filing jointly) of contributions.'
+            },
+            'AK': {
+                planName: 'Alaska 529 Plan - T. Rowe Price College Savings Plan',
+                deduction: 0,
+                notes: 'No state tax deduction due to no state income tax, but plan offers tax-free growth.'
+            },
+            'AZ': {
+                planName: 'Arizona Family College Savings Program (AZ529)',
+                deduction: 2000,
+                notes: 'Arizona taxpayers can deduct up to $2,000 per year ($4,000 for married filing jointly).'
+            },
+            'AR': {
+                planName: 'GIFTS Arkansas 529 Plan',
+                deduction: 5000,
+                notes: 'Arkansas taxpayers can deduct up to $5,000 per year ($10,000 for married filing jointly).'
+            },
+            'TX': {
+                planName: 'Texas College Savings Plan',
+                deduction: 0,
+                notes: 'No state tax deduction due to no state income tax, but plan offers investment benefits.'
+            },
+            'WA': {
+                planName: 'Washington College Savings Plan (DreamAhead)',
+                deduction: 0,
+                notes: 'No state tax deduction due to no state income tax, but plan offers investment benefits.'
+            },
+            'WY': {
+                planName: 'WYOStars 529 College Savings Plan',
+                deduction: 0,
+                notes: 'No state tax deduction due to no state income tax, but plan offers investment benefits.'
+            },
+            'AL': {
+                planName: 'CollegeCounts 529 Fund',
+                deduction: 0,
+                notes: 'Alabama taxpayers can deduct 529 contributions on state taxes.'
+            },
+            'NM': {
+                planName: 'The New Mexico Learning Alliance',
+                deduction: 0,
+                notes: 'No state tax deduction, but plan offers investment benefits.'
+            },
+            'ND': {
+                planName: 'College SAVE Plan',
+                deduction: 5000,
+                notes: 'North Dakota taxpayers can deduct up to $5,000 ($10,000 for married filing jointly).'
+            },
+            'OH': {
+                planName: 'Ohio 529 Plan',
+                deduction: 4000,
+                notes: 'Ohio taxpayers can deduct up to $4,000 per beneficiary per year.'
+            },
+            'OK': {
+                planName: 'STABLE Oklahoma 529 Savings Plan',
+                deduction: 10000,
+                notes: 'Oklahoma taxpayers can deduct up to $10,000 ($20,000 for married filing jointly).'
+            },
+            'OR': {
+                planName: 'Oregon College Savings Plan',
+                deduction: 4500,
+                notes: 'Oregon taxpayers can deduct up to $4,500 per beneficiary per year.'
+            },
+            'PA': {
+                planName: 'PA 529 Investment Plan',
+                deduction: 0,
+                notes: 'Pennsylvania taxpayers can deduct 529 contributions.'
+            },
+            'RI': {
+                planName: 'CollegeBound 529',
+                deduction: 0,
+                notes: 'No state tax deduction, but plan offers investment benefits.'
+            },
+            'SC': {
+                planName: 'Future Scholar 529 Plan',
+                deduction: 10000,
+                notes: 'South Carolina taxpayers can deduct up to $10,000 ($20,000 for married filing jointly).'
+            },
+            'SD': {
+                planName: 'College Access 529 Plan',
+                deduction: 0,
+                notes: 'No state tax deduction due to no state income tax.'
+            },
+            'TN': {
+                planName: 'TNStars College Savings 529 Program',
+                deduction: 0,
+                notes: 'No state tax deduction due to no state income tax.'
+            },
+            'UT': {
+                planName: 'my529',
+                deduction: 4000,
+                notes: 'Utah taxpayers can deduct up to $4,000 per beneficiary per year.'
+            },
+            'VT': {
+                planName: 'Vermont 529 Plan',
+                deduction: 2500,
+                notes: 'Vermont taxpayers can deduct up to $2,500 per beneficiary per year.'
+            },
+            'VA': {
+                planName: 'Virginia529',
+                deduction: 4000,
+                notes: 'Virginia taxpayers can deduct up to $4,000 per beneficiary per year.'
+            },
+            'WV': {
+                planName: 'SMART 529 West Virginia',
+                deduction: 0,
+                notes: 'No state tax deduction, but plan offers investment benefits.'
             }
 };
 
@@ -2384,6 +3006,194 @@ html, body {
                         restrictions: 'Computers and computer supplies up to $3,000, sports equipment up to $1,000'
                     }
                 ]
+            },
+            'CO': {
+                hasTaxHoliday: false,
+                notes: 'Colorado does not currently offer tax holidays.'
+            },
+            'CT': {
+                hasTaxHoliday: true,
+                holidays: [
+                    {
+                        name: 'Sales Tax Free Week',
+                        dates: 'August 18-24, 2025',
+                        details: 'Clothing and footwear under $100',
+                        gradRelevance: 'Limited benefit for graduate students',
+                        restrictions: 'Excludes accessories and specialty clothing'
+                    }
+                ]
+            },
+            'DE': {
+                hasTaxHoliday: false,
+                notes: 'Delaware has no state sales tax, so no tax holidays are necessary.'
+            },
+            'GA': {
+                hasTaxHoliday: true,
+                holidays: [
+                    {
+                        name: 'Back-to-School Sales Tax Holiday',
+                        dates: 'July 28-29, 2025',
+                        details: 'Clothing under $100, school supplies under $20 per item, computers under $1,000',
+                        gradRelevance: 'Good opportunity for computer purchases',
+                        restrictions: 'Price limits apply per item'
+                    }
+                ]
+            },
+            'HI': {
+                hasTaxHoliday: false,
+                notes: 'Hawaii does not currently offer tax holidays.'
+            },
+            'ID': {
+                hasTaxHoliday: false,
+                notes: 'Idaho does not currently offer tax holidays.'
+            },
+            'AK': {
+                hasTaxHoliday: false,
+                notes: 'Alaska does not have sales tax holidays.'
+            },
+            'AZ': {
+                hasTaxHoliday: true,
+                holidays: [
+                    {
+                        name: 'Back-to-School Sales Tax Holiday',
+                        dates: 'July 19-21, 2025',
+                        details: 'Clothing and school supplies under $100, computers under $1,500',
+                        gradRelevance: 'Opportunity to save on computers and school supplies',
+                        restrictions: 'Price limits apply to individual items'
+                    }
+                ]
+            },
+            'AR': {
+                hasTaxHoliday: false,
+                notes: 'Arkansas does not currently offer sales tax holidays.'
+            },
+            'TX': {
+                hasTaxHoliday: true,
+                holidays: [
+                    {
+                        name: 'Back-to-School Sales Tax Holiday',
+                        dates: 'August 9-11, 2025',
+                        details: 'Clothing, shoes, and school supplies under specific price limits',
+                        gradRelevance: 'Save on essential clothing and school items',
+                        restrictions: 'Clothing under $100, school supplies under $50'
+                    }
+                ]
+            },
+            'WA': {
+                hasTaxHoliday: false,
+                notes: 'Washington does not have sales tax holidays.'
+            },
+            'WY': {
+                hasTaxHoliday: false,
+                notes: 'Wyoming does not have sales tax holidays.'
+            },
+            'AL': {
+                hasTaxHoliday: true,
+                holidays: [
+                    {
+                        name: 'Back-to-School Sales Tax Holiday',
+                        dates: 'August 2-4, 2025',
+                        details: 'Clothing, school supplies, and computers',
+                        gradRelevance: 'Opportunity to save on tech and school essentials',
+                        restrictions: 'Items under specific price limits'
+                    }
+                ]
+            },
+            'NM': {
+                hasTaxHoliday: false,
+                notes: 'New Mexico does not currently offer sales tax holidays.'
+            },
+            'ND': {
+                hasTaxHoliday: false,
+                notes: 'North Dakota does not currently offer sales tax holidays.'
+            },
+            'OH': {
+                hasTaxHoliday: true,
+                holidays: [
+                    {
+                        name: 'Back-to-School Sales Tax Holiday',
+                        dates: 'August 2-4, 2025',
+                        details: 'Clothing, school supplies, and computers',
+                        gradRelevance: 'Save on educational technology and supplies',
+                        restrictions: 'Price limits apply to individual items'
+                    }
+                ]
+            },
+            'OK': {
+                hasTaxHoliday: true,
+                holidays: [
+                    {
+                        name: 'Back-to-School Sales Tax Holiday',
+                        dates: 'August 1-3, 2025',
+                        details: 'Clothing, school supplies, and computers',
+                        gradRelevance: 'Opportunity to save on essential student items',
+                        restrictions: 'Specific price limits for different categories'
+                    }
+                ]
+            },
+            'OR': {
+                hasTaxHoliday: false,
+                notes: 'Oregon does not currently offer sales tax holidays.'
+            },
+            'PA': {
+                hasTaxHoliday: false,
+                notes: 'Pennsylvania does not currently offer sales tax holidays.'
+            },
+            'RI': {
+                hasTaxHoliday: true,
+                holidays: [
+                    {
+                        name: 'Back-to-School Sales Tax Holiday',
+                        dates: 'August 15-16, 2025',
+                        details: 'Clothing and footwear under $250',
+                        gradRelevance: 'Limited benefit for graduate students',
+                        restrictions: 'Clothing and footwear price limit applies'
+                    }
+                ]
+            },
+            'SC': {
+                hasTaxHoliday: true,
+                holidays: [
+                    {
+                        name: 'Back-to-School Sales Tax Holiday',
+                        dates: 'August 1-3, 2025',
+                        details: 'Clothing, school supplies, and computers',
+                        gradRelevance: 'Opportunity to save on tech and school essentials',
+                        restrictions: 'Price limits apply to individual items'
+                    }
+                ]
+            },
+            'SD': {
+                hasTaxHoliday: false,
+                notes: 'South Dakota does not have sales tax holidays.'
+            },
+            'TN': {
+                hasTaxHoliday: false,
+                notes: 'Tennessee does not have sales tax holidays.'
+            },
+            'UT': {
+                hasTaxHoliday: false,
+                notes: 'Utah does not currently offer sales tax holidays.'
+            },
+            'VT': {
+                hasTaxHoliday: false,
+                notes: 'Vermont does not currently offer sales tax holidays.'
+            },
+            'VA': {
+                hasTaxHoliday: true,
+                holidays: [
+                    {
+                        name: 'Back-to-School Sales Tax Holiday',
+                        dates: 'August 2-4, 2025',
+                        details: 'Clothing, school supplies, and computers',
+                        gradRelevance: 'Opportunity to save on educational items',
+                        restrictions: 'Price limits apply to different categories'
+                    }
+                ]
+            },
+            'WV': {
+                hasTaxHoliday: false,
+                notes: 'West Virginia does not currently offer sales tax holidays.'
             }
         };
 
@@ -2408,6 +3218,213 @@ html, body {
                     detailsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }, 100);
             }
+
+        }
+        function update529Recommendation() {
+            // Ensure we have a selected school
+            if (!selectedSchool) return;
+
+            // Safely parse inputs
+            const savingsInput = document.getElementById('savings')?.value || '0';  
+            const savingsAmount = parseFloat(savingsInput.replace(/[^0-9.-]+/g, '')) || 0;
+
+            const groceryInput = document.getElementById('monthlyGroceries')?.value || '350';
+            const groceryAmount = parseFloat(groceryInput.replace(/[^0-9.-]+/g, '')) || 350;
+
+            const rentInput = document.getElementById('monthlyRent')?.value || '1200';
+            const rentAmount = parseFloat(rentInput.replace(/[^0-9.-]+/g, '')) || 1200;
+
+            const incomeInput = document.getElementById('income')?.value || '0';
+            const income = parseFloat(incomeInput.replace(/[^0-9.-]+/g, '')) || 0;
+
+            const paysTuitionInput = document.querySelector('input[name="tuition"]:checked')?.value === 'yesoutofpocket';
+            
+            // Calculate recommended contribution
+            const annualRent = rentAmount * 12;
+            const annualGroceries = groceryAmount * 12;
+            const totalAnnualExpenses = annualRent + annualGroceries;
+            
+            let recommended529Contribution = 0;
+
+            // Calculate state tax benefits
+            const stateTaxRate = calculateStateTaxRate(income, selectedSchool.state);
+            const stateDeduction = state529DB[selectedSchool.state]?.deduction || 0;
+
+            // If tuition is paid out of pocket, increase recommended contribution
+            if (paysTuitionInput) {
+                recommended529Contribution = Math.min(totalAnnualExpenses*.8 + savingsAmount * 0.1, savingsAmount * 0.7)
+                ;
+            } else {
+                recommended529Contribution = Math.min(
+                    totalAnnualExpenses * 0.8,
+                    savingsAmount * 0.5
+                );
+            }
+
+            // Ensure a reasonable range (between $500 and $10,000)
+            recommended529Contribution = Math.max(500, Math.min(recommended529Contribution, 50000));
+
+            // Update the display
+            const savingsDiv = document.getElementById('529SavingsEstimate');
+            savingsDiv.innerHTML = `
+                <div class="savings-amount-rent">
+                    <span class="amount">$${Math.round(recommended529Contribution).toLocaleString()}</span>
+                    <span class="period">/year</span>
+                </div>
+                <div class="savings-details">
+                    <p>Recommended contribution based on tax benefits of ${(stateTaxRate * 100).toFixed(1)}% deduction</p>
+                </div>
+            `;
+
+            // Update tuition message visibility
+            const tuitionMessage = document.getElementById('tuitionMessage');
+            if (paysTuitionInput) {
+                tuitionMessage.classList.remove('hidden');
+            } else {
+                tuitionMessage.classList.add('hidden');
+            }
+
+            // Update 529 calculator with this contribution
+            document.getElementById('contribution529').value = recommended529Contribution;
+            update529Calculator();
+        }
+
+        // Add event listeners to trigger the recommendation
+        function setup529RecommendationListeners() {
+            // Inputs that affect 529 recommendation
+            ['savings', 'monthlyRent', 'monthlyGroceries', 'income'].forEach(id => {
+                const input = document.getElementById(id);
+                if (input) {
+                    input.addEventListener('input', update529Recommendation);
+                }
+            });
+
+            // Tuition radio buttons
+            document.querySelectorAll('input[name="tuition"]').forEach(input => {
+                input.addEventListener('change', update529Recommendation);
+            });
+
+            // Initial call
+            if (selectedSchool) {
+                update529Recommendation();
+            }
+        }
+        function update529Display() {
+          const savingsDiv = document.getElementById('529SavingsEstimate');
+          
+          const contributionInput = document.getElementById('contribution529');
+          const monthlyContribution = parseFloat(contributionInput.value);
+          const annualContribution = monthlyContribution;
+
+          const interestRate = 0.04; // Assume 4% annual interest 
+          const interest = annualContribution * interestRate;
+
+          const federalTaxRate = calculateFederalTaxRate(parseFloat(document.getElementById('income').value));
+          const stateTaxRate = calculateStateTaxRate(parseFloat(document.getElementById('income').value), selectedSchool.state); 
+          const totalTaxRate = federalTaxRate + stateTaxRate;
+          const taxSavings = interest * totalTaxRate;
+
+          const totalSavings = taxSavings;
+
+          savingsDiv.innerHTML = `
+            <div class="savings-amount-rent">
+              <span class="amount">$${Math.round(totalSavings).toLocaleString()}</span>
+              <span class="period">/year</span>
+            </div>
+            <div class="savings-details">  
+              <p>Projected tax savings from using 529 as savings account</p>
+            </div>
+          `;
+        }
+
+        function update529Calculator() {
+          const contributionInput = document.getElementById('contribution529');
+          const contributionDisplay = document.getElementById('contribution529Display');
+          const interestEarned = document.getElementById('interestEarned'); 
+          const taxSavings = document.getElementById('taxSavings');
+
+          const monthlyContribution = parseFloat(contributionInput.value);
+          const annualContribution = monthlyContribution 
+          
+          contributionDisplay.textContent = `$${monthlyContribution}`;
+
+          const interestRate = 0.04; // Assume 4% annual interest
+          const interest = annualContribution * interestRate;
+          interestEarned.textContent = `$${Math.round(interest)}`;
+
+          const federalTaxRate = calculateFederalTaxRate(parseFloat(document.getElementById('income').value)); 
+          const stateTaxRate = calculateStateTaxRate(parseFloat(document.getElementById('income').value), selectedSchool.state);
+          const totalTaxRate = federalTaxRate + stateTaxRate;
+          const taxSavingsAmount = interest * totalTaxRate;
+          taxSavings.textContent = `$${Math.round(taxSavingsAmount)}`;
+
+          update529Display();
+        }
+
+        function generate529Steps() {
+          const stepsContainer = document.getElementById('529StepsContainer');
+          
+          let stepsHtml = '';
+
+          if (state529DB[selectedSchool.state]?.deduction > 0) {
+            stepsHtml += `
+              <div class="step-item">
+                <div class="step-header" onclick="toggleStep('529-step1')">
+                  <div class="step-circle" data-step="529-step1">
+                    <span class="step-number">1</span>
+                    <svg class="checkmark hidden" viewBox="0 0 24 24">
+                      <path fill="none" stroke="white" stroke-width="2" d="M20 6L9 17l-5-5"/>
+                    </svg>
+                  </div>
+                  <div class="step-title">
+                    <h4>Contribute to ${state529DB[selectedSchool.state].planName}</h4>
+                    <p class="time-estimate">Time: 10 minutes</p>
+                  </div>
+                  <span class="expand-arrow">▼</span>
+                </div>
+                <div class="step-content hidden">
+                        <p>Your state offers a tax deduction of up to $${state529DB[selectedSchool.state].deduction.toLocaleString()} for 529 plan contributions. Open and contribute to your state's 529 plan for dual benefit of tax free growth and a tax deduction on your state.</p>
+                        <ul class="step-details">
+                            <li>Open your state 529 account. Contribute as much of your savings into it that you will use for qualified expenses like food, rent and tuition.</li>
+                            <li>Then select the capital preservation or interest earning option.</li>
+                            <li>Now you have a tax free high yield savings account for all your education expenses.</li>
+                            <li>Anytime you need to pay for a qualified expense withdraw from your 529 to pay it off.</li>
+                        </ul>
+                  <button class="complete-step-btn" onclick="completeStep('529-step1', 'savings')">Mark Complete</button>
+                </div>
+              </div>
+            `;
+          } else {
+            stepsHtml += `
+              <div class="step-item">
+                <div class="step-header" onclick="toggleStep('529-step1')">
+                  <div class="step-circle" data-step="529-step1">
+                    <span class="step-number">1</span>
+                    <svg class="checkmark hidden" viewBox="0 0 24 24">
+                      <path fill="none" stroke="white" stroke-width="2" d="M20 6L9 17l-5-5"/>
+                    </svg>
+                  </div>
+                  <div class="step-title">
+                    <h4>Contribute to a Low-Cost 529 Plan</h4>
+                    <p class="time-estimate">Time: 10 minutes</p>
+                  </div>
+                  <span class="expand-arrow">▼</span>
+                </div>
+                <div class="step-content hidden">
+                        <p>While your state doesn't offer a tax deduction, you can still benefit from tax-free growth. Open and contribute to a low-cost plan like New York's 529 Program</p>
+                        <ul class="step-details">
+                            <li>Open your state 529 account. Contribute as much of your savings into it that you will use for qualified expenses like food, rent and tuition.</li>
+                            <li>Then select the capital preservation option sometimes also called fixed income or short term interest earning.</li>
+                            <li>Now you have a tax free high yield savings account for all your education expenses.</li>
+                            <li>Anytime you need to pay for a qualified expense withdraw from your 529 to pay it off.</li>
+                        </ul>
+                  <button class="complete-step-btn" onclick="completeStep('529-step1', 'savings')">Mark Complete</button>
+                </div>
+              </div>  
+            `;
+          }
+
+          stepsContainer.innerHTML = stepsHtml;
         }
         function toggleSavingsDetails() {
             const detailsSection = document.getElementById('savingsDetails');
@@ -2537,24 +3554,83 @@ html, body {
         // Update the selectSchool function to also update calculator limits
 
        function selectSchool(schoolId) {
-            selectedSchool = schoolsDB[schoolId];
-            const searchInput = document.getElementById('schoolSearch');
-            searchInput.value = `${selectedSchool.name} (${getStateName(selectedSchool.state)})`;
-            document.getElementById('schoolSuggestions').classList.add('hidden');
-            const savingsContent = document.getElementById('savings-content');
-            if (savingsContent && !savingsContent.classList.contains('hidden')) {
-                initializeSavingsSection();
-            }
-            
-            // Run all necessary updates
-            updateResults();
-            updateAccountTypeDetails();
-            updateCalculatorLimits();
-            updateSavingsEstimate();
-            updateGrocerySavings(); 
-            initializeRentGrocerySection();
-        }
+    const searchInput = document.getElementById('schoolSearch');
+    const stateSelection = document.getElementById('stateSelection');
+    const stateSuggestions = document.getElementById('stateSuggestions');
+    
+    if (schoolId === 'other') {
+        // Show state suggestions and set school text
+        searchInput.value = 'My School Isn\'t Listed';
+        
+        // Populate state suggestions
+        stateSuggestions.innerHTML = `
+            ${Object.entries(stateOptions).map(([abbr, name]) => `
+                <div class="suggestion-item" onclick="selectState('${abbr}', '${name}')">
+                    <span class="state-name">${name}</span>
+                    <span class="state-abbr">(${abbr})</span>
+                </div>
+            `).join('')}
+        `;
+        
+        // Show the state suggestions
+        stateSuggestions.classList.remove('hidden');
+        stateSelection.classList.remove('hidden');
+        
+        // Hide school suggestions
+        document.getElementById('schoolSuggestions').classList.add('hidden');
+    } else {
+        // Handle regular school selection
+        selectedSchool = schoolsDB[schoolId];
+        searchInput.value = `${selectedSchool.name} (${getStateName(selectedSchool.state)})`;
+        stateSelection.classList.add('hidden');
+        stateSuggestions.classList.add('hidden');
+        
+        // Run all necessary updates
+        updateResults();
+        updateAccountTypeDetails();
+        updateCalculatorLimits();
+        updateSavingsEstimate();
+        updateGrocerySavings();
+        initializeRentGrocerySection();
+        
+        // Hide suggestions
+        document.getElementById('schoolSuggestions').classList.add('hidden');
+    }
+}
 
+function selectState(stateAbbr, stateName) {
+    const searchInput = document.getElementById('schoolSearch');
+    const stateSelection = document.getElementById('stateSelection');
+    const stateSuggestions = document.getElementById('stateSuggestions');
+    
+    // Correctly set the selectedSchool object
+    selectedSchool = {
+        name: 'My School Isn\'t Listed',
+        state: stateAbbr,
+        retirementPlans: {
+            has403b: false,
+            has457b: false,
+            employerMatch: '0%',
+            vestingPeriod: 'n/a',
+            notes: 'Grad students eligible for Roth IRA contributions'
+        }
+    };
+    
+    // Update search input to show selected state
+    searchInput.value = `My School Isn't Listed (${stateName})`;
+    
+    // Hide state suggestions
+    stateSuggestions.classList.add('hidden');
+    stateSelection.classList.add('hidden');
+    
+    // Run all necessary updates
+    updateResults();
+    updateAccountTypeDetails();
+    updateCalculatorLimits();
+    updateSavingsEstimate();
+    updateGrocerySavings();
+    initializeRentGrocerySection();
+}
         const incomeInput = document.getElementById('income');
         incomeInput.addEventListener('input', function(e) {
             // Remove any non-digits
@@ -2595,6 +3671,20 @@ html, body {
                     detailsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }, 100);
             }
+        }
+        function toggle529SavingsDetails() {
+          const detailsSection = document.getElementById('529SDetails');
+          const button = document.getElementById('learn529SBtn');
+          const isHidden = detailsSection.classList.contains('hidden');
+              
+          detailsSection.classList.toggle('hidden');
+          button.textContent = isHidden ? 'Show Less ↑' : 'Learn More About 529 Savings Benefits ↓';
+              
+          if (isHidden) {
+            setTimeout(() => {
+              detailsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+          }
         }
 
         function toggleCreditCardInfo() {
@@ -2641,129 +3731,78 @@ html, body {
         }
 
         function generateSavingsSteps() {
-          if (!selectedSchool) return '';
+  if (!selectedSchool) return '';
 
-          const savingsInput = document.getElementById('savings')?.value || '0'; 
-          const monthlySavingsInput = document.getElementById('bank')?.value || '0';
-          const paysTuitionInput = document.querySelector('input[name="tuition"]:checked')?.value === 'yesoutofpocket';
+  const savingsInput = document.getElementById('savings')?.value || '0'; 
+  const monthlySavingsInput = document.getElementById('bank')?.value || '0';
+  const paysTuitionInput = document.querySelector('input[name="tuition"]:checked')?.value === 'yesoutofpocket';
 
-          const strategy = calculateSavingsStrategy(
-            parseFloat(savingsInput.replace(/[^0-9.-]+/g, '')),
-            parseFloat(monthlySavingsInput.replace(/[^0-9.-]+/g, '')),
-            paysTuitionInput,
-            selectedSchool.state
-          );
+  const strategy = calculateSavingsStrategy(
+    parseFloat(savingsInput.replace(/[^0-9.-]+/g, '')),
+    parseFloat(monthlySavingsInput.replace(/[^0-9.-]+/g, '')),
+    paysTuitionInput,
+    selectedSchool.state
+  );
 
-          return `
-            <div class="step-item">
-              <div class="step-header" onclick="toggleStep('savings1')">
-                <div class="step-circle" data-step="savings1">
-                  <span class="step-number">1</span>
-                  <svg class="checkmark hidden" viewBox="0 0 24 24">
-                    <path fill="none" stroke="white" stroke-width="2" d="M20 6L9 17l-5-5"/>
-                  </svg>
-                </div>
-                <div class="step-title">
-                  <h4>Move Savings to High-Yield Account</h4>
-                  <p class="time-estimate">Time: 4 minutes</p>
-                </div>
-                <span class="expand-arrow">▼</span>
-              </div>
-              <div class="step-content hidden">
-                <p>Transfer your existing savings of $${strategy.hysaBalance.toLocaleString()} into a high-yield savings account.</p>
-                <ul class="step-details">
-                  <li>Look for accounts with APY around 4%</li>
-                  <li>Citizen's is a trusted bank that offers consistent high interest on savings with no fees or hidden costs. </li>
-                  <li>This will allow your savings to grow faster</li>
-                </ul>
+  let stepsHtml = `
+    <h3>High-Yield Savings Account Steps</h3>
+    <div class="step-item">
+      <div class="step-header" onclick="toggleStep('savings1')">
+        <div class="step-circle" data-step="savings1">
+          <span class="step-number">1</span>
+          <svg class="checkmark hidden" viewBox="0 0 24 24">
+            <path fill="none" stroke="white" stroke-width="2" d="M20 6L9 17l-5-5"/>
+          </svg>
+        </div>
+        <div class="step-title">
+          <h4>Move Savings to High-Yield Account</h4>
+          <p class="time-estimate">Time: 4 minutes</p>
+        </div>
+        <span class="expand-arrow">▼</span>
+      </div>
+      <div class="step-content hidden">
+        <p>Transfer your existing savings of $${strategy.hysaBalance.toLocaleString()} into a high-yield savings account.</p>
+        <ul class="step-details">
+          <li>Look for accounts with APY around 4%</li>
+          <li>Citizen's is a trusted bank that offers consistent high interest on savings with no fees or hidden costs.</li>
+          <li>This will allow your savings to grow faster</li>
+        </ul>
 
-                        <a href="https://www.secure.citizensaccess.com/Citizens/save?mrkgadid=1&mrkgen=mtext&mrkgbflag=1&ctzMode=MKL-SEM--BNG--SAV--CAX--BR--43700071876580474--Group1_BR_Citizens_Deposits_Savings_PHR&&acctid=21700000002029063&dskeywordid=43700071876580474&lid=43700071876580474&ds_s_kwgid=58700007906794393&ds_a_cid=975551231&ds_a_caid=17621005165&ds_a_agid=137912480043&ds_a_lid=kwd-483731438318&&device=c&network=o&matchtype=e&locationid=89660&creative=&targetid=kwd-77996989483976:loc-190&campaignid=287840010&adgroupid=1247946314891189&gclid=9e3344e6ef89195d2edd238db9386f8b&gclsrc=3p.ds&msclkid=9e3344e6ef89195d2edd238db9386f8b" target="_blank" class="complete-step-btn" style="display: inline-block; text-align: center; margin-top: 10px; text-decoration: none;">
-                            Link to Citizen's High Yield Savings Account
-                        </a>
-                <button class="complete-step-btn" onclick="completeStep('savings1', 'savings')">Mark Complete</button>
-              </div>
-            </div>
+        <a href="https://www.secure.citizensaccess.com/Citizens/save?mrkgadid=1&mrkgen=mtext&mrkgbflag=1&ctzMode=MKL-SEM--BNG--SAV--CAX--BR--43700071876580474--Group1_BR_Citizens_Deposits_Savings_PHR&&acctid=21700000002029063&dskeywordid=43700071876580474&lid=43700071876580474&ds_s_kwgid=58700007906794393&ds_a_cid=975551231&ds_a_caid=17621005165&ds_a_agid=137912480043&ds_a_lid=kwd-483731438318&&device=c&network=o&matchtype=e&locationid=89660&creative=&targetid=kwd-77996989483976:loc-190&campaignid=287840010&adgroupid=1247946314891189&gclid=9e3344e6ef89195d2edd238db9386f8b&gclsrc=3p.ds&msclkid=9e3344e6ef89195d2edd238db9386f8b" target="_blank" class="complete-step-btn" style="display: inline-block; text-align: center; margin-top: 10px; text-decoration: none;">
+          Link to Citizen's High Yield Savings Account
+        </a>
+        <button class="complete-step-btn" onclick="completeStep('savings1', 'savings')">Mark Complete</button>
+      </div>
+    </div>
 
-            <div class="step-item">
-              <div class="step-header" onclick="toggleStep('savings2')">  
-                <div class="step-circle" data-step="savings2">
-                  <span class="step-number">2</span>
-                  <svg class="checkmark hidden" viewBox="0 0 24 24">
-                    <path fill="none" stroke="white" stroke-width="2" d="M20 6L9 17l-5-5"/> 
-                  </svg>
-                </div>
-                <div class="step-title">
-                  <h4>Set Up Auto-Savings to HYSA</h4>  
-                  <p class="time-estimate">Time: 2 minutes</p>
-                </div>
-                <span class="expand-arrow">▼</span>
-              </div>
-              <div class="step-content hidden">  
-                <p>Configure automatic monthly transfers of $${strategy.hysaMonthlyContribution.toLocaleString()} (20% of your monthly savings) into your high-yield account.</p>
-                <ul class="step-details">
-                  <li>This will grow your savings consistently over time</li>
-                  <li>Set it and forget it to make saving a habit</li> 
-                </ul>
-                <button class="complete-step-btn" onclick="completeStep('savings2', 'savings')">Mark Complete</button>
-              </div>
-            </div>
+    <div class="step-item">
+      <div class="step-header" onclick="toggleStep('savings2')">  
+        <div class="step-circle" data-step="savings2">
+          <span class="step-number">2</span>
+          <svg class="checkmark hidden" viewBox="0 0 24 24">
+            <path fill="none" stroke="white" stroke-width="2" d="M20 6L9 17l-5-5"/> 
+          </svg>
+        </div>
+        <div class="step-title">
+          <h4>Set Up Auto-Savings to HYSA</h4>  
+          <p class="time-estimate">Time: 2 minutes</p>
+        </div>
+        <span class="expand-arrow">▼</span>
+      </div>
+      <div class="step-content hidden">  
+        <p>Configure automatic monthly transfers of $${strategy.hysaMonthlyContribution.toLocaleString()} (20% of your monthly savings) into your high-yield account.</p>
+        <ul class="step-details">
+          <li>This will grow your savings consistently over time</li>
+          <li>Set it and forget it to make saving a habit</li> 
+        </ul>
+        <button class="complete-step-btn" onclick="completeStep('savings2', 'savings')">Mark Complete</button>
+      </div>
+    </div>`;
 
+  
 
-            ${strategy.state529Contribution > 0 ? `
-              <div class="step-item">
-                <div class="step-header" onclick="toggleStep('savings3')">
-                  <div class="step-circle" data-step="savings3">
-                    <span class="step-number">3</span>  
-                    <svg class="checkmark hidden" viewBox="0 0 24 24">
-                      <path fill="none" stroke="white" stroke-width="2" d="M20 6L9 17l-5-5"/>
-                    </svg>
-                  </div>
-                  <div class="step-title">  
-                    <h4>Open and Contribute to a 529 Plan</h4>
-                    <p class="time-estimate">Time: 8 minutes</p>  
-                  </div>
-                  <span class="expand-arrow">▼</span>
-                </div>
-                <div class="step-content hidden">
-                  <p>Since you're paying tuition, contribute at least $${strategy.state529Contribution.toLocaleString()} of your savings to your state's 529 plan for tax benefits. If you can put as much of your tuition into the 529 as soon as possible. This could save you hundreds in taxes on interest and income.</p>
-                  <ul class="step-details">  
-                    <li>Open a ${state529DB[selectedSchool.state].planName} if you haven't already</li>
-                    <li>This allows you to deduct contributions on your state taxes</li>
-                    <li>Invest in your 529 plan's capital preservation or fixed income fund. This essentially will act as a tax free HYSA</li>
-                  </ul>
-                  <button class="complete-step-btn" onclick="completeStep('savings3', 'savings')">Mark Complete</button>
-                </div>  
-              </div>
-            ` : ''}
-            ${paysTuitionInput && state529DB[selectedSchool.state].deduction === 0 ?  `
-              <div class="step-item">
-                <div class="step-header" onclick="toggleStep('savings3')">
-                  <div class="step-circle" data-step="savings3">
-                    <span class="step-number">3</span>
-                    <svg class="checkmark hidden" viewBox="0 0 24 24">
-                      <path fill="none" stroke="white" stroke-width="2" d="M20 6L9 17l-5-5"/>
-                    </svg>
-                  </div>
-                  <div class="step-title">
-                    <h4>Use a 529 Plan for Tuition Savings</h4>
-                    <p class="time-estimate">Time: 4 minutes</p>
-                  </div>
-                  <span class="expand-arrow">▼</span>
-                </div>
-                <div class="step-content hidden">
-                  <p>Since you're paying tuition out of pocket, consider contributing some of your tuition savings to New York's 529 plan (anyone can contribute regardless of which state you live in). Benefits include:</p>
-                  <ul class="step-details">
-                    <li>Earnings grow tax-free, so more of your money goes towards tuition</li>
-                    <li>New York's 529 plan offers capital preservation or fixed income investment options that act like a tax-free high-yield savings account</li>
-                    <li>You can withdraw funds tax-free for qualified education expenses like tuition</li>
-                  </ul>
-                  <p>The more tuition savings you can contribute, the more you'll benefit from tax-free growth.</p>
-                  <button class="complete-step-btn" onclick="completeStep('savings3', 'savings')">Mark Complete</button>
-                </div>
-              </div>
-            ` : ''}
-          `;
-        }
+  return stepsHtml;
+}
 
         function updateSavingsStrategyDisplay() {
             if (!selectedSchool) {
@@ -3014,35 +4053,66 @@ html, body {
             }, 3000);
         }
 
-        function handleSchoolSearch(event) {
+       function handleSchoolSearch(event) {
             const searchTerm = event.target.value.toLowerCase();
             const suggestionsDiv = document.getElementById('schoolSuggestions');
+            const stateSelection = document.getElementById('stateSelection');
+            const stateSuggestions = document.getElementById('stateSuggestions');
             
+            // Hide suggestions if less than 2 characters
             if (searchTerm.length < 2) {
                 suggestionsDiv.classList.add('hidden');
+                stateSelection.classList.add('hidden');
                 return;
             }
 
+            // Filter suggestions excluding the "other" option
             const suggestions = Object.entries(schoolsDB)
-                .filter(([_, school]) => 
-                    school.name.toLowerCase().includes(searchTerm))
+                .filter(([id, school]) => 
+                    id !== 'other' && school.name.toLowerCase().includes(searchTerm))
                 .slice(0, 10); // Limit to 10 suggestions
 
-            if (suggestions.length > 0) {
-                suggestionsDiv.innerHTML = suggestions
-                    .map(([id, school]) => `
-                        <div class="suggestion-item" onclick="selectSchool('${id}')">
-                            <span class="school-name">${school.name}</span>
-                            <span class="state-name">${getStateName(school.state)}</span>
-                        </div>
-                    `)
-                    .join('');
-                suggestionsDiv.classList.remove('hidden');
-            } else {
-                suggestionsDiv.classList.add('hidden');
-            }
+            // Show matching schools followed by "My School Isn't Listed"
+            suggestionsDiv.innerHTML = `
+                ${suggestions.map(([id, school]) => `
+                    <div class="suggestion-item" onclick="selectSchool('${id}')">
+                        <span class="school-name">${school.name}</span>
+                        <span class="state-name">${getStateName(school.state)}</span>
+                    </div>
+                `).join('')}
+                <div class="suggestion-item" onclick="showStateSelection()">
+                    <span class="school-name">My School Isn't Listed</span>
+                </div>`;
+            
+            suggestionsDiv.classList.remove('hidden');
         }
 
+        // New function to show state selection
+        function showStateSelection() {
+            const searchInput = document.getElementById('schoolSearch');
+            const stateSelection = document.getElementById('stateSelection');
+            const stateSuggestions = document.getElementById('stateSuggestions');
+            
+            // Set input text
+            searchInput.value = 'My School Isn\'t Listed';
+            
+            // Populate state suggestions
+            stateSuggestions.innerHTML = `
+                ${Object.entries(stateOptions).map(([abbr, name]) => `
+                    <div class="suggestion-item" onclick="selectState('${abbr}', '${name}')">
+                        <span class="state-name">${name}</span>
+                        <span class="state-abbr">(${abbr})</span>
+                    </div>
+                `).join('')}
+            `;
+            
+            // Show the state suggestions
+            stateSuggestions.classList.remove('hidden');
+            stateSelection.classList.remove('hidden');
+            
+            // Hide school suggestions
+            document.getElementById('schoolSuggestions').classList.add('hidden');
+        }
         function getStateName(stateAbbr) {
             const states = {
                 'CA': 'California',
@@ -3382,30 +4452,111 @@ function generateTaxHolidaySteps(state) {
 }
     function calculateTaxHolidaySavings(state, holidayType) {
         const salesTaxRates = {
+            // Existing entries
             'MA': 0.0625,
             'FL': 0.06,
-            'NJ': 0.0625
+            'NJ': 0.0625,
+            'AL': 0.04,
+            'AR': 0.065,
+            'AZ': 0.056,
+            'CT': 0.0635,
+            'GA': 0.04,
+            'HI': 0.04,
+            'IA': 0.06,
+            'IN': 0.07,
+            'KS': 0.065,
+            'KY': 0.06,
+            'MD': 0.06,
+            'MS': 0.07,
+            'NC': 0.0475,
+            'OH': 0.0575,
+            'OK': 0.045,
+            'SC': 0.06,
+            'TX': 0.0625,
+            'VA': 0.053,
+            'WV': 0.06,
+
+            // Additional states
+            'LA': 0.0445,
+            'ME': 0.0550,
+            'MI': 0.06,
+            'MN': 0.0688,
+            'MO': 0.0423,
+            'MT': 0, // No state sales tax
+            'NE': 0.0550,
+            'NH': 0, // No state sales tax
+            'NM': 0.0575,
+            'NY': 0.0400,
+            'ND': 0.0575,
+            'OR': 0, // No state sales tax
+            'PA': 0.06,
+            'RI': 0.0700,
+            'SD': 0.0450,
+            'UT': 0.0695,
+            'VT': 0.0630,
+            'WA': 0.0650,
+            'WY': 0.04
         };
+
+
         
         const taxRate = salesTaxRates[state] || 0;
         
         const maxSavings = {
             'Back-to-School Sales Tax Holiday': {
-                'FL': 1500 * taxRate, // Computer limit
-                'NJ': 3000 * taxRate, // Computer and supplies limit
-                'MA': 2500 * taxRate  // General limit
+                // Existing entries
+                'FL': 1500 * salesTaxRates['FL'],
+                'NJ': 3000 * salesTaxRates['NJ'],
+                'MA': 2500 * salesTaxRates['MA'],
+                'AL': 2000 * salesTaxRates['AL'],
+                'AR': 2000 * salesTaxRates['AR'],
+                'AZ': 1500 * salesTaxRates['AZ'],
+                'CT': 2500 * salesTaxRates['CT'],
+                'GA': 1500 * salesTaxRates['GA'],
+                'HI': 2000 * salesTaxRates['HI'],
+                'IA': 2000 * salesTaxRates['IA'],
+                'IN': 2500 * salesTaxRates['IN'],
+                'KS': 2500 * salesTaxRates['KS'],
+                'KY': 2000 * salesTaxRates['KY'],
+                'MD': 2500 * salesTaxRates['MD'],
+                'MS': 2000 * salesTaxRates['MS'],
+                'NC': 2500 * salesTaxRates['NC'],
+                'OH': 2500 * salesTaxRates['OH'],
+                'OK': 2000 * salesTaxRates['OK'],
+                'SC': 2500 * salesTaxRates['SC'],
+                'TX': 2500 * salesTaxRates['TX'],
+                'VA': 2500 * salesTaxRates['VA'],
+                'WV': 2000 * salesTaxRates['WV'],
+
+                // Additional states
+                'LA': 2500 * salesTaxRates['LA'],
+                'ME': 2000 * salesTaxRates['ME'],
+                'MI': 2500 * salesTaxRates['MI'],
+                'MN': 2000 * salesTaxRates['MN'],
+                'MO': 2500 * salesTaxRates['MO'],
+                'NE': 2000 * salesTaxRates['NE'],
+                'NM': 2500 * salesTaxRates['NM'],
+                'NY': 2000 * salesTaxRates['NY'],
+                'ND': 2500 * salesTaxRates['ND'],
+                'PA': 2000 * salesTaxRates['PA'],
+                'RI': 2500 * salesTaxRates['RI'],
+                'SD': 2000 * salesTaxRates['SD'],
+                'UT': 2500 * salesTaxRates['UT'],
+                'VT': 2000 * salesTaxRates['VT'],
+                'WY': 2500 * salesTaxRates['WY']
             },
             'Disaster Preparedness Sales Tax Holiday': {
-                'FL': 3000 * taxRate  // Generator limit
+                'FL': 3000 * salesTaxRates['FL']
             },
             'Tool Time Sales Tax Holiday': {
-                'FL': 2000 * taxRate  // Equipment limit
+                'FL': 2000 * salesTaxRates['FL']
             },
             'Freedom Week': {
-                'FL': 500 * taxRate   // Estimated average
+                'FL': 500 * salesTaxRates['FL']
             },
             'Sales Tax Holiday': {
-                'MA': 2500 * taxRate  // Most items under $2,500
+                'MA': 2500 * salesTaxRates['MA'],
+                'CT': 2500 * salesTaxRates['CT']
             }
         };
         
@@ -3671,6 +4822,9 @@ function generateTaxHolidaySteps(state) {
             
             // Generate steps
             document.getElementById('savingsStepsContainer').innerHTML = generateSavingsSteps();
+            document.getElementById('contribution529').addEventListener('input', update529Calculator); 
+            generate529Steps();
+            update529Calculator();
             
             // Update progress bar
             const currentTab = document.querySelector('[data-tab="savings"]');
@@ -3893,11 +5047,12 @@ function generateTaxHolidaySteps(state) {
             // Parse inputs safely
             const rent = parseFloat(monthlyRent) || 1200;
             const annualIncome = parseFloat(income) || 0;
+
             
             // Rent Savings (529 plan)
             if (state529DB[state]?.deduction > 0) {
                 const taxRate = calculateStateTaxRate(annualIncome, state);
-                const deductibleAmount = Math.min(rent * 12, state529DB[state].deduction);
+                const deductibleAmount = Math.min(rent * 12, state529DB[state].deduction, annualIncome);
                 return Math.round(deductibleAmount * taxRate);
             }
             
@@ -4073,7 +5228,7 @@ function generateTaxHolidaySteps(state) {
                             description: state529DB[state].deduction > 0 
                                 ? `Use your state's 529 plan to save ${(calculateStateTaxRate(income, state) * 100).toFixed(1)}% in taxes on up to $${state529DB[state].deduction.toLocaleString()} of qualified education expenses.`
                                 : 'Your state does not offer 529 tax deductions, but you can still benefit from tax-free growth.',
-                            savings: state529DB[state].deduction > 0 ? calculate529Savings(income, state, monthlyRent * 12) : 0,
+                            savings: state529DB[state].deduction > 0 ? calculateRentSavings(income, state, monthlyRent) : 0,
                             tab: 'rent-groceries',
                             time: OPTIMIZATION_CONFIG['rent-groceries'].rent.totalTime
                         },
@@ -4263,6 +5418,20 @@ function initializeApp() {
         });
     });
     setupSavingsEventListeners();
+    document.querySelectorAll('input[name="tuition"]').forEach(input => {
+      input.addEventListener('change', update529Recommendation);
+    });
+
+    ['savings', 'monthlyRent', 'monthlyGroceries'].forEach(id => {
+      const input = document.getElementById(id);
+      if (input) {
+        input.addEventListener('input', update529Recommendation);
+      }
+    });
+
+    // Call on initialization
+    update529Recommendation();
+    document.addEventListener('DOMContentLoaded', setup529RecommendationListeners);
     
     // Add savings section initialization to the tab switching logic
     document.querySelectorAll('.nav-tab').forEach(tab => {
@@ -4370,6 +5539,11 @@ function initializeApp() {
 
 document.querySelectorAll('input[name="tuition"]').forEach(input => {
   input.addEventListener('change', updateSavingsDisplay);
+});
+document.addEventListener('DOMContentLoaded', () => {
+  if (selectedSchool) {
+    update529Recommendation();
+  }
 });
 
 // Generate initial savings strategy steps 
