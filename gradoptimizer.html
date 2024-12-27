@@ -1860,7 +1860,7 @@ html, body {
 
   <div class="edu-section">
     <div class="slider-group">
-      <label for="contribution529">Recommended Savings Contribution to 529 ($):</label>
+      <label for="contribution529">Recommended Contribution to a 529 Account ($):</label>
       <input type="range" id="contribution529" min="0" max="100000" step="50" value="0">
       <span id="contribution529Display" class="value-display">$1000</span>
     </div>
@@ -4195,26 +4195,29 @@ const stateTaxDB = {
         let hasOptimized = false;
         function updateCalculatorLimits() {
             const monthlyInput = document.getElementById('monthlyContribution');
-            const contributionDisplay = document.getElementById('contributionDisplay');
+            const income = parseFloat(document.getElementById('income')?.value.replace(/[^0-9.-]/g, '') || '0');
             
-            if (selectedSchool && selectedSchool.retirementPlans.has457b) {
-                // 457(b) limit is $23,000 per year (2024)
-                monthlyInput.max = 1916; // $23,000 / 12 = $1,916.67 per month
-                monthlyInput.value = Math.min(monthlyInput.value, 1916);
-                // Add helper text
-                document.querySelector('.slider-group label[for="monthlyContribution"]')
-                    .innerHTML = 'Monthly Contribution ($): <span style="color: var(--primary-light);">Max $1,916/month (457(b) limit)</span>';
+            let maxAnnualContribution;
+            if (income < 20000 || !selectedSchool?.retirementPlans?.has457b) {
+                // Roth IRA limit (2024)
+                maxAnnualContribution = Math.min(7000, income);
             } else {
-                // Roth IRA limit is $7,000 per year (2024)
-                monthlyInput.max = 583; // $7,000 / 12 = $583.33 per month
-                monthlyInput.value = Math.min(monthlyInput.value, 583);
-                // Add helper text
-                document.querySelector('.slider-group label[for="monthlyContribution"]')
-                    .innerHTML = 'Monthly Contribution ($): <span style="color: var(--primary-light);">Max $583/month (Roth IRA limit)</span>';
+                // 457(b) limit (2024)
+                maxAnnualContribution = Math.min(23000, income);
             }
             
+            // Set monthly maximum
+            const maxMonthly = Math.round(maxAnnualContribution / 12);
+            monthlyInput.max = maxMonthly;
+            monthlyInput.value = Math.min(monthlyInput.value, maxMonthly);
+            
+            // Update helper text with appropriate account type
+            const accountType = income < 20000 || !selectedSchool?.retirementPlans?.has457b ? 'Roth IRA' : '457(b)';
+            document.querySelector('.slider-group label[for="monthlyContribution"]')
+                .innerHTML = `Monthly Contribution ($): <span style="color: var(--primary-light);">Max $${maxMonthly.toLocaleString()}/month (${accountType} limit)</span>`;
+            
             // Update the display and calculations
-            contributionDisplay.textContent = `$${monthlyInput.value}`;
+            document.getElementById('contributionDisplay').textContent = `$${monthlyInput.value}`;
             updateCalculator();
         }
 
@@ -5848,51 +5851,72 @@ function generateTaxHolidaySteps(state) {
             // Calculate disposable income (use defaults if not provided)
             const disposableIncome = monthlyIncome - monthlyRent - monthlyGroceries;
             
-            // Calculate potential contribution options
+            // Determine maximum contribution based on account type and earned income
+            let maxAnnualContribution;
+            let accountType;
+            
+            if (annualIncome < 20000) {
+                // For very low income, suggest Roth IRA
+                accountType = 'Roth IRA';
+                maxAnnualContribution = Math.min(7000, annualIncome); // 2024 Roth IRA limit
+            } else if (selectedSchool?.retirementPlans?.has457b) {
+                // For schools with 457(b) access
+                accountType = '457(b)';
+                maxAnnualContribution = Math.min(23000, annualIncome); // 2024 457(b) limit
+            } else {
+                // Default to Roth IRA
+                accountType = 'Roth IRA';
+                maxAnnualContribution = Math.min(7000, annualIncome); // 2024 Roth IRA limit
+            }
+            
+            // Calculate maximum monthly contribution
+            const maxMonthlyContribution = maxAnnualContribution / 12;
+            
+            // Calculate potential contribution options (not exceeding maximum)
             const contributionOptions = [
-                disposableIncome * 0.2,  // 20% of disposable income
-                monthlySavings*.5,           // Amount they set aside monthly
-                monthlyIncome * 0.1     // 10% of monthly income
+                Math.min(maxMonthlyContribution, disposableIncome * 0.2),  // 20% of disposable income
+                Math.min(maxMonthlyContribution, monthlySavings * 0.5),    // Half of monthly savings
+                Math.min(maxMonthlyContribution, monthlyIncome * 0.1)      // 10% of monthly income
             ].filter(value => value > 0);  // Remove zero or negative values
             
             // Find the minimum positive contribution
             const recommendedContribution = contributionOptions.length > 0 
                 ? Math.round(Math.min(...contributionOptions))
-                : null;
+                : Math.min(maxMonthlyContribution, Math.round(monthlyIncome * 0.15));
             
             // Update DOM
             const recommendationDiv = document.getElementById('retirementContributionRecommendation');
-                if (contributionOptions.length > 1) {
-            // Multiple inputs provided
-            const recommendedContribution = Math.round(Math.min(...contributionOptions));
-            recommendationDiv.innerHTML = `
+            if (contributionOptions.length > 1) {
+                recommendationDiv.innerHTML = `
                     <div class="savings-amount-rent">
                         <span class="amount">$${recommendedContribution.toLocaleString()}</span>
                         <span class="period">/month</span>
                     </div>
                     <div class="savings-details">
-                        <p>Recommended monthly retirement contribution</p>
+                        <p>Recommended monthly ${accountType} contribution</p>
                         <div class="edu-highlight" style="background-color: rgba(124, 58, 237, 0.1); color: var(--text); margin-top: 12px;">
-                            <strong>Tip:</strong> This is a conservative estimate. If you feel able to you should contribute more. Use the calculator below to see the benefits.
+                            <strong>Note:</strong> Maximum annual contribution: $${maxAnnualContribution.toLocaleString()} (${accountType})
+                            <br>Maximum monthly contribution: $${Math.round(maxMonthlyContribution).toLocaleString()}
                         </div>
                     </div>
                 `;
             } else {
                 recommendationDiv.innerHTML = `
                     <div class="savings-amount-rent">
-                        <span class="amount">$${Math.round(monthlyIncome * 0.15).toLocaleString()}</span>
+                        <span class="amount">$${recommendedContribution.toLocaleString()}</span>
                         <span class="period">/month</span>
                     </div>
                     <div class="savings-details">
-                        <p>Recommended based on 10% of your income</p>
+                        <p>Recommended based on your income level</p>
                         <div class="edu-highlight" style="background-color: rgba(124, 58, 237, 0.1); color: var(--text); margin-top: 12px;">
-                            <strong>Tip:</strong> Input your income, rent, groceries, and monthly savings for a personalized recommendation.
+                            <strong>Note:</strong> Maximum annual contribution: $${maxAnnualContribution.toLocaleString()} (${accountType})
+                            <br>Maximum monthly contribution: $${Math.round(maxMonthlyContribution).toLocaleString()}
                         </div>
                     </div>
                 `;
             }
             
-            return recommendedContribution || Math.round(monthlyIncome * 0.15);
+            return recommendedContribution;
         }
         function calculateSavingsInterest(savingsAmount) {
             // If savingsAmount is already a number, use it directly
