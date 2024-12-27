@@ -2171,13 +2171,298 @@ html, body {
                 }
             });
         }
+        function calculateSnapBenefits(annualIncome, state) {
+            // Monthly income
+            const monthlyIncome = annualIncome / 12;
+            
+            // Basic calculation for SNAP benefits
+            // This is a simplified version - actual calculations involve more factors
+            let estimatedBenefits = 0;
+            
+            if (monthlyIncome <= 1473) { // 2024 Federal Poverty Level for single person
+                // Base benefit for 2024
+                const maxBenefit = 291;
+                
+                // Reduction based on income (30% of net income)
+                // Using simplified calculation
+                const netIncome = monthlyIncome * 0.8; // Rough estimate of net income
+                const reduction = netIncome * 0.3;
+                
+                estimatedBenefits = Math.max(0, maxBenefit - reduction);
+            }
+            
+            return Math.round(estimatedBenefits);
+        }
+        function generateSnapCard(annualIncome, state) {
+                if (annualIncome >= 20000) return ''; // Don't show card if income too high
+                
+                const monthlyBenefits = calculateSnapBenefits(annualIncome, state);
+                const annualBenefits = monthlyBenefits * 12;
+                
+                return `
+                    <div class="summary-card">
+                        <div class="summary-content" style="margin-bottom: 1rem;">
+                            <div>
+                                <h3 class="card-title">SNAP Food Benefits: Money for Groceries</h3>
+                                <div class="savings-amount">
+                                    $${monthlyBenefits.toLocaleString()}
+                                    <span style="font-size: 1rem; color: var(--text-light)">/month</span>
+                                </div>
+                            </div>
+                            
+                            <div class="time-investment">
+                                <h4 style="color: var(--text); margin-bottom: 0.5rem">Annual Value</h4>
+                                <div style="font-size: 1.5rem; font-weight: 600; color: var(--primary)">
+                                    $${annualBenefits.toLocaleString()}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="edu-section" style="margin-bottom: 1rem;">
+                            <p style="color: var(--text);">SNAP, a government program that assists with groceries, is open to all, including graduate students. We encourage you to apply as soon as possible - many students qualify but don't realize they're eligible.</p>
+                            <a href="${snapDB[state].url}" target="_blank" data-gtm-event="click" data-gtm-category="External Links" data-gtm-action="Click" data-gtm-label="Apply for SNAP Benefits" class="view-details-btn"  style="margin-top: 10px;">
+                                        Apply for SNAP Benefits
+                                    </a>
+                            <button onclick="toggleSnapDetails()" id="learnSnapBtn" class="learn-more-btn">
+                                Learn More About Applying ↓
+                            </button>
+                        </div>
+
+                        <div id="snapDetails" class="hidden">
+                            <div class="edu-section">
+                                <h4 class="edu-subtitle">How to Apply</h4>
+                                <ul class="edu-list">
+                                    <li>Required Documents:
+                                        <ul>
+                                            <li>Proof of identity (student ID, driver's license)</li>
+                                            <li>Proof of income (pay stubs, award letters)</li>
+                                            <li>Proof of residence (lease, utility bill)</li>
+                                            <li>Social Security Number</li>
+                                        </ul>
+                                    </li>
+                                    <li>Student Eligibility - You may qualify if you:
+                                        <ul>
+                                            <li>Work at least 20 hours per week</li>
+                                            <li>Have a teaching/research assistantship</li>
+                                            <li>Have a work-study position</li>
+                                            <li>Care for dependents</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
 
         // Setup currency formatting for all money-related inputs
+        const snapDB = {
+            'AL': {
+                url: 'https://mydhr.alabama.gov/',
+                notes: 'Apply through Alabama DHR website'
+            },
+            'AK': {
+                url: 'https://dfcs.alaska.gov/Application',
+                notes: 'Alaska Division of Public Assistance'
+            },
+            'AZ': {
+                url: 'https://des.az.gov/na',
+                notes: 'Arizona Department of Economic Security'
+            },
+            'AR': {
+                url: 'https://access.arkansas.gov/',
+                notes: 'Arkansas Department of Human Services'
+            },
+            'CA': {
+                url: 'https://www.cdss.ca.gov/calfresh',
+                notes: 'CalFresh Benefits Application'
+            },
+            'CO': {
+                url: 'https://peak.my.site.com/peak/s/peak-landing-page?language=en_US',
+                notes: 'Colorado PEAK System'
+            },
+            'CT': {
+                url: 'https://portal.ct.gov/connect',
+                notes: 'Connecticut DSS Connect'
+            },
+            'DE': {
+                url: 'https://assist.dhss.delaware.gov/',
+                notes: 'Delaware ASSIST'
+            },
+            'FL': {
+                url: 'https://www.myflorida.com/accessflorida/',
+                notes: 'Florida ACCESS'
+            },
+            'GA': {
+                url: 'https://gateway.ga.gov/',
+                notes: 'Georgia Gateway'
+            },
+            'HI': {
+                url: 'https://pais-benefits.dhs.hawaii.gov/',
+                notes: 'Hawaii PAIS'
+            },
+            'ID': {
+                url: 'https://idalink.idaho.gov/',
+                notes: 'Idaho Idalink'
+            },
+            'IL': {
+                url: 'https://abe.illinois.gov/',
+                notes: 'Illinois ABE'
+            },
+            'IN': {
+                url: 'https://fssabenefits.in.gov/',
+                notes: 'Indiana FSSA'
+            },
+            'IA': {
+                url: 'https://dhs.iowa.gov/food-assistance',
+                notes: 'Iowa DHS'
+            },
+            'KS': {
+                url: 'https://cssp.kees.ks.gov/',
+                notes: 'Kansas KEES'
+            },
+            'KY': {
+                url: 'https://kynect.ky.gov/',
+                notes: 'Kentucky kynect'
+            },
+            'LA': {
+                url: 'http://dcfs.la.gov/cafe',
+                notes: 'Louisiana CAFÉ'
+            },
+            'ME': {
+                url: 'https://www.maine.gov/mymaineconnection/',
+                notes: 'Maine Connection'
+            },
+            'MD': {
+                url: 'https://mydhrbenefits.dhr.state.md.us/',
+                notes: 'Maryland DHR'
+            },
+            'MA': {
+                url: 'https://dtaconnect.eohhs.mass.gov/',
+                notes: 'Massachusetts DTA Connect'
+            },
+            'MI': {
+                url: 'https://newmibridges.michigan.gov/',
+                notes: 'Michigan MIBridges'
+            },
+            'MN': {
+                url: 'https://mn.gov/dhs/food-emergency/',
+                notes: 'Minnesota DHS'
+            },
+            'MS': {
+                url: 'https://www.access.ms.gov/',
+                notes: 'Mississippi Access'
+            },
+            'MO': {
+                url: 'https://mydss.mo.gov/',
+                notes: 'Missouri DSS'
+            },
+            'MT': {
+                url: 'https://apply.mt.gov/',
+                notes: 'Montana DPHHS'
+            },
+            'NE': {
+                url: 'https://dhhs-access-neb-menu.ne.gov/',
+                notes: 'Nebraska ACCESS'
+            },
+            'NV': {
+                url: 'https://dwss.nv.gov/',
+                notes: 'Nevada DWSS'
+            },
+            'NH': {
+                url: 'https://nheasy.nh.gov/',
+                notes: 'New Hampshire EASY'
+            },
+            'NJ': {
+                url: 'https://oneapp.dhs.state.nj.us/',
+                notes: 'New Jersey OneApp'
+            },
+            'NM': {
+                url: 'https://www.yes.state.nm.us/',
+                notes: 'New Mexico YES'
+            },
+            'NY': {
+                url: 'https://mybenefits.ny.gov/',
+                notes: 'New York myBenefits'
+            },
+            'NC': {
+                url: 'https://epass.nc.gov/',
+                notes: 'North Carolina ePASS'
+            },
+            'ND': {
+                url: 'https://www.applyforhelp.nd.gov/',
+                notes: 'North Dakota Apply for Help'
+            },
+            'OH': {
+                url: 'https://benefits.ohio.gov/',
+                notes: 'Ohio Benefits'
+            },
+            'OK': {
+                url: 'https://www.okdhslive.org/',
+                notes: 'Oklahoma DHS Live'
+            },
+            'OR': {
+                url: 'https://one.oregon.gov/',
+                notes: 'Oregon ONE'
+            },
+            'PA': {
+                url: 'https://www.compass.state.pa.us/',
+                notes: 'Pennsylvania COMPASS'
+            },
+            'RI': {
+                url: 'https://healthyrhode.ri.gov/',
+                notes: 'Rhode Island HealthyRhode'
+            },
+            'SC': {
+                url: 'https://scmapp.sc.gov/',
+                notes: 'South Carolina SCMAPP'
+            },
+            'SD': {
+                url: 'https://dss.sd.gov/',
+                notes: 'South Dakota DSS'
+            },
+            'TN': {
+                url: 'https://faonlineapp.dhs.tn.gov/',
+                notes: 'Tennessee DHS'
+            },
+            'TX': {
+                url: 'https://yourtexasbenefits.com/',
+                notes: 'Your Texas Benefits'
+            },
+            'UT': {
+                url: 'https://jobs.utah.gov/mycase/',
+                notes: 'Utah myCase'
+            },
+            'VT': {
+                url: 'https://portal.healthconnect.vermont.gov/',
+                notes: 'Vermont Health Connect'
+            },
+            'VA': {
+                url: 'https://commonhelp.virginia.gov/',
+                notes: 'Virginia CommonHelp'
+            },
+            'WA': {
+                url: 'https://www.washingtonconnection.org/',
+                notes: 'Washington Connection'
+            },
+            'WV': {
+                url: 'https://www.wvpath.org/',
+                notes: 'West Virginia PATH'
+            },
+            'WI': {
+                url: 'https://access.wisconsin.gov/',
+                notes: 'Wisconsin ACCESS'
+            },
+            'WY': {
+                url: 'https://dfs.wyo.gov/',
+                notes: 'Wyoming DFS'
+            }
+        };
         
         // School database (same as before)
         const schoolsDB = {
             'other': {
-                name: 'My School Isn\'t Listed',
+                name: 'My School Isn\'t Listed (click here)',
                 state: null,
                 retirementPlans: {
                     has403b: false,
@@ -3826,6 +4111,20 @@ const stateTaxDB = {
                 { threshold: Infinity, rate: 20 }
             ]
         };
+        function toggleSnapDetails() {
+            const detailsSection = document.getElementById('snapDetails');
+            const button = document.getElementById('learnSnapBtn');
+            const isHidden = detailsSection.classList.contains('hidden');
+            
+            detailsSection.classList.toggle('hidden');
+            button.textContent = isHidden ? 'Show Less ↑' : 'Learn More About Applying ↓';
+            
+            if (isHidden) {
+                setTimeout(() => {
+                    detailsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            }
+        }
         function toggleTaxHolidayDetails() {
             const detailsSection = document.getElementById('taxHolidayDetails');
             const button = document.getElementById('learnTaxHolidayBtn');
@@ -4231,7 +4530,7 @@ const stateTaxDB = {
     
     if (schoolId === 'other') {
         // Show state suggestions and set school text
-        searchInput.value = 'My School Isn\'t Listed';
+        searchInput.value = 'My School Isn\'t Listed (click here)';
         
         // Populate state suggestions
         stateSuggestions.innerHTML = `
@@ -4278,7 +4577,7 @@ function selectState(stateAbbr, stateName) {
     
     // Correctly set the selectedSchool object
     selectedSchool = {
-        name: 'My School Isn\'t Listed',
+        name: 'My School Isn\'t Listed (click here)',
         state: stateAbbr,
         retirementPlans: {
             has403b: false,
@@ -4843,7 +5142,7 @@ function selectState(stateAbbr, stateName) {
                     </div>
                 `).join('')}
                 <div class="suggestion-item" onclick="showStateSelection()">
-                    <span class="school-name">My School Isn't Listed</span>
+                    <span class="school-name">My School Isn't Listed (click here)</span>
                 </div>`;
             
             suggestionsDiv.classList.remove('hidden');
@@ -4856,7 +5155,7 @@ function selectState(stateAbbr, stateName) {
             const stateSuggestions = document.getElementById('stateSuggestions');
             
             // Set input text
-            searchInput.value = 'My School Isn\'t Listed';
+            searchInput.value = 'My School Isn\'t Listed (click here)';
             
             // Populate state suggestions
             stateSuggestions.innerHTML = `
@@ -5019,40 +5318,171 @@ function selectState(stateAbbr, stateName) {
         return totalTime;
     }
 
-    // Calculate total potential savings
-    function calculateTotalSavings(income, state, monthlyRent, monthlyGroceries, savingsAmount) {
-        // Parse inputs safely
-        const annualIncome = parseFloat(income) || 0;
-        
-        // 1. Rent Savings (529 plan)
-        const rentSavings = calculateRentSavings(income, state, monthlyRent);
-        
-        // 2. Grocery Savings
-        const grocerySavings = calculateGrocerySavings(monthlyGroceries);
-        
-        // 3. Retirement Savings
-        const retirementSavings = calculateRetirementSavings(annualIncome);
-        
-        // 4. Tax Holiday Savings
-        let taxHolidaySavings = 0;
-        if (stateTaxHolidayDB[state]?.hasTaxHoliday) {
-            stateTaxHolidayDB[state].holidays.forEach(holiday => {
-                taxHolidaySavings += calculateTaxHolidaySavings(state, holiday.name);
-            });
-        }
-        
-        // 5. Savings Account Interest
-        const hysaInterest = calculateSavingsInterest(document.getElementById('savings')?.value);
-        
-        // Total savings
-        return Math.round(
-            rentSavings + 
-            grocerySavings + 
-            retirementSavings + 
-            taxHolidaySavings + 
-            hysaInterest
-        );
+    // Updated generatePlan function to include SNAP benefits card
+function generatePlan() {
+    if (!selectedSchool || !document.getElementById('income').value) {
+        showError('Please select your school and enter your income first.');
+        return;
     }
+
+    const income = parseFloat(document.getElementById('income').value.replace(/[^0-9.]/g, ''));
+    const state = selectedSchool.state;
+    const monthlyRent = parseFloat(document.getElementById('monthlyRent')?.value?.replace(/[^0-9.]/g, '') || '1200');
+    const monthlyGroceries = parseFloat(document.getElementById('monthlyGroceries')?.value?.replace(/[^0-9.]/g, '') || '350');
+    
+    // Calculate totals
+    const totalSavings = calculateTotalSavings(income, state, monthlyRent, monthlyGroceries);
+    const totalMinutes = calculateTotalOptimizationTime();
+    
+    // Get DOM elements
+    const loadingElement = document.getElementById('loadingAnimation');
+    const resultsDiv = document.getElementById('results');
+    const planStepsDiv = document.getElementById('planSteps');
+    
+    // Show loading, hide results
+    loadingElement.style.display = 'flex';
+    loadingElement.classList.remove('hidden');
+    resultsDiv.classList.add('hidden');
+    
+    // Scroll to show loading animation
+    loadingElement.scrollIntoView({ behavior: 'smooth' });
+
+    // Process after delay
+    setTimeout(() => {
+        try {
+            // Clear existing content
+            planStepsDiv.innerHTML = '';
+            
+            // Add SNAP card first if eligible
+            if (income < 20000) {
+                const snapCard = generateSnapCard(income, state);
+                planStepsDiv.innerHTML += snapCard;
+            }
+            
+            // Add summary card
+            planStepsDiv.innerHTML += generateSummaryCard(totalSavings, totalMinutes);
+            
+            // Add sections
+            const sections = [
+                {
+                    title: 'Rent',
+                    description: state529DB[state].deduction > 0 
+                        ? `Use your state's 529 plan to save ${(calculateStateTaxRate(income, state) * 100).toFixed(1)}% in taxes on up to $${state529DB[state].deduction.toLocaleString()} of qualified education expenses.`
+                        : 'Your state does not offer 529 tax deductions, but you can still benefit from tax-free growth.',
+                    savings: state529DB[state].deduction > 0 ? calculateRentSavings(income, state, monthlyRent) : 0,
+                    tab: 'rent-groceries',
+                    time: OPTIMIZATION_CONFIG['rent-groceries'].rent.totalTime
+                },
+                {
+                    title: 'Grocery Rewards',
+                    description: 'Get 5% cash back on groceries.',
+                    savings: calculateGrocerySavings(monthlyGroceries),
+                    tab: 'rent-groceries',
+                    time: OPTIMIZATION_CONFIG['rent-groceries'].groceries.totalTime
+                },
+                {
+                    title: 'Retirement Benefits',
+                    description: income < 20000 
+                        ? 'Start building tax-free retirement savings with a Roth IRA while in your lowest tax bracket.'
+                        : (selectedSchool.retirementPlans.has457b 
+                            ? 'Take advantage of your 457(b) access - a unique retirement account with no withdrawal penalties after leaving your program.'
+                            : 'Start building tax-free retirement savings with a Roth IRA while in your lower tax bracket.'),
+                    savings: calculateRetirementSavings(income),
+                    tab: 'retirement',
+                    time: OPTIMIZATION_CONFIG.retirement.totalTime
+                },
+                {
+                    title: 'Savings Strategy',
+                    description: 'Optimize your savings with high-yield accounts and tax-advantaged options.',
+                    savings: calculateSavingsInterest(document.getElementById('savings')?.value),
+                    tab: 'savings',
+                    time: OPTIMIZATION_CONFIG.savings.totalTime
+                }
+            ];
+
+            // Add Tax Holiday section if applicable
+            const holidayInfo = stateTaxHolidayDB[state];
+            if (holidayInfo?.hasTaxHoliday) {
+                let totalHolidaySavings = 0;
+                let holidayNames = [];
+                holidayInfo.holidays.forEach(holiday => {
+                    totalHolidaySavings += calculateTaxHolidaySavings(state, holiday.name);
+                    holidayNames.push(holiday.name);
+                });
+
+                sections.push({
+                    title: 'Tax Holidays',
+                    description: `Your state offers ${holidayNames.length} tax holidays: ${holidayNames.join(', ')}. Plan your purchases during these periods to save on sales tax.`,
+                    savings: totalHolidaySavings,
+                    tab: 's&s',
+                    time: OPTIMIZATION_CONFIG['s&s'].totalTime
+                });
+            }
+
+            // Create and append each section
+            sections.forEach(section => addPlanStep(planStepsDiv, section.title, section.description, section.savings, '', section.tab, section.time));
+            
+            // Hide loading, show results
+            loadingElement.style.display = 'none';
+            loadingElement.classList.add('hidden');
+            resultsDiv.classList.remove('hidden');
+            
+            // Mark as optimized and update rating
+            hasOptimized = true;
+            updateRating();
+            
+            // Scroll to results
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+            
+        } catch (error) {
+            console.error('Error generating plan:', error);
+            loadingElement.style.display = 'none';
+            loadingElement.classList.add('hidden');
+            showError('An error occurred while generating your plan. Please try again.');
+        }
+    }, 2000);
+}
+
+// Updated calculateTotalSavings function to include SNAP benefits
+function calculateTotalSavings(income, state, monthlyRent, monthlyGroceries) {
+    // Parse inputs safely
+    const annualIncome = parseFloat(income) || 0;
+    const rent = parseFloat(monthlyRent) || 1200;
+    const groceries = parseFloat(monthlyGroceries) || 350;
+    
+    // Calculate SNAP benefits if eligible
+    const snapBenefits = annualIncome < 20000 ? calculateSnapBenefits(annualIncome, state) * 12 : 0;
+    
+    // Rent Savings (529 plan)
+    const rentSavings = calculateRentSavings(annualIncome, state, rent);
+    
+    // Grocery Savings
+    const grocerySavings = calculateGrocerySavings(groceries);
+    
+    // Retirement Savings
+    const retirementSavings = calculateRetirementSavings(annualIncome);
+    
+    // Tax Holiday Savings
+    let taxHolidaySavings = 0;
+    if (stateTaxHolidayDB[state]?.hasTaxHoliday) {
+        stateTaxHolidayDB[state].holidays.forEach(holiday => {
+            taxHolidaySavings += calculateTaxHolidaySavings(state, holiday.name);
+        });
+    }
+    
+    // Savings Account Interest
+    const hysaInterest = calculateSavingsInterest(document.getElementById('savings')?.value);
+    
+    // Return total savings including SNAP benefits
+    return Math.round(
+        snapBenefits +
+        rentSavings + 
+        grocerySavings + 
+        retirementSavings + 
+        taxHolidaySavings + 
+        hysaInterest
+    );
+}
     function calculateGrocerySavings(monthlyGroceries) {
         const monthlyGroceriesValue = parseFloat(monthlyGroceries) || 350;
         const monthlyLimit = 500;
@@ -5976,7 +6406,7 @@ function generateTaxHolidaySteps(state) {
         // Modify the generatePlan function to include tab names
         // Update the generatePlan function with proper loading sequence
         function generatePlan() {
-                   if (!selectedSchool || !document.getElementById('income').value) {
+            if (!selectedSchool || !document.getElementById('income').value) {
                 showError('Please select your school and enter your income first.');
                 return;
             }
@@ -6006,8 +6436,18 @@ function generateTaxHolidaySteps(state) {
             // Process after delay
             setTimeout(() => {
                 try {
-                    // Generate the summary card HTML
-                    planStepsDiv.innerHTML = generateSummaryCard(totalSavings, totalMinutes);
+                    // Clear existing content
+                    planStepsDiv.innerHTML = '';
+                    
+                    // Add SNAP card first if eligible
+                    
+                    
+                    // Add summary card
+                    planStepsDiv.innerHTML += generateSummaryCard(totalSavings, totalMinutes);
+                    if (income < 20000) {
+                        const snapCard = generateSnapCard(income, state);
+                        planStepsDiv.innerHTML += snapCard;
+                    }
                     
                     // Add sections
                     const sections = [
@@ -6029,20 +6469,14 @@ function generateTaxHolidaySteps(state) {
                         },
                         {
                             title: 'Retirement Benefits',
-    description: (() => {
-        const income = parseFloat(document.getElementById('income').value.replace(/[^0-9.]/g, '')) || 0;
-        
-        if (income < 20000) {
-            return 'Start building tax-free retirement savings with a Roth IRA while in your lowest tax bracket.';
-        }
-        
-        return selectedSchool.retirementPlans.has457b 
-            ? 'Take advantage of your 457(b) access - a unique retirement account with no withdrawal penalties after leaving your program.'
-            : 'Start building tax-free retirement savings with a Roth IRA while in your lower tax bracket.';
-    })(),
-    savings: calculateRetirementSavings(income),
-    tab: 'retirement',
-    time: OPTIMIZATION_CONFIG.retirement.totalTime
+                            description: income < 20000 
+                                ? 'Start building tax-free retirement savings with a Roth IRA while in your lowest tax bracket.'
+                                : (selectedSchool.retirementPlans.has457b 
+                                    ? 'Take advantage of your 457(b) access - a unique retirement account with no withdrawal penalties after leaving your program.'
+                                    : 'Start building tax-free retirement savings with a Roth IRA while in your lower tax bracket.'),
+                            savings: calculateRetirementSavings(income),
+                            tab: 'retirement',
+                            time: OPTIMIZATION_CONFIG.retirement.totalTime
                         },
                         {
                             title: 'Savings Strategy',
@@ -6073,31 +6507,7 @@ function generateTaxHolidaySteps(state) {
                     }
 
                     // Create and append each section
-                    sections.forEach(section => {
-                        const stepDiv = document.createElement('div');
-                        stepDiv.classList.add('step');
-                        
-                        let savingsText = '';
-                        if (section.savings > 0) {
-                            savingsText = `
-                                <p class="savings-estimate">
-                                    Potential Savings: $${Math.round(section.savings).toLocaleString()}
-                                    ${section.tab ? `<button class="view-details-btn" onclick="switchTab('${section.tab}')">View Details </button>` : ''}
-                                </p>`;
-                        } else if (section.tab) {
-                            savingsText = `
-                                <p class="savings-estimate">
-                                    <button class="view-details-btn" onclick="switchTab('${section.tab}')">View Details</button>
-                                </p>`;
-                        }
-                        
-                        stepDiv.innerHTML = `
-                            <h3>${section.title}</h3>
-                            <p>${section.description}</p>
-                            ${savingsText}
-                        `;
-                        planStepsDiv.appendChild(stepDiv);
-                    });
+                    sections.forEach(section => addPlanStep(planStepsDiv, section.title, section.description, section.savings, '', section.tab, section.time));
                     
                     // Hide loading, show results
                     loadingElement.style.display = 'none';
