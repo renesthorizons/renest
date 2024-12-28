@@ -1487,6 +1487,88 @@ html, body {
     right: 15px;
     z-index: 2001;
 }
+.expand-arrow {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(124, 58, 237, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    margin-left: auto;
+    color: var(--primary);
+}
+
+.expand-arrow:hover {
+    background: rgba(124, 58, 237, 0.2);
+    transform: translateY(-2px);
+}
+
+.step-content.hidden + .step-header .expand-arrow {
+    transform: rotate(180deg);
+}
+.optimize-btn {
+    display: block;
+    width: 200px;
+    min-height: 50px;
+    margin: 15px auto;
+    font-size: 1rem;
+    font-weight: 500;
+    color: white;
+    background: var(--primary);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+    box-shadow: 0 2px 4px rgba(2, 21, 61, 0.2);
+    text-decoration: none;
+}
+
+.optimize-btn:hover {
+    transform: translateY(-2px);
+    background: var(--primary-light);
+    box-shadow: 0 4px 8px rgba(2, 21, 61, 0.25);
+}
+
+.optimize-btn:hover::before {
+    transform: translateX(100%);
+}
+
+.optimize-btn:hover .button-text {
+    opacity: 0;
+}
+
+.optimize-btn:hover .button-logo {
+    opacity: 1;
+}
+
+.optimize-btn .button-content {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    padding: 10px;
+}
+
+.optimize-btn .button-text {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.optimize-btn .button-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 40px;
+    width: auto;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
 </style>
 </head>
 <body>
@@ -1556,7 +1638,7 @@ html, body {
                         </div>
                     </div>
                     <div class="form-group wide">
-                        <label for="income">Annual Income:</label>
+                        <label for="income">Your Estimated Income this Year:</label>
                         <input type="text" id="income" placeholder="Closest Guess">
                     </div>
                 </div>
@@ -1672,7 +1754,7 @@ html, body {
                             </div></h3>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="savings">Money You Haven't Used in Past 3 Months:</label>
+                        <label for="savings">Your Total Savings:</label>
                         <input type="text" id="savings" placeholder="Estimated Savings Amount ($)">
                     </div>
                     <!-- <div class="form-group">
@@ -1844,6 +1926,7 @@ html, body {
                         </button>
                     </div>
 
+
                     <div id="retirementDetails" class="hidden">
                         <div class="edu-section">
                             <h3 class="edu-subtitle">Understanding Your Retirement Options</h3>
@@ -1863,6 +1946,21 @@ html, body {
                                     <li><strong>Emergency Access:</strong> Available for medical emergencies</li>
                                 </ul>
                             </div>
+                        </div>
+                    </div>
+                    <div id="renestBenefitsEstimate" class="savings-estimate">
+                        <div class="savings-amount-rent">
+                            <span class="amount">$0</span>
+                            <span class="period">/year</span>
+                        </div>
+                        <div class="savings-details">
+                            <p>Additional retirement support you qualify for based on your information</p>
+                            <a href="https://www.renesthorizons.com" target="_blank" data-gtm-event="click" data-gtm-category="External Links" data-gtm-action="Click" data-gtm-label="Renest Core" class="optimize-btn" style="margin-top: 15px;">
+                                <div class="button-content">
+                                    <span class="button-text">Learn More</span>
+                                    <img src="blogo.png" alt="Logo" class="button-logo">
+                                </div>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -2128,6 +2226,13 @@ html, body {
             <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdQaV4FjKE5cX658_6nnYFTYFlm0Y1FXWV5RrNHu4i8eOTPWA/viewform?embedded=true"></iframe>
         </div>
     </div>
+
+    <!-- Add this near the end of your body tag -->
+<div class="form-overlay" id="formOverlay">
+    <div class="form-container">
+        <!-- Form will be inserted here -->
+    </div>
+</div>
 </body>
 
     <script>
@@ -2234,28 +2339,29 @@ html, body {
             });
         }
         function handleNavScroll() {
-            const nav = document.querySelector('.nav-tabs');
-            const navOffset = nav.offsetTop;
-            
-            if (window.scrollY >= navOffset) {
-                nav.classList.add('fixed');
-                document.body.classList.add('nav-is-fixed');
-            } else {
-                nav.classList.remove('fixed');
-                document.body.classList.remove('nav-is-fixed');
-            }
+        const nav = document.querySelector('.nav-tabs');
+        const navOffset = nav.offsetTop;
+        
+        if (window.scrollY >= navOffset) {
+            nav.classList.add('fixed');
+            document.body.classList.add('nav-is-fixed');
+        } else {
+            nav.classList.remove('fixed');
+            document.body.classList.remove('nav-is-fixed');
         }
+    }
 
         // Initialize scroll handler
         function initializeScrollBehavior() {
-            const nav = document.querySelector('.nav-tabs');
-            if (nav) {
-                // Add scroll event listener
-                window.addEventListener('scroll', handleNavScroll);
-                // Check initial position
-                handleNavScroll();
-            }
+        const nav = document.querySelector('.nav-tabs');
+        if (nav) {
+            // Add scroll event listener
+            window.addEventListener('scroll', handleNavScroll);
+            // Check initial position
+            handleNavScroll();
         }
+    }
+
 
         function setupCurrencyInput(inputId) {
             const input = document.getElementById(inputId);
@@ -2324,7 +2430,7 @@ html, body {
                         <div class="edu-section" style="margin-bottom: 1rem;">
                             <p style="color: var(--text);">SNAP, a government program that assists with groceries, is open to all, including graduate students. We encourage you to apply as soon as possible - many students qualify but don't realize they're eligible.</p>
                             <a href="${snapDB[state].url}" target="_blank" data-gtm-event="click" data-gtm-category="External Links" data-gtm-action="Click" data-gtm-label="Apply for SNAP Benefits" class="view-details-btn"  style="margin-top: 10px;">
-                                        Apply for SNAP Benefits
+                                        Apply for Benefits
                                     </a>
                             <button onclick="toggleSnapDetails()" id="learnSnapBtn" class="learn-more-btn">
                                 Learn More About Applying ↓
@@ -2565,7 +2671,7 @@ html, body {
         // School database (same as before)
         const schoolsDB = {
             'other': {
-                name: 'My School Isn\'t Listed (click here)',
+                name: 'My School Isn\'t Listed Yet (click here)',
                 state: null,
                 retirementPlans: {
                     has403b: false,
@@ -4633,7 +4739,7 @@ const stateTaxDB = {
     
     if (schoolId === 'other') {
         // Show state suggestions and set school text
-        searchInput.value = 'My School Isn\'t Listed (click here)';
+        searchInput.value = 'My School Isn\'t Listed Yet (click here)';
         
         // Populate state suggestions
         stateSuggestions.innerHTML = `
@@ -4664,6 +4770,7 @@ const stateTaxDB = {
         updateCalculatorLimits();
         updateSavingsEstimate();
         updateGrocerySavings();
+        updateRenestBenefitsDisplay();
         initializeRentGrocerySection();
         
         // Hide suggestions
@@ -4680,7 +4787,7 @@ function selectState(stateAbbr, stateName) {
     
     // Correctly set the selectedSchool object
     selectedSchool = {
-        name: 'My School Isn\'t Listed (click here)',
+        name: 'My School Isn\'t Listed Yet (click here)',
         state: stateAbbr,
         retirementPlans: {
             has403b: false,
@@ -4692,7 +4799,7 @@ function selectState(stateAbbr, stateName) {
     };
     
     // Update search input to show selected state
-    searchInput.value = `My School Isn't Listed (${stateName})`;
+    searchInput.value = `My School Isn't Listed Yet (${stateName})`;
     
     // Hide state suggestions
     stateSuggestions.classList.add('hidden');
@@ -4940,7 +5047,7 @@ function selectState(stateAbbr, stateName) {
             const income = parseFloat(document.getElementById('income')?.value.replace(/[^0-9.]/g, '')) || 0;
     
             // If income is below $20,000, always use Roth IRA steps
-            if (income < 20000) {
+            if (income < 20000|| !school.retirementPlans.has457b) {
                 return `
                     <div class="step-item">
                         <div class="step-header" onclick="toggleStep('retirement1')">
@@ -5236,7 +5343,7 @@ function selectState(stateAbbr, stateName) {
                     id !== 'other' && school.name.toLowerCase().includes(searchTerm))
                 .slice(0, 10); // Limit to 10 suggestions
 
-            // Show matching schools followed by "My School Isn't Listed"
+            // Show matching schools followed by "My School Isn't Listed Yet"
             suggestionsDiv.innerHTML = `
                 ${suggestions.map(([id, school]) => `
                     <div class="suggestion-item" onclick="selectSchool('${id}')">
@@ -5245,7 +5352,7 @@ function selectState(stateAbbr, stateName) {
                     </div>
                 `).join('')}
                 <div class="suggestion-item" onclick="showStateSelection()">
-                    <span class="school-name">My School Isn't Listed (click here)</span>
+                    <span class="school-name">My School Isn't Listed Yet (click here)</span>
                 </div>`;
             
             suggestionsDiv.classList.remove('hidden');
@@ -5258,7 +5365,7 @@ function selectState(stateAbbr, stateName) {
             const stateSuggestions = document.getElementById('stateSuggestions');
             
             // Set input text
-            searchInput.value = 'My School Isn\'t Listed (click here)';
+            searchInput.value = 'My School Isn\'t Listed Yet (click here)';
             
             // Populate state suggestions
             stateSuggestions.innerHTML = `
@@ -5422,129 +5529,7 @@ function selectState(stateAbbr, stateName) {
     }
 
     // Updated generatePlan function to include SNAP benefits card
-function generatePlan() {
-    if (!selectedSchool || !document.getElementById('income').value) {
-        showError('Please select your school and enter your income first.');
-        return;
-    }
 
-    const income = parseFloat(document.getElementById('income').value.replace(/[^0-9.]/g, ''));
-    const state = selectedSchool.state;
-    const monthlyRent = parseFloat(document.getElementById('monthlyRent')?.value?.replace(/[^0-9.]/g, '') || '1200');
-    const monthlyGroceries = parseFloat(document.getElementById('monthlyGroceries')?.value?.replace(/[^0-9.]/g, '') || '350');
-    
-    // Calculate totals
-    const totalSavings = calculateTotalSavings(income, state, monthlyRent, monthlyGroceries);
-    const totalMinutes = calculateTotalOptimizationTime();
-    
-    // Get DOM elements
-    const loadingElement = document.getElementById('loadingAnimation');
-    const resultsDiv = document.getElementById('results');
-    const planStepsDiv = document.getElementById('planSteps');
-    
-    // Show loading, hide results
-    loadingElement.style.display = 'flex';
-    loadingElement.classList.remove('hidden');
-    resultsDiv.classList.add('hidden');
-    
-    // Scroll to show loading animation
-    loadingElement.scrollIntoView({ behavior: 'smooth' });
-
-    // Process after delay
-    setTimeout(() => {
-        try {
-            // Clear existing content
-            planStepsDiv.innerHTML = '';
-            
-            // Add SNAP card first if eligible
-            if (income < 20000) {
-                const snapCard = generateSnapCard(income, state);
-                planStepsDiv.innerHTML += snapCard;
-            }
-            
-            // Add summary card
-            planStepsDiv.innerHTML += generateSummaryCard(totalSavings, totalMinutes);
-            
-            // Add sections
-            const sections = [
-                {
-                    title: 'Rent',
-                    description: state529DB[state].deduction > 0 
-                        ? `Use your state's 529 plan to save ${(calculateStateTaxRate(income, state) * 100).toFixed(1)}% in taxes on up to $${state529DB[state].deduction.toLocaleString()} of qualified education expenses.`
-                        : 'Your state does not offer 529 tax deductions, but you can still benefit from tax-free growth.',
-                    savings: state529DB[state].deduction > 0 ? calculateRentSavings(income, state, monthlyRent) : 0,
-                    tab: 'rent-groceries',
-                    time: OPTIMIZATION_CONFIG['rent-groceries'].rent.totalTime
-                },
-                {
-                    title: 'Grocery Rewards',
-                    description: 'Get 5% cash back on groceries.',
-                    savings: calculateGrocerySavings(monthlyGroceries),
-                    tab: 'rent-groceries',
-                    time: OPTIMIZATION_CONFIG['rent-groceries'].groceries.totalTime
-                },
-                {
-                    title: 'Retirement Benefits',
-                    description: income < 20000 
-                        ? 'Start building tax-free retirement savings with a Roth IRA while in your lowest tax bracket.'
-                        : (selectedSchool.retirementPlans.has457b 
-                            ? 'Take advantage of your 457(b) access - a unique retirement account with no withdrawal penalties after leaving your program.'
-                            : 'Start building tax-free retirement savings with a Roth IRA while in your lower tax bracket.'),
-                    savings: calculateRetirementSavings(income),
-                    tab: 'retirement',
-                    time: OPTIMIZATION_CONFIG.retirement.totalTime
-                },
-                {
-                    title: 'Savings Strategy',
-                    description: 'Optimize your savings with high-yield accounts and tax-advantaged options.',
-                    savings: calculateSavingsInterest(document.getElementById('savings')?.value),
-                    tab: 'savings',
-                    time: OPTIMIZATION_CONFIG.savings.totalTime
-                }
-            ];
-
-            // Add Tax Holiday section if applicable
-            const holidayInfo = stateTaxHolidayDB[state];
-            if (holidayInfo?.hasTaxHoliday) {
-                let totalHolidaySavings = 0;
-                let holidayNames = [];
-                holidayInfo.holidays.forEach(holiday => {
-                    totalHolidaySavings += calculateTaxHolidaySavings(state, holiday.name);
-                    holidayNames.push(holiday.name);
-                });
-
-                sections.push({
-                    title: 'Tax Holidays',
-                    description: `Your state offers ${holidayNames.length} tax holidays: ${holidayNames.join(', ')}. Plan your purchases during these periods to save on sales tax.`,
-                    savings: totalHolidaySavings,
-                    tab: 's&s',
-                    time: OPTIMIZATION_CONFIG['s&s'].totalTime
-                });
-            }
-
-            // Create and append each section
-            sections.forEach(section => addPlanStep(planStepsDiv, section.title, section.description, section.savings, '', section.tab, section.time));
-            
-            // Hide loading, show results
-            loadingElement.style.display = 'none';
-            loadingElement.classList.add('hidden');
-            resultsDiv.classList.remove('hidden');
-            
-            // Mark as optimized and update rating
-            hasOptimized = true;
-            updateRating();
-            
-            // Scroll to results
-            resultsDiv.scrollIntoView({ behavior: 'smooth' });
-            
-        } catch (error) {
-            console.error('Error generating plan:', error);
-            loadingElement.style.display = 'none';
-            loadingElement.classList.add('hidden');
-            showError('An error occurred while generating your plan. Please try again.');
-        }
-    }, 2000);
-}
 
 // Updated calculateTotalSavings function to include SNAP benefits
 function calculateTotalSavings(income, state, monthlyRent, monthlyGroceries) {
@@ -5563,7 +5548,7 @@ function calculateTotalSavings(income, state, monthlyRent, monthlyGroceries) {
     const grocerySavings = calculateGrocerySavings(groceries);
     
     // Retirement Savings
-    const retirementSavings = calculateRetirementSavings(annualIncome);
+    const retirementSavings = calculateRenestCoreBenefits(annualIncome);
     
     // Tax Holiday Savings
     let taxHolidaySavings = 0;
@@ -5602,20 +5587,14 @@ function calculateTotalSavings(income, state, monthlyRent, monthlyGroceries) {
             <div class="summary-card">
                 <div class="summary-content">
                     <div>
-                        <h3 class="card-title">Total Potential Savings</h3>
+                        <h3 class="card-title">You Could Have an Extra</h3>
                         <div class="savings-amount">
                             $${totalSavings.toLocaleString()}
                             <span style="font-size: 1rem; color: var(--text-light)">/year</span>
                         </div>
                     </div>
                     
-                    <div class="time-investment">
-                        <h4 style="color: var(--text); margin-bottom: 0.5rem">Time Investment</h4>
-                        <div style="font-size: 1.5rem; font-weight: 600; color: var(--primary)">
-                            ${totalMinutes} minutes
-                        </div>
-                        <div style="color: var(--text-light); font-size: 0.875rem">one-time setup</div>
-                    </div>
+                    
                 </div>
                 
                 <div class="summary-footer">
@@ -5626,6 +5605,13 @@ function calculateTotalSavings(income, state, monthlyRent, monthlyGroceries) {
             </div>
         `;
     }
+    // <div class="time-investment">
+                    //     <h4 style="color: var(--text); margin-bottom: 0.5rem">Time Investment</h4>
+                    //     <div style="font-size: 1.5rem; font-weight: 600; color: var(--primary)">
+                    //         ${totalMinutes} minutes
+                    //     </div>
+                    //     <div style="color: var(--text-light); font-size: 0.875rem">one-time setup</div>
+                    // </div>
 
     // Calculate 529 savings
     function calculate529Savings(income, state, expenses) {
@@ -5638,20 +5624,135 @@ function calculateTotalSavings(income, state, monthlyRent, monthlyGroceries) {
         return deductibleAmount * taxRate;
     }
 
+    function calculateRenestCoreBenefits(income) {
+        console.log('CALCULATION START');
+        console.log('Input Income:', income);
+        console.log('Selected School:', selectedSchool);
+        
+        const years = 1;
+        const annualReturn = 0.07;
+        const nestbenefit = 0.04;
+        const annualIncome = income;
+        const maxannualcontribution = Math.min(7000, annualIncome);
+        
+        // CRITICAL: Log the recommended contribution 
+        const assumedContribution = calculateRecommendedContribution();
+        console.log('Assumed Monthly Contribution:', assumedContribution);
+        console.log('Assumed Annual Contribution:', assumedContribution * 12);
+        
+        // Calculate growth in tax-advantaged account
+        const delta = maxannualcontribution - assumedContribution * 12;
+        console.log('Delta:', delta);
+        
+        const nestdelta = delta * nestbenefit;
+        console.log('Nest Delta:', nestdelta);
+        
+        const nc457b = 7000 * nestbenefit;
+        console.log('NC 457b:', nc457b);
+
+        const nestcore = nestdelta;
+        console.log('Nest Core:', nestcore);
+
+        if (selectedSchool.retirementPlans.has457b && income > 20000) {
+            console.log('RETURNING 457b benefit');
+            return nc457b;
+        } else {
+            console.log('RETURNING nest core benefit');
+            return nestcore;
+        }
+    }
+
     // Calculate retirement savings comparison (457b/Roth vs Brokerage)
     function calculateRetirementSavings(income, assumedContribution = 6000) {
         // Assume 7% annual return over 30 years
-        const years = 5;
+        const years = 30;
         const annualReturn = 0.07;
-        
+        assumedContribution=calculateRecommendedContribution();
         // Calculate growth in tax-advantaged account
-        const taxAdvantaged = assumedContribution * Math.pow(1 + annualReturn, years);
+        const taxAdvantaged = assumedContribution*12 * Math.pow(1 + annualReturn, years);
         
         // Calculate growth in brokerage with capital gains tax
         // Assume 15% long-term capital gains tax rate for most grad student income levels
-        const brokerage = assumedContribution * Math.pow(1 + annualReturn * (1 - 0.15), years);
+        const brokerage = assumedContribution*12 * Math.pow(1 + annualReturn *(1-.15*.015), years);
         
-        return taxAdvantaged - brokerage;
+        const rothbenefit=(brokerage-assumedContribution*12)*.8
+        const posttaxrothbenefit=rothbenefit+assumedContribution*12;
+
+
+        return taxAdvantaged - posttaxrothbenefit;
+    }
+    function calculate20YearGrowth(annualContribution) {
+            const contributionYears = 8;
+            const totalYears = 35;
+            const annualReturn = 0.085;
+            
+            // Calculate the future value of contributions made in the first 8 years
+            let futureValue = 0;
+            
+            // Calculate the growth for each year's contribution
+            for (let year = 0; year < contributionYears; year++) {
+                // Calculate how long each contribution will grow
+                const growthYears = totalYears - year;
+                
+                // Calculate future value of this specific contribution
+                const contributionFutureValue = annualContribution * Math.pow(1 + annualReturn, growthYears);
+                
+                futureValue += contributionFutureValue;
+            }
+            
+            return Math.round(futureValue);
+        }
+    function showOptimizeForm(event) {
+        event.preventDefault(); // Prevent immediate navigation
+        
+        // Show the form overlay
+        const formOverlay = document.getElementById('formOverlay');
+        formOverlay.style.display = 'flex';
+        
+        // Update form container with new form
+        const formContainer = formOverlay.querySelector('.form-container');
+        formContainer.innerHTML = `
+            <button class="close-form" onclick="closeForm()"><span class="close-x">&times;</span></button>
+            <div class="form-message">Please fill out this quick form</div>
+            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfCP28u0eYCkKXuveopKkiH3jam6xzp9Id5uj0Vap234z43iQ/viewform?embedded=true" 
+                    width="100%" 
+                    height="500px" 
+                    frameborder="0" 
+                    marginheight="0" 
+                    marginwidth="0">
+                Loading...
+            </iframe>
+        `;
+
+        // After form submission, navigate to the website
+        // Note: You'll need to handle this based on your Google Form setup
+        // setTimeout(() => {
+        //     window.open('https://www.renesthorizons.com', '_blank');
+        // }, 10000);
+    }
+
+    function updateRenestBenefitsDisplay() {
+        const income = parseFloat(document.getElementById('income')?.value.replace(/[^0-9.-]+/g, '') || 0);
+        const benefits = calculateRenestCoreBenefits(income);
+        const futureValue = calculate20YearGrowth(benefits);
+        
+        const benefitsDiv = document.getElementById('renestBenefitsEstimate');
+        benefitsDiv.innerHTML = `
+            <div class="savings-amount-rent" style="justify-content: center; text-align: center;">
+                <span class="amount">$${Math.round(benefits).toLocaleString()}</span>
+                <span class="period">/year</span>
+            </div>
+            <div class="savings-details" style="text-align: center;">
+                <p>Additional retirement support you qualify for based on your information</p>
+                <p style="color: var(--primary); margin-top: 10px;">Worth up to $${futureValue.toLocaleString()} when you retire</p>
+                <a href="https://www.renesthorizons.com" target="_blank" onclick="showOptimizeForm(event)" data-gtm-event="click" data-gtm-category="External Links" data-gtm-action="Click" data-gtm-label="Renest Core" class="optimize-btn" style="margin-top: 15px;">
+                    <div class="button-content">
+                        <span class="button-text">Learn More</span>
+                        <img src="blogo.png" alt="Logo" class="button-logo">
+                    </div>
+                </a>
+            </div>
+        `;
     }
 
     // Calculate sales tax holiday savings
@@ -5872,7 +5973,7 @@ function generateTaxHolidaySteps(state) {
             if (savings > 0) {
                 savingsText = `
                     <p class="savings-estimate">
-                        Potential Savings: $${savings.toLocaleString(undefined, {maximumFractionDigits: 0})}
+                        Save an Extra: $${savings.toLocaleString(undefined, {maximumFractionDigits: 0})}
                         ${tabName ? `<button class="view-details-btn" onclick="switchTab('${tabName}')">View Details </button>` : ''}
                     </p>`;
             } else if (tabName) {
@@ -6015,7 +6116,7 @@ function generateTaxHolidaySteps(state) {
                     '<p>Please select your school to see available benefits</p>';
                 return;
             }
-
+            updateGrocerySavings();
             const state = selectedSchool.state;
             const rentContainer = document.getElementById('rentStepsContainer');
             const groceryContainer = document.getElementById('groceryStepsContainer');
@@ -6429,10 +6530,11 @@ function generateTaxHolidaySteps(state) {
                         <p>Recommended monthly ${accountType} contribution</p>
                         <div class="edu-highlight" style="background-color: rgba(124, 58, 237, 0.1); color: var(--text); margin-top: 12px;">
                             <strong>Note:</strong> Your maximum annual contribution: $${maxAnnualContribution.toLocaleString()} (${accountType})
-                            <br>Monthly contribution that hits annual maximum: $${Math.round(maxMonthlyContribution).toLocaleString()}
+                            
                         </div>
                     </div>
                 `;
+                // <br>Monthly contribution that hits annual maximum: $${Math.round(maxMonthlyContribution).toLocaleString()}
             } else {
                 recommendationDiv.innerHTML = `
                     <div class="savings-amount-rent">
@@ -6440,10 +6542,9 @@ function generateTaxHolidaySteps(state) {
                         <span class="period">/month</span>
                     </div>
                     <div class="savings-details">
-                        <p>Recommended based on your income level</p>
+                        <p>Recommended monthly ${accountType} contribution based on your income</p>
                         <div class="edu-highlight" style="background-color: rgba(124, 58, 237, 0.1); color: var(--text); margin-top: 12px;">
                             <strong>Note:</strong> Your maximum annual contribution: $${maxAnnualContribution.toLocaleString()} (${accountType})
-                            <br>Monthly contribution that hits annual maximum: $${Math.round(maxMonthlyContribution).toLocaleString()}
                         </div>
                     </div>
                 `;
@@ -6564,23 +6665,23 @@ function generateTaxHolidaySteps(state) {
                             time: OPTIMIZATION_CONFIG['rent-groceries'].rent.totalTime
                         },
                         {
-                            title: 'Grocery Rewards',
-                            description: 'Get 5% cash back on groceries.',
-                            savings: calculateGrocerySavings(monthlyGroceries),
-                            tab: 'rent-groceries',
-                            time: OPTIMIZATION_CONFIG['rent-groceries'].groceries.totalTime
-                        },
-                        {
                             title: 'Retirement Benefits',
                             description: income < 20000 
                                 ? 'Start building tax-free retirement savings with a Roth IRA while in your lowest tax bracket.'
                                 : (selectedSchool.retirementPlans.has457b 
                                     ? 'Take advantage of your 457(b) access - a unique retirement account with no withdrawal penalties after leaving your program.'
                                     : 'Start building tax-free retirement savings with a Roth IRA while in your lower tax bracket.'),
-                            savings: calculateRetirementSavings(income),
+                            savings: calculateRenestCoreBenefits(income),
                             tab: 'retirement',
                             time: OPTIMIZATION_CONFIG.retirement.totalTime
                         },
+                        {
+                            title: 'Grocery Rewards',
+                            description: 'Get 5% cash back on groceries.',
+                            savings: calculateGrocerySavings(monthlyGroceries),
+                            tab: 'rent-groceries',
+                            time: OPTIMIZATION_CONFIG['rent-groceries'].groceries.totalTime
+                        },                        
                         {
                             title: 'Savings Strategy',
                             description: 'Optimize your savings with high-yield accounts and tax-advantaged options.',
@@ -6690,38 +6791,54 @@ function generateTaxHolidaySteps(state) {
 
             // Calculator functionality
             function updateCalculator() {
-                const monthlyContribution = parseFloat(document.getElementById('monthlyContribution').value);
-                const years = parseFloat(document.getElementById('yearsGrowth').value);
-                
-                // Update displays
-                document.getElementById('contributionDisplay').textContent = `$${monthlyContribution}`;
-                document.getElementById('yearsDisplay').textContent = years;
-                
-                // Calculate values
-                const r = 0.07; // 7% annual return
-                const n = years * 12; // number of months
-                const PMT = monthlyContribution;
-                
-                // Total contributions
-                const totalContributions = PMT * n;
-                
-                // Future value calculation
-                const FV = PMT * ((Math.pow(1 + r/12, n) - 1) / (r/12));
-                
-                // Earnings = Future Value - Total Contributions
-                const totalEarnings = FV - totalContributions;
-                
-                // Update displays
-                document.getElementById('totalContributions').textContent = `$${Math.round(totalContributions).toLocaleString()}`;
-                document.getElementById('totalEarnings').textContent = `$${Math.round(totalEarnings).toLocaleString()}`;
-                document.getElementById('futureValue').textContent = `$${Math.round(FV).toLocaleString()}`;
-            }
+    const monthlyContribution = parseFloat(document.getElementById('monthlyContribution').value);
+    const years = parseFloat(document.getElementById('yearsGrowth').value);
+    
+    // Update displays
+    document.getElementById('contributionDisplay').textContent = `$${monthlyContribution}`;
+    document.getElementById('yearsDisplay').textContent = years;
+    
+    // Calculate values
+    const r = 0.07; // 7% annual return
+    const n = years * 12; // number of months
+    const PMT = monthlyContribution;
+    
+    // Total contributions
+    const totalContributions = PMT * n;
+    
+    // Future value calculation
+    const FV = PMT * ((Math.pow(1 + r/12, n) - 1) / (r/12));
+    
+    // Earnings = Future Value - Total Contributions
+    const totalEarnings = FV - totalContributions;
+    
+    // Update displays
+    document.getElementById('totalContributions').textContent = `$${Math.round(totalContributions).toLocaleString()}`;
+    document.getElementById('totalEarnings').textContent = `$${Math.round(totalEarnings).toLocaleString()}`;
+    document.getElementById('futureValue').textContent = `$${Math.round(FV).toLocaleString()}`;
+}
+
+function initializeCalculatorListeners() {
+    const monthlyContribInput = document.getElementById('monthlyContribution');
+    const yearsGrowthInput = document.getElementById('yearsGrowth');
+    
+    if (monthlyContribInput) {
+        monthlyContribInput.addEventListener('input', updateCalculator);
+    }
+    
+    if (yearsGrowthInput) {
+        yearsGrowthInput.addEventListener('input', updateCalculator);
+    }
+    
+    // Initial calculation
+    updateCalculator();
+}
 
             // Add event listeners
             
 
             // Initial calculation
-            updateCalculator();
+            // updateCalculator();
 
         // Add click listeners for tab navigation
        
@@ -6744,7 +6861,13 @@ function initializeApp() {
             }
         });
     });
+    initializeCalculatorListeners();
+
+
     setupSavingsEventListeners();
+    document.getElementById('income').addEventListener('input', updateRenestBenefitsDisplay);
+    document.getElementById('savings').addEventListener('input', updateRenestBenefitsDisplay);
+    document.getElementById('bank').addEventListener('input', updateRenestBenefitsDisplay);
     document.querySelectorAll('input[name="tuition"]').forEach(input => {
       input.addEventListener('change', update529Recommendation);
     });
@@ -6758,6 +6881,7 @@ function initializeApp() {
 
     // Call on initialization
     update529Recommendation();
+    updateRenestBenefitsDisplay();
     document.addEventListener('DOMContentLoaded', setup529RecommendationListeners);
     
     // Add savings section initialization to the tab switching logic
@@ -6962,6 +7086,10 @@ document.addEventListener('click', function(event) {
     });
   }
 });
+document.getElementById('income').addEventListener('input', updateRenestBenefitsDisplay);
+
+    // Add this to your DOMContentLoaded event or initializeApp function
+    document.addEventListener('DOMContentLoaded', initializeScrollBehavior);
 window.addEventListener('load', resetPageStateOnRefresh);
 </script>
 
