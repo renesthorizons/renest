@@ -5761,7 +5761,7 @@ function calculateTotalSavings(income, state, monthlyRent, monthlyGroceries) {
                 
                 <div class="summary-footer">
                     <p style="color: var(--text)">
-                        Follow the easy steps below to unlock these savings. Each section provides detailed guidance to help you maximize your benefits.
+                        Follow the easy steps below to save more today
                     </p>
                 </div>
             </div>
@@ -6844,14 +6844,12 @@ function generateTaxHolidaySteps(state) {
                     // Add sections
                     const sections = [
                         {
-                            title: 'Rent',
-                            description: state529DB[state].deduction > 0 
-                                ? `Use your state's 529 plan to save ${(calculateStateTaxRate(income, state) * 100).toFixed(1)}% in taxes on up to $${state529DB[state].deduction.toLocaleString()} of qualified education expenses.`
-                                : 'Your state does not offer 529 tax deductions, but you can still benefit from tax-free growth.',
-                            savings: state529DB[state].deduction > 0 ? calculateRentSavings(income, state, monthlyRent) : 0,
+                            title: 'Grocery Rewards',
+                            description: 'Get 5% cash back on groceries.',
+                            savings: calculateGrocerySavings(monthlyGroceries),
                             tab: 'rent-groceries',
-                            time: OPTIMIZATION_CONFIG['rent-groceries'].rent.totalTime
-                        },
+                            time: OPTIMIZATION_CONFIG['rent-groceries'].groceries.totalTime
+                        },  
                         {
                             title: 'Retirement Benefits',
                             description: income < 20000 
@@ -6864,12 +6862,15 @@ function generateTaxHolidaySteps(state) {
                             time: OPTIMIZATION_CONFIG.retirement.totalTime
                         },
                         {
-                            title: 'Grocery Rewards',
-                            description: 'Get 5% cash back on groceries.',
-                            savings: calculateGrocerySavings(monthlyGroceries),
+                            title: 'Rent',
+                            description: state529DB[state].deduction > 0 
+                                ? `Use your state's 529 plan to save ${(calculateStateTaxRate(income, state) * 100).toFixed(1)}% in taxes on up to $${state529DB[state].deduction.toLocaleString()} of qualified education expenses.`
+                                : 'Your state does not offer 529 tax deductions, but you can still benefit from tax-free growth.',
+                            savings: state529DB[state].deduction > 0 ? calculateRentSavings(income, state, monthlyRent) : 0,
                             tab: 'rent-groceries',
-                            time: OPTIMIZATION_CONFIG['rent-groceries'].groceries.totalTime
-                        },                        
+                            time: OPTIMIZATION_CONFIG['rent-groceries'].rent.totalTime
+                        },
+                                              
                         {
                             title: 'Savings Strategy',
                             description: 'Optimize your savings with high-yield accounts and tax-advantaged options.',
@@ -7248,10 +7249,7 @@ document.addEventListener('DOMContentLoaded', () => {
     update529Recommendation();
   }
 });
-document.getElementById('bank').addEventListener('input', function() {
-    const value = this.value.replace(/[^0-9.-]/g, '');
-    trackUserInput('monthly_savings', value);
-});
+
 
 // Generate initial savings strategy steps 
 document.getElementById('savingsStepsContainer').innerHTML = generateSavingsSteps();
@@ -7306,6 +7304,10 @@ document.getElementById('monthlyGroceries').addEventListener('change', function(
 // Track savings
 document.getElementById('savings').addEventListener('change', function() {
     trackUserInput('savings', this.value);
+});
+document.getElementById('bank').addEventListener('change', function() {
+    const value = this.value.replace(/[^0-9.-]/g, '');
+    trackUserInput('monthly_savings', value);
 });
 
 // Track tuition selection
