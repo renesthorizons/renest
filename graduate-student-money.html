@@ -128,6 +128,11 @@
     --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --transition: all 0.3s ease;
 }
+.main-content {
+  margin-right: 0;
+  padding-right: 0;
+  width:100vw;
+}
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
@@ -191,6 +196,24 @@ label {
             transform: translateX(-50%);
             margin: 0 auto;
         }
+        .nav-icons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 16px;
+}
+
+.status-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+}
 
         /* Add spacing when nav is fixed */
         body.nav-is-fixed .input-card:first-of-type {
@@ -1569,6 +1592,79 @@ html, body {
     opacity: 0;
     transition: opacity 0.3s ease;
 }
+
+.email-capture-section {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    margin: 2rem auto;
+    max-width: 800px;
+    box-shadow: var(--card-shadow);
+    text-align: center;
+}
+
+.service-cta-button {
+    display: block;
+    width: 100%;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+    font-weight: bold;
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
+    border: none;
+    cursor: pointer;
+    margin: 1rem auto;
+    max-width: 800px;
+    transition: opacity 0.3s ease;
+}
+
+.service-cta-button:hover {
+    opacity: 0.9;
+}
+
+.email-form {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.email-input {
+    flex: 1;
+    min-width: 250px;
+    padding: 0.75rem 1rem;
+    border: 1px solid rgba(75, 34, 122, 0.2);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+}
+
+.email-submit {
+    padding: 0.75rem 2rem;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.email-submit:hover {
+    background: var(--primary-light);
+}
+
+.email-message {
+    margin-top: 1rem;
+    color: var(--accent);
+    font-weight: 500;
+}
+@media screen and (max-width: 768px) {
+    .summary-card .summary-content {
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem !important;
+    }
+}
+
 </style>
 </head>
 <body>
@@ -2192,7 +2288,7 @@ html, body {
         <!-- <button class="create-account-btn">Create Account</button> -->
         <!-- <h3>Next Steps:</h3> -->
         <p style="color: black;">What other optimization tools do you use that we should let others know about? Contact us and we will add it! Are there other areas you would like to see us address? Please send us your feedback, suggestions and questions.</p>
-        <button class="feedback-btn">Copy Our Email</button>
+        <button class="feedback-btn">Contact Us</button>
         <div class="partner-logos">
           <!-- Add partner logo images here -->
         </div>
@@ -2203,14 +2299,14 @@ html, body {
 
 <div class="footnote">
     <div class="footnote-branding">
-        <span style="font-size: 0.9rem; color: #666;">An optimizer tool built for graduate students by</span>
+        <span style="font-size: 0.9rem; color: #666;">An optimizer tool built by and for graduate students in collaboration with</span>
         <a href="https://www.renesthorizons.com" target="_blank">
             <img src="Renest_Logo.png" alt="Renest Logo" style="height: 20px;">
         </a>
     </div>
     <div class="footnote-contact">
-        <span>Have questions, feedback or suggestions? Contact us!</span>
-        <button class="feedback-btn" onclick="navigator.clipboard.writeText('renestinfo@gmail.com'); alert('Email copied to clipboard!')">Copy Our Email</button>
+        <span>Have questions, feedback or suggestions?</span>
+        <button class="feedback-btn" onclick="navigator.clipboard.writeText('renestinfo@gmail.com'); alert('Email copied to clipboard!')">Contact Us</button>
     </div>
     <div style="display: flex; justify-content: center; width: 100%; padding: 0 20px;">
         <div class="footnote-disclaimer" style="font-size: 0.8rem; color: #666; text-align: center; margin-top: 10px; max-width: 600px; width: 100%;">
@@ -2236,13 +2332,39 @@ html, body {
 </body>
 
     <script>
-        function trackUserInput(fieldName, value) {
+        function trackTextInput(fieldName, value) {
             window.dataLayer = window.dataLayer || [];
             window.dataLayer.push({
-                'event': 'user_input',
+                'event': 'text_input',  // Different event name
                 'input_field': fieldName,
                 'input_value': value
             });
+            
+            // Debug log
+            console.log('Text Input Tracked:', {
+                field: fieldName,
+                value: value
+            });
+        }
+        function trackUserInput(fieldName, value) {
+            // Clean the value if it's a string
+            let cleanValue = value;
+            if (typeof value === 'string') {
+                cleanValue = value.replace(/[^0-9.-]/g, '');
+            }
+            
+            const eventData = {
+                'event': 'user_input',
+                'input_field': fieldName,
+                'input_value': cleanValue,
+                'event_category': 'User Input',
+                'event_label': fieldName,
+                'value': parseFloat(cleanValue) || 0
+            };
+            
+            console.log('DataLayer Push:', eventData);
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push(eventData);
         }
 
         // Function to track time spent on tabs
@@ -4742,16 +4864,28 @@ const stateTaxDB = {
 
         // Update the selectSchool function to also update calculator limits
 
-       function selectSchool(schoolId) {
+      // Define function to update all necessary components after school selection
+function updateResults() {
+    updateAccountTypeDetails();
+    updateCalculatorLimits();
+    updateSavingsEstimate();
+    updateGrocerySavings();
+    updateRenestBenefitsDisplay();
+}
+
+// Main school selection function
+function selectSchool(schoolId) {
+    // Get necessary DOM elements
     const searchInput = document.getElementById('schoolSearch');
     const stateSelection = document.getElementById('stateSelection');
     const stateSuggestions = document.getElementById('stateSuggestions');
+    const schoolSuggestions = document.getElementById('schoolSuggestions');
     
+    // Handle "Other" school selection case
     if (schoolId === 'other') {
-        // Show state suggestions and set school text
         searchInput.value = 'My School Isn\'t Listed Yet (click here)';
         
-        // Populate state suggestions
+        // Populate state suggestions dropdown
         stateSuggestions.innerHTML = `
             ${Object.entries(stateOptions).map(([abbr, name]) => `
                 <div class="suggestion-item" onclick="selectState('${abbr}', '${name}')">
@@ -4761,33 +4895,51 @@ const stateTaxDB = {
             `).join('')}
         `;
         
-        // Show the state suggestions
+        // Show state selection, hide school suggestions
         stateSuggestions.classList.remove('hidden');
         stateSelection.classList.remove('hidden');
-        
-        // Hide school suggestions
-        document.getElementById('schoolSuggestions').classList.add('hidden');
-    } else {
-        // Handle regular school selection
-        selectedSchool = schoolsDB[schoolId];
-        searchInput.value = `${selectedSchool.name} (${getStateName(selectedSchool.state)})`;
-        stateSelection.classList.add('hidden');
-        stateSuggestions.classList.add('hidden');
-        
-        // Run all necessary updates
+        schoolSuggestions.classList.add('hidden');
+        return;
+    }
+    
+    // Validate school selection
+    if (!schoolsDB[schoolId]) {
+        console.warn('Invalid school ID:', schoolId);
+        return;
+    }
+    
+    // Set selected school and update search input
+    selectedSchool = schoolsDB[schoolId];
+    searchInput.value = `${selectedSchool.name} (${getStateName(selectedSchool.state)})`;
+    
+    // Hide suggestion dropdowns
+    schoolSuggestions.classList.add('hidden');
+    stateSelection.classList.add('hidden');
+    stateSuggestions.classList.add('hidden');
+    
+    // Track school selection using new text tracking function
+    trackTextInput('selected_school', selectedSchool.name);
+    trackTextInput('school_state', selectedSchool.state);
+    
+    // Update all components
+    try {
         updateResults();
-        updateAccountTypeDetails();
-        updateCalculatorLimits();
-        updateSavingsEstimate();
-        updateGrocerySavings();
-        updateRenestBenefitsDisplay();
         initializeRentGrocerySection();
         
-        // Hide suggestions
-        document.getElementById('schoolSuggestions').classList.add('hidden');
+        // Update UI based on optimization status
+        const resultsSections = document.querySelectorAll('.results-section');
+        resultsSections.forEach(section => section.classList.remove('hidden'));
+        
+        // Enable tabs after school selection
+        const tabs = document.querySelectorAll('.nav-tab');
+        tabs.forEach(tab => {
+            if (tab.getAttribute('data-tab') !== 'optimize') {
+                tab.classList.remove('disabled');
+            }
+        });
+    } catch (error) {
+        console.error('Error updating after school selection:', error);
     }
-    trackUserInput('school', schoolsDB[schoolId].name);
-    trackUserInput('state', schoolsDB[schoolId].state);
 }
 
 function selectState(stateAbbr, stateName) {
@@ -6662,6 +6814,32 @@ function generateTaxHolidaySteps(state) {
                         const snapCard = generateSnapCard(income, state);
                         planStepsDiv.innerHTML += snapCard;
                     }
+                    // planStepsDiv.innerHTML += `
+                    //     <button class="service-cta-button">
+                    //         Have Us Complete These Steps For You ↗
+                    //     </button>
+                    // `;
+
+                    // Add email capture section
+                    planStepsDiv.innerHTML += `
+                        <div class="email-capture-section">
+                            <h3 style="color: var(--text); font-size: 1.5rem; margin-bottom: 1rem;">
+                                Get Notified When We Add Health Benefits!
+                            </h3>
+                            <form id="emailCaptureForm" class="email-form">
+                                <input 
+                                    type="email" 
+                                    class="email-input" 
+                                    placeholder="Enter your email" 
+                                    required
+                                >
+                                <button type="submit" class="email-submit">
+                                    Send Me Details
+                                </button>
+                            </form>
+                            <div id="emailMessage" class="email-message"></div>
+                        </div>
+                    `;
                     
                     // Add sections
                     const sections = [
@@ -6722,7 +6900,70 @@ function generateTaxHolidaySteps(state) {
 
                     // Create and append each section
                     sections.forEach(section => addPlanStep(planStepsDiv, section.title, section.description, section.savings, '', section.tab, section.time));
-                    
+                    // Add bottom CTA button
+                        planStepsDiv.innerHTML += `
+                            <button class="service-cta-button">
+                                Have Us Complete These Steps For You ↗
+                            </button>
+                        `;
+
+                        // Add form submission handler
+                        const form = document.getElementById('emailCaptureForm');
+                        const messageDiv = document.getElementById('emailMessage');
+
+                        async function submitToGoogleSheets(email) {
+                            try {
+                                const formData = new FormData();
+                                formData.append('entry.2146964549', email);
+                                
+                                const response = await fetch(
+                                    'https://docs.google.com/forms/d/e/1FAIpQLSfCP28u0eYCkKXuveopKkiH3jam6xzp9Id5uj0Vap234z43iQ/formResponse',
+                                    {
+                                        method: 'POST',
+                                        mode: 'no-cors',
+                                        body: formData
+                                    }
+                                );
+                                
+                                // Since we're using no-cors, we won't get a proper response
+                                // So we'll just assume success after the fetch completes
+                                return true;
+                            } catch (error) {
+                                console.error('Error submitting form:', error);
+                                // Return true even on error since we can't detect actual success/failure
+                                // with no-cors mode
+                                return true;
+                            }
+                        }
+                        form.addEventListener('submit', async function(e) {
+                        e.preventDefault();
+                        const emailInput = form.querySelector('input[type="email"]');
+                        const email = emailInput.value;
+                        
+                        // Disable form while submitting
+                        const submitButton = form.querySelector('button[type="submit"]');
+                        submitButton.disabled = true;
+                        messageDiv.textContent = 'Submitting...';
+                        
+                        try {
+                            await submitToGoogleSheets(email);
+                            
+                            // Show success message
+                            messageDiv.textContent = 'Thank you! We will be in touch soon.';
+                            form.reset();
+                            
+                            // Track the email capture
+                            window.dataLayer.push({
+                                'event': 'email_capture',
+                                'email': email
+                            });
+                        } catch (error) {
+                            messageDiv.textContent = 'Something went wrong. Please try again.';
+                            console.error('Form submission error:', error);
+                        } finally {
+                            submitButton.disabled = false;
+                        }
+                    });
                     // Hide loading, show results
                     loadingElement.style.display = 'none';
                     loadingElement.classList.add('hidden');
@@ -6893,6 +7134,7 @@ function initializeApp() {
     update529Recommendation();
     updateRenestBenefitsDisplay();
     document.addEventListener('DOMContentLoaded', setup529RecommendationListeners);
+
     
     // Add savings section initialization to the tab switching logic
     document.querySelectorAll('.nav-tab').forEach(tab => {
@@ -7005,6 +7247,10 @@ document.addEventListener('DOMContentLoaded', () => {
   if (selectedSchool) {
     update529Recommendation();
   }
+});
+document.getElementById('bank').addEventListener('input', function() {
+    const value = this.value.replace(/[^0-9.-]/g, '');
+    trackUserInput('monthly_savings', value);
 });
 
 // Generate initial savings strategy steps 
