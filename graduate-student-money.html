@@ -6320,6 +6320,8 @@ function generateTaxHolidaySteps(state) {
             if (rentGroceriesContent && !rentGroceriesContent.classList.contains('hidden')) {
                 initializeRentGrocerySection();
             }
+            trackTextInput('selected_school', selectedSchool.name);
+            trackTextInput('school_state', selectedSchool.state);
             
             // Run all necessary updates
             updateResults();
@@ -7291,6 +7293,9 @@ document.querySelectorAll('.feedback-btn').forEach(button => {
 document.getElementById('income').addEventListener('change', function() {
     trackUserInput('annual_income', this.value);
 });
+// document.getElementById('income').addEventListener('change', function() {
+//     trackTextInput('school_name', this.value);
+// })
 
 // Track monthly expenses
 document.getElementById('monthlyRent').addEventListener('change', function() {
@@ -7313,7 +7318,7 @@ document.getElementById('bank').addEventListener('change', function() {
 // Track tuition selection
 document.querySelectorAll('input[name="tuition"]').forEach(input => {
     input.addEventListener('change', function() {
-        trackUserInput('pays_tuition', this.value);
+        trackTextInput('pays_tuition', this.value);
     });
 });
 document.getElementById('monthlyContribution').addEventListener('change', function() {
