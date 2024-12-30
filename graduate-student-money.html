@@ -3875,6 +3875,14 @@ const stateTaxDB = {
                 ],
                 notes: 'Pennsylvania has a flat tax rate and taxes capital gains as ordinary income.'
             },
+            'IN': {
+                hasStateCapGains: true,
+                taxesWithZeroIncome: false,
+                brackets: [
+                    { threshold: Infinity, rate: 3.15 }
+                ],
+                notes: 'Indiana has a flat tax rate and taxes capital gains as ordinary income.'
+            },
             'RI': {
                 hasStateCapGains: true,
                 taxesWithZeroIncome: false,
@@ -4163,6 +4171,12 @@ const stateTaxDB = {
                 planName: 'College Savings Iowa 529 Plan',
                 deduction: 5500,  // $4,000 per beneficiary
                 notes: 'Iowa taxpayers can deduct up to $4,000 per beneficiary for 529 plan contributions'
+            },
+            'IN': {
+                // 529 Plan Information
+                planName: 'Indiana 529 Direct',
+                deduction: 1500,  // $4,000 per beneficiary
+                notes: 'Indiana taxpayers can deduct 20% of contribution up to $1,500 per beneficiary for 529 plan contributions'
             },
             'NC': {
                 planName: 'NC 529 Plan',
@@ -6230,6 +6244,7 @@ function generateTaxHolidaySteps(state) {
             const stepContent = stepItem.querySelector('.step-content');
             const checkmark = stepCircle.querySelector('.checkmark');
             const number = stepCircle.querySelector('.step-number');
+
             
             // Update step appearance
             stepCircle.classList.add('completed');
@@ -6247,6 +6262,11 @@ function generateTaxHolidaySteps(state) {
             
             // Update rating
             updateRating();
+            console.log('Step Complete Event:', {
+                event: 'step_complete',
+                step_number: stepNumber,
+                tab_name: tabName
+            });
             window.dataLayer.push({
                 'event': 'step_complete',
                 'step_number': stepNumber,
@@ -7329,8 +7349,14 @@ document.getElementById('yearsGrowth').addEventListener('change', function() {
     trackSliderInteraction('years_growth', this.value);
 });
 
+// For regular buttons
 document.querySelectorAll('button').forEach(button => {
     button.addEventListener('click', function() {
+        console.log('Button clicked:', {
+            event: 'button_click',
+            button_id: this.id,
+            button_text: this.textContent.trim()
+        });
         window.dataLayer.push({
             'event': 'button_click',
             'button_id': this.id,
@@ -7338,16 +7364,24 @@ document.querySelectorAll('button').forEach(button => {
         });
     });
 });
+
+// For link clicks
 document.addEventListener('click', function(event) {
-  if (event.target.closest('a[data-gtm-event="click"]')) {
-    const link = event.target.closest('a[data-gtm-event="click"]');
-    window.dataLayer.push({
-      'event': link.getAttribute('data-gtm-event'),
-      'eventCategory': link.getAttribute('data-gtm-category'),
-      'eventAction': link.getAttribute('data-gtm-action'),
-      'eventLabel': link.getAttribute('data-gtm-label')
-    });
-  }
+    if (event.target.closest('a[data-gtm-event="click"]')) {
+        const link = event.target.closest('a[data-gtm-event="click"]');
+        console.log('Link clicked:', {
+            event: link.getAttribute('data-gtm-event'),
+            eventCategory: link.getAttribute('data-gtm-category'),
+            eventAction: link.getAttribute('data-gtm-action'),
+            eventLabel: link.getAttribute('data-gtm-label')
+        });
+        window.dataLayer.push({
+            'event': link.getAttribute('data-gtm-event'),
+            'eventCategory': link.getAttribute('data-gtm-category'),
+            'eventAction': link.getAttribute('data-gtm-action'),
+            'eventLabel': link.getAttribute('data-gtm-label')
+        });
+    }
 });
 document.getElementById('income').addEventListener('input', updateRenestBenefitsDisplay);
 
