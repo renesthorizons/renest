@@ -1668,6 +1668,100 @@ html, body {
         gap: 1.5rem !important;
     }
 }
+        .logo-scroll {
+            animation: slide 45s linear infinite;
+            display: flex;
+            width: max-content;
+        }
+        
+        .logo-container {
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+            padding: 10px 0;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        
+        .logo-wrapper {
+            display: flex;
+            margin-right: 40px;  /* Add spacing between sets */
+        }
+        
+        .logo-item {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 20px;
+            width: 100px;
+            height: 60px;
+            flex-shrink: 0;
+        }
+        
+        .logo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            max-width: 100px;
+            max-height: 60px;
+        }
+        
+        @keyframes slide {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(-100% - 40px)); }  /* Account for wrapper margin */
+        }
+        
+        .logo-scroll:hover {
+            animation-play-state: paused;
+        }
+        
+        .gradient-fade {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 60px;
+            z-index: 2;
+            pointer-events: none;
+        }
+        
+        .gradient-left {
+            left: 0;
+            background: linear-gradient(to right, white 20%, transparent);
+        }
+        
+        .gradient-right {
+            right: 0;
+            background: linear-gradient(to left, white 20%, transparent);
+        }
+.error-message {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10000;
+    color: #0d766b;
+    background-color: #ccfbf1;
+    border: 1px solid #5eead4;
+    padding: 12px 24px;
+    border-radius: 8px;
+    margin: 0;
+    display: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    max-width: 90%;
+    text-align: center;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    0% {
+        transform: translateX(-50%) translateY(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+}
 
 </style>
 </head>
@@ -1711,16 +1805,95 @@ html, body {
             <div class="progress-bar"></div>
         </button>
     </div>
+    <div class="input-card">
+    <div class="w-full bg-white p-8 rounded-lg shadow-md mb-8 mt-4">
+    <div class="text-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Built By Graduate Students, For Graduate Students</h2>
+        <p class="text-gray-600 mb-6 max-w-2xl mx-auto" style=" color:  black;">
+            Created by grad students from Cal, Stanford, BU, UCSB, and UMichigan. Your information is anonymous, secure and not monetized. Contribute to helping other graduate students!
+        </p>
+        <button class="feedback-btn">Contact Us</button>
+    </div>
+       <div class="logo-container relative">
+        <div class="gradient-fade gradient-left"></div>
+        <div class="gradient-fade gradient-right"></div>
+        
+        <div class="logo-scroll">
+            <!-- First set of logos -->
+            <div class="logo-item">
+                <img src="ucb.png" alt="UC Berkeley Logo" class="h-16 w-32 object-contain mb-2">
+            </div>
+            <div class="logo-item">
+                <img src="stanford.png" alt="Stanford Logo" class="h-16 w-32 object-contain mb-2">
+            </div>
+            <div class="logo-item">
+                <img src="ucsb.png" alt="UCSB Logo" class="h-16 w-32 object-contain mb-2">
+            </div>
+            <div class="logo-item">
+                <img src="bu.png" alt="BU Logo" class="h-16 w-32 object-contain mb-2">
+            </div>
+            <div class="logo-item">
+                <img src="michigan.png" alt="Michigan Logo" class="h-16 w-32 object-contain mb-2">
+            </div>
+            
+            <!-- Duplicate set for seamless scrolling -->
+            <div class="logo-item">
+                <img src="ucb.png" alt="UC Berkeley Logo" class="h-16 w-32 object-contain mb-2">
+            </div>
+            <div class="logo-item">
+                <img src="stanford.png" alt="Stanford Logo" class="h-16 w-32 object-contain mb-2">
+            </div>
+            <div class="logo-item">
+                <img src="ucsb.png" alt="UCSB Logo" class="h-16 w-32 object-contain mb-2">
+            </div>
+            <div class="logo-item">
+                <img src="bu.png" alt="BU Logo" class="h-16 w-32 object-contain mb-2">
+            </div>
+            <div class="logo-item">
+                <img src="michigan.png" alt="Michigan Logo" class="h-16 w-32 object-contain mb-2">
+            </div>
+                <div class="logo-item">
+                    <img src="ucb.png" alt="UC Berkeley Logo">
+                </div>
+                <div class="logo-item">
+                    <img src="stanford.png" alt="Stanford Logo">
+                </div>
+                <div class="logo-item">
+                    <img src="ucsb.png" alt="UCSB Logo">
+                </div>
+                <div class="logo-item">
+                    <img src="bu.png" alt="BU Logo">
+                </div>
+                <div class="logo-item">
+                <img src="michigan.png" alt="Michigan Logo" class="h-16 w-32 object-contain mb-2">
+            </div>
+                <div class="logo-item">
+                    <img src="ucb.png" alt="UC Berkeley Logo">
+                </div>
+                <div class="logo-item">
+                    <img src="stanford.png" alt="Stanford Logo">
+                </div>
+                <div class="logo-item">
+                    <img src="ucsb.png" alt="UCSB Logo">
+                </div>
+                <div class="logo-item">
+                    <img src="bu.png" alt="BU Logo">
+                </div>
+                <div class="logo-item">
+                <img src="michigan.png" alt="Michigan Logo" class="h-16 w-32 object-contain mb-2">
+            </div>
+    </div>
+</div>
+</div>
+</div>
 
     <!-- Optimize Tab Content -->
     <div id="optimize-content" class="tab-content active">
         <div class="input-card">
-            <h2 class="card-title">Enter Your Information
-            <div class="info-tooltip">
-                <img src="info.png" alt="info" class="info-icon">
-                <span class="tooltip-text">We use your school and income to identify state-specific benefits and tax advantages available to you as a graduate student.</span>
-            </div>
-        </h2>
+            <h2 class="card-title">Enter Your Information</h2>
+            <p style="text-align:center">We use your school and income to identify state-specific benefits and tax advantages available to you as a graduate student.</p>
+            
+        
             
             <!-- Required Information Section -->
             <div class="form-section">
@@ -1745,12 +1918,9 @@ html, body {
             </div>
         </div>
         <div class="input-card">
-                <h3 style=" color:  var(--text);" class="section-title">Optional Information
-                    <div class="info-tooltip">
-                        <img src="info.png" alt="info" class="info-icon">
-                        <span class="tooltip-text">Additional information helps us provide more personalized recommendations. Fill in as many fields as you'd like.</span>
-                    </div>
-                </h3>
+                <h2 class="card-title">Optional Information</h2>
+                    <p style="text-align:center">Additional information helps us provide more accurate advice.</p>
+                
             <!-- Optional Information Section -->
             <div class="form-section optional-section">
                 <h3 class="section-title">Spending Essentials
@@ -1772,7 +1942,7 @@ html, body {
                     </div>
                 </div>
                 <div class="form-group">
-                        <label>Do you pay some or all of your tuition out of pocket (e.g., savings, loans, etc...)?</label>
+                        <label>Do you pay some or all of your tuition out of pocket (from your savings or loans)?</label>
                         <div class="radio-group">
                             <label class="radio-label">
                                 <input type="radio" name="tuition" value="yesoutofpocket">
@@ -5411,7 +5581,7 @@ function selectState(stateAbbr, stateName) {
             // updateProgress();
         }
         // Update the switchTab function to update calculator limits when switching to retirement tab
-        function switchTab(tabName) {
+       function switchTab(tabName, pushState = true) {
             if (!hasOptimized && tabName !== 'optimize') {
                 showError('Please input your school and income details first.');
                 return;
@@ -5422,18 +5592,19 @@ function selectState(stateAbbr, stateName) {
             const results = document.getElementById('results');
             const loadingAnimation = document.getElementById('loadingAnimation');
             const currentTab = document.querySelector('.tab-content.active');
+            
             if (currentTab) {
                 trackTabEngagement(currentTab.id.replace('-content', ''), 'exit');
             }
+
             // Hide results and loading animation when switching away from optimize tab
             if (tabName !== 'optimize') {
                 results.classList.add('hidden');
                 loadingAnimation.classList.add('hidden');
             } else if (hasOptimized) {
-                // Show results if returning to optimize tab and optimization was done
                 results.classList.remove('hidden');
             }
-            
+
             // Update active tab
             tabs.forEach(tab => {
                 tab.classList.remove('active');
@@ -5441,18 +5612,24 @@ function selectState(stateAbbr, stateName) {
                     tab.classList.add('active');
                 }
             });
-            
+
             // Update visible content
             contents.forEach(content => {
                 content.classList.remove('active');
                 if (content.id === `${tabName}-content`) {
                     content.classList.add('active');
-                    // Scroll to the top of the content section
                     document.body.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             });
 
-            // Initialize appropriate section based on tab, but only if not already initialized
+            // Update browser history if needed
+            if (pushState) {
+                const newUrl = new URL(window.location);
+                newUrl.searchParams.set('tab', tabName);
+                window.history.pushState({ tab: tabName }, '', newUrl);
+            }
+
+            // Initialize appropriate section based on tab
             if (selectedSchool && !initializedTabs[tabName]) {
                 switch(tabName) {
                     case 'retirement':
@@ -5484,28 +5661,33 @@ function selectState(stateAbbr, stateName) {
             }
             trackTabEngagement(tabName, 'enter');
         }
+
+
         function showError(message) {
-            const errorDiv = document.createElement('div');
-            errorDiv.classList.add('error-message');
-            errorDiv.style.display = 'block';
-            errorDiv.textContent = message;
-            
             // Remove any existing error messages
             const existingError = document.querySelector('.error-message');
             if (existingError) {
                 existingError.remove();
             }
             
-            // Insert error before the input card
-            const inputCard = document.querySelector('.input-card');
-            inputCard.parentNode.insertBefore(errorDiv, inputCard);
+            // Create new error message
+            const errorDiv = document.createElement('div');
+            errorDiv.classList.add('error-message');
+            errorDiv.style.display = 'block';
+            errorDiv.textContent = message;
             
-            // Auto-hide after 3 seconds
+            // Add to body
+            document.body.appendChild(errorDiv);
+            
+            // Auto-hide after 3 seconds with fade out effect
             setTimeout(() => {
-                errorDiv.style.display = 'none';
+                errorDiv.style.opacity = '0';
+                errorDiv.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => {
+                    errorDiv.remove();
+                }, 500);
             }, 3000);
         }
-
        function handleSchoolSearch(event) {
             const searchTerm = event.target.value.toLowerCase();
             const suggestionsDiv = document.getElementById('schoolSuggestions');
@@ -5769,7 +5951,7 @@ function calculateTotalSavings(income, state, monthlyRent, monthlyGroceries) {
             <div class="summary-card">
                 <div class="summary-content">
                     <div>
-                        <h3 class="card-title">You Could Have an Extra</h3>
+                        <h3 class="card-title">Potential Savings</h3>
                         <div class="savings-amount">
                             $${totalSavings.toLocaleString()}
                             <span style="font-size: 1rem; color: var(--text-light)">/year</span>
@@ -5781,7 +5963,7 @@ function calculateTotalSavings(income, state, monthlyRent, monthlyGroceries) {
                 
                 <div class="summary-footer">
                     <p style="color: var(--text)">
-                        Follow the easy steps below to save more today
+                       The steps below outline how to save more through simple steps
                     </p>
                 </div>
             </div>
@@ -5926,7 +6108,7 @@ function calculateTotalSavings(income, state, monthlyRent, monthlyGroceries) {
             </div>
             <div class="savings-details" style="text-align: center;">
                 <p>Additional retirement support you qualify for based on your information</p>
-                <p style="color: var(--primary); margin-top: 10px;">Worth up to $${futureValue.toLocaleString()} when you retire</p>
+                <p style="color: var(--primary); margin-top: 10px;">Compounding growth creates up to $${futureValue.toLocaleString()} when you retire</p>
                 <a href="https://www.renesthorizons.com" target="_blank" onclick="showOptimizeForm(event)" data-gtm-event="click" data-gtm-category="External Links" data-gtm-action="Click" data-gtm-label="Renest Core" class="optimize-btn" style="margin-top: 15px;">
                     <div class="button-content">
                         <span class="button-text">Learn More</span>
@@ -6155,7 +6337,7 @@ function generateTaxHolidaySteps(state) {
             if (savings > 0) {
                 savingsText = `
                     <p class="savings-estimate">
-                        Save an Extra: $${savings.toLocaleString(undefined, {maximumFractionDigits: 0})}
+                        Save: $${savings.toLocaleString(undefined, {maximumFractionDigits: 0})}
                         ${tabName ? `<button class="view-details-btn" onclick="switchTab('${tabName}')">View Details </button>` : ''}
                     </p>`;
             } else if (tabName) {
@@ -7098,6 +7280,27 @@ function generateTaxHolidaySteps(state) {
     document.getElementById('futureValue').textContent = `$${Math.round(FV).toLocaleString()}`;
 }
 
+function initializeUrlState() {
+    // Get initial tab from URL if present
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialTab = urlParams.get('tab') || 'optimize';
+    initializeUrlState();
+    
+    // Modify existing tab click listeners
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            const tabName = tab.getAttribute('data-tab');
+            switchTab(tabName, true);  // true indicates we should push state
+        });
+    });
+    
+    // Set initial history state
+    window.history.replaceState({ tab: initialTab }, '', window.location);
+    
+    // Switch to initial tab
+    switchTab(initialTab, false);
+}
+
 function initializeCalculatorListeners() {
     const monthlyContribInput = document.getElementById('monthlyContribution');
     const yearsGrowthInput = document.getElementById('yearsGrowth');
@@ -7174,6 +7377,7 @@ function initializeApp() {
             }
         });
     });
+
 
     // Add calculator input listeners
     const monthlyContribInput = document.getElementById('monthlyContribution');
@@ -7394,6 +7598,14 @@ document.getElementById('income').addEventListener('input', updateRenestBenefits
     // Add this to your DOMContentLoaded event or initializeApp function
     document.addEventListener('DOMContentLoaded', initializeScrollBehavior);
 window.addEventListener('load', resetPageStateOnRefresh);
+window.addEventListener('popstate', (event) => {
+    if (event.state && event.state.tab) {
+        switchTab(event.state.tab, false);
+    } else {
+        // Default to optimize tab if no state exists
+        switchTab('optimize', false);
+    }
+});
 </script>
 
 </html>
