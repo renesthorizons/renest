@@ -1805,6 +1805,7 @@ html, body {
             <div class="progress-bar"></div>
         </button>
     </div>
+    <div id="optimize-content" class="tab-content active">
     <div class="input-card">
     <div class="w-full bg-white p-8 rounded-lg shadow-md mb-8 mt-4">
     <div class="text-center mb-6">
@@ -1888,7 +1889,7 @@ html, body {
 </div>
 
     <!-- Optimize Tab Content -->
-    <div id="optimize-content" class="tab-content active">
+    
         <div class="input-card">
             <h2 class="card-title">Enter Your Information</h2>
             <p style="text-align:center">We use your school and income to identify state-specific benefits and tax advantages available to you as a graduate student.</p>
@@ -7054,11 +7055,13 @@ function generateTaxHolidaySteps(state) {
                     // Add sections
                     const sections = [
                         {
-                            title: 'Grocery Rewards',
-                            description: 'Get 5% cash back on groceries.',
-                            savings: calculateGrocerySavings(monthlyGroceries),
+                            title: 'Rent',
+                            description: state529DB[state].deduction > 0 
+                                ? `Use your state's 529 plan to save ${(calculateStateTaxRate(income, state) * 100).toFixed(1)}% in taxes on up to $${state529DB[state].deduction.toLocaleString()} of qualified education expenses.`
+                                : 'Your state does not offer 529 tax deductions, but you can still benefit from tax-free growth.',
+                            savings: state529DB[state].deduction > 0 ? calculateRentSavings(income, state, monthlyRent) : 0,
                             tab: 'rent-groceries',
-                            time: OPTIMIZATION_CONFIG['rent-groceries'].groceries.totalTime
+                            time: OPTIMIZATION_CONFIG['rent-groceries'].rent.totalTime
                         },  
                         {
                             title: 'Retirement Benefits',
@@ -7072,18 +7075,16 @@ function generateTaxHolidaySteps(state) {
                             time: OPTIMIZATION_CONFIG.retirement.totalTime
                         },
                         {
-                            title: 'Rent',
-                            description: state529DB[state].deduction > 0 
-                                ? `Use your state's 529 plan to save ${(calculateStateTaxRate(income, state) * 100).toFixed(1)}% in taxes on up to $${state529DB[state].deduction.toLocaleString()} of qualified education expenses.`
-                                : 'Your state does not offer 529 tax deductions, but you can still benefit from tax-free growth.',
-                            savings: state529DB[state].deduction > 0 ? calculateRentSavings(income, state, monthlyRent) : 0,
+                            title: 'Grocery Rewards',
+                            description: 'Get 5% cash back on groceries.',
+                            savings: calculateGrocerySavings(monthlyGroceries),
                             tab: 'rent-groceries',
-                            time: OPTIMIZATION_CONFIG['rent-groceries'].rent.totalTime
-                        },
+                            time: OPTIMIZATION_CONFIG['rent-groceries'].groceries.totalTime
+                        },                       
                                               
                         {
                             title: 'Savings Strategy',
-                            description: 'Optimize your savings with high-yield accounts and tax-advantaged options.',
+                            description: 'Optimize your savings with high-yield accounts and tax-advantaged 529 savings options.',
                             savings: calculateSavingsInterest(document.getElementById('savings')?.value),
                             tab: 'savings',
                             time: OPTIMIZATION_CONFIG.savings.totalTime
