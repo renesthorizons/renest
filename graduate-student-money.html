@@ -1335,8 +1335,21 @@ html, body {
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
+.feedbackbtn {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
 
 .feedback-btn:hover {
+    background-color: var(--primary-light);
+    transform: translateY(-2px);
+}
+.feedbackbtn:hover {
     background-color: var(--primary-light);
     transform: translateY(-2px);
 }
@@ -1762,6 +1775,121 @@ html, body {
         opacity: 1;
     }
 }
+.share-notification {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10000;
+    color: var(--accent);
+    background-color: white;
+    border: 2px solid var(--accent);
+    padding: 12px 24px;
+    border-radius: 8px;
+    margin: 0;
+    display: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    max-width: 90%;
+    text-align: center;
+    font-weight: 500;
+    animation: shareSlideDown 0.3s ease-out;
+    transition: opacity 0.5s ease;
+}
+
+@keyframes shareSlideDown {
+    0% {
+        transform: translateX(-50%) translateY(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+}
+.renest-email-wrapper {
+    width: 100%;
+    max-width: 800px;
+    margin: 1rem auto;
+    position: relative;
+}
+
+.renest-email-capture {
+    display: none;
+    background: white;
+    padding: 1.5rem;
+    margin-top: 1rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(124, 58, 237, 0.1);
+}
+
+.renest-email-capture.renest-visible {
+    display: block;
+    animation: renestSlideDown 0.3s ease-out;
+}
+
+.renest-email-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid rgba(124, 58, 237, 0.3);
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+.renest-email-input:focus {
+    outline: none;
+    border-color: #7c3aed;
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+}
+
+.renest-submit-btn {
+    width: 100%;
+    background: #7c3aed;
+    color: white;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.renest-submit-btn:hover {
+    background: #6d28d9;
+    transform: translateY(-2px);
+}
+
+.renest-submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.renest-message {
+    text-align: center;
+    margin-top: 0.75rem;
+    font-size: 0.9rem;
+}
+
+.renest-success {
+    color: #0d9488;
+}
+
+.renest-error {
+    color: #ef4444;
+}
+
+@keyframes renestSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
 </style>
 </head>
@@ -1811,9 +1939,15 @@ html, body {
     <div class="text-center mb-6">
         <h2 class="text-2xl font-bold text-gray-800 mb-4">Built By Graduate Students, For Graduate Students</h2>
         <p class="text-gray-600 mb-6 max-w-2xl mx-auto" style=" color:  black;">
-            Created by grad students from Cal, Stanford, BU, UCSB, and UMichigan. Your information is anonymous and secure. Contribute to helping other graduate students!
+            Created by grad students from Cal, Stanford, UChicago, UCSB, and UMichigan. Your information is anonymous and secure. Contribute to helping other graduate students!
         </p>
         <button class="feedback-btn">Contact Us</button>
+        <button class="feedbackbtn" onclick="copyShareLink()" style="margin-left: 10px;">
+        Share With Other Students
+    </button>
+    <div id="shareNotification" class="share-notification">
+    Link copied to clipboard!
+</div>
     </div>
        <div class="logo-container relative">
         <div class="gradient-fade gradient-left"></div>
@@ -1831,7 +1965,7 @@ html, body {
                 <img src="ucsb.png" alt="UCSB Logo" class="h-16 w-32 object-contain mb-2">
             </div>
             <div class="logo-item">
-                <img src="bu.png" alt="BU Logo" class="h-16 w-32 object-contain mb-2">
+                <img src="uchicago.png" alt="UChicago Logo" class="h-16 w-32 object-contain mb-2">
             </div>
             <div class="logo-item">
                 <img src="michigan.png" alt="Michigan Logo" class="h-16 w-32 object-contain mb-2">
@@ -1848,7 +1982,7 @@ html, body {
                 <img src="ucsb.png" alt="UCSB Logo" class="h-16 w-32 object-contain mb-2">
             </div>
             <div class="logo-item">
-                <img src="bu.png" alt="BU Logo" class="h-16 w-32 object-contain mb-2">
+                <img src="uchicago.png" alt="UChicago Logo" class="h-16 w-32 object-contain mb-2">
             </div>
             <div class="logo-item">
                 <img src="michigan.png" alt="Michigan Logo" class="h-16 w-32 object-contain mb-2">
@@ -1863,8 +1997,8 @@ html, body {
                     <img src="ucsb.png" alt="UCSB Logo">
                 </div>
                 <div class="logo-item">
-                    <img src="bu.png" alt="BU Logo">
-                </div>
+                <img src="uchicago.png" alt="UChicago Logo" class="h-16 w-32 object-contain mb-2">
+            </div>
                 <div class="logo-item">
                 <img src="michigan.png" alt="Michigan Logo" class="h-16 w-32 object-contain mb-2">
             </div>
@@ -1878,8 +2012,8 @@ html, body {
                     <img src="ucsb.png" alt="UCSB Logo">
                 </div>
                 <div class="logo-item">
-                    <img src="bu.png" alt="BU Logo">
-                </div>
+                <img src="uchicago.png" alt="UChicago Logo" class="h-16 w-32 object-contain mb-2">
+            </div>
                 <div class="logo-item">
                 <img src="michigan.png" alt="Michigan Logo" class="h-16 w-32 object-contain mb-2">
             </div>
@@ -1892,7 +2026,7 @@ html, body {
     
         <div class="input-card">
             <h2 class="card-title">Enter Your Information</h2>
-            <p style="text-align:center">We use your school and income to identify state-specific benefits and tax advantages available to you as a graduate student.</p>
+            <p style="text-align:center">We use your school and income to identify state specific benefits and tax advantages available to you as a graduate student.</p>
             
         
             
@@ -2021,7 +2155,7 @@ html, body {
                 <h3 class="section-title">Savings Details
                     <div class="info-tooltip">
                                 <img src="info.png" alt="info" class="info-icon">
-                                <span class="tooltip-text">This section will allow us to make suggestions on how to saver for retirement and invest optimally for a future career, house, family etc...</span>
+                                <span class="tooltip-text">This section will allow us to suggest how and where to save optimally for retirement.</span>
                             </div></h3>
                 <div class="form-grid">
                     <div class="form-group">
@@ -2080,7 +2214,7 @@ html, body {
                     <!-- This section is populated by JavaScript -->
                 </div>
                 <div class="edu-section">
-                    <p>States want to help you by giving you tax-breaks for your education expenses. If you contribute to your states 529 plan your state will give you a tax break. By opening a 529 account you can save hundreds per year on rent.</p>
+                    <p>States want to help you by giving you tax-breaks through 529 plans on what you spend during your education. By opening a 529 account you can save hundreds per year on rent.</p>
                     <button onclick="toggle529Details()" id="learn529Btn" class="learn-more-btn">
                         Learn More About 529 Benefits ↓
                     </button>
@@ -2092,8 +2226,9 @@ html, body {
                         <ul class="edu-list">
                             <li><strong>Step 1:</strong> Deposit your rent/grocery money into your state's 529 plan</li>
                             <li><strong>Step 2:</strong> Withdraw it (immediately or when you need it) for qualified expenses (including rent and meals)</li>
-                            <li><strong>Step 3:</strong> When you do your taxes you will easily indicate how much you contributed to your 529 and then state will reimburse your taxes on that amount (up to the state  limit)</li>
-                            <li><strong>Result:</strong> You get a tax-refund and money grows tax-free while in your 529 meaning even more money available for your needs.</li>
+                            <li><strong>Step 3:</strong> Your 529 plan will send you a form at the end of the year.</li>
+                            <li><strong>Step 4:</strong> Upload that form and mark your qualified expenses on your tax return.</li>
+                            <li><strong>Result:</strong> You get a tax-refund for the qualified expenses and money grows tax-free while in your 529 meaning even more money available.</li>
                         </ul>
                         
                         <div class="edu-highlight">
@@ -2139,7 +2274,7 @@ html, body {
                     </div>
                 </div>
                 <div class="edu-section">
-                    <p>Credit cards are a safer, easier and more responsible way to spend and reduce expenses than cash and debit cards. Start by only using your credit card to buy groceries and pay it off everytime you use it. If you use the Citi Custom Cash Card you will get 5% cash back on your groceries each month. That the easiest few hundred dollars you will ever make.</p>
+                    <p>Credit cards are a safer, easier and more responsible way to pay for necessities. Credit cards are only a problem if you spend more than you make so start by only using your credit card to buy groceries. If you use the Citi Custom Cash Card you will get 5% cash back on your groceries each month.</p>
                     <button onclick="toggleCreditCardInfo()" id="learnCreditCardBtn" class="learn-more-btn">
                         I Don't Have a Credit Card ↓
                     </button>
@@ -2147,7 +2282,7 @@ html, body {
                         <div class="edu-highlight">
                             <h4>Getting Started with Credit</h4>
                             <ul class="edu-list" style="color: white;">
-                                <li>Building a credit history is super important and you need to get started as soon as possible. </li>
+                                <li>Building a credit history is super important.</li>
                                 <li>Building credit will lower interest rates on car and home purchases.</li>
                                 <li>Only spend what you can pay off each month - credit cards are only problematic if you spend more than you make.</li>
                                 <li>Set up auto-pay to never miss a payment and build your credit score.</li>
@@ -2166,6 +2301,11 @@ html, body {
             </div>
 
         </div>
+        <div class="renest-email-wrapper">
+    <button class="service-cta-button" onclick="RenestEmailCapture.toggle(this)">
+        Do You Want Help With These Steps ↗
+    </button>
+</div>
     </div>
 
 
@@ -2272,7 +2412,16 @@ html, body {
                     </div>
                 </div>
             </div>
+             <div class="renest-email-wrapper">
+    <button class="service-cta-button" onclick="RenestEmailCapture.toggle(this)">
+        Do You Want Help With These Steps ↗
+    </button>
+</div>
         </div>
+
+       
+
+
     <div id="savings-content" class="tab-content">
       <div class="optimization-section">
         <!-- Summary Card -->
@@ -2381,8 +2530,13 @@ html, body {
   </div>
 </div>
       </div>
-      
+      <div class="renest-email-wrapper">
+    <button class="service-cta-button" onclick="RenestEmailCapture.toggle(this)">
+        Do You Want Help With These Steps ↗
+    </button>
+</div>    
     </div>
+     
 
 
     <div id="s&s-content" class="tab-content">
@@ -2421,8 +2575,13 @@ html, body {
                 </div>
             </div>
         </div>
+        <div class="renest-email-wrapper">
+    <button class="service-cta-button" onclick="RenestEmailCapture.toggle(this)">
+        Do You Want Help With These Steps ↗
+    </button>
+</div>
     </div>
-
+        
 
     <div class="fixed-rating-box">
       <!-- <div class="savings-info">
@@ -2452,7 +2611,7 @@ html, body {
             </div>
 
           </div>
-           <p>The higher the score the better offers you can access. Think of it as a credit score you can change in one day.</p>
+           <p>Think of your optimization score as a credit score you can change in one day.</p>
         </div>
         <!-- <button class="create-account-btn">Create Account</button> -->
         <!-- <h3>Next Steps:</h3> -->
@@ -3697,6 +3856,32 @@ html, body {
 
         // Database of state 529 plans and tax benefits
                 
+        function copyShareLink() {
+            const url = 'www.renesthorizons.com/graduate-student-money.html';
+            navigator.clipboard.writeText(url).then(() => {
+                // Show notification
+                const notification = document.getElementById('shareNotification');
+                notification.style.display = 'block';
+                
+                // Hide notification after 3 seconds
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    setTimeout(() => {
+                        notification.style.display = 'none';
+                        notification.style.opacity = '1';
+                    }, 500);
+                }, 3000);
+                
+                // Track sharing event
+                window.dataLayer.push({
+                    'event': 'share_link_copied',
+                    'share_url': url
+                });
+            }).catch(err => {
+                console.error('Failed to copy link:', err);
+                alert('Failed to copy link. Please try again.');
+            });
+        }
 
         const OPTIMIZATION_CONFIG = {
             'rent-groceries': {
@@ -3711,8 +3896,8 @@ html, body {
                 groceries: {
                     steps: [
                         { name: 'Apply for Citi Custom Cash', time: 2 },
-                        { name: 'Activate Card', time: 2 },
-                        { name: 'Set Up Auto-Pay', time: 1 }
+                        { name: 'Activate Card', time: 3 },
+                        { name: 'Set Up Auto-Pay', time: 2 }
                     ],
                     totalTime: 5
                 }
@@ -5250,7 +5435,7 @@ const stateTaxDB = {
                         <p>While your state doesn't offer a tax deduction, you can still benefit from tax-free growth. Open and contribute to a low-cost plan like New York's 529 Program</p>
                         <ul class="step-details">
                             <li>Open your state 529 account. Contribute as much of your savings into it that you will use for qualified expenses like food, rent and tuition.</li>
-                            <li>Then select the capital preservation option sometimes also called fixed income or short term interest earning.</li>
+                            <li>Then select the capital preservation option: Interest Accumulation Portfolio.</li>
                             <li>Now you have a tax free high yield savings account for all your education expenses.</li>
                             <li>Anytime you need to pay for a qualified expense withdraw from your 529 to pay it off.</li>
                         </ul>
@@ -5812,9 +5997,7 @@ function selectState(stateAbbr, stateName) {
                         <div class="step-content hidden">
                             <p>Select low-cost index funds or target date funds for long-term growth.</p>
                             <ul class="step-details">
-                                <li>Look for "Target Date" funds matching your retirement year</li>
-                                <li>Choose funds with expense ratios under 0.2%</li>
-                                <li>Consider a mix of stock and bond index funds if selecting your own portfolio</li>
+                                <li>Look for "Target Date" funds matching the year you turn 65</li>
                             </ul>
                             <button class="complete-step-btn" onclick="completeStep('retirement3', 'retirement')">Mark Complete</button>
                         </div>
@@ -6303,7 +6486,7 @@ function calculateTotalSavings(income, state, monthlyRent, monthlyGroceries) {
                 
                 <div class="summary-footer">
                     <p style="color: var(--text)">
-                       The steps below outline how to save more through simple steps
+                       The steps below outline how to achieve this savings amount. You can see more detailed steps and time estimates in each section.
                     </p>
                 </div>
             </div>
@@ -6448,7 +6631,7 @@ function calculateTotalSavings(income, state, monthlyRent, monthlyGroceries) {
             </div>
             <div class="savings-details" style="text-align: center;">
                 <p>Additional retirement benefits you qualify for based on your information. Get the benefit of a 401(k) retirement match program as a graduate student.</p>
-                <p style="color: var(--primary); margin-top: 10px;">Compounding growth creates up to $${futureValue.toLocaleString()} when you retire</p>
+                <p style="color: var(--primary); margin-top: 10px;">Compounding growth creates up to $${futureValue.toLocaleString()} by the time you retire</p>
                 <div class="email-capture-section">
                             <form id="emailCaptureForm" class="email-form">
                                 <input 
@@ -7151,7 +7334,7 @@ function generateTaxHolidaySteps(state) {
                         </div>
                         <div class="step-title">
                             <h4>Set Up Monthly Deposits</h4>
-                            <p class="time-estimate">Time: 2 minutes monthly</p>
+                            <p class="time-estimate">Time: 2 minutes</p>
                         </div>
                         <span class="expand-arrow">▼</span>
                     </div>
@@ -7222,7 +7405,7 @@ function generateTaxHolidaySteps(state) {
                         </div>
                         <div class="step-title">
                             <h4>Activate Your Card</h4>
-                            <p class="time-estimate">Time: 2 minutes</p>
+                            <p class="time-estimate">Time: 3 minutes</p>
                         </div>
                         <span class="expand-arrow">▼</span>
                     </div>
@@ -7246,7 +7429,7 @@ function generateTaxHolidaySteps(state) {
                         </div>
                         <div class="step-title">
                             <h4>Set Up Auto-Pay</h4>
-                            <p class="time-estimate">Time: 1 minute</p>
+                            <p class="time-estimate">Time: 2 minute</p>
                         </div>
                         <span class="expand-arrow">▼</span>
                     </div>
@@ -7559,9 +7742,11 @@ function generateTaxHolidaySteps(state) {
                     sections.forEach(section => addPlanStep(planStepsDiv, section.title, section.description, section.savings, '', section.tab, section.time));
                     // Add bottom CTA button
                         planStepsDiv.innerHTML += `
-                            <button class="service-cta-button">
-                                Have Us Complete These Steps For You ↗
-                            </button>
+                            <div class="renest-email-wrapper">
+    <button class="service-cta-button" onclick="RenestEmailCapture.toggle(this)">
+        Do You Want Help With These Steps ↗
+    </button>
+</div>
                         `;
 
                         // Add form submission handler
@@ -7641,6 +7826,83 @@ function generateTaxHolidaySteps(state) {
                 }
             }, 1000);
         }
+        const RenestEmailCapture = {
+    toggle: function(button) {
+        const wrapper = button.closest('.renest-email-wrapper');
+        let form = wrapper.querySelector('.renest-email-capture');
+        
+        if (!form) {
+            form = document.createElement('div');
+            form.className = 'renest-email-capture';
+            form.innerHTML = `
+                <form onsubmit="RenestEmailCapture.submit(event)">
+                    <input type="email" 
+                           class="renest-email-input"
+                           placeholder="Enter your email for personalized support" 
+                           required>
+                    <button type="submit" class="renest-submit-btn">Send Me Details</button>
+                    <div class="renest-message"></div>
+                </form>
+            `;
+            wrapper.appendChild(form);
+        }
+        
+        setTimeout(() => {
+            form.classList.toggle('renest-visible');
+            if (form.classList.contains('renest-visible')) {
+                form.querySelector('.renest-email-input').focus();
+            }
+        }, 0);
+    },
+
+    submit: async function(event) {
+        event.preventDefault();
+        const form = event.target;
+        const email = form.querySelector('.renest-email-input').value;
+        const messageDiv = form.querySelector('.renest-message');
+        const submitButton = form.querySelector('.renest-submit-btn');
+        
+        submitButton.disabled = true;
+        messageDiv.textContent = 'Submitting...';
+
+        try {
+            const formData = new FormData();
+            formData.append('entry.91823667', email);
+            
+            await fetch(
+                'https://docs.google.com/forms/d/e/1FAIpQLSevITFtFEk2bgyRuPQSmtxannvs2vnWd3GNfZcca3fNyPxqbQ/formResponse',
+                {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: formData
+                }
+            );
+            
+            messageDiv.textContent = 'Thank you! We will be in touch soon.';
+            form.reset();
+            
+            setTimeout(() => {
+                const formContainer = form.closest('.renest-email-capture');
+                formContainer.classList.remove('renest-visible');
+                setTimeout(() => {
+                    messageDiv.textContent = '';
+                    submitButton.disabled = false;
+                }, 300);
+            }, 3000);
+
+            if (window.dataLayer) {
+                window.dataLayer.push({
+                    'event': 'email_capture',
+                    'email': email
+                });
+            }
+        } catch (error) {
+            messageDiv.textContent = 'Something went wrong. Please try again.';
+            console.error('Form submission error:', error);
+            submitButton.disabled = false;
+        }
+    }
+};
 
         function updateAccountTypeDetails() {
             const accountTypeDetails = document.getElementById('accountTypeDetails');
@@ -7776,7 +8038,7 @@ function initializeCalculatorListeners() {
    
 function initializeApp() {
     // Setup currency formatting for money inputs
-    ['income', 'monthlyRent', 'monthlyGroceries', 'monthlyHealthCare', 'savings'].forEach(id => {
+    ['income', 'monthlyRent', 'monthlyGroceries', 'monthlyHealthCare', 'savings','bank'].forEach(id => {
         setupCurrencyInput(id);
     });
 
