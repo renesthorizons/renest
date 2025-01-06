@@ -7344,13 +7344,13 @@ function generateTaxHolidaySteps(state) {
                             </svg>
                         </div>
                         <div class="step-title">
-                            <h4>Open a ${state529DB[state].planName}</h4>
+                            <h4>Open an account with your states 529 plan: ${state529DB[state].planName}</h4>
                             <p class="time-estimate">Time: 8 minutes</p>
                         </div>
                         <span class="expand-arrow">▼</span>
                     </div>
                     <div class="step-content hidden">
-                        <p>Visit the ${state529DB[state].planName} website and complete the enrollment process.</p>
+                        <p>Your state offers a tax deduction of up to $${state529DB[selectedSchool.state].deduction.toLocaleString()} for 529 plan contributions. Visit the ${state529DB[state].planName} website and complete the enrollment process.</p>
                         <ul class="step-details">
                             <li>Have your SSN ready</li>
                             <li>Choose a basic investment option</li>
@@ -7721,7 +7721,7 @@ function generateTaxHolidaySteps(state) {
                         {
                             title: 'Rent',
                             description: state529DB[state].deduction > 0 
-                                ? `Use your state's 529 plan to save ${(calculateStateTaxRate(income, state) * 100).toFixed(1)}% in taxes on up to $${state529DB[state].deduction.toLocaleString()} of qualified education expenses.`
+                                ? `Use your state's 529 plan to save ${(calculateStateTaxRate(income, state) * 100).toFixed(1)}% in taxes on up to $${state529DB[state].deduction.toLocaleString()} of qualified education expenses, which includes rent and food.`
                                 : 'Your state does not offer 529 tax deductions, but you can still benefit from tax-free growth.',
                             savings: state529DB[state].deduction > 0 ? calculateRentSavings(income, state, monthlyRent) : 0,
                             tab: 'rent-groceries',
