@@ -128,23 +128,34 @@
     --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --transition: all 0.3s ease;
 }
-.main-content {
-  margin-right: 0;
-  padding-right: 0;
-  width:100%;
+
+
+html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    position: relative;
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
     margin: 0;
-    overflow-x: hidden;
+    padding: 0;
     width: 100%;
-    max-width: 100%;
+    min-height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
     padding-bottom: 90px;
     line-height: 1.6;
     color: var(--primary-dark);
     background-color: #ffdfd3;
-    min-height: 100%;
+    overflow-x: hidden;
+}
+
+.main-content {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+    overflow-x: hidden;
 }
 
 /* Change h1 styles */
@@ -565,11 +576,24 @@ input:focus {
 html {
     scroll-behavior: smooth;
 }
-
 @media screen and (max-width: 600px) {
-    /*body {
-        padding: 3px;
-    }*/
+    body {
+        padding: 0;
+    }
+
+    .input-card {
+        margin: 0 0 20px 0;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .results {
+        margin: 0;
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+@media screen and (max-width: 600px) {
 
     h1 {
         font-size: 1.8rem;
@@ -4761,14 +4785,14 @@ const stateTaxDB = {
                     holidays: [
                         {
                             name: 'Weather Preparedness Sales Tax Holiday',
-                            dates: 'February 21 - 23, 2025',
+                            dates: 'February 21-23, 2025',
                             details: 'Items such as batteries, radios, self-powered lights, sheets/tarpaulins, plywood, food storage cooler, first aid kits, and fire extinguishers',
                             gradRelevance: 'Opportunity to save on emergency supplies and equipment',
                             restrictions: 'Local sales and use tax may apply'
                         },
                         {
                             name: 'Back to School Sales Tax Holiday',
-                            dates: 'July 18 - 20, 2025',
+                            dates: 'July 18-20, 2025',
                             details: 'Clothing up to $100 per item, computers and software up to $750, school supplies up to $50, books up to $30',
                             gradRelevance: 'Savings on computers, software, and school supplies',
                             restrictions: 'Accessories, protective equipment, and sports equipment not exempt'
@@ -4780,7 +4804,7 @@ const stateTaxDB = {
                     holidays: [
                         {
                             name: 'Skagway Sales Tax Holiday',
-                            dates: 'October 1, 2024 - March 31, 2025',
+                            dates: 'October 1, 2024-March 31, 2025',
                             details: 'All retail sales of goods and products except for resale',
                             gradRelevance: 'General savings on all purchases in Skagway',
                             restrictions: 'Only applies to Skagway municipality'
@@ -4792,7 +4816,7 @@ const stateTaxDB = {
                     holidays: [
                         {
                             name: 'Back to School Sales Tax Holiday',
-                            dates: 'August 2 - 3, 2025',
+                            dates: 'August 2-3, 2025',
                             details: 'Clothing up to $100, accessories up to $50, school supplies, art supplies, and textbooks',
                             gradRelevance: 'Savings on educational materials and supplies',
                             restrictions: 'Only specific listed items qualify'
@@ -4804,7 +4828,7 @@ const stateTaxDB = {
                     holidays: [
                         {
                             name: 'Back to School Sales Tax Holiday',
-                            dates: 'August 17 - 23, 2025',
+                            dates: 'August 17-23, 2025',
                             details: 'General clothing and footwear up to $100 per item',
                             gradRelevance: 'Savings on clothing and footwear',
                             restrictions: 'Excludes jewelry, sports uniforms, protective equipment, accessories, and insoles'
@@ -4816,14 +4840,14 @@ const stateTaxDB = {
                     holidays: [
                         {
                             name: 'Weather Preparedness Sales Tax Holiday',
-                            dates: 'May 24 - June 6, 2025',
+                            dates: 'May 24-June 6, 2025',
                             details: 'Impact-resistant doors, windows, and garage doors',
                             gradRelevance: 'Home protection equipment',
                             restrictions: 'Limited to "Home Hardening" items'
                         },
                         {
                             name: 'Back to School Sales Tax Holiday',
-                            dates: 'July 28 - August 10, 2025',
+                            dates: 'July 28-August 10, 2025',
                             details: 'Clothing up to $100, school supplies up to $50, learning aids up to $30, computers up to $1,500',
                             gradRelevance: 'Savings on computers and educational supplies',
                             restrictions: 'Computers must be for noncommercial home or personal use'
@@ -4835,7 +4859,7 @@ const stateTaxDB = {
                     holidays: [
                         {
                             name: 'Back to School Sales Tax Holiday',
-                            dates: 'August 1 - 2, 2025',
+                            dates: 'August 1-2, 2025',
                             details: 'General clothing and footwear up to $100',
                             gradRelevance: 'Savings on clothing and footwear',
                             restrictions: 'Excludes jewelry, watches, protective equipment, umbrellas, skis and skates'
@@ -4847,7 +4871,7 @@ const stateTaxDB = {
                     holidays: [
                         {
                             name: 'Second Amendment Sales Tax Holiday',
-                            dates: 'September 5 - 7, 2025',
+                            dates: 'September 5-7, 2025',
                             details: 'Items related to firearms, hunting, and ammunition',
                             gradRelevance: 'Savings on hunting and firearms equipment',
                             restrictions: 'Limited to specific firearms-related items'
@@ -4859,14 +4883,14 @@ const stateTaxDB = {
                     holidays: [
                         {
                             name: 'Energy Star Sales Tax Holiday',
-                            dates: 'February 16 - 18, 2025',
+                            dates: 'February 16-18, 2025',
                             details: 'Energy Star certified appliances including air conditioners, washers, dryers, furnaces, heat pumps',
                             gradRelevance: 'Savings on energy-efficient equipment',
                             restrictions: 'Must be Energy Star certified products'
                         },
                         {
                             name: 'Back to School Sales Tax Holiday',
-                            dates: 'August 10 - 16, 2025',
+                            dates: 'August 10-16, 2025',
                             details: 'Clothing and footwear up to $100 per item',
                             gradRelevance: 'Savings on clothing and footwear',
                             restrictions: 'Excludes accessories'
@@ -4878,7 +4902,7 @@ const stateTaxDB = {
                     holidays: [
                         {
                             name: 'Back to School Sales Tax Holiday',
-                            dates: 'August 9 - 10, 2025',
+                            dates: 'August 9-10, 2025',
                             details: 'Most tangible personal property',
                             gradRelevance: 'General savings on most purchases',
                             restrictions: 'Excludes telecommunications, tobacco, marijuana, alcohol, gas, steam, electricity, motor vehicles, motorboats, items over $2,500'
@@ -4890,14 +4914,14 @@ const stateTaxDB = {
                     holidays: [
                         {
                             name: 'Back to School Sales Tax Holiday',
-                            dates: 'July 11 - 13, 2025',
+                            dates: 'July 11-13, 2025',
                             details: 'Clothing and footwear up to $100 per item',
                             gradRelevance: 'Savings on clothing and footwear',
                             restrictions: 'Excludes accessories, certain cities may not participate'
                         },
                         {
                             name: 'Second Amendment Sales Tax Holiday',
-                            dates: 'August 29 - 30, 2025',
+                            dates: 'August 29-30, 2025',
                             details: 'Firearms, ammunition and certain hunting supplies',
                             gradRelevance: 'Savings on hunting equipment',
                             restrictions: 'General hunting supplies and animals not exempt, certain cities may not participate'
@@ -4909,14 +4933,14 @@ const stateTaxDB = {
                     holidays: [
                         {
                             name: 'Energy Star Sales Tax Holiday',
-                            dates: 'April 18 - 24, 2025',
+                            dates: 'April 18-24, 2025',
                             details: 'Energy Star certified appliances',
                             gradRelevance: 'Savings on energy-efficient equipment',
                             restrictions: 'Must be Energy Star certified, local jurisdictions may opt out'
                         },
                         {
                             name: 'Back to School Sales Tax Holiday',
-                            dates: 'August 1 - 3, 2025',
+                            dates: 'August 1-3, 2025',
                             details: 'Clothing up to $100, school supplies up to $50, computer software up to $350, computers up to $1,500, computer peripherals up to $1,500, calculators up to $150',
                             gradRelevance: 'Significant savings on technology and educational supplies',
                             restrictions: 'Local jurisdictions may opt out, retailers with less than 2% qualifying merchandise may not participate'
@@ -4928,7 +4952,7 @@ const stateTaxDB = {
                     holidays: [
                         {
                             name: 'National Guard Sales Tax Holiday',
-                            dates: 'October 24 - 26, 2025',
+                            dates: 'October 24-26, 2025',
                             details: 'Purchases by National Guard members',
                             gradRelevance: 'Savings for National Guard members',
                             restrictions: 'Limited to National Guard members'
@@ -4940,7 +4964,7 @@ const stateTaxDB = {
                     holidays: [
                         {
                             name: 'Back to School Sales Tax Holiday',
-                            dates: 'August 1 - 3, 2025',
+                            dates: 'August 1-3, 2025',
                             details: 'Clothing under $100, computers up to $1,000, computer hardware up to $500, school supplies up to $30-$200',
                             gradRelevance: 'Savings on technology and educational supplies',
                             restrictions: 'Price limits vary by supply type'
@@ -4958,8 +4982,8 @@ const stateTaxDB = {
                     hasTaxHoliday: true,
                     holidays: [
                         {
-                            name: 'General Sales Tax Holiday',
-                            dates: 'July 29 - August 7, 2025',
+                            name: 'Back to School Sales Tax Holiday',
+                            dates: 'July 29-August 7, 2025',
                             details: 'All goods $500 or less',
                             gradRelevance: 'General savings on most purchases',
                             restrictions: 'Excludes watercraft, motor vehicles, alcoholic beverages, tobacco, vapor products, marijuana'
@@ -4971,7 +4995,7 @@ const stateTaxDB = {
                     holidays: [
                         {
                             name: 'Back to School Sales Tax Holiday',
-                            dates: 'August 1 - 3, 2025',
+                            dates: 'August 1-3, 2025',
                             details: 'Clothing and shoes up to $100 per item',
                             gradRelevance: 'Savings on clothing and footwear',
                             restrictions: 'Limited to clothing and shoes'
@@ -4983,7 +5007,7 @@ const stateTaxDB = {
                     holidays: [
                         {
                             name: 'Weather Preparedness Sales Tax Holiday',
-                            dates: 'May 30 - June 1, 2025',
+                            dates: 'May 30-June 1, 2025',
                             details: 'Portable generators and hurricane supplies',
                             gradRelevance: 'Emergency preparedness equipment',
                             restrictions: 'Limited to specified hurricane supplies'
@@ -4995,7 +5019,7 @@ const stateTaxDB = {
                     holidays: [
                         {
                             name: 'Back to School Sales Tax Holiday',
-                            dates: 'August 1 - 3, 2025',
+                            dates: 'August 1-3, 2025',
                             details: 'Clothing, school supplies, computers, bed and bath items',
                             gradRelevance: 'Wide range of educational and household items',
                             restrictions: 'Excludes rentals, mattresses, smartphones, cameras, uniforms, sports equipment'
@@ -5007,7 +5031,7 @@ const stateTaxDB = {
                     holidays: [
                         {
                             name: 'Back to School Sales Tax Holiday',
-                            dates: 'July 25 - 27, 2025',
+                            dates: 'July 25-27, 2025',
                             details: 'Clothing and school supplies up to $100, computers up to $1,500',
                             gradRelevance: 'Savings on technology and educational supplies',
                             restrictions: 'Price limits apply per item'
@@ -5019,28 +5043,28 @@ const stateTaxDB = {
                     holidays: [
                         {
                             name: 'Weather Preparedness Sales Tax Holiday',
-                            dates: 'April 26 - 28, 2025',
+                            dates: 'April 26-28, 2025',
                             details: 'Emergency supplies including generators up to $3,000, shutters up to $300, various supplies up to $75',
                             gradRelevance: 'Emergency preparedness equipment',
                             restrictions: 'Specific price limits per category'
                         },
                         {
                             name: 'Energy Star Sales Tax Holiday',
-                            dates: 'May 24 - 26, 2025',
+                            dates: 'May 24-26, 2025',
                             details: 'Energy Star and WaterSense products',
                             gradRelevance: 'Energy-efficient equipment savings',
                             restrictions: 'Specific price limits per category'
                         },
                         {
                             name: 'WaterSense Sales Tax Holiday',
-                            dates: 'May 24 - 26, 2025',
+                            dates: 'May 24-26, 2025',
                             details: 'WaterSense products and water-conserving items',
                             gradRelevance: 'Water conservation equipment savings',
                             restrictions: 'Some items only for residential use'
                         },
                         {
                             name: 'Back to School Sales Tax Holiday',
-                            dates: 'August 8 - 10, 2025',
+                            dates: 'August 8-10, 2025',
                             details: 'Clothing and footwear under $100, backpacks under $100, school supplies',
                             gradRelevance: 'Educational supplies savings',
                             restrictions: 'Business purchases require exemption certificate'
@@ -5052,7 +5076,7 @@ const stateTaxDB = {
                     holidays: [
                         {
                             name: 'Combined Sales Tax Holiday',
-                            dates: 'August 1 - 3, 2025',
+                            dates: 'August 1-3, 2025',
                             details: 'Clothing under $100, school supplies under $20, generators under $1,000, chainsaws under $350, Energy Star/WaterSense products under $2,500',
                             gradRelevance: 'Wide range of savings opportunities',
                             restrictions: 'Specific price limits per category'
@@ -5064,7 +5088,7 @@ const stateTaxDB = {
                     holidays: [
                         {
                             name: 'Back to School Sales Tax Holiday',
-                            dates: 'August 1 - 4, 2025',
+                            dates: 'August 1-4, 2025',
                             details: 'Clothing up to $125, school supplies up to $20, sports equipment up to $150, computers up to $500',
                             gradRelevance: 'Technology and educational supplies savings',
                             restrictions: 'Specific price limits per category'
