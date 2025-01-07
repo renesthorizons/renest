@@ -2087,14 +2087,14 @@ html, body {
         </div>
         <div class="input-card">
                 <h2 class="card-title">Optional Information</h2>
-                    <p style="text-align:center">Additional information helps us provide more accurate advice and ways to save.</p>
+                    <p style="text-align:center">Additional information helps us be more accurate in our advice and savings optimizations.</p>
                 
             <!-- Optional Information Section -->
             <div class="form-section optional-section">
                 <h3 class="section-title">Spending Essentials
                 <div class="info-tooltip">
                                 <img src="info.png" alt="info" class="info-icon">
-                                <span class="tooltip-text">This section will allow us to maximize the immediate tax benefits available to you as a student for essential spending</span>
+                                <span class="tooltip-text">This section will allow us to maximize the immediate tax benefits available to you as a student for rent and grocery spend.</span>
                             </div> </h3>               
                 <div class="form-grid">
                     <div class="form-group">
@@ -5265,11 +5265,11 @@ const stateTaxDB = {
             const savingsInput = document.getElementById('savings')?.value || '0';  
             const savingsAmount = parseFloat(savingsInput.replace(/[^0-9.-]+/g, '')) || 0;
 
-            const groceryInput = document.getElementById('monthlyGroceries')?.value || '350';
-            const groceryAmount = parseFloat(groceryInput.replace(/[^0-9.-]+/g, '')) || 350;
+            const groceryInput = document.getElementById('monthlyGroceries')?.value || '500';
+            const groceryAmount = parseFloat(groceryInput.replace(/[^0-9.-]+/g, '')) || 500;
 
-            const rentInput = document.getElementById('monthlyRent')?.value || '1200';
-            const rentAmount = parseFloat(rentInput.replace(/[^0-9.-]+/g, '')) || 1200;
+            const rentInput = document.getElementById('monthlyRent')?.value || '1500';
+            const rentAmount = parseFloat(rentInput.replace(/[^0-9.-]+/g, '')) || 1500;
 
             const incomeInput = document.getElementById('income')?.value || '0';
             const income = parseFloat(incomeInput.replace(/[^0-9.-]+/g, '')) || 0;
@@ -6485,8 +6485,8 @@ function selectState(stateAbbr, stateName) {
 function calculateTotalSavings(income, state, monthlyRent, monthlyGroceries) {
     // Parse inputs safely
     const annualIncome = parseFloat(income) || 0;
-    const rent = parseFloat(monthlyRent) || 1200;
-    const groceries = parseFloat(monthlyGroceries) || 350;
+    const rent = parseFloat(monthlyRent) || 1500;
+    const groceries = parseFloat(monthlyGroceries) || 500;
     
     // Calculate SNAP benefits if eligible
     const snapBenefits = annualIncome < 20000 ? calculateSnapBenefits(annualIncome, state) * 12 : 0;
@@ -7094,7 +7094,7 @@ function generateTaxHolidaySteps(state) {
                     limitMessage.textContent = `Based on 5% cash back on your monthly grocery spending`;
                 }
             } else {
-                limitMessage.textContent = `Please input your grocery spending for a customized estimate. Currently, we are assuming $350/month.`;
+                limitMessage.textContent = `Please input your grocery spending for a customized estimate. Currently, we are assuming $500/month.`;
             }
         }
         
@@ -7322,8 +7322,8 @@ function generateTaxHolidaySteps(state) {
             const incomeInput = document.getElementById('income')?.value?.replace(/[^0-9.]/g, '') || '';
             
             // Use default values if not provided
-            const monthlyRent = monthlyRentInput ? parseFloat(monthlyRentInput) : 1200;
-            const monthlyGroceries = monthlyGroceriesInput ? parseFloat(monthlyGroceriesInput) : 350;
+            const monthlyRent = monthlyRentInput ? parseFloat(monthlyRentInput) : 1500;
+            const monthlyGroceries = monthlyGroceriesInput ? parseFloat(monthlyGroceriesInput) : 500;
             const income = parseFloat(incomeInput) || 0;
             
             const state = selectedSchool.state;
@@ -7341,7 +7341,7 @@ function generateTaxHolidaySteps(state) {
                 if (!monthlyRentInput) {
                     html += `
                         <div class="missing-info-prompt">
-                            Please input your rent for a customized estimate. Currently assuming $1,200/month rent.
+                            Please input your rent for a customized estimate. Currently assuming $1,500/month rent.
                         </div>`;
                 }
                 
@@ -7510,7 +7510,7 @@ function generateTaxHolidaySteps(state) {
         }
         function calculateRentSavings(income, state, monthlyRent) {
             // Parse inputs safely
-            const rent = parseFloat(monthlyRent) || 1200;
+            const rent = parseFloat(monthlyRent) || 1500;
             const annualIncome = parseFloat(income) || 0;
 
             
@@ -7539,8 +7539,8 @@ function generateTaxHolidaySteps(state) {
 
             // Get input values with robust parsing
             const monthlySavings = parseInputValue('bank');
-            const monthlyRent = parseInputValue('monthlyRent', 1200);
-            const monthlyGroceries = parseInputValue('monthlyGroceries', 350);
+            const monthlyRent = parseInputValue('monthlyRent', 1500);
+            const monthlyGroceries = parseInputValue('monthlyGroceries', 500);
             const annualIncome = parseInputValue('income');
             
             // Calculate monthly income
@@ -7681,8 +7681,8 @@ function generateTaxHolidaySteps(state) {
 
             const income = parseFloat(document.getElementById('income').value.replace(/[^0-9.]/g, ''));
             const state = selectedSchool.state;
-            const monthlyRent = parseFloat(document.getElementById('monthlyRent')?.value?.replace(/[^0-9.]/g, '') || '1200');
-            const monthlyGroceries = parseFloat(document.getElementById('monthlyGroceries')?.value?.replace(/[^0-9.]/g, '') || '350');
+            const monthlyRent = parseFloat(document.getElementById('monthlyRent')?.value?.replace(/[^0-9.]/g, '') || '1500');
+            const monthlyGroceries = parseFloat(document.getElementById('monthlyGroceries')?.value?.replace(/[^0-9.]/g, '') || '500');
             
             // Calculate totals
             const totalSavings = calculateTotalSavings(income, state, monthlyRent, monthlyGroceries);
