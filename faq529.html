@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - VOSUS</title>
+    <style>
+        /* Your existing root styles */
+        :root {
+            --primary: #4B227A;
+            --accent: #FF69B4;
+            --text-dark: #1E0A3C;
+            --background: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        /* Your existing navigation styles */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        /* Mobile Menu Styles */
+        .nav-links {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .nav-links a {
+            color: var(--text-dark);
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            display: block;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(75, 34, 122, 0.05);
+            transform: translateX(5px);
+        }
+
+        .nav-links .talk-button {
+            background-color: var(--primary);
+            color: white !important;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+        .nav-links .talk-button:hover {
+            background: linear-gradient(45deg, #4B227A, #FF69B4);
+            transform: translateY(-2px);
+        }
+        /* FAQ specific styles */
+        .faq-section {
+            margin-top: 80px;
+            padding: 4rem 1rem;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .faq-title {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .faq-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .faq-item {
+            border: 1px solid rgba(75, 34, 122, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            background: white;
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: rgba(75, 34, 122, 0.05);
+        }
+
+        .faq-answer {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .faq-answer-content {
+            padding: 1.5rem;
+            border-top: 1px solid rgba(75, 34, 122, 0.1);
+            line-height: 1.6;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+        }
+
+        .faq-toggle {
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-toggle {
+            transform: rotate(45deg);
+        }
+
+        @media (min-width: 768px) {
+            .menu-button {
+                display: none;
+            }
+
+            .nav-links {
+                position: static;
+                display: flex !important;
+                flex-direction: row;
+                padding: 0;
+                box-shadow: none;
+                gap: 0;
+                align-items: center;
+            }
+
+            .nav-links a {
+                margin-left: 2rem;
+                padding: 0.5rem 1rem;
+            }
+
+            .faq-section {
+                padding: 6rem 2rem;
+            }
+        }
+        .menu-button {
+            background: none;
+            border: 2px solid var(--primary);
+            border-radius: 4px;
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.5rem 0.75rem;
+            color: var(--primary);
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .menu-button:hover {
+            background: var(--primary);
+            color: white;
+        }
+        @media (min-width: 768px) {
+            .menu-button {
+                display: none;  /* This hides the menu button on desktop */
+            }
+        }
+         .footer {
+            background-color: white;
+            padding: 3rem 1rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .social-links a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .footer-links h3 {
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            display: block;
+            color: var(--text-dark);
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+        }
+
+        .copyright {
+            color: var(--text-dark);
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        @media (min-width: 768px) {
+            .nav-links {
+                display: flex;
+                align-items: center;
+            }
+
+            .menu-button {
+                display: none;
+            }
+
+            .footer-content {
+                grid-template-columns: 2fr 1fr 1fr;
+            }
+
+            .hero {
+                padding: 4rem 2rem;
+            }
+
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+
+            .email-form {
+                flex-direction: row;
+            }
+
+            .email-input {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="529benefit.html" class="logo">VOSUS</a>
+        <div class="nav-links">
+            <a href="529benefit.html">Home</a>
+            <a href="aboutus529.html">About us</a>
+            <a href="faq529.html">FAQ</a>
+            <a href="contact.html">Contact us</a>
+            <a href="admin.html">For University Administrators</a>
+            <a href="getstarted529.html" class="talk-button">Get Started</a>
+        </div>
+        <button class="menu-button" aria-label="Toggle menu" aria-expanded="false">☰</button>
+    </nav>
+
+    <section class="faq-section">
+        <h1 class="faq-title">Frequently Asked Questions</h1>
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question">
+                    What Does Renest Do?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Renest is a financial technology company helping students track and manage qualified tuition program expenses to maximize tax-benefits associated with state 529 plans.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    Who is Renest for?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Renest serves working students and universities by providing money management tools and services for qualified tuition program expenses. Renest also supports employers with employees who are students.
+                    </div>
+                </div>
+            </div>
+
+             <div class="faq-item">
+                <div class="faq-question">
+                    I think my parents / grandparents have a 529 for me, can I still create one?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Yes, you can create a 529 for yourself. If you are a graduate student or any type of student with income opening and contributing to a 529 allows you to get a tax-benefit for qualified spend (e.g., rent, food) that Renest can help you track.
+                    </div>
+                </div>
+            </div>
+
+             <div class="faq-item">
+                <div class="faq-question">
+                    I am an international student, can I still take advantage of this?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Yes, as long as you are a student and earn income and pay taxes you qualify for a 529 benefit.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    What is Considered a Working Student? Do I have to be a graduate student?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        If you are enrolled part-time or full-time in a educational institution and/or program and have made or will make taxable income this year, you are considered a working student. You do not need to be a graduate student to unlock these benefits associated with a 529 plan.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    What is a 529?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        529 plans are tax-advantaged savings plans established by states under Section 529 of the federal tax codes. Money contributed and invested in a 529 plan grow tax-free and can be used for qualified tuition program expenses.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    Why Do I Get Tax-Benefits From a 529?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Unlike savings or investments in a traditional savings or brokerage account, contributions in a 529 plan are not subject to ordinary income, dividend, and capital gains tax. Additionally, 37 states and Washington, D.C. allow contributions to a 529 plan to be tax-deductible against state income tax (deduction limits vary across states).
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    How Do I Use a 529 Plan?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        To begin, open an account with your state's 529 plan. Once you have established an account, you can fund the account using your existing bank account and/or directly via payroll. Contact your employer's HR/benefits department if you have questions about payroll contributions – the Renest team is happy to connect with your employer for support as well! Once you have funded your 529 account, you can select an investment allocation into equities and bonds funds (e.g., target-date funds, stock market indexes) or a high-yield savings fund. Your funds and investment growth can be withdrawn and used to pay for qualified tuition program expenses. Funds and investment growth withdrawn and not used for qualified tuition program expenses will incur an income tax and 10% penalty on earnings.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    What are Considered Qualified Tuition Program Expenses?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        In general, this term includes tuition, fees, books, supplies, and equipment required for enrollment or attendance at an eligible educational institution. Additionally, this includes certain expenses for computer, software, or internet access and related services to be used during enrollment. The term also includes certain room and board expenses for students attending at least half-time, and in the case of special needs beneficiaries, expenses for special needs services.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    Are there any Limits / Restrictions?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        There are no limits on funds used for tuition expenses at an eligible educational institution. However, other expenses must be:
+                        <br><br>
+                        • Within the educational institution's official cost of attendance (COA) figures or;
+                        <br>
+                        • The invoiced price of any services operated by or products purchased from the educational institution
+                        <br><br>
+                        Additionally, a life-time amount of $10,000 can be used to pay student loans.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    Can Renest do this for Me?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Yes! Renest provides products and services that help graduate students maximize their tax-benefits through 529 plans. We have automated the account opening and provide expense management tools to identify and track qualified spend.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="footer-logo">VOSUS</div>
+                <p class="copyright">©2025 VOSUS Technologies Inc., Patents Pending</p>
+            </div>
+            <div class="footer-links">
+                <h3>Company</h3>
+                <a href="about.html">About us</a>
+            </div>
+            <div class="footer-links">
+                <h3>Resources</h3>
+                <a href="contact.html">Contact us</a>
+                <a href="faq.html">FAQ</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu functionality
+        const menuButton = document.querySelector('.menu-button');
+        const navLinks = document.querySelector('.nav-links');
+
+        const toggleMenu = () => {
+            const isExpanded = menuButton.getAttribute('aria-expanded') === 'true';
+            menuButton.setAttribute('aria-expanded', !isExpanded);
+            navLinks.style.display = !isExpanded ? 'flex' : 'none';
+        };
+
+        menuButton.addEventListener('click', toggleMenu);
+
+        // FAQ functionality
+        const faqItems = document.querySelectorAll('.faq-item');
+
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            
+            question.addEventListener('click', () => {
+                // Close other items
+                faqItems.forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('active');
+                    }
+                });
+                
+                // Toggle current item
+                item.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>

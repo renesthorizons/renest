@@ -45,22 +45,70 @@
 
         .nav-links {
             display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            flex-direction: column;
+            gap: 1rem;
         }
 
         .nav-links a {
             color: var(--text-dark);
             text-decoration: none;
-            margin-left: 2rem;
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            display: block;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(75, 34, 122, 0.05);
+            transform: translateX(5px);
         }
 
         .nav-links .talk-button {
             background-color: var(--primary);
-            color: #FFFFFF !important;
+            color: white !important;
             padding: 0.75rem 1.5rem;
-            border-radius: 4px;
-            text-decoration: none;
+            border-radius: 10px;
             font-weight: 600;
-            display: inline-block;
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+
+       .nav-links .talk-button:hover {
+            background: linear-gradient(45deg, #4B227A, #FF69B4);
+            transform: translateY(-2px);
+        }
+
+         @media (min-width: 768px) {
+            .menu-button {
+                display: none;
+            }
+
+            .nav-links {
+                position: static;
+                display: flex !important;
+                flex-direction: row;
+                padding: 0;
+                box-shadow: none;
+                gap: 0;
+                align-items: center;
+            }
+
+            .nav-links a {
+                margin-left: 2rem;
+                padding: 0.5rem 1rem;
+            }
+
+            .faq-section {
+                padding: 6rem 2rem;
+            }
         }
 
         .hero {
@@ -557,20 +605,71 @@
                 padding: 2rem 1rem;
             }
         }
+        .menu-button {
+            background: none;
+            border: 2px solid var(--primary);
+            border-radius: 4px;
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.5rem 0.75rem;
+            color: var(--primary);
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .menu-button:hover {
+            background: var(--primary);
+            color: white;
+        }
+        @media (min-width: 768px) {
+            .menu-button {
+                display: none;  /* This hides the menu button on desktop */
+            }
+        }
+        .talk-button {
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-block;
+            background-image: linear-gradient(45deg, var(--primary) 0%, var(--primary) 100%);
+            background-size: 200% 200%;
+            background-position: 0% 0%;
+            font-weight: 600;
+        }
+
+        .talk-button:hover {
+            background-image: linear-gradient(45deg, #4B227A, #FF69B4) !important;
+            background-position: 100% 100% !important;
+            transform: translateY(-2px);
+        }
+
+        .nav-links .talk-button {
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .how-it-works .talk-button {
+            font-size: 1.2rem;
+            padding: 1rem 3rem;
+            margin-top: 3rem;
+        }
     </style>
 </head>
 <body>
     <nav class="navbar">
-        <a href="/" class="logo">VOSUS</a>
+        <a href="529benefit.html" class="logo">VOSUS</a>
         <div class="nav-links">
-            <a href="/home">Home</a>
-            <a href="/about">About us</a>
-            <a href="/faq">FAQ</a>
-            <a href="/contact">Contact us</a>
-             <a href="/contact">For University Administrators</a>
-            <a href="/talk" class="talk-button">Calculate Your Savings</a>
+            <a href="529benefit.html">Home</a>
+            <a href="aboutus529.html">About us</a>
+            <a href="faq529.html">FAQ</a>
+            <a href="contact.html">Contact us</a>
+            <a href="admin.html">For University Administrators</a>
+            <a href="getstarted529.html" class="talk-button">Get Started</a>
         </div>
-        <button class="menu-button">☰</button>
+        <button class="menu-button" aria-label="Toggle menu" aria-expanded="false">☰</button>
     </nav>
 
     <main>
@@ -660,14 +759,14 @@
             
             <div class="savings-highlight">
                 <h3 style="margin-bottom: 0.5rem; font-size: 1.3rem;">Annual State Refund</h3>
-                <span style="font-size: 2.5rem; font-weight: bold; display: block; margin: 0.5rem 0;">$495</span>
+                <span style="font-size: 2.5rem; font-weight: bold; display: block; margin: 0.5rem 0;">+$495</span>
                 <p style="opacity: 0.9; font-size: 0.9rem; margin-top: 0.5rem;"></p>
             </div>
         </div>
     </div>
-            <div style="text-align: center; margin-top: 3rem;">
-                    <a href="/talk" class="talk-button" style="font-size: 1.2rem; padding: 1rem 2rem; background-color: var(--primary); color: white; text-decoration: none; border-radius: 4px; display: inline-block;">Calculate Your Savings</a>
-                </div>
+            <div style="text-align: center;">
+                <a href="getstarted529.html" class="talk-button">Get Started</a>
+            </div>
         </section>
 
         <section class="logo-scroller">
@@ -756,8 +855,49 @@
         const menuButton = document.querySelector('.menu-button');
         const navLinks = document.querySelector('.nav-links');
 
-        menuButton.addEventListener('click', () => {
-            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        const toggleMenu = () => {
+            const isExpanded = menuButton.getAttribute('aria-expanded') === 'true';
+            menuButton.setAttribute('aria-expanded', !isExpanded);
+            
+            if (!isExpanded) {
+                navLinks.style.display = 'flex';
+                setTimeout(() => navLinks.style.opacity = '1', 10);
+            } else {
+                navLinks.style.opacity = '0';
+                setTimeout(() => navLinks.style.display = 'none', 300);
+            }
+        };
+
+        menuButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMenu();
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!menuButton.contains(e.target) && !navLinks.contains(e.target)) {
+                menuButton.setAttribute('aria-expanded', 'false');
+                navLinks.style.opacity = '0';
+                setTimeout(() => navLinks.style.display = 'none', 300);
+            }
+        });
+
+        // Close menu on link click
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                menuButton.setAttribute('aria-expanded', 'false');
+                navLinks.style.display = 'none';
+            });
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) {
+                navLinks.style.display = 'flex';
+                navLinks.style.opacity = '1';
+            } else if (menuButton.getAttribute('aria-expanded') === 'false') {
+                navLinks.style.display = 'none';
+                navLinks.style.opacity = '0';
+            }
         });
          function isElementInViewport(el) {
             const rect = el.getBoundingClientRect();
