@@ -365,13 +365,6 @@
             display: none !important;
         }
 
-        .tooltip {
-          position: relative;
-          display: inline-block;
-          margin-left: 8px;
-          vertical-align: top;  /* Add this line */
-        }
-
         .tooltip-content {
           visibility: hidden;
           background-color: white;
@@ -382,13 +375,14 @@
           border: 1px solid #ddd;
           box-shadow: 0 2px 4px rgba(0,0,0,0.1);
           
-          /* Update position properties */
           position: absolute;
-          z-index: 1;
-          width: 300px;
-          left: 100%;  /* Change from bottom to left */
-          top: 0;      /* Add this line */
-          margin-left: 10px; /* Add some space between icon and tooltip */
+          z-index: 10;
+          width: calc(100vw - 40px);
+          max-width: 300px;
+          left: 100%;  
+          top: -50%;  /* Move it up */
+          transform: translate(-100%, -80%);  /* Adjust transform */
+          margin-left: -10px;
         }
 
 
@@ -863,7 +857,7 @@
                 <div class="form-step" data-step="4">
                     <div class="form-group text-center">
                         <div class="benefit-label-container">
-                            <div class="benefit-label">Your Estimated Annual Tax Benefit</div>
+                            <div class="benefit-label">Your Annual 529 Tax Benefit</div>
                             <div class="tooltip inline-block">
                                 <div class="tooltip-icon">i</div>
                                 <div class="tooltip-content" id="benefitDetails"></div>
@@ -1030,7 +1024,7 @@
                     </ul>
                 </div>
                 <div class="price">$3/month</div>
-                <div class="price-period">or $50 when you receive your tax refund</div>
+                <div class="price-period">or $50 when you receive your 529 tax refund</div>
                 <div class="guarantee">Accuracy guarantee on expense qualification</div>
             </div>
 
@@ -1060,7 +1054,7 @@
                     </ul>
                 </div>
                 <div class="price">$4/month</div>
-                <div class="price-period">or $60 when you receive your tax refund</div>
+                <div class="price-period">or $60 when you receive your 529 tax refund</div>
                 <div class="guarantee">Guaranteed maximum tax benefit or no fee</div>
             </div>
 
