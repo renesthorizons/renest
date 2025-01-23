@@ -791,6 +791,13 @@
 .nav-links {
   max-width: 100vw;
 }
+.nav-links {
+    display: none;
+}
+
+.nav-links.show {
+    display: flex;
+}
     </style>
 </head>
 <body>
@@ -2903,12 +2910,27 @@
         // Update showStep to handle the new layout
         
         // Navigation menu toggle
-        const menuButton = document.querySelector('.menu-button');
-        const navLinks = document.querySelector('.nav-links');
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuButton = document.querySelector('.menu-button');
+            const navLinks = document.querySelector('.nav-links');
+            
+            if (!menuButton || !navLinks) {
+                console.error('Menu elements not found');
+                return;
+            }
 
-        menuButton.addEventListener('click', function(e) {
-            e.stopPropagation();
-            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex !important';
+            menuButton.addEventListener('touchstart', toggleMenu);
+            menuButton.addEventListener('click', toggleMenu);
+
+            function toggleMenu(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                navLinks.classList.toggle('show');
+            }
+
+            document.addEventListener('click', () => {
+                navLinks.classList.remove('show');
+            });
         });
         // Form navigation
         let currentStep = 1;
