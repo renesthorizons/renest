@@ -765,7 +765,10 @@
         }
 
         .slider-container {
-            margin: 2rem 0;
+            margin: 1rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
         }
 
         .slider {
@@ -775,6 +778,7 @@
             border-radius: 4px;
             outline: none;
             -webkit-appearance: none;
+            margin-bottom: .5rem;
         }
 
         .slider::-webkit-slider-thumb {
@@ -838,7 +842,7 @@
         }
 
         .school-select {
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
         }
 
         .school-input {
@@ -869,7 +873,7 @@
         }
 
         .impact-section {
-            padding: 4rem 2rem;
+            padding: 3rem 2rem;
             background: linear-gradient(to right, #f8f8f8, #fff);
         }
 
@@ -991,8 +995,8 @@
                 </div>
 
                 <div class="slider-container">
-                    <label>Number of Working Students: <span id="studentCount">1000</span></label>
                     <input type="range" min="100" max="10000" value="1000" class="slider" id="studentSlider">
+                    <label>Number of Working Students: <span id="studentCount">1000</span></label>
                 </div>
 
                 <div class="stats-grid">
@@ -2731,17 +2735,21 @@
 
         function showStateSelection() {
             const suggestionsDiv = document.getElementById('schoolSuggestions');
+            
+            // Create array of state entries and sort alphabetically by state name
+            const sortedStates = Object.keys(state529DB)
+                .filter(state => state529DB[state].deduction > 0)
+                .sort((a, b) => stateOptions[a].localeCompare(stateOptions[b]));
+            
             const stateSelectionHTML = `
                 <div class="suggestion-item" style="font-weight: bold; background-color: #f5f5f5;">
                     Select State
                 </div>
-                ${Object.keys(state529DB)
-                    .filter(state => state529DB[state].deduction > 0)
-                    .map(state => `
-                        <div class="suggestion-item" onclick="selectState('${state}')">
-                            ${state} (Max deduction: $${state529DB[state].deduction.toLocaleString()})
-                        </div>
-                    `).join('')}`;
+                ${sortedStates.map(state => `
+                    <div class="suggestion-item" onclick="selectState('${state}')">
+                        ${state} (Max deduction: $${state529DB[state].deduction.toLocaleString()})
+                    </div>
+                `).join('')}`;
             
             suggestionsDiv.innerHTML = stateSelectionHTML;
             suggestionsDiv.style.display = 'block';
