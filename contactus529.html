@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us - VOSUS</title>
+    <title>Contact Us - RENEST</title>
     <style>
+        /* Previous styles remain the same until contact-form */
         :root {
             --primary: #4B227A;
             --accent: #FF69B4;
@@ -119,52 +120,73 @@
             }
         }
 
-        .about-hero {
-            margin-top: 5rem;
-            padding: 4rem 2rem;
-            background: linear-gradient(45deg, #4B227A, #FF69B4);
-            color: white;
+        .contact-section {
+            margin-top: 80px;
+            padding: 4rem 1rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .contact-title {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
             text-align: center;
         }
 
-        .about-hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            line-height: 1.2;
-        }
-
-        .about-content {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 4rem 2rem;
-        }
-
-        .about-section {
-            margin-bottom: 3rem;
-        }
-
-        .about-section h2 {
-            color: var(--primary);
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .about-section p {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: var(--text-dark);
-            margin-bottom: 1.5rem;
-        }
-
-        .gradient-card {
-            background: linear-gradient(135deg, rgba(75, 34, 122, 0.05), rgba(255, 105, 180, 0.05));
+        .contact-form {
+            background: white;
             padding: 2rem;
             border-radius: 16px;
-            margin: 2rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .submit-button {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .submit-button:hover {
+            background-image: linear-gradient(45deg, #4B227A, #FF69B4);
+            transform: translateY(-2px);
         }
 
         .footer {
-             background-color: rgb(235, 232, 252,.5);
+            background-color: rgb(235, 232, 252,.5);
             padding: 3rem 1rem;
             margin-top: 4rem;
         }
@@ -207,19 +229,6 @@
                 grid-template-columns: 2fr 1fr 1fr;
             }
         }
-         .aboutus-title {
-            color: var(--primary);
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-        .aboutus-section {
-            margin-top: 80px;
-            padding: 4rem 1rem;
-            max-width: 1000px;
-            margin-left: auto;
-            margin-right: auto;
-        }
     </style>
 </head>
 <body>
@@ -237,28 +246,26 @@
     </nav>
 
     <main>
-        
-            <section class="aboutus-section">
-            <h1 class="aboutus-title">About Us</h1>
-                <div class="about-content">
-            
-            <section class="about-section">
-                <p>Renest was founded to address the challenges graduate students across the nation faced: high costs of living and the stress of managing money with a graduate student stipend.</p>
-            </section>
-
-            <section class="about-section">
-                <div class="gradient-card">
-                    <h2>Our Story</h2>
-                    <p>As a graduate student, co-founder Thomas Lloyd experienced firsthand the financial pressures faced by him and his peers. He reached out to this long-time friend, Thomas "Mo" Zheng, and after combing through solutions together the two founded Renest to unlock financial benefits for graduate students.</p>
-                </div>
-            </section>
-
-            <section class="about-section">
-                <h2>Our Mission</h2>
-                <p>Our team understands the commitment and courage undertaken by graduate students. Renest aims to empower graduate students in their academic journeys and beyond.</p>
-            </section>
-        </div>
-    </section>
+        <section class="contact-section">
+            <h1 class="contact-title">Contact Us</h1>
+            <div class="contact-form">
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-button">Send Message</button>
+                </form>
+            </div>
+        </section>
     </main>
 
     <footer class="footer">
@@ -294,6 +301,33 @@
                 navLinks.style.display = 'none';
                 menuButton.setAttribute('aria-expanded', false);
             }
+        });
+
+        // Google Form integration
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = encodeURIComponent(document.getElementById('name').value);
+            const email = encodeURIComponent(document.getElementById('email').value);
+            const message = encodeURIComponent(document.getElementById('message').value);
+            
+            const baseUrl = 'https://docs.google.com/forms/d/e/1FAIpQLScaiqY3-9WPHT7ctNia4fjseUJSzsX4uQ5dW7cYxF8guMZzlw/formResponse';
+            const queryString = `?entry.882969433=${name}&entry.2136588149=${email}&entry.1903740139=${message}`;
+            
+            // Using a hidden iframe to submit the form without redirecting
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.setAttribute('src', baseUrl + queryString);
+            document.body.appendChild(iframe);
+            
+            // Show success message and reset form
+            alert('Thank you for your message. We will get back to you soon!');
+            this.reset();
+            
+            // Remove iframe after submission
+            setTimeout(() => {
+                document.body.removeChild(iframe);
+            }, 1000);
         });
     </script>
 </body>
