@@ -75,14 +75,10 @@
             background-color: var(--primary);
             color: white !important;
             padding: 0.75rem 1.5rem;
-            border-radius: 4px;
+            border-radius: 10px;
             font-weight: 600;
             text-align: center;
             margin-top: 0.5rem;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            background-image: linear-gradient(45deg, var(--primary) 0%, var(--primary) 100%);
-            background-size: 200% 200%;
-            background-position: 0% 0%;
         }
 
         .nav-links .talk-button:hover {
@@ -168,7 +164,7 @@
         }
 
         .footer {
-            background-color: white;
+            background-color: rgb(235, 232, 252,.5);
             padding: 3rem 1rem;
             margin-top: 4rem;
         }
@@ -473,7 +469,212 @@
   visibility: visible;
 }
 
+.how-it-works {
+  max-width: 1200px;
+  margin: 4rem auto;
+  padding: 0 2rem;
+}
 
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .options-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+@media (min-width: 768px) {
+  .pricing-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.option-card {
+  background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 0.5rem;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  border: 1px solid rgba(75, 34, 122, 0.1);
+}
+
+.pricing-card {
+  background: white;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  border: 1px solid rgba(75, 34, 122, 0.1);
+  transition: all 0.3s ease;
+}
+
+.pricing-card:nth-child(1) {
+  background: linear-gradient(145deg, #ffffff 0%, #f0f7ff 100%);
+}
+
+.pricing-card:nth-child(2) {
+  background: linear-gradient(145deg, #ffffff 0%, #fff0f7 100%);
+}
+
+.pricing-card:nth-child(3) {
+  background: linear-gradient(145deg, #ffffff 0%, #f0fff4 100%);
+}
+
+.step-description {
+  color: #666;
+  font-size: 0.9rem;
+  margin-left: 2.5rem;
+  margin-top: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.time-estimate {
+  display: flex;
+  align-items: center;
+  color: #666;
+  margin-top: 1rem;
+}
+
+.time-estimate svg {
+  margin-right: 0.5rem;
+}
+
+.option-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 1rem;
+}
+
+.step-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.step-list li {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.step-list svg {
+  flex-shrink: 0;
+  margin-right: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.pricing-title {
+  color: var(--primary);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 1rem 0;
+}
+
+.price-period {
+  color: #666;
+  font-size: 0.875rem;
+}
+
+.pricing-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.pricing-features {
+  flex-grow: 1;
+  margin: 1rem 0;
+}
+
+.guarantee {
+  font-size: 0.875rem;
+  color: var(--primary);
+  margin-top: 1rem;
+  font-style: italic;
+}
+
+
+.calculator-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #4B227A;
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+.calculate-benefits-btn {
+  display: inline-block;
+  background: var(--primary);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  text-align: center;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-top: auto;
+}
+
+.calculate-benefits-btn:hover {
+  background: linear-gradient(45deg, var(--primary), var(--accent));
+  transform: translateY(-2px);
+}
+
+.get-today-btn {
+  display: inline-block;
+  background: linear-gradient(45deg, var(--primary), var(--accent));
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  text-align: center;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-top: auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.get-today-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(75, 34, 122, 0.2);
+}
+
+.get-today-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s;
+}
+
+.get-today-btn:hover::after {
+  transform: translateX(100%);
+}
 
 
     </style>
@@ -494,11 +695,13 @@
 
     <main>
         <section class="about-hero">
-            <h1>Re-Investing the Investment in Education</h1>
+            <h1>Unlock Savings Today</h1>
         </section>
 
 
+
         <div class="form-container">
+            <h2 class="calculator-title">Benefits Calculator</h2>
             <div class="progress-bar">
                 <div class="progress-line"></div>
                 <div class="progress-step active">1</div>
@@ -507,8 +710,9 @@
                 <div class="progress-step">4</div>
             </div>
 
+
             <form id="signup-form">
-                <!-- Replace the existing form-step divs with: -->
+               
                 <div class="form-step active" data-step="1">
                     <div class="form-group">
                         <label>Which university do you attend?</label>
@@ -538,15 +742,15 @@
 
                 <div class="form-step" data-step="4">
                     <div class="form-group text-center">
-    <div class="benefit-label-container">
-        <div class="benefit-label">Your Estimated Annual Tax Benefit</div>
-        <div class="tooltip inline-block">
-            <div class="tooltip-icon">i</div>
-            <div class="tooltip-content" id="benefitDetails"></div>
-        </div>
-    </div>
-    <div class="benefit-amount" id="benefitResult">$0</div>
-</div>
+                        <div class="benefit-label-container">
+                            <div class="benefit-label">Your Estimated Annual Tax Benefit</div>
+                            <div class="tooltip inline-block">
+                                <div class="tooltip-icon">i</div>
+                                <div class="tooltip-content" id="benefitDetails"></div>
+                            </div>
+                        </div>
+                        <div class="benefit-amount" id="benefitResult">$0</div>
+                    </div>
                 </div>
 
                 <div class="btn-container">
@@ -555,13 +759,206 @@
                 </div>
             </form>
         </div>
+        <div id="how-it-works" class="how-it-works">
+          <h2 class="text-3xl font-bold text-center mb-12">How It Works</h2>
+          
+          <div class="options-grid">
+            <div class="option-card">
+              <h3 class="option-title">Do It Yourself</h3>
+              <ul class="step-list">
+                <li>
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>Research and select your state's 529 plan provider</span>
+                </li>
+                <div class="step-description">
+                  Visit your state's 529 website, review plan options, and select a provider. Most states have a preferred provider, but you can choose any state's plan.
+                </div>
+                <li>
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>Complete 529 account application and setup</span>
+                </li>
+                <div class="step-description">
+                  Fill out the application online. You'll need your SSN, beneficiary information, and banking details. Process typically takes 15-20 minutes.
+                </div>
+                <li>
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>Make regular deposits into your 529 account</span>
+                </li>
+                <div class="step-description">
+                  Set up automatic monthly transfers or make manual deposits. Remember to deposit enough to cover your expected qualified expenses.
+                </div>
+                <li>
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>Maintain detailed records of all qualified expenses</span>
+                </li>
+                <div class="step-description">
+                  Keep receipts for rent, groceries, and other qualified expenses. Create a spreadsheet to track dates, amounts, and categories.
+                </div>
+                <li>
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>Request withdrawals for each qualified expense</span>
+                </li>
+                <div class="step-description">
+                  Log into your 529 account to request withdrawals. Ensure withdrawal amounts match your expense records exactly to avoid tax complications.
+                </div>
+                <li>
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>Track all transactions for tax reporting</span>
+                </li>
+                <div class="step-description">
+                  Match each withdrawal to its corresponding expense. Save Form 1099-Q from your provider and maintain documentation for at least 3 years.
+                </div>
+                <li>
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>File tax returns with proper documentation</span>
+                </li>
+              </ul>
+              <div class="time-estimate">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <circle cx="10" cy="10" r="7" stroke="#666666" stroke-width="2"/>
+                  <path d="M10 6V10L13 13" stroke="#666666" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span>Time estimate: 5-7 hours/year</span>
+              </div>
+            </div>
+            
+            <div class="option-card">
+              <h3 class="option-title">Use Renest</h3>
+              <ul class="step-list">
+                <li>
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>Create your Renest account online</span>
+                </li>
+                <li>
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>Connect your payment methods</span>
+                </li>
+                <li>
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>Let Renest handle everything else</span>
+                </li>
+              </ul>
+              <div class="time-estimate">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <circle cx="10" cy="10" r="7" stroke="#666666" stroke-width="2"/>
+                  <path d="M10 6V10L13 13" stroke="#666666" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span>Time estimate: 15 minutes/year</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pricing-grid">
+            <div class="pricing-card">
+              <h3 class="pricing-title">Basic Tracking</h3>
+              <div class="pricing-features">
+                <p>Automated expense tracking and qualification verification</p>
+                <ul class="step-list">
+                  <li>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Expense tracking</span>
+                  </li>
+                  <li>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Deduction qualification</span>
+                  </li>
+                </ul>
+              </div>
+              <div class="price">$3/month</div>
+              <div class="price-period">or $50 when you get your refund</div>
+              <div class="guarantee">No cost if tracking error occurs</div>
+            </div>
+
+            <div class="pricing-card">
+              <h3 class="pricing-title">Full Service</h3>
+              <div class="pricing-features">
+                <p>Complete 529 account management</p>
+                <ul class="step-list">
+                  <li>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Everything in Basic</span>
+                  </li>
+                  <li>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Account setup assistance</span>
+                  </li>
+                  <li>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Automated deposits & withdrawals</span>
+                  </li>
+                </ul>
+              </div>
+              <div class="price">$4/month</div>
+              <div class="price-period">or $60 when you get your refund</div>
+              <div class="guarantee">No cost if you don't recieve your refund</div>
+            </div>
+
+            <div class="pricing-card" id="early-refund-card">
+              <h3 class="pricing-title">Early Refund</h3>
+              <div class="pricing-features">
+                <p>Get your tax benefits sooner</p>
+                <ul class="step-list">
+                  <li>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Everything in Full Service</span>
+                  </li>
+                  <li>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Up to 70% refund advance</span>
+                  </li>
+                </ul>
+              </div>
+              <div id="early-refund-details" class="text-center text-2xl font-bold my-4">Available Today</div>
+              <div class="text-center">
+                <a href="getstarted529.html" id="early-refund-amount" class="calculate-benefits-btn inline-block">Complete Benefits Calculator</a>
+              </div>
+              <div id="early-refund-explanation" class="guarantee mt-4" style="display: none">
+                Get 70% of your estimated 529 refund now. We'll collect the full 529 refund when you file your taxes.
+              </div>
+            </div>
+          </div>
+        </div>
     </main>
 
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-brand">
                 <div class="footer-logo">VOSUS</div>
-                <p class="copyright">©2025 VOSUS Technologies Inc., Patents Pending</p>
+                <p class="copyright">©2025 Renest Horizons Inc.</p>
             </div>
             <div class="footer-links">
                 <h3>Company</h3>
@@ -2387,21 +2784,23 @@
         const progressSteps = document.querySelectorAll('.progress-step');
 
         function showStep(stepNumber) {
-    steps.forEach(step => step.classList.remove('active'));
-    progressSteps.forEach((step, index) => {
-        if (index < stepNumber) step.classList.add('active');
-        else step.classList.remove('active');
-    });
-    
-    steps[stepNumber - 1].classList.add('active');
-    
-    if (stepNumber === 4) {
-        calculateAndDisplayBenefit();
-    }
-    
-    prevBtn.style.display = stepNumber === 1 ? 'none' : 'block';
-    nextBtn.style.display = stepNumber === 4 ? 'none' : 'block';
-}
+            steps.forEach(step => step.classList.remove('active'));
+            progressSteps.forEach((step, index) => {
+                if (index < stepNumber) step.classList.add('active');
+                else step.classList.remove('active');
+            });
+            
+            steps[stepNumber - 1].classList.add('active');
+            
+            if (stepNumber === 4) {
+                calculateAndDisplayBenefit();
+                prevBtn.style.display = 'none';  // Hide back button on step 4
+                nextBtn.style.display = 'none';  // Hide next button on step 4
+            } else {
+                prevBtn.style.display = stepNumber === 1 ? 'none' : 'block';
+                nextBtn.style.display = 'block';
+            }
+        }
 
         nextBtn.addEventListener('click', () => {
             if (currentStep === 1 && !selectedState) {
@@ -2439,7 +2838,25 @@
         }
 
 
-         function calculateAndDisplayBenefit() {
+        function initHowItWorks() {
+          const howItWorks = document.getElementById('how-it-works');
+          
+          // Add hover effects to pricing cards
+          const pricingCards = document.querySelectorAll('.pricing-card');
+          pricingCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+              card.style.transform = 'translateY(-5px)';
+              card.style.transition = 'transform 0.3s ease';
+            });
+            card.addEventListener('mouseleave', () => {
+              card.style.transform = 'translateY(0)';
+            });
+          });
+        }
+
+
+         // Add to existing calculateAndDisplayBenefit function
+        function calculateAndDisplayBenefit() {
             const income = Number(document.getElementById('incomeInput').value.replace(/[^0-9.-]+/g, '')) || 0;
             const monthlyRent = Number(document.getElementById('rentInput').value.replace(/[^0-9.-]+/g, '')) || 0;
             const monthlyGrocery = Number(document.getElementById('groceryInput').value.replace(/[^0-9.-]+/g, '')) || 0;
@@ -2452,13 +2869,31 @@
             const deductibleAmount = Math.min(annualExpenses, stateDeduction);
             const benefit = deductibleAmount * taxRate;
 
-            document.getElementById('benefitResult').textContent = new Intl.NumberFormat('en-US', {
+            // Format and display the total benefit
+            const formattedBenefit = new Intl.NumberFormat('en-US', {
                 style: 'currency',
                 currency: 'USD',
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0
             }).format(benefit);
+            
+            document.getElementById('benefitResult').textContent = formattedBenefit;
+            
+            // Calculate and display early refund amount (70% of benefit)
+            const earlyAmount = Math.round(benefit * 0.7);
+            const formattedEarlyAmount = new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(earlyAmount);
+            
+            // Update early refund card
+            document.getElementById('early-refund-amount').textContent = formattedEarlyAmount;
+            document.getElementById('early-refund-details').textContent = 'Available Today';
+            document.getElementById('early-refund-explanation').style.display = 'block';
 
+            // Update benefit details tooltip
             document.getElementById('benefitDetails').innerHTML = `
                 Your tax benefit is based on:
                 <br><br>
@@ -2533,6 +2968,25 @@
                 suggestionsDiv.classList.add('hidden');
             }
         }
+        function updateEarlyRefundCard(benefit) {
+            const earlyAmount = Math.round(benefit * 0.7);
+            const formattedEarlyAmount = new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(earlyAmount);
+            
+            const earlyRefundAmount = document.getElementById('early-refund-amount');
+            const earlyRefundDetails = document.getElementById('early-refund-details');
+            const earlyRefundExplanation = document.getElementById('early-refund-explanation');
+            
+            earlyRefundAmount.textContent = formattedEarlyAmount;
+            earlyRefundAmount.classList.remove('calculate-benefits-btn');
+            earlyRefundAmount.classList.add('get-today-btn');
+            earlyRefundDetails.textContent = 'Available Today';
+            earlyRefundExplanation.style.display = 'block';
+        }
 
         // New function to show state selection
         function showStateSelection() {
@@ -2571,6 +3025,9 @@
         document.getElementById('groceryInput').addEventListener('input', function() {
             formatCurrency(this);
         });
+        document.addEventListener('DOMContentLoaded', function() {
+  initHowItWorks();
+});
     </script>
 </body>
 </html>
