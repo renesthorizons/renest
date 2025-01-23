@@ -81,9 +81,8 @@
             margin-top: 0.5rem;
         }
 
-        .nav-links .talk-button:hover {
-            background-image: linear-gradient(45deg, #4B227A, #FF69B4) !important;
-            background-position: 100% 100% !important;
+       .nav-links .talk-button:hover {
+            background: linear-gradient(45deg, #4B227A, #FF69B4);
             transform: translateY(-2px);
         }
 
@@ -470,9 +469,80 @@
 }
 
 .how-it-works {
-  max-width: 1200px;
-  margin: 4rem auto;
+  max-width: 800px;
+  margin: 3rem auto;
   padding: 0 2rem;
+}
+
+.tab-container {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.tab-buttons {
+  display: flex;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.tab-button {
+  flex: 1;
+  padding: 1rem;
+  font-size: 1.125rem;
+  font-weight: 500;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tab-button.active {
+  background: #4B227A;
+  color: white;
+}
+
+.tab-content {
+  display: none;
+  padding: 2rem;
+  background:   #fffaf0;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.step-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.step-list li {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.step-list svg {
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+.step-description {
+  color: #666;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.time-estimate {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #666;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
 }
 
 .options-grid {
@@ -488,10 +558,21 @@
 }
 
 .pricing-grid {
+  max-width: 1200px;
+  margin: 4rem auto;
+  padding: 0 2rem;
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
-  margin-top: 3rem;
+}
+
+.pricing-card {
+  background: white;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  border: 1px solid rgba(75, 34, 122, 0.1);
+  transition: all 0.3s ease;
 }
 
 @media (min-width: 768px) {
@@ -508,14 +589,6 @@
   border: 1px solid rgba(75, 34, 122, 0.1);
 }
 
-.pricing-card {
-  background: white;
-  border-radius: 0.5rem;
-  padding: 2rem;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  border: 1px solid rgba(75, 34, 122, 0.1);
-  transition: all 0.3s ease;
-}
 
 .pricing-card:nth-child(1) {
   background: linear-gradient(145deg, #ffffff 0%, #f0f7ff 100%);
@@ -588,7 +661,8 @@
 
 .price-period {
   color: #666;
-  font-size: 0.875rem;
+  font-size: 1.2rem;
+  color:    teal;
 }
 
 .pricing-card {
@@ -675,6 +749,27 @@
 .get-today-btn:hover::after {
   transform: translateX(100%);
 }
+.getst-button {
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-block;
+            background-image: linear-gradient(45deg, var(--primary) 0%, var(--primary) 100%);
+            background-size: 200% 200%;
+            background-position: 0% 0%;
+            font-weight: 600;
+            font-size: 1.2rem;
+            padding: 1rem 3rem;
+            margin-top: 3rem;
+        }
+
+        .getst-button:hover {
+            background-image: linear-gradient(45deg, #4B227A, #FF69B4) !important;
+            background-position: 100% 100% !important;
+            transform: translateY(-2px);
+        }
 
 
     </style>
@@ -760,102 +855,42 @@
             </form>
         </div>
         <div id="how-it-works" class="how-it-works">
-          <h2 class="text-3xl font-bold text-center mb-12">How It Works</h2>
           
-          <div class="options-grid">
-            <div class="option-card">
-              <h3 class="option-title">Do It Yourself</h3>
-              <ul class="step-list">
-                <li>
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                  <span>Research and select your state's 529 plan provider</span>
-                </li>
-                <div class="step-description">
-                  Visit your state's 529 website, review plan options, and select a provider. Most states have a preferred provider, but you can choose any state's plan.
-                </div>
-                <li>
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                  <span>Complete 529 account application and setup</span>
-                </li>
-                <div class="step-description">
-                  Fill out the application online. You'll need your SSN, beneficiary information, and banking details. Process typically takes 15-20 minutes.
-                </div>
-                <li>
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                  <span>Make regular deposits into your 529 account</span>
-                </li>
-                <div class="step-description">
-                  Set up automatic monthly transfers or make manual deposits. Remember to deposit enough to cover your expected qualified expenses.
-                </div>
-                <li>
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                  <span>Maintain detailed records of all qualified expenses</span>
-                </li>
-                <div class="step-description">
-                  Keep receipts for rent, groceries, and other qualified expenses. Create a spreadsheet to track dates, amounts, and categories.
-                </div>
-                <li>
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                  <span>Request withdrawals for each qualified expense</span>
-                </li>
-                <div class="step-description">
-                  Log into your 529 account to request withdrawals. Ensure withdrawal amounts match your expense records exactly to avoid tax complications.
-                </div>
-                <li>
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                  <span>Track all transactions for tax reporting</span>
-                </li>
-                <div class="step-description">
-                  Match each withdrawal to its corresponding expense. Save Form 1099-Q from your provider and maintain documentation for at least 3 years.
-                </div>
-                <li>
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                  <span>File tax returns with proper documentation</span>
-                </li>
-              </ul>
-              <div class="time-estimate">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <circle cx="10" cy="10" r="7" stroke="#666666" stroke-width="2"/>
-                  <path d="M10 6V10L13 13" stroke="#666666" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-                <span>Time estimate: 5-7 hours/year</span>
-              </div>
+          
+          <div class="tab-container">
+            <div class="tab-buttons">
+                <button class="tab-button active" data-tab="renest">Use Renest</button>
+              <button class="tab-button" data-tab="diy">Do It Yourself</button>
+              
             </div>
-            
-            <div class="option-card">
-              <h3 class="option-title">Use Renest</h3>
+            <div class="tab-content active" id="renest">
               <ul class="step-list">
                 <li>
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
-                  <span>Create your Renest account online</span>
+                  <div>
+                    <span>Create your Renest account online</span>
+                    <p class="step-description">Quick 5-minute signup process with guided setup</p>
+                  </div>
                 </li>
                 <li>
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
-                  <span>Connect your payment methods</span>
+                  <div>
+                    <span>Connect your payment methods</span>
+                    <p class="step-description">Securely link your accounts for automatic tracking</p>
+                  </div>
                 </li>
                 <li>
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
-                  <span>Let Renest handle everything else</span>
+                  <div>
+                    <span>Let Renest handle everything else</span>
+                    <p class="step-description">We manage your 529 account, track expenses, and handle all documentation</p>
+                  </div>
                 </li>
               </ul>
               <div class="time-estimate">
@@ -866,92 +901,173 @@
                 <span>Time estimate: 15 minutes/year</span>
               </div>
             </div>
-          </div>
-
-          <div class="pricing-grid">
-            <div class="pricing-card">
-              <h3 class="pricing-title">Basic Tracking</h3>
-              <div class="pricing-features">
-                <p>Automated expense tracking and qualification verification</p>
-                <ul class="step-list">
-                  <li>
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                      <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    <span>Expense tracking</span>
-                  </li>
-                  <li>
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                      <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    <span>Deduction qualification</span>
-                  </li>
-                </ul>
-              </div>
-              <div class="price">$3/month</div>
-              <div class="price-period">or $50 when you get your refund</div>
-              <div class="guarantee">No cost if tracking error occurs</div>
-            </div>
-
-            <div class="pricing-card">
-              <h3 class="pricing-title">Full Service</h3>
-              <div class="pricing-features">
-                <p>Complete 529 account management</p>
-                <ul class="step-list">
-                  <li>
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                      <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    <span>Everything in Basic</span>
-                  </li>
-                  <li>
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                      <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    <span>Account setup assistance</span>
-                  </li>
-                  <li>
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                      <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    <span>Automated deposits & withdrawals</span>
-                  </li>
-                </ul>
-              </div>
-              <div class="price">$4/month</div>
-              <div class="price-period">or $60 when you get your refund</div>
-              <div class="guarantee">No cost if you don't recieve your refund</div>
-            </div>
-
-            <div class="pricing-card" id="early-refund-card">
-              <h3 class="pricing-title">Early Refund</h3>
-              <div class="pricing-features">
-                <p>Get your tax benefits sooner</p>
-                <ul class="step-list">
-                  <li>
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                      <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    <span>Everything in Full Service</span>
-                  </li>
-                  <li>
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                      <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    <span>Up to 70% refund advance</span>
-                  </li>
-                </ul>
-              </div>
-              <div id="early-refund-details" class="text-center text-2xl font-bold my-4">Available Today</div>
-              <div class="text-center">
-                <a href="getstarted529.html" id="early-refund-amount" class="calculate-benefits-btn inline-block">Complete Benefits Calculator</a>
-              </div>
-              <div id="early-refund-explanation" class="guarantee mt-4" style="display: none">
-                Get 70% of your estimated 529 refund now. We'll collect the full 529 refund when you file your taxes.
+            
+            <div class="tab-content" id="diy">
+              <ul class="step-list">
+                <li>
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <div>
+                    <span>Research and select your state's 529 plan provider</span>
+                    <p class="step-description">Visit your state's 529 website, review plan options, and select a provider. Most states have a preferred provider, but you can choose any state's plan.</p>
+                  </div>
+                </li>
+                <li>
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <div>
+                    <span>Complete 529 account application and setup</span>
+                    <p class="step-description">Fill out the application online. You'll need your SSN, beneficiary information, and banking details. Process typically takes 15-20 minutes.</p>
+                  </div>
+                </li>
+                <li>
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <div>
+                    <span>Make regular deposits into your 529 account</span>
+                    <p class="step-description">Set up automatic monthly transfers or make manual deposits. Remember to deposit enough to cover your expected qualified expenses.</p>
+                  </div>
+                </li>
+                <li>
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <div>
+                    <span>Maintain detailed records of all qualified expenses</span>
+                    <p class="step-description">Keep receipts for rent, groceries, and other qualified expenses. Create a spreadsheet to track dates, amounts, and categories.</p>
+                  </div>
+                </li>
+                <li>
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <div>
+                    <span>Request withdrawals for each qualified expense</span>
+                    <p class="step-description">Log into your 529 account to request withdrawals. Ensure withdrawal amounts match your expense records exactly to avoid tax complications.</p>
+                  </div>
+                </li>
+                <li>
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <div>
+                    <span>Track all transactions for tax reporting</span>
+                    <p class="step-description">Match each withdrawal to its corresponding expense. Save Form 1099-Q from your provider and maintain documentation for at least 3 years.</p>
+                  </div>
+                </li>
+                <li>
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <div>
+                    <span>File tax returns with proper documentation</span>
+                    <p class="step-description">Include all necessary forms and documentation with your tax return to claim your state tax deduction.</p>
+                  </div>
+                </li>
+              </ul>
+              <div class="time-estimate">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <circle cx="10" cy="10" r="7" stroke="#666666" stroke-width="2"/>
+                  <path d="M10 6V10L13 13" stroke="#666666" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span>Time estimate: 5-7 hours/year</span>
               </div>
             </div>
           </div>
         </div>
+        <div class="text-center my-8">
+          <a href="createaccount529.html" class="getst-button">
+            Create Your Account
+          </a>
+        </div>
+
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3 class="pricing-title">Record Keeping</h3>
+                <div class="pricing-features">
+                    <!-- <p>Track your qualified expenses</p> -->
+                    <ul class="step-list">
+                        <li>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>Automated qualified expense categorization & tracking</span>
+                        </li>
+                        <li>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>IRS-ready documentation for 529 expense reports for 3 years</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="price">$3/month</div>
+                <div class="price-period">or $50 when you receive your refund</div>
+                <div class="guarantee">Accuracy guarantee on expense qualification</div>
+            </div>
+
+            <div class="pricing-card">
+                <h3 class="pricing-title">Complete Management</h3>
+                <div class="pricing-features">
+                    <!-- <p>Full-service 529 plan administration</p> -->
+                    <ul class="step-list">
+                        <li>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>All Record Keeping features</span>
+                        </li>
+                        <li>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>529 account setup & optimization</span>
+                        </li>
+                        <li>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>Contribution and withdrawal automation (no funds required on your part!)</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="price">$4/month</div>
+                <div class="price-period">or $60 when you receive your refund</div>
+                <div class="guarantee">Guaranteed maximum tax benefit or no fee</div>
+            </div>
+
+            <div class="pricing-card" id="early-refund-card">
+                <h3 class="pricing-title">Get Your 529 Benefit Early</h3>
+                <div class="pricing-features">
+                    <!-- <p>Access your 529 tax benefits early</p> -->
+                    <ul class="step-list">
+                        <li>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>All Complete Management features</span>
+                        </li>
+                        <li>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>Advance up to 70% of estimated tax benefit</span>
+                        </li>
+                    </ul>
+                </div>
+                <div id="early-refund-details" class="text-center text-2xl font-bold my-4">Calculate Your Advance</div>
+                <div class="text-center">
+                    <a href="getstarted529.html" id="early-refund-amount" class="calculate-benefits-btn inline-block">Complete Benefits Calculator</a>
+                </div>
+                <div id="early-refund-explanation" class="guarantee mt-4">
+                    Receive up to 70% of your estimated 529 tax benefit today. Final settlement upon tax filing.
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <footer class="footer">
@@ -2771,10 +2887,16 @@
         const menuButton = document.querySelector('.menu-button');
         const navLinks = document.querySelector('.nav-links');
 
-        menuButton.addEventListener('click', () => {
+        menuButton.addEventListener('click', function(e) {
+            e.stopPropagation();
             navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
         });
 
+        document.addEventListener('click', function(e) {
+            if (window.innerWidth < 768 && !navLinks.contains(e.target) && e.target !== menuButton) {
+                navLinks.style.display = 'none';
+            }
+        });
         // Form navigation
         let currentStep = 1;
         const form = document.getElementById('signup-form');
@@ -2856,6 +2978,27 @@
 
 
          // Add to existing calculateAndDisplayBenefit function
+        
+        function calculateStateTaxRate(income, state) {
+            if (income < 0) income = 0;
+            
+            const stateTaxInfo = stateTaxDB[state];
+            if (!stateTaxInfo || !stateTaxInfo.brackets || stateTaxInfo.brackets.length === 0) {
+                console.warn(`No tax bracket information found for state: ${state}`);
+                return 0;
+            }
+            
+            // Find applicable tax bracket
+            for (const bracket of stateTaxInfo.brackets) {
+                if (income <= bracket.threshold) {
+                    return bracket.rate / 100;
+                }
+            }
+            
+            // If income exceeds all thresholds, use the highest bracket
+            return stateTaxInfo.brackets[stateTaxInfo.brackets.length - 1].rate / 100;
+        }
+
         function calculateAndDisplayBenefit() {
             const income = Number(document.getElementById('incomeInput').value.replace(/[^0-9.-]+/g, '')) || 0;
             const monthlyRent = Number(document.getElementById('rentInput').value.replace(/[^0-9.-]+/g, '')) || 0;
@@ -2866,7 +3009,14 @@
             
             const stateDeduction = state529DB[state]?.deduction || 0;
             const taxRate = calculateStateTaxRate(income, state);
-            const deductibleAmount = Math.min(annualExpenses, stateDeduction);
+            
+            // Adjust deductible amount based on income
+            const deductibleAmount = Math.min(
+                annualExpenses,  // Actual expenses
+                stateDeduction,  // State's max deduction
+                income           // Limit to income if it's less than the deduction
+            );
+            
             const benefit = deductibleAmount * taxRate;
 
             // Format and display the total benefit
@@ -2911,27 +3061,14 @@
                     minimumFractionDigits: 0
                 }).format(annualExpenses)}/year
                 <br>
+                • Deductible amount: ${new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                    minimumFractionDigits: 0
+                }).format(deductibleAmount)}
+                <br>
                 Your benefit is doubled if you are married.
             `;
-        }
-        function calculateStateTaxRate(income, state) {
-            if (income < 0) income = 0;
-            
-            const stateTaxInfo = stateTaxDB[state];
-            if (!stateTaxInfo || !stateTaxInfo.brackets || stateTaxInfo.brackets.length === 0) {
-                console.warn(`No tax bracket information found for state: ${state}`);
-                return 0;
-            }
-            
-            // Find applicable tax bracket
-            for (const bracket of stateTaxInfo.brackets) {
-                if (income <= bracket.threshold) {
-                    return bracket.rate / 100;
-                }
-            }
-            
-            // If income exceeds all thresholds, use the highest bracket
-            return stateTaxInfo.brackets[stateTaxInfo.brackets.length - 1].rate / 100;
         }
         function getStateName(stateAbbr) {
             return stateOptions[stateAbbr] || stateAbbr;
@@ -3026,8 +3163,18 @@
             formatCurrency(this);
         });
         document.addEventListener('DOMContentLoaded', function() {
-  initHowItWorks();
-});
+          const tabButtons = document.querySelectorAll('.tab-button');
+          
+          tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+              document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+              document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+              
+              button.classList.add('active');
+              document.getElementById(button.dataset.tab).classList.add('active');
+            });
+          });
+        });
     </script>
 </body>
 </html>
