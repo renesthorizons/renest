@@ -2911,30 +2911,22 @@
         
         // Navigation menu toggle
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('DOM Loaded');
             const menuButton = document.querySelector('.menu-button');
             const navLinks = document.querySelector('.nav-links');
             
-            console.log('Menu button:', menuButton);
-            console.log('Nav links:', navLinks);
-            
-            if (!menuButton || !navLinks) {
-                console.error('Menu elements not found');
-                return;
-            }
+            // Force display change with inline style
+            menuButton.onclick = function() {
+                if (navLinks.style.display === 'flex') {
+                    navLinks.setAttribute('data-menu-state', 'closed');
+                    navLinks.style.display = 'none';
+                } else {
+                    navLinks.setAttribute('data-menu-state', 'open');
+                    navLinks.style.display = 'flex';
+                }
+            };
 
-            // Add multiple event listeners for debugging
-            menuButton.addEventListener('click', function(e) {
-                console.log('Click event triggered');
-                e.stopPropagation();
-                console.log('Current display:', navLinks.style.display);
-                navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-                console.log('New display:', navLinks.style.display);
-            });
-
-            menuButton.addEventListener('touchstart', function(e) {
-                console.log('Touchstart event triggered');
-            });
+            // Add visual indicator
+            menuButton.innerHTML = '☰ ' + (navLinks.style.display === 'flex' ? 'OPEN' : 'CLOSED');
         });
         // Form navigation
         let currentStep = 1;
