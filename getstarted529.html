@@ -2908,15 +2908,7 @@
 
         menuButton.addEventListener('click', function(e) {
             e.stopPropagation();
-            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-            menuButton.setAttribute('aria-expanded', navLinks.style.display === 'flex');
-        });
-
-        document.addEventListener('click', function(e) {
-            if (window.innerWidth < 768 && !navLinks.contains(e.target) && e.target !== menuButton) {
-                navLinks.style.display = 'none';
-                menuButton.setAttribute('aria-expanded', false);
-            }
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex !important';
         });
         // Form navigation
         let currentStep = 1;
