@@ -681,8 +681,8 @@
         <section class="hero">
             <h1>Unlocking Savings<br>Benefits for Graduate Students</h1>
             <p>Students are eligible for state tax refunds on their qualified education expenses, which includes rent and food</p>
-            <form class="email-form">
-                <input type="email" class="email-input" placeholder="Enter your email">
+            <form class="email-form" id="emailForm" onsubmit="submitToGoogleForm(event)">
+                <input type="email" class="email-input" id="emailInput" placeholder="Enter your email" required>
                 <button type="submit" class="submit-button">Stay Updated</button>
             </form>
         </section>
@@ -938,6 +938,33 @@
             if (isElementInViewportWithOffset(caseStudy) && !caseStudy.classList.contains('visible')) {
                 caseStudy.classList.add('visible');
             }
+        }
+
+        
+        function submitToGoogleForm(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('emailInput').value;
+            const googleFormUrl = `https://docs.google.com/forms/d/e/1FAIpQLScZ04ro2nS9fPEclOjblV8kv-rTFxQNH1pMN_xy8H1gbGKQtQ/formResponse?entry.1358827248=${encodeURIComponent(email)}`;
+            
+            // Create a hidden iframe to submit the form
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
+            
+            // Submit the form through the iframe
+            iframe.src = googleFormUrl;
+            
+            // Show success message
+            alert('Thank you for subscribing!');
+            
+            // Clear the input
+            document.getElementById('emailInput').value = '';
+            
+            // Remove the iframe after submission
+            setTimeout(() => {
+                document.body.removeChild(iframe);
+            }, 1000);
         }
 
         // Initialize the timeline line on page load
