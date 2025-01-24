@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How It Works - RENEST</title>
+</head>
+<style> 
+   :root {
+    --primary: #4B227A;
+    --accent: #FF69B4;
+    --text-dark: #1E0A3C;
+    --background: #FFFFFF;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+    background-color: var(--background);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* Navigation Styles */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: white;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    padding: 1rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.nav-links a {
+    color: var(--text-dark);
+    text-decoration: none;
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    display: block;
+    font-weight: 500;
+}
+
+.nav-links a:hover {
+    background-color: rgba(75, 34, 122, 0.05);
+    transform: translateX(5px);
+}
+
+.nav-links .talk-button {
+    background-color: var(--primary);
+    color: white !important;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 0.5rem;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-links .talk-button:hover {
+    background-image: linear-gradient(45deg, #4B227A, #FF69B4) !important;
+    background-position: 100% 100% !important;
+    transform: translateY(-2px);
+}
+
+.menu-button {
+    background: none;
+    border: 2px solid var(--primary);
+    border-radius: 4px;
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 0.5rem 0.75rem;
+    color: var(--primary);
+    display: block;
+}
+
+.menu-button:hover {
+    background: var(--primary);
+    color: white;
+}
+
+/* Hero Section */
+.hero {
+    margin-top: 5rem;
+    padding: 4rem 2rem;
+    background: linear-gradient(45deg, #4B227A, #FF69B4);
+    color: white;
+    text-align: center;
+}
+
+.hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+/* Process Timeline */
+.process-overview {
+    padding: 6rem 0;
+    background-color: #fff;
+}
+
+.process-overview h2 {
+    text-align: center;
+    color: var(--text-dark);
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+}
+
+.process-timeline {
+    margin-top: 4rem;
+    position: relative;
+}
+
+.process-timeline::before {
+    content: '';
+    position: absolute;
+    left: 19px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #eaeaea;
+    z-index: 1;
+}
+
+.timeline-item {
+    position: relative;
+    padding-left: 3rem;
+    margin-bottom: 4rem;
+    z-index: 2;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: 0;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(45deg, var(--primary), var(--accent));
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.timeline-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border: 1px solid rgba(75, 34, 122, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.timeline-content:hover {
+    transform: translateY(-5px);
+}
+
+.timeline-content h3 {
+    color: var(--primary);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.feature-list {
+    list-style: none;
+    margin: 1rem 0;
+}
+
+.feature-list li {
+    margin-bottom: 0.75rem;
+    padding-left: 1.5rem;
+    position: relative;
+    color: var(--text-dark);
+}
+
+.feature-list li:before {
+    content: "•";
+    color: var(--primary);
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+}
+
+.renest-advantage {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background: linear-gradient(145deg, rgba(75, 34, 122, 0.05), rgba(255, 105, 180, 0.05));
+    border-radius: 8px;
+    border: 1px solid rgba(75, 34, 122, 0.1);
+}
+
+.renest-advantage h4 {
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+}
+
+/* Security Features */
+.security-features {
+    background: #f8f8f8;
+    padding: 6rem 0;
+}
+
+.security-features h2 {
+    text-align: center;
+    color: var(--text-dark);
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+}
+
+.security-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.security-item {
+    text-align: center;
+    padding: 2.5rem 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease;
+}
+
+.security-item:hover {
+    transform: translateY(-5px);
+}
+
+.security-item h3 {
+    color: var(--primary);
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+}
+
+/* CTA Section */
+.cta-section {
+    padding: 6rem 0;
+    text-align: center;
+    background: linear-gradient(145deg, rgba(75, 34, 122, 0.05), rgba(255, 105, 180, 0.05));
+}
+
+.cta-section h2 {
+    color: var(--text-dark);
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.cta-section p {
+    font-size: 1.2rem;
+    color: var(--text-dark);
+    margin-bottom: 2rem;
+}
+
+.cta-button {
+    display: inline-block;
+    background: var(--primary);
+    color: white;
+    padding: 1rem 3rem;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.2rem;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cta-button:hover {
+    background: linear-gradient(45deg, var(--primary), var(--accent));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(75, 34, 122, 0.2);
+}
+
+/* Footer */
+.footer {
+    background-color: rgb(235, 232, 252,.5);
+    padding: 3rem 1rem;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 2rem;
+}
+
+.footer-logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 1rem;
+}
+
+.footer-links h3 {
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+}
+
+.footer-links a {
+    display: block;
+    color: var(--text-dark);
+    text-decoration: none;
+    margin-bottom: 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: var(--primary);
+}
+
+.copyright {
+    color: var(--text-dark);
+    opacity: 0.7;
+    font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (min-width: 768px) {
+    .menu-button {
+        display: none;
+    }
+
+    .nav-links {
+        position: static;
+        display: flex !important;
+        flex-direction: row;
+        padding: 0;
+        box-shadow: none;
+        gap: 0;
+        align-items: center;
+    }
+
+    .nav-links a {
+        margin-left: 2rem;
+        padding: 0.5rem 1rem;
+    }
+
+    .nav-links a:hover {
+        transform: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .hero p {
+        font-size: 1.2rem;
+    }
+
+    .timeline-item {
+        padding-left: 2.5rem;
+    }
+
+    .timeline-marker {
+        width: 35px;
+        height: 35px;
+    }
+
+    .security-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .container {
+        padding: 0 1rem;
+    }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.timeline-item, .security-item {
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+}
+.tab-container {
+    margin-top: 2rem;
+}
+
+.tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.tab {
+    padding: 1rem 2rem;
+    background: white;
+    border: 2px solid var(--primary);
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--primary);
+    transition: all 0.3s ease;
+}
+
+.tab.active {
+    background: var(--primary);
+    color: white;
+}
+
+.tab:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.calculator-result {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.result-box {
+    background: linear-gradient(145deg, rgba(75, 34, 122, 0.05), rgba(255, 105, 180, 0.05));
+    padding: 2rem;
+    border-radius: 12px;
+    max-width: 800px;
+    margin: 2rem auto;
+}
+
+.result-text {
+    font-size: 1.2rem;
+    line-height: 1.6;
+}
+
+.highlight {
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 1.4rem;
+}
+
+.nav-links {
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .nav-links {
+        position: static;
+        display: flex !important;
+        flex-direction: row;
+        padding: 0;
+        box-shadow: none;
+        background: none;
+        align-items: center;
+    }
+}
+</style>
+<body>
+    <nav class="navbar">
+        <a href="529benefit.html" class="logo">RENEST</a>
+        <div class="nav-links">
+            <a href="529benefit.html">Home</a>
+            <a href="aboutus529.html">About us</a>
+            <a href="faq529.html">FAQ</a>
+            <a href="howitworks529.html">How It Works</a>
+            <a href="admin529.html">For University Administrators</a>
+            <a href="getstarted529.html" class="talk-button">Get Started</a>
+        </div>
+        <button class="menu-button" aria-label="Toggle menu">☰</button>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <h1>Understanding Your 529 Benefits</h1>
+            <p>A step-by-step guide to maximizing your graduate student tax benefits</p>
+        </section>
+
+         <section class="process-overview">
+            <div class="container">
+                <div class="calculator-result">
+                    <h2>Sara's 529 Journey</h2>
+                    <div class="result-box">
+                        <p class="result-text">Sara, a PhD student in Aerospace Engineering at CU Boulder, used our calculator and discovered she could get a <span class="highlight">$924 annual tax refund</span> using a 529 plan for her qualified expenses. Here's how Renest helps her get there:</p>
+                    </div>
+                </div>
+
+                    <div class="tab-content active" id="with-renest">
+                        <div class="process-timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-marker">1</div>
+                                <div class="timeline-content">
+                                    <h3>Opening Her 529 Account</h3>
+                                    <p>Sara is a PhD student in Aerospace Engineering at CU Boulder with a $34,000 annual stipend.</p>
+                                    <ul class="feature-list">
+                                        <li>She needs to open a CollegeInvest 529 account (Colorado's plan)</li>
+                                        <li>Required to submit SSN, bank details, and beneficiary information</li>
+                                        <li>Must designate herself as the beneficiary for grad school</li>
+                                        <li>Select the high yield savings or fixed income option</li>
+                                    </ul>
+                                    <div class="renest-advantage">
+                                        <h4>With Renest</h4>
+                                        <p>Renest handles the entire account setup. Sara provides basic info once, and we manage all paperwork and account creation.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="timeline-item">
+                                <div class="timeline-marker">2</div>
+                                <div class="timeline-content">
+                                    <h3>Planning Qualified Expenses</h3>
+                                    <p>Sara's monthly qualified expenses she must track and maintain records for 3 years:</p>
+                                    <ul class="feature-list">
+                                        <li>Rent: $1,350/month in Boulder</li>
+                                        <li>Utilities and phone bill fees: $50/month</li>
+                                        <li>Groceries: ~$350/month</li>
+                                        <li>Total monthly qualified spend: ~$1,750</li>
+                                    </ul>
+                                    <div class="renest-advantage">
+                                        <h4>With Renest</h4>
+                                        <p>Our system automatically verifies her lease and tracks all qualified expenses. No manual logging needed.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="timeline-item">
+                                <div class="timeline-marker">3</div>
+                                <div class="timeline-content">
+                                    <h3>Contributing to 529</h3>
+                                    <p>Sara needs to contribute before spending:</p>
+                                    <ul class="feature-list">
+                                        <li>Must contribute $1,750 monthly to cover expenses</li>
+                                        <li>Contributions need to be made before payments</li>
+                                        <li>Colorado offers 4.4% tax benefit on contributions</li>
+                                    </ul>
+                                    <div class="renest-advantage">
+                                        <h4>With Renest</h4>
+                                        <p>We handle all transfers automatically and can provide the 4.4% tax benefit upfront.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="timeline-item">
+                                <div class="timeline-marker">4</div>
+                                <div class="timeline-content">
+                                    <h3>Making Qualified Withdrawals</h3>
+                                    <p>Each expense requires a matching withdrawal:</p>
+                                    <ul class="feature-list">
+                                        <li>Must withdraw exact amount of each expense</li>
+                                        <li>Timing must match within same tax year</li>
+                                        <li>Records needed for each withdrawal-expense pair</li>
+                                    </ul>
+                                    <div class="renest-advantage">
+                                        <h4>With Renest</h4>
+                                        <p>Our system manages all withdrawals automatically, ensuring perfect timing and documentation.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="timeline-item">
+                                <div class="timeline-marker">5</div>
+                                <div class="timeline-content">
+                                    <h3>Tax Time Benefits</h3>
+                                    <p>Sara's annual benefits:</p>
+                                    <ul class="feature-list">
+                                        <li>Total qualified expenses: $21,000</li>
+                                        <li>Colorado tax benefit (4.4%): $924</li>
+                                    </ul>
+                                    <div class="renest-advantage">
+                                        <h4>With Renest</h4>
+                                        <p>Sara chose to split her benefits: $300 for immediate spending, $324 to retirement savings, and $200 for a new iPad. She only pays Renest after receiving benefits and is confident knowing all her records are maintained with Renest.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="without-renest">
+                        <div class="process-timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-marker">1</div>
+                                <div class="timeline-content">
+                                    <h3>Manual Account Setup</h3>
+                                    <p>Sara must:</p>
+                                    <ul class="feature-list">
+                                        <li>Research Colorado's 529 plan options</li>
+                                        <li>Complete multi-page application forms</li>
+                                        <li>Provide identity verification documents</li>
+                                        <li>Wait 1-2 weeks for account approval</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="timeline-item">
+                                <div class="timeline-marker">2</div>
+                                <div class="timeline-content">
+                                    <h3>Manual Expense Tracking</h3>
+                                    <p>Sara needs to:</p>
+                                    <ul class="feature-list">
+                                        <li>Create spreadsheet to track all expenses</li>
+                                        <li>Save and organize all receipts</li>
+                                        <li>Verify which expenses qualify</li>
+                                        <li>Get lease certified as qualified housing</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="timeline-item">
+                                <div class="timeline-marker">3</div>
+                                <div class="timeline-content">
+                                    <h3>Managing Contributions</h3>
+                                    <p>Sara must:</p>
+                                    <ul class="feature-list">
+                                        <li>Calculate needed contribution amounts</li>
+                                        <li>Make manual bank transfers</li>
+                                        <li>Wait 3-5 days for funds to clear</li>
+                                        <li>Track contribution timing vs expenses</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="timeline-item">
+                                <div class="timeline-marker">4</div>
+                                <div class="timeline-content">
+                                    <h3>Withdrawal Management</h3>
+                                    <p>Sara needs to:</p>
+                                    <ul class="feature-list">
+                                        <li>Request each withdrawal manually</li>
+                                        <li>Match withdrawal amounts exactly</li>
+                                        <li>Track withdrawal dates vs expenses</li>
+                                        <li>Wait 7-10 days for each withdrawal</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="timeline-item">
+                                <div class="timeline-marker">5</div>
+                                <div class="timeline-content">
+                                    <h3>Tax Filing</h3>
+                                    <p>Sara must:</p>
+                                    <ul class="feature-list">
+                                        <li>Organize all yearly documentation</li>
+                                        <li>File Colorado state taxes</li>
+                                        <li>Wait 2-3 months for tax refund</li>
+                                        <li>Keep records for potential audit</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="security-features">
+            <div class="container">
+                <h2>Security & Compliance</h2>
+                <div class="security-grid">
+                    <div class="security-item">
+                        <h3>Bank-Level Security</h3>
+                        <p>All financial data is protected with enterprise-grade encryption</p>
+                    </div>
+                    <div class="security-item">
+                        <h3>Secure Documentation</h3>
+                        <p>All records are maintained securely for the required retention period</p>
+                    </div>
+                    <div class="security-item">
+                        <h3>Compliance Guaranteed</h3>
+                        <p>Our process ensures full compliance with 529 plan regulations</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <div class="container">
+                <h2>Ready to Maximize Your Benefits?</h2>
+                <p></p>
+                <a href="getstarted529.html" class="cta-button">Get Started</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="footer-logo">RENEST</div>
+                <p class="copyright">©2025 Renest Horizons Inc.</p>
+            </div>
+            <div class="footer-links">
+                <h3>Company</h3>
+                <a href="aboutus529.html">About us</a>
+            </div>
+            <div class="footer-links">
+                <h3>Resources</h3>
+                <a href="contactus529.html">Contact us</a>
+                <a href="faq529.html">FAQ</a>
+            </div>
+        </div>
+    </footer>
+<script>
+// Mobile menu functionality
+const menuButton = document.querySelector('.menu-button');
+        const navLinks = document.querySelector('.nav-links');
+
+        menuButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+            menuButton.setAttribute('aria-expanded', navLinks.style.display === 'flex');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (window.innerWidth < 768 && !navLinks.contains(e.target) && e.target !== menuButton) {
+                navLinks.style.display = 'none';
+                menuButton.setAttribute('aria-expanded', false);
+            }
+        });
+
+// Scroll animations
+const timelineItems = document.querySelectorAll('.timeline-item');
+const securityItems = document.querySelectorAll('.security-item');
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = 1;
+            entry.target.style.transform = 'translateY(0)';
+        }
+    });
+}, {
+    threshold: 0.1
+});
+
+timelineItems.forEach(item => {
+    item.style.opacity = 0;
+    item.style.transform = 'translateY(20px)';
+    item.style.transition = 'all 0.6s ease-out';
+    observer.observe(item);
+});
+
+securityItems.forEach(item => {
+    item.style.opacity = 0;
+    item.style.transform = 'translateY(20px)';
+    item.style.transition = 'all 0.6s ease-out';
+    observer.observe(item);
+});
+const tabs = document.querySelectorAll('.tab');
+const tabContents = document.querySelectorAll('.tab-content');
+
+tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        // Remove active class from all tabs and contents
+        tabs.forEach(t => t.classList.remove('active'));
+        tabContents.forEach(content => content.classList.remove('active'));
+        
+        // Add active class to clicked tab and corresponding content
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab).classList.add('active');
+    });
+});
+document.addEventListener('click', function(e) {
+    if (window.innerWidth < 768 && !navLinks.contains(e.target) && e.target !== menuButton) {
+        navLinks.style.display = 'none';
+        menuButton.setAttribute('aria-expanded', 'false');
+    }
+});
+
+window.addEventListener('resize', function() {
+    if (window.innerWidth >= 768) {
+        navLinks.style.display = 'flex';
+    } else {
+        navLinks.style.display = 'none';
+    }
+});
+</script>
+</body>
+</html>
