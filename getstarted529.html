@@ -1325,6 +1325,37 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </footer>
 
     <script>
+
+
+        function generateUserId() {
+            let userId = localStorage.getItem('renest_user_id');
+            if (!userId) {
+                userId = 'user_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('renest_user_id', userId);
+            }
+            return userId;
+        };
+
+        function trackFormInput(inputId, eventName) {
+            const input = document.getElementById(inputId);
+            let timeoutId;
+            
+            input.addEventListener('input', function() {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => {
+                    const value = this.value.replace(/[^0-9.-]+/g, '');
+                    if (value) {
+                        window.dataLayer.push({
+                            'event': eventName,
+                            'user_id': generateUserId(),
+                            'input_value': parseFloat(value)
+                        });
+                    }
+                }, 1000); // Debounce for 1 second
+            });
+        };
+
+
         function openEmailModal() {
     document.getElementById('emailModal').style.display = 'flex';
 }
@@ -3213,6 +3244,13 @@ document.getElementById('emailModal').addEventListener('click', function(e) {
             document.getElementById('schoolSearch').value = school.name;
             document.getElementById('schoolSuggestions').classList.add('hidden');
             document.getElementById('stateSelection').classList.add('hidden');
+
+            window.dataLayer.push({
+            'event': 'school_selected',
+            'user_id': generateUserId(),
+            'school_name': school.name,
+            'school_state': school.state
+        });
         }
 
         // Add selectState function
@@ -3222,7 +3260,14 @@ document.getElementById('emailModal').addEventListener('click', function(e) {
             document.getElementById('schoolSearch').value = `School in ${name}`;
             document.getElementById('stateSuggestions').classList.add('hidden');
             document.getElementById('stateSelection').classList.add('hidden');
+            window.dataLayer.push({
+            'event': 'state_selected',
+            'user_id': generateUserId(),
+            'state_abbr': abbr,
+            'state_name': name
+        });
         }
+
 
         // Modify nextBtn event listener
         
@@ -3391,20 +3436,7 @@ document.getElementById('emailModal').addEventListener('click', function(e) {
             
             document.getElementById('benefitResult').textContent = formattedBenefit;
             
-            // Calculate early amount (70% of benefit)
-            const earlyAmount = Math.round(benefit * 0.62);
-            const formattedEarlyAmount = new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD',
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
-            }).format(earlyAmount);
-            
-            // Update early refund card
-            const mainCTAButton = document.getElementById('main-cta-button');
-            if (mainCTAButton) {
-                mainCTAButton.textContent = `Get ${formattedEarlyAmount} Today`;
-            }
+            updateEarlyRefundCard(benefit);
             
             // document.getElementById('early-refund-amount').textContent = formattedEarlyAmount;
             // document.getElementById('early-refund-details').style.display = 'block';
@@ -3441,7 +3473,15 @@ document.getElementById('emailModal').addEventListener('click', function(e) {
                 if (priceElement) {
                     priceElement.innerHTML = `or $89 when you receive your ${formattedBenefit} tax benefit`;
                 }
-            }
+            };
+            window.dataLayer.push({
+            'event': 'benefit_calculated',
+            'user_id': generateUserId(),
+            'income': income,
+            'monthly_rent': monthlyRent,
+            'monthly_grocery': monthlyGrocery,
+            'calculated_benefit': benefit
+        });
         }
         function getStateName(stateAbbr) {
             return stateOptions[stateAbbr] || stateAbbr;
@@ -3482,14 +3522,23 @@ document.getElementById('emailModal').addEventListener('click', function(e) {
             const dailyRate = 0.05 / 365; // 5% APY converted to daily rate
             const lendingDays = 400;
             const serviceFee = 30;
+            const baseFee = 89;
             
-            const earlyAmount = benefit * 0.62;
-            const futureValue = benefit - 89;
-            const lendingCost = earlyAmount * (1 + dailyRate * lendingDays) - earlyAmount;
+            // Calculate potential early amount for lending cost calculation
+            const potentialEarlyAmount = benefit * 0.65;
+            const lendingCost = potentialEarlyAmount * (1 + dailyRate * lendingDays) - potentialEarlyAmount;
             
-            // Only offer early amount if the future value minus lending costs and fees is greater
-            const isViable = futureValue > (earlyAmount + lendingCost + serviceFee);
-            const finalAmount = isViable ? earlyAmount : 0;
+            // Total costs and calculate early amount
+            const totalCosts = baseFee + serviceFee + lendingCost;
+            const calculatedEarlyAmount = benefit - totalCosts;
+            
+            // Cap at 70% of benefit
+            const maxEarlyAmount = benefit * 0.65;
+            const earlyAmount = Math.min(calculatedEarlyAmount, maxEarlyAmount);
+            
+            // Only check if the amount is positive since we've already capped it
+            const isViable = earlyAmount > 0;
+            const finalAmount = isViable ? Math.floor(earlyAmount) : 0;
             
             const formattedEarlyAmount = new Intl.NumberFormat('en-US', {
                 style: 'currency',
@@ -3507,12 +3556,7 @@ document.getElementById('emailModal').addEventListener('click', function(e) {
             if (ctaButton) {
                 ctaButton.textContent = finalAmount > 0 ? 
                     `Get ${formattedEarlyAmount} Today` : 
-                    'Check Eligibility';
-            }
-            if (earlyRefundDetails) {
-                earlyRefundDetails.textContent = finalAmount > 0 ? 
-                    'Available Today' : 
-                    'Not Currently Available';
+                    'Open Account to Check Eligibility';
             }
         }
 
@@ -3565,7 +3609,39 @@ document.getElementById('emailModal').addEventListener('click', function(e) {
               document.getElementById(button.dataset.tab).classList.add('active');
             });
           });
+          // Track income input
+            trackFormInput('incomeInput', 'income_entered');
+            
+            // Track rent input
+            trackFormInput('rentInput', 'rent_entered');
+            
+            // Track grocery input
+            trackFormInput('groceryInput', 'grocery_entered');
+            
+            // Track form completion
+            document.getElementById('signup-form').addEventListener('submit', function(e) {
+                window.dataLayer.push({
+                    'event': 'form_completed',
+                    'user_id': generateUserId()
+                });
+            });
+            document.querySelector('.getst-button').addEventListener('click', function(e) {
+                window.dataLayer.push({
+                    'event': 'create_account_clicked',
+                    'user_id': generateUserId(),
+                    'button_location': 'main_page'
+                });
+            });
+
+            // Modified to not include email
+            document.getElementById('emailForm').addEventListener('submit', function(e) {
+                window.dataLayer.push({
+                    'event': 'account_email_submitted',
+                    'user_id': generateUserId()
+                });
+            });
         });
+
 
     </script>
 </body>
