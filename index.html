@@ -1,3928 +1,1014 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Essential Security Headers -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
-    <!-- Resource Hints -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="anonymous">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous">
-
-    <!-- Favicon -->
-    <link rel="icon" href="blogo2.png" type="image/png">
-
-    <title>Renest</title>
-
-    <!-- Load Chart.js - using the version that works -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
-
-    <!-- Load Tailwind -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
-
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-P7F8NNDX');</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Savings Platform</title>
     <style>
-    /* Font Imports */
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@400;500;600&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600;700&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap');
-
-    /* Global Styles */
-    body {
-        min-height: 100vh;
-        font-family: 'DM Sans', sans-serif;
-        color: #1A1A1A;
-        background-color: #FAFAFA;
-        overflow-x: hidden;
-        width: 100%;
-        height: 100%;
-        max-width: 100vw;
-        position: relative;
-    }
-    * {
-        max-width: 100vw;
-        box-sizing: border-box;
-    }
-
-    .hidden {
-        display: none !important;
-    }
-
-    /* Hero Section Styles */
-    .hero-section {
-        position: relative;
-        height: 70vh;
-        width: 100%;
-        overflow: hidden;
-    }
-
-    .video-background {
-        position: absolute;
-        right: 0;
-        top: 0;
-        max-width: 100vw;
-        width: 100vw;
-        height: 100%;
-        z-index: -1;
-        object-fit: cover;
-        object-position: center bottom;
-        filter: grayscale(100%) contrast(110%);
-    }
-
-    /* Login Container Styles */
-    .login-container {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        text-align: center;
-        background: rgba(0, 0, 0, 0.55);
-        backdrop-filter: blur(10px);
-        padding: 2.5rem 1.5rem;  /* Adjusted padding */
-        border-radius: 16px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        width: 90%;
-        max-width: 380px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-sizing: border-box;
-        overflow: hidden;  /* Contains child elements */
-    }
-
-    .logo-wrapper {
-        position: relative;
-        margin-bottom: 1rem;
-    }
-
-    .logo-wrapper img {
-        max-height: 60px;
-        width: auto;
-    }
-
-    .logo-wrapper::after {
-        content: '';
-        position: absolute;
-        bottom: -10px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 40px;
-        height: 1px;
-        background: rgba(255, 255, 255, 0.3);
-    }
-
-    .subtitle {
-        color: rgba(255, 255, 255, 0.7);
-        font-size: 13px;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        margin-top: 15px;
-        margin-bottom: 10px;
-        font-weight: 300;
-    }
-
-    /* Login Form Styles */
-    .input-container {
-        position: relative;
-        margin: 0.75rem auto;
-        width: 100%;
-        max-width: 280px;
-        box-sizing: border-box;
-    }
-
-    .input-style {
-        border: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-        border-radius: 0;
-        padding: 12px 0;  /* Removed horizontal padding */
-        margin: 8px auto;
-        width: 100%;
-        max-width: 280px;
-        outline: none;
-        transition: all 0.4s ease;
-        background: transparent;
-        color: white;
-        font-size: 15px;
-        letter-spacing: 0.3px;
-        box-sizing: border-box;
-    }
-
-    .input-style::placeholder {
-        color: rgba(255, 255, 255, 0.7);
-        font-weight: 300;
-    }
-
-    .input-style:focus {
-        border-bottom: 1px solid rgba(255, 255, 255, 1);
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Login Button Styles */
-    .login-button {
-        background-color: white;
-        color: black;
-        padding: 12px 0;
-        width: 90%;
-        max-width: 280px;
-        border-radius: 8px;
-        margin: 20px auto 12px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        font-family: 'DM Sans', sans-serif;  /* Matching your other buttons */
-        font-size: 15px;
-        font-weight: 500;
-        letter-spacing: 0.5px;
-        border: none;
-        cursor: pointer;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    }
-
-    .signup-button {
-        background-color: transparent;
-        color: white;
-        padding: 10px 0;
-        width: 70%;
-        max-width: 300px;
-        border-radius: 8px;
-        font-size: 15px;
-        margin-top: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        transition: all 0.3s ease;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        font-weight: 400;
-    }
-
-    .login-button:hover {
-        background-color: rgba(255, 255, 255, 0.9);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.2);
-    }
-
-    .signup-button:hover {
-        background-color: rgba(255, 255, 255, 0.1);
-        border-color: white;
-        transform: translateY(-2px);
-    }
-
-    /* Toggle Navigation Styles */
-    /* Toggle Navigation Styles */
-/* Toggle Navigation Styles */
-    .toggle-container {
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        display: flex;
-        justify-content: flex-start;
-        padding: 1rem 2rem;
-        background: white;
-        border-bottom: 1px solid #eee;
-        width: 100%;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .toggle-button {
-        padding: 0.75rem 1.5rem;
-        margin-right: 1rem;
-        border: none;
-        background: none;
-        font-family: 'Spectral', serif;
-        font-size: 1rem;
-        color: #666;
-        cursor: pointer;
-        position: relative;
-        transition: color 0.3s ease;
-        text-align: left;
-    }
-
-
-    .toggle-button.active {
-        color: #000;
-    }
-
-    .toggle-button.active::after {
-        content: '';
-        position: absolute;
-        bottom: -1px;
-        left: 0;
-        width: 100%;
-        height: 2px;
-        background-color: #000;
-    }
-
-    /* Content Section Styles */
-    .content-section {
-        background: #efe2dd;
-        position: relative;
-        z-index: 1;
-        width: 100%;
-        max-width: 100%;
-        padding: 2rem 1rem;
-        text-align: center;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    }
-
-    .content-section h1 {
-        font-family: 'Spectral', serif;
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin-bottom: .5rem;
-        color: #1A1A1A;
-        line-height: 1.2;
-        max-width: 1500px;
-        margin-left: auto;
-        margin-right: auto;
-        letter-spacing: -0.02em;
-        position: relative;
-        padding: 0rem 0rem;
-    }
-
-    .content-section p {
-        font-family: 'Inter', sans-serif;
-        font-size: 1.4rem;
-        line-height: 1.7;
-        color: #4B5563;
-        margin-bottom: 2rem;
-        max-width: 1000px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    /* Financial Advice Section Styles */
-        .financial-advice-section {
-            background: #efe2dd;
-            position: relative;
-            z-index: 1;
-            padding: 2rem 1rem;
-            text-align: center;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            margin-top: 2rem;
+        :root {
+            --primary: #4B227A;
+            --accent: #FF69B4;
+            --text-dark: #1E0A3C;
+            --background: #FFFFFF;
         }
 
-        .financial-advice-section h1 {
-            font-family: 'Spectral', serif;
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: .5rem;
-            color: #1A1A1A;
-            line-height: 1.2;
-            max-width: 1500px;
-            margin-left: auto;
-            margin-right: auto;
-            letter-spacing: -0.02em;
-            position: relative;
-            padding: 0rem 0rem;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
-        .financial-advice-section p {
-            font-family: 'Inter', sans-serif;
-            font-size: 1.4rem;
-            line-height: 1.7;
-            color: #4B5563;
-            margin-bottom: 2rem;
-            max-width: 1000px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* Responsive Styles */
-        
-
-    /* Sleek Button Styles */
-    .sleek-button {
-        background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
-        color: #ffffff;
-        font-family: 'Spectral', serif;
-        font-size: 1.25rem;
-        font-weight: 500;
-        padding: 0.75rem 2rem;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        cursor: pointer;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
-        letter-spacing: 0.5px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: auto;
-        min-width: 220px;
-        min-height: 80px;
-    }
-
-    .sleek-button::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.03), transparent);
-        transform: translateX(-100%);
-        transition: transform 0.6s;
-    }
-
-    .sleek-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.4), 0 4px 8px rgba(0, 0, 0, 0.2);
-        background: linear-gradient(145deg, #2d2d2d, #1a1a1a);
-    }
-
-    .sleek-button:hover::before {
-        transform: translateX(100%);
-    }
-
-    .sleek-button:active {
-        transform: translateY(0);
-        box-shadow: 0 5px 10px -5px rgba(0, 0, 0, 0.3);
-    }
-
-    /* Button Content Styles */
-    .button-content {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 120px;
-    }
-    .button-container {
-        text-align: center;
-        margin-top: 32px;
-        margin-bottom: 32px;
-    }
-
-    .button-text {
-        opacity: 1;
-        transition: opacity 0.3s ease;
-    }
-
-    .button-logo {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        height: 40px;
-        width: auto;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-
-    .sleek-button:hover .button-text {
-        opacity: 0;
-    }
-
-    .sleek-button:hover .button-logo {
-        opacity: 1;
-    }
-
-    /* Comparison Section Styles */
-    .comparison-container {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        width:90%;
-        max-width: 1000px;
-        margin: 0 auto;
-        padding: 1rem;
-        background: #FFFFFF;
-        border-radius: 24px;
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
-    }
-
-    /* System Section Styles */
-    .system-section {
-        text-align: center;
-        margin-bottom: 2rem;
-        padding: 1rem;
-        border-radius: 16px;
-        transition: transform 0.3s ease;
-    }
-
-    .system-section:hover {
-        transform: translateY(-4px);
-    }
-
-    .system-title {
-        font-family: 'DM Sans', sans-serif;
-        font-size: 1.75rem;
-        font-weight: 700;
-        margin-bottom: 3rem;
-        color: #1A1A1A;
-        line-height: 1.3;
-        position: relative;
-        padding-bottom: 1rem;
-    }
-
-    .system-title::after,
-    .current-system::after,
-    .renest-system::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 60px;
-        height: 3px;
-        border-radius: 2px;
-    }
-
-    .system-title::after {
-        background: #EF4444;
-    }
-
-    .current-system::after {
-        background: #EF4444;
-    }
-
-    .renest-system::after {
-        background: #22C55E;
-    }
-
-    /* Comparison Row Styles */
-    .comparison-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 2rem;
-        background: #F8FAFC;
-        border-radius: 16px;
-        margin: 2rem 0;
-        transition: all 0.3s ease;
-    }
-
-    .comparison-row:hover {
-        background: #F1F5F9;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
-    }
-
-    /* Amount and Result Styles */
-    .amount {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        font-weight: 600;
-        min-width: 150px;
-    }
-
-    .amount > div:first-child {
-        font-size: 1rem;
-        color: #1A1A1A;
-        margin-bottom: 0.5rem;
-    }
-
-    .result {
-        color: #22C55E;
-        font-size: 1.75rem;
-        font-weight: 700;
-        text-shadow: 0 1px 2px rgba(34, 197, 94, 0.1);
-        animation: highlight 2s ease-in-out infinite;
-    }
-
-    /* Calculator Section Styles */
-    .calculator-section {
-        background: white;
-        padding: 24px;
-        border-radius: 8px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        margin-top: 40px;
-        max-width: 1200px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .calculator-title {
-        font-size: 32px;
-        font-weight: 600;
-        color: #0f4c81;
-        margin-bottom: 24px;
-        text-align: center;
-    }
-
-    /* Calculator Values Styles */
-
-    .values-container {
-        display: grid;
-        grid-template-columns: 1fr 1fr;  /* Two equal columns */
-        gap: 2rem;  /* Add space between columns */
-        margin: 2rem auto;
-        width: 95%;
-        max-width: 1200px;
-    }
-
-    .value-display {
-        background: #f8f9fa;
-        padding: 16px;
-        border-radius: 6px;
-    }
-
-    .value-label {
-        color: #666;
-        font-size: 20px;
-        margin-bottom: 8px;
-    }
-
-    .value-number {
-        font-size: 24px;
-        font-weight: 600;
-        color: #0f4c81;
-    }
-
-    /* Slider Styles */
-    .slider-container {
-        max-width: 1200px;
-        margin: 20px auto;
-    }
-
-    .slider-label {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 8px;
-        color: #444;
-    }
-
-    input[type="range"] {
-        width: 100%;
-        margin: 8px 0;
-    }
-
-    /* Graph Container */
-    .graph-container {
-        height: 400px;
-        margin: 20px auto;
-        background: white;
-    }
-
-    /* Icon and Image Styles */
-    .arrow {
-        width: 32px;
-        height: auto;
-        margin: 1.5rem 0;
-        opacity: 0.8;
-    }
-
-    .user-group {
-        display: flex;
-        gap: 2rem;
-        justify-content: center;
-        align-items: center;
-        padding: 1rem 2rem;
-    }
-
-    .user-group img {
-        width: 48px;
-        height: 48px;
-        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-        transition: transform 0.3s ease;
-    }
-
-    .user-group img:hover {
-        transform: scale(1.1);
-    }
-
-    .barrier-icon {
-        opacity: 0.8;
-        transform: rotate(90deg);
-        margin: 0 1rem;
-    }
-
-    /* Email Input Styles */
-    .email-input-container {
-        margin: 1.5rem auto;
-        max-width: 400px;
-    }
-
-    .email-input {
-        width: 100%;
-        padding: 0.875rem 1rem;
-        font-family: 'DM Sans', sans-serif;
-        font-size: 1rem;
-        color: #1a1a1a;
-        background-color: rgba(255, 255, 255, 0.9);
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
-        transition: all 0.3s ease;
-        outline: none;
-    }
-
-    .email-input:hover {
-        border-color: rgba(0, 0, 0, 0.2);
-        background-color: #ffffff;
-    }
-
-    .email-input:focus {
-        border-color: #2d2d2d;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        background-color: #ffffff;
-    }
-
-    .email-input::placeholder {
-        color: #6b7280;
-    }
-
-    /* Animations */
-    @keyframes highlight {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-        100% { transform: scale(1); }
-    }
-
-    /* Responsive Styles */
-    /* Business Section Specific Styles */
-    .business-benefits-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 2rem;
-        padding: 2rem;
-        background: #F8FAFC;
-        border-radius: 16px;
-        margin: 2rem 0;
-        text-align: center;
-    }
-
-    .benefit-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 1.5rem;
-    }
-
-    .benefit-item h3 {
-        font-family: 'DM Sans', sans-serif;
-        font-size: 3rem;
-        font-weight: 700;
-        color: #1A1A1A;
-        margin-bottom: 0.5rem;
-    }
-
-    .benefit-item p {
-        font-size: 1.5rem;
-        color: #4B5563;
-    }
-
-    .full-coverage {
-        text-align: center;
-        padding: 2rem;
-        background: #F8FAFC;
-        border-radius: 16px;
-        margin: 2rem 0;
-    }
-
-    .full-coverage h3 {
-        font-family: 'DM Sans', sans-serif;
-        font-size: 3rem;
-        font-weight: 700;
-        color: #22C55E;
-        margin-bottom: 0.5rem;
-    }
-
-    .full-coverage p {
-        font-size: 2rem;
-        color: #4B5563;
-    }
-
-    .business-steps-container {
-        max-width: 1200px;
-        margin: 48px auto;
-        padding: 32px;
-        background-color: #f8fafc;
-        border-radius: 16px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    }
-
-    /* New Header Styles */
-    .steps-header {
-        text-align: center;
-        margin-bottom: 48px;
-    }
-
-    .steps-header h2 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: #1a1a1a;
-        margin-bottom: 16px;
-        font-family: 'DM Sans', sans-serif;
-    }
-
-    .steps-header p {
-        font-size: 1.25rem;
-        color: #4b5563;
-        font-family: 'Inter', sans-serif;
-    }
-
-    /* New Grid Layout */
-    .steps-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr); /* Change to 2x2 grid */
-        gap: 32px;
-        margin-bottom: 48px;
-    }
-
-    /* New Card Styles */
-    .step-card {
-        background: white;
-        border-radius: 12px;
-        padding: 24px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .step-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    }
-
-    .step-content {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-
-    /* New Icon Styles */
-    .step-icon {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 16px;
-    }
-
-    .organization-icon {
-        background-color: #dbeafe;
-        color: #2563eb;
-    }
-
-    .members-icon {
-        background-color: #dcfce7;
-        color: #16a34a;
-    }
-
-    .email-icon {
-        background-color: #f3e8ff;
-        color: #9333ea;
-    }
-
-    /* New Result Banner Styles */
-    /*.steps-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 32px;
-        margin-bottom: 48px;
-    }*/
-
-    /* Results card specific styles */
-    /*.results-icon {
-        background-color: #fef3c7;
-        color: #d97706;
-    }*/
-
-    .card-cta-button {
-        background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
-        color: #ffffff;
-        font-family: 'Spectral', serif;
-        font-size: 1.25rem;
-        font-weight: 500;
-        padding: 0.75rem 2rem;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        cursor: pointer;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
-        letter-spacing: 0.5px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: auto;
-        min-width: 220px;
-        min-height: 80px;
-    }
-
-    .card-cta-button::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.03), transparent);
-        transform: translateX(-100%);
-        transition: transform 0.6s;
-    }
-
-    .card-cta-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.4), 0 4px 8px rgba(0, 0, 0, 0.2);
-        background: linear-gradient(145deg, #2d2d2d, #1a1a1a);
-    }
-
-    .card-cta-button:hover::before {
-        transform: translateX(100%);
-    }
-
-    .card-cta-button:active {
-        transform: translateY(0);
-        box-shadow: 0 5px 10px -5px rgba(0, 0, 0, 0.3);
-    }
-
-    /* Button Content Styles */
-    .card-cta-button .button-content {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .card-cta-button .button-text {
-        opacity: 1;
-        transition: opacity 0.3s ease;
-    }
-
-    .card-cta-button .button-logo {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        height: 40px;
-        width: auto;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-
-    .card-cta-button:hover .button-text {
-        opacity: 0;
-    }
-
-    .card-cta-button:hover .button-logo {
-        opacity: 1;
-    }
-
-    .cta-button:hover {
-        background-color: rgba(255, 255, 255, 0.9);
-        transform: translateY(-2px);
-    }
-    .icon-img {
-        width: 40px;
-        height: 40px;
-        object-fit: contain;
-    }
-
-    /* New Responsive Styles */
-    
-
-    .business-progress {
-        max-width: 975px;
-        margin: 48px auto;
-        padding: 32px;
-        background-color: #f8fafc;
-        border-radius: 16px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    }
-
-    .progress-background {
-        position: absolute;
-        width: 100%;
-        height: 300px;
-        bottom: 180px;     /* Change this to adjust vertical position */
-        left: 0;  
-        /*transform: translateY(60px);  
-        transform: translateX(50px);*/
-        object-fit: cover;
-        z-index: -5;
-    }
-
-    .progress-content {
-        position: relative;
-        z-index: 2;
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 2rem;
-    }
-    
-
-    .progress-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: .5 rem;
-        text-align: center;
-        perspective: 1000px; /* Required for 3D effect */
-        height: 500px;
-    }
-
-
-    .progress-card {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        transition: transform 0.8s;
-        transform-style: preserve-3d;
-        cursor: pointer;
-    }
-
-    .progress-item:hover .progress-card {
-        transform: rotateY(180deg);
-    }
-
-    .progress-front, .progress-back {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        backface-visibility: hidden;
-        border-radius: 12px;
-        padding: 1rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .progress-front {
-        background-color: inherit;
-    }
-
-    .progress-back {
-        background: rgba(255, 255, 255, 0.95);
-        transform: rotateY(180deg);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 2rem;
-        text-align: center;
-    }
-
-    .progress-back-content {
-        font-family: 'DM Sans', sans-serif;
-        color: #1A1A1A;
-        font-size: 1.1rem;
-        line-height: 1.6;
-    }
-
-    .progress-icon {
-        width: 200px;
-        height: 200px;
-        margin-bottom: 0rem;
-    }
-
-    .progress-item h4 {
-        font-family: 'DM Sans', sans-serif;
-        font-size: 1.25rem;
-        font-weight: 600;
-        color: #1A1A1A;
-        margin-bottom: 0.1rem;
-        margin-top: 0 rem;
-    }
-
-    .progress-item .amount {
-        font-size: 1.25rem;
-        color: #1A1A1A;
-        font-weight: 600;
-        margin-bottom: 0.1rem;
-    }
-
-    .progress-item .bonus {
-        font-family: 'DM Sans', sans-serif;
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #22C55E;
-        margin-top: 0.1rem;
-        margin-bottom:0rem;
-    }
-
-    .progress-item .back-title {
-        font-family: 'DM Sans', sans-serif;
-        font-size: 14px;
-        font-weight: 200;
-        color: #1A1A1A;
-        margin-bottom: 1rem;
-        width: 100%;
-        text-align: center;  /* Change to 'left' or 'right' to align text */
-        margin-top: 2rem;    /* Adjust this to move title up/down */
-    }
-
-    .progress-item .back-example {
-        font-family: 'DM Sans', sans-serif;
-        font-size: 14px;
-        font-weight: 100;
-        width: 100%;
-        color: #1A1A1A;
-        text-align: justify;  /* Change to 'left' or 'right' to align text */
-        margin-top: 1rem;    /* Adjust this to control spacing below title */
-    }
-
-        .progress-item:nth-child(1) {
-        background-color: rgba(146, 192, 137, .3);  /* Light blue tint */
-        border-radius: 12px;
-        padding: 1rem;
-    }
-
-    .progress-item:nth-child(2) {
-        background-color: rgba(78, 167, 46, .3);  /* Light gray */
-        border-radius: 12px;
-        padding: 1rem;
-    }
-
-    .progress-item:nth-child(3) {
-        background-color: rgba(57, 125, 32, .3);  /* Light green tint */
-        border-radius: 12px;
-        padding: 1rem;
-    }
-
-
-    /* Responsive Styles */
-    
-
-    /* Hover Effects */
-    .progress-item:hover,
-    .benefit-item:hover {
-        transform: translateY(-4px);
-        transition: transform 0.3s ease;
-    }
-
-    /* Icons Hover Effect */
-    .icon-image:hover {
-        transform: scale(1.1);
-        transition: transform 0.3s ease;
-    }
-
-
-
-    /* Add these styles to your existing stylesheet */
-
-    /* Updated State Section Styles */
-    .states-container {
-        background: #efe2dd;
-        position: relative;
-        z-index: 1;
-        padding: 1rem 1rem;
-        text-align: center;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-
-    .states-container h1 {
-        font-family: 'Spectral', serif;
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin-bottom: .5rem;
-        color: #1A1A1A;
-        line-height: 1.2;
-        letter-spacing: -0.02em;
-    }
-
-    .states-container p {
-        font-family: 'Inter', sans-serif;
-        font-size: 1.4rem;
-        line-height: 1.7;
-        color: #4B5563;
-        margin-bottom: 2rem;
-        max-width: 800px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .state-search-card {
-        background: white;
-        border-radius: 16px;
-        padding: 2rem;
-        margin: 2rem auto;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        max-width: 1000px;
-    }
-
-    .state-search-input {
-        width: 90%;
-        max-width: 960px;
-        left:0;
-        padding: 1rem 1.5rem;
-        font-family: 'DM Sans', sans-serif;
-        font-size: 1.1rem;
-        color: #1a1a1a;
-        background-color: #f8f9fa;
-        border: 2px solid rgba(146, 192, 137, 0.3);
-        border-radius: 12px;
-        transition: all 0.3s ease;
-        outline: none;
-        margin-bottom: 1.5rem;
-    }
-
-    .state-search-input:hover {
-        border-color: rgba(78, 167, 46, 0.4);
-        background-color: #ffffff;
-    }
-
-    .state-search-input:focus {
-        border-color: rgba(57, 125, 32, 0.5);
-        box-shadow: 0 0 0 3px rgba(57, 125, 32, 0.1);
-        background-color: #ffffff;
-    }
-
-    .state-card {
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 16px;
-        text-align:center;
-        padding: 1.5rem;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-        border: 1px solid rgba(146, 192, 137, 0.2);
-    }
-
-    .state-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        border-color: rgba(78, 167, 46, 0.3);
-    }
-
-    .state-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1.5rem;
-        padding-bottom: 1rem;
-        border-bottom: 2px solid rgba(146, 192, 137, 0.2);
-    }
-
-    .state-name {
-        font-family: 'Spectral', serif;
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: #1a1a1a;
-    }
-
-
-
-    .state-metrics-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.25rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .state-costs-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1.25rem;
-    }
-
-    .metric-card {
-        background: rgba(146, 192, 137, 0.1);
-        padding: 1.25rem;
-        border-radius: 12px;
-        transition: all 0.3s ease;
-        border: 1px solid rgba(146, 192, 137, 0.1);
-    }
-
-    .metric-card:hover {
-        transform: translateY(-2px);
-        background: rgba(146, 192, 137, 0.15);
-        border-color: rgba(146, 192, 137, 0.2);
-    }
-
-    .metric-label {
-        font-size: 0.9rem;
-        color: #4a5568;
-        margin-bottom: 0.5rem;
-        font-family: 'DM Sans', sans-serif;
-    }
-
-    .metric-value {
-        font-size: 1.4rem;
-        font-weight: 600;
-        color: #1a1a1a;
-        font-family: 'DM Sans', sans-serif;
-    }
-
-    .costs-section {
-        margin-top: 1.5rem;
-    }
-
-    .costs-header {
-        font-family: 'DM Sans', sans-serif;
-        font-size: 1.1rem;
-        font-weight: 500;
-        color: #1a1a1a;
-        margin-bottom: 1rem;
-        padding-left: 0.5rem;
-    }
-
-    .no-results {
-        text-align: center;
-        padding: 2rem;
-        color: #4a5568;
-        font-family: 'DM Sans', sans-serif;
-        font-size: 1.1rem;
-        background: rgba(146, 192, 137, 0.1);
-        border-radius: 12px;
-        margin-top: 1rem;
-    }
-
-    /* Crisis Section styling */
-    .crisis-section {
-        background: rgba(0,0, 0, 0.15);
-        padding: 2rem;
-        border-radius: 16px;
-        margin: 2rem auto;
-        max-width: 1000px;
-        text-align: left;
-        border: 1px solid rgba(146, 192, 137, 0.2);
-    }
-
-    .crisis-header {
-        font-family: 'Spectral', serif;
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: #1a1a1a;
-        margin-bottom: 1rem;
-    }
-
-    .crisis-list {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-    }
-
-    .crisis-list li {
-        margin-bottom: 0.75rem;
-        padding-left: 1.5rem;
-        position: relative;
-        color: #4a5568;
-        font-family: 'DM Sans', sans-serif;
-        font-size: 1.1rem;
-    }
-
-    .crisis-list li::before {
-        content: none;
-        color: rgba(57, 125, 32, 0.8);
-        font-weight: bold;
-        position: absolute;
-        left: 0;
-    }
-
-    
-    .state-search-title {
-        font-family: 'Spectral', serif;
-        font-size: 2rem;
-        font-weight: 600;
-        color: #1a1a1a;
-        margin-bottom: 2rem;
-        text-align: left;
-    }
-
-    
-
-
-    .state-read-more {
-        display: inline-block;
-        color: #2563eb;
-        text-decoration: none;
-        margin-bottom: 2rem;
-        font-family: 'DM Sans', sans-serif;
-    }
-
-    .state-metric {
-        margin-bottom: 1.5rem;
-    }
-
-    .state-metric-label {
-        font-family: 'DM Sans', sans-serif;
-        color: #6b7280;
-        margin-bottom: 0.5rem;
-    }
-
-    .state-metric-value {
-        font-family: 'DM Sans', sans-serif;
-        font-size: 1.25rem;
-        font-weight: 600;
-        color: #1a1a1a;
-    }
-
-    .state-costs {
-        position: relative;
-        margin-top: 2rem;
-    }
-
-
-    .info-link {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        color: #6b7280;
-        transition: color 0.3s ease;
-    }
-
-    .info-link:hover {
-        color: #374151;
-    }
-
-    .state-costs-title {
-        font-family: 'DM Sans', sans-serif;
-        font-weight: 600;
-        color: #1a1a1a;
-        margin-bottom: 1rem;
-    }
-
-    .cost-item {
-        padding: 1rem;
-    }
-
-    .cost-label {
-        font-family: 'DM Sans', sans-serif;
-        color: #6b7280;
-        margin-bottom: 0.5rem;
-    }
-
-    .cost-value {
-        font-family: 'DM Sans', sans-serif;
-        font-size: 1.25rem;
-        font-weight: 600;
-        color: #1a1a1a;
-    }
-    .section-title {
-        font-family: 'Spectral', serif;
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: #1a1a1a;
-        margin-bottom: 2rem;
-        text-align: left;
-    }
-
-    .costs-overview {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1.5rem;
-        background-color: #f8fafc;
-        border-radius: 12px;
-        margin-bottom: 2rem;
-    }
-
-
-    .cost-period {
-        flex: 1;  /* This makes each item take up equal space */
-        text-align: center;  /* Centers the text within each column */
-        padding: 0 1rem;  /* Adds some horizontal padding */
-    }
-
-
-    .cost-label {
-        font-family: 'DM Sans', sans-serif;
-        color: #6b7280;
-        font-size: 0.9rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .cost-value {
-        font-family: 'DM Sans', sans-serif;
-        font-size: 1.75rem;
-        font-weight: 600;
-        color: #1a1a1a;
-    }
-
-    .savings-info {
-        background-color: #f8fafc;
-        border-radius: 12px;
-        padding: 1.5rem;
-    }
-
-    .info-header {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        margin-bottom: 1rem;
-    }
-
-    .info-icon {
-        color: #2563eb;
-        font-size: 1.25rem;
-    }
-
-    .info-header h3 {
-        font-family: 'DM Sans', sans-serif;
-        font-weight: 600;
-        color: #1a1a1a;
-        font-size: 1rem;
-    }
-
-    .info-text {
-        font-family: 'DM Sans', sans-serif;
-        color: #4b5563;
-        font-size: 0.95rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .savings-amounts {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
-    }
-
-    .savings-period {
-        background-color: white;
-        padding: 1rem;
-        border-radius: 8px;
-    }
-
-    .savings-label {
-        font-family: 'DM Sans', sans-serif;
-        color: #6b7280;
-        font-size: 0.9rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .savings-value {
-        font-family: 'DM Sans', sans-serif;
-        font-size: 1.8rem;
-        font-weight: 600;
-        color: #2563eb;
-    }
-
-    @media (max-width: 768px) {
-        .costs-overview,
-        .savings-amounts {
-            grid-template-columns: 1fr;
-            gap: 1rem;
-        }
-    }
-    .integration-text {
-        font-family: 'Inter', sans-serif;
-        font-size: 1.2rem;
-        color: #4B5563;
-        margin-bottom: 2rem;
-        text-align: center;
-    }
-
-    .input-label {
-        display: block;
-        font-family: 'DM Sans', sans-serif;
-        font-size: 0.9rem;
-        font-weight: 500;
-        color: #374151;
-        margin-bottom: 0.5rem;
-    }
-
-    textarea.email-input {
-        resize: vertical;
-        min-height: 100px;
-    }
-
-    .submit-button {
-        width: 200px;
-        padding: 0.875rem;
-        background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
-        color: white;
-        font-family: 'DM Sans', sans-serif;
-        font-size: 1rem;
-        font-weight: 500;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .submit-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    /* Tablet and small laptops */
-/* Tablet and small laptops */
-    @media (max-width: 1024px) {
-        .content-section {
-            padding: 1.5rem;
-        }
-
-        .business-benefits-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .steps-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-
-    /* Mobile devices */
-    @media (max-width: 768px) {
-        /* Global fixes */
         body {
-            overflow-x: hidden;
-            width: 100%;
-            max-width: 100vw;
+            background-color: var(--background);
         }
 
-        /* Content section fixes */
-        .content-section {
+        .navbar {
+            position: fixed;
+            top: 0;
             width: 100%;
-            max-width: 100%;
+            background-color: white;
             padding: 1rem;
-            margin: 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: none;
+            position: absolute;
+            top: 100%;
             left: 0;
-            overflow-x: hidden;
-        }
-
-        .content-section h1 {
-            font-size: 1.75rem;
-            padding: 0 0.5rem;
-            line-height: 1.3;
-        }
-
-        .content-section p {
-            font-size: 1.1rem;
-            padding: 0 0.5rem;
-            line-height: 1.5;
-        }
-
-        /* Navigation */
-        .toggle-container {
-            flex-direction: column;
-            padding: 0.5rem 1rem;
-            gap: 0.5rem;
-        }
-
-        .toggle-button {
-            width: 100%;
-            margin-right: 0;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .toggle-button:last-child {
-            border-bottom: none;
-        }
-
-        .toggle-button.active::after {
-            bottom: -1px;
-        }
-
-        /* Login and Input Styles */
-        .login-container,
-        .email-input-container,
-        .values-container,
-        .slider-container {
-            max-width: calc(100% - 2rem);
+            right: 0;
+            background: white;
             padding: 1rem;
-        }
-
-            
-        .input-style,
-        .login-button,
-        .signup-button {
-            width: 90%;  /* Slightly narrower on mobile */
-            font-size: 16px;  /* Prevents iOS zoom */
-        }
-        
-
-        /* Comparison Section */
-        .comparison-container,
-        .calculator-section,
-        .business-steps-container,
-        .state-search-card {
-            width: auto;
-            margin-left: 1rem;
-            margin-right: 1rem;
-        }
-        
-        
-        .values-container {
-            grid-template-columns: 1fr;  /* Stack on mobile */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            flex-direction: column;
             gap: 1rem;
         }
 
-        .comparison-row {
+        .nav-links a {
+            color: var(--text-dark);
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            display: block;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(75, 34, 122, 0.05);
+            transform: translateX(5px);
+        }
+
+        .nav-links .talk-button {
+            background-color: var(--primary);
+            color: white !important;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+        .nav-links .talk-button {
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+       .nav-links .talk-button:hover {
+            background: linear-gradient(45deg, #4B227A, #FF69B4);
+            transform: translateY(-2px);
+        }
+
+         @media (min-width: 768px) {
+            .menu-button {
+                display: none;
+            }
+
+            .nav-links {
+                position: static;
+                display: flex !important;
+                flex-direction: row;
+                padding: 0;
+                box-shadow: none;
+                gap: 0;
+                align-items: center;
+            }
+
+            .nav-links a {
+                margin-left: 2rem;
+                padding: 0.5rem 1rem;
+            }
+
+            .faq-section {
+                padding: 6rem 2rem;
+            }
+        }
+
+        .hero {
+            margin-top: 5rem;
+            padding: 2rem 1rem;
+            background: linear-gradient(45deg, #4B227A, #FF69B4);
+            color: white;
+            min-height: 65vh;
+            display: flex;
             flex-direction: column;
+            justify-content: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            color: white;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .email-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-width: 500px;
+        }
+
+        .email-input {
+            padding: 1rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .submit-button {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .submit-button:hover {
+            background-color: var(--primary);
+            background-position: 100% 100% !important;
+            transform: translateY(-2px);
+        }
+
+        .newsletter {
+            padding: 4rem 1rem;
+            text-align: center;
+            background-color: #f8f8f8;
+        }
+
+        .newsletter h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer {
+             background-color: rgb(235, 232, 252,.5);
+            padding: 3rem 1rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
             gap: 2rem;
-            padding: 1.5rem;
         }
 
-        .system-title {
+        .footer-logo {
             font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 1rem;
         }
 
-        /* User Group */
-        .user-group {
-            flex-wrap: wrap;
+        .social-links {
+            display: flex;
             gap: 1rem;
-            padding: 1rem;
+            margin-bottom: 2rem;
         }
 
-        /* Business Section */
-        .business-benefits-grid {
-            width: auto;
-            padding: 1rem;
-            grid-template-columns: 1fr;
-            gap: 1rem;
+        .social-links a {
+            color: var(--primary);
+            text-decoration: none;
         }
 
-        .business-progress {
-            grid-template-columns: 1fr;
-            gap: 1rem;
-            height: auto;
-            padding-bottom: 200px;
+        .footer-links h3 {
+            color: var(--text-dark);
+            margin-bottom: 1rem;
         }
 
-        .progress-background {
-            height: 150px;
+        .footer-links a {
+            display: block;
+            color: var(--text-dark);
+            text-decoration: none;
+            margin-bottom: 0.5rem;
         }
 
-        .progress-content {
-            grid-template-columns: 1fr;
-        }
-
-        .benefit-item,
-        .progress-item {
-            padding: 1rem;
-        }
-
-        .benefit-item h3 {
-            font-size: 1.75rem;
-        }
-
-        .full-coverage h3 {
-            font-size: 3rem;
-        }
-
-        /* Steps Section */
-        .business-steps-container {
-            padding: 24px;
-            margin: 24px;
-        }
-
-        .steps-header h2 {
-            font-size: 2rem;
-        }
-
-        .steps-grid {
-            grid-template-columns: 1fr;
-            gap: 24px;
-        }
-
-        .steps-list {
-            padding: 1rem;
-        }
-
-        /* Button Styles */
-        .card-cta-button {
-            min-width: 160px;
-            min-height: 45px;
-            font-size: 1rem;
-            padding: 10px 24px;
-        }
-
-        .card-cta-button .button-logo {
-            height: 20px;
-        }
-
-        /* States Section */
-        #states-content {
-            overflow-x: hidden;
-            width: 100%;
-            padding: 0;
-        }
-
-        .states-container {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            max-width: 100%;
-            overflow: hidden;
-        }
-
-        .states-container h1 {
-            font-size: 2rem;
-        }
-
-        .states-container p {
-            font-size: 1.2rem;
-        }
-
-        /* From your original states section fixes */
-        .state-search-card,
-        .crisis-section {
-            margin: 1rem 0;
-            width: 100%;
-            max-width: 100%;
-            padding: 1rem;
-            box-sizing: border-box;
-        }
-
-        .state-metrics-grid,
-        .state-costs-grid {
-            grid-template-columns: 1fr !important;
-            gap: 1rem;
-            padding: 0;
-            margin: 1rem 0;
-            width: 100%;
-        }
-
-        /* Program comparison section fix from original */
-        .state-metrics-grid[style*="grid-template-columns: repeat(3, 1fr)"] {
-            grid-template-columns: 1fr !important;
-            width: 100%;
-        }
-
-        .metric-card {
-            width: 100%;
-            margin: 0;
-            padding: 1rem;
-            box-sizing: border-box;
-        }
-
-        .metric-value {
-            font-size: 1.2rem;
-        }
-
-        /* Crisis section from original */
-        .crisis-list {
-            padding: 0;
-            margin: 0;
-        }
-
-        .crisis-list li {
-            padding: 0.5rem;
-            margin: 0;
-            word-break: break-word;
-        }
-
-        /* Font adjustments from original */
-        .state-search-title {
-            font-size: 1.5rem;
-            padding: 0 1rem;
-        }
-
-        .section-title {
-            font-size: 1.25rem;
-            padding: 0 1rem;
-        }
-
-        .crisis-header {
-            font-size: 1.25rem;
-            padding: 0 1rem;
-        }
-
-        /* Financial advice section from original */
-        .financial-advice-section h1 {
-            font-size: 2rem;
-        }
-
-        /* Costs and Savings from original */
-        .costs-overview,
-        .savings-amounts {
-            grid-template-columns: 1fr;
-            gap: 1rem;
-            width: 100%;
-        }
-
-        /* Image handling from original */
-        img {
-            max-width: 100%;
-            height: auto;
-        }
-    }
-
-    /* Small mobile devices */
-    @media (max-width: 480px) {
-        .content-section h1 {
-            font-size: 1.5rem;
-        }
-
-        .content-section p {
-            font-size: 1rem;
-        }
-
-        .login-container {
-            padding: 1rem;
-        }
-
-        .progress-icon {
-            width: 120px;
-            height: 120px;
-        }
-
-        .sleek-button,
-        .card-cta-button {
-            min-width: 140px;
+        .copyright {
+            color: var(--text-dark);
+            opacity: 0.7;
             font-size: 0.9rem;
         }
 
-        .metric-card {
-            padding: 0.5rem;
+        @media (min-width: 768px) {
+            .nav-links {
+                display: flex;
+                align-items: center;
+            }
+
+            .menu-button {
+                display: none;
+            }
+
+            .footer-content {
+                grid-template-columns: 2fr 1fr 1fr;
+            }
+
+            .hero {
+                padding: 4rem 2rem;
+            }
+
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+
+            .email-form {
+                flex-direction: row;
+            }
+
+            .email-input {
+                flex: 1;
+            }
+        }
+        .benefits {
+            padding: 4rem 1rem;
+            background-color: white;
         }
 
-        .metric-value {
-            font-size: 1rem;
-        }
-    }
-
-    /* Very small mobile devices */
-    @media (max-width: 360px) {
-        .content-section h1 {
-            font-size: 1.25rem;
-        }
-
-        .login-container {
-            padding: 0.75rem;
-        }
-
-        .progress-icon {
-            width: 100px;
-            height: 100px;
-        }
-
-        .sleek-button,
-        .card-cta-button {
-            min-width: 120px;
-            font-size: 0.85rem;
-            padding: 0.5rem 1rem;
-        }
-    }
-    .renest-benefits-container {
-        background: linear-gradient(145deg, rgba(218, 240, 247, 0.8), rgba(12, 209, 210, 0.6));
-        max-width: 1200px;
-        margin: 2rem auto;
-        border-radius: 20px;
-        box-shadow: 0 10px 25px -5px rgba(78, 167, 46, 0.1);
-        padding: 3rem 2rem;
-        border: 1px solid rgba(78, 167, 46, 0.2);
-    }
-
-    .renest-benefits-title {
-        font-family: 'Spectral', serif;
-        font-size: 2.5rem;
-        text-align: center;
-        color: #1A1A1A;
-        margin-bottom: 2.5rem;
-        position: relative;
-        padding-bottom: 1rem;
-    }
-
-    .renest-benefits-title::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 80px;
-        height: 3px;
-        background: linear-gradient(90deg, #92C089, #4EA72E);
-        border-radius: 2px;
-    }
-
-    .renest-benefits-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 2rem;
-        padding: 1rem;
-    }
-
-    .renest-benefit-card {
-        background: white;
-        border-radius: 16px;
-        padding: 2.5rem 2rem;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        border: 1px solid rgba(78, 167, 46, 0.1);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .renest-benefit-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background: linear-gradient(90deg, #92C089, #4EA72E);
-    }
-
-    .renest-benefit-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 20px 25px -5px rgba(78, 167, 46, 0.1), 0 10px 10px -5px rgba(78, 167, 46, 0.05);
-    }
-
-    .renest-benefit-heading {
-        color: #397D20;
-        font-size: 1.6rem;
-        font-weight: 700;
-        margin-bottom: 1.5rem;
-        font-family: 'DM Sans', sans-serif;
-        position: relative;
-    }
-
-    .renest-benefit-list {
-        color: #4B5563;
-        font-size: 1.1rem;
-        text-align:left;
-        line-height: 1.8;
-    }
-
-    .renest-benefit-list br {
-        margin-bottom: 0.8rem;
-    }
-
-    .renest-benefit-list::before {
-        color: #4EA72E;
-        margin-right: 0.5rem;
-    }
-
-    .renest-benefit-list .check {
-        color: #4EA72E;
-        font-weight: 600;
-        margin-right: 0.5rem;
-    }
-
-    .renest-benefit-footnotes {
-        font-size: 0.9rem;
-        color: #666;
-        margin-top: 2rem;
-        text-align: left;
-        padding: 1rem;
-        background: rgba(255, 255, 255, 0.5);
-        border-radius: 8px;
-    }
-
-    @media (max-width: 1024px) {
-        .renest-benefits-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-
-    @media (max-width: 768px) {
-        .renest-benefits-grid {
+        .benefits-grid {
+            display: grid;
             grid-template-columns: 1fr;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
         }
-        
-        .renest-benefits-title {
+
+        .benefit-card {
+            background-color: #f8f8f8;
+            padding: 2rem;
+            border-radius: 8px;
+        }
+
+        .universities {
+            padding: 4rem 1rem;
+            background-color: #f8f8f8;
+        }
+
+        .universities-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .university-card {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 4px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
             font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 2rem;
+            text-align: center;
         }
 
-        .renest-benefits-container {
+        .section-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+        }
+
+        .text-emphasis {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        @media (min-width: 768px) {
+            .benefits-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .universities-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        .logo-scroller {
+            padding: 4rem 1rem;
+            background-color: #f8f8f8;
+            overflow: hidden;
+        }
+
+        .logo-scroller h2 {
+            text-align: center;
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 2rem;
+        }
+
+        .logo-container {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            padding: 20px 0;
+        }
+
+        .logo-track {
+            display: flex;
+            animation: scroll 30s linear infinite;
+            width: max-content;
+        }
+
+        /*.logo-track:hover {
+            animation-play-state: paused;
+        }*/
+
+        .logo-item {
+            flex: 0 0 auto;
+            width: 200px;
+            height: 80px;
+            margin: 0 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-item img {
+            max-width: 80%;
+            max-height: 60%;
+            object-fit: contain;
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* Add a gradient overlay for smooth fade at edges */
+        .logo-container::before,
+        .logo-container::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 100px;
+            z-index: 2;
+        }
+
+        .logo-container::before {
+            left: 0;
+            background: linear-gradient(to right, #f8f8f8 0%, transparent 100%);
+        }
+
+        .logo-container::after {
+            right: 0;
+            background: linear-gradient(to left, #f8f8f8 0%, transparent 100%);
+        }
+        .how-it-works {
             padding: 2rem 1rem;
+            background-color: white;
+            overflow-x: hidden;
         }
-    }
-    .hidden {
-        display: none !important;
-    }
 
-    #showFederalButton {
-        background: linear-gradient(145deg, #e0e0e0, #cccccc); 
-        margin-left: auto;
-        margin-right: auto;
-        display: block;
-    }
+        .gradient-card {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 3rem;
+            background: #fffaf0;
+            border-radius: 24px;
+            position: relative;
+            box-shadow: 0px 0px 8px 8px rgba(75, 34, 122, 0.3);
+        }
 
-    #showFederalButton:hover {
-        background: linear-gradient(145deg, #cccccc, #e0e0e0);
-    }
-    @media (max-width: 768px) {
-        .full-coverage > div {
-            grid-template-columns: 1fr !important;
-            gap: 1.5rem !important;
+        /* New pop-out border style */
+        .gradient-card::before {
+            content: '';
+            position: absolute;
+           /* top: 0;
+            left: 0;*/
+            width: 100%;
+            height: 100%;
+            /*border-radius: 24px;
+            border-left: 4px solid;
+            border-top: 4px solid;
+            border-image: linear-gradient(45deg, #4B227A, #FF69B4) 1;*/
+            pointer-events: none;
         }
+
+        .info-box {
+            background: linear-gradient(45deg, rgba(75, 34, 122, 0.05), rgba(255, 105, 180, 0.05));
+            padding: 2rem;
+            border-radius: 16px;
+            margin: 2rem auto;
+            max-width: 800px;
+            transform: translateY(30px);
+            opacity: 0;
+            transition: all 0.6s ease-out;
+        }
+
+        .info-box.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .timeline-steps {
+            max-width: 800px;
+            margin: 4rem auto;
+            position: relative;
+            padding-left: 85px;
+        }
+
+        .timeline-steps::before {
+            content: '';
+            position: absolute;
+            left: 29px;
+            top: 40px;
+            bottom: 40px;
+            width: 3px;
+            background: #eaeaea;
+            z-index:    2;
+            border-radius: 4px;
+        }
+
+        /* Add the animated line overlay */
+        .timeline-line {
+            position: absolute;
+            left: 29px;
+            top: 40px;
+            width: 3px;
+            height: 0;
+            z-index:    2;
+            background: linear-gradient(to bottom, #4B227A, #FF69B4);
+            border-radius: 4px;
+            transition: height 2.5s ease-out;
+        }
+
+        .timeline-step {
+            position: relative;
+            padding-bottom: 3rem;
+            opacity: 0;
+            z-index:    5;
+            transform: translateX(-30px);
+            transition: all 0.6s ease-out;
+        }
+
+        .timeline-step.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .timeline-step:last-child {
+            padding-bottom: 0;
+        }
+
+        .timeline-number {
+            position: absolute;
+            left: -85px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #4B227A, #FF69B4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            z-index:    5;
+            font-size: 1.4rem;
+            box-shadow: 0 4px 12px rgba(75, 34, 122, 0.2);
+        }
+
+        .timeline-content {
+            padding: 2rem 2.5rem;
+            border-radius: 16px;
+            background: white;
+            box-shadow: 0 4px 16px rgba(75, 34, 122, 0.08);
+            border: 1px solid rgba(75, 34, 122, 0.1);
+        }
+
+        .timeline-content h4 {
+            color: #4B227A;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .case-study {
+            max-width: 800px;
+            margin: 1rem auto 0;
+            padding: 2rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 24px rgba(75, 34, 122, 0.1);
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
+        }
+
         
-        .full-coverage > div > div:first-child {
-            border-right: none !important;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            padding-right: 0 !important;
-            padding-bottom: 1.5rem;
+
+        .case-study.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
-        
-        .full-coverage > div > div:last-child {
-            text-align: center !important;
-            padding-left: 0 !important;
-            padding-top: 1rem;
+
+        .case-study-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
         }
-    }
+
+        .case-study-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            background: rgba(75, 34, 122, 0.05);
+            border-radius: 12px;
+            font-size: 1.1rem;
+        }
+
+        .text-emphasis {
+            color: #4B227A;
+            font-weight: 600;
+            font-size: 1.3rem;
+        }
+
+        .savings-highlight {
+            background: linear-gradient(45deg, #4B227A, #FF69B4);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            margin-top: 2rem;
+            box-shadow: 0 4px 16px rgba(75, 34, 122, 0.2);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            color: #1E0A3C;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-steps {
+                padding-left: 65px;
+            }
+            
+            .timeline-number {
+                left: -65px;
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+
+            .case-study-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gradient-card {
+                padding: 2rem 1rem;
+            }
+        }
+        .menu-button {
+            background: none;
+            border: 2px solid var(--primary);
+            border-radius: 4px;
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.5rem 0.75rem;
+            color: var(--primary);
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .menu-button:hover {
+            background: var(--primary);
+            color: white;
+        }
+        @media (min-width: 768px) {
+            .menu-button {
+                display: none;  /* This hides the menu button on desktop */
+            }
+        }
+        .talk-button {
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-block;
+            background-image: linear-gradient(45deg, var(--primary) 0%, var(--primary) 100%);
+            background-size: 200% 200%;
+            background-position: 0% 0%;
+            font-weight: 600;
+        }
+
+        .talk-button:hover {
+            background-image: linear-gradient(45deg, #4B227A, #FF69B4) !important;
+            background-position: 100% 100% !important;
+            transform: translateY(-2px);
+        }
+
+        .nav-links .talk-button {
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .how-it-works .talk-button {
+            font-size: 1.2rem;
+            padding: 1rem 3rem;
+            margin-top: 3rem;
+        }
     </style>
 </head>
 <body>
-        <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P7F8NNDX"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-    <div class="hero-section">
-        <video id="oceanVideo" class="video-background" autoplay muted loop playsinline>
-            <source src="ocean.mp4" type="video/mp4">
-        </video>
+    <nav class="navbar">
+        <a href="529benefit.html" class="logo">RENEST</a>
+        <div class="nav-links">
+            <a href="529benefit.html">Home</a>
+            <a href="aboutus529.html">About Us</a>
+            <a href="faq529.html">FAQ</a>
+            <a href="howitworks529.html">How It Works</a>
+            <a href="admin529.html">For University Administrators</a>
+            <a href="getstarted529.html" class="talk-button">Get Started</a>
+        </div>
+        <button class="menu-button" aria-label="Toggle menu" aria-expanded="false">☰</button>
+    </nav>
 
-        <div class="login-container">
-            <div class="logo-wrapper">
-                <img src="white.png" alt="Renest Logo" class="mx-auto transform hover:scale-105 transition-transform duration-500" style="max-width: 380px;">
-            </div>
-            
-            <div class="subtitle">Secure Login</div>
-            
-            <form id="loginForm" class="space-y-6">
-                <div class="input-container">
-                    <input type="text" id="username" placeholder="Username" class="input-style">
-                </div>
-                <div class="input-container">
-                    <input type="password" id="password" placeholder="Password" class="input-style">
-                </div>
-                <button type="submit" class="login-button">
-                    Sign In
-                </button>
+    <main>
+        <section class="hero">
+            <h1>Unlocking Savings<br>Benefits for Graduate Students</h1>
+            <p>Students are eligible for state refunds on their education expenses, including rent and food</p>
+            <form class="email-form" id="emailForm" onsubmit="submitToGoogleForm(event)">
+                <input type="email" class="email-input" id="emailInput" placeholder="Enter your email" required>
+                <button type="submit" class="submit-button">Stay Updated</button>
             </form>
+        </section>
+
+        <section class="benefits">
+            <h2 class="section-title">Did you know?</h2>
+            <p style="text-align: center; max-width: 800px; margin: 0 auto 3rem; font-size: 1.2rem;">
+                Several everyday graduate student expenses (e.g., rent, groceries, wi-fi, etc.) qualify for state tax-benefits.
+                Renest identifies and tracks qualified expenses in order to maximize graduate student refunds!
+            </p>
+            <!-- <div class="gradient-card" style="text-align: center; max-width: 400px; margin: 1.5rem auto; padding: 2rem;">
+                <div style="font-size: 1.4rem; color: #4B227A; margin-bottom: 0.5rem;">Average Benefit</div>
+                <div style="font-size: 2.5rem; font-weight: bold;">
+                    <span style="color: #4B227A;">$450</span><span style="color: #666; font-weight: normal;">/year</span>
+                </div>
+            </div> -->
+            <h3 class="section-subtitle" style="text-align: center;">Built by Graduate Students, Built for Graduate Students</h3>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <h4 style="margin-bottom: 1rem;">Pay off student loans</h4>
+                    <p>Thousands of graduate students have unlocked funds to pay off their student loans</p>
+                </div>
+                <div class="benefit-card">
+                    <h4 style="margin-bottom: 1rem;">Everyday expenses</h4>
+                    <p>Use unlocked funds towards everyday expenses and essential needs</p>
+                </div>
+                <div class="benefit-card">
+                    <h4 style="margin-bottom: 1rem;">Create savings</h4>
+                    <p>Build rainy day funds and start your retirement savings journey</p>
+                </div>
+            </div>
+
             
-            <!-- <button onclick="window.location.href='signup.html'" class="signup-button">
-                Create Account
-            </button> -->
+        </section>
+        <section class="how-it-works">
+           <h2 class="section-title">How It Works</h2>
+    
+    <div class="gradient-card">
+        <div class="info-box">
+            <p style="text-align: center; font-size: 1.2rem; line-height: 1.6;">
+                We simplify and help graduate students maximize their tax benefits through 529 accounts, which give you a tax refund for your qualified education expenses - including rent and groceries!
+            </p>
         </div>
-    </div>
-
-    <div class="toggle-container">
-        <button class="toggle-button active" data-section="individuals">Individuals</button>
-        <button class="toggle-button" data-section="businesses">Non-Profits & Organizations</button>
-        <button class="toggle-button" data-section="states">States and Local Government</button>
-    </div>
-
-    <div class="sections-container">
-        <div class="content-section" id="individuals-content">
-            <h1><i>Reinvent Investing</i></h1>
-            <h1>Grow Wealth No Matter Who You Are or What You Do</h1>
-            <p>Renest is a retirement plan facilitator that has created the first pooled retirement benefit plan. By uniting instead of dividing individuals, everyone saves more together, whether you are able to contribute $0 or $1 million</p>
+        
+        <div class="timeline-steps">
+            <div class="timeline-step">
+                <div class="timeline-number">1</div>
+                <div class="timeline-content">
+                    <h4>You Are a Student and You Have an income</h4>
+                    <p>Because you are a student and have an income you qualify to use a 529 account which is an account managed by your state government.</p>
+                </div>
+            </div>
             
-            <div class="comparison-container">
-                <div class="system-section" style="margin-bottom:0px;">
-                    <h2 class="system-title current-system">Currently, everyone saves on their own</h2>
-                    <div class="comparison-row">
-                        <div class="amount">
-                            <div style="font-size: 20px">$0 <br>invested / month</div>
-                            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48bGluZSB4MT0iMTIiIHkxPSI1IiB4Mj0iMTIiIHkyPSIxOSI+PC9saW5lPjxwb2x5bGluZSBwb2ludHM9IjE5IDEyIDEyIDE5IDUgMTIiPjwvcG9seWxpbmU+PC9zdmc+" class="arrow" alt="Down arrow">
-                            <div style="font-size: 20px">$0 <br> retirement savings</div>
-                        </div>
-                        <div class="user-group">
-                            <img src="person icon.png" alt="Person icon" style="width: 100px; height: 100px;">
-                            <img src="barrier.png" alt="Barrier" class="barrier-icon" onmouseover="this.src='broken barrier.png'" onmouseout="this.src='barrier.png'" style="width: 100px; height: 100px;">
-                            <img src="person icon.png" alt="Person icon" style="width: 100px; height: 100px;">
-                        </div>
-                        <div class="amount">
-                            <div style="font-size: 20px">$760 <br>invested / month</div>
-                            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48bGluZSB4MT0iMTIiIHkxPSI1IiB4Mj0iMTIiIHkyPSIxOSI+PC9saW5lPjxwb2x5bGluZSBwb2ludHM9IjE5IDEyIDEyIDE5IDUgMTIiPjwvcG9seWxpbmU+PC9zdmc+" class="arrow" alt="Down arrow">
-                            <div style="font-size: 20px">$2.9 M <br>retirement savings</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="system-section">
-                    <h2></h2>
-                    <h2 class="system-title renest-system">Renest breaks down the barrier between individuals by pooling retirement plans so everyone saves more together</h2>
-                    <div class="comparison-row">
-                        <div class="amount">
-                            <div style="font-size: 20px">$0 <br>invested / month</div>
-                            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48bGluZSB4MT0iMTIiIHkxPSI1IiB4Mj0iMTIiIHkyPSIxOSI+PC9saW5lPjxwb2x5bGluZSBwb2ludHM9IjE5IDEyIDEyIDE5IDUgMTIiPjwvcG9seWxpbmU+PC9zdmc+" class="arrow" alt="Down arrow">
-                            <div class="result">+$56,000</div>
-                            <!-- <div> additional retirement savings</div> -->
-                        </div>
-                        <img src="group of people.png" alt="Group of people" style="width: 180px; height: 180px;">
-                        <div class="amount">
-                            <div style="font-size: 20px">$760<br>invested / month</div>
-                            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48bGluZSB4MT0iMTIiIHkxPSI1IiB4Mj0iMTIiIHkyPSIxOSI+PC9saW5lPjxwb2x5bGluZSBwb2ludHM9IjE5IDEyIDEyIDE5IDUgMTIiPjwvcG9seWxpbmU+PC9zdmc+" class="arrow" alt="Down arrow">
-                            <div class="result">+$100,000</div>
-                            <!-- <div> additional retirement savings</div> -->
-                        </div>
-                    </div>
+            <div class="timeline-step">
+                <div class="timeline-number">2</div>
+                <div class="timeline-content">
+                    <h4>How You Benefit from a 529 Account</h4>
+                    <p>Your state government wants to help you while you are a student. So if you open and use a 529 account your state will give you a refund on a portion of your education expenses.</p>
                 </div>
             </div>
-
-            <div class="financial-advice-section">
-                <button id="joinButton" class="sleek-button">
-                    <div class="button-content">
-                        <span class="button-text">Learn More</span>
-                        <img src="wlogo.png" alt="Logo" class="button-logo">
-                    </div>
-                </button>
-
-                <!-- Modal Dialog -->
-                <div id="emailModal" class="fixed inset-0 bg-black/50 hidden backdrop-blur-sm flex items-center justify-center z-50">
-                    <div class="bg-white rounded-xl shadow-2xl max-w-md w-full m-4 transform transition-all">
-                        <form id="emailForm" class="p-6 space-y-4" action="javascript:void(0)">
-                            <div class="email-input-container">
-                                <label for="email" class="email-label"> </label>
-                                <input 
-                                    type="email" 
-                                    id="email" 
-                                    class="email-input"
-                                    placeholder="your@email.com" 
-                                    required
-                                >
-                            </div>
-                            <button type="submit" class="submit-button">Submit</button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Success Message Modal -->
-                <div id="successModal" class="fixed inset-0 bg-black/50 hidden backdrop-blur-sm flex items-center justify-center z-50">
-                    <div class="bg-white rounded-xl shadow-2xl p-6 max-w-md w-full m-4 transform transition-all text-center">
-                        <h2 class="text-2xl font-bold text-gray-800 mb-4">Welcome to the Network!</h2>
-                        <p class="text-gray-600">You've been added to the Renest Network. Please check your inbox to complete your registration.</p>
-                    </div>
-                </div>
-            </div>
-            <h1>Renest enhances everyone, no matter your stage</h1>
-            <div class="business-progress">
-                    <!-- <img src="" alt="Progress graph" class="progress-background"> -->
-                    <div class="progress-content">
-                        <div class="progress-item">
-                            <div class="progress-card">
-                                <!-- Front of card -->
-                                <div class="progress-front">
-                                    <img src="startingout.png" alt="Starting out icon" class="progress-icon">
-                                    <h4>Starting out</h4>
-                                    <p class="amount">Is saving<br>$0/month</p>
-                                    <p class="amount">Renest Adds</p>
-                                    <p class="bonus">+$70,000</p>
-                                </div>
-                                <!-- Back of card -->
-                                <div class="progress-back">
-                                    <div class="progress-back-content">
-                                        <p class='back-title'>Building your career? <br>Renest ensures you don't miss out on compound growth, even when you can't contribute.</h4>
-                                    <p class="back-example">Ariella, a newly appointed professor at 30, hasn't been able to save for the past 10 years. With Renest, she'd have $4,000 now and an extra $70,000 by age 65.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="progress-item">
-                            <div class="progress-card">
-                                <!-- Front of card -->
-                                <div class="progress-front">
-                                    <img src="grind.png" alt="On the grind icon" class="progress-icon">
-                                    <h4>On the grind</h4>
-                                    <p class="amount">Is saving<br>$300/month</p>
-                                    <p class="amount">Renest Adds</p>
-                                    <p class="bonus">+$15,000</p>
-                                </div>
-                                <!-- Back of card -->
-                                <div class="progress-back">
-                                    <div class="progress-back-content">
-                                       <p class='back-title'>Working towards the top?<br> Renest supplements your savings so you stay invested in your future.</h4>
-                                    <p class="back-example">Jess, an independent contractor at 40, makes varying contributions as work fluctuates. After 10 years with Renest averaging $300/month, he'll gain an extra $15,000 by age 65.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="progress-item">
-                            <div class="progress-card">
-                                <!-- Front of card -->
-                                <div class="progress-front">
-                                    <img src="made.png" alt="Made it icon" class="progress-icon">
-                                    <h4>Scaling new heights</h4>
-                                    <p class="amount">Is saving<br>$2000/month</p>
-                                    <p class="amount">Renest Adds</p>
-                                    <p class="bonus">+$121,000</p>
-                                </div>
-                                <!-- Back of card -->
-                                <div class="progress-back">
-                                    <div class="progress-back-content">
-                                        <p class='back-title'>Know the power of retirement investing? <br>Renest goes further than any other platform to optimize every dollar you save.</h4>
-                                    <p class="back-example">Zu, a systems engineer at 50, balances saving for retirement and their kids' future. With Renest, they'll gain an extra $121,000 by age 70.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <div class="calculator-section">
-                <h2 class="calculator-title">Calculate Your Renest Benefit</h2>
-                
-                <div class="values-container">
-                    <div class="value-display">
-                        <div class="value-label">Your Contributions Retirement Value</div>
-                        <div id="contributionValue" class="value-number">$1.1M</div>
-                    </div>
-                     <div class="value-display">
-                        <div class="value-label">Renest Increases Your Retirement Account by</div>
-                        <div id="yValue" class="value-number result" style="color: #22C55E;">$34K</div>
-                    </div>
-                </div>
-
-                <div class="slider-container">
-                    <div class="slider-label">
-                        <span>Your Monthly Retirement Contributions</span>
-                        <span>$<span id="xValue">0</span></span>
-                    </div>
-                    <input type="range" id="contributionSlider" min="0" max="2000" value="0" step="10" />
-                </div>
-
-                <div class="slider-container">
-                    <div class="slider-label">
-                        <span>Years with Renest</span>
-                        <span id="prValue">40</span>
-                    </div>
-                    <input type="range" id="prInput" min="1" max="50" value="40" step="1" />
-                </div>
-
-                <div class="graph-container">
-                    <canvas id="benefitChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-
-
-
-        <div class="content-section hidden" id="businesses-content">
-            <h1>An Enhanced Retirement Benefit for Every Organization</h1>
-            <p>Help your organization and community invest for the future</p>
             
-            <div class="comparison-container">
-                <div class="business-benefits-grid">
-                    <div class="benefit-item">
-                        <h3>$0</h3>
-                        <p>Cost</p>
-                    </div>
-                    <div class="benefit-item">
-                        <h3>0hr</h3>
-                        <p>Management</p>
-                    </div>
-                    <div class="benefit-item">
-                        <h3>0</h3>
-                        <p>Liability</p>
-                    </div>
+            <div class="timeline-step">
+                <div class="timeline-number">3</div>
+                <div class="timeline-content">
+                    <h4>How You Get Your Benefit</h4>
+                    <p>Open a 529 account and track your education expenses. Deposit and withdraw money equal to these expenses and then when you file your taxes your state will refund you. We will help you track and document everything properly.</p>
                 </div>
+            </div>
 
-                <div class="full-coverage">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; padding: 1rem;">
-                        <div style="text-align: center; border-right: 1px solid rgba(0, 0, 0, 0.1); padding-right: 2rem;">
-                            <h3>100%</h3>
-                            <p>Coverage and Benefit</p>
-                        </div>
-                        <div style="text-align: left; padding-left: 1rem;">
-                            <h3 style="font-size: 1.9rem; margin-bottom: 1.5rem; color: #1A1A1A; font-weight:100;">Empowering Your Impact</h3>
-                            <p style="font-size: 1.2rem; line-height: 1.8; color: #4B5563;">
-                                <span style="color: #22C55E; font-weight: 600; margin-right: 0.5rem;">✓</span>Strengthen community engagement<br>
-                                <span style="color: #22C55E; font-weight: 600; margin-right: 0.5rem;">✓</span>Enhance every member's well-being<br>
-                                <span style="color: #22C55E; font-weight: 600; margin-right: 0.5rem;">✓</span>Amplify your organization's mission
-                            </p>
-                        </div>
-                    </div>
+            <div class="timeline-step">
+                <div class="timeline-number">4</div>
+                <div class="timeline-content">
+                    <h4>How Renest Helps</h4>
+                    <p><b>Renest automates your 529 benefit.</b> This includes tracking your education expenses, handling your deposits, withdrawals and management of your account and forms. We are confident in getting you your refund, so there is no cost until you benefit!</p>
                 </div>
-
-                <div class="business-steps-container">
-                    <!-- Header -->
-                    <div class="steps-header">
-                        <h2>Getting Started is Simple</h2>
-                        <p>Offer your organization a unique retirement advantage</p>
-                    </div>
-
-                    <!-- Steps Grid -->
-                    <div class="steps-grid">
-                        <!-- Step 1 -->
-                        <div class="step-card">
-                            <div class="step-content">
-                                <div class="step-icon organization-icon">
-                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                                    </svg>
-                                </div>
-                                <h3>Create Account</h3>
-                                <p>Register your organization and get started in minutes</p>
-                            </div>
-                        </div>
-
-                        <!-- Step 2 -->
-                        <div class="step-card">
-                            <div class="step-content">
-                                <div class="step-icon members-icon">
-                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-                                    </svg>
-                                </div>
-                                <h3>Manage Members</h3>
-                                <p>Easily add or remove individuals from your network</p>
-                            </div>
-                        </div>
-
-                        <!-- Step 3 -->
-                        <div class="step-card">
-                            <div class="step-content">
-                                <div class="step-icon email-icon">
-                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                                    </svg>
-                                </div>
-                                <h3>Automatic Invites</h3>
-                                <p>Members receive registration links via email</p>
-                            </div>
-                        </div>
-                    
-
-                    <!-- Result Banner -->
-                    <!-- Add this as the fourth card in the steps-grid -->
-                        <div class="step-card results-card">
-                            <div class="step-content">
-                                <div class="step-icon results-icon">
-                                    <img src="blogo.png" alt="Renest Logo" class="icon-img">
-                                </div>
-                                <h3>Renest Today</h3>
-                                <p>Renest is a retirement plan facilitator that has created the first pooled retirement benefit plan, helping everyone save more together</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="button-container">
-                        <button class="card-cta-button">
-                            <div class="button-content">
-                                <span class="button-text">Get Started</span>
-                                <img src="wlogo.png" alt="Logo" class="button-logo">
-                            </div>
-                        </button>
-                    </div>
-
-                    <!-- Add the business modal here -->
-                    <div id="businessModal" class="fixed inset-0 bg-black/50 hidden backdrop-blur-sm flex items-center justify-center z-50">
-                        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full m-4 transform transition-all">
-                            <form id="businessForm" class="p-6 space-y-4" onsubmit="sendEmail(event)">
-                                <div class="email-input-container">
-                                    <label for="businessEmail" class="input-label">Email</label>
-                                    <input 
-                                        type="email" 
-                                        id="businessEmail" 
-                                        class="email-input"
-                                        placeholder="your@email.com" 
-                                        required
-                                    >
-                                </div>
-                                <div class="email-input-container">
-                                    <label for="businessPosition" class="input-label">Position within Business</label>
-                                    <input 
-                                        type="text" 
-                                        id="businessPosition" 
-                                        class="email-input"
-                                        placeholder="Your position" 
-                                        required
-                                    >
-                                </div>
-                                <div class="email-input-container">
-                                    <label for="businessName" class="input-label">Name of Business</label>
-                                    <input 
-                                        type="text" 
-                                        id="businessName" 
-                                        class="email-input"
-                                        placeholder="Business name" 
-                                        required
-                                    >
-                                </div>
-                                <div class="email-input-container">
-                                    <label for="businessInfo" class="input-label">Additional Information (Optional)</label>
-                                    <textarea 
-                                        id="businessInfo" 
-                                        class="email-input"
-                                        placeholder="Share any additional information..."
-                                        rows="4"
-                                    ></textarea>
-                                </div>
-                                <button type="submit" class="submit-button">
-                                    Submit
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                    <div id="businessSuccessModal" class="fixed inset-0 bg-black/50 hidden backdrop-blur-sm flex items-center justify-center z-50">
-                        <div class="bg-white rounded-xl shadow-2xl p-6 max-w-md w-full m-4 transform transition-all text-center">
-                            <h2 class="text-2xl font-bold text-gray-800 mb-4">Thank You!</h2>
-                            <p class="text-gray-600">We will contact you soon.</p>
-                        </div>
-                    </div>
-                    
-                </div>
-
-
-                <!-- </div>
-                <h1>Renest enhances everyone, no matter their stage</h1>
-                 <div class="business-progress">
-                    <div class="progress-content">
-                        <div class="progress-item">
-                            <div class="progress-card">
-                                <div class="progress-front">
-                                    <img src="startingout.png" alt="Starting out icon" class="progress-icon">
-                                    <h4>Starting out</h4>
-                                    <p class="amount">Is saving<br>$0/month</p>
-                                    <p class="amount">Renest Adds</p>
-                                    <p class="bonus">+$70,000</p>
-                                </div>
-                                <div class="progress-back">
-                                    <div class="progress-back-content">
-                                        <p class='back-title'>Building your career? <br>Renest ensures you don't miss out on compound growth, even when you can't contribute.</h4>
-                                    <p class="back-example">Ariella, a newly appointed professor at 30, hasn't been able to save for the past 10 years. With Renest, she'd have $4,000 now and an extra $70,000 by age 65.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="progress-item">
-                            <div class="progress-card">
-                                <div class="progress-front">
-                                    <img src="grind.png" alt="On the grind icon" class="progress-icon">
-                                    <h4>On the grind</h4>
-                                    <p class="amount">Is saving<br>$300/month</p>
-                                    <p class="amount">Renest Adds</p>
-                                    <p class="bonus">+$15,000</p>
-                                </div>
-                                <div class="progress-back">
-                                    <div class="progress-back-content">
-                                       <p class='back-title'>Working towards the top?<br> Renest supplements your savings so you stay invested in your future.</h4>
-                                    <p class="back-example">Jess, an independent contractor at 40, makes varying contributions as work fluctuates. After 10 years with Renest averaging $300/month, he'll gain an extra $15,000 by age 65.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="progress-item">
-                            <div class="progress-card">
-
-                                <div class="progress-front">
-                                    <img src="made.png" alt="Made it icon" class="progress-icon">
-                                    <h4>Making it rain</h4>
-                                    <p class="amount">Is saving<br>$2000/month</p>
-                                    <p class="amount">Renest Adds</p>
-                                    <p class="bonus">+$121,000</p>
-                                </div>
-
-                                <div class="progress-back">
-                                    <div class="progress-back-content">
-                                        <p class='back-title'>Know the power of retirement investing? <br>Renest goes further than any other platform to optimize every dollar you save.</h4>
-                                    <p class="back-example">Zu, a systems engineer at 50, balances saving for retirement and their kids' future. With Renest, they'll gain an extra $121,000 by age 70.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                </div> -->
-
-               
             </div>
         </div>
 
-
-
-
-
-
-        <div class="content-section hidden" id="states-content">
-            <h1>State and Local Government Solutions</h1>
-            <p>A more secure financial future for all residents</p>
-            <div class="crisis-section">
-                <h3 class="crisis-header" style="font-size: 2rem; margin-bottom: 2rem;">Nationwide Challenges</h3>
-                <div class="business-benefits-grid">
-                    <div class="benefit-item">
-                        <div class="step-icon organization-icon" style="width: 100px; height: 100px; margin-bottom: 1rem;">
-                            <img src="smb.png" alt="Business icon" style="width: 80px; height: 80px; object-fit: contain;">
-                        </div>
-                        <h3 style="font-size: 1.5rem; margin: 1rem 0; color: #1A1A1A;">56 Million</h3>
-                        <p style="font-size: 1.15rem; line-height: 1.5; color: #4B5563;">Americans lack access to an employer retirement plan</p>
-                    </div>
-                    <div class="benefit-item">
-                        <div class="step-icon members-icon" style="width: 100px; height: 100px; margin-bottom: 1rem;">
-                            <img src="noira.png" alt="People icon" style="width: 80px; height: 80px; object-fit: contain;">
-                        </div>
-                        <h3 style="font-size: 1.5rem; margin: 1rem 0; color: #1A1A1A;">77 Million</h3>
-                        <p style="font-size: 1.15rem; line-height: 1.5; color: #4B5563;">Americans do not have an individual retirement account</p>
-                    </div>
-                    <div class="benefit-item">
-                        <div class="step-icon email-icon" style="width: 100px; height: 100px; margin-bottom: 1rem;">
-                            <img src="selfemp.png" alt="Growth icon" style="width: 80px; height: 80px; object-fit: contain;">
-                        </div>
-                        <h3 style="font-size: 1.5rem; margin: 1rem 0; color: #1A1A1A;">87 Million</h3>
-                        <p style="font-size: 1.15rem; line-height: 1.5; color: #4B5563;">Americans predicted to be self-employed by 2027</p>
-                    </div>
+        <div class="case-study">
+            <h3 style="color: #1E0A3C; margin-bottom: 1.5rem; font-size: 1.5rem;">Case Study: University of Illinois Urbana-Champaign Graduate Student</h3>
+            <p style="margin-bottom: 2rem; font-size: 1.1rem; line-height: 1.6;">A physics PhD student making $30,000/year uses Renest to automate their 529 account management and track qualified education expenses. This increased their state refund by $495! Renest's guarantee means they only paid after they received their benefit.</p>
+            
+            <div class="case-study-grid">
+                <div class="case-study-item">
+                    <span>Monthly Rent</span>
+                    <span class="text-emphasis">$700</span>
                 </div>
-
-
-                <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(0, 0, 0, 0.03); border-radius: 16px;">
-                        <h4 style="font-size: 1.2rem; color: #1A1A1A; margin-bottom: 1rem; font-weight: 600;">Additional Adversity:</h4>
-                        <div style="display: grid; margin-bottom: 1rem; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
-                            <div style="text-align: left;background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                                <div style="color: #4B5563; line-height: 1.5;">
-                                    <span style="color: #EF4444; font-weight: 600;">✗</span>
-                                    87% of lowest-earning fifth of households lack retirement accounts
-                                </div>
-                            </div>
-                            <div style="text-align: left;background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                                <div style="color: #4B5563; line-height: 1.5;">
-                                    <span style="color: #EF4444; font-weight: 600;">✗</span>
-                                    1 in 2 families in the bottom half of income earners do not save for retirement
-                                </div>
-                            </div>
-                        </div>
-                        <div style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 1.5rem;">
-                            <div style="color: #4B5563; line-height: 1.5; text-align: left;">
-                                <span style="color: #EF4444; font-weight: 600;">✗</span>
-                                Even with the massive 401(k) expansion, the percentage of workers (25-54 yo) participating in a retirement plan has stagnated at 50% since the 1970s
-                            </div>
-                        </div>
-                    </div>
+                <div class="case-study-item">
+                    <span>Monthly Food Spend</span>
+                    <span class="text-emphasis">$300</span>
                 </div>
-
-                <div class="state-search-card">
-                    <h2 class="state-search-title">State Program Costs and Demographics Search</h2>
-                    <input 
-                        type="text" 
-                        id="stateSearchInput"
-                        placeholder="Enter state name..." 
-                        class="state-search-input"
-                    >
-                    <div id="stateResults" class="state-results"></div>
-                </div>
-                <div class="crisis-section">
-                    <h3 class="crisis-header" style="font-size: 2rem; margin-bottom: 2rem;">Current State Auto-IRA Program Challenges</h3>
-                    <div class="business-benefits-grid">
-                        <div class="benefit-item">
-                            <div class="step-icon organization-icon" style="width: 100px; height: 100px; margin-bottom: 1rem;">
-                                <img src="optout.png" alt="Opt out icon" style="width: 80px; height: 80px; object-fit: contain;">
-                            </div>
-                            <h3 style="font-size: 1.5rem; margin: 1rem 0; color: #1A1A1A;">30-35%</h3>
-                            <p style="font-size: 1.15rem; line-height: 1.5; color: #4B5563;">Percentage of workers opting out of state retirement programs</p>
-                        </div>
-                        <div class="benefit-item">
-                            <div class="step-icon members-icon" style="width: 100px; height: 100px; margin-bottom: 1rem;">
-                                <img src="lowcontrib.png" alt="Low contribution icon" style="width: 80px; height: 80px; object-fit: contain;">
-                            </div>
-                            <h3 style="font-size: 1.5rem; margin: 1rem 0; color: #1A1A1A;"><$30</h3>
-                            <p style="font-size: 1.15rem; line-height: 1.5; color: #4B5563;">Median monthly contribution amount across all accounts</p>
-                        </div>
-                        <div class="benefit-item">
-                            <div class="step-icon email-icon" style="width: 100px; height: 100px; margin-bottom: 1rem;">
-                                <img src="lowbalance.png" alt="Low balance icon" style="width: 80px; height: 80px; object-fit: contain;">
-                            </div>
-                            <h3 style="font-size: 1.5rem; margin: 1rem 0; color: #1A1A1A;">$1,800</h3>
-                            <p style="font-size: 1.15rem; line-height: 1.5; color: #4B5563;">Average account balance after 3 years</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Additional Challenges Section -->
-                    <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(0, 0, 0, 0.03); border-radius: 16px;">
-                        <h4 style="font-size: 1.2rem; color: #1A1A1A; margin-bottom: 1rem; font-weight: 600;">Additional Program Limitations:</h4>
-                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
-                            <div style="text-align: left;background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                                <div style="color: #4B5563; line-height: 1.5;">
-                                    <span style="color: #EF4444; font-weight: 600;">✗</span>
-                                    High number of small accounts creates diseconomies of scale
-                                </div>
-                            </div>
-                            <div style="text-align: left;background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                                <div style="color: #4B5563; line-height: 1.5;">
-                                    <span style="color: #EF4444; font-weight: 600;">✗</span>
-                                    Only benefits people able to contribute
-                                </div>
-                            </div>
-                            <div style="text-align: left;background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                                <div style="color: #4B5563; line-height: 1.5;">
-                                    <span style="color: #EF4444; font-weight: 600;">✗</span>
-                                    Higher costs lead to lower account values and de minimis retirement outcomes
-                                </div>
-                            </div>
-                            <div style="text-align: left;background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                                <div style="color: #4B5563; line-height: 1.5;">
-                                    <span style="color: #EF4444; font-weight: 600;">✗</span>
-                                    Interstate partnerships reduce design control and oversight
-                                </div>
-                            </div>
-                        </div>
-                    </div>
             </div>
-
-
-
-                <div class="renest-benefits-container">
-                    <h2 class="renest-benefits-title">Renest Solution: Benefits Overview</h2>
-                    <p style="text-align:justify;">     Renest is a retirement plan facilitator that offers a unique program design – the Renest Network. Thanks to our Network's structure, retirement benefits are pooled and investment outcomes are aligned across plan participants. By uniting instead of dividing, we are able to increase individuals' account values, leading to better retirement outcomes for all.</p>
-                    <div class="renest-benefits-grid">
-                        <!-- Financial Impact Card -->
-                        <div class="renest-benefit-card">
-                            <div class="step-icon organization-icon" style="width: 100px; height: 100px; margin: 0 auto 1rem auto; background: linear-gradient(145deg, rgba(146, 192, 137, 0.1), rgba(78, 167, 46, 0.1)); border-radius: 50%; display: flex; justify-content: center; align-items: center;">
-                                <img src="people.png" alt="Financial impact icon" style="width: 80px; height: 80px; object-fit: contain;">
-                            </div>
-                            <div class="renest-benefit-heading">Financial Impact</div>
-                            <div class="renest-benefit-list">
-                                <span class="check">✓</span> Generates $45,000 - $70,000* for each saver<br>
-                                <span class="check">✓</span> 60-70% increase in savings vs. standalone programs<br>
-                                <span class="check">✓</span> $93,108 average savings by year 30
-                            </div>
-                        </div>
-                        
-                        <!-- Cost Structure Card -->
-                        <div class="renest-benefit-card">
-                            <div class="step-icon organization-icon" style="width: 100px; height: 100px; margin: 0 auto 1rem auto; background: linear-gradient(145deg, rgba(146, 192, 137, 0.1), rgba(78, 167, 46, 0.1)); border-radius: 50%; display: flex; justify-content: center; align-items: center;">
-                                <img src="fee.png" alt="Cost structure icon" style="width: 80px; height: 80px; object-fit: contain;">
-                            </div>
-                            <div class="renest-benefit-heading">Cost Structure</div>
-                            <div class="renest-benefit-list">
-                                <span class="check">✓</span> Saves $80-90 Million<sup>†</sup> in fees<br>
-                                <span class="check">✓</span> $0 implementation cost<br>
-                                <span class="check">✓</span> $0 annual cost<br>
-                                <span class="check">✓</span> Achieve economies of scale even with small programs                          
-                            </div>
-                        </div>
-
-                        <!-- Coverage Card -->
-                        <div class="renest-benefit-card">
-                            <div class="step-icon organization-icon" style="width: 100px; height: 100px; margin: 0 auto 1rem auto; background: linear-gradient(145deg, rgba(146, 192, 137, 0.1), rgba(78, 167, 46, 0.1)); border-radius: 50%; display: flex; justify-content: center; align-items: center;">
-                                <img src="family.png" alt="Coverage icon" style="width: 80px; height: 80px; object-fit: contain;">
-                            </div>
-                            <div class="renest-benefit-heading">Universal Coverage</div>
-                            <div class="renest-benefit-list">
-                                <span class="check">✓</span> People unable to contribute<br>
-                                <span class="check">✓</span> Self-employed, freelancers, gig-economy workers<br>
-                                <span class="check">✓</span> Middle-class contributors<br>
-                                <span class="check">✓</span> Intergenerational planning
-                            </div>
-                        </div>
-                    </div>
-
-                        <h2 class="renest-benefits-title">Impact Analysis</h2>
-                        <div style="display: grid; grid-template-columns: 1fr; gap: 2rem; padding: 1rem;">
-                            <!-- Savings Chart -->
-                            <div style="width: 100%; height: 400px; background: white; padding: 1rem; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-                                <canvas id="savingsChart"></canvas>
-                            </div>
-                            <!-- Fees Chart -->
-                            <div style="width: 100%; height: 400px; background: white; padding: 1rem; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-                                <canvas id="feesChart"></canvas>
-                            </div>
-                        </div>
-                    <h2 class="renest-benefits-title">Renest Supports Better Financial Wellness For All Residents</h2>
-                    <div class="renest-benefits-grid" style="margin-top: 2rem;">
-                        <div class="renest-benefit-card">
-                            <div class="renest-benefit-heading" style="color: #397D20;">Savings Growth</div>
-                            <div class="renest-benefit-list">
-                                <span class="check"></span> Renest solves the retirement gap by creating thousands of dollars in extra savings for participants
-                            </div>
-                        </div>
-                        
-                        <div class="renest-benefit-card">
-                            <div class="renest-benefit-heading" style="color: #397D20;">Fee Reduction</div>
-                            <div class="renest-benefit-list">
-                                <span class="check"></span>Renest achieves lowers participant fees faster through enhanced economies of scale
-                            </div>
-                        </div>
-
-                        <div class="renest-benefit-card">
-                            <div class="renest-benefit-heading" style="color: #397D20;">Overall Impact</div>
-                            <div class="renest-benefit-list">
-                                <span class="check"></span>A more financially secure population lowers costs to state programs and increases budget
-                            </div>
-                        </div>
-                    </div>
-                   <h2 class="renest-benefits-title">Integrate Renest</h2>
-                    <div class="state-search-card">
-                        <p class="integration-text">See how Renest can enhance or facilitate your state or city retirement mandate</p>
-                        <button id="integrateButton" class="sleek-button">
-                            <div class="button-content">
-                                <span class="button-text">Get Started</span>
-                                <img src="wlogo.png" alt="Logo" class="button-logo">
-                            </div>
-                        </button>
-                    </div>
-
-                    <div id="integrateModal" class="fixed inset-0 bg-black/50 hidden backdrop-blur-sm flex items-center justify-center z-50">
-                        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full m-4 transform transition-all">
-                            <form id="integrateForm" class="p-6 space-y-4" onsubmit="sendStateEmail(event)">
-                                <div class="email-input-container">
-                                    <label for="integrateEmail" class="input-label">Email</label>
-                                    <input 
-                                        type="email" 
-                                        id="integrateEmail" 
-                                        class="email-input"
-                                        placeholder="your@email.com" 
-                                        required
-                                    >
-                                </div>
-                                <div class="email-input-container">
-                                    <label for="position" class="input-label">Position in State/City Government</label>
-                                    <input 
-                                        type="text" 
-                                        id="position" 
-                                        class="email-input"
-                                        placeholder="Your position" 
-                                        required
-                                    >
-                                </div>
-                                <div class="email-input-container">
-                                    <label for="additionalInfo" class="input-label">Additional Information</label>
-                                    <textarea 
-                                        id="additionalInfo" 
-                                        class="email-input"
-                                        placeholder="Share any additional information..."
-                                        rows="4"
-                                    ></textarea>
-                                </div>
-                                <button type="submit" class="submit-button">
-                                    Submit
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-
-                    <!-- Add this success modal -->
-                    <div id="integrateSuccessModal" class="fixed inset-0 bg-black/50 hidden backdrop-blur-sm flex items-center justify-center z-50">
-                        <div class="bg-white rounded-xl shadow-2xl p-6 max-w-md w-full m-4 transform transition-all text-center">
-                            <h2 class="text-2xl font-bold text-gray-800 mb-4">Thank You!</h2>
-                            <p class="text-gray-600">Your information has been submitted. Our team will be in touch soon.</p>
-                        </div>
-                    </div>
-                        <div class="renest-benefit-footnotes">
-                            * Based on individual contribution levels and time horizon<br>
-                            † Compared to traditional state IRA programs<br>
-                        </div>
-                    </div>
-
-
-
-               <!--  <button id="showFederalButton" class="sleek-button" style="margin-top: 2rem;">
-                    <div class="button-content">
-                        <span class="button-text">Federal Level Data</span>
-                        <img src="wlogo.png" alt="Logo" class="button-logo">
-                    </div>
-                </button> -->
-
-                
-                
-
-                <!-- <div id="federalContent" class="hidden"> -->
-                <!-- Federal Overview Section -->
-               <!-- <div class="state-search-card">
-                    <h2 class="state-search-title">Federal Overview - Cost to Due to Insufficient Savings</h2>
-                    
-                    <div class="costs-overview">
-                        <div class="cost-period">
-                            <div class="cost-label">2025 Cost</div>
-                            <div class="cost-value">$140B</div>
-                        </div>
-                        <div class="cost-period">
-                            <div class="cost-label">2040 Cost</div>
-                            <div class="cost-value">$201B</div>
-                        </div> -->
-                        <!-- <div class="cost-period">
-                            <div class="cost-label">Total 2021-2040</div>
-                            <div class="cost-value">$990B</div>
-                        </div> -->
-                    <!-- </div> -->
-
-                    <!-- <div class="savings-info"> -->
-                        <!-- <div class="info-header">
-                            <span class="info-icon">ℹ</span>
-                            <h3>Potential Savings from Recommended Income Replacement</h3>
-                        </div> -->
-                        <!-- <p class="info-text">Achieving recommended income replacement levels for new retirees would reduce federal expenditures by:</p> -->
-                        
-                        <!-- <div class="savings-amounts">
-                            <div class="savings-period">
-                                <div class="savings-label">Annual Savings in 2040</div>
-                                <div class="savings-value">$61 billion</div>
-                            </div>
-                            <div class="savings-period">
-                                <div class="savings-label">Total Savings 2025-2040</div>
-                                <div class="savings-value">$810 billion</div>
-                            </div>
-                        </div>
-                    </div> -->
-                <!-- </div> -->
-
-                
-
-                <!-- Solution Comparison -->
-                <!-- <div class="state-search-card">
-
-
-                    <h3 class="crisis-header">Current Programs  vs. Cost-Effective Private Solution</h3>
-                    <div class="state-metrics-grid" style="grid-template-columns: repeat(3, 1fr); margin-top: 1.5rem;">
-                        <div class="metric-card">
-                            <div class="metric-label">Social Security</div>
-                            <div class="metric-value">Cost: $1.2T</div>
-                            <div style="color: #666; font-size: 0.9rem; margin-top: 0.5rem;">Benefit of program is not keeping up with costs</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Employer-Sponsored Plans</div>
-                            <div class="metric-value">Cost: $280B</div>
-                            <div style="color: #666; font-size: 0.9rem; margin-top: 0.5rem;">80% of benefit goes to top 10% of Americans</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Saver's Match (2027)</div>
-                            <div class="metric-value">Cost $9.8B</div>
-                            <div style="color: #666; font-size: 0.9rem; margin-top: 0.5rem;">Benefits only those able to contribute</div>
-                        </div> -->
-                        <!-- Financial Impact Card -->
-                        <!-- <div class="renest-benefit-card">
-                            <div class="step-icon organization-icon" style="width: 100px; height: 100px; margin: 0 auto 1rem auto; background: linear-gradient(145deg, rgba(146, 192, 137, 0.1), rgba(78, 167, 46, 0.1)); border-radius: 50%; display: flex; justify-content: center; align-items: center;">
-                                <img src="people.png" alt="Financial impact icon" style="width: 80px; height: 80px; object-fit: contain;">
-                            </div>
-                            <div class="renest-benefit-heading">Financial Impact</div>
-                            <div class="renest-benefit-list">
-                                <span class="check">✓</span> Generates $45,000 - $70,000* for each saver<br>
-                                <span class="check">✓</span> $95 Billion in Benefits Created<br>
-                                <span class="check">✓</span> Saves Billions of Dollars through Reduced Federal Program Reliance
-                            </div>
-                        </div> -->
-                        
-                        <!-- Cost Structure Card -->
-                        <!-- <div class="renest-benefit-card">
-                            <div class="step-icon organization-icon" style="width: 100px; height: 100px; margin: 0 auto 1rem auto; background: linear-gradient(145deg, rgba(146, 192, 137, 0.1), rgba(78, 167, 46, 0.1)); border-radius: 50%; display: flex; justify-content: center; align-items: center;">
-                                <img src="fee.png" alt="Cost structure icon" style="width: 80px; height: 80px; object-fit: contain;">
-                            </div>
-                            <div class="renest-benefit-heading">Cost Structure</div>
-                            <div class="renest-benefit-list">
-                                <span class="check">✓</span> $0 upfront cost<br>
-                                <span class="check">✓</span> $0 implementation cost<br>
-                                <span class="check">✓</span> $0 annual cost<br>                            
-                            </div>
-                        </div> -->
-
-                        <!-- Coverage Card -->
-                        <!-- <div class="renest-benefit-card">
-                            <div class="step-icon organization-icon" style="width: 100px; height: 100px; margin: 0 auto 1rem auto; background: linear-gradient(145deg, rgba(146, 192, 137, 0.1), rgba(78, 167, 46, 0.1)); border-radius: 50%; display: flex; justify-content: center; align-items: center;">
-                                <img src="family.png" alt="Coverage icon" style="width: 80px; height: 80px; object-fit: contain;">
-                            </div>
-                            <div class="renest-benefit-heading">Universal Coverage</div>
-                            <div class="renest-benefit-list">
-                                <span class="check">✓</span> People unable to contribute<br>
-                                <span class="check">✓</span> Self-employed, freelancers, gig-economy workers<br>
-                                <span class="check">✓</span> Middle Class Contributors<br>
-                            </div>
-                        </div> -->
-                        <!-- <div class="metric-card" style="background: rgba(34, 197, 94, 0.1); border-color: rgba(34, 197, 94, 0.2);">
-                            <div class="metric-label" style="color: #166534;">Renest Network</div>
-                            <div class="metric-value" style="color: #166534;">Creates $95B in total benefits</div>
-                            <div style="color: #166534; font-size: 0.9rem; margin-top: 0.5rem;"></div>
-                        </div>
-                        <div class="metric-card" style="background: rgba(34, 197, 94, 0.1); border-color: rgba(34, 197, 94, 0.2);">
-                            <div style="color: #166534; font-size: 1.1rem; margin-top: 1rem;">
-                                ✓ $0 upfront cost<br>
-                                ✓ $0 implementation cost<br>
-                                ✓ $0 annual cost
-                            </div>
-                        </div>
-                        <div class="metric-card" style="background: rgba(34, 197, 94, 0.1); border-color: rgba(34, 197, 94, 0.2);">
-                            <div class="metric-label" style="color: #166534;">Covers and benefits everyone</div>
-                            <div style="color: #166534; font-size: 1.1rem; margin-top: 1rem;">
-                                ✓ People unable to contribute<br>
-                                ✓ Self-employed, freelancers, gig-economy, independent contractors<br>
-                                ✓ Middle Class Contributors
-                            </div>
-                        </div> -->
-                    <!-- </div>
-
-
-
-                    <button onclick="openCaseStudy()" class="sleek-button" style="margin-top: 2rem;">
-                        <div class="button-content">
-                            <span class="button-text">View Case Study</span>
-                            <img src="wlogo.png" alt="Logo" class="button-logo">
-                        </div>
-                    </button>
-                </div> -->
-                
-                <!-- Add this section between Solutions Comparison and Impact sections -->
-                
-
-                <!-- Impact Sections -->
-                <!-- <div class="state-metrics-grid" style="margin-top: 2rem;">
-                    <div class="state-search-card" style="margin: 0;">
-                        <h3 class="crisis-header">Federal Level Impact</h3>
-                        <ul class="crisis-list">
-                            <li>Returns $312B to US shores</li>
-                            <li>$5.8T in economic growth (10 years)</li>
-                            <li>$400B+ in new revenue</li>
-                        </ul>
-                    </div>
-
-                    <div class="state-search-card" style="margin: 0;">
-                        <h3 class="crisis-header">Individual/State Level Impact</h3>
-                        <ul class="crisis-list">
-                            <li>2x increase in savings rate</li>
-                            <li>$30,984 additional lifetime income</li>
-                            <li>$7,972 federal tax revenue per participant</li>
-                            <li>$3,195 state/local tax revenue per participant</li>
-                        </ul>
-                    </div>
-                </div> -->
-
-                <!-- SROI Analysis -->
-                <!-- <div class="state-search-card">
-                    <h3 class="crisis-header">Social Return on Investment</h3>
-                    <div class="state-metrics-grid" style="grid-template-columns: repeat(4, 1fr); margin-top: 1.5rem;">
-                        <div class="metric-card">
-                            <div class="metric-label">Financial Success</div>
-                            <div class="metric-value">$48,608</div>
-                            <div style="color: #666; font-size: 0.8rem;">per participant benefit</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Security & Stability</div>
-                            <div class="metric-value">$759</div>
-                            <div style="color: #666; font-size: 0.8rem;">increased household earnings</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Community Impact</div>
-                            <div class="metric-value">26%</div>
-                            <div style="color: #666; font-size: 0.8rem;">increased engagement</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-label">SROI Ratio</div>
-                            <div class="metric-value">$2.61</div>
-                            <div style="color: #666; font-size: 0.8rem;">return per dollar invested</div>
-                        </div>
-                    </div>
-                </div> -->
+            
+            <div class="savings-highlight">
+                <h3 style="margin-bottom: 0.5rem; font-size: 1.3rem;">Annual State Refund</h3>
+                <span style="font-size: 2.5rem; font-weight: bold; display: block; margin: 0.5rem 0;">+$495</span>
+                <p style="opacity: 0.9; font-size: 0.9rem; margin-top: 0.5rem;"></p>
             </div>
         </div>
     </div>
+            <div style="text-align: center;">
+                <a href="getstarted529.html" class="talk-button">Get Started</a>
+            </div>
+        </section>
 
+        <section class="logo-scroller">
+            <h2>Unlocking Funds At Universities Across the Nation</h2>
+            <div class="logo-container">
+                <div class="logo-track">
+                    <!-- First set of logos -->
+                    <div class="logo-item">
+                        <img src="uchicago.png" alt="University of Chicago" />
+                    </div>
+                    <div class="logo-item">
+                        <img src="michigan.png" alt="University of Michigan" />
+                    </div>
+                    <div class="logo-item">
+                        <img src="stanford.png" alt="Stanford" />
+                    </div>
+                    <div class="logo-item">
+                        <img src="mit.png" alt="MIT" />
+                    </div>
+                    <div class="logo-item">
+                        <img src="ucb.png" alt="UC Berkeley" />
+                    </div>
+                    <div class="logo-item">
+                        <img src="bu.png" alt="Boston University" />
+                    </div>
+                    
+                    <!-- Duplicate set for seamless scrolling -->
+                    <div class="logo-item">
+                        <img src="uchicago.png" alt="University of Chicago" />
+                    </div>
+                    <div class="logo-item">
+                        <img src="michigan.png" alt="University of Michigan" />
+                    </div>
+                    <div class="logo-item">
+                        <img src="stanford.png" alt="Stanford" />
+                    </div>
+                    <div class="logo-item">
+                        <img src="mit.png" alt="MIT" />
+                    </div>
+                    <div class="logo-item">
+                        <img src="ucb.png" alt="UC Berkeley" />
+                    </div>
+                    <div class="logo-item">
+                        <img src="bu.png" alt="Boston University" />
+                    </div>
+                </div>
+            </div>
+        </section>
 
+       <!--  <section class="newsletter">
+            <h2></h2>
+            <p>Sign up for our newsletter to get the latest updates.</p>
+            <form class="email-form">
+                <input type="email" class="email-input" placeholder="Enter your email">
+                <button type="submit" class="submit-button">Subscribe</button>
+            </form>
+        </section> -->
+    </main>
 
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="footer-logo">RENEST</div>
+                <p class="copyright">©2025 Renest Horizons Inc.</p>
+            </div>
+            <div class="footer-links">
+                <h3>Company</h3>
+                <a href="aboutus529.html">About us</a>
+            </div>
+            <div class="footer-links">
+                <h3>Resources</h3>
+                <a href="contactus529.html">Contact us</a>
+                <a href="faq529.html">FAQ</a>
+            </div>
+        </div>
+    </footer>
 
-    </div>
     <script>
-        document.getElementById('oceanVideo').playbackRate = 0.81;
-        
-        async function submitToGoogleSheets(email) {
-            try {
-                const formData = new FormData();
-                formData.append('entry.1419532941', email);
+        const menuButton = document.querySelector('.menu-button');
+        const navLinks = document.querySelector('.nav-links');
 
-                // Add a loading state or disable the submit button here if desired
-                
-                const response = await fetch(
-                    'https://docs.google.com/forms/d/e/1FAIpQLScvmIdqLYppKjzNxpQhnXTIprmHiQ_oZeXWGr3tseiAzHwiCA/formResponse',
-                    {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        body: formData
-                    }
-                );
-
-                handleFormSuccess();
-                return false; // Prevent form submission
-            } catch (error) {
-                console.error('Error submitting form:', error);
-                handleFormSuccess();
-                return false; // Prevent form submission
-            }
-        }
-
-        function handleFormSuccess() {
-            const emailModal = document.getElementById('emailModal');
-            const successModal = document.getElementById('successModal');
-            const emailForm = document.getElementById('emailForm');
-
-            if (emailModal) emailModal.classList.add('hidden');
-            if (successModal) successModal.classList.remove('hidden');
-            if (emailForm) emailForm.reset();
-
-            setTimeout(() => {
-                if (successModal) successModal.classList.add('hidden');
-            }, 3000);
-        }
-        // Business form submission
-        async function submitBusinessToGoogleSheets(email, position, businessName, additionalInfo) {
-            try {
-                const formData = new FormData();
-                formData.append('entry.110874108', email);
-                formData.append('entry.1718074849', position);
-                formData.append('entry.1316491564', businessName);
-                formData.append('entry.481504362', additionalInfo);
-                
-                await fetch(
-                    'https://docs.google.com/forms/d/e/1FAIpQLScsJg50nxH1ShI9QYeW8ZUFojvmcnpQoHTkoxFMdUNxoCELlQ/formResponse',
-                    {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        body: formData
-                    }
-                );
-                
-                handleBusinessFormSuccess();
-                return false;
-            } catch (error) {
-                console.error('Error submitting business form:', error);
-                handleBusinessFormSuccess();
-                return false;
-            }
-        }
-
-        // State form submission
-        async function submitStateToGoogleSheets(email, position, additionalInfo) {
-            try {
-                const formData = new FormData();
-                formData.append('entry.355309525', email);
-                formData.append('entry.96140659', position);
-                formData.append('entry.1760812363', additionalInfo);
-                
-                await fetch(
-                    'https://docs.google.com/forms/d/e/1FAIpQLScBgYf_ly41gWPoSl3bqs2mi6GpNZLvQuJK7zAoNfcjwYXTvg/formResponse',
-                    {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        body: formData
-                    }
-                );
-                
-                handleStateFormSuccess();
-                return false;
-            } catch (error) {
-                console.error('Error submitting state form:', error);
-                handleStateFormSuccess();
-                return false;
-            }
-        }
-
-        
-        // Constants for calculations
-        const I = 0.03;//inflation
-        const MG = 0.07;//market growth
-        const nb = 0.03;//percentage of unused contribution that goes to the nest
-        const TR = 0.20;//tax rate that the bird would face in a brokerage on the capital gains
-        const CL = 7000;//contribution limit at time=0
-        const dr= .015;//dividend tax rate
-        
-        // Initialize emailCount from localStorage
-            const stateData = {
-            'Alabama': { cost2020: 125, cost2040: 227, totalCost: 3779, percentBelow75k: 71, monthlySavings: 170 },
-            'Alaska': { cost2020: 21, cost2040: 42, totalCost: 708, percentBelow75k: 50, monthlySavings: 75 },
-            'Arizona': { cost2020: 115, cost2040: 279, totalCost: 4082, percentBelow75k: 62, monthlySavings: 100 },
-            'Arkansas': { cost2020: 92, cost2040: 167, totalCost: 2744, percentBelow75k: 72, monthlySavings: 115 },
-            'California': { cost2020: 1972, cost2040: 3961, totalCost: 63000, percentBelow75k: 57, monthlySavings: 135 },
-            'Colorado': { cost2020: 156, cost2040: 348, totalCost: 5371, percentBelow75k: 54, monthlySavings: 85 },
-            'Connecticut': { cost2020: 212, cost2040: 379, totalCost: 6508, percentBelow75k: 50, monthlySavings: 110 },
-            'Delaware': { cost2020: 34, cost2040: 68, totalCost: 1097, percentBelow75k: 60, monthlySavings: 100 },
-            'Florida': { cost2020: 513, cost2040: 1143, totalCost: 16983, percentBelow75k: 70, monthlySavings: 145 },
-            'Georgia': { cost2020: 239, cost2040: 523, totalCost: 8052, percentBelow75k: 68, monthlySavings: 170 },
-            'Hawaii': { cost2020: 38, cost2040: 71, totalCost: 1152, percentBelow75k: 46, monthlySavings: 65 },
-            'Idaho': { cost2020: 33, cost2040: 74, totalCost: 1147, percentBelow75k: 67, monthlySavings: 140 },
-            'Illinois': { cost2020: 298, cost2040: 510, totalCost: 8859, percentBelow75k: 60, monthlySavings: 195 },
-            'Indiana': { cost2020: 225, cost2040: 407, totalCost: 6856, percentBelow75k: 65, monthlySavings: 135 },
-            'Iowa': { cost2020: 65, cost2040: 117, totalCost: 1984, percentBelow75k: 58, monthlySavings: 80 },
-            'Kansas': { cost2020: 66, cost2040: 118, totalCost: 2020, percentBelow75k: 65, monthlySavings: 170 },
-            'Kentucky': { cost2020: 118, cost2040: 215, totalCost: 3582, percentBelow75k: 74, monthlySavings: 200 },
-            'Louisiana': { cost2020: 119, cost2040: 207, totalCost: 3555, percentBelow75k: 73, monthlySavings: 185 },
-            'Maine': { cost2020: 52, cost2040: 96, totalCost: 1633, percentBelow75k: 63, monthlySavings: 115 },
-            'Maryland': { cost2020: 152, cost2040: 288, totalCost: 4771, percentBelow75k: 46, monthlySavings: 135 },
-            'Massachusetts': { cost2020: 450, cost2040: 845, totalCost: 13941, percentBelow75k: 53, monthlySavings: 215 },
-            'Michigan': { cost2020: 370, cost2040: 643, totalCost: 11151, percentBelow75k: 69, monthlySavings: 180 },
-            'Minnesota': { cost2020: 170, cost2040: 336, totalCost: 5504, percentBelow75k: 55, monthlySavings: 145 },
-            'Mississippi': { cost2020: 138, cost2040: 245, totalCost: 4122, percentBelow75k: 80, monthlySavings: 185 },
-            'Missouri': { cost2020: 112, cost2040: 201, totalCost: 3412, percentBelow75k: 64, monthlySavings: 135 },
-            'Montana': { cost2020: 24, cost2040: 44, totalCost: 740, percentBelow75k: 63, monthlySavings: 50 },
-            'Nebraska': { cost2020: 33, cost2040: 61, totalCost: 1022, percentBelow75k: 60, monthlySavings: 145 },
-            'Nevada': { cost2020: 48, cost2040: 126, totalCost: 1803, percentBelow75k: 66, monthlySavings: 110 },
-            'New Hampshire': { cost2020: 28, cost2040: 58, totalCost: 946, percentBelow75k: 48, monthlySavings: 75 },
-            'New Jersey': { cost2020: 365, cost2040: 651, totalCost: 11005, percentBelow75k: 54, monthlySavings: 225 },
-            'New Mexico': { cost2020: 72, cost2040: 139, totalCost: 2303, percentBelow75k: 69, monthlySavings: 75 },
-            'New York': { cost2020: 925, cost2040: 1544, totalCost: 26873, percentBelow75k: 59, monthlySavings: 155 },
-            'North Carolina': { cost2020: 304, cost2040: 638, totalCost: 9913, percentBelow75k: 70, monthlySavings: 170 },
-            'North Dakota': { cost2020: 22, cost2040: 43, totalCost: 687, percentBelow75k: 58, monthlySavings: 115 },
-            'Ohio': { cost2020: 398, cost2040: 678, totalCost: 11797, percentBelow75k: 68, monthlySavings: 185 },
-            'Oklahoma': { cost2020: 89, cost2040: 162, totalCost: 2681, percentBelow75k: 70, monthlySavings: 130 },
-            'Oregon': { cost2020: 106, cost2040: 209, totalCost: 3356, percentBelow75k: 56, monthlySavings: 55 },
-            'Pennsylvania': { cost2020: 646, cost2040: 1097, totalCost: 19104, percentBelow75k: 60, monthlySavings: 140 },
-            'Rhode Island': { cost2020: 15, cost2040: 27, totalCost: 456, percentBelow75k: 60, monthlySavings: 180 },
-            'South Carolina': { cost2020: 229, cost2040: 460, totalCost: 7263, percentBelow75k: 70, monthlySavings: 95 },
-            'South Dakota': { cost2020: 12, cost2040: 23, totalCost: 379, percentBelow75k: 62, monthlySavings: 140 },
-            'Tennessee': { cost2020: 233, cost2040: 453, totalCost: 7268, percentBelow75k: 66, monthlySavings: 105 },
-            'Texas': { cost2020: 599, cost2040: 1401, totalCost: 20800, percentBelow75k: 62, monthlySavings: 120 },
-            'Utah': { cost2020: 29, cost2040: 71, totalCost: 1042, percentBelow75k: 50, monthlySavings: 60 },
-            'Vermont': { cost2020: 25, cost2040: 46, totalCost: 782, percentBelow75k: 57, monthlySavings: 90 },
-            'Virginia': { cost2020: 188, cost2040: 368, totalCost: 5947, percentBelow75k: 54, monthlySavings: 155 },
-            'Washington': { cost2020: 117, cost2040: 248, totalCost: 3894, percentBelow75k: 53, monthlySavings: 95 },
-            'West Virginia': { cost2020: 82, cost2040: 126, totalCost: 2272, percentBelow75k: 75, monthlySavings: 100 },
-            'Wisconsin': { cost2020: 142, cost2040: 269, totalCost: 4535, percentBelow75k: 66, monthlySavings: 180 },
-            'Wyoming': { cost2020: 15, cost2040: 27, totalCost: 475, percentBelow75k: 63, monthlySavings: 75 },
-            'District of Columbia': { cost2020: 37, cost2040: 60, totalCost: 975, percentBelow75k: 53, monthlySavings: 185 }
-          };
-
-        const stateAbbreviations = {
-            'Alabama': 'al',
-            'Alaska': 'ak',
-            'Arizona': 'az',
-            'Arkansas': 'ar',
-            'California': 'ca',
-            'Colorado': 'co',
-            'Connecticut': 'ct',
-            'Delaware': 'de',
-            'Florida': 'fl',
-            'Georgia': 'ga',
-            'Hawaii': 'hi',
-            'Idaho': 'id',
-            'Illinois': 'il',
-            'Indiana': 'in',
-            'Iowa': 'ia',
-            'Kansas': 'ks',
-            'Kentucky': 'ky',
-            'Louisiana': 'la',
-            'Maine': 'me',
-            'Maryland': 'md',
-            'Massachusetts': 'ma',
-            'Michigan': 'mi',
-            'Minnesota': 'mn',
-            'Mississippi': 'ms',
-            'Missouri': 'mo',
-            'Montana': 'mt',
-            'Nebraska': 'ne',
-            'Nevada': 'nv',
-            'New Hampshire': 'nh',
-            'New Jersey': 'nj',
-            'New Mexico': 'nm',
-            'New York': 'ny',
-            'North Carolina': 'nc',
-            'North Dakota': 'nd',
-            'Ohio': 'oh',
-            'Oklahoma': 'ok',
-            'Oregon': 'or',
-            'Pennsylvania': 'pa',
-            'Rhode Island': 'ri',
-            'South Carolina': 'sc',
-            'South Dakota': 'sd',
-            'Tennessee': 'tn',
-            'Texas': 'tx',
-            'Utah': 'ut',
-            'Vermont': 'vt',
-            'Virginia': 'va',
-            'Washington': 'wa',
-            'West Virginia': 'wv',
-            'Wisconsin': 'wi',
-            'Wyoming': 'wy',
-            'District of Columbia': 'dc'
-          };
-          function sendStateEmail(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('integrateEmail').value;
-            const position = document.getElementById('position').value;
-            const additionalInfo = document.getElementById('additionalInfo').value;
-            
-            submitStateToGoogleSheets(email, position, additionalInfo);
-        }
-
-
-          function sendEmail(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('businessEmail').value;
-            const position = document.getElementById('businessPosition').value;
-            const businessName = document.getElementById('businessName').value;
-            const additionalInfo = document.getElementById('businessInfo').value;
-            
-            submitBusinessToGoogleSheets(email, position, businessName, additionalInfo);
-        }
-
-
-        function handleBusinessFormSuccess() {
-            const businessModal = document.getElementById('businessModal');
-            const businessSuccessModal = document.getElementById('businessSuccessModal');
-            const businessForm = document.getElementById('businessForm');
-
-            if (businessModal) businessModal.classList.add('hidden');
-            if (businessSuccessModal) businessSuccessModal.classList.remove('hidden');
-            if (businessForm) businessForm.reset();
-
-            setTimeout(() => {
-                if (businessSuccessModal) businessSuccessModal.classList.add('hidden');
-            }, 3000);
-        }
-
-
-        function handleStateFormSuccess() {
-            const integrateModal = document.getElementById('integrateModal');
-            const integrateSuccessModal = document.getElementById('integrateSuccessModal');
-            const integrateForm = document.getElementById('integrateForm');
-
-            if (integrateModal) integrateModal.classList.add('hidden');
-            if (integrateSuccessModal) integrateSuccessModal.classList.remove('hidden');
-            if (integrateForm) integrateForm.reset();
-
-            setTimeout(() => {
-                if (integrateSuccessModal) integrateSuccessModal.classList.add('hidden');
-            }, 3000);
-        }
-          const savingsCtx = document.getElementById('savingsChart').getContext('2d');
-            const savingsChart = new Chart(savingsCtx, {
-                type: 'bar',  // Changed from 'line' to 'bar'
-                data: {
-                    labels: ['1', '2', '3', '4', '5', '10', '20', '30'],
-                    datasets: [
-                        {
-                            label: "Median Individual's Contributions",
-                            data: [295, 629, 1005, 1427, 1901, 5218, 19702, 55964],
-                            backgroundColor: '#3B82F6',
-                            borderColor: '#3B82F6',
-                            borderWidth: 1,
-                            barPercentage: 0.7,  // Controls bar width
-                        },
-                        {
-                            label: 'Renest Benefits',
-                            data: [210, 445, 707, 999, 1324, 3561, 13121, 37145],
-                            backgroundColor: '#22C55E',
-                            borderColor: '#22C55E',
-                            borderWidth: 1,
-                            barPercentage: 0.7,  // Controls bar width
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: [
-                                    "Renest Increases Participants' Retirement Savings","Compared to a Stand-Alone Auto-IRA Program"
-                                ],
-                            font: {
-                                size: 16,
-                                family: "'DM Sans', sans-serif"
-                            }
-                        },
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                usePointStyle: true,
-                                pointStyle: 'rect'
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            stacked: true,  // Enable stacking on x-axis
-                            title: {
-                                display: true,
-                                text: 'Years'
-                            },
-                            grid: {
-                                display: false,
-                                drawBorder: false
-                            }
-                        },
-                        y: {
-                            stacked: true,  // Enable stacking on y-axis
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Participants Retirement Savings ($)',
-                            },
-                            ticks: {
-                                callback: function(value) {
-                                    return '$' + value.toLocaleString();
-                                }
-                            },
-                            grid: {
-                                display: false,
-                                drawBorder: false
-                            }
-                        }
-                    }
-                }
-            });
-
-            // Data for Fees Chart
-            const feesCtx = document.getElementById('feesChart').getContext('2d');
-            const feesChart = new Chart(feesCtx, {
-                type: 'line',
-                data: {
-                    labels: ['1', '3', '5', '7', '9', '11', '13', '15'],
-                    datasets: [
-                        {
-                            label: 'Fee with Renest',
-                            data: [0.75, 0.60, 0.60, 0.45, 0.35, 0.18, 0.15, 0.15],
-                            borderColor: '#22C55E',
-                            backgroundColor: 'transparent',
-                            tension: 0.4
-                        },
-                        {
-                            label: 'Fee without Renest',
-                            data: [0.75, 0.75, 0.75, 0.75, 0.6, 0.45, 0.35, 0.23],
-                            borderColor: '#FF746C',
-                            backgroundColor: 'transparent',
-                            tension: 0.4
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: ["Renest Achieves Lower Fees for Participants due to Faster Asset Growth","than a Stand-Alone Auto-IRA Program"],
-                            font: {
-                                size: 16,
-                                family: "'DM Sans', sans-serif"
-                            }
-                        },
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                usePointStyle: true,  // This makes the legend show lines instead of boxes
-                                pointStyle: 'line'    // This specifically sets it to show as a line
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Asset Based Fee %'
-                            },
-                            ticks: {
-                                callback: function(value) {
-                                    return value.toFixed(2) + '%';
-                                }
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Years'
-                            }
-                        }
-                    }
-                }
-            });
-        function formatNumber(num) {
-            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const showFederalButton = document.getElementById('showFederalButton');
-            const federalContent = document.getElementById('federalContent');
-            
-            showFederalButton?.addEventListener('click', function() {
-                federalContent.classList.toggle('hidden');
-                showFederalButton.querySelector('.button-text').textContent = 
-                    federalContent.classList.contains('hidden') 
-                        ? 'Federal Level Data' 
-                        : 'Hide Federal Level Content';
-            });
+        menuButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+            menuButton.setAttribute('aria-expanded', navLinks.style.display === 'flex');
         });
 
-
-
-        function openCaseStudy() {
-            // Replace 'case-study.pdf' with your PDF file name
-            // window.location.href = 'Renest - A Financially Secure Retirement for Nevadans_case study.pdf';
-            window.open('Renest - A Financially Secure Retirement for Nevadans_case study.pdf', '_blank');
+        document.addEventListener('click', function(e) {
+            if (window.innerWidth < 768 && !navLinks.contains(e.target) && e.target !== menuButton) {
+                navLinks.style.display = 'none';
+                menuButton.setAttribute('aria-expanded', false);
+            }
+        });
+         function isElementInViewport(el) {
+            const rect = el.getBoundingClientRect();
+            return (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+            );
         }
 
-        // Add event listener to search input
-        function createStateResultHTML(state, stateInfo) {
-            return `
-                <div class="state-card">
-                    <div class="state-header">
-                        <h3 class="state-name">${state}</h3>
-                        <a href="https://cri.georgetown.edu/wp-content/uploads/2021/02/${stateAbbreviations[state]}.pdf"
-                           target="_blank"
-                           rel="noopener noreferrer"
-                           class="state-read-more">
-                           Read More ↗
-                        </a>
+        function isElementInViewportWithOffset(el) {
+            const rect = el.getBoundingClientRect();
+            const offset = 500; // Only apply offset to case study
+            return (
+                rect.top >= -offset &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight + offset || document.documentElement.clientHeight + offset) &&
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+            );
+        }
+
+        function createTimelineLine() {
+            const timelineSteps = document.querySelector('.timeline-steps');
+            const line = document.createElement('div');
+            line.className = 'timeline-line';
+            timelineSteps.appendChild(line);
+        }
+
+        function handleScroll() {
+            // Timeline animation
+            const timelineSteps = document.querySelector('.timeline-steps');
+            const steps = document.querySelectorAll('.timeline-step');
+            const line = document.querySelector('.timeline-line');
+            
+            if (!timelineSteps || !line) return;
+            
+            const timelineRect = timelineSteps.getBoundingClientRect();
+            const viewportHeight = window.innerHeight;
+            
+            // Calculate how much of the timeline is visible
+            let visibleSteps = 0;
+            steps.forEach((step, index) => {
+                const rect = step.getBoundingClientRect();
+                if (rect.top < viewportHeight - 175) {
+                    step.classList.add('visible');
+                    visibleSteps = index + 1;
+                }
+            });
+            
+            // Update line height based on visible steps
+            const stepHeight = timelineRect.height / steps.length;
+            const lineHeight = Math.min(visibleSteps * stepHeight, timelineRect.height - 80);
+            line.style.height = `${lineHeight}px`;
+
+            // Info box animation
+            const infoBox = document.querySelector('.info-box');
+            if (isElementInViewport(infoBox) && !infoBox.classList.contains('visible')) {
+                infoBox.classList.add('visible');
+            }
+
+            // Case study animation
+            const caseStudy = document.querySelector('.case-study');
+            if (isElementInViewportWithOffset(caseStudy) && !caseStudy.classList.contains('visible')) {
+                caseStudy.classList.add('visible');
+            }
+        }
+
+
+        function submitToGoogleForm(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('emailInput').value;
+            const googleFormUrl = `https://docs.google.com/forms/d/e/1FAIpQLScZ04ro2nS9fPEclOjblV8kv-rTFxQNH1pMN_xy8H1gbGKQtQ/formResponse?entry.1358827248=${encodeURIComponent(email)}`;
+            
+            // Create a hidden iframe to submit the form
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
+            
+            // Submit the form through the iframe
+            iframe.src = googleFormUrl;
+            
+            // Create and show styled thank you message
+            const thankYouModal = document.createElement('div');
+            thankYouModal.style.position = 'fixed';
+            thankYouModal.style.top = '0';
+            thankYouModal.style.left = '0';
+            thankYouModal.style.width = '100%';
+            thankYouModal.style.height = '100%';
+            thankYouModal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+            thankYouModal.style.display = 'flex';
+            thankYouModal.style.justifyContent = 'center';
+            thankYouModal.style.alignItems = 'center';
+            thankYouModal.style.zIndex = '2000';
+            
+            thankYouModal.innerHTML = `
+                <div style="background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); max-width: 500px; width: 90%; text-align: center; position: relative;">
+                    <div style="width: 48px; height: 48px; margin: 0 auto 1rem; background: linear-gradient(45deg, #4B227A, #FF69B4); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
                     </div>
-                    
-                    <div class="state-metrics-wrapper">
-                        <div class="state-metric">
-                            <div class="state-metric-label">% of Elderly Households with Income < $75k (2040)</div>
-                            <div class="state-metric-value">${stateInfo.percentBelow75k}%</div>
-                        </div>
-                        
-                        <div class="state-metric">
-                            <div class="state-metric-label">Additional Monthly Savings Needed per Individual for 30 years to Close the Retirement Gap</div>
-                            <div class="state-metric-value">$${stateInfo.monthlySavings}</div>
-                        </div>
-                    </div>
-                    
-                    <div class="state-costs">
-                        <div class="state-costs-title">Cost To State Programs Due to Insufficient Savings Among Citizens</div>
-                        <div class="state-costs-grid">
-                            <div class="cost-item">
-                                <div class="cost-label">2020</div>
-                                <div class="cost-value">$${formatNumber(stateInfo.cost2020)}M</div>
-                            </div>
-                            <div class="cost-item">
-                                <div class="cost-label">2040</div>
-                                <div class="cost-value">$${formatNumber(stateInfo.cost2040)}M</div>
-                            </div>
-                            <div class="cost-item">
-                                <div class="cost-label">Total 2021-2040</div>
-                                <div class="cost-value">$${formatNumber(stateInfo.totalCost)}M</div>
-                            </div>
-                        </div>
-                        <a href="https://www.ncsl.org/labor-and-employment/state-and-federal-impacts-of-insufficient-retirement-savings" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="info-link">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <line x1="12" y1="16" x2="12" y2="12"></line>
-                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                            </svg>
-                        </a>
-                    </div>
+                    <h2 style="color: #4B227A; font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem;">Thank You for Subscribing!</h2>
+                    <p style="color: #666; font-size: 1.1rem; margin-bottom: 2rem;">We'll keep you updated with the latest news and information about maximizing your benefits.</p>
+                    <button style="background: linear-gradient(45deg, #4B227A, #FF69B4); color: white; padding: 0.75rem 2rem; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; transition: all 0.3s ease;" onclick="this.parentElement.parentElement.remove()">Continue</button>
                 </div>
             `;
+            
+            document.body.appendChild(thankYouModal);
+            
+            // Clear the input
+            document.getElementById('emailInput').value = '';
+            
+            // Remove the iframe after submission
+            setTimeout(() => {
+                document.body.removeChild(iframe);
+            }, 1000);
         }
 
+        // Initialize the timeline line on page load
+        document.addEventListener('DOMContentLoaded', createTimelineLine);
 
-        document.getElementById('stateSearchInput')?.addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            const resultsContainer = document.getElementById('stateResults');
-            resultsContainer.innerHTML = ''; // Clear previous results
-
-            // Only show results if there's a search term
-            if (searchTerm) {
-                const filteredStates = Object.keys(stateData).filter(state =>
-                    state.toLowerCase().includes(searchTerm)
-                );
-
-                if (filteredStates.length === 0) {
-                    resultsContainer.innerHTML = `
-                        <div class="no-results">
-                            No states found matching "${searchTerm}"
-                        </div>
-                    `;
-                } else {
-                    filteredStates.forEach(state => {
-                        const stateInfo = stateData[state];
-                        resultsContainer.innerHTML += createStateResultHTML(state, stateInfo);
-                    });
-                }
-            }
-        });
-        function CLI(t) {
-            return CL * Math.pow(1 + I, t);
-        }
-
-        function MCI(t, MC) {
-            return MC * Math.pow(1 + I, t);
-        }
-
-        function cBenefit(MC, PR) {
-            if (MC <= CL/12) {
-                let na = 0;
-                let nad=0;
-                for (let g = 0; g < PR; g++) {
-                    let nc = ((MCI(g, MC) * 12));
-                    nad=na*dr
-                    na *= (1 + MG);
-                    na+=nad
-                    na += nc;
-                }
-                return na;
-            }
-            
-            if (MC > CL/12) {
-                let ba = 0;
-                let bd = 0;
-                let rba = 0;
-                let rbd = 0;
-                let rbg = 0;
-                let bg = 0;
-                let bc = 0;
-                let rbc = 0;
-                let na = 0;
-                let nad=0;
-                let bad=0;
-                for (let g = 0; g < PR; g++) {
-                    let nc = ((MCI(g, MC) * 12));
-                    nad=na*dr;
-                    na *= (1 + MG);
-                    na+=nad;
-                    na += nc;
-                }
-                for (let g = 0; g < PR; g++) {
-                    bc = MCI(g, MC) * 12 - CLI(g);
-                    bad=ba*dr*(1-TR);
-                    bg = ba * (1 + MG);
-                    bd += bc;
-                    bg += bc;
-                    bg+=bad;
-                    ba = bg;
-                }
-                let bv = (bg - bd) * (1 - TR);
-                return bv+bd+na;
-            }
-        }
-
-        function renestBenefit(MC, PR) {
-            if (MC < CL/12) {
-                let na = 0;
-                let nad=0;
-                for (let g = 0; g < PR; g++) {
-                    let nc = (CLI(g) - (MCI(g, MC) * 12)) * nb;
-                    nad=na*dr;
-                    na *= (1 + MG);
-                    na+=nad;
-                    na += nc;
-                }
-                return na;
-            }
-            
-            if (MC === CL/12) {
-                return 0;
-            }
-            
-            if (MC > CL/12) {
-                let ba = 0;
-                let bd = 0;
-                let rba = 0;
-                let rbd = 0;
-                let rbg = 0;
-                let bg = 0;
-                let bc = 0;
-                let rbc = 0;
-                let bad=0;
-                let rbad=0;
-                for (let g = 0; g < PR; g++) {
-                    bc = MCI(g, MC) * 12 - CLI(g);
-                    bad=ba*dr*(1-TR);
-                    bg = ba * (1 + MG);
-                    bd += bc;
-                    bg += bc;
-                    bg+=bad;
-                    rbc = (MCI(g, MC) * 12 - CLI(g)) * (1 - nb);
-                    rbd += rbc;
-                    rbg = rba * (1 + MG);
-                    rbad=rba*dr;
-                    rbg+=rbad;
-                    rbg += rbc;
-                    ba = bg;
-                    rba = rbg;
-                }
-                let rbv = rbg - rbd;
-                let bv = (bg - bd) * (1 - TR);
-                return rbv - bv;
-            }
-        }
-
-        let benefitChart;
-
-        function formatValue(value) {
-            if (value >= 1e6) {
-                return `$${(value / 1e6).toFixed(1)}M`;
-            } else if (value >= 1e3) {
-                return `$${(value / 1e3).toFixed(0)}K`;
-            }
-            return `$${value.toFixed(0)}`;
-        }
-
-        function generateGraphData() {
-            const data = [];
-            const numPoints = 200; // Increased for smoother curve
-            const maxX = 2000;
-            const pr = parseInt(document.getElementById('prInput').value);
-
-            for (let i = 0; i <= numPoints; i++) {
-                const x = Math.round((i / numPoints) * maxX / 10) * 10; // Round to nearest $10
-                const y = renestBenefit(x, pr);
-                data.push({ x, y });
-            }
-            return data;
-        }
-
-        function updateAllValues() {
-            const currentX = parseFloat(document.getElementById('contributionSlider').value);
-            const pr = parseInt(document.getElementById('prInput').value);
-            
-            // Calculate all values
-            const renestValue = renestBenefit(currentX, pr);
-            const contributionValue = cBenefit(currentX, pr);
-            
-            // Update all displays
-            document.getElementById('xValue').textContent = currentX;
-            document.getElementById('yValue').textContent = formatValue(renestValue);
-            document.getElementById('contributionValue').textContent = formatValue(contributionValue);
-            
-            // Update the tracking dot
-            if (benefitChart) {
-                benefitChart.data.datasets[1].data = [{x: currentX, y: renestValue}];
-                benefitChart.update();
-            }
-        }
-
-        function updateGraphAndDisplays() {
-            const data = generateGraphData();
-            const currentX = parseFloat(document.getElementById('contributionSlider').value);
-            const pr = parseInt(document.getElementById('prInput').value);
-            const currentY = renestBenefit(currentX, pr);
-            
-            if (benefitChart) {
-                benefitChart.destroy();
-            }
-
-            const ctx = document.getElementById('benefitChart').getContext('2d');
-            benefitChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    datasets: [
-                        {
-                            label: 'Value',
-                            data: data,
-                            borderColor: '#0f4c81',
-                            backgroundColor: '#e8f0f7',
-                            fill: true,
-                            tension: 0.4,
-                            pointRadius: 0,
-                            order: 2
-                        },
-                        {
-                            label: 'Current Position',
-                            data: [{x: currentX, y: currentY}],
-                            borderColor: 'red',
-                            backgroundColor: 'red',
-                            pointRadius: 6,
-                            pointHoverRadius: 8,
-                            showLine: false,
-                            order: 1
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    animation: {
-                        duration: 0
-                    },
-                    scales: {
-                        x: {
-                            type: 'linear',
-                            position: 'bottom',
-                            title: {
-                                display: true,
-                                text: 'Monthly Contributions ($)'
-                            },
-                            grid: {
-                                display: false,
-                                color: '#f0f0f0'
-                            }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'Additional Retirement Savings Created by Renest ($)'
-                            },
-                            grid: {
-                                color: '#f0f0f0'
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                }
-            });
-            
-            updateAllValues();
-        }
-        document.addEventListener('DOMContentLoaded', function() {
-            // Toggle functionality
-            const toggleButtons = document.querySelectorAll('.toggle-button');
-            const contentSections = document.querySelectorAll('.content-section');
-            const joinButton = document.getElementById('joinButton');
-            const emailModal = document.getElementById('emailModal');
-            const emailForm = document.getElementById('emailForm');
-            const successModal = document.getElementById('successModal');
-            const emailInput = document.getElementById('email');
-
-            // Get last selected section from localStorage, default to 'individuals'
-            const lastSelectedSection = localStorage.getItem('selectedSection') || 'individuals';
-            
-            // First, hide all sections
-            contentSections.forEach(section => section.classList.add('hidden'));
-            
-            // Show the last selected section
-            const sectionId = `${lastSelectedSection}-content`;
-            document.getElementById(sectionId)?.classList.remove('hidden');
-
-            // Update button states
-            toggleButtons.forEach(button => {
-                if (button.dataset.section === lastSelectedSection) {
-                    button.classList.add('active');
-                    window.scrollTo(0, 0);
-                } else {
-                    button.classList.remove('active');
-                }
-            });
-
-            // Toggle button click handlers
-            toggleButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    toggleButtons.forEach(btn => btn.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    contentSections.forEach(section => section.classList.add('hidden'));
-                    
-                    const sectionId = this.dataset.section + '-content';
-                    document.getElementById(sectionId).classList.remove('hidden');
-                    localStorage.setItem('selectedSection', this.dataset.section);
-                    window.scrollTo(0, 0);
-                });
-            });
-
-            // Email related functionality - single instances only
-            if (joinButton) {
-                joinButton.addEventListener('click', () => {
-                    if (emailModal) {
-                        emailModal.classList.remove('hidden');
-                    }
-                });
-            }
-
-
-            if (emailForm) {
-                emailForm.addEventListener('submit', async function(e) {
-                    e.preventDefault(); // Prevent default form submission
-                    e.stopPropagation(); // Stop event bubbling
-                    
-                    const email = emailInput.value;
-                    await submitToGoogleSheets(email);
-                    return false; // Extra prevention of form submission
-                });
-            }
-
-            if (emailModal) {
-                emailModal.addEventListener('click', (e) => {
-                    if (e.target === emailModal) {
-                        emailModal.classList.add('hidden');
-                    }
-                });
-            }
-
-            if (successModal) {
-                successModal.addEventListener('click', (e) => {
-                    if (e.target === successModal) {
-                        successModal.classList.add('hidden');
-                    }
-                });
-            }
-
-            // Integration modal functionality
-            const integrateButton = document.getElementById('integrateButton');
-            const integrateModal = document.getElementById('integrateModal');
-            const integrateForm = document.getElementById('integrateForm');
-            const integrateSuccessModal = document.getElementById('integrateSuccessModal');
-
-            integrateButton?.addEventListener('click', () => {
-                integrateModal.classList.remove('hidden');
-            });
-
-            integrateModal?.addEventListener('click', (e) => {
-                if (e.target === integrateModal) {
-                    integrateModal.classList.add('hidden');
-                }
-            });
-
-            integrateForm?.addEventListener('submit', (e) => {
-                e.preventDefault();
-                integrateModal.classList.add('hidden');
-                integrateForm.reset();
-                integrateSuccessModal.classList.remove('hidden');
-                setTimeout(() => {
-                    integrateSuccessModal.classList.add('hidden');
-                }, 3000);
-            });
-
-            integrateSuccessModal?.addEventListener('click', (e) => {
-                if (e.target === integrateSuccessModal) {
-                    integrateSuccessModal.classList.add('hidden');
-                }
-            });
-
-            // Business modal functionality
-            const businessButtons = document.querySelectorAll('.card-cta-button');
-            const businessModal = document.getElementById('businessModal');
-            const businessForm = document.getElementById('businessForm');
-            
-            businessButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    businessModal?.classList.remove('hidden');
-                });
-            });
-
-            businessModal?.addEventListener('click', (e) => {
-                if (e.target === businessModal) {
-                    businessModal.classList.add('hidden');
-                }
-            });
-
-            businessForm?.addEventListener('submit', (e) => {
-                e.preventDefault();
-                businessModal.classList.add('hidden');
-                businessForm.reset();
-                successModal.classList.remove('hidden');
-                setTimeout(() => {
-                    successModal.classList.add('hidden');
-                }, 3000);
-            });
-
-            // Calculator functionality
-            const contributionSlider = document.getElementById('contributionSlider');
-            const prInput = document.getElementById('prInput');
-
-            contributionSlider?.addEventListener('input', updateAllValues);
-            prInput?.addEventListener('input', () => {
-                if (prInput.value) {
-                    document.getElementById('prValue').textContent = prInput.value;
-                    updateAllValues();
-                    updateGraphAndDisplays();
-                }
-            });
-
-            // Initialize calculator
-            updateGraphAndDisplays();
-        });
-
-
-        // Login form functionality
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            
-            // Define credentials object for easier management
-            const credentials = {
-                'thomas': {
-                    password: 'roth',
-                    redirectUrl: 'facilitatorview.html'
-                },
-                'UCHealth': {
-                    password: 'uchxrenest',
-                    redirectUrl: 'uchxrenest.html'
-                },
-                'Nevada': {
-                    password: 'nevadaxrenest',
-                    redirectUrl: 'nevadaxrenest.html'
-                },
-                'Grad': {
-                    password: 'gradxrenest',
-                    redirectUrl: 'graduate-student-money.html'
-                }
-            };
-            
-            // Check if username exists and password matches
-            if (credentials[username] && credentials[username].password === password) {
-                window.location.href = credentials[username].redirectUrl;
-            } else {
-                alert('Invalid credentials. Please try again.');
-            }
-        });
-
-        document.getElementById('password').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                document.getElementById('loginForm').dispatchEvent(new Event('submit'));
-            }
-        });
-        // Add these new event listeners at the end of your script section
+        // Update on scroll
+        window.addEventListener('scroll', handleScroll);
     </script>
 </body>
 </html>
