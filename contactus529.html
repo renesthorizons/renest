@@ -304,6 +304,7 @@
         });
 
         // Google Form integration
+        // Google Form integration
         document.getElementById('contactForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -320,8 +321,33 @@
             iframe.setAttribute('src', baseUrl + queryString);
             document.body.appendChild(iframe);
             
-            // Show success message and reset form
-            alert('Thank you for your message. We will get back to you soon!');
+            // Create and show styled thank you message
+            const thankYouModal = document.createElement('div');
+            thankYouModal.style.position = 'fixed';
+            thankYouModal.style.top = '0';
+            thankYouModal.style.left = '0';
+            thankYouModal.style.width = '100%';
+            thankYouModal.style.height = '100%';
+            thankYouModal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+            thankYouModal.style.display = 'flex';
+            thankYouModal.style.justifyContent = 'center';
+            thankYouModal.style.alignItems = 'center';
+            thankYouModal.style.zIndex = '2000';
+            
+            thankYouModal.innerHTML = `
+                <div style="background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); max-width: 500px; width: 90%; text-align: center; position: relative;">
+                    <div style="width: 64px; height: 64px; margin: 0 auto 1rem; background: linear-gradient(45deg, #4B227A, #FF69B4); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                    <h2 style="color: #4B227A; font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem;">Message Sent!</h2>
+                    <p style="color: #666; font-size: 1.1rem; margin-bottom: 2rem;">Thank you for reaching out. We'll get back to you as soon as possible.</p>
+                    <button style="background: linear-gradient(45deg, #4B227A, #FF69B4); color: white; padding: 0.75rem 2rem; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; transition: all 0.3s ease;" onclick="this.parentElement.parentElement.remove()">Continue</button>
+                </div>
+            `;
+            
+            document.body.appendChild(thankYouModal);
             this.reset();
             
             // Remove iframe after submission
