@@ -504,6 +504,142 @@ body {
         align-items: center;
     }
 }
+/* Find and replace the existing .story-cards and related styles with these new ones */
+
+.story-cards {
+    max-width: 800px;
+    margin: 2rem auto;
+    position: relative;
+    padding-left: 3rem;
+}
+
+.story-cards::before {
+    content: '';
+    position: absolute;
+    left: 19px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #eaeaea;
+    z-index: 1;
+}
+
+.story-card {
+    position: relative;
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border: 1px solid rgba(75, 34, 122, 0.1);
+    margin-bottom: 2rem;
+    transition: transform 0.3s ease;
+    z-index: 2;
+    text-align: left;
+}
+
+.story-card:hover {
+    transform: translateY(-5px);
+}
+
+.story-card::before {
+    content: '';
+    position: absolute;
+    left: -3rem;
+    top: 1rem;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(45deg, var(--primary), var(--accent));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.story-card:nth-child(1)::before {
+    content: '1';
+}
+
+.story-card:nth-child(2)::before {
+    content: '2';
+}
+
+.story-card:nth-child(3)::before {
+    content: '3';
+}
+
+.story-card h3 {
+    color: var(--primary);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.story-card p {
+    color: var(--text-dark);
+    line-height: 1.6;
+    font-size: 1.1rem;
+}
+
+.story-highlight {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: linear-gradient(145deg, rgba(75, 34, 122, 0.05), rgba(255, 105, 180, 0.05));
+    border-radius: 8px;
+    border: 1px solid rgba(75, 34, 122, 0.1);
+}
+
+@media (max-width: 768px) {
+    .story-cards {
+        padding-left: 2.5rem;
+    }
+    
+    .story-card::before {
+        width: 35px;
+        height: 35px;
+        left: -2.5rem;
+    }
+}
+
+.expand-button {
+    background: var(--primary);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 2rem auto;
+}
+
+.expand-button:hover {
+    background: linear-gradient(45deg, var(--primary), var(--accent));
+    transform: translateY(-2px);
+}
+
+.detailed-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out;
+}
+
+.detailed-content.expanded {
+    max-height: 5000px; /* Adjust based on content */
+}
+
+.arrow-icon {
+    transition: transform 0.3s ease;
+}
+
+.arrow-icon.up {
+    transform: rotate(180deg);
+}
 </style>
 <body>
     <nav class="navbar">
@@ -524,18 +660,48 @@ body {
             <h1>Understanding Your 529 Benefits</h1>
             <p>A step-by-step guide to maximizing your graduate student tax benefits</p>
         </section>
-
-         <section class="process-overview">
-            <div class="container">
-                <div class="calculator-result">
+        <section class="process-overview">
+    <div class="container">
+        <div class="calculator-result">
                     <h2>Sara's 529 Journey</h2>
                     <div class="result-box">
                         <p class="result-text">Sara, a PhD student in Aerospace Engineering at CU Boulder, used our calculator and discovered she could get a <span class="highlight">$924 annual tax refund</span> using a 529 plan for her qualified expenses. Here's how Renest helps her get there:</p>
                     </div>
                 </div>
+            <!-- Replace the existing story-cards section with this -->
+                <div class="story-cards">
+                    <div class="story-card">
+                        <h3>The Student</h3>
+                        <p>Sara is a PhD student in Aerospace Engineering at CU Boulder, managing a busy academic schedule while trying to make the most of her $34,000 stipend. Like many graduate students, she spends much of her income on rent, groceries, and other qualified expenses.</p>
+                        <div class="story-highlight">
+                            <p><i>I was excited to learn I could get over $900 back for money I was already spending, but initially I was worried about more paperwork.</i></p>
+                        </div>
+                    </div>
+                    
+                    <div class="story-card">
+                        <h3>The Renest Solution</h3>
+                        <p>With just 4 minutes, Sara set up and linked her Renest account. Renest automated her 529 setup, tracking of qualified expenses and tax documentation.</p>
+                        <div class="story-highlight">
+                            <p><i>It was easy.</i></p>
+                        </div>
+                    </div>
+                    
+                    <div class="story-card">
+                        <h3>The Result</h3>
+                        <p>Sara received her <strong>$924 tax refund</strong> without any manual tracking or paperwork. The entire process was automated, letting her focus on her research while maximizing her benefits.</p>
+                        <div class="story-highlight">
+                            <p><i>Honestly I was surprised I actually got the money, but I did and it was great because Renest did not cost anything until I actually got the $900 they said they could get me.</i></p>
+                        </div>
+                    </div>
+                </div>
+            
+            <!-- <button onclick="toggleDetails()" class="expand-button">
+                See More Details
+                <span class="arrow-icon">↓</span>
+            </button> -->
 
-                    <div class="tab-content active" id="with-renest">
-                        <div class="process-timeline">
+            <div id="detailed-content" class="detailed-content">
+                <div class="process-timeline">
                             <div class="timeline-item">
                                 <div class="timeline-marker">1</div>
                                 <div class="timeline-content">
@@ -622,85 +788,10 @@ body {
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="tab-content" id="without-renest">
-                        <div class="process-timeline">
-                            <div class="timeline-item">
-                                <div class="timeline-marker">1</div>
-                                <div class="timeline-content">
-                                    <h3>Manual Account Setup</h3>
-                                    <p>Sara must:</p>
-                                    <ul class="feature-list">
-                                        <li>Research Colorado's 529 plan options</li>
-                                        <li>Complete multi-page application forms</li>
-                                        <li>Provide identity verification documents</li>
-                                        <li>Wait 1-2 weeks for account approval</li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <div class="timeline-item">
-                                <div class="timeline-marker">2</div>
-                                <div class="timeline-content">
-                                    <h3>Manual Expense Tracking</h3>
-                                    <p>Sara needs to:</p>
-                                    <ul class="feature-list">
-                                        <li>Create spreadsheet to track all expenses</li>
-                                        <li>Save and organize all receipts</li>
-                                        <li>Verify which expenses qualify</li>
-                                        <li>Get lease certified as qualified housing</li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <div class="timeline-item">
-                                <div class="timeline-marker">3</div>
-                                <div class="timeline-content">
-                                    <h3>Managing Contributions</h3>
-                                    <p>Sara must:</p>
-                                    <ul class="feature-list">
-                                        <li>Calculate needed contribution amounts</li>
-                                        <li>Make manual bank transfers</li>
-                                        <li>Wait 3-5 days for funds to clear</li>
-                                        <li>Track contribution timing vs expenses</li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <div class="timeline-item">
-                                <div class="timeline-marker">4</div>
-                                <div class="timeline-content">
-                                    <h3>Withdrawal Management</h3>
-                                    <p>Sara needs to:</p>
-                                    <ul class="feature-list">
-                                        <li>Request each withdrawal manually</li>
-                                        <li>Match withdrawal amounts exactly</li>
-                                        <li>Track withdrawal dates vs expenses</li>
-                                        <li>Wait 7-10 days for each withdrawal</li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <div class="timeline-item">
-                                <div class="timeline-marker">5</div>
-                                <div class="timeline-content">
-                                    <h3>Tax Filing</h3>
-                                    <p>Sara must:</p>
-                                    <ul class="feature-list">
-                                        <li>Organize all yearly documentation</li>
-                                        <li>File Colorado state taxes</li>
-                                        <li>Wait 2-3 months for tax refund</li>
-                                        <li>Keep records for potential audit</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
-        </section>
-
+        </div>
+    </div>
+</section>
         <section class="security-features">
             <div class="container">
                 <h2>Security & Compliance</h2>
@@ -748,6 +839,39 @@ body {
         </div>
     </footer>
 <script>
+function toggleDetails() {
+    const content = document.getElementById('detailed-content');
+    const button = document.querySelector('.expand-button');
+    const arrow = document.querySelector('.arrow-icon');
+    
+    content.classList.toggle('expanded');
+    
+    if (content.classList.contains('expanded')) {
+        button.innerHTML = 'Show Less <span class="arrow-icon up">↓</span>';
+        // Smooth scroll to the detailed content
+        content.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+        button.innerHTML = 'See How Sara Did It <span class="arrow-icon">↓</span>';
+    }
+}
+
+// Add smooth reveal animation for timeline items
+document.addEventListener('DOMContentLoaded', () => {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = 1;
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, {
+        threshold: 0.1
+    });
+
+    document.querySelectorAll('.timeline-item').forEach(item => {
+        observer.observe(item);
+    });
+});
 // Mobile menu functionality
 const menuButton = document.querySelector('.menu-button');
         const navLinks = document.querySelector('.nav-links');

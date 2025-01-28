@@ -478,29 +478,7 @@
   }
 }
 
-.pricing-grid {
-  max-width: 1200px;
-  margin: 4rem auto;
-  padding: 0 2rem;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-}
 
-.pricing-card {
-  background: white;
-  border-radius: 1rem;
-  padding: 2rem;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  border: 1px solid rgba(75, 34, 122, 0.1);
-  transition: all 0.3s ease;
-}
-
-@media (min-width: 768px) {
-  .pricing-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
 
 .option-card {
   background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
@@ -511,17 +489,7 @@
 }
 
 
-.pricing-card:nth-child(1) {
-  background: linear-gradient(145deg, #ffffff 0%, #f0f7ff 100%);
-}
 
-.pricing-card:nth-child(2) {
-  background: linear-gradient(145deg, #ffffff 0%, #fff0f7 100%);
-}
-
-.pricing-card:nth-child(3) {
-  background: linear-gradient(145deg, #ffffff 0%, #f0fff4 100%);
-}
 
 .step-description {
   color: #666;
@@ -692,12 +660,7 @@
             transform: translateY(-2px);
         }
 
-@media (max-width: 768px) {
-  .pricing-grid {
-    grid-template-columns: 1fr;
-    padding: 0 1rem;
-  }
-}
+
 
 @media (max-width: 768px) {
   .form-container {
@@ -953,6 +916,89 @@
         font-size: 1.1rem;  /* Slightly smaller font on mobile */
     }
 }
+.pricing-grid-two {
+    max-width: 900px;
+    margin: 4rem auto;
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+}
+
+.pricing-card {
+    position: relative;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.pricing-card:first-child {
+    background: linear-gradient(145deg, #ffffff 0%, #fff0f7 100%);
+}
+
+.pricing-card:last-child {
+    background: linear-gradient(145deg, #ffffff 0%, #f0f7ff 100%);
+}
+
+.pricing-card:hover {
+    border: 2px solid var(--primary);
+    transform: translateY(-5px);
+}
+
+.pricing-card-featured {
+/*    border: 2px solid var(--primary);*/
+    transform: scale(1.02);
+}
+
+.featured-label {
+    background: linear-gradient(45deg, var(--primary), var(--accent));
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 1rem;
+}
+
+.calculator-cta {
+    display: inline-block;
+    background: linear-gradient(45deg, var(--primary), var(--accent));
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    text-align: center;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-top: auto;
+    position: relative;
+    overflow: hidden;
+}
+
+.calculator-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(75, 34, 122, 0.2);
+}
+
+@media (max-width: 768px) {
+    .pricing-grid-two {
+        grid-template-columns: 1fr;
+        padding: 0 1rem;
+    }
+    
+    .pricing-card-featured {
+        transform: none;
+    }
+}
     </style>
 </head>
 <body>
@@ -1013,7 +1059,7 @@
                     <div class="form-group">
                         <label>Monthly Expenses</label>
                         <input type="text" id="rentInput" class="form-control" placeholder="Enter your monthly rent" required>
-                        <input type="text" id="groceryInput" class="form-control mt-4" placeholder="Enter your monthly grocery spend" required>
+                        <input type="text" id="groceryInput" class="form-control mt-4" placeholder="Enter your monthly grocery/food spend" required>
                     </div>
                 </div>
 
@@ -1160,9 +1206,78 @@
             </div>
           </div>
         </div>
-        <div class="text-center my-8">
+        
+        <div class="pricing-intro">
+            <p>Choose how you want to save. Get your benefits today, or wait until tax season. Either way, you're fully covered.</p>
+        </div>
+
+        <div class="pricing-grid-two">
+            <!-- Get Your Benefit Today Card -->
+            <div class="pricing-card pricing-card-featured">
+                <span class="featured-label">Most Popular</span>
+                <h3 class="pricing-title">Get Your Benefit Today</h3>
+                <div class="pricing-features">
+                    <ul class="step-list">
+                        <li>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>Get part of your 529 tax benefit today</span>
+                        </li>
+                        <li>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>Automated expense tracking & qualification</span>
+                        </li>
+                        <li>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>Complete 529 Account Management</span>
+                        </li>
+                    </ul>
+                </div>
+                <!-- <div id="early-refund-amount" class="benefit-preview">Calculate Your Benefit</div> -->
+                <a href="getstarted529.html" class="calculator-cta" id="main-cta-button">
+                    Fill out our calculator to estimate how much you could get today
+                </a>
+                <div class="guarantee">Money now and your maximum tax benefit guaranteed</div>
+            </div>
+
+            <!-- Complete Management Card -->
+            <div class="pricing-card">
+                <h3 class="pricing-title">Complete Account Management</h3>
+                <div class="pricing-features">
+                    <ul class="step-list">
+                        <li>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>Full 529 account setup & optimization</span>
+                        </li>
+                        <li>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>Automated expense tracking & qualification</span>
+                        </li>
+                        <li>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>IRS-ready documentation for 3 years</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="price">$5/month</div>
+                <div class="price-period">or $70 when you receive your tax benefit</div>
+                <div class="guarantee">Your maximum tax benefit guaranteed</div>
+            </div>
+        </div>
+<div class="text-center my-8">
           <a href="createaccount529.html" class="getst-button">
-            Create Your Account
+            Open Your Renest Account
           </a>
         </div>
         <div id="emailModal">
@@ -1178,94 +1293,6 @@
                 </form>
             </div>
         </div>
-        <div class="pricing-intro">
-            <p>Choose how you want to save. <br>Track your qualified expenses, or let us manage everything accurately. Either way, you don't need to pay until you receive your tax benefit.</p>
-        </div>
-
-        <div class="pricing-grid">
-            <div class="pricing-card">
-                <h3 class="pricing-title">Record Keeping</h3>
-                <div class="pricing-features">
-                    <!-- <p>Track your qualified expenses</p> -->
-                    <ul class="step-list">
-                        <li>
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <span>Automated qualified expense categorization & tracking</span>
-                        </li>
-                        <li>
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <span>IRS-ready documentation for 529 expense reports for 3 years</span>
-                        </li>
-                    </ul>
-                </div>
-                <div class="price">$3/month</div>
-                <div class="price-period">or $49 when you receive your 529 tax refund</div>
-                <div class="guarantee">Accuracy guarantee on expense qualification</div>
-            </div>
-
-            <div class="pricing-card">
-                <h3 class="pricing-title">Complete Management</h3>
-                <div class="pricing-features">
-                    <!-- <p>Full-service 529 plan administration</p> -->
-                    <ul class="step-list">
-                        <li>
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <span>All Record Keeping features</span>
-                        </li>
-                        <li>
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <span>529 account setup & optimization</span>
-                        </li>
-                        <li>
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <span>Contribution and withdrawal automation (no funds required on your part!)</span>
-                        </li>
-                    </ul>
-                </div>
-                <div class="price">$4/month</div>
-                <div class="price-period">or $59 when you receive your 529 tax refund</div>
-                <div class="guarantee">Your guaranteed maximum tax benefit or no fee</div>
-            </div>
-
-            <div class="pricing-card" id="early-refund-card">
-                <h3 class="pricing-title">Get Your 529 Benefit Early</h3>
-                <div class="pricing-features">
-                    <!-- <p>Access your 529 tax benefits early</p> -->
-                    <ul class="step-list">
-                        <li>
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <span>All Complete Management features</span>
-                        </li>
-                        <li>
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <span>Advance up to 70% of estimated tax benefit</span>
-                        </li>
-                    </ul>
-                </div>
-                <div id="early-refund-details" class="text-center text-2xl font-bold my-4">What You Get Today</div>
-                <div class="text-center">
-                    <a href="getstarted529.html" id="early-refund-amount" class="calculate-benefits-btn inline-block" style="font-size: .85rem;">Complete Calculator to See Benefit</a>
-                </div>
-                <div id="early-refund-explanation" class="guarantee mt-4">
-                    Receive up to 70% of your estimated 529 tax benefit today. Final settlement upon tax filing.
-                </div>
-            </div>
-        </div>
-
     </main>
 
     <footer class="footer">
@@ -3160,10 +3187,11 @@ document.getElementById('emailModal').addEventListener('click', function(e) {
             
             steps[stepNumber - 1].classList.add('active');
             
+            // Handle buttons visibility for step 4
             if (stepNumber === 4) {
+                nextBtn.style.display = 'none';
+                prevBtn.style.display = 'none';
                 calculateAndDisplayBenefit();
-                prevBtn.style.display = 'none';  // Hide back button on step 4
-                nextBtn.style.display = 'none';  // Hide next button on step 4
             } else {
                 prevBtn.style.display = stepNumber === 1 ? 'none' : 'block';
                 nextBtn.style.display = 'block';
@@ -3275,8 +3303,8 @@ document.getElementById('emailModal').addEventListener('click', function(e) {
             
             document.getElementById('benefitResult').textContent = formattedBenefit;
             
-            // Calculate and display early refund amount (70% of benefit)
-            const earlyAmount = Math.round(benefit * 0.7);
+            // Calculate early amount (70% of benefit)
+            const earlyAmount = Math.round(benefit * 0.62);
             const formattedEarlyAmount = new Intl.NumberFormat('en-US', {
                 style: 'currency',
                 currency: 'USD',
@@ -3285,9 +3313,13 @@ document.getElementById('emailModal').addEventListener('click', function(e) {
             }).format(earlyAmount);
             
             // Update early refund card
-            document.getElementById('early-refund-amount').textContent = formattedEarlyAmount;
-            document.getElementById('early-refund-details').textContent = 'Available Today';
-            document.getElementById('early-refund-explanation').style.display = 'block';
+            const mainCTAButton = document.getElementById('main-cta-button');
+            if (mainCTAButton) {
+                mainCTAButton.textContent = `Get ${formattedEarlyAmount} Today`;
+            }
+            
+            // document.getElementById('early-refund-amount').textContent = formattedEarlyAmount;
+            // document.getElementById('early-refund-details').style.display = 'block';
 
             // Update benefit details tooltip
             document.getElementById('benefitDetails').innerHTML = `
@@ -3315,6 +3347,13 @@ document.getElementById('emailModal').addEventListener('click', function(e) {
                 <br>
                 Your benefit is doubled if you are married.
             `;
+            const completeManagementCard = document.querySelector('.pricing-card:not(.pricing-card-featured)');
+            if (completeManagementCard) {
+                const priceElement = completeManagementCard.querySelector('.price-period');
+                if (priceElement) {
+                    priceElement.innerHTML = `or $70 when you receive your ${formattedBenefit} tax benefit`;
+                }
+            }
         }
         function getStateName(stateAbbr) {
             return stateOptions[stateAbbr] || stateAbbr;
@@ -3352,23 +3391,41 @@ document.getElementById('emailModal').addEventListener('click', function(e) {
             }
         }
         function updateEarlyRefundCard(benefit) {
-            const earlyAmount = Math.round(benefit * 0.7);
+            const dailyRate = 0.05 / 365; // 5% APY converted to daily rate
+            const lendingDays = 400;
+            const serviceFee = 30;
+            
+            const earlyAmount = benefit * 0.62;
+            const futureValue = benefit - 70;
+            const lendingCost = earlyAmount * (1 + dailyRate * lendingDays) - earlyAmount;
+            
+            // Only offer early amount if the future value minus lending costs and fees is greater
+            const isViable = futureValue > (earlyAmount + lendingCost + serviceFee);
+            const finalAmount = isViable ? earlyAmount : 0;
+            
             const formattedEarlyAmount = new Intl.NumberFormat('en-US', {
                 style: 'currency',
                 currency: 'USD',
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0
-            }).format(earlyAmount);
+            }).format(finalAmount);
             
+            // Update UI elements
             const earlyRefundAmount = document.getElementById('early-refund-amount');
+            const ctaButton = document.getElementById('main-cta-button');
             const earlyRefundDetails = document.getElementById('early-refund-details');
-            const earlyRefundExplanation = document.getElementById('early-refund-explanation');
             
-            earlyRefundAmount.textContent = formattedEarlyAmount;
-            earlyRefundAmount.classList.remove('calculate-benefits-btn');
-            earlyRefundAmount.classList.add('get-today-btn');
-            earlyRefundDetails.textContent = 'Available Today';
-            earlyRefundExplanation.style.display = 'block';
+            if (earlyRefundAmount) earlyRefundAmount.textContent = formattedEarlyAmount;
+            if (ctaButton) {
+                ctaButton.textContent = finalAmount > 0 ? 
+                    `Get ${formattedEarlyAmount} Today` : 
+                    'Check Eligibility';
+            }
+            if (earlyRefundDetails) {
+                earlyRefundDetails.textContent = finalAmount > 0 ? 
+                    'Available Today' : 
+                    'Not Currently Available';
+            }
         }
 
         // New function to show state selection
