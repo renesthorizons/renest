@@ -615,6 +615,44 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     background: #4B227A;
     color: white;
 }
+
+.tabi-container {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.tabi-buttons {
+  display: flex;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.tabi-button {
+  flex: 1;
+  padding: 1rem;
+  font-size: 1.125rem;
+  font-weight: 500;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tabi-button.active {
+  background: #4B227A;
+  color: white;
+}
+
+.tabi-content {
+  display: none;
+  padding: 2rem;
+  background:   #fffaf0;
+}
+
+.tabi-content.active {
+  display: block;
+}
 </style>
 <body>
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TGZL6PTS"
@@ -710,13 +748,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </div>
         </section>
         <div id="how-it-works" class="how-it-works">
-            <div class="tab-container">
-              <div class="tab-buttons">
-                <button class="tab-button active" data-tab="employer">Employer Benefits</button>
-                <button class="tab-button" data-tab="student">Student Benefits</button>
+            <div class="tabi-container">
+              <div class="tabi-buttons">
+                <button class="tabi-button active" data-tab="employer">Employer Benefits</button>
+                <button class="tabi-button" data-tab="student">Student Benefits</button>
               </div>
               
-              <div class="tab-content active" id="employer">
+              <div class="tabi-content active" id="employer">
                 <ul class="step-list">
                   <li>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -759,7 +797,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 </ul>
               </div>
                         
-              <div class="tab-content" id="student">
+              <div class="tabi-content" id="student">
                 <ul class="step-list">
                   <li>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -889,7 +927,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         planName: 'Wisconsin',
         employerCredit: 800,
         requiredContribution: 1600,
-        studentBenefit: 400,
+        studentBenefit: 100,
         notes: '50% tax credit for 529 plan contributions'
     }
 };
@@ -1051,21 +1089,17 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // How It Works tab buttons
-    document.querySelectorAll('[data-tab]').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const targetTab = e.target.dataset.tab;
-            
-            // Remove active class from all How It Works tab buttons
-            document.querySelectorAll('[data-tab]').forEach(btn => btn.classList.remove('active'));
-            e.target.classList.add('active');
-            
-            // Hide all tab content
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            
-            // Show selected tab content
-            document.getElementById(targetTab).classList.add('active');
-        });
-    });
+    const tabiButtons = document.querySelectorAll('.tabi-button');
+          
+          tabiButtons.forEach(button => {
+            button.addEventListener('click', () => {
+              document.querySelectorAll('.tabi-button').forEach(btn => btn.classList.remove('active'));
+              document.querySelectorAll('.tabi-content').forEach(content => content.classList.remove('active'));
+              
+              button.classList.add('active');
+              document.getElementById(button.dataset.tab).classList.add('active');
+            });
+          });
 
     // Initialize menu button functionality
     const menuButton = document.querySelector('.menu-button');
