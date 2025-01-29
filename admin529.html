@@ -1,38 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-TGZL6PTS');</script>
- <link rel="icon" href="blogo2.png" type="image/png">
-<!-- End Google Tag Manager -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>University Administrator Portal - RENEST</title>
-    <style>
-        /* Previous styles remain */
-        :root {
-            --primary: #4B227A;
-            --accent: #FF69B4;
-            --text-dark: #1E0A3C;
-            --background: #FFFFFF;
-        }
+    <title>State Tax Benefits Calculator - RENEST</title>
+    <link rel="stylesheet" href="admin-styles.css">
+</head>
+<style>
+    :root {
+    --primary: #4B227A;
+    --accent: #FF69B4;
+    --text-dark: #1E0A3C;
+    --background: #FFFFFF;
+}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
 
-        body {
-            background-color: var(--background);
-        }
+.about-hero {
+    margin-top: 5rem;
+    padding: 4rem 2rem;
+    background: linear-gradient(45deg, #4B227A, #FF69B4);
+    color: white;
+    text-align: center;
+}
 
-        .navbar {
+.about-hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.impact-section {
+    padding: 3rem 2rem;
+    background: linear-gradient(to right, #f8f8f8, #fff);
+}
+
+.impact-title {
+    text-align: center;
+    margin-bottom: 3rem;
+    color: var(--primary);
+    font-size: 2rem;
+}
+
+.calculator-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(75, 34, 122, 0.1);
+}
+
+.slider-container {
+    margin: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.slider {
+    width: 100%;
+    height: 8px;
+    background: #eee;
+    border-radius: 4px;
+    outline: none;
+    -webkit-appearance: none;
+    margin-bottom: .5rem;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 24px;
+    height: 24px;
+    background: var(--primary);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.stat-card {
+    padding: 1.5rem;
+    background: linear-gradient(45deg, rgba(75, 34, 122, 0.05), rgba(255, 105, 180, 0.05));
+    border-radius: 8px;
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--primary);
+    margin: 0.5rem 0;
+}
+
+.process-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    padding: 4rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.process-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(75, 34, 122, 0.1);
+}
+
+.process-card h3 {
+    color: var(--primary);
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+}
+
+.state-select {
+    margin-bottom: 1rem;
+}
+
+.state-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.suggestions {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.suggestion-item {
+    padding: 0.75rem;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+.suggestion-item:hover {
+    background-color: rgba(75, 34, 122, 0.05);
+}
+
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .process-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .about-hero h1 {
+        font-size: 2rem;
+    }
+}
+.navbar {
             position: fixed;
             top: 0;
             width: 100%;
@@ -124,67 +261,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 padding: 6rem 2rem;
             }
         }
-
-        .hero {
-            margin-top: 5rem;
-            padding: 2rem 1rem;
-            background: linear-gradient(45deg, #4B227A, #FF69B4);
-            color: white;
-            min-height: 65vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            line-height: 1.2;
-            color: white;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-        }
-
-        .email-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            max-width: 500px;
-        }
-
-        .email-input {
-            padding: 1rem;
-            border: none;
-            border-radius: 4px;
-            font-size: 1rem;
-        }
-
-        .submit-button {
-            background-color: var(--primary);
-            color: white;
-            padding: 1rem;
-            border: none;
-            border-radius: 4px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .newsletter {
-            padding: 4rem 1rem;
-            text-align: center;
-            background-color: #f8f8f8;
-        }
-
-        .newsletter h2 {
-            color: var(--primary);
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-
         .footer {
              background-color: rgb(235, 232, 252,.5);
             padding: 3rem 1rem;
@@ -303,322 +379,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             text-align: center;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
-
-        .section-title {
-            font-size: 2rem;
-            color: var(--text-dark);
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-
-        .section-subtitle {
-            font-size: 1.5rem;
-            color: var(--text-dark);
-            margin-bottom: 1.5rem;
-        }
-
-        .text-emphasis {
-            color: var(--primary);
-            font-weight: 600;
-        }
-
-        @media (min-width: 768px) {
-            .benefits-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            
-            .universities-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-        .logo-scroller {
-            padding: 4rem 1rem;
-            background-color: #f8f8f8;
-            overflow: hidden;
-        }
-
-        .logo-scroller h2 {
-            text-align: center;
-            font-size: 2rem;
-            color: var(--text-dark);
-            margin-bottom: 2rem;
-        }
-
-        .logo-container {
-            position: relative;
-            overflow: hidden;
-            width: 100%;
-            padding: 20px 0;
-        }
-
-        .logo-track {
-            display: flex;
-            animation: scroll 30s linear infinite;
-            width: max-content;
-        }
-
-        .logo-track:hover {
-            animation-play-state: paused;
-        }
-
-        .logo-item {
-            flex: 0 0 auto;
-            width: 200px;
-            height: 80px;
-            margin: 0 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .logo-item img {
-            max-width: 80%;
-            max-height: 60%;
-            object-fit: contain;
-        }
-
-        @keyframes scroll {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(-50%);
-            }
-        }
-
-        /* Add a gradient overlay for smooth fade at edges */
-        .logo-container::before,
-        .logo-container::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            height: 100%;
-            width: 100px;
-            z-index: 2;
-        }
-
-        .logo-container::before {
-            left: 0;
-            background: linear-gradient(to right, #f8f8f8 0%, transparent 100%);
-        }
-
-        .logo-container::after {
-            right: 0;
-            background: linear-gradient(to left, #f8f8f8 0%, transparent 100%);
-        }
-        .how-it-works {
-          max-width: 800px;
-          margin: 3rem auto;
-          padding: 0 2rem;
-        }
-
-        .gradient-card {
-            max-width: 1000px;
-            margin: 2rem auto;
-            padding: 3rem;
-            background: #fffaf0;
-            border-radius: 24px;
-            position: relative;
-            box-shadow: 0px 0px 8px 8px rgba(75, 34, 122, 0.3);
-        }
-
-        /* New pop-out border style */
-        .gradient-card::before {
-            content: '';
-            position: absolute;
-           /* top: 0;
-            left: 0;*/
-            width: 100%;
-            height: 100%;
-            /*border-radius: 24px;
-            border-left: 4px solid;
-            border-top: 4px solid;
-            border-image: linear-gradient(45deg, #4B227A, #FF69B4) 1;*/
-            pointer-events: none;
-        }
-
-        .info-box {
-            background: linear-gradient(45deg, rgba(75, 34, 122, 0.05), rgba(255, 105, 180, 0.05));
-            padding: 2rem;
-            border-radius: 16px;
-            margin: 2rem auto;
-            max-width: 800px;
-            transform: translateY(30px);
-            opacity: 0;
-            transition: all 0.6s ease-out;
-        }
-
-        .info-box.visible {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .timeline-steps {
-            max-width: 800px;
-            margin: 4rem auto;
-            position: relative;
-            padding-left: 85px;
-        }
-
-        .timeline-steps::before {
-            content: '';
-            position: absolute;
-            left: 29px;
-            top: 40px;
-            bottom: 40px;
-            width: 3px;
-            background: #eaeaea;
-            z-index:    2;
-            border-radius: 4px;
-        }
-
-        /* Add the animated line overlay */
-        .timeline-line {
-            position: absolute;
-            left: 29px;
-            top: 40px;
-            width: 3px;
-            height: 0;
-            z-index:    2;
-            background: linear-gradient(to bottom, #4B227A, #FF69B4);
-            border-radius: 4px;
-            transition: height 2.5s ease-out;
-        }
-
-        .timeline-step {
-            position: relative;
-            padding-bottom: 3.5rem;
-            opacity: 0;
-            z-index:    5;
-            transform: translateX(-30px);
-            transition: all 0.6s ease-out;
-        }
-
-        .timeline-step.visible {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .timeline-step:last-child {
-            padding-bottom: 0;
-        }
-
-        .timeline-number {
-            position: absolute;
-            left: -85px;
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(45deg, #4B227A, #FF69B4);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            z-index:    5;
-            font-size: 1.4rem;
-            box-shadow: 0 4px 12px rgba(75, 34, 122, 0.2);
-        }
-
-        .timeline-content {
-            padding: 2rem 2.5rem;
-            border-radius: 16px;
-            background: white;
-            box-shadow: 0 4px 16px rgba(75, 34, 122, 0.08);
-            border: 1px solid rgba(75, 34, 122, 0.1);
-        }
-
-        .timeline-content h4 {
-            color: #4B227A;
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-            font-weight: 600;
-        }
-
-        .case-study {
-            max-width: 800px;
-            margin: 1rem auto 0;
-            padding: 2rem;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 4px 24px rgba(75, 34, 122, 0.1);
-            position: relative;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.6s ease-out;
-        }
-
-        
-
-        .case-study.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .case-study-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .case-study-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem;
-            background: rgba(75, 34, 122, 0.05);
-            border-radius: 12px;
-            font-size: 1.1rem;
-        }
-
-        .text-emphasis {
-            color: #4B227A;
-            font-weight: 600;
-            font-size: 1.3rem;
-        }
-
-        .savings-highlight {
-            background: linear-gradient(45deg, #4B227A, #FF69B4);
-            color: white;
-            padding: 2rem;
-            border-radius: 16px;
-            text-align: center;
-            margin-top: 2rem;
-            box-shadow: 0 4px 16px rgba(75, 34, 122, 0.2);
-        }
-
-        .section-title {
-            font-size: 2.5rem;
-            color: #1E0A3C;
-            margin-bottom: 2rem;
-            text-align: center;
-            font-weight: 700;
-        }
-
-        @media (max-width: 768px) {
-            .timeline-steps {
-                padding-left: 65px;
-            }
-            
-            .timeline-number {
-                left: -65px;
-                width: 50px;
-                height: 50px;
-                font-size: 1.2rem;
-            }
-
-            .case-study-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .gradient-card {
-                padding: 2rem 1rem;
-            }
-        }
         .menu-button {
             background: none;
             border: 2px solid var(--primary);
@@ -640,53 +400,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 display: none;  /* This hides the menu button on desktop */
             }
         }
-        .colk-button {
-            background-color: var(--primary);
-            color: white;
-            text-decoration: none;
-            border-radius: 10px;
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            display: inline-block;
-            background-image: linear-gradient(45deg, var(--primary) 0%, var(--primary) 100%);
-            background-size: 200% 200%;
-            background-position: 0% 0%;
-            font-weight: 600;
-            font-size: 1.2rem;
-            padding: 1rem 3rem;
-            margin-top: 3rem;
-        }
-
-        .colk-button:hover {
-            background-image: linear-gradient(45deg, #4B227A, #FF69B4) !important;
-            background-position: 100% 100% !important;
-            transform: translateY(-2px);
-        }
-
-        .nav-links .talk-button {
-            padding: 0.75rem 1.5rem;
-            font-weight: 600;
-            margin-top: 0.5rem;
-        }
-
-        .how-it-works .talk-button {
-            font-size: 1.2rem;
-            padding: 1rem 3rem;
-            margin-top: 3rem;
-        }
-        .admin-hero {
-            margin-top: 5rem;
-            padding: 4rem 2rem;
-            background: linear-gradient(45deg, #4B227A, #FF69B4);
-            color: white;
-            text-align: center;
-        }
-
-        .admin-hero h1 {
-            font-size: 2.8rem;
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
-        }
-
         .process-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -762,147 +475,26 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             border-radius: 12px;
             box-shadow: 0 4px 16px rgba(75, 34, 122, 0.1);
         }
-        /* Calculator styles */
-        .calculator-container {
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 2rem;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 16px rgba(75, 34, 122, 0.1);
-        }
-
-        .slider-container {
-            margin: 1rem 0;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .slider {
-            width: 100%;
-            height: 8px;
-            background: #eee;
-            border-radius: 4px;
-            outline: none;
-            -webkit-appearance: none;
-            margin-bottom: .5rem;
-        }
-
-        .slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 24px;
-            height: 24px;
-            background: var(--primary);
-            border-radius: 50%;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .slider::-webkit-slider-thumb:hover {
-            background: var(--accent);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        @media (max-width: 640px) {
-            .stats-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-        }
-
-        .stat-card {
-            padding: 1.5rem;
-            background: linear-gradient(45deg, rgba(75, 34, 122, 0.05), rgba(255, 105, 180, 0.05));
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        @media (max-width: 640px) {
-            .stat-card {
-                padding: 1rem;
-            }
-            
-            .stat-card h3 {
-                font-size: 1.1rem;
-            }
-            
-            .stat-value {
-                font-size: 1.75rem;
-            }
-            
-            .stat-card p {
-                font-size: 0.9rem;
-            }
-        }
-
-        .stat-value {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--primary);
-            margin: 0.5rem 0;
-        }
-
-        .school-select {
-            margin-bottom: 1rem;
-        }
-
-        .school-input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .suggestions {
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
-        .suggestion-item {
-            padding: 0.75rem;
-            cursor: pointer;
-            border-bottom: 1px solid #eee;
-        }
-
-        .suggestion-item:hover {
-            background-color: rgba(75, 34, 122, 0.05);
-        }
-
-        .impact-section {
-            padding: 3rem 2rem;
-            background: linear-gradient(to right, #f8f8f8, #fff);
-        }
-
-        .impact-title {
-            text-align: center;
-            margin-bottom: 3rem;
-            color: var(--primary);
-            font-size: 2rem;
-        }
-        .about-hero {
-            margin-top: 5rem;
-            padding: 4rem 2rem;
-            background: linear-gradient(45deg, #4B227A, #FF69B4);
+        .colk-button {
+            background-color: var(--primary);
             color: white;
-            text-align: center;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-block;
+            background-image: linear-gradient(45deg, var(--primary) 0%, var(--primary) 100%);
+            background-size: 200% 200%;
+            background-position: 0% 0%;
+            font-weight: 600;
+            font-size: 1.2rem;
+            padding: 1rem 3rem;
+            margin-top: 3rem;
         }
 
-        .about-hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            line-height: 1.2;
+        .colk-button:hover {
+            background-image: linear-gradient(45deg, #4B227A, #FF69B4) !important;
+            background-position: 100% 100% !important;
+            transform: translateY(-2px);
         }
         .tab-container {
  background: white;
@@ -970,12 +562,64 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
    margin: 0 1rem;
  }
 }
+.how-it-works {
+          max-width: 800px;
+          margin: 3rem auto;
+          padding: 0 2rem;
+        }
+.section-title {
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
 
-    </style>
-</head>
+        .section-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+        }
+
+
+.state-details {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: rgba(75, 34, 122, 0.05);
+    border-radius: 8px;
+}
+
+.text-hint {
+    color: #666;
+    font-size: 0.875rem;
+    text-align: center;
+    margin-top: 0.5rem;
+}
+
+.tab-buttons {
+    display: flex;
+    border: 1px solid #4B227A;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 1rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.tab-button.active {
+    background: #4B227A;
+    color: white;
+}
+</style>
 <body>
-    <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TGZL6PTS"
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TGZL6PTS"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
     <nav class="navbar">
@@ -993,36 +637,59 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <main>
         <section class="about-hero">
-            <h1>Empowering Working Students Through Financial Innovation</h1>
-            <p>Renest helps your students maximize their state tax benefits through 529 account management</p>
+            <h1>Empowering Employers and Students Through Financial Innovation</h1>
+            <p>Renest helps employers and working students reduce their tax liabilities through 529 account management</p>
         </section>
 
         <section class="impact-section">
-            <h2 class="impact-title">Calculate Your University's Impact</h2>
+            <h2 class="impact-title">Tax Benefit Calculator</h2>
             <div class="calculator-container">
-                <div class="school-select">
-                    <input type="text" id="schoolSearch" class="school-input" 
-                           placeholder="Type your university's name..." 
-                           oninput="handleSchoolSearch(event)">
-                    <div id="schoolSuggestions" class="suggestions" style="display: none;"></div>
+                <!-- Calculator Type Selector -->
+                <div class="tab-buttons">
+                    <button class="tab-button active" data-calc="university">University</button>
+                    <button class="tab-button" data-calc="business">Business</button>
                 </div>
 
+                <!-- State Search -->
+                <div class="state-select">
+                    <input type="text" 
+                           id="stateSearch" 
+                           class="state-input" 
+                           placeholder="Type your state name..." 
+                           oninput="handleStateSearch(event)">
+                    <div id="stateSuggestions" class="suggestions" style="display: none;"></div>
+                </div>
+
+                <!-- Student Count Slider -->
                 <div class="slider-container">
-                    <input type="range" min="100" max="10000" value="1000" class="slider" id="studentSlider">
-                    <label>Number of Working Students: <span id="studentCount">1000</span></label>
+                    <label for="studentSlider" id="sliderLabel">Number of Student Workers:</label>
+                    <input type="range" 
+                           id="studentSlider" 
+                           class="slider" 
+                           min="100" 
+                           max="5000" 
+                           value="1000" 
+                           step="1">
+                    <span id="studentCount">1000 students</span>
+                    <!-- <p id="rangeHint" class="text-hint">Typical range: 500-5000 graduate student workers</p> -->
                 </div>
 
+                <!-- Results Display -->
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <h3>Total Student Savings</h3>
-                        <div class="stat-value" id="studentSavings">$495,000</div>
-                        <p>Annual tax benefits for all students</p>
+                        <h3>Annual Student Benefit</h3>
+                        <div class="stat-value" id="studentBenefit">$0</div>
                     </div>
                     <div class="stat-card">
-                        <h3>University Economic Impact</h3>
-                        <div class="stat-value" id="universityImpact">$742,500</div>
-                        <p>Total economic benefit to university community</p>
+                        <h3>Annual Employer Tax Savings</h3>
+                        <div class="stat-value" id="employerBenefit">$0</div>
                     </div>
+                </div>
+
+                <!-- State Program Details -->
+                <div id="stateDetails" class="state-details" style="display: none;">
+                    <h4>State Program Details</h4>
+                    <p id="stateNotes"></p>
                 </div>
             </div>
         </section>
@@ -1030,106 +697,110 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <section class="process-grid">
             <div class="process-card">
                 <h3>Simple Implementation</h3>
-                <p>We provide a turnkey solution that requires minimal administrative overhead. Share our enrollment information through your existing communication channels.</p>
+                <p>Turnkey solution requiring minimal administrative overhead. Share enrollment information through existing channels.</p>
             </div>
             <div class="process-card">
                 <h3>Dedicated Support</h3>
-                <p>Our team handles all student inquiries and provides comprehensive support throughout the process, from enrollment to tax filing.</p>
+                <p>Our team handles all student inquiries and provides comprehensive support throughout the process.</p>
             </div>
             <div class="process-card">
                 <h3>Compliance Assured</h3>
-                <p>We maintain strict compliance with state and federal regulations while managing all aspects of 529 account administration.</p>
+                <p>We maintain strict compliance with state and federal regulations while managing all aspects of 529 administration.</p>
             </div>
         </section>
-<div id="how-it-works" class="how-it-works">
-        <div class="tab-container">
-  <div class="tab-buttons">
-    <button class="tab-button active" data-tab="students">For Students</button>
-    <button class="tab-button" data-tab="universities">For Universities</button>
-  </div>
-  <div class="tab-content active" id="students">
-    <ul class="step-list">
-      <li>
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <div>
-          <span>Average annual tax savings of $495 per student</span>
-          <p class="step-description">Get money back on rent and groceries you're already spending</p>
+        <div id="how-it-works" class="how-it-works">
+            <div class="tab-container">
+              <div class="tab-buttons">
+                <button class="tab-button active" data-tab="employer">Employer Benefits</button>
+                <button class="tab-button" data-tab="student">Student Benefits</button>
+              </div>
+              
+              <div class="tab-content active" id="employer">
+                <ul class="step-list">
+                  <li>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path d="M12 8V16M8 12H16" stroke="#4B227A" stroke-width="2" stroke-linecap="round"/>
+                      <circle cx="12" cy="12" r="10" stroke="#4B227A" stroke-width="2"/>
+                    </svg>
+                    <div>
+                      <span>Tax Credits & Savings</span>
+                      <p class="step-description">Receive up to $800 in tax credits per employee annually, plus potential payroll tax savings</p>
+                    </div>
+                  </li>
+                  <li>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path d="M20 6L9 17L4 12" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <div>
+                      <span>Simple Implementation</span>
+                      <p class="step-description">Hands-off employer implementation and easy employee onboarding</p>
+                    </div>
+                  </li>
+                  <li>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path d="M12 16V16.01M12 8V12" stroke="#4B227A" stroke-width="2" stroke-linecap="round"/>
+                      <circle cx="12" cy="12" r="10" stroke="#4B227A" stroke-width="2"/>
+                    </svg>
+                    <div>
+                      <span>Compliance & Risk Management</span>
+                      <p class="step-description">Full regulatory compliance handling and automated documentation</p>
+                    </div>
+                  </li>
+                  <li>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path d="M15 8a3 3 0 11-6 0 3 3 0 016 0zm-9 8c0 1 1 1 1 1h10s1 0 1-1-1-4-6-4-6 3-6 4z" stroke="#4B227A" stroke-width="2"/>
+                    </svg>
+                    <div>
+                      <span>Enhanced Employee Relations</span>
+                      <p class="step-description">Improve retention and satisfaction by providing valuable financial benefits at no cost to employees</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+                        
+              <div class="tab-content" id="student">
+                <ul class="step-list">
+                  <li>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H7" stroke="#4B227A" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <div>
+                      <span>Immediate Tax Savings</span>
+                      <p class="step-description">Save up to $500 annually through state tax benefits on qualified expenses you're already paying</p>
+                    </div>
+                  </li>
+                  <li>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" stroke="#4B227A" stroke-width="2"/>
+                      <rect x="9" y="3" width="6" height="4" rx="1" stroke="#4B227A" stroke-width="2"/>
+                    </svg>
+                    <div>
+                      <span>Automatic Expense Tracking</span>
+                      <p class="step-description">Smart categorization of qualified expenses like rent, utilities, and course materials</p>
+                    </div>
+                  </li>
+                  <li>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <div>
+                      <span>Educational Support</span>
+                      <p class="step-description">Access to financial education resources and personalized guidance for maximizing benefits</p>
+                    </div>
+                  </li>
+                  <li>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" stroke="#4B227A" stroke-width="2"/>
+                    </svg>
+                    <div>
+                      <span>Dedicated Support Team</span>
+                      <p class="step-description">Expert assistance available for questions about benefits, documentation, and tax filing</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
         </div>
-      </li>
-      <li>
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <div>
-          <span>Simplified expense tracking and documentation</span>
-          <p class="step-description">Automated categorization of qualified expenses and IRS-ready documentation</p>
-        </div>
-      </li>
-      <li>
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <div>
-          <span>Reduced financial stress</span>
-          <p class="step-description">Better focus on academics with improved financial wellbeing</p>
-        </div>
-      </li>
-      <li>
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <div>
-          <span>Enhanced financial literacy</span>
-          <p class="step-description">Learn valuable financial planning skills while maximizing your benefits</p>
-        </div>
-      </li>
-    </ul>
-  </div>
-            
-  <div class="tab-content" id="universities">
-    <ul class="step-list">
-      <li>
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <div>
-          <span>Increased graduate student satisfaction and retention</span>
-          <p class="step-description">Help students maximize their financial benefits with zero implementation cost</p>
-        </div>
-      </li>
-      <li>
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <div>
-          <span>Enhanced recruitment competitiveness</span>
-          <p class="step-description">Offer unique financial benefits that set your institution apart</p>
-        </div>
-      </li>
-      <li>
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <div>
-          <span>Reduced financial support inquiries</span>
-          <p class="step-description">Our team handles all student questions and support needs</p>
-        </div>
-      </li>
-      <li>
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <div>
-          <span>Strengthened commitment to student financial wellbeing</span>
-          <p class="step-description">Demonstrate your institution's dedication to student success</p>
-        </div>
-      </li>
-    </ul>
-  </div>
-</div>
-</div>
         <section class="contact-section">
             <h2 class="section-title">Want to Learn More?</h2>
             <div class="contact-card">
@@ -1137,9 +808,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <a href="contactus529.html" class="colk-button">Contact Our Team</a>
             </div>
         </section>
-    </main>
-
-    <footer class="footer">
+        <footer class="footer">
         <div class="footer-content">
             <div class="footer-brand">
                 <div class="footer-logo">RENEST</div>
@@ -1156,1513 +825,74 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </div>
         </div>
     </footer>
-
+    </main>
     <script>
-        const stateTaxDB = {
-    'AK': {
-        hasStateCapGains: false,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: Infinity, rate: 0 }
-        ],
-        notes: 'Alaska has no state income tax.'
-    },
-    'AL': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: 3000, rate: 2 },
-            { threshold: 6000, rate: 4 },
-            { threshold: 12000, rate: 5 },
-            { threshold: Infinity, rate: 5.5 }
-        ],
-        notes: 'Alabama taxes capital gains as ordinary income with progressive rates.'
-    },
+        const state529DB = {
     'AR': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: 4300, rate: 2 },
-            { threshold: 8500, rate: 3 },
-            { threshold: 12700, rate: 4.4 },
-            { threshold: 21300, rate: 4.6 },
-            { threshold: 26500, rate: 4.9 },
-            { threshold: Infinity, rate: 5.5 }
-        ],
-        notes: 'Arkansas taxes capital gains as ordinary income with multiple tax brackets.'
-    },
-    'AZ': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: 27272, rate: 2.55 },
-            { threshold: 54544, rate: 2.98 },
-            { threshold: 163692, rate: 4.50 },
-            { threshold: Infinity, rate: 4.80 }
-        ],
-        notes: 'Arizona taxes capital gains as ordinary income with progressive rates.'
-    },
-    'CA': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: true,
-        brackets: [
-            { threshold: 10099, rate: 1 },
-            { threshold: 23942, rate: 2 },
-            { threshold: 37788, rate: 4 },
-            { threshold: 52455, rate: 6 },
-            { threshold: 66295, rate: 8 },
-            { threshold: 338639, rate: 9.3 },
-            { threshold: 406364, rate: 10.3 },
-            { threshold: 677275, rate: 11.3 },
-            { threshold: 1000000, rate: 12.3 },
-            { threshold: Infinity, rate: 13.3 }
-        ],
-        notes: 'California taxes capital gains as ordinary income with progressive rates from 1% to 13.3%. Capital gains are taxed even with $0 in other income.'
+        planName: 'Arkansas',
+        employerCredit: 500,
+        requiredContribution: 500,
+        studentBenefit: 21.5,
+        notes: 'State income tax deduction for 529 contributions; $21.5 per employee benefit with 4.3% marginal corporate tax'
     },
     'CO': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: Infinity, rate: 4.4 }
-        ],
-        notes: 'Colorado has a flat tax rate of 4.4% for all income including capital gains.'
-    },
-    'CT': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: 10000, rate: 3 },
-            { threshold: 50000, rate: 5 },
-            { threshold: 100000, rate: 5.5 },
-            { threshold: 200000, rate: 6 },
-            { threshold: 250000, rate: 6.5 },
-            { threshold: 500000, rate: 6.9 },
-            { threshold: Infinity, rate: 6.99 }
-        ],
-        notes: 'Connecticut taxes capital gains as ordinary income with progressive rates.'
-    },
-    'DE': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: 2000, rate: 0 },
-            { threshold: 5000, rate: 2.2 },
-            { threshold: 10000, rate: 3.9 },
-            { threshold: 20000, rate: 4.8 },
-            { threshold: 25000, rate: 5.2 },
-            { threshold: 60000, rate: 5.55 },
-            { threshold: Infinity, rate: 6.6 }
-        ],
-        notes: 'Delaware taxes capital gains as ordinary income with progressive rates.'
-    },
-    'FL': {
-        hasStateCapGains: false,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: Infinity, rate: 0 }
-        ],
-        notes: 'Florida has no state income tax or capital gains tax.'
-    },
-    'GA': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: 750, rate: 1 },
-            { threshold: 2250, rate: 2 },
-            { threshold: 3750, rate: 3 },
-            { threshold: 5250, rate: 4 },
-            { threshold: 7000, rate: 5 },
-            { threshold: Infinity, rate: 5.75 }
-        ],
-        notes: 'Georgia taxes capital gains as ordinary income with progressive rates.'
-    },
-    'HI': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: 2400, rate: 1.4 },
-            { threshold: 4800, rate: 3.2 },
-            { threshold: 9600, rate: 5.5 },
-            { threshold: 14400, rate: 6.4 },
-            { threshold: 19200, rate: 6.8 },
-            { threshold: 24000, rate: 7.2 },
-            { threshold: 36000, rate: 7.6 },
-            { threshold: 48000, rate: 7.9 },
-            { threshold: 150000, rate: 8.25 },
-            { threshold: 175000, rate: 9 },
-            { threshold: 200000, rate: 10 },
-            { threshold: Infinity, rate: 11 }
-        ],
-        notes: 'Hawaii has one of the highest state tax rates with multiple brackets.'
-    },
-    'IA': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: Infinity, rate: 3.90 }
-        ],
-        notes: 'Iowa has implemented a flat tax rate of 3.90% for 2024.'
+        planName: 'Colorado',
+        employerCredit: 500,
+        requiredContribution: 2500,
+        studentBenefit: 100,
+        notes: '20% tax credit for 529 plan contributions; maximum $500 credit per employee per year'
     },
     'ID': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: Infinity, rate: 5.8 }
-        ],
-        notes: 'Idaho has a flat tax rate of 5.8% as of 2024.'
+        planName: 'Idaho',
+        employerCredit: 500,
+        requiredContribution: 2500,
+        studentBenefit: 100,
+        notes: '20% tax credit, up to a maximum of $500 per employee per year'
     },
     'IL': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: Infinity, rate: 4.95 }
-        ],
-        notes: 'Illinois taxes capital gains at a flat 4.95% rate.'
-    },
-    'IN': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: Infinity, rate: 3.15 }
-        ],
-        notes: 'Indiana has a flat tax rate and taxes capital gains as ordinary income.'
-    },
-    'KS': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: 15000, rate: 3.1 },
-            { threshold: 30000, rate: 5.25 },
-            { threshold: Infinity, rate: 5.7 }
-        ],
-        notes: 'Kansas taxes capital gains as ordinary income with progressive rates.'
-    },
-    'KY': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: Infinity, rate: 4.5 }
-        ],
-        notes: 'Kentucky has a flat tax rate of 4.5% for all income including capital gains.'
-    },
-    'LA': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: 12500, rate: 1.85 },
-            { threshold: 50000, rate: 3.5 },
-            { threshold: Infinity, rate: 4.25 }
-        ],
-        notes: 'Louisiana taxes capital gains as ordinary income with progressive rates.'
-    },
-    'MA': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: Infinity, rate: 5 }
-        ],
-        notes: 'Massachusetts has a renters credit allowing a deduction up to $4,000 spent on rent.'
-    },
-    'MD': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: 1000, rate: 2 },
-            { threshold: 2000, rate: 3 },
-            { threshold: 3000, rate: 4 },
-            { threshold: 100000, rate: 4.75 },
-            { threshold: 125000, rate: 5 },
-            { threshold: 150000, rate: 5.25 },
-            { threshold: 250000, rate: 5.5 },
-            { threshold: Infinity, rate: 5.75 }
-        ],
-        notes: 'Maryland taxes capital gains as ordinary income with progressive rates.'
-    },
-    'ME': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: 24500, rate: 5.8 },
-            { threshold: 58050, rate: 6.75 },
-            { threshold: Infinity, rate: 7.15 }
-        ],
-        notes: 'Maine taxes capital gains as ordinary income with progressive rates.'
-    },
-    'MI': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: Infinity, rate: 4.25 }
-        ],
-        notes: 'Michigan taxes capital gains at a flat 4.25% rate.'
-    },
-    'MN': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: 30070, rate: 5.35 },
-            { threshold: 98760, rate: 6.8 },
-            { threshold: 164400, rate: 7.85 },
-            { threshold: Infinity, rate: 9.85 }
-        ],
-        notes: 'Minnesota taxes capital gains as ordinary income with progressive rates.'
-    },
-    'MO': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: 1121, rate: 1.5 },
-            { threshold: 2242, rate: 2 },
-            { threshold: 3363, rate: 2.5 },
-            { threshold: 4484, rate: 3 },
-            { threshold: 5605, rate: 3.5 },
-            { threshold: 6726, rate: 4 },
-            { threshold: 7847, rate: 4.5 },
-            { threshold: 8968, rate: 5 },
-            { threshold: Infinity, rate: 5.3 }
-        ],
-        notes: 'Missouri taxes capital gains as ordinary income with progressive rates.'
-    },
-    'MS': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: 5000, rate: 4 },
-            { threshold: 10000, rate: 5 },
-            { threshold: Infinity, rate: 5 }
-        ],
-        notes: 'Mississippi taxes capital gains as ordinary income with progressive rates.'
-    },
-    'MT': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: 3300, rate: 1 },
-            { threshold: 5800, rate: 2 },
-            { threshold: 8900, rate: 3 },
-            { threshold: 12000, rate: 4 },
-            { threshold: 15400, rate: 5 },
-            { threshold: 19800, rate: 6 },
-            { threshold: Infinity, rate: 6.75 }
-        ],
-        notes: 'Montana taxes capital gains as ordinary income with progressive rates.'
-    },
-    'NC': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: Infinity, rate: 4.75 }
-        ],
-        notes: 'North Carolina has a flat income tax rate of 4.75% for 2024.'
-    },
-    'ND': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: 41775, rate: 1.1 },
-            { threshold: 100450, rate: 2.04 },
-            { threshold: 221050, rate: 2.64 },
-            { threshold: Infinity, rate: 2.90 }
-        ],
-        notes: 'North Dakota taxes capital gains as ordinary income with progressive rates.'
+        planName: 'Illinois',
+        employerCredit: 500,
+        requiredContribution: 2000,
+        studentBenefit: 125,
+        notes: '25% tax credit for 529 plan contributions; credits may carry forward 5 years'
     },
     'NE': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: 3700, rate: 2.46 },
-            { threshold: 22170, rate: 3.51 },
-            { threshold: 35730, rate: 5.01 },
-            { threshold: Infinity, rate: 6.84 }
-        ],
-        notes: 'Nebraska taxes capital gains as ordinary income with progressive rates.'
-    },
-    'NH': {
-        hasStateCapGains: false,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: Infinity, rate: 0 }
-        ],
-        notes: 'New Hampshire has no general income tax or capital gains tax.'
-    },
-    'NJ': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: 20000, rate: 1.4 },
-            { threshold: 35000, rate: 1.75 },
-            { threshold: 40000, rate: 3.5 },
-            { threshold: 75000, rate: 5.525 },
-            { threshold: 500000, rate: 6.37 },
-            { threshold: 1000000, rate: 10.75 },
-            { threshold: Infinity, rate: 10.75 }
-        ],
-        notes: 'New Jersey taxes capital gains as ordinary income with progressive rates from 1.4% to 10.75%.'
-    },
-    'NM': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: 5500, rate: 1.7 },
-            { threshold: 11000, rate: 3.2 },
-            { threshold: 16000, rate: 4.7 },
-            { threshold: 24000, rate: 4.9 },
-            { threshold: Infinity, rate: 5.9 }
-        ],
-        notes: 'New Mexico taxes capital gains as ordinary income with progressive rates.'
+        planName: 'Nebraska',
+        employerCredit: 500,
+        requiredContribution: 2000,
+        studentBenefit: 125,
+        notes: '25% tax credit for 529 plan contributions'
     },
     'NV': {
-        hasStateCapGains: false,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: Infinity, rate: 0 }
-        ],
-        notes: 'Nevada has no state income tax or capital gains tax.'
-    },
-    'NY': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: 13900, rate: 4 },
-            { threshold: 80650, rate: 5.97 },
-            { threshold: 215400, rate: 6.33 },
-            { threshold: 1077550, rate: 6.85 },
-            { threshold: 5000000, rate: 9.65 },
-            { threshold: 25000000, rate: 10.3 },
-            { threshold: Infinity, rate: 10.9 }
-        ],
-        notes: 'New York taxes capital gains as ordinary income with progressive rates from 4% to 10.9%.'
-    },
-    'OH': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: Infinity, rate: 3.75 }
-        ],
-        notes: 'Ohio has a flat tax rate and taxes capital gains as ordinary income.'
-    },
-    'OK': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: 1000, rate: 0.5 },
-            { threshold: 2500, rate: 1 },
-            { threshold: 3750, rate: 2 },
-            { threshold: 4900, rate: 3 },
-            { threshold: 7200, rate: 4 },
-            { threshold: Infinity, rate: 5 }
-        ],
-        notes: 'Oklahoma taxes capital gains as ordinary income with progressive rates.'
-    },
-    'OR': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: 3750, rate: 4.75 },
-            { threshold: 9450, rate: 6.75 },
-            { threshold: 125000, rate: 8.75 },
-            { threshold: 250000, rate: 9.9 },
-            { threshold: Infinity, rate: 9.9 }
-        ],
-        notes: 'Oregon taxes capital gains as ordinary income with progressive rates.'
+        planName: 'Nevada',
+        employerCredit: 500,
+        requiredContribution: 2000,
+        studentBenefit: 125,
+        notes: '25% tax credit for 529 plan contributions'
     },
     'PA': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: Infinity, rate: 3.07 }
-        ],
-        notes: 'Pennsylvania has a flat tax rate and taxes capital gains as ordinary income.'
-    },
-    'RI': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: 66200, rate: 3.75 },
-            { threshold: 155950, rate: 4.75 },
-            { threshold: Infinity, rate: 5.99 }
-        ],
-        notes: 'Rhode Island taxes capital gains as ordinary income with progressive rates.'
-    },
-    'SC': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: 3000, rate: 0 },
-            { threshold: 6000, rate: 3 },
-            { threshold: 15000, rate: 4 },
-            { threshold: Infinity, rate: 5 }
-        ],
-        notes: 'South Carolina taxes capital gains as ordinary income with progressive rates.'
-    },
-    'SD': {
-        hasStateCapGains: false,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: Infinity, rate: 0 }
-        ],
-        notes: 'South Dakota has no state income tax.'
-    },
-    'TN': {
-        hasStateCapGains: false,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: Infinity, rate: 0 }
-        ],
-        notes: 'Tennessee has no state income tax.'
-    },
-    'TX': {
-        hasStateCapGains: false,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: Infinity, rate: 0 }
-        ],
-        notes: 'Texas has no state income tax.'
+        planName: 'Pennsylvania',
+        employerCredit: 125,
+        requiredContribution: 500,
+        studentBenefit: 31.25,
+        notes: '25% tax credit on contributions up to $500'
     },
     'UT': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: Infinity, rate: 4.85 }
-        ],
-        notes: 'Utah has a flat tax rate and taxes capital gains as ordinary income.'
-    },
-    'VT': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: 42550, rate: 3.35 },
-            { threshold: 103200, rate: 6.6 },
-            { threshold: 203600, rate: 7.6 },
-            { threshold: Infinity, rate: 8.75 }
-        ],
-        notes: 'Vermont taxes capital gains as ordinary income with progressive rates.'
-    },
-    'VA': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: 3000, rate: 2 },
-            { threshold: 5000, rate: 3 },
-            { threshold: 17000, rate: 5 },
-            { threshold: Infinity, rate: 5.75 }
-        ],
-        notes: 'Virginia taxes capital gains as ordinary income with progressive rates.'
-    },
-    'WA': {
-        hasStateCapGains: false,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: Infinity, rate: 0 }
-        ],
-        notes: 'Washington has no state income tax.'
-    },
-    'WV': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: 10000, rate: 3 },
-            { threshold: 25000, rate: 4 },
-            { threshold: 40000, rate: 4.5 },
-            { threshold: 60000, rate: 6 },
-            { threshold: Infinity, rate: 6.5 }
-        ],
-        notes: 'West Virginia taxes capital gains as ordinary income with progressive rates.'
+        planName: 'Utah',
+        employerCredit: 500,
+        requiredContribution: 2130,
+        studentBenefit: 96.92,
+        notes: 'State income tax deduction with 4.55% corporate tax rate flat'
     },
     'WI': {
-        hasStateCapGains: true,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: 13810, rate: 3.54 },
-            { threshold: 27630, rate: 4.65 },
-            { threshold: 304170, rate: 6.27 },
-            { threshold: Infinity, rate: 7.65 }
-        ],
-        notes: 'Wisconsin taxes capital gains as ordinary income with progressive rates.'
-    },
-    'WY': {
-        hasStateCapGains: false,
-        taxesWithZeroIncome: false,
-        brackets: [
-            { threshold: Infinity, rate: 0 }
-        ],
-        notes: 'Wyoming has no state income tax.'
+        planName: 'Wisconsin',
+        employerCredit: 800,
+        requiredContribution: 1600,
+        studentBenefit: 400,
+        notes: '50% tax credit for 529 plan contributions'
     }
 };
-
-        const state529DB = {
-            'CA': {
-                planName: 'ScholarShare 529',
-                deduction: 0,
-                notes: 'California does not offer state tax deductions for 529 contributions, but earnings grow tax-free.'
-            },
-            'NY': {
-                planName: 'New Yorks 529 Plan',
-                deduction: 5000,
-                notes: 'New York taxpayers can deduct up to $5,000 per year ($10,000 for married filing jointly) of their 529 plan contributions.'
-            },
-            'MA': {
-                planName: 'U.Fund College Investing Plan',
-                deduction: 1000,
-                notes: 'Massachusetts taxpayers can deduct up to $1,000 per year ($2,000 for married filing jointly) of their 529 plan contributions.'
-            },
-            'FL': {
-                planName: 'Florida 529 Savings Plan',
-                deduction: 0,
-                notes: 'Florida has no state income tax, so there are no state tax deductions. However, earnings grow tax-free.'
-            },
-            'MI': {
-                planName: 'Michigan Education Savings Program (MESP)',
-                deduction: 5000,
-                notes: 'Michigan taxpayers can deduct up to $5,000 per year ($10,000 for married filing jointly) of their 529 plan contributions.'
-            },
-            'MO': {
-                planName: 'Missouri529',
-                deduction: 8000,
-                notes: 'Missouri taxpayers can deduct up to $8,000 per year ($16,000 for married filing jointly) of their 529 plan contributions.'
-            },
-            'IL': {
-                planName: 'Bright Start College Savings',
-                deduction: 10000,
-                notes: 'Illinois taxpayers can deduct up to $10,000 per year ($20,000 for married filing jointly) of their 529 plan contributions.'
-            },
-            'NJ': {
-                planName: 'NJBEST 529 College Savings Plan',
-                deduction: 10000,
-                notes: 'New Jersey does offers state tax deductions for 529 contributions and earnings grow tax-free.'
-            },
-            'CO': {
-                planName: 'CollegeInvest 529 Plan',
-                deduction: 25400,
-                notes: 'Colorado offers a full deduction for contributions to its 529 plan, with no limit.'
-            },
-            'CT': {
-                planName: 'CHET 529 College Savings Program',
-                deduction: 5000,
-                notes: 'Connecticut taxpayers can deduct up to $5,000 ($10,000 if married filing jointly) of contributions.'
-            },
-            'DE': {
-                planName: 'Delaware College Investment Plan',
-                deduction: 1000,
-                notes: 'Delaware offers a state tax deductions for 529 contributions.'
-            },
-            'FL': {
-                planName: 'Florida 529 Savings Plan',
-                deduction: 0,
-                notes: 'No state tax benefit as Florida has no state income tax.'
-            },
-            'GA': {
-                planName: 'Path2College 529 Plan',
-                deduction: 4000,
-                notes: 'Georgia taxpayers can deduct up to $4,000 per beneficiary ($8,000 if married filing jointly).'
-            },
-            'HI': {
-                planName: 'HI529 College Savings Program',
-                deduction: 0,
-                notes: 'Hawaii does not offer state tax deductions for 529 contributions.'
-            },
-            'ID': {
-                planName: 'IDeal - Idaho College Savings Program',
-                deduction: 6000,
-                notes: 'Idaho taxpayers can deduct up to $6,000 ($12,000 if married filing jointly) of contributions.'
-            },
-            'AK': {
-                planName: 'Alaska 529 Plan - T. Rowe Price College Savings Plan',
-                deduction: 0,
-                notes: 'No state tax deduction due to no state income tax, but plan offers tax-free growth.'
-            },
-            'AZ': {
-                planName: 'Arizona Family College Savings Program (AZ529)',
-                deduction: 2000,
-                notes: 'Arizona taxpayers can deduct up to $2,000 per year ($4,000 for married filing jointly).'
-            },
-            'AR': {
-                planName: 'GIFTS Arkansas 529 Plan',
-                deduction: 5000,
-                notes: 'Arkansas taxpayers can deduct up to $5,000 per year ($10,000 for married filing jointly).'
-            },
-            'TX': {
-                planName: 'Texas College Savings Plan',
-                deduction: 0,
-                notes: 'No state tax deduction due to no state income tax, but plan offers investment benefits.'
-            },
-            'WA': {
-                planName: 'Washington College Savings Plan (DreamAhead)',
-                deduction: 0,
-                notes: 'No state tax deduction due to no state income tax, but plan offers investment benefits.'
-            },
-            'WY': {
-                planName: 'WYOStars 529 College Savings Plan',
-                deduction: 0,
-                notes: 'No state tax deduction due to no state income tax, but plan offers investment benefits.'
-            },
-            'WI': {
-                planName: 'Wisconsin 529 College Savings Plan',
-                deduction: 5000,
-                notes: 'Wisconsin offers $5,000'
-            },
-            'AL': {
-                planName: 'CollegeCounts 529 Fund',
-                deduction: 5000,
-                notes: 'Alabama taxpayers can deduct 529 contributions on state taxes.'
-            },
-            'NM': {
-                planName: 'The New Mexico Learning Alliance',
-                deduction: Infinity,
-                notes: 'No state tax deduction, but plan offers investment benefits.'
-            },
-            'ND': {
-                planName: 'College SAVE Plan',
-                deduction: 5000,
-                notes: 'North Dakota taxpayers can deduct up to $5,000 ($10,000 for married filing jointly).'
-            },
-            'OH': {
-                planName: 'Ohio 529 Plan',
-                deduction: 4000,
-                notes: 'Ohio taxpayers can deduct up to $4,000 per beneficiary per year.'
-            },
-            'OK': {
-                planName: 'STABLE Oklahoma 529 Savings Plan',
-                deduction: 10000,
-                notes: 'Oklahoma taxpayers can deduct up to $10,000 ($20,000 for married filing jointly).'
-            },
-            //OREGON IS WRONG
-            'OR': {
-                planName: 'Oregon College Savings Plan',
-                deduction: 150,
-                notes: 'Oregon taxpayers can get $150 per year.'
-            },
-            'PA': {
-                planName: 'PA 529 Investment Plan',
-                deduction: 18000,
-                notes: 'Pennsylvania taxpayers can deduct 529 contributions.'
-            },
-            'RI': {
-                planName: 'CollegeBound 529',
-                deduction: 500,
-                notes: 'No state tax deduction, but plan offers investment benefits.'
-            },
-            'SC': {
-                planName: 'Future Scholar 529 Plan',
-                deduction: Infinity,
-                notes: 'South Carolina taxpayers can deduct up to $10,000 ($20,000 for married filing jointly).'
-            },
-            'SD': {
-                planName: 'College Access 529 Plan',
-                deduction: 0,
-                notes: 'No state tax deduction due to no state income tax.'
-            },
-            'TN': {
-                planName: 'TNStars College Savings 529 Program',
-                deduction: 0,
-                notes: 'No state tax deduction due to no state income tax.'
-            },
-            'UT': {
-                planName: 'my529',
-                deduction: 4000,
-                notes: 'Utah taxpayers can deduct up to $4,000 per beneficiary per year.'
-            },
-            'VT': {
-                planName: 'Vermont 529 Plan',
-                deduction: 2500,
-                notes: 'Vermont taxpayers can deduct up to $2,500 per beneficiary per year.'
-            },
-            'VA': {
-                planName: 'Virginia529',
-                deduction: 4000,
-                notes: 'Virginia taxpayers can deduct up to $4,000 per beneficiary per year.'
-            },
-            'WV': {
-                planName: 'SMART 529 West Virginia',
-                deduction: Infinity,
-                notes: 'No state tax deduction, but plan offers investment benefits.'
-            },
-            'IA': {
-                // 529 Plan Information
-                planName: 'College Savings Iowa 529 Plan',
-                deduction: 5500,  // $4,000 per beneficiary
-                notes: 'Iowa taxpayers can deduct up to $4,000 per beneficiary for 529 plan contributions'
-            },
-            'IN': {
-                // 529 Plan Information
-                planName: 'Indiana 529 Direct',
-                deduction: 1500,  // $4,000 per beneficiary
-                notes: 'Indiana taxpayers can deduct 20% of contribution up to $1,500 per beneficiary for 529 plan contributions'
-            },
-            'NC': {
-                planName: 'NC 529 Plan',
-                deduction: 0,
-                notes: 'North Carolina taxpayers cannot deduct'
-            },
-            'KS': {
-                planName: 'KS 529 Plan',
-                deduction: 1000,
-                notes: 'Kansataxpayers can deduct up to $150 credit '
-            },
-            'KY': {
-                planName: 'KY 529 Plan',
-                deduction: 0,
-                notes: 'Kentucky taxpayers cannot deduct'
-            },
-            'LA': {
-                planName: 'LA 529 Plan',
-                deduction: 2400,
-                notes: 'Louisiana taxpayers can deduct up to $2,400 per year for 529 contributions'
-            },
-            'ME': {
-                planName: 'ME 529 Plan',
-                deduction: 1000,
-                notes: 'Maine taxpayers can deduct up to $1,000 per beneficiary per year for 529 contributions'
-            },
-            'MD': {
-                planName: 'MD 529 Plan',
-                deduction: 2500,
-                notes: 'Maryland taxpayers can deduct up to $2,500 per year for 529 contributions'
-            },
-            'MN': {
-                planName: 'MN 529 Plan',
-                deduction: 1500,
-                notes: 'Minnesota taxpayers can deduct up to $1,500 per beneficiary per year for 529 contributions'
-            },
-            'MS': {
-                planName: 'MS 529 Plan',
-                deduction: 10000,
-                notes: 'Mississippi taxpayers can deduct up to $10,000 per year for 529 contributions'
-            },
-            'MT': {
-                planName: 'MT 529 Plan',
-                deduction: 3000,
-                notes: 'Montana taxpayers can deduct up to $3,000 per year for 529 contributions'
-            },
-            'NE': {
-                planName: 'NE 529 Plan',
-                deduction: 10000,
-                notes: 'Nebraska taxpayers can deduct up to $10,000 per year for 529 contributions'
-            },
-            'NV': {
-                planName: 'NV 529 Plan',
-                deduction: 0,
-                notes: 'Nevada taxpayers cannot deduct'
-            },
-            'NH': {
-                planName: 'NH 529 Plan',
-                deduction: 0,
-                notes: 'New Hampshire taxpayers cannot deduct'
-            }
-
-        };
-         const schoolsDB = {
-            'other': {
-                name: 'My School Isn\'t Listed Yet (click here)',
-                state: null,
-                retirementPlans: {
-                    has403b: false,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Grad students eligible for Roth IRA contributions'
-                }
-            },
-            'harvard': {
-                name: 'Harvard University',
-                state: 'MA',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Grad students eligible for voluntary 403(b) contributions, no match'
-                }
-            },
-            'mit': {
-                name: 'Massachusetts Institute of Technology',
-                state: 'MA',
-                retirementPlans: {
-                    has403b: false,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Grad students eligible for voluntary 403(b) contributions, no match'
-                }
-            },
-            'tufts': {
-                name: 'Tufts University',
-                state: 'MA',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Grad students eligible for voluntary 403(b) contributions, no match'
-                }
-            },
-            'cmu': {
-                name: 'Carengie Mellon University',
-                state: 'PA',
-                retirementPlans: {
-                    has403b: false,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Grad students eligible for voluntary 403(b) contributions, no match'
-                }
-            },
-            'bu': {
-                name: 'Boston University',
-                state: 'MA',
-                retirementPlans: {
-                    has403b: false,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Grad students eligible for voluntary 403(b) contributions, no match'
-                }
-            },
-            'columbia': {
-                name: 'Columbia University',
-                state: 'NY',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Grad students eligible for voluntary 403(b) & 457(b) contributions, no match'
-                }
-            },
-            'princeton': {
-                name: 'Princeton University',
-                state: 'NJ',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Grad students eligible for voluntary 403(b) contributions, no match'
-                }
-            },
-            'stanford': {
-                name: 'Stanford University',
-                state: 'CA',
-                retirementPlans: {
-                    has403b: false,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Grad students eligible for voluntary 403(b) & 457(b) contributions, no match'
-                }
-            },
-            'berkeley': {
-                name: 'UC Berkeley',
-                state: 'CA',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: true,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Grad students eligible for voluntary 403(b) & 457(b) contributions, no match'
-                }
-            },
-            'davis': {
-                name: 'UC Davis',
-                state: 'CA',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: true,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Grad students eligible for voluntary 403(b) & 457(b) contributions, no match'
-                }
-            },
-            'irvine': {
-                name: 'UC Irvine',
-                state: 'CA',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: true,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Grad students eligible for voluntary 403(b) & 457(b) contributions, no match'
-                }
-            },
-            'ucla': {
-                name: 'UC Los Angeles',
-                state: 'CA',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: true,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Grad students eligible for voluntary 403(b) & 457(b) contributions, no match'
-                }
-            },
-            'merced': {
-                name: 'UC Merced',
-                state: 'CA',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: true,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Grad students eligible for voluntary 403(b) & 457(b) contributions, no match'
-                }
-            },
-            'riverside': {
-                name: 'UC Riverside',
-                state: 'CA',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: true,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Grad students eligible for voluntary 403(b) & 457(b) contributions, no match'
-                }
-            },
-            'ucsd': {
-                name: 'UC San Diego',
-                state: 'CA',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: true,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Grad students eligible for voluntary 403(b) & 457(b) contributions, no match'
-                }
-            },
-            'ucsf': {
-                name: 'UC San Francisco',
-                state: 'CA',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: true,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Grad students eligible for voluntary 403(b) & 457(b) contributions, no match'
-                }
-            },
-            'ucsb': {
-                name: 'UC Santa Barbara',
-                state: 'CA',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: true,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Grad students eligible for voluntary 403(b) & 457(b) contributions, no match'
-                }
-            },
-            'ucsc': {
-                name: 'UC Santa Cruz',
-                state: 'CA',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: true,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Grad students eligible for voluntary 403(b) & 457(b) contributions, no match'
-                }
-            },
-            'uf': {
-                name: 'University of Florida',
-                state: 'FL',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: true,
-                    employerMatch: '0%',
-                    vestingPeriod: '1 year'
-                }
-            },
-            'umich': {
-                name: 'University of Michigan',
-                state: 'MI',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: true,
-                    employerMatch: '0%',
-                    vestingPeriod: '3 years'
-                }
-            },
-            'uchicago': {
-                name: 'University of Chicago',
-                state: 'IL',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: '3 years'
-                }
-            },
-            'Urbana-Champaign': {
-                name: 'University of Illinois Urbana-Champaign',
-                state: 'IL',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: '3 years'
-                }
-            },
-            'Des Moines University': {
-                name: 'Des Moines University',
-                state: 'IA',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: '3 years'
-                }
-            },
-            'northwestern': {
-                name: 'Northwestern University',
-                state: 'IL',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: '3 years'
-                }
-            },
-            'yale': {
-                name: 'Yale University',
-                state: 'CT',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Grad students eligible for voluntary retirement plan contributions'
-                }
-            },
-            'princeton': {
-                name: 'Princeton University',
-                state: 'NJ',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Grad students can participate in 403(b) plan with no employer match'
-                }
-            },
-            'columbia': {
-                name: 'Columbia University',
-                state: 'NY',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Voluntary retirement plans available for graduate students'
-                }
-            },
-            'caltech': {
-                name: 'California Institute of Technology (Caltech)',
-                state: 'CA',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Grad students can make voluntary 403(b) contributions'
-                }
-            },
-            'upenn': {
-                name: 'University of Pennsylvania',
-                state: 'PA',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Voluntary retirement plan options for graduate students'
-                }
-            },
-            'duke': {
-                name: 'Duke University',
-                state: 'NC',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Grad students can participate in 403(b) plan'
-                }
-            },
-            'brown': {
-                name: 'Brown University',
-                state: 'RI',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Voluntary 403(b) contributions available for graduate students'
-                }
-            },
-            'northwestern': {
-                name: 'Northwestern University',
-                state: 'IL',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Grad students can access voluntary retirement plans'
-                }
-            },
-            'dartmouth': {
-                name: 'Dartmouth College',
-                state: 'NH',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Voluntary 403(b) plan for graduate students'
-                }
-            },
-            'cornell': {
-                name: 'Cornell University',
-                state: 'NY',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Retirement plan options for graduate student employees'
-                }
-            },
-            'rice': {
-                name: 'Rice University',
-                state: 'TX',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Voluntary 403(b) contributions for graduate students'
-                }
-            },
-            'vanderbilt': {
-                name: 'Vanderbilt University',
-                state: 'TN',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Grad students can participate in 403(b) plan'
-                }
-            },
-            'emory': {
-                name: 'Emory University',
-                state: 'GA',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Voluntary 403(b) contributions for graduate students'
-                }
-            },
-            'rochester': {
-                name: 'University of Rochester',
-                state: 'NY',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Retirement plan options for graduate student employees'
-                }
-            },
-            'umass': {
-                name: 'University of Massachusetts Amherst',
-                state: 'MA',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Voluntary retirement plans available for graduate students'
-                }
-            },
-            'washingtonustl': {
-                name: 'Washington University in St. Louis',
-                state: 'MO',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Voluntary 403(b) plan for graduate students'
-                }
-            },
-            'arizona': {
-                name: 'University of Arizona',
-                state: 'AZ',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Voluntary retirement plans available for graduate students'
-                }
-            },
-            'colorado': {
-                name: 'University of Colorado Boulder',
-                state: 'CO',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Retirement plan options for graduate student employees and researchers'
-                }
-            },
-            'georgia-tech': {
-                name: 'Georgia Institute of Technology',
-                state: 'GA',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Voluntary 403(b) plan for graduate students'
-                }
-            },
-            'iowa': {
-                name: 'University of Iowa',
-                state: 'IA',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Retirement plan options for graduate student employees'
-                }
-            },
-            'indiana': {
-                name: 'Indiana University Bloomington',
-                state: 'IN',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Comprehensive retirement plan for graduate student workers'
-                }
-            },
-            'iowa-state': {
-                name: 'Iowa State University',
-                state: 'IA',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Retirement options for graduate student employees'
-                }
-            },
-            'kansas': {
-                name: 'University of Kansas',
-                state: 'KS',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Voluntary 403(b) plan for graduate students'
-                }
-            },
-            'kentucky': {
-                name: 'University of Kentucky',
-                state: 'KY',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Retirement plan options for graduate student employees'
-                }
-            },
-            'louisiana-state': {
-                name: 'Louisiana State University',
-                state: 'LA',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Comprehensive retirement plans for graduate students'
-                }
-            },
-            'maine': {
-                name: 'University of Maine',
-                state: 'ME',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Voluntary 403(b) plan for graduate student employees'
-                }
-            },
-            'minnesota': {
-                name: 'University of Minnesota',
-                state: 'MN',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Comprehensive retirement options for graduate students'
-                }
-            },
-            'montana': {
-                name: 'University of Montana',
-                state: 'MT',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Voluntary 403(b) plan for graduate student employees'
-                }
-            },
-            'nebraska': {
-                name: 'University of Nebraska-Lincoln',
-                state: 'NE',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Retirement plan options for graduate student workers'
-                }
-            },
-            'nevada': {
-                name: 'University of Nevada, Las Vegas',
-                state: 'NV',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Retirement options for graduate student employees'
-                }
-            },
-            'north-dakota': {
-                name: 'University of North Dakota',
-                state: 'ND',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Voluntary 403(b) plan for graduate students'
-                }
-            },
-            'oklahoma': {
-                name: 'University of Oklahoma',
-                state: 'OK',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Comprehensive retirement plan for graduate student workers'
-                }
-            },
-            'oregon': {
-                name: 'University of Oregon',
-                state: 'OR',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Voluntary 403(b) plan for graduate student employees'
-                }
-            },
-            'south-carolina': {
-                name: 'University of South Carolina',
-                state: 'SC',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Retirement options for graduate student workers'
-                }
-            },
-            'south-dakota': {
-                name: 'University of South Dakota',
-                state: 'SD',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Voluntary 403(b) plan for graduate students'
-                }
-            },
-            'utah': {
-                name: 'University of Utah',
-                state: 'UT',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Comprehensive retirement plan for graduate student employees'
-                }
-            },
-            'washington-state': {
-                name: 'Washington State University',
-                state: 'WA',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Retirement options for graduate student workers'
-                }
-            },
-            'west-virginia': {
-                name: 'West Virginia University',
-                state: 'WV',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Voluntary 403(b) plan for graduate students'
-                }
-            },
-            'wisconsin': {
-                name: 'University of Wisconsin-Madison',
-                state: 'WI',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Comprehensive retirement plan for graduate student employees'
-                }
-            },
-            'wyoming': {
-                name: 'University of Wyoming',
-                state: 'WY',
-                retirementPlans: {
-                    has403b: true,
-                    has457b: false,
-                    employerMatch: '0%',
-                    vestingPeriod: 'n/a',
-                    notes: 'Voluntary 403(b) plan for graduate students'
-                }
-            }
-        };
-        const stateOptions = {
+const stateOptions = {
             'AL': 'Alabama',
             'AK': 'Alaska',
             'AZ': 'Arizona',
@@ -2717,140 +947,137 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             'WY': 'Wyoming'
         };
 
-        let selectedState = null;
-        let selectedSchool = null;
+let selectedState = null;
+let calculatorType = 'university';
 
-        function handleSchoolSearch(event) {
-            const searchTerm = event.target.value.toLowerCase();
-            const suggestionsDiv = document.getElementById('schoolSuggestions');
-            
-            if (searchTerm.length >= 2) {
-                const suggestions = Object.entries(schoolsDB)
-                    .filter(([id, school]) => 
-                        school.name.toLowerCase().includes(searchTerm))
-                    .slice(0, 10);
+function handleStateSearch(event) {
+    const searchTerm = event.target.value.toLowerCase();
+    const suggestionsDiv = document.getElementById('stateSuggestions');
+    
+    if (searchTerm.length >= 1) {
+        const suggestions = Object.entries(state529DB)
+            .map(([code, data]) => ({
+                code,
+                name: `${code} - ${data.planName}`
+            }))
+            .filter(state => 
+                state.name.toLowerCase().includes(searchTerm) || 
+                state.code.toLowerCase().includes(searchTerm));
 
-                suggestionsDiv.innerHTML = `
-                    ${suggestions.map(([id, school]) => `
-                        <div class="suggestion-item" onclick="selectSchool('${id}')">
-                            ${school.name} ${school.state ? `(${school.state})` : ''}
-                        </div>
-                    `).join('')}
-                    <div class="suggestion-item" onclick="showStateSelection()">
-                        My School Isn't Listed Yet (click here)
-                    </div>`;
-                
-                suggestionsDiv.style.display = 'block';
-            } else {
-                suggestionsDiv.style.display = 'none';
-            }
-        }
+        suggestionsDiv.innerHTML = suggestions.map(state => `
+            <div class="suggestion-item" onclick="selectState('${state.code}')">
+                ${state.name}
+            </div>
+        `).join('');
+        
+        suggestionsDiv.style.display = 'block';
+    } else {
+        suggestionsDiv.style.display = 'none';
+    }
+}
 
-        function showStateSelection() {
-            const suggestionsDiv = document.getElementById('schoolSuggestions');
-            
-            // Create array of state entries and sort alphabetically by state name
-            const sortedStates = Object.keys(state529DB)
-                .filter(state => state529DB[state].deduction > 0)
-                .sort((a, b) => stateOptions[a].localeCompare(stateOptions[b]));
-            
-            const stateSelectionHTML = `
-                <div class="suggestion-item" style="font-weight: bold; background-color: #f5f5f5;">
-                    Select State
-                </div>
-                ${sortedStates.map(state => `
-                    <div class="suggestion-item" onclick="selectState('${state}')">
-                        ${state} (Max deduction: $${state529DB[state].deduction.toLocaleString()})
-                    </div>
-                `).join('')}`;
-            
-            suggestionsDiv.innerHTML = stateSelectionHTML;
-            suggestionsDiv.style.display = 'block';
-        }
+function selectState(code) {
+    selectedState = code;
+    const state = state529DB[code];
+    document.getElementById('stateSearch').value = `${code} - ${state.planName}`;
+    document.getElementById('stateSuggestions').style.display = 'none';
+    updateCalculations();
+}
 
-        function selectSchool(id) {
-            const school = schoolsDB[id];
-            selectedSchool = school;
-            selectedState = school.state;
-            
-            document.getElementById('schoolSearch').value = school.name;
-            document.getElementById('schoolSuggestions').style.display = 'none';
-            updateCalculations();
-        }
+function updateCalculatorType(type) {
+    calculatorType = type;
+    const slider = document.getElementById('studentSlider');
+    const label = document.getElementById('sliderLabel');
+    const hint = document.getElementById('rangeHint');
+    
+    if (type === 'university') {
+        slider.min = "100";
+        slider.max = "20000";
+        slider.value = "1000";
+        label.textContent = 'Number of Student Workers:';
+        hint.textContent = 'Typical range: 500-5000 graduate student workers';
+    } else {
+        slider.min = "1";
+        slider.max = "100";
+        slider.value = "25";
+        label.textContent = 'Number of Student Employees:';
+        hint.textContent = 'Typical range: 5-50 student employees';
+    }
+    
+    document.getElementById('studentCount').textContent = `${slider.value} students`;
+    updateCalculations();
+}
 
-        function selectState(state) {
-            selectedState = state;
-            selectedSchool = null;
-            
-            document.getElementById('schoolSearch').value = `School in ${state}`;
-            document.getElementById('schoolSuggestions').style.display = 'none';
-            updateCalculations();
-        }
-        // Keep existing state529DB and stateTaxDB from your code
+function updateCalculations() {
+    if (!selectedState) return;
+    
+    const studentCount = parseInt(document.getElementById('studentSlider').value);
+    const state = state529DB[selectedState];
+    
+    // Update student count display
+    document.getElementById('studentCount').textContent = `${studentCount} students`;
+    
+    // Calculate and update benefits
+    const studentBenefit = state.studentBenefit* studentCount;
+    const totalEmployerCredit = state.employerCredit * studentCount;
+    
+    document.getElementById('studentBenefit').textContent = 
+        new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
+            .format(studentBenefit);
+    
+    document.getElementById('employerBenefit').textContent = 
+        new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
+            .format(totalEmployerCredit);
+    
+    // Show state details
+    document.getElementById('stateDetails').style.display = 'block';
+    document.getElementById('stateNotes').textContent = state.notes;
+}
 
-        function calculateStateBenefit(state) {
-            if (!state) return 495; // Default benefit
-            
-            const taxInfo = stateTaxDB[state];
-            const planInfo = state529DB[state];
-            
-            if (!taxInfo || !planInfo) return 495;
-            
-            // Get highest tax bracket rate
-            const highestBracket = taxInfo.brackets[taxInfo.brackets.length - 1].rate / 100;
-            
-            // Get max deduction (handle Infinity case)
-            const maxDeduction = planInfo.deduction === Infinity ? 
-                24000 : // Assume $24k/year for "unlimited" deductions (typical grad student expenses)
-                planInfo.deduction;
-            
-            return Math.round(maxDeduction * highestBracket);
-        }
-        document.addEventListener('DOMContentLoaded', function() {
-         const tabButtons = document.querySelectorAll('.tab-button');
-         
-         tabButtons.forEach(button => {
-           button.addEventListener('click', () => {
-             document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-             
-             button.classList.add('active');
-             document.getElementById(button.dataset.tab).classList.add('active');
-           });
-         });
+// Initialize the calculator
+document.addEventListener('DOMContentLoaded', function() {
+    // Calculator slider event listener
+    document.getElementById('studentSlider').addEventListener('input', updateCalculations);
+    
+    // Calculator tab buttons
+    document.querySelectorAll('[data-calc]').forEach(button => {
+        button.addEventListener('click', (e) => {
+            // Remove active class from all calculator tab buttons
+            document.querySelectorAll('[data-calc]').forEach(btn => btn.classList.remove('active'));
+            e.target.classList.add('active');
+            updateCalculatorType(e.target.dataset.calc);
         });
+    });
 
-        function updateCalculations() {
-            const studentCount = parseInt(document.getElementById('studentSlider').value);
-            const stateBenefit = calculateStateBenefit(selectedState);
-            const totalStudentSavings = studentCount * stateBenefit;
-            const universityImpact = totalStudentSavings * 1.5;
-
-            document.getElementById('studentCount').textContent = studentCount.toLocaleString();
-            document.getElementById('studentSavings').textContent = 
-                new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })
-                    .format(totalStudentSavings);
-            document.getElementById('universityImpact').textContent = 
-                new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })
-                    .format(universityImpact);
-        }
-        document.getElementById('studentSlider').addEventListener('input', updateCalculations);
-        const menuButton = document.querySelector('.menu-button');
-        const navLinks = document.querySelector('.nav-links');
-
-        menuButton.addEventListener('click', function(e) {
-            e.stopPropagation();
-            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-            menuButton.setAttribute('aria-expanded', navLinks.style.display === 'flex');
+    // How It Works tab buttons
+    document.querySelectorAll('[data-tab]').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const targetTab = e.target.dataset.tab;
+            
+            // Remove active class from all How It Works tab buttons
+            document.querySelectorAll('[data-tab]').forEach(btn => btn.classList.remove('active'));
+            e.target.classList.add('active');
+            
+            // Hide all tab content
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Show selected tab content
+            document.getElementById(targetTab).classList.add('active');
         });
+    });
 
-        document.addEventListener('click', function(e) {
-            if (window.innerWidth < 768 && !navLinks.contains(e.target) && e.target !== menuButton) {
-                navLinks.style.display = 'none';
-                menuButton.setAttribute('aria-expanded', false);
-            }
+    // Initialize menu button functionality
+    const menuButton = document.querySelector('.menu-button');
+    const navLinks = document.querySelector('.nav-links');
+    
+    if (menuButton) {
+        menuButton.addEventListener('click', () => {
+            const isExpanded = menuButton.getAttribute('aria-expanded') === 'true';
+            menuButton.setAttribute('aria-expanded', !isExpanded);
+            navLinks.style.display = isExpanded ? 'none' : 'flex';
         });
-        updateCalculations();
+    }
+});
     </script>
 </body>
 </html>
