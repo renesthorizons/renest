@@ -1712,9 +1712,8 @@ document.getElementById('emailModal').addEventListener('click', function(e) {
         hasStateCapGains: true,
         taxesWithZeroIncome: false,
         brackets: [
-            { threshold: 5000, rate: 4 },
-            { threshold: 10000, rate: 5 },
-            { threshold: Infinity, rate: 5 }
+            { threshold: 10000, rate: 4.4 },
+            { threshold: Infinity, rate: 4.4 }
         ],
         notes: 'Mississippi taxes capital gains as ordinary income with progressive rates.'
     },
@@ -1989,6 +1988,193 @@ document.getElementById('emailModal').addEventListener('click', function(e) {
             { threshold: Infinity, rate: 0 }
         ],
         notes: 'Wyoming has no state income tax.'
+    }
+};
+const statePersonalExemptionDB = {
+    'NY': {
+        exemptionType: 'Standard Deduction',
+        amount: 8000,
+        notes: 'Uses federal standard deduction amounts. Single filer: $15,000, Married filing jointly: $30,000, Head of household: $22,500'
+    },
+    'IL': {
+        exemptionType: 'Personal Exemption',
+        amount: 2425,
+        notes: 'Personal exemption allowance per person. Additional $1,000 for individuals 65 and older or legally blind'
+    },
+    'MA': {
+        exemptionType: 'Personal Exemption',
+        amount: 1000,
+        notes: 'Single filer: $4,400, Married filing jointly: $8,800, Head of household: $6,800'
+    },
+    'PA': {
+        exemptionType: 'None',
+        amount: 0,
+        notes: 'Pennsylvania has no standard deduction or personal exemption. Uses flat tax rate of 3.07%. Tax Forgiveness program available separately based on income and family size'
+    },
+    'VA': {
+        exemptionType: 'Standard Deduction',
+        amount: 8500,
+        notes: 'Standard deduction of $8,500 for all filing statuses'
+    },
+    'AZ': {
+        exemptionType: 'Standard Deduction',
+        amount: 14600,
+        notes: 'Single: $12,950, Married filing jointly: $25,900'
+    },
+    'MN': {
+        exemptionType: 'Standard Deduction',
+        amount: 15000,
+        notes: 'Single: $13,825, Married filing jointly: $27,650. Additional standard deduction for age 65+ or blind'
+    },
+    'GA': {
+        exemptionType: 'Standard Deduction',
+        amount: 12000,
+        notes: 'Single: $12,000, Married filing jointly: $24,000. Additional amounts for age 65+ or blind'
+    },
+    'OH': {
+        exemptionType: 'Personal Exemption',
+        amount: 26050,
+        notes: 'Personal exemption credit amount varies based on income. Range: $2,400-$2,800 per person'
+    },
+    'IN': {
+        exemptionType: 'Personal Exemption',
+        amount: 1000,
+        notes: 'Base exemption $1,000 per person. Additional $1,500 for dependents, $1,000 for age 65+'
+    },
+    'MO': {
+        exemptionType: 'Standard Deduction',
+        amount: 15000,
+        notes: 'Follows federal standard deduction amounts. Single: $15,000, Married filing jointly: $30,000'
+    },
+    'MI': {
+        exemptionType: 'Personal Exemption',
+        amount: 5400,
+        notes: 'Personal exemption amount per person. Additional exemption for seniors and disabled'
+    },
+    'MD': {
+        exemptionType: 'Standard Deduction',
+        amount: 2700,
+        notes: 'Single: $2,400, Married filing jointly: $4,850. Additional amounts for age 65+ or blind'
+    },
+    'UT': {
+        exemptionType: 'Standard Deduction',
+        amount: 15000,
+        notes: 'Follows federal standard deduction amounts. Single: $15,000, Married filing jointly: $30,000'
+    },
+    'NJ': {
+        exemptionType: 'Personal Exemption',
+        amount: 1000,
+        notes: 'Personal exemption per person. Additional exemptions for age 65+ and blind'
+    },
+    'AL': {
+        exemptionType: 'Standard Deduction',
+        amount: 3000,
+        notes: 'Single: $2,500, Married filing jointly: $7,500. Additional personal exemption of $1,500'
+    },
+    'CO': {
+        exemptionType: 'Standard Deduction',
+        amount: 15000,
+        notes: 'Follows federal standard deduction amounts. Single: $15,000, Married filing jointly: $30,000'
+    },
+    'DC': {
+        exemptionType: 'Standard Deduction',
+        amount: 15000,
+        notes: 'Single: $12,950, Married filing jointly: $25,900'
+    },
+    'LA': {
+        exemptionType: 'Combined Exemption/Deduction',
+        amount: 4500,
+        notes: 'Combined personal exemption/standard deduction. Single: $4,500, Married filing jointly: $9,000'
+    },
+    'VT': {
+        exemptionType: 'Standard Deduction',
+        amount: 15000,
+        notes: 'Single: $6,800, Married filing jointly: $13,600'
+    },
+    'WI': {
+        exemptionType: 'Standard Deduction',
+        amount: 12120,
+        notes: 'Single: $12,120, Married filing jointly: $22,260. Phases out at higher income levels'
+    },
+    'CT': {
+        exemptionType: 'Personal Exemption',
+        amount: 15000,
+        notes: 'Single: $15,000, Married filing jointly: $24,000. Phases out at higher income levels'
+    },
+    'SC': {
+        exemptionType: 'Standard Deduction',
+        amount: 15000,
+        notes: 'Follows federal standard deduction amounts. Single: $15,000, Married filing jointly: $30,000'
+    },
+    'OK': {
+        exemptionType: 'Standard Deduction',
+        amount: 10000,
+        notes: 'Single: $6,350, Married filing jointly: $12,700'
+    },
+    'OR': {
+        exemptionType: 'Standard Deduction',
+        amount: 5495,
+        notes: 'Single: $2,420, Married filing jointly: $4,840. Additional credit for personal exemptions'
+    },
+    'NE': {
+        exemptionType: 'Standard Deduction',
+        amount: 12000,
+        notes: 'Follows federal standard deduction amounts. Single: $15,000, Married filing jointly: $30,000'
+    },
+    'MS': {
+        exemptionType: 'Standard Deduction',
+        amount: 6000,
+        notes: 'Single: $6,000, Married filing jointly: $12,000'
+    },
+    'KS': {
+        exemptionType: 'Standard Deduction',
+        amount: 3500,
+        notes: 'Single: $3,500, Married filing jointly: $8,000'
+    },
+    'IA': {
+        exemptionType: 'Standard Deduction',
+        amount: 15000,
+        notes: 'Single: $2,210, Married filing jointly: $5,450'
+    },
+    'AR': {
+        exemptionType: 'Standard Deduction',
+        amount: 3000,
+        notes: 'Follows federal standard deduction amounts. Single: $15,000, Married filing jointly: $30,000'
+    },
+    'WV': {
+        exemptionType: 'Personal Exemption',
+        amount: 2000,
+        notes: 'Personal exemption of $2,000 per person'
+    },
+    'NM': {
+        exemptionType: 'Standard Deduction',
+        amount: 3000,
+        notes: 'Follows federal standard deduction amounts. Single: $15,000, Married filing jointly: $30,000'
+    },
+    'RI': {
+        exemptionType: 'Standard Deduction',
+        amount: 12000,
+        notes: 'Single: $9,300, Married filing jointly: $18,600'
+    },
+    'DE': {
+        exemptionType: 'Standard Deduction',
+        amount: 3250,
+        notes: 'Single: $3,250, Married filing jointly: $6,500. Additional personal credits available'
+    },
+    'ID': {
+        exemptionType: 'Standard Deduction',
+        amount:0,
+        notes: 'Single: $15,000, Married filing jointly: $30,000'
+    },
+    'ME': {
+        exemptionType: 'Standard Deduction',
+        amount: 12000,
+        notes: 'Follows federal standard deduction amounts. Single: $15,000, Married filing jointly: $30,000'
+    },
+    'MT': {
+        exemptionType: 'Standard Deduction',
+        amount: 15000,
+        notes: 'Single: $5,590, Married filing jointly: $11,180. Additional personal exemption credit available'
     }
 };
 
@@ -3414,15 +3600,18 @@ document.getElementById('emailModal').addEventListener('click', function(e) {
             
             const annualExpenses = (monthlyRent + monthlyGrocery) * 12;
             const state = selectedState;
+
+            const statetaxdeduction = statePersonalExemptionDB[state]?.amount || 0;
             
             const stateDeduction = state529DB[state]?.deduction || 0;
-            const taxRate = calculateStateTaxRate(income, state);
+            const taxablestateincome=income-statetaxdeduction;
+            const taxRate = calculateStateTaxRate(taxablestateincome, state);
             
             // Adjust deductible amount based on income
             const deductibleAmount = Math.min(
                 annualExpenses,  // Actual expenses
                 stateDeduction,  // State's max deduction
-                income           // Limit to income if it's less than the deduction
+                taxablestateincome           // Limit to income if it's less than the deduction
             );
             
             const benefit = deductibleAmount * taxRate;
