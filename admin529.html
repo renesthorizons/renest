@@ -106,10 +106,10 @@
 
 .process-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 1fr);  /* Force exactly 2 columns */
     gap: 2rem;
     padding: 4rem 2rem;
-    max-width: 1200px;
+    max-width: 1200px;  /* We can reduce this to keep cards from getting too wide */
     margin: 0 auto;
 }
 
@@ -400,14 +400,6 @@
                 display: none;  /* This hides the menu button on desktop */
             }
         }
-        .process-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            padding: 4rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
 
         .process-card {
             background: white;
@@ -642,9 +634,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </section>
 
         <section class="impact-section">
-            <h2 class="impact-title">Tax Benefit Calculator</h2>
+            <h2 class="impact-title">Calculate Your Benefit</h2>
             <div class="calculator-container">
                 <!-- Calculator Type Selector -->
+                <div class="slider-container">
+    <label id="institutionLabel">Select your institution type:</label>
+</div>
                 <div class="tab-buttons">
                     <button class="tab-button active" data-calc="university">University</button>
                     <button class="tab-button" data-calc="business">Business</button>
@@ -655,7 +650,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <input type="text" 
                            id="stateSearch" 
                            class="state-input" 
-                           placeholder="Type your state name..." 
+                           placeholder="Search for your state..." 
                            oninput="handleStateSearch(event)">
                     <div id="stateSuggestions" class="suggestions" style="display: none;"></div>
                 </div>
@@ -667,7 +662,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                            id="studentSlider" 
                            class="slider" 
                            min="100" 
-                           max="5000" 
+                           max="10000" 
                            value="1000" 
                            step="1">
                     <span id="studentCount">1000 students</span>
@@ -696,12 +691,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         <section class="process-grid">
             <div class="process-card">
-                <h3>Simple Implementation</h3>
-                <p>Turnkey solution requiring minimal administrative overhead. Share enrollment information through existing channels.</p>
+                <h3>How It Works: Win-Win</h3>
+                <p>Employers direct student employee's compensation through their state's 529 plan instead of direct payment. Employers <b>&</b> employees receive valuable tax credits from the state.</p>
             </div>
             <div class="process-card">
-                <h3>Dedicated Support</h3>
-                <p>Our team handles all student inquiries and provides comprehensive support throughout the process.</p>
+                <h3>Simple and Cost Effective</h3>
+                <p>Our quick and efficient solution means more benefits in less time. Comprehensive support ensures the maximum savings for you and your employees.</p>
             </div>
             <div class="process-card">
                 <h3>Compliance Assured</h3>
@@ -804,7 +799,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <section class="contact-section">
             <h2 class="section-title">Want to Learn More?</h2>
             <div class="contact-card">
-                <p>Schedule a consultation to learn how we can help your graduate students maximize their benefits.</p>
+                <p>Schedule a consultation so we can help you and your employees unlock immediate benefits.</p>
                 <a href="contactus529.html" class="colk-button">Contact Our Team</a>
             </div>
         </section>
@@ -992,7 +987,7 @@ function updateCalculatorType(type) {
     
     if (type === 'university') {
         slider.min = "100";
-        slider.max = "20000";
+        slider.max = "10000";
         slider.value = "1000";
         label.textContent = 'Number of Student Workers:';
         hint.textContent = 'Typical range: 500-5000 graduate student workers';
