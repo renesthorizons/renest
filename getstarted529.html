@@ -3640,6 +3640,31 @@ document.getElementById('emailModal').addEventListener('click', function(e) {
                     'user_id': generateUserId()
                 });
             });
+            // Add this at the start of your window.onload or DOMContentLoaded handler
+window.addEventListener('load', function() {
+    // Reset form fields
+    document.getElementById('signup-form').reset();
+    
+    // Reset school search
+    document.getElementById('schoolSearch').value = '';
+    
+    // Reset to first step
+    currentStep = 1;
+    showStep(1);
+    
+    // Clear selected state and school
+    selectedState = null;
+    selectedSchool = null;
+    
+    // Hide all suggestions
+    document.getElementById('schoolSuggestions').classList.add('hidden');
+    document.getElementById('stateSelection').classList.add('hidden');
+    document.getElementById('stateSuggestions').classList.add('hidden');
+    
+    // Reset benefit display
+    document.getElementById('benefitResult').textContent = '$0';
+    
+    });
         });
 
 
