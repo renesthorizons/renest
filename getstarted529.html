@@ -2379,7 +2379,7 @@ const statePersonalExemptionDB = {
             'IN': {
                 // 529 Plan Information
                 planName: 'Indiana 529 Direct',
-                deduction: 1500,  // $4,000 per beneficiary
+                deduction: 50000,  // $4,000 per beneficiary
                 notes: 'Indiana taxpayers can deduct 20% of contribution up to $1,500 per beneficiary for 529 plan contributions'
             },
             'NC': {
@@ -3601,6 +3601,7 @@ const statePersonalExemptionDB = {
             const annualExpenses = (monthlyRent + monthlyGrocery) * 12;
             const state = selectedState;
 
+
             const statetaxdeduction = statePersonalExemptionDB[state]?.amount || 0;
             
             const stateDeduction = state529DB[state]?.deduction || 0;
@@ -3613,8 +3614,14 @@ const statePersonalExemptionDB = {
                 stateDeduction,  // State's max deduction
                 taxablestateincome           // Limit to income if it's less than the deduction
             );
+            let benefit;
+            if (state === 'Indiana') {
+                const contributionCredit = deductibleAmount * 0.20; // 20% of contributions
+                benefit = Math.min(contributionCredit,1500); // Take the higher of the two benefits
+            } else {
+                benefit = deductibleAmount * taxRate;
+            }
             
-            const benefit = deductibleAmount * taxRate;
 
             // Format and display the total benefit
             const formattedBenefit = new Intl.NumberFormat('en-US', {
