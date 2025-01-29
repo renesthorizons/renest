@@ -1326,7 +1326,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </footer>
 
     <script>
-
+        window.calculatorCompleted = false;
 
         function generateUserId() {
             let userId = localStorage.getItem('renest_user_id');
@@ -3634,6 +3634,7 @@ const statePersonalExemptionDB = {
             document.getElementById('benefitResult').textContent = formattedBenefit;
             
             updateEarlyRefundCard(benefit);
+            window.calculatorCompleted = true;
             
             // document.getElementById('early-refund-amount').textContent = formattedEarlyAmount;
             // document.getElementById('early-refund-details').style.display = 'block';
@@ -3838,30 +3839,44 @@ const statePersonalExemptionDB = {
                 });
             });
             // Add this at the start of your window.onload or DOMContentLoaded handler
-window.addEventListener('load', function() {
-    // Reset form fields
-    document.getElementById('signup-form').reset();
-    
-    // Reset school search
-    document.getElementById('schoolSearch').value = '';
-    
-    // Reset to first step
-    currentStep = 1;
-    showStep(1);
-    
-    // Clear selected state and school
-    selectedState = null;
-    selectedSchool = null;
-    
-    // Hide all suggestions
-    document.getElementById('schoolSuggestions').classList.add('hidden');
-    document.getElementById('stateSelection').classList.add('hidden');
-    document.getElementById('stateSuggestions').classList.add('hidden');
-    
-    // Reset benefit display
-    document.getElementById('benefitResult').textContent = '$0';
-    
-    });
+            window.addEventListener('load', function() {
+                // Reset form fields
+                document.getElementById('signup-form').reset();
+                
+                // Reset school search
+                document.getElementById('schoolSearch').value = '';
+                
+                // Reset to first step
+                currentStep = 1;
+                showStep(1);
+                
+                // Clear selected state and school
+                selectedState = null;
+                selectedSchool = null;
+                
+                // Hide all suggestions
+                document.getElementById('schoolSuggestions').classList.add('hidden');
+                document.getElementById('stateSelection').classList.add('hidden');
+                document.getElementById('stateSuggestions').classList.add('hidden');
+                
+                // Reset benefit display
+                document.getElementById('benefitResult').textContent = '$0';
+                
+           });
+            const ctaButton = document.getElementById('main-cta-button');
+            if (ctaButton) {
+                ctaButton.addEventListener('click', function(e) {
+                    if (window.calculatorCompleted) {
+                        e.preventDefault();
+                        openEmailModal();
+                    }
+                });
+            }
+            
+            // Reset calculator completion on page load
+            window.addEventListener('load', function() {
+                window.calculatorCompleted = false;
+            });
         });
 
 
