@@ -991,6 +991,49 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 padding-bottom: 5rem; /* Slightly less padding on mobile */
             }
         }
+
+        /* Add these new styles for mobile/desktop screenshot handling */
+        .screenshot-mobile {
+            display: none;
+        }
+
+        .screenshot-desktop {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .screenshot-mobile {
+                display: block;
+            }
+            
+            .screenshot-desktop {
+                display: none;
+            }
+            
+            .screenshot-item {
+                flex: 0 0 85%;
+                min-width: 280px;
+                padding: 1rem 0.5rem;
+            }
+            
+            .screenshot-scroll {
+                padding: 4rem 7.5%;
+                margin: -4rem -7.5%;
+            }
+            
+            .screenshot-container {
+                padding-bottom: 4rem;
+            }
+            
+            .screenshot-caption {
+                font-size: 1rem;
+            }
+            
+            .screenshot-gallery::before,
+            .screenshot-gallery::after {
+                width: 10%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1088,19 +1131,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <div class="screenshot-scroll">
                     <div class="screenshot-item">
                         <div class="screenshot-container">
-                            <img src="homepage529desktop.png" alt="Dashboard Screenshot" class="screenshot-image">
+                            <img src="homepage529desktop.png" alt="Dashboard Screenshot" class="screenshot-image screenshot-desktop">
+                            <img src="homepage529mobile.png" alt="Dashboard Screenshot" class="screenshot-image screenshot-mobile">
                             <p class="screenshot-caption">Your personalized dashboard shows your progress and unlocked savings</p>
                         </div>
                     </div>
                     <div class="screenshot-item">
                         <div class="screenshot-container">
-                            <img src="tracking529desktop.png" alt="Expense Tracker Screenshot" class="screenshot-image">
+                            <img src="tracking529desktop.png" alt="Expense Tracker Screenshot" class="screenshot-image screenshot-desktop">
+                            <img src="tracking529mobile.png" alt="Expense Tracker Screenshot" class="screenshot-image screenshot-mobile">
                             <p class="screenshot-caption">Our tracker lets you identify and track your qualified expenses</p>
                         </div>
                     </div>
                     <div class="screenshot-item">
                         <div class="screenshot-container">
-                            <img src="autotracking529desktop.png" alt="Account Management Screenshot" class="screenshot-image">
+                            <img src="autotracking529desktop.png" alt="Account Management Screenshot" class="screenshot-image screenshot-desktop">
+                            <img src="529autotracking.png" alt="Account Management Screenshot" class="screenshot-image screenshot-mobile">
                             <p class="screenshot-caption">Our automated tracker and 529 account management ensures 529 compliance and your maximum tax benefits</p>
                         </div>
                     </div>
