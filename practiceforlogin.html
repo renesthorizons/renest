@@ -734,37 +734,34 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         .screenshot-desktop {
             width: 100%;
             height: auto;
-            display: none;
+            display: none;  /* Hide both by default */
             border-radius: 8px;
             transition: transform 0.3s ease;
             transform: translateY(-15px);
             position: relative;
             z-index: 2;
-            outline: 4px solid rgba(0, 0, 0, 0.8);  /* Thicker and darker outline */
+            outline: 4px solid rgba(0, 0, 0, 0.8);
         }
 
-        .screenshot-container::after {
-            content: '';
-            position: absolute;
-            left: 5%;
-            right: 5%;
-            bottom: -25px;
-            height: 4px;
-            background: radial-gradient(
-                ellipse at center,
-                rgba(20, 8, 25, 0.98) 0%,
-                rgba(35, 15, 45, 0.98) 70%
-            );
-            filter: blur(8px);
-            border-radius: 50%;
-            z-index: 1;
-            transition: all 0.3s ease;  /* Added transition for smooth shadow changes */
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            .screenshot-mobile {
+                display: block;  /* Show mobile screenshots on small screens */
+            }
+            
+            .screenshot-desktop {
+                display: none;  /* Hide desktop screenshots on small screens */
+            }
         }
 
         /* Desktop styles */
         @media (min-width: 769px) {
             .screenshot-desktop {
-                display: block;
+                display: block;  /* Show desktop screenshots on large screens */
+            }
+            
+            .screenshot-mobile {
+                display: none;  /* Hide mobile screenshots on large screens */
             }
             
             .screenshot-wrapper {
@@ -786,6 +783,24 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 );
                 filter: blur(10px);  /* Slightly increased blur for hover */
             }
+        }
+
+        .screenshot-container::after {
+            content: '';
+            position: absolute;
+            left: 5%;
+            right: 5%;
+            bottom: -25px;
+            height: 4px;
+            background: radial-gradient(
+                ellipse at center,
+                rgba(20, 8, 25, 0.98) 0%,
+                rgba(35, 15, 45, 0.98) 70%
+            );
+            filter: blur(8px);
+            border-radius: 50%;
+            z-index: 1;
+            transition: all 0.3s ease;  /* Added transition for smooth shadow changes */
         }
     </style>
 </head>
