@@ -207,7 +207,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             border-radius: 4px;
             font-weight: 600;
             cursor: pointer;
-            font-size: 1.1 rem;
         }
 
         .submit-button:hover {
@@ -713,6 +712,105 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             padding: 1rem 3rem;
             margin-top: 3rem;
         }
+        .screenshot-wrapper {
+            margin: 2rem -1rem;
+            background: transparent;
+            padding: 1rem;
+            border-radius: 12px;
+        }
+
+        .screenshot-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            border-radius: 12px;
+            overflow: visible;  /* Changed from hidden to visible to show shadow */
+            transition: all 0.3s ease;
+        }
+
+        /* Updated styles for screenshots */
+        .screenshot-mobile,
+        .screenshot-desktop {
+            width: 100%;
+            height: auto;
+            display: none;  /* Hide both by default */
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+            transform: translateY(-15px);
+            position: relative;
+            z-index: 2;
+            outline: 4px solid rgba(0, 0, 0, 0.8);
+        }
+        @media (max-width: 768px) {
+            .screenshot-mobile {
+                width: 100%;
+                max-width: 100%;
+                height: auto;
+                margin: 0 auto;
+                display: block;
+            }
+        }
+
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            .screenshot-mobile {
+                display: block;  /* Show mobile screenshots on small screens */
+            }
+            
+            .screenshot-desktop {
+                display: none;  /* Hide desktop screenshots on small screens */
+            }
+        }
+
+        /* Desktop styles */
+        @media (min-width: 769px) {
+            .screenshot-desktop {
+                display: block;  /* Show desktop screenshots on large screens */
+            }
+            
+            .screenshot-mobile {
+                display: none;  /* Hide mobile screenshots on large screens */
+            }
+            
+            .screenshot-wrapper {
+                margin: 2rem 0;
+                padding: 1.5rem;
+            }
+
+            .screenshot-container:hover .screenshot-desktop {
+                transform: translateY(-20px);
+            }
+            
+            .screenshot-container:hover::after {
+                transform: scaleX(0.95);
+                opacity: 1;
+                background: radial-gradient(
+                    ellipse at center,
+                    rgba(15, 6, 20, 1) 0%,    /* Even darker center on hover */
+                    rgba(30, 12, 40, 0.98) 70%    /* Slightly darker edges on hover */
+                );
+                filter: blur(10px);  /* Slightly increased blur for hover */
+            }
+        }
+
+        .screenshot-container::after {
+            content: '';
+            position: absolute;
+            left: 5%;
+            right: 5%;
+            bottom: -25px;
+            height: 4px;
+            background: radial-gradient(
+                ellipse at center,
+                rgba(20, 8, 25, 0.98) 0%,
+                rgba(35, 15, 45, 0.98) 70%
+            );
+            filter: blur(8px);
+            border-radius: 50%;
+            z-index: 1;
+            transition: all 0.3s ease;  /* Added transition for smooth shadow changes */
+        }
     </style>
 </head>
 <body>
@@ -721,7 +819,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
     <nav class="navbar">
-        <a href="index.html" class="logo">RENEST</a>
+        <a href="www.renesthorizons.com" class="logo">RENEST</a>
         <div class="nav-links">
             <a href="index.html">Home</a>
             <a href="aboutus529.html">About Us</a>
@@ -853,6 +951,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <h4>How You Benefit from a 529 Account</h4>
                     <p>Your state government wants to help you while you are a student. So if you open and use a 529 account your state will give you a refund on a portion of your education expenses.</p>
                 </div>
+                <div class="screenshot-wrapper">
+                    <div class="screenshot-container">
+                        <img src="homepage529desktop.png" alt="Dashboard Screenshot - Desktop" class="screenshot-desktop" />
+                        <img src="homepage529mobile.png" alt="Dashboard Screenshot - Mobile" class="screenshot-mobile" />
+                        <!-- <div class="screenshot-caption">Your personalized dashboard shows your progress and potential savings</div> -->
+                    </div>
+                </div>
+
             </div>
             
             <div class="timeline-step">
@@ -861,6 +967,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <h4>How You Get Your Benefit</h4>
                     <p>Open a 529 account and track your education expenses. Deposit and withdraw money equal to these expenses and then when you file your taxes your state will refund you. We will help you track and document everything properly.</p>
                 </div>
+                <div class="screenshot-wrapper">
+                    <div class="screenshot-container">
+                        <img src="tracking529desktop.png" alt="Expense Tracker Screenshot - Desktop" class="screenshot-desktop" />
+                        <img src="tracking529mobile.png" alt="Expense Tracker Screenshot - Mobile" class="screenshot-mobile" />
+                        <!-- <div class="screenshot-caption">Our automated expense tracker identifies and categorizes qualified expenses</div> -->
+                    </div>
+
+
+                </div>
+                
             </div>
 
             <div class="timeline-step">
@@ -869,7 +985,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <h4>How Renest Helps</h4>
                     <p><b>Renest automates your 529 benefit.</b> This includes tracking your education expenses, handling your deposits, withdrawals and management of your account and forms. We are confident in getting you your refund, so there is no cost until you benefit!</p>
                 </div>
+            
+                <div class="screenshot-wrapper">
+                    <div class="screenshot-container">
+                        <img src="autotracking529desktop.png" alt="Account Management Screenshot - Desktop" class="screenshot-desktop" />
+                        <img src="529autotracking.png" alt="Account Management Screenshot - Mobile" class="screenshot-mobile" />
+                        <!-- <div class="screenshot-caption">Our automated expense tracker identifies and categorizes qualified expenses</div> -->
+                    </div>
+                </div>
+            
             </div>
+            
         </div>
 
         <div class="case-study">
