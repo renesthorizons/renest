@@ -806,28 +806,33 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
         /* Desktop styles */
         @media (min-width: 769px) {
-            .screenshot-desktop {
-                display: block;
+            .screenshot-item {
+                flex: 0 0 750px !important;  /* Reduced from 900px */
+                min-width: 650px !important;  /* Reduced from 800px */
+                max-width: none !important;
+                padding: 2rem 1rem 1rem;
             }
             
-            .screenshot-wrapper {
-                margin: 2rem 0;
-                padding: 1.5rem;
+            .screenshot-scroll {
+                padding: 4rem 30% !important;   /* Increased padding for better spacing */
+                margin: -4rem -30% !important;
+            }
+            
+            .screenshot-image {
+                width: 650px !important;      /* Reduced from 800px */
+                max-width: none !important;
+                height: auto !important;
+                transform: translateY(-15px) scale(1.05) !important; /* Reduced scale from 1.1 */
             }
 
-            .screenshot-container:hover .screenshot-desktop {
-                transform: translateY(-20px);
+            .screenshot-container {
+                overflow: visible !important;
+                width: 100% !important;
             }
-            
-            .screenshot-container:hover::after {
-                transform: scaleX(0.95);
-                opacity: 1;
-                background: radial-gradient(
-                    ellipse at center,
-                    rgba(15, 6, 20, 1) 0%,    /* Even darker center on hover */
-                    rgba(30, 12, 40, 0.98) 70%    /* Slightly darker edges on hover */
-                );
-                filter: blur(10px);  /* Slightly increased blur for hover */
+
+            .screenshot-gallery {
+                overflow: hidden !important;
+                max-width: 100vw !important;
             }
         }
 
@@ -931,7 +936,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             position: absolute;
             top: 0;
             bottom: 0;
-            width: 15%;
+            width: 25% !important;
             z-index: 2;
             pointer-events: none;
         }
