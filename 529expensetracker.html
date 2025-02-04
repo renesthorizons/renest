@@ -459,6 +459,87 @@
                 font-size: 0.9rem;
             }
         }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 70px;
+            height: 28px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #EF4444;
+            transition: .4s;
+            border-radius: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 8px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            top: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        .toggle-text {
+            position: absolute;
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            z-index: 1;
+        }
+
+        /* OFF text appears on right */
+        .toggle-text:first-child {
+            right: 8px;
+        }
+
+        /* ON text appears on left */
+        .toggle-text:last-child {
+            left: 8px;
+            opacity: 0;
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: #10B981;
+        }
+
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(42px);
+        }
+
+        .toggle-switch input:checked + .toggle-slider .toggle-text:first-child {
+            opacity: 0;
+        }
+
+        .toggle-switch input:checked + .toggle-slider .toggle-text:last-child {
+            opacity: 1;
+        }
+
+        .status-badge.on {
+            background: #10B981;
+        }
     </style>
 </head>
 <body>
@@ -478,12 +559,16 @@
             <h1>529 Expense Tracker</h1>
             <div class="automation-section">
                 <div class="automation-info">
-                    <h3>Automation Status: <span class="status-badge">Off</span></h3>
+                    <h3>Automation</h3>
                     <p>Enable automation to let Renest handle your 529 account transactions automatically.</p>
                 </div>
-                <button class="automation-button">
-                    Turn On Automation
-                </button>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="automation-toggle">
+                    <span class="toggle-slider">
+                        <span class="toggle-text">OFF</span>
+                        <span class="toggle-text">ON</span>
+                    </span>
+                </label>
             </div>
         </div>
 
@@ -740,6 +825,10 @@
             } else {
                 navLinks.style.display = 'none';
             }
+        });
+
+        document.getElementById('automation-toggle').addEventListener('change', function() {
+            // No additional JavaScript needed since the CSS handles the visual changes
         });
     </script>
 </body>
