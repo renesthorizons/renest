@@ -129,16 +129,54 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
         .about-hero {
             margin-top: 5rem;
-            padding: 4rem 2rem;
+            min-height: calc(100vh - 5rem);
+            padding: 2rem;
             background: linear-gradient(45deg, #4B227A, #FF69B4);
             color: white;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-hero img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: .5;
+            z-index: 1;
+        }
+
+        .about-hero img.desktop-hero {
+            display: none;
+        }
+
+        .about-hero img.mobile-hero {
+            display: block;
+        }
+
+        @media (min-width: 768px) {
+            .about-hero img.desktop-hero {
+                display: block;
+            }
+
+            .about-hero img.mobile-hero {
+                display: none;
+            }
         }
 
         .about-hero h1 {
             font-size: 2.5rem;
             margin-bottom: 1rem;
             line-height: 1.2;
+            position: fixed;
+            z-index: 2;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s ease;
         }
 
         .about-content {
@@ -220,10 +258,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             font-size: 2.5rem;
             margin-bottom: 2rem;
             text-align: center;
+            padding-top: 1rem;
         }
         .aboutus-section {
-            margin-top: 80px;
-            padding: 4rem 1rem;
+            margin-top: 0px;
+            padding: 2rem 1rem;
             max-width: 1000px;
             margin-left: auto;
             margin-right: auto;
@@ -305,8 +344,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </nav>
 
     <main>
-        
-            <section class="aboutus-section">
+        <section class="about-hero">
+            <img src="mattbeach.jpeg" alt="Beach background" class="desktop-hero">
+            <img src="mattbeachmobile.jpeg" alt="Beach background" class="mobile-hero">
+            <h1>About Us</h1>
+        </section>
+            
+        <section class="aboutus-section">
             <h1 class="aboutus-title">About Us</h1>
                 <div class="about-content">
             
@@ -324,11 +368,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </section>
 
             <section class="about-section">
-                <h2>Our Mission</h2>
-                <p>Our team understands the commitment and courage undertaken by graduate students. Renest aims to empower graduate students during their academic journey and beyond.</p>
+                <h2 style="text-align: center;">Our Mission</h2>
+                <p style="text-align: center;">Our team understands the commitment and courage undertaken by graduate students. Renest aims to empower graduate students during their academic journey and beyond.</p>
                 <div class="button-container">
-                        <a href="contactus529.html" class="contact-button">Contact Us</a>
-                    </div>
+                    <a href="contactus529.html" class="contact-button">Contact Us</a>
+                </div>
             </section>
         </div>
         </section>
@@ -368,6 +412,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             if (window.innerWidth < 768 && !navLinks.contains(e.target) && e.target !== menuButton) {
                 navLinks.style.display = 'none';
                 menuButton.setAttribute('aria-expanded', false);
+            }
+        });
+
+        // Add scroll effect for hero text
+        const heroText = document.querySelector('.about-hero h1');
+        const contentTitle = document.querySelector('.aboutus-title');
+
+        window.addEventListener('scroll', () => {
+            const contentRect = contentTitle.getBoundingClientRect();
+            if (contentRect.top < window.innerHeight) {
+                heroText.style.opacity = '0';
+            } else {
+                heroText.style.opacity = '1';
             }
         });
     </script>
