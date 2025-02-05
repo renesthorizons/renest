@@ -3620,9 +3620,11 @@ const statePersonalExemptionDB = {
                 taxablestateincome           // Limit to income if it's less than the deduction
             );
             let benefit;
-            if (state === 'Indiana') {
+            if (state === 'IN') {
                 const contributionCredit = deductibleAmount * 0.20; // 20% of contributions
-                benefit = Math.min(contributionCredit,1500); // Take the higher of the two benefits
+                benefit = Math.min(contributionCredit,1500); // Take the smaller of the two benefits
+            } else if (state === 'OR'){
+                benefit=180;
             } else {
                 benefit = deductibleAmount * taxRate;
             }
