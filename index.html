@@ -312,18 +312,90 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         }
 
         .benefits-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
 
-        .benefit-card {
-            background-color: #f8f8f8;
-            padding: 2rem;
-            border-radius: 8px;
-        }
+.benefit-card {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    position: relative;
+}
+
+.benefit-card .image-container {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-container::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 120px;
+    height: 120px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+}
+
+/* Student Loans Card */
+.benefit-card:nth-child(1) .image-container::before {
+    background: radial-gradient(circle closest-side, 
+        rgba(225, 255, 225, 0.9) 0%,
+        rgba(225, 255, 225, 0.7) 30%, 
+        rgba(225, 255, 225, 0.4) 60%,
+        rgba(255, 228, 225, 0) 100%
+    );
+}
+
+/* Groceries Card */
+.benefit-card:nth-child(2) .image-container::before {
+    background: radial-gradient(circle closest-side,
+        rgba(255, 240, 220, 0.9) 0%,
+        rgba(255, 240, 220, 0.7) 30%,
+        rgba(255, 240, 220, 0.4) 60%,
+        rgba(255, 240, 220, 0) 100%
+    );
+}
+
+/* Savings Card */
+.benefit-card:nth-child(3) .image-container::before {
+    background: radial-gradient(circle closest-side,
+        rgba(255, 220, 249, 0.9) 0%,
+        rgba(255, 220, 249, 0.7) 30%,
+        rgba(255, 220, 249, 0.4) 60%,
+        rgba(253, 220, 255, 0) 100%
+    );
+}
+
+.benefit-card img {
+    width: 100px;
+    height: auto;
+    position: relative;
+    z-index: 1;
+}
+
+.benefit-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--text-dark);
+    text-align: center;
+}
+
+.benefit-card p {
+    text-align: center;
+}
+
+
 
         .universities {
             padding: 4rem 1rem;
@@ -641,6 +713,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             font-weight: 700;
         }
 
+        .benefit-card h4 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
         @media (max-width: 768px) {
             .timeline-steps {
                 padding-left: 65px;
@@ -904,30 +982,30 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 Renest automates the process, making sure you unlock your maximum benefit!
             </p>
 
-
-            <!-- <div class="gradient-card" style="text-align: center; max-width: 400px; margin: 1.5rem auto; padding: 2rem;">
-                <div style="font-size: 1.4rem; color: #4B227A; margin-bottom: 0.5rem;">Average Benefit</div>
-                <div style="font-size: 2.5rem; font-weight: bold;">
-                    <span style="color: #4B227A;">$450</span><span style="color: #666; font-weight: normal;">/year</span>
-                </div>
-            </div> -->
             <h3 class="section-subtitle" style="text-align: center;">Built by Graduate Students, Built for Graduate Students</h3>
             <div class="benefits-grid">
                 <div class="benefit-card">
-                    <h4 style="margin-bottom: 1rem;">Pay off student loans</h4>
-                    <p>Thousands of graduate students have unlocked funds to pay off their student loans</p>
+                    <div class="image-container">
+                        <img src="studentloans.png" alt="Student Loans">
+                    </div>
+                    <h4 class="benefit-title">Pay Off Student Loans</h4>
+                    <p>Thousands of graduate students have unlocked funds to pay off student loans</p>
                 </div>
                 <div class="benefit-card">
-                    <h4 style="margin-bottom: 1rem;">Everyday expenses</h4>
-                    <p>Use unlocked funds towards everyday expenses and essential needs</p>
+                    <div class="image-container">
+                        <img src="groceriesbenefit.png" alt="Groceries Benefit">
+                    </div>
+                    <h4 class="benefit-title">Everyday Expenses</h4>
+                    <p>Use unlocked funds for essentials and other expenses, from groceries to concert tickets</p>
                 </div>
                 <div class="benefit-card">
-                    <h4 style="margin-bottom: 1rem;">Create savings</h4>
+                    <div class="image-container">
+                        <img src="savingsbenefit.png" alt="Savings Benefit">
+                    </div>
+                    <h4 class="benefit-title">Create Savings</h4>
                     <p>Build rainy day funds and start your retirement savings journey</p>
                 </div>
             </div>
-
-            
         </section>
         <section class="how-it-works">
            <h2 class="section-title">How It Works</h2>
