@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Budget Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/11.3.0/highcharts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/11.3.0/highcharts-more.js"></script>
+    <style>
+        :root {
+            --primary: #6366F1;
+            --primary-dark: #4F46E5;
+            --accent: #EC4899;
+            --text-dark: #1F2937;
+            --background: #ffffff;
+            --border: #E5E7EB;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-top: 1rem;
+        }
+
+        .header h1 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .monthly-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-section {
+            background: linear-gradient(to bottom right, rgba(99, 102, 241, 0.02), rgba(236, 72, 153, 0.02));
+            border-radius: 24px;
+            padding: 1.5rem;
+            min-height: 500px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .summary-card {
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .summary-card h3 {
+            color: var(--text-dark);
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .summary-card p {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .income-amount {
+            color: var(--primary);
+        }
+
+        .spend-amount {
+            color: var(--accent);
+        }
+
+        .cash-back-section {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .cash-back-card {
+            flex: 1;
+            padding: 1.25rem;
+            border-radius: 1rem;
+            color: white;
+            backdrop-filter: blur(10px);
+            transition: transform 0.2s;
+        }
+
+        .cash-back-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .cash-back-card:first-child {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        }
+
+        .cash-back-card:last-child {
+            background: linear-gradient(135deg, var(--accent), #DB2777);
+        }
+
+        .cash-back-label {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .cash-back-amount {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .expense-list {
+            margin-top: 1rem;
+        }
+
+        .expense-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .expense-item:last-child {
+            border-bottom: none;
+        }
+
+        .expense-category {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .category-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .expense-details {
+            flex: 1;
+        }
+
+        .expense-name {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .expense-progress {
+            font-size: 0.875rem;
+            color: #6B7280;
+            margin-top: 0.25rem;
+        }
+
+        .expense-amount {
+            text-align: right;
+        }
+
+        .current-amount {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .budget-amount {
+            font-size: 0.875rem;
+            color: #6B7280;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .monthly-summary {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <p style="color: #6B7280;">February Spend</p>
+        </header>
+
+        <div class="monthly-summary">
+            <div class="card summary-card">
+                <h3>Typical Monthly Income</h3>
+                <p class="income-amount">$2,100</p>
+            </div>
+            <div class="card summary-card">
+                <h3>Typical Monthly Spend</h3>
+                <p class="spend-amount">$1,900</p>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="chart-section">
+                <div id="radar-container" style="height: 450px;"></div>
+            </div>
+
+            <div class="cash-back-section">
+                <div class="cash-back-card">
+                    <div class="cash-back-label">February Cash Back</div>
+                    <div class="cash-back-amount">$28.50</div>
+                </div>
+                <div class="cash-back-card">
+                    <div class="cash-back-label">Year to Date</div>
+                    <div class="cash-back-amount">$86.75</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 style="color: var(--text-dark); margin-bottom: 1rem;">Expense Summary</h2>
+                <div class="expense-list">
+                    <div class="expense-item">
+                        <div class="expense-category">
+                            <div class="category-icon" style="background: var(--primary)">📚</div>
+                            <div class="expense-details">
+                                <div class="expense-name">Textbooks</div>
+                                <div class="expense-progress">95% of budget</div>
+                            </div>
+                        </div>
+                        <div class="expense-amount">
+                            <div class="current-amount">$285</div>
+                            <div class="budget-amount">/$300</div>
+                        </div>
+                    </div>
+
+                    <div class="expense-item">
+                        <div class="expense-category">
+                            <div class="category-icon" style="background: var(--accent)">🛒</div>
+                            <div class="expense-details">
+                                <div class="expense-name">Groceries</div>
+                                <div class="expense-progress">48.9% of budget</div>
+                            </div>
+                        </div>
+                        <div class="expense-amount">
+                            <div class="current-amount">$220</div>
+                            <div class="budget-amount">/$450</div>
+                        </div>
+                    </div>
+
+                    <div class="expense-item">
+                        <div class="expense-category">
+                            <div class="category-icon" style="background: #10B981">🎮</div>
+                            <div class="expense-details">
+                                <div class="expense-name">Entertainment</div>
+                                <div class="expense-progress">75% of budget</div>
+                            </div>
+                        </div>
+                        <div class="expense-amount">
+                            <div class="current-amount">$150</div>
+                            <div class="budget-amount">/$200</div>
+                        </div>
+                    </div>
+
+                    <div class="expense-item">
+                        <div class="expense-category">
+                            <div class="category-icon" style="background: #8B5CF6">☕</div>
+                            <div class="expense-details">
+                                <div class="expense-name">Coffee & Snacks</div>
+                                <div class="expense-progress">85% of budget</div>
+                            </div>
+                        </div>
+                        <div class="expense-amount">
+                            <div class="current-amount">$85</div>
+                            <div class="budget-amount">/$100</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Highcharts.chart('radar-container', {
+                chart: {
+                    polar: true,
+                    type: 'area',
+                    backgroundColor: 'transparent'
+                },
+                title: {
+                    text: ''
+                },
+                pane: {
+                    size: '85%',
+                    startAngle: 0,
+                    endAngle: 360
+                },
+                xAxis: {
+                    categories: ['Textbooks', 'Groceries', 'Entertainment', 'Study Supplies', 'Transport', 'Dining Out', 'Coffee & Snacks', 'Club Fees', 'Savings'],
+                    tickmarkPlacement: 'on',
+                    lineWidth: 0,
+                    gridLineWidth: 0,
+                    labels: {
+                        distance: 20,
+                        style: {
+                            color: '#6B7280',
+                            fontSize: '12px'
+                        }
+                    }
+                },
+                yAxis: {
+                    gridLineInterpolation: 'circle',
+                    lineWidth: 0,
+                    min: 0,
+                    max: 500,
+                    tickInterval: 200,
+                    gridLineWidth: 1,
+                    gridLineColor: 'rgba(99, 102, 241, 0.1)',
+                    labels: {
+                        formatter: function() {
+                            return this.value % 200 === 0 ? '$' + this.value : '';
+                        },
+                        style: {
+                            color: '#6B7280',
+                            fontSize: '12px'
+                        }
+                    }
+                },
+                tooltip: {
+                    shared: true,
+                    pointFormat: '<span style="color:{series.color}">{series.name}: <b>${point.y}</b><br/>',
+                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                    borderWidth: 0,
+                    shadow: true
+                },
+                legend: {
+                    align: 'center',
+                    verticalAlign: 'bottom',
+                    layout: 'horizontal',
+                    itemStyle: {
+                        color: '#6B7280'
+                    }
+                },
+                series: [{
+                    name: 'Average Month',
+                    data: [300, 450, 200, 150, 150, 300, 100, 80, 200],
+                    color: '#EC4899',
+                    fillOpacity: 0.1,
+                    marker: {
+                        enabled: false
+                    }
+                }, {
+                    name: 'This Month',
+                    data: [285, 220, 150, 125, 75, 120, 85, 60, 180],
+                    color: '#6366F1',
+                    fillOpacity: 0.2,
+                    marker: {
+                        enabled: false
+                    }
+                }],
+                responsive: {
+                    rules: [{
+                        condition: {
+                            maxWidth: 500
+                        },
+                        chartOptions: {
+                            legend: {
+                                align: 'center',
+                                verticalAlign: 'bottom',
+                                layout: 'horizontal'
+                            },
+                            pane: {
+                                size: '70%'
+                            }
+                        }
+                    }]
+                }
+            });
+        });
+    </script>
+</body>
+</html>
