@@ -161,29 +161,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             }
         }
 
-        .hero {
-            margin-top: 5rem;
-            padding: 2rem 1rem;
-            background: linear-gradient(45deg, #4B227A, #FF69B4);
-            color: white;
-            min-height: 65vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            line-height: 1.2;
-            color: white;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-        }
+        
 
         .email-form {
             display: flex;
@@ -288,14 +266,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             .footer-content {
                 grid-template-columns: 2fr 1fr 1fr;
-            }
-
-            .hero {
-                padding: 4rem 2rem;
-            }
-
-            .hero h1 {
-                font-size: 3.5rem;
             }
 
             .email-form {
@@ -977,26 +947,36 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             z-index: 1;
             transition: all 0.3s ease;  /* Added transition for smooth shadow changes */
         }
+        @media (min-width: 769px) {
+            .screenshot-item {
+                flex: 0 0 550px !important;  /* Reduced from 600px */
+                min-width: 300px !important;  /* Reduced from 400px */
+            }
+            
+            
+            .screenshot-image {
+                width: 450px !important;      /* Reduced from 500px */
+                transform: translateY(-15px) scale(1) !important; /* Reduced scale from 1.05 */
+            }
+        }
 
         /* Desktop styles */
         @media (min-width: 769px) {
             .screenshot-item {
-                flex: 0 0 600px !important;  /* Reduced from 900px */
-                min-width: 400px !important;  /* Reduced from 800px */
                 max-width: none !important;
                 padding: 2rem 1rem 1rem;
             }
             
             .screenshot-scroll {
-                padding: 4rem 30% !important;   /* Increased padding for better spacing */
-                margin: -4rem -30% !important;
+                padding: 4rem 40% !important;   /* Increased padding for better spacing */
+                margin: -4rem -40% !important;
             }
             
             .screenshot-image {
-                width: 500px !important;      /* Reduced from 800px */
+               
                 max-width: none !important;
                 height: auto !important;
-                transform: translateY(-15px) scale(1.05) !important; /* Reduced scale from 1.1 */
+               
             }
 
             .screenshot-container2 {
@@ -1010,15 +990,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             }
         }
 
+
         /* Updated Screenshot Gallery Styles */
-        .screenshot-gallery {
-            margin: 2rem auto;
-            padding: 2rem 0;
-            max-width: 100%;
-            overflow: hidden;
-            position: relative;
-            display: flex;
-            justify-content: center;
+        
+
+        .screenshot-scroll::-webkit-scrollbar {
+            display: none;
         }
 
         .screenshot-scroll {
@@ -1029,23 +1006,40 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
             max-width: 100vw;
-            padding: 4rem 30%;
-            margin: -4rem -30%;
-        }
-
-        .screenshot-scroll::-webkit-scrollbar {
-            display: none;
+            padding: 4rem 20%;
+            margin: -4rem -20%;
         }
 
         .screenshot-item {
-            flex: 0 0 600px;
+            flex: 0 0 400px;
             min-width: 300px;
-            max-width: 600px;
-            padding: 2rem 3rem 1rem; /* Reduced bottom padding */
+            padding: 2rem 1rem;
             scroll-snap-align: center;
             scroll-snap-stop: always;
             opacity: 0.3;
             transition: all 0.3s ease;
+        }
+
+        /* Ensure the container is centered on the page */
+        .screenshot-gallery {
+            margin: 2rem auto;
+            padding: 2rem 0;
+            max-width: 100%;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Add smooth transitions for opacity changes */
+        .screenshot-item.active {
+            opacity: 1;
+        }
+
+        /* Add smooth scrolling to all browsers */
+        * {
+            scroll-behavior: smooth;
         }
 
         .screenshot-container2 {
@@ -1110,9 +1104,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             position: absolute;
             top: 0;
             bottom: 0;
-            width: 25% !important;
-            z-index: 2;
+            width: 15% !important;
+            z-index: 1;
             pointer-events: none;
+            transition: opacity 3s ease;
         }
 
         .screenshot-gallery::before {
@@ -1128,6 +1123,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 rgba(255, 255, 255, 1) 0%,
                 rgba(255, 255, 255, 0) 100%);
         }
+        .screenshot-item.active ~ .screenshot-gallery::before,
+.screenshot-item.active ~ .screenshot-gallery::after,
+.screenshot-gallery:hover::before,
+.screenshot-gallery:hover::after {
+    opacity: 0;
+}
 
         /* Active states */
         .screenshot-item.active {
@@ -1167,52 +1168,215 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             }
 
             .screenshot-container2 {
-                padding-bottom: 5rem; /* Slightly less padding on mobile */
+                padding-bottom: 4rem; /* Slightly less padding on mobile */
             }
+            .screenshot-caption {
+        bottom: 1rem;  /* Moves the caption lower */
+        padding: 0 1rem;
+        font-size: 1rem;
+    }
         }
 
         /* Add these new styles for mobile/desktop screenshot handling */
-        .screenshot-mobile2 {
-            display: none;
+    /* Add these styles to your existing CSS */
+@media (min-width: 769px) {
+    .screenshot-gallery {
+        width: 100%;
+        max-width: 1200px;
+        margin: 1rem auto;
+        overflow: visible;
+/*        padding: 0;*/
+        padding: 2rem 0; 
+    }
+
+    .screenshot-scroll {
+        display: block;
+        animation: none;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+        transform: none;
+    }
+
+    .screenshot-item {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;  /* Increased gap between image and caption */
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 6rem;
+        opacity: 1;
+        padding: 0;
+        max-width: 1000px;  /* Increased max-width to give more room */
+    }
+
+    .screenshot-container2 {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        position: relative;
+        padding-bottom: 30px;
+    }
+
+    .screenshot-image {
+        max-width: 400px;
+        width: 100%;
+        height: auto;
+        transform: translateY(-15px);
+        transition: transform 0.3s ease;
+    }
+
+    .screenshot-container2::after {
+        content: '';
+        position: absolute;
+        left: 5%;
+        right: 5%;
+        bottom: 15px;
+        height: 4px;
+        background: radial-gradient(
+            ellipse at center,
+            rgba(20, 8, 25, 0.98) 0%,
+            rgba(35, 15, 45, 0.98) 70%
+        );
+        filter: blur(8px);
+        border-radius: 50%;
+        z-index: 1;
+        transition: all 0.3s ease;
+    }
+
+    .screenshot-container2:hover .screenshot-image {
+        transform: translateY(-20px);
+    }
+
+    .screenshot-container2:hover::after {
+        transform: scaleX(0.95);
+        opacity: 1;
+        background: radial-gradient(
+            ellipse at center,
+            rgba(15, 6, 20, 1) 0%,
+            rgba(30, 12, 40, 0.98) 70%
+        );
+        filter: blur(10px);
+    }
+
+    .screenshot-caption {
+        position: static;
+        opacity: 1;
+        transform: none;
+        text-align: left;
+        padding: 2rem;  /* Added padding inside caption */
+        font-size: 1.4rem;
+        width: 100%;
+        background: rgba(75, 34, 122, 0.2);  /* Light purple background */
+        min-width: 310px;
+        border-radius: 16px;  /* Rounded corners */
+        box-shadow: 0 4px 16px rgba(75, 34, 122, 0.06);  /* Subtle shadow */
+    }
+
+    .screenshot-gallery::before,
+    .screenshot-gallery::after {
+        display: none;
+    }
+
+    .screenshot-caption h3 {
+        margin-bottom: 1.5rem;  /* Increased spacing after heading */
+        color: #4B227A;
+        font-size: 1.8rem;  /* Larger heading */
+    }
+
+    .screenshot-caption p {
+        color: #666;
+        line-height: 1.7;  /* Increased line height */
+        font-size: 1.2rem;  /* Slightly larger text */
+    }
+    .screenshot-item:last-child {
+        margin-bottom: 1rem; /* Reduced from 6rem to 2rem */
+    }
+}
+
+/* Add these to your existing CSS */
+/*.hero {
+    position: relative;
+    margin-top: 5rem;
+    padding: 2rem 1rem;
+    background: linear-gradient(45deg, #4B227A, #FF69B4);
+    color: white;
+    min-height: 65vh;
+}*/
+        .hero {
+            margin-top: 5rem;
+            padding: 2rem 1rem;
+            background: linear-gradient(45deg, #4B227A, #FF69B4);
+            color: white;
+            min-height: 65vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
-        .screenshot-desktop2 {
-            display: block;
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            color: white;
         }
 
-        @media (max-width: 768px) {
-            .screenshot-mobile2 {
-                display: block;
-            }
-            
-            .screenshot-desktop2 {
-                display: none;
-            }
-            
-            .screenshot-item {
-                flex: 0 0 85%;
-                min-width: 280px;
-                padding: 1rem 0.5rem;
-            }
-            
-            .screenshot-scroll {
-                padding: 4rem 7.5%;
-                margin: -4rem -7.5%;
-            }
-            
-            .screenshot-container2 {
-                padding-bottom: 4rem;
-            }
-            
-            .screenshot-caption {
-                font-size: 1rem;
-            }
-            
-            .screenshot-gallery::before,
-            .screenshot-gallery::after {
-                width: 10%;
-            }
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
         }
+.hero-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left:    0rem;
+}
+
+/* Hide image container by default (mobile) */
+.hero-image-container {
+    display: none;
+}
+
+/* Control image size and position */
+.hero-phone {
+    width: 300px; /* Controls the width of the phone image */
+    height: auto;
+    transform:  scale(2);
+    object-fit: contain;
+    transform: translateY(20px) translateX(50px); /* Adjusts vertical position */
+}
+
+/* Desktop styles */
+@media (min-width: 768px) {
+    .hero-phone{transform:  scale(1.2)}
+    .hero {
+                padding: 4rem 2rem;
+            }
+
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+
+    .hero-content {
+        justify-content: space-between;
+        padding: 0 2rem;
+    }
+
+    .hero-image-container {
+        display: block; /* Show image on desktop */
+        flex: 0 0 30%; /* Controls how much space the image takes */
+        margin-right: 2rem;
+    }
+
+    .hero-text {
+        flex: 0 0 85%; /* Controls how much space the text takes */
+    }
+}
 
     </style>
 </head>
@@ -1236,15 +1400,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <main>
         <section class="hero">
-            <h1>Unlocking Savings<br>Benefits for Graduate Students</h1>
-            <!-- <h1>Turn Expenses<br>Into Your Opportunity</h1>
-            <p>Unlocking savings benefits for graduate students</p> -->
-            <!-- <p>Students are eligible for state refunds on their education expenses, including rent and food</p> -->
-            <p>Renest turns expenses into savings</p>
-            <form class="email-form" id="emailForm" onsubmit="submitToGoogleForm(event)">
-                <input type="email" class="email-input" id="emailInput" placeholder="Enter your email" required>
-                <button type="submit" class="submit-button">Stay Updated</button>
-            </form>
+            <div class="hero-content">
+                <!-- Add this new div for the image -->
+                
+                <!-- Wrap existing content in a div -->
+                <div class="hero-text">
+                    <h1>Unlocking Savings<br>Benefits for Graduate Students</h1>
+                    <p>Renest turns expenses into savings</p>
+                    <form class="email-form" id="emailForm" onsubmit="submitToGoogleForm(event)">
+                        <input type="email" class="email-input" id="emailInput" placeholder="Enter your email" required>
+                        <button type="submit" class="submit-button">Stay Updated</button>
+                    </form>
+                </div>
+                <div class="hero-image-container">
+                    <img src="529iphoneimage3hero.png" alt="Renest App Interface" class="hero-phone">
+                </div>
+            </div>
         </section>
         <section class="logo-scroller">
             <h2>Supporting Students Coast to Coast</h2>
@@ -1302,38 +1473,48 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <section class="benefits">
             <h2 class="section-title">Did you know?</h2>
             <p style="text-align: center; max-width: 800px; margin: 0 auto 3rem; font-size: 1.2rem;">
-                Several everyday graduate student expenses (e.g., rent, groceries, wi-fi, etc.) qualify for state 529 benefits.
+                Several everyday graduate student expenses—like rent and groceries—qualify for state 529 benefits.
                 However, graduate students often do not have the time to go through the required steps.
                 Renest automates the process, making sure you unlock your maximum benefit!
             </p>
 
-            <h3 class="section-subtitle" style="text-align: center;">Built by Graduate Students, Built for Graduate Students</h3>
-            <div class="screenshot-gallery">
+            <h3 class="section-subtitle" style="text-align: center;">Built by and for Graduate Students</h3>
+            <section class="screenshot-gallery">
                 <div class="screenshot-scroll">
                     <div class="screenshot-item">
                         <div class="screenshot-container2">
-                            <img src="529iphoneimage1.png" alt="Dashboard Screenshot" class="screenshot-image screenshot-desktop2">
-                            <img src="529iphoneimage1.png" alt="Dashboard Screenshot" class="screenshot-image screenshot-mobile2">
-                            <p class="screenshot-caption">Open a Renest account. Automatically link your Renest account with your states 529 plan.</p>
+                            <img src="529iphoneimage2style.png" alt="Dashboard Screenshot" class="screenshot-image">
+                        </div>
+                        <div class="screenshot-caption">
+                            <!-- <h3>Get Started with Renest</h3> -->
+                            <p>Open a Renest account and start benefitting from your state's 529 plan</p>
                         </div>
                     </div>
+                    
                     <div class="screenshot-item">
                         <div class="screenshot-container2">
-                            <img src="529iphoneimage2.png" alt="Expense Tracker Screenshot" class="screenshot-image screenshot-desktop2">
-                            <img src="529iphoneimage2.png" alt="Expense Tracker Screenshot" class="screenshot-image screenshot-mobile2">
-                            <p class="screenshot-caption">Our tracker lets you identify and track your qualified expenses</p>
+                            <img src="529iphoneimage1style.png" alt="Expense Tracker Screenshot" class="screenshot-image">
+                        </div>
+                        <div class="screenshot-caption">
+                            <!-- <h3>Track Your Expenses</h3> -->
+                            <p>Automate or manually track your 529 qualified expenses</p>
                         </div>
                     </div>
+                    
                     <div class="screenshot-item">
                         <div class="screenshot-container2">
-                            <img src="529iphoneimage3.png" alt="Account Management Screenshot" class="screenshot-image screenshot-desktop2">
-                            <img src="529iphoneimage3.png" alt="Account Management Screenshot" class="screenshot-image screenshot-mobile2">
-                            <p class="screenshot-caption">Manually track your expenses or link your credit or debit card for automatated expense tracking through <a href="https://plaid.com/">Plaid</a></p>
+                            <img src="529iphoneimage3style.png" alt="Account Management Screenshot" class="screenshot-image">
+                        </div>
+                        <div class="screenshot-caption">
+                            <!-- <h3>Maximize Your Benefits</h3> -->
+                            <p>Renest validates and ensures your maximum benefit</p>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
+            <h2 class="section-title">Use Your Unlocked Cash How You Like!</h2>
             <div class="benefits-grid">
+
                 <div class="benefit-card">
                     <div class="image-container">
                         <img src="StudentLoans3.png" alt="Student Loans">
@@ -1365,134 +1546,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             
         </section>
         
-        <section class="how-it-works">
-           <h2 class="section-title">How It Works</h2>
-    
-    <div class="gradient-card">
-        <div class="info-box">
-            <p style="text-align: center; font-size: 1.2rem; line-height: 1.6;">
-                We help graduate students maximize their benefits by using 529 accounts, which provide refunds for qualified education expenses—including rent and groceries!
-            </p>
-        </div>
         
-        <div class="timeline-steps">
-            <div class="timeline-step">
-                <div class="timeline-number">1</div>
-                <div class="timeline-content">
-                    <h4>You Are a Student and You Have an income</h4>
-                    <p>Because you are a student and have an income you qualify to use a 529 account which is an account managed by your state government.</p>
-                    
-                    <!-- Add search bar and results container -->
-                    <div class="state-search-container" style="margin-top: 1.5rem;">
-                        <h4 style="color: #4B227A; margin-bottom: 1rem; font-size: 1.1rem;">Find Your State's 529 Plan</h4>
-                        <input 
-                            type="text" 
-                            id="stateSearch" 
-                            placeholder="Enter your school's location..." 
-                            style="width: 100%; padding: 0.75rem; border: 2px solid #4B227A; border-radius: 8px; font-size: 1rem; margin-bottom: 0.5rem;"
-                        >
-                        <div 
-                            id="searchResults" 
-                            style="display: none; max-height: 200px; overflow-y: auto; border: 1px solid #ddd; border-radius: 8px; background: white;"
-                        ></div>
-                        <div 
-                            id="selectedStateInfo" 
-                            style="display: none; margin-top: 1rem; padding: 1rem; background: rgba(75, 34, 122, 0.05); border-radius: 8px;"
-                        ></div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="timeline-step">
-                <div class="timeline-number">2</div>
-                <div class="timeline-content">
-                    <h4>How You Benefit from a 529 Account</h4>
-                    <p>Your state government wants to help you while you are a student. So if you open and use a 529 account your state will give you a refund on a portion of your education expenses.</p>
-                </div>
-                <div class="screenshot-wrapper">
-                    <div class="screenshot-container">
-                        <img src="homepage529desktop.png" alt="Dashboard Screenshot - Desktop" class="screenshot-desktop" />
-                        <img src="homepage529mobile.png" alt="Dashboard Screenshot - Mobile" class="screenshot-mobile" />
-                        <!-- <div class="screenshot-caption">Your personalized dashboard shows your progress and potential savings</div> -->
-                    </div>
-                </div>
-
-            </div>
-            
-            <div class="timeline-step">
-                <div class="timeline-number">3</div>
-                <div class="timeline-content">
-                    <h4>How You Get Your Benefit</h4>
-                    <p>Open a 529 account and track your education expenses. Deposit and withdraw money equal to these expenses and then when you file your taxes your state will refund you. We will help you track and document everything properly.</p>
-                </div>
-                <div class="screenshot-wrapper">
-                    <div class="screenshot-container">
-                        <img src="tracking529desktop.png" alt="Expense Tracker Screenshot - Desktop" class="screenshot-desktop" />
-                        <img src="tracking529mobile.png" alt="Expense Tracker Screenshot - Mobile" class="screenshot-mobile" />
-                        <!-- <div class="screenshot-caption">Our automated expense tracker identifies and categorizes qualified expenses</div> -->
-                    </div>
-
-
-                </div>
-                
-            </div>
-
-            <div class="timeline-step">
-                <div class="timeline-number">4</div>
-                <div class="timeline-content">
-                    <h4>How Renest Helps</h4>
-                    <p><b>Renest automates your 529 benefit.</b> This includes tracking your education expenses, handling your deposits, withdrawals and management of your account and forms. We are confident in getting you your refund, so there is no cost until you benefit!</p>
-                </div>
-            
-                <div class="screenshot-wrapper">
-                    <div class="screenshot-container">
-                        <img src="autotracking529desktop.png" alt="Account Management Screenshot - Desktop" class="screenshot-desktop" />
-                        <img src="529autotracking.png" alt="Account Management Screenshot - Mobile" class="screenshot-mobile" />
-                        <!-- <div class="screenshot-caption">Our automated expense tracker identifies and categorizes qualified expenses</div> -->
-                    </div>
-                </div>
-            
-            </div>
-            
-        </div>
-
-        <div class="case-study">
-            <h3 style="color: #1E0A3C; margin-bottom: 1.5rem; font-size: 1.5rem;">Case Study: University of Illinois Urbana-Champaign Graduate Student</h3>
-            <p style="margin-bottom: 2rem; font-size: 1.1rem; line-height: 1.6;">A physics PhD student making $30,000/year uses Renest to automate their 529 account management and track qualified education expenses. This increased their state refund by $495! Renest's guarantee means they only paid after they received their benefit.</p>
-            
-            <div class="case-study-grid">
-                <div class="case-study-item">
-                    <span>Monthly Rent</span>
-                    <span class="text-emphasis">$700</span>
-                </div>
-                <div class="case-study-item">
-                    <span>Monthly Food Spend</span>
-                    <span class="text-emphasis">$300</span>
-                </div>
-            </div>
-            
-            <div class="savings-highlight">
-                <h3 style="margin-bottom: 0.5rem; font-size: 1.3rem;">Annual State Refund</h3>
-                <span style="font-size: 2.5rem; font-weight: bold; display: block; margin: 0.5rem 0;">+$495</span>
-                <p style="opacity: 0.9; font-size: 0.9rem; margin-top: 0.5rem;"></p>
-            </div>
-        </div>
-    </div>
-            <div style="text-align: center;">
-                <a href="getstarted529.html" class="talk-button">Get Started</a>
-            </div>
-        </section>
-
-        
-
-       <!--  <section class="newsletter">
-            <h2></h2>
-            <p>Sign up for our newsletter to get the latest updates.</p>
-            <form class="email-form">
-                <input type="email" class="email-input" placeholder="Enter your email">
-                <button type="submit" class="submit-button">Subscribe</button>
-            </form>
-        </section> -->
     </main>
 
     <footer class="footer">
