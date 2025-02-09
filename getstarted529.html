@@ -3619,15 +3619,16 @@ const statePersonalExemptionDB = {
                 stateDeduction,  // State's max deduction
                 taxablestateincome           // Limit to income if it's less than the deduction
             );
+            const taxespaid = taxRate*taxablestateincome;
             let benefit;
             if (state === 'IN') {
                 const contributionCredit = deductibleAmount * 0.20; // 20% of contributions
-                benefit = Math.min(contributionCredit,1500); // Take the smaller of the two benefits
+                benefit = Math.min(contributionCredit,1500,taxespaid); // Take the smaller of the two benefits
             } else if (state === 'OR'){
                 benefit=180;
             } else {
-                benefit = deductibleAmount * taxRate;
-            }
+                benefit = Math.min(deductibleAmount * taxRate,taxespaid);
+            };
             
 
             // Format and display the total benefit
