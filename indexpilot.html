@@ -3308,8 +3308,8 @@ function updatePricingDisplay(benefit, earlyAmount) {
     }).format(benefit);
 
     // Update toggle displays
-    document.getElementById('early-amount-display').textContent = `Get ${formattedEarly} today`;
-    document.getElementById('later-amount-display').textContent = `Get ${formattedBenefit} at tax time`;
+    document.getElementById('early-amount-display').textContent = `You Get ${formattedEarly} Today`;
+    document.getElementById('later-amount-display').textContent = `You Get ${formattedBenefit} When You File Taxes`;
 
     // Unlock content
     pricingCards.forEach(card => {
@@ -5646,7 +5646,7 @@ const statePersonalExemptionDB = {
     const totalCosts = baseFee + serviceFee + lendingCost;
     const calculatedEarlyAmount = benefit - totalCosts;
     
-    const maxEarlyAmount = benefit*.85;
+    const maxEarlyAmount = benefit*.825;
     const earlyAmount = Math.min(calculatedEarlyAmount, maxEarlyAmount);
     
     const isViable = earlyAmount > 0;
@@ -5670,8 +5670,8 @@ const statePersonalExemptionDB = {
     });
 
     // Update early and later amounts in toggle displays
-    document.getElementById('early-amount-display').textContent = `Get ${formattedEarlyAmount} today`;
-    document.getElementById('later-amount-display').textContent = `Get ${formattedBenefit} at tax time`;
+    document.getElementById('early-amount-display').textContent = `You Get ${formattedEarlyAmount} Today`;
+    document.getElementById('later-amount-display').textContent = `You Get ${formattedBenefit} at Tax Time`;
 
     // Update CTA button
     const mainCtaButton = document.getElementById('main-cta-button');
@@ -5784,7 +5784,7 @@ const statePersonalExemptionDB = {
             const calculatedEarlyAmount = benefit - totalCosts;
             
             // Cap at 70% of benefit
-            const maxEarlyAmount = benefit * 0.85;
+            const maxEarlyAmount = benefit * 0.825;
             const earlyAmount = Math.min(calculatedEarlyAmount, maxEarlyAmount);
             
             // Only check if the amount is positive since we've already capped it
