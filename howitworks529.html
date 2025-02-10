@@ -648,6 +648,372 @@ body {
 .arrow-icon.up {
     transform: rotate(180deg);
 }
+.how-it-works {
+            padding: 2rem 1rem;
+            background-color: white;
+            overflow-x: hidden;
+        }
+
+        .gradient-card {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 3rem;
+            background: #fffaf0;
+            border-radius: 24px;
+            position: relative;
+            box-shadow: 0px 0px 8px 8px rgba(75, 34, 122, 0.3);
+        }
+
+        /* New pop-out border style */
+        .gradient-card::before {
+            content: '';
+            position: absolute;
+           /* top: 0;
+            left: 0;*/
+            width: 100%;
+            height: 100%;
+            /*border-radius: 24px;
+            border-left: 4px solid;
+            border-top: 4px solid;
+            border-image: linear-gradient(45deg, #4B227A, #FF69B4) 1;*/
+            pointer-events: none;
+        }
+
+        .info-box {
+            background: linear-gradient(45deg, rgba(75, 34, 122, 0.05), rgba(255, 105, 180, 0.05));
+            padding: 2rem;
+            border-radius: 16px;
+            margin: 2rem auto;
+            max-width: 800px;
+            transform: translateY(30px);
+            opacity: 0;
+            transition: all 0.6s ease-out;
+        }
+
+        .info-box.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .timeline-steps {
+            max-width: 800px;
+            margin: 4rem auto;
+            position: relative;
+            padding-left: 85px;
+        }
+
+        .timeline-steps::before {
+            content: '';
+            position: absolute;
+            left: 29px;
+            top: 40px;
+            bottom: 40px;
+            width: 3px;
+            background: #eaeaea;
+            z-index:    2;
+            border-radius: 4px;
+        }
+
+        /* Add the animated line overlay */
+        .timeline-line {
+            position: absolute;
+            left: 29px;
+            top: 40px;
+            width: 3px;
+            height: 0;
+            z-index:    2;
+            background: linear-gradient(to bottom, #4B227A, #FF69B4);
+            border-radius: 4px;
+            transition: height 2.5s ease-out;
+        }
+
+        .timeline-step {
+            position: relative;
+            padding-bottom: 3rem;
+            opacity: 0;
+            z-index:    5;
+            transform: translateX(-30px);
+            transition: all 0.6s ease-out;
+        }
+
+        .timeline-step.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .timeline-step:last-child {
+            padding-bottom: 0;
+        }
+
+        .timeline-number {
+            position: absolute;
+            left: -85px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #4B227A, #FF69B4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            z-index:    5;
+            font-size: 1.4rem;
+            box-shadow: 0 4px 12px rgba(75, 34, 122, 0.2);
+        }
+
+        .timeline-content {
+            padding: 2rem 2.5rem;
+            border-radius: 16px;
+            background: white;
+            box-shadow: 0 4px 16px rgba(75, 34, 122, 0.08);
+            border: 1px solid rgba(75, 34, 122, 0.1);
+        }
+
+        .timeline-content h4 {
+            color: #4B227A;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .case-study {
+            max-width: 800px;
+            margin: 1rem auto 0;
+            padding: 2rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 24px rgba(75, 34, 122, 0.1);
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
+        }
+
+        
+
+        .case-study.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .case-study-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .case-study-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            background: rgba(75, 34, 122, 0.05);
+            border-radius: 12px;
+            font-size: 1.1rem;
+        }
+
+        .text-emphasis {
+            color: #4B227A;
+            font-weight: 600;
+            font-size: 1.3rem;
+        }
+
+        .savings-highlight {
+            background: linear-gradient(45deg, #4B227A, #FF69B4);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            margin-top: 2rem;
+            box-shadow: 0 4px 16px rgba(75, 34, 122, 0.2);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            color: #1E0A3C;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .benefit-card h4 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        @media (max-width: 768px) {
+            .timeline-steps {
+                padding-left: 65px;
+            }
+            
+            .timeline-number {
+                left: -65px;
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+
+            .case-study-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gradient-card {
+                padding: 2rem 1rem;
+            }
+        }
+        .menu-button {
+            background: none;
+            border: 2px solid var(--primary);
+            border-radius: 4px;
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.5rem 0.75rem;
+            color: var(--primary);
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .menu-button:hover {
+            background: var(--primary);
+            color: white;
+        }
+        @media (min-width: 768px) {
+            .menu-button {
+                display: none;  /* This hides the menu button on desktop */
+            }
+        }
+        .talk-button {
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-block;
+            background-image: linear-gradient(45deg, var(--primary) 0%, var(--primary) 100%);
+            background-size: 200% 200%;
+            background-position: 0% 0%;
+            font-weight: 600;
+        }
+
+        .talk-button:hover {
+            background-image: linear-gradient(45deg, #4B227A, #FF69B4) !important;
+            background-position: 100% 100% !important;
+            transform: translateY(-2px);
+        }
+
+        .nav-links .talk-button {
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .how-it-works .talk-button {
+            font-size: 1.2rem;
+            padding: 1rem 3rem;
+            margin-top: 3rem;
+        }
+        .screenshot-wrapper {
+            margin: 2rem -1rem;
+            background: transparent;
+            padding: 1rem;
+            border-radius: 12px;
+        }
+
+        .screenshot-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            border-radius: 12px;
+            overflow: visible;  /* Changed from hidden to visible to show shadow */
+            transition: all 0.3s ease;
+        }
+
+        /* Updated styles for screenshots */
+        .screenshot-mobile,
+        .screenshot-desktop {
+            width: 100%;
+            height: auto;
+            display: none;  /* Hide both by default */
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+            transform: translateY(-15px);
+            position: relative;
+            z-index: 2;
+            outline: 4px solid rgba(0, 0, 0, 0.8);
+        }
+        @media (max-width: 768px) {
+            .screenshot-mobile {
+                width: 100%;
+                max-width: 100%;
+                height: auto;
+                margin: 0 auto;
+                display: block;
+            }
+        }
+
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            .screenshot-mobile {
+                display: block;  /* Show mobile screenshots on small screens */
+            }
+            
+            .screenshot-desktop {
+                display: none;  /* Hide desktop screenshots on small screens */
+            }
+        }
+
+        /* Desktop styles */
+        @media (min-width: 769px) {
+            .screenshot-desktop {
+                display: block;  /* Show desktop screenshots on large screens */
+            }
+            
+            .screenshot-mobile {
+                display: none;  /* Hide mobile screenshots on large screens */
+            }
+            
+            .screenshot-wrapper {
+                margin: 2rem 0;
+                padding: 1.5rem;
+            }
+
+            .screenshot-container:hover .screenshot-desktop {
+                transform: translateY(-20px);
+            }
+            
+            .screenshot-container:hover::after {
+                transform: scaleX(0.95);
+                opacity: 1;
+                background: radial-gradient(
+                    ellipse at center,
+                    rgba(15, 6, 20, 1) 0%,    /* Even darker center on hover */
+                    rgba(30, 12, 40, 0.98) 70%    /* Slightly darker edges on hover */
+                );
+                filter: blur(10px);  /* Slightly increased blur for hover */
+            }
+        }
+
+        .screenshot-container::after {
+            content: '';
+            position: absolute;
+            left: 5%;
+            right: 5%;
+            bottom: -25px;
+            height: 4px;
+            background: radial-gradient(
+                ellipse at center,
+                rgba(20, 8, 25, 0.98) 0%,
+                rgba(35, 15, 45, 0.98) 70%
+            );
+            filter: blur(8px);
+            border-radius: 50%;
+            z-index: 1;
+            transition: all 0.3s ease;  /* Added transition for smooth shadow changes */
+        }
 </style>
 <body>
     <!-- Google Tag Manager (noscript) -->
@@ -669,13 +1035,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <main>
         <section class="hero">
-            <h1>Understanding Your 529 Benefits</h1>
-            <p>A step-by-step guide to maximizing your graduate student tax benefits</p>
+            <h1>Understanding Your Renest Benefits</h1>
+            <!-- <p>A step-by-step guide to maximizing your graduate student tax benefits</p> -->
         </section>
         <section class="process-overview">
     <div class="container">
         <div class="calculator-result">
-                    <h2>Sara's 529 Journey</h2>
+                    <h2>Sara's Renest Journey</h2>
                     <div class="result-box">
                         <p class="result-text">Sara, a PhD student in Aerospace Engineering at CU Boulder, used our calculator and discovered she could get a <span class="highlight">$924 annual tax refund</span> using a 529 plan for her qualified expenses. Here's how Renest helps her get there:</p>
                     </div>
@@ -831,6 +1197,128 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <a href="getstarted529.html" class="cta-button">Get Started</a>
             </div>
         </section>
+
+
+        <section class="how-it-works" style="margin-top: 4rem">
+            <h2 class="section-title">More Details</h2>
+     
+     <div class="gradient-card">
+         <div class="info-box">
+             <p style="text-align: center; font-size: 1.2rem; line-height: 1.6;">
+                 We help graduate students maximize their benefits by using 529 accounts, which provide refunds for qualified education expenses—including rent and groceries!
+             </p>
+         </div>
+         
+         <div class="timeline-steps">
+             <div class="timeline-step">
+                 <div class="timeline-number">1</div>
+                 <div class="timeline-content">
+                     <h4>You Are a Student and You Have an income</h4>
+                     <p>Because you are a student and have an income you qualify to use a 529 account which is an account managed by your state government.</p>
+                     
+                     <!-- Add search bar and results container -->
+                     <div class="state-search-container" style="margin-top: 1.5rem;">
+                         <h4 style="color: #4B227A; margin-bottom: 1rem; font-size: 1.1rem;">Find Your State's 529 Plan</h4>
+                         <input 
+                             type="text" 
+                             id="stateSearch" 
+                             placeholder="Enter your school's location..." 
+                             style="width: 100%; padding: 0.75rem; border: 2px solid #4B227A; border-radius: 8px; font-size: 1rem; margin-bottom: 0.5rem;"
+                         >
+                         <div 
+                             id="searchResults" 
+                             style="display: none; max-height: 200px; overflow-y: auto; border: 1px solid #ddd; border-radius: 8px; background: white;"
+                         ></div>
+                         <div 
+                             id="selectedStateInfo" 
+                             style="display: none; margin-top: 1rem; padding: 1rem; background: rgba(75, 34, 122, 0.05); border-radius: 8px;"
+                         ></div>
+                     </div>
+                 </div>
+             </div>
+             
+             <div class="timeline-step">
+                 <div class="timeline-number">2</div>
+                 <div class="timeline-content">
+                     <h4>How You Benefit from a 529 Account</h4>
+                     <p>Your state government wants to help you while you are a student. So if you open and use a 529 account your state will give you a refund on a portion of your education expenses.</p>
+                 </div>
+                 <div class="screenshot-wrapper">
+                     <div class="screenshot-container">
+                         <img src="homepage529desktop.png" alt="Dashboard Screenshot - Desktop" class="screenshot-desktop" />
+                         <img src="homepage529mobile.png" alt="Dashboard Screenshot - Mobile" class="screenshot-mobile" />
+                         <!-- <div class="screenshot-caption">Your personalized dashboard shows your progress and potential savings</div> -->
+                     </div>
+                 </div>
+ 
+             </div>
+             
+             <div class="timeline-step">
+                 <div class="timeline-number">3</div>
+                 <div class="timeline-content">
+                     <h4>How You Get Your Benefit</h4>
+                     <p>Open a 529 account and track your education expenses. Deposit and withdraw money equal to these expenses and then when you file your taxes your state will refund you. We will help you track and document everything properly.</p>
+                 </div>
+                 <div class="screenshot-wrapper">
+                     <div class="screenshot-container">
+                         <img src="tracking529desktop.png" alt="Expense Tracker Screenshot - Desktop" class="screenshot-desktop" />
+                         <img src="tracking529mobile.png" alt="Expense Tracker Screenshot - Mobile" class="screenshot-mobile" />
+                         <!-- <div class="screenshot-caption">Our automated expense tracker identifies and categorizes qualified expenses</div> -->
+                     </div>
+ 
+ 
+                 </div>
+                 
+             </div>
+ 
+             <div class="timeline-step">
+                 <div class="timeline-number">4</div>
+                 <div class="timeline-content">
+                     <h4>How Renest Helps</h4>
+                     <p><b>Renest automates your 529 benefit.</b> This includes tracking your education expenses, handling your deposits, withdrawals and management of your account and forms. We are confident in getting you your refund, so there is no cost until you benefit!</p>
+                 </div>
+             
+                 <div class="screenshot-wrapper">
+                     <div class="screenshot-container">
+                         <img src="autotracking529desktop.png" alt="Account Management Screenshot - Desktop" class="screenshot-desktop" />
+                         <img src="529autotracking.png" alt="Account Management Screenshot - Mobile" class="screenshot-mobile" />
+                         <!-- <div class="screenshot-caption">Our automated expense tracker identifies and categorizes qualified expenses</div> -->
+                     </div>
+                 </div>
+             
+             </div>
+             
+         </div>
+ 
+         <div class="case-study">
+             <h3 style="color: #1E0A3C; margin-bottom: 1.5rem; font-size: 1.5rem;">Case Study: University of Illinois Urbana-Champaign Graduate Student</h3>
+             <p style="margin-bottom: 2rem; font-size: 1.1rem; line-height: 1.6;">A physics PhD student making $30,000/year uses Renest to automate their 529 account management and track qualified education expenses. This increased their state refund by $495! Renest's guarantee means they only paid after they received their benefit.</p>
+             
+             <div class="case-study-grid">
+                 <div class="case-study-item">
+                     <span>Monthly Rent</span>
+                     <span class="text-emphasis">$700</span>
+                 </div>
+                 <div class="case-study-item">
+                     <span>Monthly Food Spend</span>
+                     <span class="text-emphasis">$300</span>
+                 </div>
+             </div>
+             
+             <div class="savings-highlight">
+                 <h3 style="margin-bottom: 0.5rem; font-size: 1.3rem;">Annual State Refund</h3>
+                 <span style="font-size: 2.5rem; font-weight: bold; display: block; margin: 0.5rem 0;">+$495</span>
+                 <p style="opacity: 0.9; font-size: 0.9rem; margin-top: 0.5rem;"></p>
+             </div>
+         </div>
+     </div>
+             <div style="text-align: center;">
+                 <a href="getstarted529.html" class="talk-button">Get Started</a>
+             </div>
+         </section>
+
+
+
     </main>
 
     <footer class="footer">
@@ -852,6 +1340,515 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
     </footer>
 <script>
+const stateOptions = {
+            'AL': 'Alabama',
+            'AK': 'Alaska',
+            'AZ': 'Arizona',
+            'AR': 'Arkansas',
+            'CA': 'California',
+            'CO': 'Colorado',
+            'CT': 'Connecticut',
+            'DE': 'Delaware',
+            'DC': 'District of Columbia',
+            'FL': 'Florida',
+            'GA': 'Georgia',
+            'HI': 'Hawaii',
+            'ID': 'Idaho',
+            'IL': 'Illinois',
+            'IN': 'Indiana',
+            'IA': 'Iowa',
+            'KS': 'Kansas',
+            'KY': 'Kentucky',
+            'LA': 'Louisiana',
+            'ME': 'Maine',
+            'MD': 'Maryland',
+            'MA': 'Massachusetts',
+            'MI': 'Michigan',
+            'MN': 'Minnesota',
+            'MS': 'Mississippi',
+            'MO': 'Missouri',
+            'MT': 'Montana',
+            'NE': 'Nebraska',
+            'NV': 'Nevada',
+            'NH': 'New Hampshire',
+            'NJ': 'New Jersey',
+            'NM': 'New Mexico',
+            'NY': 'New York',
+            'NYC': 'New York City',
+            'NC': 'North Carolina',
+            'ND': 'North Dakota',
+            'OH': 'Ohio',
+            'OK': 'Oklahoma',
+            'OR': 'Oregon',
+            'PA': 'Pennsylvania',
+            'PR': 'Puerto Rico',
+            'RI': 'Rhode Island',
+            'SC': 'South Carolina',
+            'SD': 'South Dakota',
+            'TN': 'Tennessee',
+            'TX': 'Texas',
+            'UT': 'Utah',
+            'VT': 'Vermont',
+            'VA': 'Virginia',
+            'WA': 'Washington',
+            'WV': 'West Virginia',
+            'WI': 'Wisconsin',
+            'WY': 'Wyoming'
+        };
+        const state529linkDB = {
+            'AL': {
+                url: 'https://www.collegecounts529.com/',
+                name: 'Alabama CollegeCounts 529',
+                benefit: "$256"
+            },
+            'AK': {
+                url: 'https://www.alaska529plan.com/',
+                name: 'Alaska 529',
+                benefit:"$0"
+            },
+            'AZ': {
+                url: 'https://az529.gov/',
+                name: 'Arizona Education Savings Plan',
+                benefit:"$53"
+            },
+            'AR': {
+                url: 'https://brighterfuturedirect529.com/',
+                name: 'Arkansas Brighter Future 529',
+                benefit:"$231"
+            },
+            'CA': {
+                url: 'https://www.scholarshare529.com/',
+                name: 'California ScholarShare 529',
+                benefit:"$0"
+            },
+            'CO': {
+                url: 'https://www.collegeinvest.org/',
+                name: 'Colorado CollegeInvest 529',
+                benefit:"$1,118"
+            },
+            'CT': {
+                url: 'https://aboutchet.com/',
+                name: 'Connecticut College Savings Plan',
+                benefit:"$221"
+            },
+            'DE': {
+                url: 'https://treasurer.delaware.gov/education-savings-plan/#:~:text=Delaware%E2%80%99s%20529%20Plan%20is%20sponsored%20by%20the%20State,grandparents%20and%20others%20pay%20for%20higher%20education%20expenses.',
+                name: 'Delaware Education Savings Plan',
+                benefit:"$47"
+            },
+            'FL': {
+                url: 'https://www.myfloridaprepaid.com/savings-plan/',
+                name: 'Florida Prepaid 529',
+                benefit:"$0"
+            },
+            'GA': {
+                url: 'https://ost.georgia.gov/georgias-529-college-savings/georgias-529-college-savings',
+                name: 'Georgia 529 College Savings',
+                benefit:"$212"
+            },
+            'HI': {
+                url: 'https://www.hi529.com/',
+                name: 'Hawaii College Savings Program 529',
+                benefit:"$0"
+
+            },
+            'ID': {
+                url: 'https://www.idsaves.org/',
+                name: 'Idaho Saves 529',
+                benefit:"$348"
+            },
+            'IL': {
+                url: 'https://www.brightstart.com/',
+                name: 'Bright Start 529 College Savings',
+                benefit:"$495"
+            },
+            'IN': {
+                url: 'https://www.collegechoiceplan.com/',
+                name: 'CollegeChoice 529 Direct Savings Plan',
+                benefit:"$1,500"
+            },
+            'IA': {
+                url: 'https://www.collegesavingsiowa.com/',
+                name: 'College Savings Iowa 529 Plan',
+                benefit:"$215"
+            },
+            'KS': {
+                url: 'https://www.learningquest.com/',
+                name: 'Learning Quest 529 Education Savings Program',
+                benefit:"$47"
+            },
+            'KY': {
+                url: 'https://ky529.com/',
+                name: 'KY Saves 529',
+                benefit:"$0"
+
+            },
+            'LA': {
+                url: 'https://www.startsaving.la.gov/',
+                name: 'START Saving Program',
+                benefit:"$73"
+
+            },
+            'ME': {
+                url: 'https://www.nextgenforme.com/',
+                name: 'NextGen 529',
+                benefit:"$61"
+            },
+            'MD': {
+                url: 'https://maryland529.com/',
+                name: 'Maryland 529',
+                benefit:"$116"
+            },
+            'MA': {
+                url: 'https://www.fidelity.com/529-plans/massachusetts',
+                name: 'U.Fund College Investing Plan',
+                benefit:"$50"
+            },
+            'MI': {
+                url: 'https://www.misaves.com/',
+                name: 'Michigan Education Savings Program (MESP)',
+                benefit:"$215"
+            },
+            'MN': {
+                url: 'https://www.mnsaves.org/',
+                name: 'Minnesota College Savings Plan',
+                benefit:"$83"
+            },
+
+            'MS': {
+                url: 'https://www.treasury.ms.gov/collegesavingsmississippi/',
+                name: 'Mississippi Affordable College Savings (MACS)',
+                benefit:"$440"
+            },
+            'MO': {
+                url: 'https://www.missourimost.org/',
+                name: 'MOST 529 Plan',
+                benfit:"$382"
+            },
+            'MT': {
+                url: 'https://achievemontana.com/',
+                name: 'Achieve Montana',
+                benefit:"$151"
+            },
+            'NE': {
+                url: 'https://nest529.com/',
+                name: 'NEST 529 College Savings',
+                benefit:"$414"
+            },
+            'NV': {
+                url: 'https://www.ssga.upromise529.com/',
+                name: 'SSGA Upromise 529 Plan',
+                benefit:"$0"
+            },
+            'NH': {
+                url: 'https://www.fidelity.com/529-plans/new-hampshire',
+                name: 'UNIQUE College Investing Plan',
+                benefit:"$0"
+            },
+            'NJ': {
+                url: 'https://www.njbest.com/',
+                name: 'NJBEST 529 College Savings Plan',
+                benefit:"$248"
+            },
+            'NM': {
+                url: 'https://www.theeducationplan.com/',
+                name: 'The Education Plan',
+                benefit:"$1,151"
+            },
+            'NY': {
+                url: 'https://www.nysaves.org/',
+                name: 'New York 529 Plan',
+                benefit:"$266"
+            },
+            'NYC': {
+                url: 'https://www.nysaves.org/',
+                name: 'New York 529 Plan',
+                benefit:"$383"
+            },
+            'NC': {
+                url: 'https://nc529.org/',
+                name: 'NC 529 Plan',
+                benefit:"$0"
+            },
+            'ND': {
+                url: 'https://www.collegesave4u.com/',
+                name: 'College SAVE',
+                benefit:"$63"
+            },
+            'OH': {
+                url: 'https://www.collegeadvantage.com/',
+                name: 'CollegeAdvantage 529',
+                benefit:"$150"
+            },
+            'OK': {
+                url: 'https://www.ok4saving.org/',
+                name: 'Oklahoma 529 College Savings Plan',
+                benefit:"$453"
+            },
+            'OR': {
+                url: 'https://www.oregoncollegesavings.com/',
+                name: 'Oregon College Savings Plan',
+                benefit:"$180"
+            },
+            'PA': {
+                url: 'https://www.pa529.com/',
+                name: 'PA 529',
+                benefit:"$553"
+            },
+
+            'RI': {
+                url: 'https://www.collegeboundsaver.com/',
+                name: 'CollegeBound Saver',
+                benefit:"$19"
+            },
+            'SC': {
+                url: 'https://www.futurescholar.com/',
+                name: 'Future Scholar 529 College Savings Plan',
+                benefit:"$912"
+            },
+            'SD': {
+                url: 'https://collegeaccess529.com/',
+                name: 'CollegeAccess 529',
+                benefit:"$0"
+            },
+            'TN': {
+                url: 'https://tnstars.com/',
+                name: 'TNStars College Savings 529 Program',
+                benefit:"$0"
+            },
+            'TX': {
+                url: 'https://www.texascollegesavings.com/',
+                name: 'Texas College Savings Plan',
+                benefit:"$0"
+            },
+            'UT': {
+                url: 'https://my529.org/',
+                name: 'my529',
+                benefit:"$194"
+            },
+            'VT': {
+                url: 'https://www.vheip.org/',
+                name: 'Vermont Higher Education Investment Plan',
+                benefit:"$84"
+            },
+            'VA': {
+                url: 'https://www.virginia529.com/',
+                name: 'Virginia529',
+                benefit:"$205"
+            },
+            'WA': {
+                url: 'https://www.dreamahead.wa.gov/',
+                name: 'DreamAhead College Investment Plan',
+                benefit:"$0"
+            },
+            'WV': {
+                url: 'https://www.smart529.com/',
+                name: 'SMART529',
+                benefit:"$1,028"
+            },
+            'WI': {
+                url: 'https://www.edvest.com/',
+                name: 'Edvest',
+                benefit:"$234"
+            },
+            'WY': {
+                url: 'https://www.collegeadvantage.com/',
+                name: 'College Achievement Wyoming',
+                benefit:"$0"
+            }
+        };
+        
+         function isElementInViewport(el) {
+            const rect = el.getBoundingClientRect();
+            return (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+            );
+        }
+
+        function isElementInViewportWithOffset(el) {
+            const rect = el.getBoundingClientRect();
+            const offset = 500; // Only apply offset to case study
+            return (
+                rect.top >= -offset &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight + offset || document.documentElement.clientHeight + offset) &&
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+            );
+        }
+
+        function createTimelineLine() {
+            const timelineSteps = document.querySelector('.timeline-steps');
+            const line = document.createElement('div');
+            line.className = 'timeline-line';
+            timelineSteps.appendChild(line);
+        }
+
+        function handleScroll() {
+            // Timeline animation
+            const timelineSteps = document.querySelector('.timeline-steps');
+            const steps = document.querySelectorAll('.timeline-step');
+            const line = document.querySelector('.timeline-line');
+            
+            if (!timelineSteps || !line) return;
+            
+            const timelineRect = timelineSteps.getBoundingClientRect();
+            const viewportHeight = window.innerHeight;
+            
+            // Calculate how much of the timeline is visible
+            let visibleSteps = 0;
+            steps.forEach((step, index) => {
+                const rect = step.getBoundingClientRect();
+                if (rect.top < viewportHeight - 175) {
+                    step.classList.add('visible');
+                    visibleSteps = index + 1;
+                }
+            });
+            
+            // Update line height based on visible steps
+            const stepHeight = timelineRect.height / steps.length;
+            const lineHeight = Math.min(visibleSteps * stepHeight, timelineRect.height - 80);
+            line.style.height = `${lineHeight}px`;
+
+            // Info box animation
+            const infoBox = document.querySelector('.info-box');
+            if (isElementInViewport(infoBox) && !infoBox.classList.contains('visible')) {
+                infoBox.classList.add('visible');
+            }
+
+            // Case study animation
+            const caseStudy = document.querySelector('.case-study');
+            if (isElementInViewportWithOffset(caseStudy) && !caseStudy.classList.contains('visible')) {
+                caseStudy.classList.add('visible');
+            }
+        }
+
+
+        function submitToGoogleForm(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('emailInput').value;
+            const googleFormUrl = `https://docs.google.com/forms/d/e/1FAIpQLScZ04ro2nS9fPEclOjblV8kv-rTFxQNH1pMN_xy8H1gbGKQtQ/formResponse?entry.1358827248=${encodeURIComponent(email)}`;
+            
+            // Create a hidden iframe to submit the form
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
+            
+            // Submit the form through the iframe
+            iframe.src = googleFormUrl;
+            
+            // Create and show styled thank you message
+            const thankYouModal = document.createElement('div');
+            thankYouModal.style.position = 'fixed';
+            thankYouModal.style.top = '0';
+            thankYouModal.style.left = '0';
+            thankYouModal.style.width = '100%';
+            thankYouModal.style.height = '100%';
+            thankYouModal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+            thankYouModal.style.display = 'flex';
+            thankYouModal.style.justifyContent = 'center';
+            thankYouModal.style.alignItems = 'center';
+            thankYouModal.style.zIndex = '2000';
+            
+            thankYouModal.innerHTML = `
+                <div style="background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); max-width: 500px; width: 90%; text-align: center; position: relative;">
+                    <div style="width: 48px; height: 48px; margin: 0 auto 1rem; background: linear-gradient(45deg, #4B227A, #FF69B4); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                    <h2 style="color: #4B227A; font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem;">Thank You for Subscribing!</h2>
+                    <p style="color: #666; font-size: 1.1rem; margin-bottom: 2rem;">We'll keep you updated with the latest news and information about maximizing your benefits.</p>
+                    <button style="background: linear-gradient(45deg, #4B227A, #FF69B4); color: white; padding: 0.75rem 2rem; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; transition: all 0.3s ease;" onclick="this.parentElement.parentElement.remove()">Continue</button>
+                </div>
+            `;
+            
+            document.body.appendChild(thankYouModal);
+            
+            // Clear the input
+            document.getElementById('emailInput').value = '';
+            
+            // Remove the iframe after submission
+            setTimeout(() => {
+                document.body.removeChild(iframe);
+            }, 1000);
+        }
+
+        // Initialize the timeline line on page load
+        document.addEventListener('DOMContentLoaded', createTimelineLine);
+
+        // Update on scroll
+        window.addEventListener('scroll', handleScroll);
+
+        // Add this new JavaScript code for the search functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('stateSearch');
+            const searchResults = document.getElementById('searchResults');
+            const selectedStateInfo = document.getElementById('selectedStateInfo');
+
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                searchResults.innerHTML = '';
+                searchResults.style.display = 'none';
+
+                if (searchTerm.length < 1) return;
+
+                const matches = Object.entries(stateOptions).filter(([code, name]) => 
+                    name.toLowerCase().includes(searchTerm) || code.toLowerCase().includes(searchTerm)
+                );
+
+                if (matches.length > 0) {
+                    searchResults.style.display = 'block';
+                    matches.forEach(([code, name]) => {
+                        const div = document.createElement('div');
+                        div.style.padding = '0.75rem 1rem';
+                        div.style.cursor = 'pointer';
+                        div.style.borderBottom = '1px solid #eee';
+                        div.innerHTML = `${name} (${code})`;
+                        
+                        div.addEventListener('mouseover', () => {
+                            div.style.backgroundColor = '#f0f0f0';
+                        });
+                        
+                        div.addEventListener('mouseout', () => {
+                            div.style.backgroundColor = 'white';
+                        });
+                        
+                        div.addEventListener('click', () => {
+                            const stateInfo = state529linkDB[code];
+                            if (stateInfo) {
+                                selectedStateInfo.innerHTML = `
+                                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                                        <a href="${stateInfo.url}" target="_blank" 
+                                           style="color: #0066cc; text-decoration: underline; font-weight: 500;">
+                                            ${stateInfo.name} ↗
+                                        </a>
+                                        <div style="color: #4B227A; font-weight: 500;">
+                                            Annual Benefit: ${stateInfo.benefit}
+                                        </div>
+                                    </div>
+                                `;
+                                selectedStateInfo.style.display = 'block';
+                            }
+                            searchResults.style.display = 'none';
+                            searchInput.value = name;
+                        });
+                        
+                        searchResults.appendChild(div);
+                    });
+                }
+            });
+
+            // Close search results when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!searchResults.contains(e.target) && e.target !== searchInput) {
+                    searchResults.style.display = 'none';
+                }
+            });
+        });
 function toggleDetails() {
     const content = document.getElementById('detailed-content');
     const button = document.querySelector('.expand-button');
