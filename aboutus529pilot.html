@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TGZL6PTS');</script>
+ <link rel="icon" href="blogo2.png" type="image/png">
+<!-- End Google Tag Manager -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - RENEST</title>
+    <style>
+        :root {
+            --primary: #4B227A;
+            --accent: #FF69B4;
+            --text-dark: #1E0A3C;
+            --background: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .nav-links a {
+            color: var(--text-dark);
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            display: block;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(75, 34, 122, 0.05);
+            transform: translateX(5px);
+        }
+
+        .nav-links .talk-button {
+            background-color: var(--primary);
+            color: white !important;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+
+        .nav-links .talk-button:hover {
+            background-image: linear-gradient(45deg, #4B227A, #FF69B4) !important;
+            background-position: 100% 100% !important;
+            transform: translateY(-2px);
+        }
+
+        .menu-button {
+            background: none;
+            border: 2px solid var(--primary);
+            border-radius: 4px;
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.5rem 0.75rem;
+            color: var(--primary);
+            display: block;
+        }
+
+        @media (min-width: 768px) {
+            .menu-button {
+                display: none;
+            }
+
+            .nav-links {
+                position: static;
+                display: flex !important;
+                flex-direction: row;
+                padding: 0;
+                box-shadow: none;
+                gap: 0;
+                align-items: center;
+            }
+
+            .nav-links a {
+                margin-left: 2rem;
+                padding: 0.5rem 1rem;
+            }
+        }
+
+        .about-hero {
+            margin-top: 5rem;
+            min-height: calc(100vh - 5rem);
+            padding: 2rem;
+            background: linear-gradient(45deg, #4B227A, #FF69B4);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-hero img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: .5;
+            z-index: 1;
+        }
+
+        .about-hero img.desktop-hero {
+            display: none;
+        }
+
+        .about-hero img.mobile-hero {
+            display: block;
+        }
+
+        @media (min-width: 768px) {
+            .about-hero img.desktop-hero {
+                display: block;
+            }
+
+            .about-hero img.mobile-hero {
+                display: none;
+            }
+        }
+
+        .about-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            position: fixed;
+            z-index: 2;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s ease;
+        }
+
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0rem 2rem;
+        }
+
+        .about-section {
+            margin-bottom: 3rem;
+        }
+
+        .about-section h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .about-section p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+        }
+
+        .gradient-card {
+            background: linear-gradient(135deg, rgba(75, 34, 122, 0.05), rgba(255, 105, 180, 0.05));
+            padding: 2rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+        }
+
+        .footer {
+             background-color: rgb(235, 232, 252,.5);
+            padding: 3rem 1rem;
+            margin-top: 0rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .footer-links h3 {
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            display: block;
+            color: var(--text-dark);
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+        }
+
+        .copyright {
+            color: var(--text-dark);
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        @media (min-width: 768px) {
+            .footer-content {
+                grid-template-columns: 2fr 1fr 1fr;
+            }
+        }
+         .aboutus-title {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            padding-top: 1rem;
+        }
+        .aboutus-section {
+            margin-top: 0px;
+            padding: 2rem 1rem;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .colk-button {
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-block;
+            background-image: linear-gradient(45deg, var(--primary) 0%, var(--primary) 100%);
+            background-size: 200% 200%;
+            background-position: 0% 0%;
+            font-weight: 600;
+            font-size: 1.2rem;
+            padding: 1rem 3rem;
+            margin-top: 3rem;
+        }
+
+        .colk-button:hover {
+            background-image: linear-gradient(45deg, #4B227A, #FF69B4) !important;
+            background-position: 100% 100% !important;
+            transform: translateY(-2px);
+        }
+        .contact-section {
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .contact-card {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2.5rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(75, 34, 122, 0.1);
+        }
+        .contact-button {
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            display: inline-block;
+            transition: all 0.3s ease;
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .contact-button:hover {
+            background-image: linear-gradient(45deg, #4B227A, #FF69B4);
+            transform: translateY(-2px);
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        .founder-section {
+    margin: 4rem auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 800px;
+}
+
+.founder-card {
+    background: linear-gradient(135deg, rgba(75, 34, 122, 0.05), rgba(255, 105, 180, 0.05));
+    border-radius: 16px;
+    padding: 2rem;
+    position: relative;
+    min-height: 300px;
+/*    outline: 4px solid var(--primary)  ;*/
+}
+
+.founder-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    position: absolute;
+    background: white;
+    outline: 4px solid var(--primary)  ;
+}
+
+/* First card - image top left */
+.founder-card:first-child .founder-image {
+    top: -20px;
+    left: -20px;
+}
+
+/* Second card - image top right */
+.founder-card:last-child .founder-image {
+    top: -20px;
+    right: -20px;
+}
+
+.founder-content {
+    padding-left: 100px;
+    padding-top: 60px;
+}
+
+/* Adjust content padding for second card */
+/*.founder-card:last-child .founder-content {
+    padding-left: 0;
+    padding-right: 100px;
+}*/
+
+.founder-name {
+    color: var(--primary);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.founder-title {
+    color: var(--text-dark);
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    opacity: 0.8;
+}
+
+.founder-text {
+    color: var(--text-dark);
+    line-height: 1.6;
+    font-size: 1.1rem;
+}
+
+@media (max-width: 767px) {
+    .founder-content {
+        padding-left: 1rem;
+        padding-right: 1rem;
+        padding-top: 80px;
+    }
+    
+    .founder-card:last-child .founder-content {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+    </style>
+</head>
+<body>
+    <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TGZL6PTS"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">RENEST</a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="aboutus529.html">About Us</a>
+            <a href="faq529.html">FAQ</a>
+            <a href="howitworks529.html">How It Works</a>
+            <a href="admin529.html">For Businesses & Universities</a>
+            <a href="getstarted529.html" class="talk-button">Get Started</a>
+        </div>
+        <button class="menu-button" aria-label="Toggle menu" aria-expanded="false">☰</button>
+    </nav>
+
+    <main>
+        <section class="about-hero">
+            <img src="mattbeach.jpeg" alt="Beach background" class="desktop-hero">
+            <img src="mattbeachmobile.jpeg" alt="Beach background" class="mobile-hero">
+            <h1>About Us</h1>
+        </section>
+            
+        <section class="aboutus-section">
+            <h1 class="aboutus-title">About Us</h1>
+                <div class="about-content">
+            
+            <section class="about-section">
+                <p>Renest was founded to address the challenges graduate students across the nation faced: high costs of living and the stress of managing money with a graduate student stipend.</p>
+            </section>
+
+            <section class="about-section">
+                  <div class="gradient-card">
+                    <h2>Our Story</h2>
+                    <p>As a graduate student, co-founder Thomas Lloyd experienced firsthand the financial pressures faced by him and his peers. Looking for solutions, he reached out to his long-time friend, Mo Zheng, who was working at prominent financial institutions. Mo and Thomas worked together to find the optimal way to structure a graduate student's finances, thereby relieving some of the financial pressures faced during a PhD program. Thomas began to share his findings with his PhD friends and soon he was helping fellow students navigate their financial challenges one-on-one, sharing insights and strategies from credit cards to retirement planning.</p>
+                    <p>What started as informal peer support quickly grew through word of mouth. Students began asking if we could help their friends at other universities, and as we did, we saw the same challenges everywhere we went: <b>graduate students need better financial solutions tailored to their unique situations.</b></p>
+                    <p>This realization led us to develop Renest, automating and scaling our proven approach to help graduate students gain financial security, confidence and save more money today by unlocking financial benefits. In collaboration with our trusted banking partners, we are continuously expanding our services based on the graduate student community's needs. We're excited to have you join us on this journey – your input helps shape the future of financial solutions for graduate students across the nation.</p>
+                </div>
+            </section>
+
+            
+
+        <section class="about-section">
+    <h2 style="text-align: center;">Founder Perspectives</h2>
+    <div class="founder-section">
+        <div class="founder-card">
+            <img src="thomas-photo.png" alt="Thomas Lloyd" class="founder-image">
+            <div class="founder-content">
+                <h3 class="founder-name">Thomas Lloyd</h3>
+                <p class="founder-title">Co-Founder</p>
+                <p class="founder-text">As a graduate student, I experienced firsthand the unique financial challenges we face. This inspired me to create solutions that would help fellow students navigate their financial journey with confidence.</p>
+            </div>
+        </div>
+        
+        <div class="founder-card">
+            <img src="mo-photo.png" alt="Mo Zheng" class="founder-image">
+            <div class="founder-content">
+                <h3 class="founder-name">Mo Zheng</h3>
+                <p class="founder-title">Co-Founder</p>
+                <p class="founder-text">Coming from the financial sector, I saw an opportunity to bridge the gap between traditional banking and the specific needs of graduate students. Together, we're building solutions that make a real difference.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="about-section">
+                <h2 style="text-align: center;">Our Mission</h2>
+                <p style="text-align: center;">Our team understands the commitment and courage undertaken by graduate students. Renest aims to empower graduate students during their academic journey and beyond.</p>
+                <div class="button-container">
+                    <a href="contactus529.html" class="contact-button">Contact Us</a>
+                </div>
+            </section>
+        </div>
+        </section>
+    </main>
+
+     
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="footer-logo">RENEST</div>
+                <p class="copyright">©2025 Renest Horizons Inc.</p>
+            </div>
+            <div class="footer-links">
+                <h3>Company</h3>
+                <a href="aboutus529.html">About us</a>
+            </div>
+            <div class="footer-links">
+                <h3>Resources</h3>
+                <a href="contactus529.html">Contact us</a>
+                <a href="faq529.html">FAQ</a>
+                <!-- <a href="https://www-renesthorizons-com.translate.goog/?_x_tr_sl=auto&_x_tr_tl=es&_x_tr_hl=en&_x_tr_pto=wapp">Español</a> -->
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const menuButton = document.querySelector('.menu-button');
+        const navLinks = document.querySelector('.nav-links');
+
+        menuButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+            menuButton.setAttribute('aria-expanded', navLinks.style.display === 'flex');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (window.innerWidth < 768 && !navLinks.contains(e.target) && e.target !== menuButton) {
+                navLinks.style.display = 'none';
+                menuButton.setAttribute('aria-expanded', false);
+            }
+        });
+
+        // Add scroll effect for hero text
+        const heroText = document.querySelector('.about-hero h1');
+        const contentTitle = document.querySelector('.aboutus-title');
+
+        window.addEventListener('scroll', () => {
+            const contentRect = contentTitle.getBoundingClientRect();
+            if (contentRect.top < window.innerHeight) {
+                heroText.style.opacity = '0';
+            } else {
+                heroText.style.opacity = '1';
+            }
+        });
+    </script>
+</body>
+</html>
