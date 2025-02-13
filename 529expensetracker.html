@@ -540,6 +540,103 @@
         .status-badge.on {
             background: #10B981;
         }
+        .custom-checkbox {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            gap: 8px;
+        }
+
+        .custom-checkbox input {
+            display: none; /* Hide the default checkbox */
+        }
+
+        .custom-checkbox .checkmark {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #E5E7EB;
+            border-radius: 4px;
+            background-color: white; /* Ensure the checkbox has a background */
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        /* Style for checked state */
+        .custom-checkbox input:checked + .checkmark {
+            background-color: white; /* Keep background white when checked */
+        }
+
+        /* Check mark using SVG */
+        .custom-checkbox input:checked + .checkmark::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2310B981'%3E%3Cpath d='M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+        }
+
+        /* Add hover effect */
+        .custom-checkbox:hover .checkmark {
+            border-color: #6366F1;
+        }
+        .select-container {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .select-container select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background: white;
+            padding-right: 2.5rem;
+        }
+
+        .select-container::after {
+            content: "";
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid #6B7280;
+            pointer-events: none;
+        }
+
+        .qualified-category::after {
+            content: "";
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            margin-left: 8px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2310B981' d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            vertical-align: middle;
+        }
+
+        .custom-checkbox .checkmark.checked {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2310B981'%3E%3Cpath d='M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+        }
     </style>
 </head>
 <body>
@@ -575,7 +672,7 @@
         <div class="container">
             <div class="tab-container">
                 <button class="tab-button active" onclick="showTab('rent')">Rent Tracking</button>
-                <button class="tab-button" onclick="showTab('expenses')">Other Expenses</button>
+                <button class="tab-button" onclick="showTab('expenses')">Groceries & Other Expenses</button>
                 <button class="tab-button" onclick="showTab('account')">529 Account</button>
                 <button class="tab-button" onclick="showTab('summary')">Summary</button>
             </div>
@@ -628,17 +725,36 @@
                         </div>
                         <div class="form-group">
                             <label>Category</label>
-                            <select class="form-control" required>
-                                <option value="">Select category</option>
-                                <option value="food">Food/Groceries</option>
-                                <option value="books">Books & Supplies</option>
-                                <option value="utilities">Utilities</option>
-                                <option value="other">Other Qualified Expenses</option>
-                            </select>
+                            <div class="select-container">
+                                <select class="form-control" id="expense-category" required onchange="updateQualifiedCheckbox()">
+                                    <option value="">Select category</option>
+                                    <option value="food" class="qualified-category">Groceries</option>
+                                    <option value="wifi" class="qualified-category">Wi-Fi</option>
+                                    <option value="supplies" class="qualified-category">Required Supplies</option>
+                                    <option value="utilities" class="qualified-category">Utilities</option>
+                                    <option value="restaurants">Restaurants</option>
+                                    <option value="transportation">Transportation</option>
+                                    <option value="technology">Technology</option>
+                                    <option value="other">Other</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                                <input type="text" id="custom-category" class="form-control" placeholder="Enter custom category" style="display: none;" oninput="updateQualifiedCheckbox();">
+                            </div>
                         </div>
                         <div class="form-group">
                             <label>Amount</label>
                             <input type="number" class="form-control" placeholder="Enter amount" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Note (optional)</label>
+                            <input type="text" class="form-control" placeholder="Enter note">
+                        </div>
+                        <div class="form-group">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" id="qualified-expense" checked>
+                                <span class="checkmark"></span>
+                                Qualified Expense
+                            </label>
                         </div>
                         <div class="form-group">
                             <label>Receipt Upload</label>
@@ -833,6 +949,28 @@
             }
             // No action needed when toggling off
         });
+
+        // Update the visibility of the custom category input
+        document.getElementById('expense-category').addEventListener('change', function() {
+            const customCategoryInput = document.getElementById('custom-category');
+            if (this.value === 'custom') {
+                customCategoryInput.style.display = 'block';
+            } else {
+                customCategoryInput.style.display = 'none';
+            }
+        });
+
+        // Update the qualified checkbox based on selected category
+        function updateQualifiedCheckbox() {
+            const categorySelect = document.getElementById('expense-category');
+            const qualifiedCheckbox = document.getElementById('qualified-expense');
+            
+            // Gather all qualified categories dynamically
+            const qualifiedCategories = Array.from(document.querySelectorAll('.qualified-category'))
+                .map(option => option.value);
+
+            qualifiedCheckbox.checked = qualifiedCategories.includes(categorySelect.value);
+        }
     </script>
 </body>
 </html>
