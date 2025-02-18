@@ -55,6 +55,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             --accent: #FF69B4;
             --text-dark: #1E0A3C;
             --background: #FFFFFF;
+            --primaryaccount: #6366F1
         }
 
         * {
@@ -2885,6 +2886,88 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         max-width: none;  /* Allow content to use available space */
     }
 }
+.hero-auth-container {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.hero-auth-btn {
+    padding: 0.875rem 2rem;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.hero-auth-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(75, 34, 122, 0.15);
+}
+
+.hero-auth-btn-outline {
+    border: 2px solid var(--primaryaccount);
+    color: white;
+    background: transparent;
+}
+
+.hero-auth-btn-outline:hover {
+    /* background: rgba(75, 34, 122, 0.05); */
+}
+
+.hero-auth-btn-solid {
+    background: var(--primary);
+    color: white;
+    border: 2px solid var(--primary);
+}
+
+.hero-auth-btn-solid:hover {
+    background: var(--primaryaccount);
+    border-color: var(--primaryaccount);
+}
+
+/* Update the section-overlay positioning for mobile */
+@media (max-width: 768px) {
+    .section-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 0.75rem;
+        z-index: 100;
+    }
+
+    /* Update sticky message styling */
+    .benefit-content-box:not(.calculator-completed)::before {  /* Only show when not completed */
+        content: 'Complete the calculator above to unlock your options';
+        position: sticky;
+        top: 0;
+        display: block;
+        background: rgba(51, 51, 51, 0.95);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        margin: 0.5rem 0.5rem 1rem 0.5rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        z-index: 101;
+    }
+
+    .overlay-message {
+        display: none;
+    }
+
+    .benefit-content-box {
+        position: relative;
+        padding-top: 0;
+    }
+}
+
+
     </style>
 </head>
 <body>
@@ -2914,10 +2997,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <div class="hero-text">
                     <h1>Unlocking Savings<br>Benefits for Graduate Students</h1>
                     <p style="font-size:1.5rem;">Graduate students use Renest to save an average of $450 per year</p>
-                    <!-- <form class="email-form" id="emailForm" onsubmit="submitToGoogleForm(event)">
-                        <input type="email" class="email-input" id="emailInput" placeholder="Enter your email" required>
-                        <button type="submit" class="submit-button">Stay Updated</button>
-                    </form> -->
+                    <div class="hero-auth-container">
+                        <a href="signin529.html" class="hero-auth-btn hero-auth-btn-outline">Sign In</a>
+                        <a href="signup529.html" class="hero-auth-btn hero-auth-btn-solid">Sign Up</a>
+                    </div>
                 </div>
                 <div class="hero-image-container">
                     <img src="529iphoneimage3hero.png" alt="Renest App Interface" class="hero-phone">
@@ -3016,7 +3099,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                          <input 
                              type="text" 
                              id="stateSearch" 
-                             placeholder="Enter your school's location..." 
+                             placeholder="Enter the state where you go to school..." 
                              style="width: 100%; padding: 0.75rem; border: 2px solid #4B227A; border-radius: 8px; font-size: 1rem; margin-bottom: 0.5rem;"
                          >
                          <div 
@@ -3408,6 +3491,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <script>
 
+        
+
         window.calculatorCompleted = false;
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -3648,7 +3733,7 @@ document.getElementById('emailModal').addEventListener('click', function(e) {
                 benefit:"$495"
             },
             'IN': {
-                url: 'https://www.collegechoiceplan.com/',
+                url: 'https://www.indiana529direct.com/',
                 name: 'CollegeChoice 529 Direct Savings Plan',
                 benefit:"$1,500"
             },
@@ -5097,7 +5182,7 @@ const statePersonalExemptionDB = {
                 }
             },
             'cmu': {
-                name: 'Carengie Mellon University',
+                name: 'Carnegie Mellon University',
                 state: 'PA',
                 retirementPlans: {
                     has403b: false,
@@ -6136,6 +6221,9 @@ const statePersonalExemptionDB = {
         'monthly_grocery': monthlyGrocery,
         'calculated_benefit': benefit
     });
+
+    // Add calculator-completed class to hide the message
+    document.querySelector('.benefit-content-box').classList.add('calculator-completed');
 }
         function getStateName(stateAbbr) {
             return stateOptions[stateAbbr] || stateAbbr;
