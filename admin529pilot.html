@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TGZL6PTS');</script>
+ <link rel="icon" href="blogo2.png" type="image/png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>State Tax Benefits Calculator - RENEST</title>
+    <link rel="stylesheet" href="admin-styles.css">
+</head>
+<style>
+    :root {
+    --primary: #4B227A;
+    --accent: #FF69B4;
+    --text-dark: #1E0A3C;
+    --background: #FFFFFF;
+}
+ .email-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-width: 500px;
+        }
+
+        .email-input {
+            padding: 1rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .submit-button {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .submit-button:hover {
+            background-color: var(--primary);
+            background-position: 100% 100% !important;
+            transform: translateY(-2px);
+        }
+
+        .newsletter {
+            padding: 4rem 1rem;
+            text-align: center;
+            background-color: #f8f8f8;
+        }
+
+        .newsletter h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero {
+            margin-top: 5rem;
+            padding: 2rem 1rem;
+            background: linear-gradient(45deg, #4B227A, #FF69B4);
+            color: white;
+            min-height: 65vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            color: white;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+.hero-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left:    0rem;
+}
+
+/* Hide image container by default (mobile) */
+.hero-image-container {
+    display: none;
+}
+
+/* Control image size and position */
+.hero-phone {
+    width: 300px; /* Controls the width of the phone image */
+    height: auto;
+    transform:  scale(2);
+    object-fit: contain;
+    transform: translateY(20px) translateX(50px); /* Adjusts vertical position */
+}
+
+/* Desktop styles */
+@media (min-width: 768px) {
+    .hero-phone{transform:  scale(1.2)}
+    .hero {
+                padding: 4rem 2rem;
+            }
+
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+
+    .hero-content {
+        justify-content: space-between;
+        padding: 0 2rem;
+    }
+
+    .hero-image-container {
+        display: block; /* Show image on desktop */
+        flex: 0 0 30%; /* Controls how much space the image takes */
+        margin-right: 2rem;
+    }
+
+    .hero-text {
+        flex: 0 0 85%; /* Controls how much space the text takes */
+    }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+
+
+.impact-section {
+    padding: 3rem 2rem;
+    background: linear-gradient(to right, #f8f8f8, #fff);
+}
+
+.impact-title {
+    text-align: center;
+    margin-bottom: 3rem;
+    color: var(--primary);
+    font-size: 2rem;
+}
+
+.calculator-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(75, 34, 122, 0.1);
+}
+
+.slider-container {
+    margin: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.slider {
+    width: 100%;
+    height: 8px;
+    background: #eee;
+    border-radius: 4px;
+    outline: none;
+    -webkit-appearance: none;
+    margin-bottom: .5rem;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 24px;
+    height: 24px;
+    background: var(--primary);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.stat-card {
+    padding: 1.5rem;
+    background: linear-gradient(45deg, rgba(75, 34, 122, 0.05), rgba(255, 105, 180, 0.05));
+    border-radius: 8px;
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--primary);
+    margin: 0.5rem 0;
+}
+
+.process-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);  /* Force exactly 2 columns */
+    gap: 2rem;
+    padding: 4rem 2rem;
+    max-width: 1200px;  /* We can reduce this to keep cards from getting too wide */
+    margin: 0 auto;
+}
+
+.process-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(75, 34, 122, 0.1);
+}
+
+.process-card h3 {
+    color: var(--primary);
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+}
+
+.state-select {
+    margin-bottom: 1rem;
+}
+
+.state-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.suggestions {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.suggestion-item {
+    padding: 0.75rem;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+.suggestion-item:hover {
+    background-color: rgba(75, 34, 122, 0.05);
+}
+
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .process-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    
+}
+.navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .nav-links a {
+            color: var(--text-dark);
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            display: block;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(75, 34, 122, 0.05);
+            transform: translateX(5px);
+        }
+
+        .nav-links .talk-button {
+            background-color: var(--primary);
+            color: white !important;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+        .nav-links .talk-button {
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+       .nav-links .talk-button:hover {
+            background: linear-gradient(45deg, #4B227A, #FF69B4);
+            transform: translateY(-2px);
+        }
+
+         @media (min-width: 768px) {
+            .menu-button {
+                display: none;
+            }
+
+            .nav-links {
+                position: static;
+                display: flex !important;
+                flex-direction: row;
+                padding: 0;
+                box-shadow: none;
+                gap: 0;
+                align-items: center;
+            }
+
+            .nav-links a {
+                margin-left: 2rem;
+                padding: 0.5rem 1rem;
+            }
+
+            .faq-section {
+                padding: 6rem 2rem;
+            }
+        }
+        .footer {
+             background-color: rgb(235, 232, 252,.5);
+            padding: 3rem 1rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .social-links a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .footer-links h3 {
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            display: block;
+            color: var(--text-dark);
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+        }
+
+        .copyright {
+            color: var(--text-dark);
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        @media (min-width: 768px) {
+            .nav-links {
+                display: flex;
+                align-items: center;
+            }
+
+            .menu-button {
+                display: none;
+            }
+
+            .footer-content {
+                grid-template-columns: 2fr 1fr 1fr;
+            }
+
+            .hero {
+                padding: 4rem 2rem;
+            }
+
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+
+            .email-form {
+                flex-direction: row;
+            }
+
+            .email-input {
+                flex: 1;
+            }
+        }
+        .benefits {
+            padding: 4rem 1rem;
+            background-color: white;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .benefit-card {
+            background-color: #f8f8f8;
+            padding: 2rem;
+            border-radius: 8px;
+        }
+
+        .universities {
+            padding: 4rem 1rem;
+            background-color: #f8f8f8;
+        }
+
+        .universities-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .university-card {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 4px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .menu-button {
+            background: none;
+            border: 2px solid var(--primary);
+            border-radius: 4px;
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.5rem 0.75rem;
+            color: var(--primary);
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .menu-button:hover {
+            background: var(--primary);
+            color: white;
+        }
+        @media (min-width: 768px) {
+            .menu-button {
+                display: none;  /* This hides the menu button on desktop */
+            }
+        }
+
+        .process-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(75, 34, 122, 0.1);
+        }
+
+        .benefits-section {
+            background: #f8f8f8;
+            padding: 4rem 2rem;
+        }
+
+        .benefits-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .benefit-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .benefit-list {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(75, 34, 122, 0.1);
+        }
+
+        .benefit-list h3 {
+            color: #4B227A;
+            margin-bottom: 1.5rem;
+        }
+
+        .benefit-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .benefit-list li {
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .benefit-list li:last-child {
+            border-bottom: none;
+        }
+
+        .contact-section {
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .contact-card {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2.5rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(75, 34, 122, 0.1);
+        }
+        .colk-button {
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-block;
+            background-image: linear-gradient(45deg, var(--primary) 0%, var(--primary) 100%);
+            background-size: 200% 200%;
+            background-position: 0% 0%;
+            font-weight: 600;
+            font-size: 1.2rem;
+            padding: 1rem 3rem;
+            margin-top: 3rem;
+        }
+
+        .colk-button:hover {
+            background-image: linear-gradient(45deg, #4B227A, #FF69B4) !important;
+            background-position: 100% 100% !important;
+            transform: translateY(-2px);
+        }
+        .tab-container {
+ background: white;
+ border-radius: 1rem;
+ box-shadow: 0 4px 6px rgba(75, 34, 122, 0.1);
+ overflow: hidden;
+}
+
+.tab-buttons {
+ display: flex;
+ border-bottom: 1px solid #e5e7eb;
+}
+
+.tab-button {
+ flex: 1;
+ padding: 1rem;
+ font-size: 1.125rem;
+ font-weight: 500;
+ background: none;
+ border: none;
+ cursor: pointer;
+ transition: all 0.3s ease;
+}
+
+.tab-button.active {
+ background: #4B227A;
+ color: white;
+}
+
+.tab-content {
+ display: none;
+ padding: 2rem;
+ background: #fffaf0;
+}
+
+.tab-content.active {
+ display: block;
+}
+
+.step-list {
+ list-style: none;
+ padding: 0;
+ margin: 0;
+}
+
+.step-list li {
+ display: flex;
+ gap: 1rem;
+ margin-bottom: 1.5rem;
+}
+
+.step-list svg {
+ flex-shrink: 0;
+ margin-top: 0.25rem;
+}
+
+.step-description {
+ color: #666;
+ font-size: 0.9rem;
+ margin-top: 0.5rem;
+}
+
+@media (max-width: 768px) {
+ .tab-container {
+   margin: 0 1rem;
+ }
+}
+.how-it-works {
+          max-width: 800px;
+          margin: 3rem auto;
+          padding: 0 2rem;
+        }
+.section-title {
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+        }
+
+
+.state-details {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: rgba(75, 34, 122, 0.05);
+    border-radius: 8px;
+}
+
+.text-hint {
+    color: #666;
+    font-size: 0.875rem;
+    text-align: center;
+    margin-top: 0.5rem;
+}
+
+.tab-buttons {
+    display: flex;
+    border: 1px solid #4B227A;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 1rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.tab-button.active {
+    background: #4B227A;
+    color: white;
+}
+
+.tabi-container {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.tabi-buttons {
+  display: flex;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.tabi-button {
+  flex: 1;
+  padding: 1rem;
+  font-size: 1.125rem;
+  font-weight: 500;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tabi-button.active {
+  background: #4B227A;
+  color: white;
+}
+
+.tabi-content {
+  display: none;
+  padding: 2rem;
+  background:   #fffaf0;
+}
+
+.tabi-content.active {
+  display: block;
+}
+</style>
+<body>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TGZL6PTS"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">RENEST</a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="aboutus529.html">About Us</a>
+            <a href="faq529.html">FAQ</a>
+            <a href="howitworks529.html">How It Works</a>
+            <a href="admin529.html">For Businesses & Universities</a>
+            <a href="getstarted529.html" class="talk-button">Get Started</a>
+        </div>
+        <button class="menu-button" aria-label="Toggle menu" aria-expanded="false">☰</button>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <!-- Add this new div for the image -->
+                
+                <!-- Wrap existing content in a div -->
+                <div class="hero-text">
+                    <h1>Empowering Employers<br> and Students Through<br> Financial Innovation</h1>
+                    <p>Renest helps employers and working students unlock savings through 529 account management</p>
+                    <form class="email-form" id="emailForm" onsubmit="submitToGoogleForm(event)">
+                        <input type="email" class="email-input" id="emailInput" placeholder="Enter your email" required>
+                        <button type="submit" class="submit-button">Schedule a Demo</button>
+                    </form>
+                </div>
+                <div class="hero-image-container">
+                    <img src="529iphoneimage3hero.png" alt="Renest App Interface" class="hero-phone">
+                </div>
+            </div>
+        </section>
+
+        <section class="impact-section">
+            <!-- <h2 class="impact-title">Calculate Your Benefit</h2> -->
+            <div class="calculator-container">
+                <!-- Step 1: Institution Type -->
+                <div class="calculator-step" id="step1">
+                    <div class="slider-container">
+                        <label id="institutionLabel">Select your institution type:</label>
+                    </div>
+                    <div class="tab-buttons">
+                        <button class="tab-button" data-calc="university">University</button>
+                        <button class="tab-button" data-calc="business">Business</button>
+                    </div>
+                </div>
+
+                <!-- Step 2: State Search (initially hidden) -->
+                <div class="calculator-step" id="step2" style="display: none;">
+                    <div class="state-select">
+                        <input type="text" 
+                               id="stateSearch" 
+                               class="state-input" 
+                               placeholder="Search for your state (not all states offer employer benefits)..." 
+                               oninput="handleStateSearch(event)">
+                        <div id="stateSuggestions" class="suggestions" style="display: none;"></div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Student Count Slider (initially hidden) -->
+                <div class="calculator-step" id="step3" style="display: none;">
+                    <div class="slider-container">
+                        <label for="studentSlider" id="sliderLabel">Number of Student Workers:</label>
+                        <input type="range" 
+                               id="studentSlider" 
+                               class="slider" 
+                               min="0" 
+                               max="10000" 
+                               value="0" 
+                               step="1">
+                        <span id="studentCount">0 students</span>
+                    </div>
+                </div>
+
+                <!-- Step 4: Results Display (initially hidden) -->
+                <div class="calculator-step" id="step4" style="display: none;">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3>Annual Student Benefit</h3>
+                            <div class="stat-value" id="studentBenefit">$0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Annual Employer Tax Savings</h3>
+                            <div class="stat-value" id="employerBenefit">$0</div>
+                        </div>
+                    </div>
+
+                    <!-- State Program Details -->
+                    <div id="stateDetails" class="state-details">
+                        <h4>State Program Details</h4>
+                        <p id="stateNotes"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="process-grid">
+            <div class="process-card">
+                <h3>How It Works: Win-Win</h3>
+                <p>Employers direct student employee's compensation through their state's 529 plan instead of direct payment. <b>Employers & employees</b> receive valuable tax credits from the state.</p>
+            </div>
+            <div class="process-card">
+                <h3>Simple and Cost Effective</h3>
+                <p>Our quick and efficient solution means more benefits in less time. Comprehensive support ensures the maximum savings for you and your employees.</p>
+            </div>
+            <div class="process-card">
+                <h3>Compliance Assured</h3>
+                <p>We maintain strict compliance with state and federal regulations while managing all aspects of 529 administration.</p>
+            </div>
+        </section>
+        <div id="how-it-works" class="how-it-works">
+            <div class="tabi-container">
+              <div class="tabi-buttons">
+                <button class="tabi-button active" data-tab="employer">Employer Benefits</button>
+                <button class="tabi-button" data-tab="student">Student Benefits</button>
+              </div>
+              
+              <div class="tabi-content active" id="employer">
+                <ul class="step-list">
+                  <li>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path d="M12 8V16M8 12H16" stroke="#4B227A" stroke-width="2" stroke-linecap="round"/>
+                      <circle cx="12" cy="12" r="10" stroke="#4B227A" stroke-width="2"/>
+                    </svg>
+                    <div>
+                      <span>Tax Credits & Savings</span>
+                      <p class="step-description">Receive up to $800 in tax credits per employee annually, plus potential payroll tax savings</p>
+                    </div>
+                  </li>
+                  <li>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path d="M20 6L9 17L4 12" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <div>
+                      <span>Simple Implementation</span>
+                      <p class="step-description">Hands-off employer implementation and easy employee onboarding</p>
+                    </div>
+                  </li>
+                  <li>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path d="M12 16V16.01M12 8V12" stroke="#4B227A" stroke-width="2" stroke-linecap="round"/>
+                      <circle cx="12" cy="12" r="10" stroke="#4B227A" stroke-width="2"/>
+                    </svg>
+                    <div>
+                      <span>Compliance & Risk Management</span>
+                      <p class="step-description">Full regulatory compliance handling and automated documentation</p>
+                    </div>
+                  </li>
+                  <li>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path d="M15 8a3 3 0 11-6 0 3 3 0 016 0zm-9 8c0 1 1 1 1 1h10s1 0 1-1-1-4-6-4-6 3-6 4z" stroke="#4B227A" stroke-width="2"/>
+                    </svg>
+                    <div>
+                      <span>Enhanced Employee Relations</span>
+                      <p class="step-description">Improve retention and satisfaction by providing valuable financial benefits at no cost to employees</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+                        
+              <div class="tabi-content" id="student">
+                <ul class="step-list">
+                  <li>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H7" stroke="#4B227A" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <div>
+                      <span>Immediate Tax Savings</span>
+                      <p class="step-description">Save up to $500 annually through state tax benefits on qualified expenses you're already paying</p>
+                    </div>
+                  </li>
+                  <li>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" stroke="#4B227A" stroke-width="2"/>
+                      <rect x="9" y="3" width="6" height="4" rx="1" stroke="#4B227A" stroke-width="2"/>
+                    </svg>
+                    <div>
+                      <span>Automatic Expense Tracking</span>
+                      <p class="step-description">Smart categorization of qualified expenses like rent, utilities, and course materials</p>
+                    </div>
+                  </li>
+                  <li>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <div>
+                      <span>Educational Support</span>
+                      <p class="step-description">Access to financial education resources and personalized guidance for maximizing benefits</p>
+                    </div>
+                  </li>
+                  <li>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" stroke="#4B227A" stroke-width="2"/>
+                    </svg>
+                    <div>
+                      <span>Dedicated Support Team</span>
+                      <p class="step-description">Expert assistance available for questions about benefits, documentation, and tax filing</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+        </div>
+        <section class="contact-section">
+            <h2 class="section-title">Want to Learn More?</h2>
+            <div class="contact-card">
+                <p>Schedule a consultation so we can help you and your employees unlock immediate benefits.</p>
+                <a href="contactus529.html" class="colk-button">Contact Our Team</a>
+            </div>
+        </section>
+        <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="footer-logo">RENEST</div>
+                <p class="copyright">©2025 Renest Horizons Inc.</p>
+            </div>
+            <div class="footer-links">
+                <h3>Company</h3>
+                <a href="aboutus529.html">About us</a>
+            </div>
+            <div class="footer-links">
+                <h3>Resources</h3>
+                <a href="contactus529.html">Contact us</a>
+                <a href="faq529.html">FAQ</a>
+                <!-- <a href="https://www-renesthorizons-com.translate.goog/?_x_tr_sl=auto&_x_tr_tl=es&_x_tr_hl=en&_x_tr_pto=wapp">Español</a> -->
+            </div>
+        </div>
+    </footer>
+    </main>
+    <script>
+
+        function submitToGoogleForm(event) {
+            event.preventDefault();
+            
+            
+            const email = document.getElementById('emailInput').value;
+            const googleFormUrl = `https://docs.google.com/forms/d/e/1FAIpQLSelWASsDQusIT5Arxfra-x2ZaF7UdpQwL7311kBjNgRAIXIrQ/formResponse?entry.1579285691=${encodeURIComponent(email)}`;
+            
+            // Create a hidden iframe to submit the form
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
+            
+            // Submit the form through the iframe
+            iframe.src = googleFormUrl;
+            
+            // Create and show styled thank you message
+            const thankYouModal = document.createElement('div');
+            thankYouModal.style.position = 'fixed';
+            thankYouModal.style.top = '0';
+            thankYouModal.style.left = '0';
+            thankYouModal.style.width = '100%';
+            thankYouModal.style.height = '100%';
+            thankYouModal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+            thankYouModal.style.display = 'flex';
+            thankYouModal.style.justifyContent = 'center';
+            thankYouModal.style.alignItems = 'center';
+            thankYouModal.style.zIndex = '2000';
+            
+            thankYouModal.innerHTML = `
+                <div style="background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); max-width: 500px; width: 90%; text-align: center; position: relative;">
+                    <div style="width: 48px; height: 48px; margin: 0 auto 1rem; background: linear-gradient(45deg, #4B227A, #FF69B4); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                    <h2 style="color: #4B227A; font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem;">Thank You for Your Interest!</h2>
+                    <p style="color: #666; font-size: 1.1rem; margin-bottom: 2rem;">A team member will be in contact shortly.</p>
+                    <button style="background: linear-gradient(45deg, #4B227A, #FF69B4); color: white; padding: 0.75rem 2rem; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; transition: all 0.3s ease;" onclick="this.parentElement.parentElement.remove()">Continue</button>
+                </div>
+            `;
+            
+            document.body.appendChild(thankYouModal);
+            
+            // Clear the input
+            document.getElementById('emailInput').value = '';
+            
+            // Remove the iframe after submission
+            setTimeout(() => {
+                document.body.removeChild(iframe);
+            }, 1000);
+        }
+
+
+        const state529DB = {
+    'AR': {
+        planName: 'Arkansas',
+        employerCredit: 500,
+        requiredContribution: 500,
+        studentBenefit: 21.5,
+        notes: 'State income tax deduction for 529 contributions; $21.5 per employee benefit with 4.3% marginal corporate tax'
+    },
+    'CO': {
+        planName: 'Colorado',
+        employerCredit: 500,
+        requiredContribution: 2500,
+        studentBenefit: 106,
+        notes: '20% tax credit for 529 plan contributions; maximum $500 credit per employee per year'
+    },
+    'ID': {
+        planName: 'Idaho',
+        employerCredit: 500,
+        requiredContribution: 2500,
+        studentBenefit: 100,
+        notes: '20% tax credit, up to a maximum of $500 per employee per year'
+    },
+    'IL': {
+        planName: 'Illinois',
+        employerCredit: 500,
+        requiredContribution: 2000,
+        studentBenefit: 100,
+        notes: '25% tax credit for 529 plan contributions; credits may carry forward 5 years'
+    },
+    'NE': {
+        planName: 'Nebraska',
+        employerCredit: 500,
+        requiredContribution: 2000,
+        studentBenefit: 125,
+        notes: '25% tax credit for 529 plan contributions'
+    },
+    'NV': {
+        planName: 'Nevada',
+        employerCredit: 500,
+        requiredContribution: 2000,
+        studentBenefit: 125,
+        notes: '25% tax credit for 529 plan contributions'
+    },
+    'PA': {
+        planName: 'Pennsylvania',
+        employerCredit: 125,
+        requiredContribution: 500,
+        studentBenefit: 31.25,
+        notes: '25% tax credit on contributions up to $500'
+    },
+    'UT': {
+        planName: 'Utah',
+        employerCredit: 500,
+        requiredContribution: 2130,
+        studentBenefit: 96.92,
+        notes: 'State income tax deduction with 4.55% corporate tax rate flat'
+    },
+    'WI': {
+        planName: 'Wisconsin',
+        employerCredit: 800,
+        requiredContribution: 1600,
+        studentBenefit: 100,
+        notes: '50% tax credit for 529 plan contributions'
+    }
+};
+const stateOptions = {
+            'AL': 'Alabama',
+            'AK': 'Alaska',
+            'AZ': 'Arizona',
+            'AR': 'Arkansas',
+            'CA': 'California',
+            'CO': 'Colorado',
+            'CT': 'Connecticut',
+            'DE': 'Delaware',
+            'DC': 'District of Columbia',
+            'FL': 'Florida',
+            'GA': 'Georgia',
+            'HI': 'Hawaii',
+            'ID': 'Idaho',
+            'IL': 'Illinois',
+            'IN': 'Indiana',
+            'IA': 'Iowa',
+            'KS': 'Kansas',
+            'KY': 'Kentucky',
+            'LA': 'Louisiana',
+            'ME': 'Maine',
+            'MD': 'Maryland',
+            'MA': 'Massachusetts',
+            'MI': 'Michigan',
+            'MN': 'Minnesota',
+            'MS': 'Mississippi',
+            'MO': 'Missouri',
+            'MT': 'Montana',
+            'NE': 'Nebraska',
+            'NV': 'Nevada',
+            'NH': 'New Hampshire',
+            'NJ': 'New Jersey',
+            'NM': 'New Mexico',
+            'NY': 'New York',
+            'NC': 'North Carolina',
+            'ND': 'North Dakota',
+            'OH': 'Ohio',
+            'OK': 'Oklahoma',
+            'OR': 'Oregon',
+            'PA': 'Pennsylvania',
+            'PR': 'Puerto Rico',
+            'RI': 'Rhode Island',
+            'SC': 'South Carolina',
+            'SD': 'South Dakota',
+            'TN': 'Tennessee',
+            'TX': 'Texas',
+            'UT': 'Utah',
+            'VT': 'Vermont',
+            'VA': 'Virginia',
+            'WA': 'Washington',
+            'WV': 'West Virginia',
+            'WI': 'Wisconsin',
+            'WY': 'Wyoming'
+        };
+
+let selectedState = null;
+let calculatorType = 'university';
+
+function handleStateSearch(event) {
+    const searchTerm = event.target.value.toLowerCase();
+    const suggestionsDiv = document.getElementById('stateSuggestions');
+    
+    if (searchTerm.length >= 1) {
+        const suggestions = Object.entries(state529DB)
+            .map(([code, data]) => ({
+                code,
+                name: `${code} - ${data.planName}`
+            }))
+            .filter(state => 
+                state.name.toLowerCase().includes(searchTerm) || 
+                state.code.toLowerCase().includes(searchTerm));
+
+        suggestionsDiv.innerHTML = suggestions.map(state => `
+            <div class="suggestion-item" onclick="selectState('${state.code}')">
+                ${state.name}
+            </div>
+        `).join('');
+        
+        suggestionsDiv.style.display = 'block';
+    } else {
+        suggestionsDiv.style.display = 'none';
+    }
+}
+
+function selectState(code) {
+    selectedState = code;
+    const state = state529DB[code];
+    document.getElementById('stateSearch').value = `${code} - ${state.planName}`;
+    document.getElementById('stateSuggestions').style.display = 'none';
+    
+    // Show step 3 after state selection and set initial value to 0
+    document.getElementById('step3').style.display = 'block';
+    const slider = document.getElementById('studentSlider');
+    slider.value = "0";
+    document.getElementById('studentCount').textContent = "0 students";
+}
+
+function updateCalculatorType(type) {
+    calculatorType = type;
+    const slider = document.getElementById('studentSlider');
+    const label = document.getElementById('sliderLabel');
+    
+    if (type === 'university') {
+        slider.min = "0";  // Changed to start at 0
+        slider.max = "10000";
+        slider.value = "0"; // Set initial value to 0
+        label.textContent = 'Number of Student Workers:';
+    } else {
+        slider.min = "0";  // Changed to start at 0
+        slider.max = "100";
+        slider.value = "0"; // Set initial value to 0
+        label.textContent = 'Number of Student Employees:';
+    }
+    
+    document.getElementById('studentCount').textContent = "0 students";
+    
+    // Show step 2 after calculator type selection
+    document.getElementById('step2').style.display = 'block';
+    // Hide step 4 if it was previously shown
+    document.getElementById('step4').style.display = 'none';
+}
+
+// Initialize the calculator
+document.addEventListener('DOMContentLoaded', function() {
+    let sliderTimeout;
+    
+    // Calculator slider event listener with debounce
+    document.getElementById('studentSlider').addEventListener('input', function(e) {
+        const studentCount = parseInt(e.target.value);
+        document.getElementById('studentCount').textContent = `${studentCount} students`;
+        
+        // Clear any existing timeout
+        clearTimeout(sliderTimeout);
+        
+        // Only show results if value is greater than 0
+        if (studentCount > 0) {
+            // Set a new timeout to update calculations after user stops sliding
+            sliderTimeout = setTimeout(() => {
+                updateCalculations();
+                document.getElementById('step4').style.display = 'block';
+            }, 800); // Wait 500ms after user stops moving slider
+        } else {
+            document.getElementById('step4').style.display = 'none';
+        }
+    });
+    
+    // Calculator tab buttons
+    document.querySelectorAll('[data-calc]').forEach(button => {
+        button.addEventListener('click', (e) => {
+            // Remove active class from all calculator tab buttons
+            document.querySelectorAll('[data-calc]').forEach(btn => btn.classList.remove('active'));
+            e.target.classList.add('active');
+            updateCalculatorType(e.target.dataset.calc);
+        });
+    });
+
+    // How It Works tab buttons
+    const tabiButtons = document.querySelectorAll('.tabi-button');
+          
+          tabiButtons.forEach(button => {
+            button.addEventListener('click', () => {
+              document.querySelectorAll('.tabi-button').forEach(btn => btn.classList.remove('active'));
+              document.querySelectorAll('.tabi-content').forEach(content => content.classList.remove('active'));
+              
+              button.classList.add('active');
+              document.getElementById(button.dataset.tab).classList.add('active');
+            });
+          });
+
+    // Initialize menu button functionality
+    const menuButton = document.querySelector('.menu-button');
+    const navLinks = document.querySelector('.nav-links');
+    
+    if (menuButton) {
+        menuButton.addEventListener('click', () => {
+            const isExpanded = menuButton.getAttribute('aria-expanded') === 'true';
+            menuButton.setAttribute('aria-expanded', !isExpanded);
+            navLinks.style.display = isExpanded ? 'none' : 'flex';
+        });
+    }
+});
+
+function updateCalculations() {
+    if (!selectedState) return;
+    
+    const studentCount = parseInt(document.getElementById('studentSlider').value);
+    const state = state529DB[selectedState];
+    
+    // Update student count display
+    document.getElementById('studentCount').textContent = `${studentCount} students`;
+    
+    // Calculate and update benefits
+    const studentBenefit = state.studentBenefit * studentCount;
+    const totalEmployerCredit = state.employerCredit * studentCount;
+    
+    document.getElementById('studentBenefit').textContent = 
+        new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
+            .format(studentBenefit);
+    
+    document.getElementById('employerBenefit').textContent = 
+        new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
+            .format(totalEmployerCredit);
+    
+    // Update state program details
+    document.getElementById('stateNotes').textContent = state.notes;
+    
+    // Show step 4 after calculations
+    document.getElementById('step4').style.display = 'block';
+}
+    </script>
+</body>
+</html>
