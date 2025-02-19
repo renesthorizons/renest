@@ -128,27 +128,22 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
 }
 
 .category-name {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    flex: 1;
-    min-width: 0; /* Allow text to wrap */
-}
-
-.category-label {
-    white-space: normal; /* Allow text to wrap */
-    word-break: break-word; /* Break long words if needed */
+    font-weight: 500;
 }
 
 .category-amounts {
-    white-space: nowrap; /* Keep amount on one line */
-    margin-left: auto; /* Push to the right */
-    padding-left: 1rem; /* Add some space between name and amount */
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-muted);
+    font-size: 0.875rem;
 }
 
 .progress-bar {
@@ -2490,7 +2485,7 @@ function updateCategoryDisplay(expenses) {
                     <div class="category-name">
                         <span>${categoryIcons[category] || '📊'}</span>
                         <span>${category}</span>
-                        ${isQualified ? '<span class="qualified-badge">Qualified</span>' : ''}
+                        ${isQualified ? '<span class="qualified-badge">✓ Qualified</span>' : ''}
                     </div>
                     <div class="category-amounts">$${spent.toFixed(2)} of $${budget}</div>
                 </div>
@@ -2605,7 +2600,7 @@ function updateCategoryDisplayForMonth(expenses, selectedDate) {
                     <div class="category-name">
                         <span>${categoryIcons[category] || '📊'}</span>
                         <span>${category}</span>
-                        ${isQualified ? '<span class="qualified-badge">Qualified</span>' : ''}
+                        ${isQualified ? '<span class="qualified-badge">✓ Qualified</span>' : ''}
                     </div>
                     <div class="category-amounts">$${spent.toFixed(2)} of $${budget}</div>
                 </div>
@@ -3108,7 +3103,7 @@ function displayEditableBudgets() {
                                ${category === 'Rent' ? 'readonly' : ''}
                                onchange="updateCategoryName('${category}', this.value)">
                         ${qualifiedCategories.includes(category) ? 
-                            '<span class="qualified-badge">Qualified</span>' : ''}
+                            '<span class="qualified-badge">✓ Qualified</span>' : ''}
                     </div>
                     <div class="category-amounts">
                         <span>$</span>
