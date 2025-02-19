@@ -478,8 +478,9 @@
                 width: 100%;
             }
 
-            .automation-button {
+            .automation-button, .outline-button {
                 width: 100%;
+                max-width: none;
             }
 
             .tab-container {
@@ -489,6 +490,53 @@
 
             .tab-button {
                 font-size: 0.9rem;
+            }
+
+            .tracker-header {
+                padding: 1rem;
+            }
+
+            .tracker-header .button-container {
+                flex-direction: column;
+                gap: 0.75rem;
+                padding: 0 1rem;
+            }
+
+            /* Improve date input on mobile */
+            input[type="date"] {
+                -webkit-appearance: none;
+                min-height: 45px;
+                padding: 0.5rem;
+            }
+
+            /* Larger text area for notes */
+            textarea.form-control {
+                min-height: 80px;
+                resize: vertical;
+            }
+
+            /* Better spacing for form elements */
+            .form-grid {
+                gap: 0.75rem;
+                padding: 0 0.5rem;
+            }
+
+            .tracker-card {
+                padding: 1.25rem;
+                margin: 1rem;
+                border-radius: 12px;
+            }
+
+            /* Improve select dropdowns on mobile */
+            .select-container select {
+                min-height: 45px;
+            }
+
+            /* Better button spacing */
+            .form-group .submit-button {
+                width: 100%;
+                min-height: 45px;
+                margin-top: 0.5rem;
             }
         }
 
@@ -896,7 +944,7 @@
     <main class="main-content">
         <div class="tracker-header">
             <h1>Expense Tracker</h1>
-            <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 1rem;">
+            <div class="button-container" style="display: flex; gap: 1rem; justify-content: center; margin-top: 1rem;">
                 <button onclick="window.location.href='trackersummary.html'" class="automation-button">
                     Tracker Summary
                 </button>
@@ -960,9 +1008,9 @@
                             <label>Payment Amount</label>
                             <input type="number" class="form-control" placeholder="Enter payment amount" required>
                         </div>
-                        <div class="form-group">
-                            <label>Note (optional)</label>
-                            <input type="text" class="form-control" placeholder="e.g., Zelle to landlord Eddie, venmo to roommate Sam">
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Note</label>
+                            <textarea class="form-control" placeholder="e.g., Zelle to landlord Eddie, venmo to roommate Sam" rows="3"></textarea>
                         </div>
                         <div class="form-group" style="grid-column: span 2;">
                             <button type="submit" class="submit-button">
@@ -1006,9 +1054,9 @@
                             <label>Amount</label>
                             <input type="number" class="form-control" placeholder="Enter amount" required>
                         </div>
-                        <div class="form-group">
-                            <label>Note (optional)</label>
-                            <input type="text" class="form-control" placeholder="e.g., Trader Joe's, laptop for research, etc.">
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Notes</label>
+                            <textarea class="form-control" placeholder="e.g., Trader Joe's groceries, laptop for research, etc." rows="3"></textarea>
                         </div>
                         <div class="form-group">
                             <label class="custom-checkbox">
@@ -1577,7 +1625,7 @@
                 category: category,
                 amount: parseFloat(this.querySelector('input[type="number"]').value),
                 date: inputDate.toISOString().split('T')[0],
-                notes: this.querySelector('input[placeholder="e.g., Trader Joe\'s, laptop for research, etc."]').value || '',
+                notes: this.querySelector('textarea').value || '', // Updated to use textarea
                 isQualified: document.getElementById('qualified-expense').checked,
                 needsReceipt: !!this.querySelector('input[type="file"]').files.length
             };
@@ -1621,7 +1669,7 @@
                 category: 'Rent',
                 amount: parseFloat(this.querySelector('input[type="number"]').value),
                 date: inputDate.toISOString().split('T')[0],
-                notes: this.querySelector('input[type="text"]').value || 'Monthly Rent Payment',
+                notes: this.querySelector('textarea').value || 'Monthly Rent Payment', // Updated to use textarea
                 isQualified: true,
                 needsReceipt: false
             };
