@@ -1,0 +1,3092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Renest - Smart Budget Tracking</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Add Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Add SweetAlert2 library -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<style>
+:root {
+    --primary-light: #818CF8;
+    --text-muted: #6B7280;
+    --border: #E5E7EB;
+    --success: #10B981;
+    --warning: #F59E0B;
+    --primary: #6366F1;
+    --primary-dark: #4F46E5;
+    --accent: #EC4899;
+    --text-dark: #1F2937;
+    --background: #F9FAFB;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+    background-color: var(--background);
+    min-height: 100vh;
+    color: var(--text-dark);
+}
+
+
+
+.main-content {
+    padding-top: 80px;
+    min-height: calc(100vh - 80px);
+}
+
+.budget-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+.progress-container {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border);
+    position: relative;
+}
+
+.insights-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.insight-card {
+    border-radius: 16px;
+    padding: 1.75rem;
+    height: 6rem;
+    border: 1px solid rgba(99, 102, 241, 0.1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    text-align: center !important;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.section-title2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.insight-trend {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.budget-health-banner {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    color: white;
+    display: flex;
+    gap: 1rem;
+}
+
+.budget-health-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    opacity: 0.9;
+}
+
+.budget-health-status {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.category {
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.category-name {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+}
+
+.category-amounts {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+.progress-bar {
+    height: 8px;
+    background: #F3F4F6;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-spent {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.progress-label {
+    position: absolute;
+    right: 0;
+    top: -20px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.qualified-badge {
+    background-color: var(--success);
+    color: white;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 9999px;
+    margin-left: 0.5rem;
+    font-weight: 500;
+}
+
+.alert-badge {
+    position: absolute;
+    right: -4px;
+    top: -4px;
+    background: var(--warning);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid var(--border);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Navigation styles */
+.navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+            background: var(--primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .nav-links a {
+            color: var(--text-dark);
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            display: block;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(75, 34, 122, 0.05);
+            transform: translateX(5px);
+        }
+
+        .nav-links .talk-button {
+            background-color: var(--primary);
+            color: white !important;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 0.5rem;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            background-image: linear-gradient(45deg, var(--primary) 0%, var(--primary) 100%);
+            background-size: 200% 200%;
+            background-position: 0% 0%;
+        }
+
+        .nav-links .talk-button:hover {
+            background-image: linear-gradient(45deg, var(--primary) 0%, var(--primary) 45%, var(--accent) 100%) !important;
+            background-position: 100% 100% !important;
+            transform: translateY(-2px);
+        }
+
+        .menu-button {
+            background: none;
+            border: 2px solid var(--primary);
+            border-radius: 4px;
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.5rem 0.75rem;
+            color: var(--primary);
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .menu-button:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .footer {
+            background-color: rgb(235, 232, 252,.5);
+            padding: 3rem 1rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 2rem;
+        }
+
+        
+
+        .footer-links h3 {
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            display: block;
+            color: var(--text-dark);
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .menu-button {
+                display: none;
+            }
+
+            .nav-links {
+                position: static;
+                display: flex !important;
+                flex-direction: row;
+                padding: 0;
+                box-shadow: none;
+                gap: 0;
+                align-items: center;
+            }
+
+            .nav-links a {
+                margin-left: 2rem;
+                padding: 0.5rem 1rem;
+            }
+        }
+
+@media (max-width: 768px) {
+    .insights-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .budget-container {
+        padding: 1rem;
+    }
+
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        flex-direction: column;
+        padding: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .footer {
+                margin-left: 0;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+}
+.logo {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+            background: var(--primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+.tracker-button {
+    background-color: var(--primary);
+    color: white !important;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    background-image: linear-gradient(45deg, var(--primary) 0%, var(--primary) 100%);
+    background-size: 200% 200%;
+    background-position: 0% 0%;
+}
+
+.tracker-button:hover {
+    background-image: linear-gradient(45deg, var(--primary) 0%, var(--primary) 45%, var(--accent) 100%) !important;
+    background-position: 100% 100% !important;
+    transform: translateY(-2px);
+}
+
+.month-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.month-nav {
+    background: none;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.month-nav:hover {
+    background: var(--primary);
+    color: white;
+}
+
+#currentMonthDisplay {
+    font-weight: 500;
+    min-width: 120px;
+    text-align: center;
+}
+
+.view-toggle-button {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: white;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.875rem;
+}
+
+.toggle-icon {
+    font-size: 1rem;
+}
+
+#chartContainer {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.ignore-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    position: relative;
+    z-index: 1; 
+}
+
+.ignore-toggle input {
+    appearance: none;
+    width: 2.5rem;
+    height: 1.25rem;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 999px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.ignore-toggle input:checked {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.ignore-toggle input:before {
+    content: '';
+    position: absolute;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background: white;
+    top: 0.125rem;
+    left: 0.125rem;
+    transition: all 0.3s ease;
+}
+
+.ignore-toggle input:checked:before {
+    left: 1.375rem;
+}
+
+.status-text {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.status-indicator {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+}
+
+.ignored {
+    opacity: 0.5;
+}
+
+/* Add to the existing style section */
+.budget-summary {
+    background: white;
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    border: 1px solid var(--border);
+}
+
+.stipend-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 500;
+}
+
+.edit-button {
+    padding: 0.25rem 0.5rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.edit-button:hover {
+    opacity: 1;
+}
+
+.budget-input {
+    width: 100px;
+    padding: 0.25rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 0.875rem;
+}
+
+/* Add these styles for edit mode */
+.category.edit-mode {
+    background: rgba(99, 102, 241, 0.05);
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+/* Add to your existing styles */
+.category-name-input {
+    border: none;
+    background: none;
+    font-size: inherit;
+    font-weight: inherit;
+    color: inherit;
+    padding: 0.25rem;
+    border-radius: 4px;
+}
+
+.category-name-input:not([readonly]):hover,
+.category-name-input:not([readonly]):focus {
+    background: rgba(99, 102, 241, 0.1);
+    outline: none;
+}
+
+.category-name-input[readonly] {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.category-amounts {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.budget-input {
+    width: 100px;
+    padding: 0.25rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 0.875rem;
+}
+
+.budget-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+/* Add to your existing styles */
+.delete-category {
+    color: #dc2626;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+    background: none;
+    border: none;
+    padding: 0.25rem;
+    line-height: 1;
+}
+
+.delete-category:hover {
+    opacity: 1;
+}
+
+.add-category-button {
+    width: 100%;
+    margin-top: 1rem;
+    padding: 1rem;
+    background: white;
+    border: 2px dashed #e5e7eb;
+    border-radius: 8px;
+    color: var(--primary);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.add-category-button:hover {
+    border-color: var(--primary);
+    background: rgba(99, 102, 241, 0.05);
+}
+
+.add-category-button span {
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.stipend-section {
+    background: var(--surface);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.stipend-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.stipend-header h3 {
+    margin: 0;
+    color: var(--text);
+    font-size: 1.1rem;
+}
+
+.stipend-amount {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.stipend-amount button {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.stipend-amount button:hover {
+    background: var(--primary-dark);
+}
+
+.budget-status {
+    font-size: 1rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--border);
+    margin-top: 0.5rem;
+    font-weight: 500;
+}
+
+.budget-status.positive {
+    color: var(--success);
+}
+
+.budget-status.negative {
+    color: var(--warning);
+}
+
+#editBudgets {
+    transition: background-color 0.3s ease;
+}
+
+#editBudgets.editing {
+    background-color: var(--accent);
+    color: white;
+    border: none;
+}
+
+/* Add CSS styles for the new category input and buttons */
+
+
+        .edit-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        #editBudgets.editing, #cancelEdit {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #cancelEdit {
+            background-color: var(--warning);
+        }
+
+        .new-category-modal {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .new-category-modal input {
+            width: 100%;
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .new-category-modal button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .new-category-modal button:hover {
+            background: var(--primary-dark);
+        }
+
+        .custom-swal-popup {
+            background: var(--surface);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .custom-swal-title {
+            color: var(--text);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .stipend-input-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin: 1rem 0;
+        }
+
+        .currency-symbol {
+            position: absolute;
+            left: 1rem;
+            color: var(--text);
+            font-size: 1.2rem;
+        }
+
+        #swal-stipendAmount {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 1.2rem;
+            color: var(--text);
+            background: var(--background);
+        }
+
+        #swal-stipendAmount:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary-light);
+        }
+
+        .swal2-confirm {
+            background: var(--primary) !important;
+            color: white !important;
+            padding: 0.75rem 1.5rem !important;
+            font-size: 1rem !important;
+        }
+
+        .swal2-cancel {
+            background: var(--warning) !important;
+            color: white !important;
+            padding: 0.75rem 1.5rem !important;
+            font-size: 1rem !important;
+        }
+
+        .swal2-popup {
+            background-color: white !important;
+        }
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .copyright {
+            color: var(--text-dark);
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+    </style>
+`;
+
+
+</style>
+<body>
+    <nav class="navbar">
+        <a href="https://renesthorizons.com" class="logo">RENEST</a>
+        <div class="nav-links">
+            <a href="#" id="signOutLink" class="active">Sign Out</a>
+            <!-- <a href="dashboard.html">Dashboard</a> -->
+            <a href="529expensetracker.html">Expense Tracker</a>
+            <a href="dashboard.html" class="talk-button">Dashboard</a>
+        </div>
+        <button class="menu-button" aria-label="Toggle menu" aria-expanded="false">☰</button>
+    </nav>
+
+    <main class="main-content">
+        <div class="budget-container">
+            <div class="progress-container" style="margin-bottom: 1.5rem;">
+                <h2 class="section-title2" style="margin-bottom: .8rem;">529 Benefits Unlocked</h2>
+                <div class="insights-grid" style="margin-bottom: 0;">
+                    <div class="insight-card" style="box-shadow: none; border: none; height: auto; padding: 0;">
+                        <div class="section-title" id="currentMonthBenefit">$0.00</div>
+                        <div class="insight-trend">Current Month</div>
+                    </div>
+                    <div class="insight-card" style="box-shadow: none; border: none; height: auto; padding: 0;">
+                        <div class="section-title" id="totalBenefit">$0.00</div>
+                        <div class="insight-trend">Year-to-Date</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="budget-health-banner">
+                <div style="flex: 1;">
+                    <div class="budget-health-title">Tracking Status</div>
+                    <div class="budget-health-status" id="trackingStatus">Loading tracking status...</div>
+                </div>
+                <div style="flex: 1;" id="accountStatusContainer">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div class="budget-health-title">Account Status</div>
+                        <label class="ignore-toggle">
+                            <input type="checkbox" id="ignoreStatus">
+                            <span>Ignore</span>
+                        </label>
+                    </div>
+                    <div class="budget-health-status" id="accountStatus">Loading account status...</div>
+                </div>
+            </div>
+
+            <!-- Modify the budget summary div -->
+            <div class="budget-summary" style="margin-bottom: 1.5rem; display: none;">
+                <div class="stipend-container">
+                    <div>Monthly Stipend: <span id="stipendAmount">$0.00</span></div>
+                    <button id="editStipend" class="edit-button">✏️</button>
+                </div>
+                <div id="budgetStatus">Remaining: $0.00</div>
+            </div>
+
+            <div class="progress-container">
+                <div class="section-header">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                        <h2 class="section-title2">Expenses Summary</h2>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button id="editBudgets" class="view-toggle-button">
+                                <span class="toggle-icon">✏️</span>
+                                <span class="toggle-text">Edit Budgets</span>
+                            </button>
+                            <button id="viewToggle" class="view-toggle-button">
+                                <span class="toggle-icon">📊</span>
+                                <span class="toggle-text">Switch View</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="month-selector">
+                        <button id="prevMonth" class="month-nav">←</button>
+                        <span id="currentMonthDisplay">Loading...</span>
+                        <button id="nextMonth" class="month-nav">→</button>
+                    </div>
+                </div>
+                <div id="categoriesContainer">
+                    <!-- Categories will be populated dynamically -->
+                </div>
+                <div id="chartContainer" style="display: none; height: 400px; margin: 20px auto;">
+                    <canvas id="radarChart"></canvas>
+                </div>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <a href="529expensetracker.html" class="tracker-button">Go To Tracker</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="footer-logo">RENEST</div>
+                <p class="copyright">©2025 Renest Horizons Inc.</p>
+            </div>
+            <div class="footer-links">
+                <h3>Company</h3>
+                <a href="aboutus529.html">About us</a>
+            </div>
+            <div class="footer-links">
+                <h3>Resources</h3>
+                <a href="contactus529.html">Contact us</a>
+                <a href="faq529.html">FAQ</a>
+                <!-- <a href="https://www-renesthorizons-com.translate.goog/?_x_tr_sl=auto&_x_tr_tl=es&_x_tr_hl=en&_x_tr_pto=wapp">Español</a> -->
+            </div>
+        </div>
+    </footer>
+</body>
+
+<script>
+// API Configuration
+const API = {
+    expenseUrl: 'https://wb2pd4d6gg.execute-api.us-east-2.amazonaws.com',
+    profileUrl: 'https://g4gri8abii.execute-api.us-east-2.amazonaws.com/prod',
+    getToken: () => localStorage.getItem('authToken')
+};
+
+// Category configurations
+const categoryBudgets = {
+    // 'Food': 500,
+    'Rent': 1200,
+    'Groceries': 500,
+    'WiFi': 100,
+    'Required Supplies': 200,
+    'Utilities': 150,
+    'Restaurants': 250,
+    'Transportation': 200,
+    'Technology': 300,    
+    'Other': 200
+};
+
+const categoryIcons = {
+    // 'Food': '🍽️',
+    'Rent': '🏠',
+    'Groceries': '🛒',
+    'WiFi': '📡',
+    'Required Supplies': '📚',
+    'Utilities': '💡',
+    'Restaurants': '🍴',
+    'Transportation': '🚗',
+    'Technology': '💻',
+    'Other': '📦'
+};
+
+const qualifiedCategories = [
+    'Rent',
+    'Groceries',
+    'WiFi',
+    'Required Supplies',
+    'Utilities'    
+];
+
+// Databases (with 2 entries each)
+const stateTaxDB = {
+    'AK': {
+        hasStateCapGains: false,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: Infinity, rate: 0 }
+        ],
+        notes: 'Alaska has no state income tax.'
+    },
+    'AL': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: 3000, rate: 2 },
+            { threshold: 6000, rate: 4 },
+            { threshold: 12000, rate: 5 },
+            { threshold: Infinity, rate: 5.5 }
+        ],
+        notes: 'Alabama taxes capital gains as ordinary income with progressive rates.'
+    },
+    'AR': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: 4300, rate: 2 },
+            { threshold: 8500, rate: 3 },
+            { threshold: 12700, rate: 4.4 },
+            { threshold: 21300, rate: 4.6 },
+            { threshold: 26500, rate: 4.9 },
+            { threshold: Infinity, rate: 5.5 }
+        ],
+        notes: 'Arkansas taxes capital gains as ordinary income with multiple tax brackets.'
+    },
+    'AZ': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: 27272, rate: 2.55 },
+            { threshold: 54544, rate: 2.98 },
+            { threshold: 163692, rate: 4.50 },
+            { threshold: Infinity, rate: 4.80 }
+        ],
+        notes: 'Arizona taxes capital gains as ordinary income with progressive rates.'
+    },
+    'CA': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: true,
+        brackets: [
+            { threshold: 10099, rate: 1 },
+            { threshold: 23942, rate: 2 },
+            { threshold: 37788, rate: 4 },
+            { threshold: 52455, rate: 6 },
+            { threshold: 66295, rate: 8 },
+            { threshold: 338639, rate: 9.3 },
+            { threshold: 406364, rate: 10.3 },
+            { threshold: 677275, rate: 11.3 },
+            { threshold: 1000000, rate: 12.3 },
+            { threshold: Infinity, rate: 13.3 }
+        ],
+        notes: 'California taxes capital gains as ordinary income with progressive rates from 1% to 13.3%. Capital gains are taxed even with $0 in other income.'
+    },
+    'CO': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: Infinity, rate: 4.4 }
+        ],
+        notes: 'Colorado has a flat tax rate of 4.4% for all income including capital gains.'
+    },
+    'CT': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: 10000, rate: 3 },
+            { threshold: 50000, rate: 5 },
+            { threshold: 100000, rate: 5.5 },
+            { threshold: 200000, rate: 6 },
+            { threshold: 250000, rate: 6.5 },
+            { threshold: 500000, rate: 6.9 },
+            { threshold: Infinity, rate: 6.99 }
+        ],
+        notes: 'Connecticut taxes capital gains as ordinary income with progressive rates.'
+    },
+    'DE': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: 2000, rate: 0 },
+            { threshold: 5000, rate: 2.2 },
+            { threshold: 10000, rate: 3.9 },
+            { threshold: 20000, rate: 4.8 },
+            { threshold: 25000, rate: 5.2 },
+            { threshold: 60000, rate: 5.55 },
+            { threshold: Infinity, rate: 6.6 }
+        ],
+        notes: 'Delaware taxes capital gains as ordinary income with progressive rates.'
+    },
+    'FL': {
+        hasStateCapGains: false,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: Infinity, rate: 0 }
+        ],
+        notes: 'Florida has no state income tax or capital gains tax.'
+    },
+    'GA': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: 750, rate: 1 },
+            { threshold: 2250, rate: 2 },
+            { threshold: 3750, rate: 3 },
+            { threshold: 5250, rate: 4 },
+            { threshold: 7000, rate: 5 },
+            { threshold: Infinity, rate: 5.75 }
+        ],
+        notes: 'Georgia taxes capital gains as ordinary income with progressive rates.'
+    },
+    'HI': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: 2400, rate: 1.4 },
+            { threshold: 4800, rate: 3.2 },
+            { threshold: 9600, rate: 5.5 },
+            { threshold: 14400, rate: 6.4 },
+            { threshold: 19200, rate: 6.8 },
+            { threshold: 24000, rate: 7.2 },
+            { threshold: 36000, rate: 7.6 },
+            { threshold: 48000, rate: 7.9 },
+            { threshold: 150000, rate: 8.25 },
+            { threshold: 175000, rate: 9 },
+            { threshold: 200000, rate: 10 },
+            { threshold: Infinity, rate: 11 }
+        ],
+        notes: 'Hawaii has one of the highest state tax rates with multiple brackets.'
+    },
+    'IA': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: Infinity, rate: 3.90 }
+        ],
+        notes: 'Iowa has implemented a flat tax rate of 3.90% for 2024.'
+    },
+    'ID': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: Infinity, rate: 5.8 }
+        ],
+        notes: 'Idaho has a flat tax rate of 5.8% as of 2024.'
+    },
+    'IL': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: Infinity, rate: 4.95 }
+        ],
+        notes: 'Illinois taxes capital gains at a flat 4.95% rate.'
+    },
+    'IN': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: Infinity, rate: 3.15 }
+        ],
+        notes: 'Indiana has a flat tax rate and taxes capital gains as ordinary income.'
+    },
+    'KS': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: 15000, rate: 3.1 },
+            { threshold: 30000, rate: 5.25 },
+            { threshold: Infinity, rate: 5.7 }
+        ],
+        notes: 'Kansas taxes capital gains as ordinary income with progressive rates.'
+    },
+    'KY': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: Infinity, rate: 4.5 }
+        ],
+        notes: 'Kentucky has a flat tax rate of 4.5% for all income including capital gains.'
+    },
+    'LA': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: 12500, rate: 1.85 },
+            { threshold: 50000, rate: 3.5 },
+            { threshold: Infinity, rate: 4.25 }
+        ],
+        notes: 'Louisiana taxes capital gains as ordinary income with progressive rates.'
+    },
+    'MA': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: Infinity, rate: 5 }
+        ],
+        notes: 'Massachusetts has a renters credit allowing a deduction up to $4,000 spent on rent.'
+    },
+    'MD': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: 1000, rate: 2 },
+            { threshold: 2000, rate: 3 },
+            { threshold: 3000, rate: 4 },
+            { threshold: 100000, rate: 4.75 },
+            { threshold: 125000, rate: 5 },
+            { threshold: 150000, rate: 5.25 },
+            { threshold: 250000, rate: 5.5 },
+            { threshold: Infinity, rate: 5.75 }
+        ],
+        notes: 'Maryland taxes capital gains as ordinary income with progressive rates.'
+    },
+    'ME': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: 24500, rate: 5.8 },
+            { threshold: 58050, rate: 6.75 },
+            { threshold: Infinity, rate: 7.15 }
+        ],
+        notes: 'Maine taxes capital gains as ordinary income with progressive rates.'
+    },
+    'MI': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: Infinity, rate: 4.25 }
+        ],
+        notes: 'Michigan taxes capital gains at a flat 4.25% rate.'
+    },
+    'MN': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: 30070, rate: 5.35 },
+            { threshold: 98760, rate: 6.8 },
+            { threshold: 164400, rate: 7.85 },
+            { threshold: Infinity, rate: 9.85 }
+        ],
+        notes: 'Minnesota taxes capital gains as ordinary income with progressive rates.'
+    },
+    'MO': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: 1121, rate: 1.5 },
+            { threshold: 2242, rate: 2 },
+            { threshold: 3363, rate: 2.5 },
+            { threshold: 4484, rate: 3 },
+            { threshold: 5605, rate: 3.5 },
+            { threshold: 6726, rate: 4 },
+            { threshold: 7847, rate: 4.5 },
+            { threshold: 8968, rate: 5 },
+            { threshold: Infinity, rate: 5.3 }
+        ],
+        notes: 'Missouri taxes capital gains as ordinary income with progressive rates.'
+    },
+    'MS': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: 10000, rate: 4.4 },
+            { threshold: Infinity, rate: 4.4 }
+        ],
+        notes: 'Mississippi taxes capital gains as ordinary income with progressive rates.'
+    },
+    'MT': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: 3300, rate: 1 },
+            { threshold: 5800, rate: 2 },
+            { threshold: 8900, rate: 3 },
+            { threshold: 12000, rate: 4 },
+            { threshold: 15400, rate: 5 },
+            { threshold: 19800, rate: 6 },
+            { threshold: Infinity, rate: 6.75 }
+        ],
+        notes: 'Montana taxes capital gains as ordinary income with progressive rates.'
+    },
+    'NC': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: Infinity, rate: 4.75 }
+        ],
+        notes: 'North Carolina has a flat income tax rate of 4.75% for 2024.'
+    },
+    'ND': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: 41775, rate: 1.1 },
+            { threshold: 100450, rate: 2.04 },
+            { threshold: 221050, rate: 2.64 },
+            { threshold: Infinity, rate: 2.90 }
+        ],
+        notes: 'North Dakota taxes capital gains as ordinary income with progressive rates.'
+    },
+    'NE': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: 3700, rate: 2.46 },
+            { threshold: 22170, rate: 3.51 },
+            { threshold: 35730, rate: 5.01 },
+            { threshold: Infinity, rate: 6.84 }
+        ],
+        notes: 'Nebraska taxes capital gains as ordinary income with progressive rates.'
+    },
+    'NH': {
+        hasStateCapGains: false,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: Infinity, rate: 0 }
+        ],
+        notes: 'New Hampshire has no general income tax or capital gains tax.'
+    },
+    'NJ': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: 20000, rate: 1.4 },
+            { threshold: 35000, rate: 1.75 },
+            { threshold: 40000, rate: 3.5 },
+            { threshold: 75000, rate: 5.525 },
+            { threshold: 500000, rate: 6.37 },
+            { threshold: 1000000, rate: 10.75 },
+            { threshold: Infinity, rate: 10.75 }
+        ],
+        notes: 'New Jersey taxes capital gains as ordinary income with progressive rates from 1.4% to 10.75%.'
+    },
+    'NM': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: 5500, rate: 1.7 },
+            { threshold: 11000, rate: 3.2 },
+            { threshold: 16000, rate: 4.7 },
+            { threshold: 24000, rate: 4.9 },
+            { threshold: Infinity, rate: 5.9 }
+        ],
+        notes: 'New Mexico taxes capital gains as ordinary income with progressive rates.'
+    },
+    'NV': {
+        hasStateCapGains: false,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: Infinity, rate: 0 }
+        ],
+        notes: 'Nevada has no state income tax or capital gains tax.'
+    },
+    'NY': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: 13900, rate: 4 },
+            { threshold: 80650, rate: 5.97 },
+            { threshold: 215400, rate: 6.33 },
+            { threshold: 1077550, rate: 6.85 },
+            { threshold: 5000000, rate: 9.65 },
+            { threshold: 25000000, rate: 10.3 },
+            { threshold: Infinity, rate: 10.9 }
+        ],
+        notes: 'New York taxes capital gains as ordinary income with progressive rates from 4% to 10.9%.'
+    },
+    'NYC': {
+    hasStateCapGains: true,
+    taxesWithZeroIncome: false,
+    brackets: [
+        { threshold: 12000, rate: 7.078 },     // 4.000% (state) + 3.078% (city)
+        { threshold: 13900, rate: 7.762 },     // 4.000% (state) + 3.762% (city)
+        { threshold: 25000, rate: 7.819 },     // 4.000% (state) + 3.819% (city)
+        { threshold: 50000, rate: 7.876 },     // 4.000% (state) + 3.876% (city)
+        { threshold: 80650, rate: 9.846 },     // 5.970% (state) + 3.876% (city)
+        { threshold: 215400, rate: 10.206 },   // 6.330% (state) + 3.876% (city)
+        { threshold: 1077550, rate: 10.726 },  // 6.850% (state) + 3.876% (city)
+        { threshold: 5000000, rate: 13.526 },  // 9.650% (state) + 3.876% (city)
+        { threshold: 25000000, rate: 14.176 }, // 10.300% (state) + 3.876% (city)
+        { threshold: Infinity, rate: 14.776 }  // 10.900% (state) + 3.876% (city)
+    ],
+    notes: 'Combined New York State and New York City tax rates. NYC residents pay both state and city taxes, with total progressive rates ranging from 7.078% to 14.776%. Capital gains are taxed as ordinary income.'
+},
+    'OH': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: Infinity, rate: 3.75 }
+        ],
+        notes: 'Ohio has a flat tax rate and taxes capital gains as ordinary income.'
+    },
+    'OK': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: 1000, rate: 0.5 },
+            { threshold: 2500, rate: 1 },
+            { threshold: 3750, rate: 2 },
+            { threshold: 4900, rate: 3 },
+            { threshold: 7200, rate: 4 },
+            { threshold: Infinity, rate: 5 }
+        ],
+        notes: 'Oklahoma taxes capital gains as ordinary income with progressive rates.'
+    },
+    'OR': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: 3750, rate: 4.75 },
+            { threshold: 9450, rate: 6.75 },
+            { threshold: 125000, rate: 8.75 },
+            { threshold: 250000, rate: 9.9 },
+            { threshold: Infinity, rate: 9.9 }
+        ],
+        notes: 'Oregon taxes capital gains as ordinary income with progressive rates.'
+    },
+    'PA': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: Infinity, rate: 3.07 }
+        ],
+        notes: 'Pennsylvania has a flat tax rate and taxes capital gains as ordinary income.'
+    },
+    'RI': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: 66200, rate: 3.75 },
+            { threshold: 155950, rate: 4.75 },
+            { threshold: Infinity, rate: 5.99 }
+        ],
+        notes: 'Rhode Island taxes capital gains as ordinary income with progressive rates.'
+    },
+    'SC': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: 3000, rate: 0 },
+            { threshold: 6000, rate: 3 },
+            { threshold: 15000, rate: 4 },
+            { threshold: Infinity, rate: 5 }
+        ],
+        notes: 'South Carolina taxes capital gains as ordinary income with progressive rates.'
+    },
+    'SD': {
+        hasStateCapGains: false,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: Infinity, rate: 0 }
+        ],
+        notes: 'South Dakota has no state income tax.'
+    },
+    'TN': {
+        hasStateCapGains: false,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: Infinity, rate: 0 }
+        ],
+        notes: 'Tennessee has no state income tax.'
+    },
+    'TX': {
+        hasStateCapGains: false,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: Infinity, rate: 0 }
+        ],
+        notes: 'Texas has no state income tax.'
+    },
+    'UT': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: Infinity, rate: 4.85 }
+        ],
+        notes: 'Utah has a flat tax rate and taxes capital gains as ordinary income.'
+    },
+    'VT': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: 42550, rate: 3.35 },
+            { threshold: 103200, rate: 6.6 },
+            { threshold: 203600, rate: 7.6 },
+            { threshold: Infinity, rate: 8.75 }
+        ],
+        notes: 'Vermont taxes capital gains as ordinary income with progressive rates.'
+    },
+    'VA': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: 3000, rate: 2 },
+            { threshold: 5000, rate: 3 },
+            { threshold: 17000, rate: 5 },
+            { threshold: Infinity, rate: 5.75 }
+        ],
+        notes: 'Virginia taxes capital gains as ordinary income with progressive rates.'
+    },
+    'WA': {
+        hasStateCapGains: false,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: Infinity, rate: 0 }
+        ],
+        notes: 'Washington has no state income tax.'
+    },
+    'WV': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: 10000, rate: 3 },
+            { threshold: 25000, rate: 4 },
+            { threshold: 40000, rate: 4.5 },
+            { threshold: 60000, rate: 6 },
+            { threshold: Infinity, rate: 6.5 }
+        ],
+        notes: 'West Virginia taxes capital gains as ordinary income with progressive rates.'
+    },
+    'WI': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: 13810, rate: 3.54 },
+            { threshold: 27630, rate: 4.65 },
+            { threshold: 304170, rate: 6.27 },
+            { threshold: Infinity, rate: 7.65 }
+        ],
+        notes: 'Wisconsin taxes capital gains as ordinary income with progressive rates.'
+    },
+    'WY': {
+        hasStateCapGains: false,
+        taxesWithZeroIncome: false,
+        brackets: [
+            { threshold: Infinity, rate: 0 }
+        ],
+        notes: 'Wyoming has no state income tax.'
+    }
+};
+const statePersonalExemptionDB = {
+    'NY': {
+        exemptionType: 'Standard Deduction',
+        amount: 8000,
+        notes: 'Uses federal standard deduction amounts. Single filer: $15,000, Married filing jointly: $30,000, Head of household: $22,500'
+    },
+    'IL': {
+        exemptionType: 'Personal Exemption',
+        amount: 2425,
+        notes: 'Personal exemption allowance per person. Additional $1,000 for individuals 65 and older or legally blind'
+    },
+    'MA': {
+        exemptionType: 'Personal Exemption',
+        amount: 1000,
+        notes: 'Single filer: $4,400, Married filing jointly: $8,800, Head of household: $6,800'
+    },
+    'PA': {
+        exemptionType: 'None',
+        amount: 0,
+        notes: 'Pennsylvania has no standard deduction or personal exemption. Uses flat tax rate of 3.07%. Tax Forgiveness program available separately based on income and family size'
+    },
+    'VA': {
+        exemptionType: 'Standard Deduction',
+        amount: 8500,
+        notes: 'Standard deduction of $8,500 for all filing statuses'
+    },
+    'AZ': {
+        exemptionType: 'Standard Deduction',
+        amount: 14600,
+        notes: 'Single: $12,950, Married filing jointly: $25,900'
+    },
+    'MN': {
+        exemptionType: 'Standard Deduction',
+        amount: 15000,
+        notes: 'Single: $13,825, Married filing jointly: $27,650. Additional standard deduction for age 65+ or blind'
+    },
+    'GA': {
+        exemptionType: 'Standard Deduction',
+        amount: 12000,
+        notes: 'Single: $12,000, Married filing jointly: $24,000. Additional amounts for age 65+ or blind'
+    },
+    'OH': {
+        exemptionType: 'Personal Exemption',
+        amount: 26050,
+        notes: 'Personal exemption credit amount varies based on income. Range: $2,400-$2,800 per person'
+    },
+    'IN': {
+        exemptionType: 'Personal Exemption',
+        amount: 1000,
+        notes: 'Base exemption $1,000 per person. Additional $1,500 for dependents, $1,000 for age 65+'
+    },
+    'MO': {
+        exemptionType: 'Standard Deduction',
+        amount: 15000,
+        notes: 'Follows federal standard deduction amounts. Single: $15,000, Married filing jointly: $30,000'
+    },
+    'MI': {
+        exemptionType: 'Personal Exemption',
+        amount: 5400,
+        notes: 'Personal exemption amount per person. Additional exemption for seniors and disabled'
+    },
+    'MD': {
+        exemptionType: 'Standard Deduction',
+        amount: 2700,
+        notes: 'Single: $2,400, Married filing jointly: $4,850. Additional amounts for age 65+ or blind'
+    },
+    'UT': {
+        exemptionType: 'Standard Deduction',
+        amount: 15000,
+        notes: 'Follows federal standard deduction amounts. Single: $15,000, Married filing jointly: $30,000'
+    },
+    'NJ': {
+        exemptionType: 'Personal Exemption',
+        amount: 1000,
+        notes: 'Personal exemption per person. Additional exemptions for age 65+ and blind'
+    },
+    'AL': {
+        exemptionType: 'Standard Deduction',
+        amount: 3000,
+        notes: 'Single: $2,500, Married filing jointly: $7,500. Additional personal exemption of $1,500'
+    },
+    'CO': {
+        exemptionType: 'Standard Deduction',
+        amount: 15000,
+        notes: 'Follows federal standard deduction amounts. Single: $15,000, Married filing jointly: $30,000'
+    },
+    'DC': {
+        exemptionType: 'Standard Deduction',
+        amount: 15000,
+        notes: 'Single: $12,950, Married filing jointly: $25,900'
+    },
+    'LA': {
+        exemptionType: 'Combined Exemption/Deduction',
+        amount: 4500,
+        notes: 'Combined personal exemption/standard deduction. Single: $4,500, Married filing jointly: $9,000'
+    },
+    'VT': {
+        exemptionType: 'Standard Deduction',
+        amount: 15000,
+        notes: 'Single: $6,800, Married filing jointly: $13,600'
+    },
+    'WI': {
+        exemptionType: 'Standard Deduction',
+        amount: 12120,
+        notes: 'Single: $12,120, Married filing jointly: $22,260. Phases out at higher income levels'
+    },
+    'CT': {
+        exemptionType: 'Personal Exemption',
+        amount: 15000,
+        notes: 'Single: $15,000, Married filing jointly: $24,000. Phases out at higher income levels'
+    },
+    'SC': {
+        exemptionType: 'Standard Deduction',
+        amount: 15000,
+        notes: 'Follows federal standard deduction amounts. Single: $15,000, Married filing jointly: $30,000'
+    },
+    'OK': {
+        exemptionType: 'Standard Deduction',
+        amount: 10000,
+        notes: 'Single: $6,350, Married filing jointly: $12,700'
+    },
+    'OR': {
+        exemptionType: 'Standard Deduction',
+        amount: 5495,
+        notes: 'Single: $2,420, Married filing jointly: $4,840. Additional credit for personal exemptions'
+    },
+    'NE': {
+        exemptionType: 'Standard Deduction',
+        amount: 12000,
+        notes: 'Follows federal standard deduction amounts. Single: $15,000, Married filing jointly: $30,000'
+    },
+    'MS': {
+        exemptionType: 'Standard Deduction',
+        amount: 6000,
+        notes: 'Single: $6,000, Married filing jointly: $12,000'
+    },
+    'KS': {
+        exemptionType: 'Standard Deduction',
+        amount: 3500,
+        notes: 'Single: $3,500, Married filing jointly: $8,000'
+    },
+    'IA': {
+        exemptionType: 'Standard Deduction',
+        amount: 15000,
+        notes: 'Single: $2,210, Married filing jointly: $5,450'
+    },
+    'AR': {
+        exemptionType: 'Standard Deduction',
+        amount: 3000,
+        notes: 'Follows federal standard deduction amounts. Single: $15,000, Married filing jointly: $30,000'
+    },
+    'WV': {
+        exemptionType: 'Personal Exemption',
+        amount: 2000,
+        notes: 'Personal exemption of $2,000 per person'
+    },
+    'NM': {
+        exemptionType: 'Standard Deduction',
+        amount: 3000,
+        notes: 'Follows federal standard deduction amounts. Single: $15,000, Married filing jointly: $30,000'
+    },
+    'RI': {
+        exemptionType: 'Standard Deduction',
+        amount: 12000,
+        notes: 'Single: $9,300, Married filing jointly: $18,600'
+    },
+    'DE': {
+        exemptionType: 'Standard Deduction',
+        amount: 3250,
+        notes: 'Single: $3,250, Married filing jointly: $6,500. Additional personal credits available'
+    },
+    'ID': {
+        exemptionType: 'Standard Deduction',
+        amount:0,
+        notes: 'Single: $15,000, Married filing jointly: $30,000'
+    },
+    'ME': {
+        exemptionType: 'Standard Deduction',
+        amount: 12000,
+        notes: 'Follows federal standard deduction amounts. Single: $15,000, Married filing jointly: $30,000'
+    },
+    'MT': {
+        exemptionType: 'Standard Deduction',
+        amount: 15000,
+        notes: 'Single: $5,590, Married filing jointly: $11,180. Additional personal exemption credit available'
+    }
+};
+
+        const state529DB = {
+            'CA': {
+                planName: 'ScholarShare 529',
+                deduction: 0,
+                notes: 'California does not offer state tax deductions for 529 contributions, but earnings grow tax-free.'
+            },
+            'NY': {
+                planName: 'New Yorks 529 Plan',
+                deduction: 5000,
+                notes: 'New York taxpayers can deduct up to $5,000 per year ($10,000 for married filing jointly) of their 529 plan contributions.'
+            },
+            'NYC': {
+                planName: 'New Yorks 529 Plan',
+                deduction: 5000,
+                notes: 'New York taxpayers can deduct up to $5,000 per year ($10,000 for married filing jointly) of their 529 plan contributions.'
+            },
+            'MA': {
+                planName: 'U.Fund College Investing Plan',
+                deduction: 1000,
+                notes: 'Massachusetts taxpayers can deduct up to $1,000 per year ($2,000 for married filing jointly) of their 529 plan contributions.'
+            },
+            'FL': {
+                planName: 'Florida 529 Savings Plan',
+                deduction: 0,
+                notes: 'Florida has no state income tax, so there are no state tax deductions. However, earnings grow tax-free.'
+            },
+            'MI': {
+                planName: 'Michigan Education Savings Program (MESP)',
+                deduction: 5000,
+                notes: 'Michigan taxpayers can deduct up to $5,000 per year ($10,000 for married filing jointly) of their 529 plan contributions.'
+            },
+            'MO': {
+                planName: 'Missouri529',
+                deduction: 8000,
+                notes: 'Missouri taxpayers can deduct up to $8,000 per year ($16,000 for married filing jointly) of their 529 plan contributions.'
+            },
+            'IL': {
+                planName: 'Bright Start College Savings',
+                deduction: 10000,
+                notes: 'Illinois taxpayers can deduct up to $10,000 per year ($20,000 for married filing jointly) of their 529 plan contributions.'
+            },
+            'NJ': {
+                planName: 'NJBEST 529 College Savings Plan',
+                deduction: 10000,
+                notes: 'New Jersey does offers state tax deductions for 529 contributions and earnings grow tax-free.'
+            },
+            'CO': {
+                planName: 'CollegeInvest 529 Plan',
+                deduction: 25400,
+                notes: 'Colorado offers a full deduction for contributions to its 529 plan, with no limit.'
+            },
+            'CT': {
+                planName: 'CHET 529 College Savings Program',
+                deduction: 5000,
+                notes: 'Connecticut taxpayers can deduct up to $5,000 ($10,000 if married filing jointly) of contributions.'
+            },
+            'DE': {
+                planName: 'Delaware College Investment Plan',
+                deduction: 1000,
+                notes: 'Delaware offers a state tax deductions for 529 contributions.'
+            },
+            'FL': {
+                planName: 'Florida 529 Savings Plan',
+                deduction: 0,
+                notes: 'No state tax benefit as Florida has no state income tax.'
+            },
+            'GA': {
+                planName: 'Path2College 529 Plan',
+                deduction: 4000,
+                notes: 'Georgia taxpayers can deduct up to $4,000 per beneficiary ($8,000 if married filing jointly).'
+            },
+            'HI': {
+                planName: 'HI529 College Savings Program',
+                deduction: 0,
+                notes: 'Hawaii does not offer state tax deductions for 529 contributions.'
+            },
+            'ID': {
+                planName: 'IDeal - Idaho College Savings Program',
+                deduction: 6000,
+                notes: 'Idaho taxpayers can deduct up to $6,000 ($12,000 if married filing jointly) of contributions.'
+            },
+            'AK': {
+                planName: 'Alaska 529 Plan - T. Rowe Price College Savings Plan',
+                deduction: 0,
+                notes: 'No state tax deduction due to no state income tax, but plan offers tax-free growth.'
+            },
+            'AZ': {
+                planName: 'Arizona Family College Savings Program (AZ529)',
+                deduction: 2000,
+                notes: 'Arizona taxpayers can deduct up to $2,000 per year ($4,000 for married filing jointly).'
+            },
+            'AR': {
+                planName: 'GIFTS Arkansas 529 Plan',
+                deduction: 5000,
+                notes: 'Arkansas taxpayers can deduct up to $5,000 per year ($10,000 for married filing jointly).'
+            },
+            'TX': {
+                planName: 'Texas College Savings Plan',
+                deduction: 0,
+                notes: 'No state tax deduction due to no state income tax, but plan offers investment benefits.'
+            },
+            'WA': {
+                planName: 'Washington College Savings Plan (DreamAhead)',
+                deduction: 0,
+                notes: 'No state tax deduction due to no state income tax, but plan offers investment benefits.'
+            },
+            'WY': {
+                planName: 'WYOStars 529 College Savings Plan',
+                deduction: 0,
+                notes: 'No state tax deduction due to no state income tax, but plan offers investment benefits.'
+            },
+            'WI': {
+                planName: 'Wisconsin 529 College Savings Plan',
+                deduction: 5000,
+                notes: 'Wisconsin offers $5,000'
+            },
+            'AL': {
+                planName: 'CollegeCounts 529 Fund',
+                deduction: 5000,
+                notes: 'Alabama taxpayers can deduct 529 contributions on state taxes.'
+            },
+            'NM': {
+                planName: 'The New Mexico Learning Alliance',
+                deduction: Infinity,
+                notes: 'No state tax deduction, but plan offers investment benefits.'
+            },
+            'ND': {
+                planName: 'College SAVE Plan',
+                deduction: 5000,
+                notes: 'North Dakota taxpayers can deduct up to $5,000 ($10,000 for married filing jointly).'
+            },
+            'OH': {
+                planName: 'Ohio 529 Plan',
+                deduction: 4000,
+                notes: 'Ohio taxpayers can deduct up to $4,000 per beneficiary per year.'
+            },
+            'OK': {
+                planName: 'STABLE Oklahoma 529 Savings Plan',
+                deduction: 10000,
+                notes: 'Oklahoma taxpayers can deduct up to $10,000 ($20,000 for married filing jointly).'
+            },
+            //OREGON IS WRONG
+            'OR': {
+                planName: 'Oregon College Savings Plan',
+                deduction: 150,
+                notes: 'Oregon taxpayers can get $150 per year.'
+            },
+            'PA': {
+                planName: 'PA 529 Investment Plan',
+                deduction: 18000,
+                notes: 'Pennsylvania taxpayers can deduct 529 contributions.'
+            },
+            'RI': {
+                planName: 'CollegeBound 529',
+                deduction: 500,
+                notes: 'No state tax deduction, but plan offers investment benefits.'
+            },
+            'SC': {
+                planName: 'Future Scholar 529 Plan',
+                deduction: Infinity,
+                notes: 'South Carolina taxpayers can deduct up to $10,000 ($20,000 for married filing jointly).'
+            },
+            'SD': {
+                planName: 'College Access 529 Plan',
+                deduction: 0,
+                notes: 'No state tax deduction due to no state income tax.'
+            },
+            'TN': {
+                planName: 'TNStars College Savings 529 Program',
+                deduction: 0,
+                notes: 'No state tax deduction due to no state income tax.'
+            },
+            'UT': {
+                planName: 'my529',
+                deduction: 4000,
+                notes: 'Utah taxpayers can deduct up to $4,000 per beneficiary per year.'
+            },
+            'VT': {
+                planName: 'Vermont 529 Plan',
+                deduction: 2500,
+                notes: 'Vermont taxpayers can deduct up to $2,500 per beneficiary per year.'
+            },
+            'VA': {
+                planName: 'Virginia529',
+                deduction: 4000,
+                notes: 'Virginia taxpayers can deduct up to $4,000 per beneficiary per year.'
+            },
+            'WV': {
+                planName: 'SMART 529 West Virginia',
+                deduction: Infinity,
+                notes: 'No state tax deduction, but plan offers investment benefits.'
+            },
+            'IA': {
+                // 529 Plan Information
+                planName: 'College Savings Iowa 529 Plan',
+                deduction: 5500,  // $4,000 per beneficiary
+                notes: 'Iowa taxpayers can deduct up to $4,000 per beneficiary for 529 plan contributions'
+            },
+            'IN': {
+                // 529 Plan Information
+                planName: 'Indiana 529 Direct',
+                deduction: 50000,  // $4,000 per beneficiary
+                notes: 'Indiana taxpayers can deduct 20% of contribution up to $1,500 per beneficiary for 529 plan contributions'
+            },
+            'NC': {
+                planName: 'NC 529 Plan',
+                deduction: 0,
+                notes: 'North Carolina taxpayers cannot deduct'
+            },
+            'KS': {
+                planName: 'KS 529 Plan',
+                deduction: 1000,
+                notes: 'Kansataxpayers can deduct up to $150 credit '
+            },
+            'KY': {
+                planName: 'KY 529 Plan',
+                deduction: 0,
+                notes: 'Kentucky taxpayers cannot deduct'
+            },
+            'LA': {
+                planName: 'LA 529 Plan',
+                deduction: 2400,
+                notes: 'Louisiana taxpayers can deduct up to $2,400 per year for 529 contributions'
+            },
+            'ME': {
+                planName: 'ME 529 Plan',
+                deduction: 1000,
+                notes: 'Maine taxpayers can deduct up to $1,000 per beneficiary per year for 529 contributions'
+            },
+            'MD': {
+                planName: 'MD 529 Plan',
+                deduction: 2500,
+                notes: 'Maryland taxpayers can deduct up to $2,500 per year for 529 contributions'
+            },
+            'MN': {
+                planName: 'MN 529 Plan',
+                deduction: 1500,
+                notes: 'Minnesota taxpayers can deduct up to $1,500 per beneficiary per year for 529 contributions'
+            },
+            'MS': {
+                planName: 'MS 529 Plan',
+                deduction: 10000,
+                notes: 'Mississippi taxpayers can deduct up to $10,000 per year for 529 contributions'
+            },
+            'MT': {
+                planName: 'MT 529 Plan',
+                deduction: 3000,
+                notes: 'Montana taxpayers can deduct up to $3,000 per year for 529 contributions'
+            },
+            'NE': {
+                planName: 'NE 529 Plan',
+                deduction: 10000,
+                notes: 'Nebraska taxpayers can deduct up to $10,000 per year for 529 contributions'
+            },
+            'NV': {
+                planName: 'NV 529 Plan',
+                deduction: 0,
+                notes: 'Nevada taxpayers cannot deduct'
+            },
+            'NH': {
+                planName: 'NH 529 Plan',
+                deduction: 0,
+                notes: 'New Hampshire taxpayers cannot deduct'
+            }
+
+        };
+        const stateOptions = {
+            'AL': 'Alabama',
+            'AK': 'Alaska',
+            'AZ': 'Arizona',
+            'AR': 'Arkansas',
+            'CA': 'California',
+            'CO': 'Colorado',
+            'CT': 'Connecticut',
+            'DE': 'Delaware',
+            'DC': 'District of Columbia',
+            'FL': 'Florida',
+            'GA': 'Georgia',
+            'HI': 'Hawaii',
+            'ID': 'Idaho',
+            'IL': 'Illinois',
+            'IN': 'Indiana',
+            'IA': 'Iowa',
+            'KS': 'Kansas',
+            'KY': 'Kentucky',
+            'LA': 'Louisiana',
+            'ME': 'Maine',
+            'MD': 'Maryland',
+            'MA': 'Massachusetts',
+            'MI': 'Michigan',
+            'MN': 'Minnesota',
+            'MS': 'Mississippi',
+            'MO': 'Missouri',
+            'MT': 'Montana',
+            'NE': 'Nebraska',
+            'NV': 'Nevada',
+            'NH': 'New Hampshire',
+            'NJ': 'New Jersey',
+            'NM': 'New Mexico',
+            'NY': 'New York',
+            'NYC': 'New York City',
+            'NC': 'North Carolina',
+            'ND': 'North Dakota',
+            'OH': 'Ohio',
+            'OK': 'Oklahoma',
+            'OR': 'Oregon',
+            'PA': 'Pennsylvania',
+            'PR': 'Puerto Rico',
+            'RI': 'Rhode Island',
+            'SC': 'South Carolina',
+            'SD': 'South Dakota',
+            'TN': 'Tennessee',
+            'TX': 'Texas',
+            'UT': 'Utah',
+            'VT': 'Vermont',
+            'VA': 'Virginia',
+            'WA': 'Washington',
+            'WV': 'West Virginia',
+            'WI': 'Wisconsin',
+            'WY': 'Wyoming'
+        };
+
+// Helper Functions
+function calculateStateTaxRate(income, state) {
+    if (income < 0) income = 0;
+    
+    const stateTaxInfo = stateTaxDB[state];
+    if (!stateTaxInfo?.brackets?.length) {
+        console.warn(`No tax bracket information found for state: ${state}`);
+        return 0;
+    }
+    
+    let totalTax = 0;
+    let remainingIncome = income;
+    let previousThreshold = 0;
+
+    const sortedBrackets = [...stateTaxInfo.brackets].sort((a, b) => a.threshold - b.threshold);
+    
+    for (let i = 0; i < sortedBrackets.length; i++) {
+        const bracket = sortedBrackets[i];
+        const nextThreshold = bracket.threshold;
+        const taxableInThisBracket = Math.min(
+            remainingIncome,
+            nextThreshold - previousThreshold
+        );
+        
+        if (taxableInThisBracket <= 0) break;
+        
+        totalTax += (taxableInThisBracket * (bracket.rate / 100));
+        remainingIncome -= taxableInThisBracket;
+        previousThreshold = nextThreshold;
+        
+        if (remainingIncome <= 0) break;
+    }
+    
+    return totalTax / income;
+}
+
+// API Functions
+async function fetchUserProfile() {
+    try {
+        const response = await fetch(`${API.profileUrl}/profile`, {
+            headers: {
+                'Authorization': `Bearer ${API.getToken()}`
+            }
+        });
+        if (!response.ok) throw new Error('Failed to fetch profile');
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching profile:', error);
+        return null;
+    }
+}
+
+async function updateProfile(profileData) {
+    try {
+        const response = await fetch('https://jmqfabgm02.execute-api.us-east-2.amazonaws.com/update-profile', {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${API.getToken()}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                currentBenefit: profileData.currentBenefit
+            })
+        });
+        if (!response.ok) {
+            console.warn('Profile update failed:', await response.text());
+            return null;
+        }
+        return await response.json();
+    } catch (error) {
+        console.warn('Profile update failed:', error);
+        return null;
+    }
+}
+
+async function fetchExpenses() {
+    try {
+        const response = await fetch(`${API.expenseUrl}/expenses`, {
+            headers: {
+                'Authorization': `Bearer ${API.getToken()}`
+            }
+        });
+        if (!response.ok) throw new Error('Failed to fetch expenses');
+        const data = await response.json();
+        return data.expenses || [];
+    } catch (error) {
+        console.error('Error fetching expenses:', error);
+        return [];
+    }
+}
+
+// Calculation Functions
+function calculateBenefits(expenses, state, income) {
+    const currentDate = new Date();
+    const startOfYear = new Date(currentDate.getFullYear(), 0, 1);
+    const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+
+    // Get total deposits year to date (D)
+    const totalDeposits = expenses
+        .filter(e => e.category === 'Deposit529' && 
+                     new Date(e.date) >= startOfYear)
+        .reduce((sum, e) => sum + e.amount, 0);
+    
+    // Get total qualified expenses year to date (Q)
+    const totalQualifiedExpenses = expenses
+        .filter(e => (qualifiedCategories.includes(e.category) || e.isQualified) && 
+                     new Date(e.date) >= startOfYear)
+        .reduce((sum, e) => sum + e.amount, 0);
+
+    // Get qualified expenses before current month (M)
+    const qualifiedExpensesBeforeMonth = expenses
+        .filter(e => (qualifiedCategories.includes(e.category) || e.isQualified) && 
+                     new Date(e.date) >= startOfYear &&
+                     new Date(e.date) < firstDayOfMonth)
+        .reduce((sum, e) => sum + e.amount, 0);
+
+    // Get current month's qualified expenses (E)
+    const currentMonthQualifiedExpenses = expenses
+        .filter(e => (qualifiedCategories.includes(e.category) || e.isQualified) && 
+                     new Date(e.date) >= firstDayOfMonth)
+        .reduce((sum, e) => sum + e.amount, 0);
+
+    // Calculate year to date benefit
+    const ytdBenefit = calculateStateBenefit(state, Math.min(totalDeposits, totalQualifiedExpenses), income);
+
+    // Calculate current month benefit
+    let currentMonthBenefit = 0;
+    const remainingDeposits = totalDeposits - qualifiedExpensesBeforeMonth; // K = D - M
+    if (remainingDeposits > 0) {
+        currentMonthBenefit = calculateStateBenefit(state, 
+            Math.min(remainingDeposits, currentMonthQualifiedExpenses), income);
+    }
+
+    return {
+        currentMonthBenefit,
+        ytdBenefit,
+        qualifiedAmount: Math.min(totalDeposits, totalQualifiedExpenses),
+        depositBalance: totalDeposits - totalQualifiedExpenses // L = D - Q (for status display)
+    };
+}
+
+function calculateStateBenefit(state, totalQualifiedExpenses, income) {
+    const stateTaxDeduction = statePersonalExemptionDB[state]?.amount || 0;
+    const stateDeduction = state529DB[state]?.deduction || 0;
+    const taxableStateIncome = income - stateTaxDeduction;
+    const taxRate = calculateStateTaxRate(taxableStateIncome, state);
+
+    const deductibleAmount = Math.min(
+        totalQualifiedExpenses,
+        stateDeduction,
+        taxableStateIncome
+    );
+
+    if (state === 'IN') {
+        const contributionCredit = deductibleAmount * 0.20;
+        return Math.min(contributionCredit, 1500, taxRate * taxableStateIncome);
+    } else if (state === 'OR') {
+        return 180;
+    } else {
+        return Math.min(deductibleAmount * taxRate, taxRate * taxableStateIncome);
+    }
+}
+
+// UI Update Functions
+function updateCategoryDisplay(expenses) {
+    const container = document.getElementById('categoriesContainer');
+    container.innerHTML = '';
+
+    Object.entries(categoryBudgets).forEach(([category, budget]) => {
+        const categoryExpenses = expenses.filter(e => e.category === category);
+        const spent = categoryExpenses.reduce((sum, e) => sum + e.amount, 0);
+        const percentage = (spent / budget * 100).toFixed(1);
+        const isQualified = qualifiedCategories.includes(category);
+
+        container.insertAdjacentHTML('beforeend', `
+            <div class="category">
+                <div class="category-header">
+                    <div class="category-name">
+                        <span>${categoryIcons[category] || '📊'}</span>
+                        <span>${category}</span>
+                        ${isQualified ? '<span class="qualified-badge">✓ Qualified</span>' : ''}
+                    </div>
+                    <div class="category-amounts">$${spent.toFixed(2)} of $${budget}</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-spent" style="width: ${Math.min(percentage, 100)}%; 
+                         background: ${isQualified ? 'var(--success)' : 'var(--primary)'}">
+                    </div>
+                    <div class="progress-label">${percentage}%</div>
+                </div>
+            </div>
+        `);
+    });
+}
+
+function updateBenefitDisplay(benefits, state, accountStatus, expenses) {  
+    document.getElementById('currentMonthBenefit').textContent = 
+        `$${benefits.currentMonthBenefit.toFixed(2)}`;
+    document.getElementById('totalBenefit').textContent = 
+        `$${benefits.ytdBenefit.toFixed(2)}`;
+    
+    const trackingStatusText = accountStatus === 'MANUAL' 
+        ? 'Manual - Track your expenses and manage your 529'
+        : 'Automatic - Renest is ensuring your maximum benefit';
+    
+    document.getElementById('trackingStatus').textContent = trackingStatusText;
+
+    // Calculate total qualified expenses and deposits
+    const totalQualifiedExpenses = expenses
+        ?.filter(e => qualifiedCategories.includes(e.category) || e.isQualified)
+        ?.reduce((sum, e) => sum + e.amount, 0) || 0;
+    
+    const totalDeposits = expenses
+        ?.filter(e => e.category === 'Deposit529')
+        ?.reduce((sum, e) => sum + e.amount, 0) || 0;
+
+    let ratio, statusColor, statusText;
+
+    if (totalQualifiedExpenses === 0) {
+        ratio = 1;
+        statusColor = '#10B981'; // green
+        statusText = 'No qualified expenses yet';
+    } else {
+        ratio = totalDeposits / totalQualifiedExpenses;
+        const neededDeposit = totalQualifiedExpenses - totalDeposits;
+        
+        if (ratio < 1.0) {
+            statusColor = ratio < 0.8 ? '#EF4444' : '#F59E0B'; // red or yellow
+            statusText = `Please deposit $${neededDeposit.toFixed(2)} into your 529`;
+        } else {
+            statusColor = '#10B981'; // green
+            statusText = `Good work, you have $${totalDeposits - totalQualifiedExpenses.toFixed(2)} remaining of qualified spend`;
+        }
+    }
+
+    const accountStatusElement = document.getElementById('accountStatus');
+    accountStatusElement.innerHTML = `
+        <div class="status-text">
+            <div class="status-indicator" style="background-color: ${statusColor}"></div>
+            <span>${statusText}</span>
+        </div>
+    `;
+
+    // Handle ignore toggle state
+    const ignoreCheckbox = document.getElementById('ignoreStatus');
+    const statusContainer = document.getElementById('accountStatusContainer');
+    
+    // Remove existing listener to prevent duplicates
+    const newCheckbox = ignoreCheckbox.cloneNode(true);
+    ignoreCheckbox.parentNode.replaceChild(newCheckbox, ignoreCheckbox);
+    
+    newCheckbox.addEventListener('change', (e) => {
+        if (e.target.checked) {
+            statusContainer.style.opacity = '0';
+            e.target.parentElement.style.opacity = '0.2';
+        } else {
+            statusContainer.style.opacity = '1';
+            e.target.parentElement.style.opacity = '1';
+        }
+    });
+}
+
+// Add new function to handle month-specific category display
+function updateCategoryDisplayForMonth(expenses, selectedDate) {
+    const container = document.getElementById('categoriesContainer');
+    container.innerHTML = '';
+    
+    // console.log('Updating category display with budgets:', currentBudgets);
+
+    if (isEditMode) {
+        displayEditableBudgets();
+        return;
+    }
+
+    // Filter expenses for selected month
+    const monthExpenses = expenses.filter(expense => {
+        const expenseDate = new Date(expense.date);
+        return expenseDate.getMonth() === selectedDate.getMonth() &&
+               expenseDate.getFullYear() === selectedDate.getFullYear();
+    });
+
+    // Display all categories from currentBudgets
+    Object.entries(currentBudgets).forEach(([category, data]) => {
+        const budget = data.amount;
+        const categoryExpenses = monthExpenses.filter(e => e.category === category);
+        const spent = categoryExpenses.reduce((sum, e) => sum + e.amount, 0);
+        const percentage = (spent / budget * 100).toFixed(1);
+        const isQualified = qualifiedCategories.includes(category);
+
+        container.insertAdjacentHTML('beforeend', `
+            <div class="category">
+                <div class="category-header">
+                    <div class="category-name">
+                        <span>${categoryIcons[category] || '📊'}</span>
+                        <span>${category}</span>
+                        ${isQualified ? '<span class="qualified-badge">✓ Qualified</span>' : ''}
+                    </div>
+                    <div class="category-amounts">$${spent.toFixed(2)} of $${budget}</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-spent" style="width: ${Math.min(percentage, 100)}%; 
+                         background: ${isQualified ? 'var(--success)' : 'var(--primary)'}">
+                    </div>
+                    <div class="progress-label">${percentage}%</div>
+                </div>
+            </div>
+        `);
+    });
+}
+
+// Add month navigation functionality
+let currentDisplayMonth = new Date();
+
+function updateMonthDisplay() {
+    const monthYear = currentDisplayMonth.toLocaleDateString('en-US', {
+        month: 'long',
+        year: 'numeric'
+    });
+    document.getElementById('currentMonthDisplay').textContent = monthYear;
+}
+
+let radarChart = null;
+
+function createRadarChart(expenses, selectedDate) {
+    if (!expenses || !Array.isArray(expenses)) {
+        console.error('Invalid expenses data for radar chart');
+        return;
+    }
+
+    const monthExpenses = expenses.filter(expense => {
+        const expenseDate = new Date(expense.date);
+        return expenseDate.getMonth() === selectedDate.getMonth() &&
+               expenseDate.getFullYear() === selectedDate.getFullYear();
+    });
+
+    // Get all categories from currentBudgets except 'Rent'
+    const categories = Object.keys(currentBudgets).filter(category => category !== 'Rent');
+    
+    const spentData = categories.map(category => {
+        const categoryExpenses = monthExpenses.filter(e => e.category === category);
+        return categoryExpenses.reduce((sum, e) => sum + e.amount, 0);
+    });
+    
+    const budgetData = categories.map(category => currentBudgets[category].amount);
+
+    const ctx = document.getElementById('radarChart').getContext('2d');
+    
+    if (radarChart) {
+        radarChart.destroy();
+    }
+
+    radarChart = new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: categories,
+            datasets: [
+                {
+                    label: 'Spent',
+                    data: spentData,
+                    backgroundColor: 'rgba(99, 102, 241, 0.2)',
+                    borderColor: 'rgba(99, 102, 241, 1)',
+                    pointRadius: 0,
+                    pointHoverRadius: 0
+                },
+                {
+                    label: 'Budget',
+                    data: budgetData,
+                    backgroundColor: 'rgba(236, 72, 153, 0.2)',
+                    borderColor: 'rgba(236, 72, 153, 1)',
+                    pointRadius: 0,
+                    pointHoverRadius: 0
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                r: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 200,
+                        callback: value => `$${value}`
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Main Initialization
+async function initializePage() {
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    try {
+        loadingOverlay.style.display = 'flex';
+        
+        const token = API.getToken();
+        if (!token) {
+            window.location.href = 'signin529.html';
+            return;
+        }
+
+        // Fetch all initial data in parallel
+        const [userProfile, expenses, budgets] = await Promise.all([
+            fetchUserProfile(),
+            fetchExpenses(),
+            loadCurrentBudgets()
+        ]);
+
+        if (!userProfile) throw new Error('Failed to load user profile');
+
+        // Calculate benefits
+        const benefits = calculateBenefits(expenses, userProfile.state, userProfile.income);
+
+        // Only update profile if benefits have changed
+        if (benefits.ytdBenefit !== userProfile.currentBenefit) {
+            try {
+                await updateProfile({
+                    currentBenefit: benefits.ytdBenefit
+                });
+            } catch (error) {
+                console.warn('Failed to update profile with new benefits:', error);
+            }
+        }
+
+        // Update UI with expenses parameter
+        updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
+        updateBenefitDisplay(benefits, userProfile.state, userProfile.accountStatus, expenses);
+        updateMonthDisplay();
+
+        initializeViewToggle();
+        
+        // Update the month navigation to handle both views
+        document.getElementById('prevMonth').addEventListener('click', () => {
+            currentDisplayMonth = new Date(currentDisplayMonth.getFullYear(), 
+                currentDisplayMonth.getMonth() - 1);
+            updateMonthDisplay();
+            updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
+            if (chartContainer.style.display !== 'none') {
+                createRadarChart(expenses, currentDisplayMonth);
+            }
+        });
+
+        document.getElementById('nextMonth').addEventListener('click', () => {
+            const now = new Date();
+            if (currentDisplayMonth < now) {
+                currentDisplayMonth = new Date(currentDisplayMonth.getFullYear(), 
+                    currentDisplayMonth.getMonth() + 1);
+                updateMonthDisplay();
+                updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
+                if (chartContainer.style.display !== 'none') {
+                    createRadarChart(expenses, currentDisplayMonth);
+                }
+            }
+        });
+
+        // Add these new initializations
+        const editBudgetsBtn = document.getElementById('editBudgets');
+        const editStipendBtn = document.getElementById('editStipend');
+        
+        editBudgetsBtn.addEventListener('click', toggleEditMode);
+        editStipendBtn.addEventListener('click', async () => {
+            const newAmount = prompt('Enter new monthly stipend amount:', currentStipend);
+            if (newAmount && !isNaN(newAmount)) {
+                await updateStipend(Number(newAmount));
+            }
+        });
+
+        // Load initial budgets
+        await loadCurrentBudgets();
+        
+    } catch (error) {
+        console.error('Error initializing page:', error);
+        alert('Error loading data. Please try again.');
+    } finally {
+        loadingOverlay.style.display = 'none';
+    }
+}
+
+// Event Listeners
+document.getElementById('signOutLink').addEventListener('click', (e) => {
+    e.preventDefault();
+    localStorage.removeItem('authToken');
+    window.location.href = 'signin529.html';
+});
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', async () => {
+    await initializePage();
+    // Remove the redundant loadCurrentBudgets call
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const menuButton = document.querySelector('.menu-button');
+    const navLinks = document.querySelector('.nav-links');
+
+    menuButton.addEventListener('click', () => {
+        navLinks.classList.toggle('hidden');
+    });
+});
+
+// Add near the top of your existing script section
+const budgetManagerAPI = 'https://vpomsl3zd7.execute-api.us-east-2.amazonaws.com';
+let isEditMode = false;
+let currentStipend = 0;
+let currentBudgets = {};
+
+// Add this constant at the top of your script to maintain category order
+const orderedCategories = [
+    'Rent',
+    'Groceries',
+    'Utilities',
+    'Transportation',
+    'Healthcare',
+    'Education',
+    'Entertainment',
+    'Shopping',
+    'Other'
+];
+
+// Add these functions to your existing script
+async function toggleEditMode() {
+    isEditMode = !isEditMode;
+    const editButton = document.getElementById('editBudgets');
+    const viewToggle = document.getElementById('viewToggle');
+    
+    if (isEditMode) {
+        // Store current budgets for cancel functionality
+        window.previousBudgets = JSON.stringify(currentBudgets);
+        
+        editButton.classList.add('editing');
+        editButton.querySelector('.toggle-text').textContent = 'Save';
+        
+        // Add cancel button
+        const cancelButton = document.createElement('button');
+        cancelButton.id = 'cancelEdit';
+        cancelButton.textContent = 'Cancel';
+        cancelButton.onclick = cancelEditMode;
+        editButton.parentNode.insertBefore(cancelButton, editButton.nextSibling);
+        
+        viewToggle.style.display = 'none';
+        await loadCurrentBudgets();
+        displayEditableBudgets();
+    } else {
+        editButton.classList.remove('editing');
+        editButton.querySelector('.toggle-text').textContent = 'Edit Budgets';
+        
+        // Remove cancel button
+        const cancelButton = document.getElementById('cancelEdit');
+        if (cancelButton) cancelButton.remove();
+        
+        viewToggle.style.display = 'block';
+        await saveBudgetChanges();
+        const expenses = await fetchExpenses();
+        updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
+    }
+}
+
+// Update default budget configuration
+const defaultBudgets = {
+    'Rent': {
+        amount: 0,  // Will be set from localStorage
+        id: 'cat_rent'
+    },
+    'Groceries': {
+        amount: 325,
+        id: 'cat_groceries'
+    },
+    'Utilities': {
+        amount: 250,
+        id: 'cat_utilities'
+    },
+    'Technology': {
+        amount: 200,
+        id: 'cat_technology'
+    },
+    'Transportation': {
+        amount: 200,
+        id: 'cat_transportation'
+    },
+    'Restaurants': {
+        amount: 250,
+        id: 'cat_restaurants'
+    }
+};
+
+// Modify loadCurrentBudgets to properly handle all categories
+async function loadCurrentBudgets() {
+    try {
+        // console.log('Starting loadCurrentBudgets...');
+        const response = await fetch(`${budgetManagerAPI}/budgets`, {
+            headers: {
+                'Authorization': `Bearer ${API.getToken()}`
+            }
+        });
+        
+        if (!response.ok) throw new Error('Failed to fetch budgets');
+        
+        const data = await response.json();
+        // console.log('Budget API Response:', data);
+        
+        // Initialize with default budgets
+        // First check if we have categories from the API
+        if (data.categories && data.categories.length > 0) {
+            // If we have API categories, use those
+            currentBudgets = {};
+            data.categories.forEach(apiCategory => {
+                currentBudgets[apiCategory.categoryName] = {
+                    amount: Number(apiCategory.budgetAmount),
+                    id: apiCategory.categoryId
+                };
+            });
+        } else {
+            // If no API categories exist, initialize with default budgets
+            currentBudgets = { ...defaultBudgets };
+            
+            // Set rent from localStorage
+            const monthlyRent = localStorage.getItem('monthlyRent');
+            if (monthlyRent) {
+                currentBudgets['Rent'].amount = Number(monthlyRent);
+            }
+        }
+        
+        // console.log('Initialized currentBudgets:', currentBudgets);
+        
+        // Set stipend from API
+        currentStipend = Number(data.monthlyStipend) || 0;
+        if (currentStipend === 0) {
+            const income = localStorage.getItem('income');
+            if (income) {
+                currentStipend = Math.round(Number(income) / 12);
+            }
+        }
+        
+        // Update displays
+        if (isEditMode) {
+            displayEditableBudgets();
+        } else {
+            const expenses = await fetchExpenses();
+            updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
+        }
+        
+        updateStipendDisplay();
+        updateBudgetStatus();
+    } catch (error) {
+        console.error('Error in loadCurrentBudgets:', error);
+    }
+}
+
+function updateBudgetStatus() {
+    const totalBudgeted = Object.values(currentBudgets)
+        .reduce((sum, cat) => sum + cat.amount, 0);
+    const remaining = currentStipend - totalBudgeted;
+    
+    const statusElement = document.getElementById('budgetStatus');
+    if (statusElement) {
+        statusElement.textContent = remaining >= 0 
+            ? `Remaining: $${remaining.toFixed(2)}` 
+            : `Over budget by: $${Math.abs(remaining).toFixed(2)}`;
+        statusElement.className = `budget-status ${remaining >= 0 ? 'positive' : 'negative'}`;
+    }
+}
+
+function updateStipendDisplay() {
+    // console.log('Updating stipend display with value:', currentStipend);
+    document.getElementById('stipendAmount').textContent = `$${currentStipend.toFixed(2)}`;
+}
+
+// Modify removeCategory to just update local state
+// First, add the deleteCategory API function
+async function deleteCategory(categoryId) {
+    try {
+        const response = await fetch(`${budgetManagerAPI}/budgets`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${API.getToken()}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                categoryId: categoryId,
+                date: `${currentDisplayMonth.getFullYear()}-${String(currentDisplayMonth.getMonth() + 1).padStart(2, '0')}`
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to delete category');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error deleting category:', error);
+        throw error;
+    }
+}
+
+// Then update the existing removeCategory function
+async function removeCategory(category) {
+    if (!confirm(`Are you sure you want to remove the ${category} category?`)) {
+        return;
+    }
+    
+    try {
+        // Call the API to delete the category
+        await deleteCategory(currentBudgets[category].id);
+        
+        // Remove from local state
+        delete currentBudgets[category];
+        
+        // Update the UI
+        displayEditableBudgets();
+        updateBudgetStatus();
+    } catch (error) {
+        alert('Failed to delete category. Please try again.');
+        console.error('Error in removeCategory:', error);
+    }
+}
+
+// Modify saveBudgetChanges to update all categories
+async function saveBudgetChanges() {
+    try {
+        const today = new Date();
+        const monthKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+
+        // Send current state of all categories
+        const categories = Object.entries(currentBudgets).map(([name, data]) => ({
+            categoryId: data.id,
+            categoryName: name,
+            budgetAmount: data.amount
+        }));
+
+        const response = await fetch(`${budgetManagerAPI}/budgets/month`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${API.getToken()}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                date: monthKey,
+                monthlyStipend: currentStipend,
+                categories
+            })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to save budget changes');
+        }
+        
+        // Refresh the display
+        const expenses = await fetchExpenses();
+        updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
+    } catch (error) {
+        console.error('Error saving budget changes:', error);
+        alert('Failed to save budget changes. Please try again.');
+    }
+}
+
+// Modify displayEditableBudgets to show all categories
+function displayEditableBudgets() {
+    const container = document.getElementById('categoriesContainer');
+    container.innerHTML = '';
+    
+    // Calculate total budgeted amount
+    const totalBudgeted = Object.values(currentBudgets)
+        .reduce((sum, cat) => sum + cat.amount, 0);
+    const remaining = currentStipend - totalBudgeted;
+    
+    // Add stipend section with remaining budget
+    container.insertAdjacentHTML('beforeend', `
+        <div class="stipend-section">
+            <div class="stipend-header">
+                <h3>Monthly Stipend</h3>
+                <div class="stipend-amount">
+                    <span>$</span>
+                    <span id="stipendAmount">${currentStipend.toFixed(2)}</span>
+                    <button id="editStipend" onclick="editStipendAmount()">Edit</button>
+                </div>
+            </div>
+            <div id="budgetStatus" class="budget-status ${remaining >= 0 ? 'positive' : 'negative'}">
+                ${remaining >= 0 ? 
+                    `Remaining: $${remaining.toFixed(2)}` : 
+                    `Over budget by: $${Math.abs(remaining).toFixed(2)}`}
+            </div>
+        </div>
+    `);
+    
+    // Display all categories from currentBudgets
+    Object.entries(currentBudgets).forEach(([category, data]) => {
+        container.insertAdjacentHTML('beforeend', `
+            <div class="category" data-category="${category}">
+                <div class="category-header">
+                    <div class="category-name">
+                        <span>${categoryIcons[category] || '📊'}</span>
+                        <input type="text" class="category-name-input" 
+                               value="${category}" 
+                               ${category === 'Rent' ? 'readonly' : ''}
+                               onchange="updateCategoryName('${category}', this.value)">
+                        ${qualifiedCategories.includes(category) ? 
+                            '<span class="qualified-badge">✓ Qualified</span>' : ''}
+                    </div>
+                    <div class="category-amounts">
+                        <span>$</span>
+                        <input type="number" class="budget-input" 
+                               value="${data.amount}" 
+                               onchange="updateBudget('${category}', this.value)">
+                        ${category !== 'Rent' ? 
+                            `<button class="delete-category" onclick="removeCategory('${category}')">×</button>` : 
+                            ''}
+                    </div>
+                </div>
+            </div>
+        `);
+    });
+    
+    // Add button for new categories
+    container.insertAdjacentHTML('beforeend', `
+        <button class="add-category-button" onclick="addNewCategory()">
+            <span>+</span>
+            Add New Category
+        </button>
+    `);
+    
+    updateBudgetStatus();
+}
+
+function updateBudget(category, amount) {
+    const newAmount = Number(amount);
+    if (isNaN(newAmount) || newAmount < 0) {
+        alert('Please enter a valid amount');
+        return;
+    }
+    
+    currentBudgets[category].amount = newAmount;
+    updateBudgetStatus();
+}
+
+function updateCategoryName(oldName, newName) {
+    if (newName === oldName) return;
+    
+    if (currentBudgets[newName]) {
+        alert('A category with this name already exists');
+        return;
+    }
+    
+    currentBudgets[newName] = currentBudgets[oldName];
+    delete currentBudgets[oldName];
+    displayEditableBudgets();
+}
+
+async function addNewCategory() {
+    const result = await Swal.fire({
+        title: 'Add New Category',
+        html: `
+            <div class="new-category-modal">
+                <input id="categoryName" class="swal2-input" placeholder="Category Name">
+                <input id="categoryBudget" type="number" class="swal2-input" placeholder="Budget Amount">
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Add Category',
+        confirmButtonColor: 'var(--primary)',
+        cancelButtonColor: 'var(--warning)',
+        preConfirm: () => {
+            const name = document.getElementById('categoryName').value;
+            const amount = document.getElementById('categoryBudget').value;
+            if (!name || !amount) {
+                Swal.showValidationMessage('Please fill in all fields');
+                return false;
+            }
+            return { name, amount: Number(amount) };
+        }
+    });
+
+    if (result.isConfirmed) {
+        const { name, amount } = result.value;
+        currentBudgets[name] = {
+            amount: amount,
+            id: `cat_${name.toLowerCase().replace(/\s+/g, '')}`
+        };
+        displayEditableBudgets();
+        updateBudgetStatus();
+    }
+}
+
+// Add helper function to edit stipend
+async function editStipendAmount() {
+    const result = await Swal.fire({
+        title: 'Update Monthly Stipend',
+        html: `
+            <div class="new-category-modal">
+                <div class="stipend-input-container">
+                    <span class="currency-symbol">$</span>
+                    <input 
+                        id="swal-stipendAmount" 
+                        type="number" 
+                        class="swal2-input" 
+                        value="${currentStipend}"
+                        min="0"
+                        step="100"
+                    >
+                </div>
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Save',
+        confirmButtonColor: 'var(--primary)',
+        cancelButtonColor: 'var(--warning)',
+        customClass: {
+            container: 'custom-swal-container',
+            popup: 'custom-swal-popup',
+            title: 'custom-swal-title',
+            input: 'custom-swal-input'
+        },
+        preConfirm: () => {
+            const amount = document.getElementById('swal-stipendAmount').value;
+            if (!amount || isNaN(amount) || Number(amount) < 0) {
+                Swal.showValidationMessage('Please enter a valid amount');
+                return false;
+            }
+            return Number(amount);
+        }
+    });
+
+    if (result.isConfirmed) {
+        await updateStipend(result.value);
+    }
+}
+
+async function updateStipend(newAmount) {
+    // console.log('Starting updateStipend with amount:', newAmount);
+    try {
+        const response = await fetch(`${budgetManagerAPI}/budgets/stipend`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${API.getToken()}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                amount: Number(newAmount)
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to update stipend');
+        }
+
+        const data = await response.json();
+        // console.log('Stipend updated:', data);
+        
+        currentStipend = Number(newAmount);
+        updateStipendDisplay();
+        updateBudgetStatus();
+        
+        // Refresh budgets to verify new stipend
+        await loadCurrentBudgets();
+    } catch (error) {
+        console.error('Error in updateStipend:', error);
+        alert('Failed to update stipend. Please try again.');
+    }
+}
+
+// Update the view toggle event listener
+function initializeViewToggle() {
+    const viewToggle = document.getElementById('viewToggle');
+    const categoriesContainer = document.getElementById('categoriesContainer');
+    const chartContainer = document.getElementById('chartContainer');
+    const editButton = document.getElementById('editBudgets');
+    
+    viewToggle.addEventListener('click', async () => {
+        // Don't allow switching views during edit mode
+        if (isEditMode) {
+            return;
+        }
+
+        const isChartView = categoriesContainer.style.display === 'none';
+        
+        if (isChartView) {
+            // Switch to list view
+            chartContainer.style.display = 'none';
+            categoriesContainer.style.display = 'block';
+            editButton.style.display = 'block';
+        } else {
+            // Switch to chart view
+            chartContainer.style.display = 'block';
+            categoriesContainer.style.display = 'none';
+            editButton.style.display = 'none';
+            
+            // Fetch expenses and create chart
+            try {
+                const expenses = await fetchExpenses();
+                createRadarChart(expenses, currentDisplayMonth);
+            } catch (error) {
+                console.error('Error creating radar chart:', error);
+                alert('Error loading chart data. Please try again.');
+            }
+        }
+
+        // Update toggle button text based on current view
+        viewToggle.querySelector('.toggle-text').textContent = 
+            isChartView ? 'Switch to Chart' : 'Switch to List';
+    });
+}
+
+// Add cancelEditMode function
+async function cancelEditMode() {
+    if (window.previousBudgets) {
+        currentBudgets = JSON.parse(window.previousBudgets);
+        delete window.previousBudgets;
+    }
+    
+    isEditMode = false;
+    const editButton = document.getElementById('editBudgets');
+    const viewToggle = document.getElementById('viewToggle');
+    const cancelButton = document.getElementById('cancelEdit');
+    
+    editButton.classList.remove('editing');
+    editButton.querySelector('.toggle-text').textContent = 'Edit Budgets';
+    if (cancelButton) cancelButton.remove();
+    
+    viewToggle.style.display = 'block';
+    
+    const expenses = await fetchExpenses();
+    updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
+}
+</script>
+</html>

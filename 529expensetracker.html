@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>529 Expense Tracker - Renest</title>
+    <title>Expense Tracker - Renest</title>
     <style>
         :root {
             --primary: #6366F1;
@@ -86,7 +86,7 @@
         }
 
         .automation-button {
-            background-color: var(--primary);
+            background: linear-gradient(45deg, var(--primary) 0%, var(--primary) 60%, var(--accent) 100%) !important;
             color: white;
             padding: 0.75rem 1.5rem;
             border: none;
@@ -199,12 +199,32 @@
             background-image: linear-gradient(45deg, var(--primary) 0%, var(--primary) 100%);
             background-size: 200% 200%;
             background-position: 0% 0%;
+            position: relative;
         }
 
         .submit-button:hover {
             background-image: linear-gradient(45deg, var(--primary) 0%, var(--primary) 60%, var(--accent) 100%) !important;
             background-position: 100% 100% !important;
             transform: translateY(-2px);
+        }
+
+        .submit-button span {
+            transition: opacity 0.2s;
+            display: inline-block;
+        }
+
+        .submit-button.success::before {
+            content: "✓";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            animation: check-appear 0.3s ease-out forwards;
+        }
+
+        .submit-button.success span {
+            opacity: 0;
         }
 
         .form-group .submit-button {
@@ -388,13 +408,17 @@
             gap: 2rem;
         }
 
-        .footer-brand {
+        .footer-logo {
             font-size: 1.5rem;
             font-weight: 800;
+            color: var(--primary);
             margin-bottom: 1rem;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        }
+
+        .copyright {
+            color: var(--text-dark);
+            opacity: 0.7;
+            font-size: 0.9rem;
         }
 
         .footer-links h3 {
@@ -444,6 +468,14 @@
             .automation-info h3,
             .automation-info p {
                 text-align: center;
+            }
+
+            .automation-controls {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+                width: 100%;
             }
 
             .automation-button {
@@ -637,35 +669,256 @@
             background-position: center;
             background-size: contain;
         }
+        .delete-btn {
+            background-color: #EF4444;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            margin-left: 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .delete-btn:hover {
+            background-color: #DC2626;
+        }
+
+        .tooltip {
+            display: inline-block;
+            margin-left: 4px;
+            width: 12px;
+            height: 12px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236B7280'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            cursor: help;
+            position: relative;
+        }
+
+        .tooltip::after {
+            content: attr(data-tooltip);
+            display: none;
+            position: absolute;
+            background: #1F2937;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            width: 300px;
+            max-width: 400px;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            bottom: 100%;
+            right: 0;
+            margin-bottom: 8px;
+            transform-origin: bottom right;
+            line-height: 1.4;
+        }
+
+        .tooltip:hover::after {
+            display: block;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* Add these new styles */
+        .qualified-category {
+            color: #10B981;
+            font-weight: 500;
+        }
+
+        .qualified-category::after {
+            content: "";
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            margin-left: 8px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2310B981' d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            vertical-align: middle;
+        }
+
+        select option.qualified-category {
+            background-color: #F0FDF4;
+        }
+
+        .outline-button {
+            background-color: transparent;
+            color: var(--primary);
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .outline-button:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Add these new styles for the delete confirmation modal */
+        .delete-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .delete-modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .delete-modal-title {
+            color: var(--text-dark);
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .delete-modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+
+        .delete-confirm-btn {
+            background: #EF4444;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .delete-confirm-btn:hover {
+            background: #DC2626;
+            transform: translateY(-2px);
+        }
+
+        .delete-cancel-btn {
+            background: #E5E7EB;
+            color: var(--text-dark);
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .delete-cancel-btn:hover {
+            background: #D1D5DB;
+            transform: translateY(-2px);
+        }
+
+        @keyframes check-appear {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .submit-button.success::before {
+            content: "✓";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            animation: check-appear 0.3s ease-out forwards;
+        }
+
+        .submit-button.success span {
+            opacity: 0;
+        }
     </style>
 </head>
 <body>
     <nav class="navbar">
         <a href="https://renesthorizons.com" class="logo">RENEST</a>
         <div class="nav-links">
-            <a href="#" class="active">Sign Out</a>
-            <a href="dashboard.html">Dashboard</a>
+            <a href="#" id="signOutLink" class="active">Sign Out</a>
+            <!-- <a href="dashboard.html">Dashboard</a> -->
             <a href="529expensetracker.html">Expense Tracker</a>
-            <a href="#" class="talk-button">Optimizer</a>
+            <a href="dashboard.html" class="talk-button">Dashboard</a>
         </div>
         <button class="menu-button" aria-label="Toggle menu" aria-expanded="false">☰</button>
     </nav>
 
     <main class="main-content">
         <div class="tracker-header">
-            <h1>529 Expense Tracker</h1>
+            <h1>Expense Tracker</h1>
+            <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 1rem;">
+                <button onclick="window.location.href='trackersummary.html'" class="automation-button">
+                    Tracker Summary
+                </button>
+                <button onclick="showHowToModal()" class="outline-button">
+                    How to Use Tracker
+                </button>
+            </div>
             <div class="automation-section">
                 <div class="automation-info">
                     <h3>Automation</h3>
-                    <p>Enable automation to let Renest handle your 529 account transactions automatically.</p>
+                    <p>Renest can track your expenses and handle your 529 account transactions.</p>
                 </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="automation-toggle">
-                    <span class="toggle-slider">
-                        <span class="toggle-text">OFF</span>
-                        <span class="toggle-text">ON</span>
-                    </span>
-                </label>
+                <div class="automation-controls">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="automation-toggle">
+                        <span class="toggle-slider">
+                            <span class="toggle-text">OFF</span>
+                            <span class="toggle-text">ON</span>
+                        </span>
+                    </label>
+                </div>
+                
             </div>
         </div>
 
@@ -680,11 +933,10 @@
             <div id="rent-tab" class="tab-content">
                 <div class="tracker-card">
                     <h2 class="section-title">Rent Information</h2>
+                    <p style="margin-bottom: 1.5rem; color: #6B7280;">
+                        Rent is a qualified expense if it is tracked and validated. Make sure to upload your lease and record your transactions to ensure proper documentation for your 529 withdrawals.
+                    </p>
                     <form id="rent-form" class="form-grid">
-                        <div class="form-group">
-                            <label>Monthly Rent Amount</label>
-                            <input type="number" class="form-control" id="rent-amount" placeholder="Enter monthly rent amount" required>
-                        </div>
                         <div class="form-group">
                             <label>Lease Upload</label>
                             <div class="file-upload">
@@ -708,8 +960,14 @@
                             <label>Payment Amount</label>
                             <input type="number" class="form-control" placeholder="Enter payment amount" required>
                         </div>
+                        <div class="form-group">
+                            <label>Note (optional)</label>
+                            <input type="text" class="form-control" placeholder="e.g., Zelle to landlord Eddie, venmo to roommate Sam">
+                        </div>
                         <div class="form-group" style="grid-column: span 2;">
-                            <button type="submit" class="submit-button">Record Rent Payment</button>
+                            <button type="submit" class="submit-button">
+                                <span>Record Rent Payment</span>
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -718,6 +976,9 @@
             <div id="expenses-tab" class="tab-content" style="display: none;">
                 <div class="tracker-card">
                     <h2 class="section-title">Add New Expense</h2>
+                    <p style="margin-bottom: 1.5rem; color: #6B7280;">
+                        You can use this tracker to record all your expenses or just the qualified ones. Certain categories like groceries, Wi-Fi, and required supplies are automatically marked as qualified expenses. You can manually mark other expenses as qualified if they meet 529 requirements.
+                    </p>
                     <form id="expense-form" class="form-grid">
                         <div class="form-group">
                             <label>Date</label>
@@ -728,15 +989,15 @@
                             <div class="select-container">
                                 <select class="form-control" id="expense-category" required onchange="updateQualifiedCheckbox()">
                                     <option value="">Select category</option>
-                                    <option value="food" class="qualified-category">Groceries</option>
-                                    <option value="wifi" class="qualified-category">Wi-Fi</option>
-                                    <option value="supplies" class="qualified-category">Required Supplies</option>
-                                    <option value="utilities" class="qualified-category">Utilities</option>
-                                    <option value="restaurants">Restaurants</option>
-                                    <option value="transportation">Transportation</option>
-                                    <option value="technology">Technology</option>
-                                    <option value="other">Other</option>
-                                    <option value="custom">Custom</option>
+                                    <option value="Groceries" class="qualified-category">Groceries ✓</option>
+                                    <option value="WiFi" class="qualified-category">Wi-Fi ✓</option>
+                                    <option value="Supplies" class="qualified-category">Required Supplies ✓</option>
+                                    <option value="Utilities" class="qualified-category">Utilities ✓</option>
+                                    <option value="Restaurants">Restaurants</option>
+                                    <option value="Transportation">Transportation</option>
+                                    <option value="Technology">Technology</option>
+                                    <option value="Other">Other</option>
+                                    <option value="Custom">Custom</option>
                                 </select>
                                 <input type="text" id="custom-category" class="form-control" placeholder="Enter custom category" style="display: none;" oninput="updateQualifiedCheckbox();">
                             </div>
@@ -747,11 +1008,11 @@
                         </div>
                         <div class="form-group">
                             <label>Note (optional)</label>
-                            <input type="text" class="form-control" placeholder="Enter note">
+                            <input type="text" class="form-control" placeholder="e.g., Trader Joe's, laptop for research, etc.">
                         </div>
                         <div class="form-group">
                             <label class="custom-checkbox">
-                                <input type="checkbox" id="qualified-expense" checked>
+                                <input type="checkbox" id="qualified-expense">
                                 <span class="checkmark"></span>
                                 Qualified Expense
                             </label>
@@ -766,7 +1027,9 @@
                             </div>
                         </div>
                         <div class="form-group" style="grid-column: span 2;">
-                            <button type="submit" class="submit-button">Add Expense</button>
+                            <button type="submit" class="submit-button">
+                                <span>Add Expense</span>
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -782,13 +1045,188 @@
             <div id="account-tab" class="tab-content" style="display: none;">
                 <div class="tracker-card">
                     <h2 class="section-title">529 Account Management</h2>
-                    <div class="form-group">
-                        <label>Total 529 Deposits</label>
-                        <input type="number" class="form-control" id="total-deposits" placeholder="Enter total deposits" onchange="updateSummary()">
+                    <p style="margin-bottom: 1.5rem; color: #6B7280;">
+                        Track your 529 plan activity and view projected qualified expense needs.
+                    </p>
+                    
+                    <!-- Transaction Form -->
+                    <form id="529-transaction-form" class="form-grid">
+                        <div class="form-group">
+                            <label>Transaction Type</label>
+                            <div class="select-container">
+                                <select class="form-control" required id="529-transaction-type">
+                                    <option value="Deposit529">Deposit</option>
+                                    <option value="Withdrawal529">Withdrawal</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Amount</label>
+                            <input type="number" class="form-control" required id="529-transaction-amount">
+                        </div>
+                        <div class="form-group">
+                            <label>Date</label>
+                            <input type="date" class="form-control" required id="529-transaction-date">
+                        </div>
+                        <div class="form-group">
+                            <label>Notes (optional)</label>
+                            <input type="text" class="form-control" id="529-transaction-notes" placeholder="e.g., Initial deposit, Monthly withdrawal">
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <button type="submit" class="submit-button">
+                                <span>Record Transaction</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Projections Card -->
+                <div class="tracker-card">
+                    <h2 class="section-title">Projections & Planning</h2>
+                    <p style="margin-bottom: 1.5rem; color: #6B7280;">
+                        Track your qualified expenses and plan your 529 contributions to maximize your tax benefits. These projections are based on your current spending patterns and monthly rent.
+                    </p>
+                    <div class="summary-card" style="margin-top: 0;">
+                        <div class="summary-grid">
+                            <div class="summary-item">
+                                <div class="summary-label">
+                                    Total Qualified Expenses (YTD)
+                                    <span class="tooltip" data-tooltip="How much you've spent on qualified expenses this year."></span>
+                                </div>
+                                <div class="summary-value" id="ytd-qualified-expenses">$0.00</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-label">
+                                    Total 529 Deposits (YTD)
+                                    <span class="tooltip" data-tooltip="The total amount you've contributed to your 529 plan this year."></span>
+                                </div>
+                                <div class="summary-value" id="ytd-529-deposits">$0.00</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-label">
+                                    Monthly Qualified Expenses
+                                    <span class="tooltip" data-tooltip="Your average monthly qualified expenses, including rent and other eligible costs."></span>
+                                </div>
+                                <div class="summary-value" id="projected-monthly-expenses">$0.00</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-label">
+                                    Projected Year-End Total
+                                    <span class="tooltip" data-tooltip="Estimated total qualified expenses for the entire year, based on your current spending and monthly rent."></span>
+                                </div>
+                                <div class="summary-value" id="projected-year-end">$0.00</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Total 529 Withdrawals</label>
-                        <input type="number" class="form-control" id="total-withdrawals" placeholder="Enter total withdrawals" onchange="updateSummary()">
+
+                    <!-- Funding Progress -->
+                    <div style="margin-top: 2rem;">
+                        <h3 style="color: var(--text-dark); margin-bottom: 1rem;">529 Funding Progress</h3>
+                        <p style="margin-bottom: 1.5rem; color: #6B7280;">
+                            To maximize your tax benefits, you should aim to contribute enough to your 529 plan to cover your projected qualified expenses. The recommendations below will help you stay on track.
+                        </p>
+                        <div style="background: #f3f4f6; border-radius: 8px; padding: 1.5rem;">
+                            <div style="margin-bottom: 1rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                    <div style="display: flex; align-items: center;">
+                                        <span style="font-weight: 500; color: var(--text-dark);">Recommended Total Remaining 529 Funding</span>
+                                        <span class="tooltip" data-tooltip="The total amount you should contribute to your 529 plan this year to cover your projected qualified expenses."></span>
+                                    </div>
+                                    <span id="recommended-funding" style="color: var(--primary); font-weight: 600;">$0.00</span>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                    <div style="display: flex; align-items: center;">
+                                        <span style="font-weight: 500; color: var(--text-dark);">Suggested Monthly Deposit</span>
+                                        <span class="tooltip" data-tooltip="The monthly contribution needed to reach your recommended funding amount by year-end. This adjusts based on your current deposits."></span>
+                                    </div>
+                                    <span id="suggested-monthly-deposit" style="color: var(--primary); font-weight: 600;">$0.00</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Progress Bar -->
+                            <div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <div style="display: flex; align-items: center;">
+                                        <span style="font-weight: 500; color: var(--text-dark);">Current Progress</span>
+                                        <span class="tooltip" data-tooltip="Shows how much you've contributed to your 529 plan compared to your recommended funding amount for the year."></span>
+                                    </div>
+                                </div>
+                                <div style="background: #e5e7eb; border-radius: 9999px; height: 24px; position: relative; overflow: hidden;">
+                                    <div id="funding-progress-bar" style="background: var(--primary); height: 100%; width: 0%; transition: width 0.5s ease-in-out;"></div>
+                                    <div id="funding-progress-text" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">
+                                        $0/$0
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Add after the Funding Progress section -->
+                    <div style="margin-top: 2rem; background: #EEF2FF; border-left: 4px solid var(--primary); padding: 1.5rem; border-radius: 0 8px 8px 0;">
+                        <div style="display: flex; align-items: start; gap: 1rem;">
+                            <div style="color: var(--primary); font-weight: 600;">💡 Tip:</div>
+                            <div>
+                                <p style="margin-bottom: 1rem; line-height: 1.5;">
+                                    You need to deposit money into a 529 before you can spend it on qualified expenses. However, you can withdraw it at any time. This gives you two options:
+                                    <br><br>
+                                    1. Deposit and withdraw immediately
+                                    <br>
+                                    2. Deposit and let the interest accumulate tax-free before withdrawing
+                                </p>
+                                <button onclick="showExampleModal()" class="submit-button" style="margin-top: 0.5rem;">See Examples</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Example Modal -->
+                <div id="example-modal" class="modal" style="display: none;">
+                    <div class="modal-content" style="max-width: 700px;">
+                        <h2 style="color: var(--text-dark); margin-bottom: 1.5rem;">529 Usage Examples</h2>
+                        
+                        <div style="margin-bottom: 2rem;">
+                            <h3 style="color: var(--primary); margin-bottom: 1rem;">Scenario 1: Lump Sum Deposit</h3>
+                            <div style="background: #F9FAFB; padding: 1.5rem; border-radius: 8px;">
+                                <p style="line-height: 1.6; margin-bottom: 1rem;">
+                                    Sarah knows she'll have $10,000+ in qualified expenses this year ($850/month in rent). She has $14,000 in savings.
+                                </p>
+                                <p style="line-height: 1.6; margin-bottom: 1rem;">
+                                    <strong>Her Strategy:</strong>
+                                    <br>• Deposits $10,000 into her 529 account in January hitting her state's maximum savings (Illinois: $495)
+                                    <br>• She could withdraw it right away but instead she lets the money earn interest tax-free throughout the year
+                                    <br>• Withdraws the money as needed for monthly expenses
+                                    <br>• Benefits from both tax deductions and tax-free earnings
+                                </p>
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 2rem;">
+                            <h3 style="color: var(--primary); margin-bottom: 1rem;">Scenario 2: Monthly Deposits</h3>
+                            <div style="background: #F9FAFB; padding: 1.5rem; border-radius: 8px;">
+                                <p style="line-height: 1.6; margin-bottom: 1rem;">
+                                    Mike also has $10,000+ in yearly qualified expenses but prefers a monthly approach.
+                                </p>
+                                <p style="line-height: 1.6; margin-bottom: 1rem;">
+                                    <strong>His Strategy:</strong>
+                                    <br>• Deposits $830 to his 529 account on the 1st of each month
+                                    <br>• Pays rent on the 2nd of each month
+                                    <br>• Withdraws $830 from his 529 account
+                                    <br>• By the end of the year he has hit the maximum savings for his state (Illinois: $495)
+                                </p>
+                            </div>
+                        </div>
+
+                        <button onclick="hideExampleModal()" class="submit-button">Close</button>
+                    </div>
+                </div>
+
+                <!-- Recent Transactions -->
+                <div class="tracker-card">
+                    <h2 class="section-title">Recent 529 Transactions</h2>
+                    <div id="529-transactions-list" class="expense-list">
+                        <!-- Transactions will be added here dynamically -->
                     </div>
                 </div>
             </div>
@@ -827,23 +1265,81 @@
 
     <footer class="footer">
         <div class="footer-content">
-            <div>
-                <div class="footer-brand">RENEST</div>
-                <p>©2025 Renest Horizons Inc.</p>
+            <div class="footer-brand">
+                <div class="footer-logo">RENEST</div>
+                <p class="copyright">©2025 Renest Horizons Inc.</p>
             </div>
             <div class="footer-links">
                 <h3>Company</h3>
-                <a href="#">About us</a>
+                <a href="aboutus529.html">About us</a>
             </div>
             <div class="footer-links">
                 <h3>Resources</h3>
-                <a href="#">Contact us</a>
-                <a href="#">FAQ</a>
+                <a href="contactus529.html">Contact us</a>
+                <a href="faq529.html">FAQ</a>
+                <!-- <a href="https://www-renesthorizons-com.translate.goog/?_x_tr_sl=auto&_x_tr_tl=es&_x_tr_hl=en&_x_tr_pto=wapp">Español</a> -->
             </div>
         </div>
     </footer>
 
+    <!-- Add this modal before the closing body tag -->
+    <div id="how-to-modal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 700px;">
+            <h2 style="color: var(--text-dark); margin-bottom: 1.5rem;">How to Use the Expense Tracker</h2>
+            
+            <div style="margin-bottom: 2rem;">
+                <h3 style="color: var(--primary); margin-bottom: 1rem;">Minimum 529 Savings Tracker</h3>
+                <div style="background: #F9FAFB; padding: 1.5rem; border-radius: 8px;">
+                    <ol style="line-height: 1.6; margin-left: 1.5rem;">
+                        <li style="margin-bottom: 0.5rem;">Record your monthly rent payment using the Rent Tracking tab</li>
+                        <li style="margin-bottom: 0.5rem;">Track groceries in the Groceries & Other Expenses tab</li>
+                        <li style="margin-bottom: 0.5rem;">Deposit money to your 529 account equal to these expenses</li>
+                        <li style="margin-bottom: 0.5rem;">Withdraw the money right away to pay for your expenses</li>
+                    </ol>
+                    <p style="margin-top: 1rem; color: #6B7280;">
+                        This simple approach ensures you maximize your tax benefits for essential qualified expenses.
+                    </p>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <h3 style="color: var(--primary); margin-bottom: 1rem;">Budget and Expense Tracker</h3>
+                <div style="background: #F9FAFB; padding: 1.5rem; border-radius: 8px;">
+                    <ol style="line-height: 1.6; margin-left: 1.5rem;">
+                        <li style="margin-bottom: 0.5rem;">Track all your expenses to create a complete budget</li>
+                        <li style="margin-bottom: 0.5rem;">Monitor both qualified and non-qualified expenses</li>
+                        <li style="margin-bottom: 0.5rem;">Use the Summary tab to review your spending patterns</li>
+                        <li style="margin-bottom: 0.5rem;">Follow the recommended 529 funding schedule</li>
+                    </ol>
+                    <p style="margin-top: 1rem; color: #6B7280;">
+                        This comprehensive approach helps you manage all expenses while optimizing your 529 benefits.
+                    </p>
+                </div>
+            </div>
+
+            <button onclick="hideHowToModal()" class="submit-button">Close</button>
+        </div>
+    </div>
+
+    <!-- Add this before the closing body tag -->
+    <div id="delete-confirmation-modal" class="delete-modal">
+        <div class="delete-modal-content">
+            <h3 class="delete-modal-title">Delete Expense</h3>
+            <p>Are you sure you want to delete this expense?</p>
+            <div class="delete-modal-buttons">
+                <button class="delete-cancel-btn" onclick="hideDeleteModal()">Cancel</button>
+                <button class="delete-confirm-btn" onclick="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // API Configuration
+        const API = {
+            baseUrl: 'https://wb2pd4d6gg.execute-api.us-east-2.amazonaws.com',
+            getToken: () => localStorage.getItem('authToken')
+        };
+
         // Tab switching functionality
         function showTab(tabName) {
             const tabs = document.querySelectorAll('.tab-content');
@@ -861,64 +1357,338 @@
             const fileName = input.files[0]?.name || 'No file chosen';
             input.parentElement.innerHTML = fileName + '<input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload(this)">';
         }
-
-        // Initialize expenses array
-        let expenses = [];
-        let rentPayments = [];
         
-        // Handle rent payment form submission
-        document.getElementById('rent-payment-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const date = this.querySelector('input[type="date"]').value;
-            const amount = parseFloat(this.querySelector('input[type="number"]').value);
-            
-            rentPayments.push({ date, amount });
-            updateSummary();
-            this.reset();
-        });
 
-        // Handle expense form submission
-        document.getElementById('expense-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const date = this.querySelector('input[type="date"]').value;
-            const category = this.querySelector('select').value;
-            const amount = parseFloat(this.querySelector('input[type="number"]').value);
-            
-            expenses.push({ date, category, amount });
-            updateExpenseList();
-            updateSummary();
-            this.reset();
-        });
+        // API Functions
+        async function createExpense(expenseData) {
+            try {
+                const token = API.getToken();
+                if (!token) throw new Error('No authentication token found');
 
-        // Update expense list display
-        function updateExpenseList() {
-            const expenseList = document.getElementById('expense-list');
-            expenseList.innerHTML = expenses.map(expense => `
-                <div class="expense-item">
-                    <div>
-                        <div>${new Date(expense.date).toLocaleDateString()}</div>
-                        <div>${expense.category}</div>
-                    </div>
-                    <div>$${expense.amount.toFixed(2)}</div>
-                </div>
-            `).join('');
+                const response = await fetch(`${API.baseUrl}/expenses`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(expenseData)
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Failed to create expense');
+                return data;
+            } catch (error) {
+                console.error('Error creating expense:', error);
+                throw error;
+            }
+        }
+
+        async function getExpenses() {
+            try {
+                const token = API.getToken();
+                if (!token) throw new Error('No authentication token found');
+
+                const response = await fetch(`${API.baseUrl}/expenses`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Failed to fetch expenses');
+                return data;
+            } catch (error) {
+                console.error('Error fetching expenses:', error);
+                throw error;
+            }
+        }
+
+        async function deleteExpense(expenseId) {
+            try {
+                const token = API.getToken();
+                if (!token) throw new Error('No authentication token found');
+
+                const response = await fetch(`${API.baseUrl}/expenses/${expenseId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Failed to delete expense');
+                return data;
+            } catch (error) {
+                console.error('Error deleting expense:', error);
+                throw error;
+            }
+        }
+
+        // Load and display expenses
+        async function loadExpenses() {
+            try {
+                const data = await getExpenses();
+                const expenseList = document.getElementById('expense-list');
+                
+                // Update regular expenses list
+                expenseList.innerHTML = data.expenses
+                    .filter(expense => 
+                        expense.category !== 'Deposit529' && 
+                        expense.category !== 'Withdrawal529')
+                    .map(expense => `
+                        <div class="expense-item" id="expense-${expense.expenseID}">
+                            <div>
+                                <div>${new Date(expense.date).toLocaleDateString()}</div>
+                                <div>${expense.category}</div>
+                                <div style="color: #6B7280; font-size: 0.9rem;">${expense.notes || ''}</div>
+                            </div>
+                            <div>
+                                <span>$${expense.amount.toFixed(2)}</span>
+                                <button onclick="deleteExpenseHandler('${expense.expenseID}')" 
+                                        class="delete-btn">Delete</button>
+                            </div>
+                        </div>
+                    `).join('');
+
+                // Calculate and update 529 projections
+                const projections = calculate529Projections(data.expenses);
+                update529Display(projections);
+                update529TransactionsList(data.expenses);
+                updateSummary(data.expenses);
+            } catch (error) {
+                showError('Error loading expenses: ' + error.message);
+            }
+        }
+
+        let currentExpenseToDelete = null;
+
+        // Update the deleteExpenseHandler function
+        async function deleteExpenseHandler(expenseId) {
+            currentExpenseToDelete = expenseId;
+            document.getElementById('delete-confirmation-modal').style.display = 'flex';
+        }
+
+        // Add these new functions
+        function hideDeleteModal() {
+            document.getElementById('delete-confirmation-modal').style.display = 'none';
+            currentExpenseToDelete = null;
+        }
+
+        async function confirmDelete() {
+            if (currentExpenseToDelete) {
+                try {
+                    await deleteExpense(currentExpenseToDelete);
+                    const expenseElement = document.getElementById(`expense-${currentExpenseToDelete}`);
+                    const transactionElement = document.getElementById(`transaction-${currentExpenseToDelete}`);
+                    
+                    if (expenseElement) expenseElement.remove();
+                    if (transactionElement) transactionElement.remove();
+                    
+                    showSuccess('Expense deleted successfully');
+                    loadExpenses(); // Refresh to update summary and projections
+                } catch (error) {
+                    showError('Failed to delete expense: ' + error.message);
+                }
+                hideDeleteModal();
+            }
+        }
+
+        // Update the window.onclick handler to include the delete modal
+        window.onclick = function(event) {
+            const exampleModal = document.getElementById('example-modal');
+            const howToModal = document.getElementById('how-to-modal');
+            const deleteModal = document.getElementById('delete-confirmation-modal');
+            
+            if (event.target == exampleModal) {
+                hideExampleModal();
+            }
+            if (event.target == howToModal) {
+                hideHowToModal();
+            }
+            if (event.target == deleteModal) {
+                hideDeleteModal();
+            }
         }
 
         // Update summary calculations
-        function updateSummary() {
-            const totalRent = rentPayments.reduce((sum, payment) => sum + payment.amount, 0);
-            const totalExpenses = expenses.reduce((sum, expense) => sum + expense.amount, 0);
-            const totalDeposits = parseFloat(document.getElementById('total-deposits').value) || 0;
-            const totalWithdrawals = parseFloat(document.getElementById('total-withdrawals').value) || 0;
-            const remainingBalance = totalDeposits - totalWithdrawals - totalRent - totalExpenses;
+        function updateSummary(expenses = []) {
+            const totalRent = expenses
+                .filter(expense => expense.category === 'Rent')
+                .reduce((sum, expense) => sum + expense.amount, 0);
+                
+            const otherExpenses = expenses
+                .filter(expense => 
+                    expense.category !== 'Rent' && 
+                    expense.category !== 'Deposit529' && 
+                    expense.category !== 'Withdrawal529')
+                .reduce((sum, expense) => sum + expense.amount, 0);
 
+            const deposits529 = expenses
+                .filter(expense => expense.category === 'Deposit529')
+                .reduce((sum, expense) => sum + expense.amount, 0);
+
+            const withdrawals529 = expenses
+                .filter(expense => expense.category === 'Withdrawal529')
+                .reduce((sum, expense) => sum + expense.amount, 0);
+
+            // Update display
             document.getElementById('total-rent').textContent = `$${totalRent.toFixed(2)}`;
-            document.getElementById('total-expenses').textContent = `$${totalExpenses.toFixed(2)}`;
-            document.getElementById('deposits-display').textContent = `$${totalDeposits.toFixed(2)}`;
-            document.getElementById('withdrawals-display').textContent = `$${totalWithdrawals.toFixed(2)}`;
+            document.getElementById('total-expenses').textContent = `$${otherExpenses.toFixed(2)}`;
+            document.getElementById('deposits-display').textContent = `$${deposits529.toFixed(2)}`;
+            document.getElementById('withdrawals-display').textContent = `$${withdrawals529.toFixed(2)}`;
+            
+            // Calculate and display remaining balance
+            const remainingBalance = deposits529 - withdrawals529;
             document.getElementById('remaining-balance').textContent = `$${remainingBalance.toFixed(2)}`;
         }
 
+        // Helper functions for notifications
+        function showSuccess(message) {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success-message';
+            successDiv.textContent = message;
+            document.body.appendChild(successDiv);
+            setTimeout(() => successDiv.remove(), 3000);
+        }
+
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            document.body.appendChild(errorDiv);
+            setTimeout(() => errorDiv.remove(), 3000);
+        }
+
+        // Form handlers
+        document.getElementById('expense-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const submitButton = this.querySelector('.submit-button');
+            const originalText = submitButton.textContent;
+            
+            const inputDate = new Date(this.querySelector('input[type="date"]').value);
+            inputDate.setDate(inputDate.getDate() + 1);  // Add one day
+            
+            const categorySelect = document.getElementById('expense-category');
+            const customCategoryInput = document.getElementById('custom-category');
+            
+            // Use custom category text if 'Custom' is selected, otherwise use selected category
+            const category = categorySelect.value === 'Custom' ? 
+                customCategoryInput.value : 
+                categorySelect.value;
+            
+            const expenseData = {
+                category: category,
+                amount: parseFloat(this.querySelector('input[type="number"]').value),
+                date: inputDate.toISOString().split('T')[0],
+                notes: this.querySelector('input[placeholder="e.g., Trader Joe\'s, laptop for research, etc."]').value || '',
+                isQualified: document.getElementById('qualified-expense').checked,
+                needsReceipt: !!this.querySelector('input[type="file"]').files.length
+            };
+
+            try {
+                const result = await createExpense(expenseData);
+
+                if (expenseData.needsReceipt && result.uploadUrl) {
+                    const file = this.querySelector('input[type="file"]').files[0];
+                    await fetch(result.uploadUrl, {
+                        method: 'PUT',
+                        body: file,
+                        headers: {
+                            'Content-Type': file.type
+                        }
+                    });
+                }
+
+                submitButton.textContent = "✓";
+                showSuccess('Expense added successfully!');
+                loadExpenses();
+                
+                setTimeout(() => {
+                    submitButton.textContent = originalText;
+                    this.reset();
+                }, 1500);
+            } catch (error) {
+                showError(error.message);
+                submitButton.textContent = originalText;
+            }
+        });
+        document.getElementById('rent-payment-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const submitButton = this.querySelector('.submit-button');
+            const originalText = submitButton.textContent;
+            
+            const inputDate = new Date(this.querySelector('input[type="date"]').value);
+            inputDate.setDate(inputDate.getDate() + 1);  // Add one day
+            
+            const rentPaymentData = {
+                category: 'Rent',
+                amount: parseFloat(this.querySelector('input[type="number"]').value),
+                date: inputDate.toISOString().split('T')[0],
+                notes: this.querySelector('input[type="text"]').value || 'Monthly Rent Payment',
+                isQualified: true,
+                needsReceipt: false
+            };
+
+            try {
+                const result = await createExpense(rentPaymentData);
+                submitButton.textContent = "✓";
+                showSuccess('Rent payment recorded successfully!');
+                loadExpenses();
+                
+                setTimeout(() => {
+                    submitButton.textContent = originalText;
+                    this.reset();
+                }, 1500);
+            } catch (error) {
+                showError(error.message);
+                submitButton.textContent = originalText;
+            }
+        });
+
+        
+        document.getElementById('signOutLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('authToken');
+            window.location.href = 'signin529.html';
+        });
+
+        // Automation toggle handler
+        document.getElementById('automation-toggle').addEventListener('change', function() {
+            if (this.checked) {
+                // Prevent the toggle from switching on
+                this.checked = false;
+                // Show message about upcoming functionality
+                const messageDiv = document.createElement('div');
+                messageDiv.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: white;
+                    padding: 1rem 2rem;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                    z-index: 2000;
+                    border-left: 4px solid var(--primary);
+                `;
+                messageDiv.textContent = 'Automation functionality coming soon!';
+                document.body.appendChild(messageDiv);
+                setTimeout(() => messageDiv.remove(), 3000);
+            }
+        });
+
+        // Category selection handler
+        document.getElementById('expense-category').addEventListener('change', function() {
+            const customCategoryInput = document.getElementById('custom-category');
+            if (this.value === 'Custom') {
+                customCategoryInput.style.display = 'block';
+            } else {
+                customCategoryInput.style.display = 'none';
+            }
+            updateQualifiedCheckbox();
+        });
+
+        // Add listener for custom category input
+        document.getElementById('custom-category').addEventListener('input', updateQualifiedCheckbox);
+
+        // Navigation menu handlers
         const menuButton = document.querySelector('.menu-button');
         const navLinks = document.querySelector('.nav-links');
 
@@ -943,33 +1713,208 @@
             }
         });
 
-        document.getElementById('automation-toggle').addEventListener('change', function() {
-            if (this.checked) {
-                window.location.href = '529autoexpensetracker.html';
+        // Initial load
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = API.getToken();
+            if (!token) {
+                window.location.href = 'signin529.html';
+                return;
             }
-            // No action needed when toggling off
+            loadExpenses();
         });
 
-        // Update the visibility of the custom category input
-        document.getElementById('expense-category').addEventListener('change', function() {
-            const customCategoryInput = document.getElementById('custom-category');
-            if (this.value === 'custom') {
-                customCategoryInput.style.display = 'block';
-            } else {
-                customCategoryInput.style.display = 'none';
+        // 529 Account Management Functions
+        function calculate529Projections(expenses) {
+            // Get current date info
+            const currentDate = new Date();
+            const currentYear = currentDate.getFullYear();
+            const currentMonth = currentDate.getMonth();
+            const remainingMonths = 12 - currentMonth;
+
+            // Get monthly rent from localStorage
+            const monthlyRent = parseFloat(localStorage.getItem('monthlyRent')) || 0;
+
+            // Filter expenses for current year
+            const currentYearExpenses = expenses.filter(expense => {
+                const expenseDate = new Date(expense.date);
+                return expenseDate.getFullYear() === currentYear;
+            });
+
+            // Calculate YTD qualified expenses
+            const qualifiedExpenses = currentYearExpenses
+                .filter(expense => expense.isQualified && 
+                                  expense.category !== 'Deposit529' && 
+                                  expense.category !== 'Withdrawal529')
+                .reduce((sum, expense) => sum + expense.amount, 0);
+
+            // Calculate total 529 deposits
+            const deposits529 = currentYearExpenses
+                .filter(expense => expense.category === 'Deposit529')
+                .reduce((sum, expense) => sum + expense.amount, 0);
+
+            // Calculate average monthly qualified expenses (excluding rent)
+            const nonRentExpenses = currentYearExpenses
+                .filter(expense => expense.isQualified && 
+                                  expense.category !== 'Rent' &&
+                                  expense.category !== 'Deposit529' && 
+                                  expense.category !== 'Withdrawal529')
+                .reduce((sum, expense) => sum + expense.amount, 0);
+            
+            const monthsElapsed = currentMonth + 1;
+            const averageMonthlyNonRentExpense = nonRentExpenses / monthsElapsed;
+
+            // Calculate yearly projections using profile rent
+            const yearlyRent = monthlyRent * 12; // Full year of rent from profile
+            const yearlyNonRent = averageMonthlyNonRentExpense * 12; // Project other expenses for full year
+            const projectedYearEnd = yearlyRent + yearlyNonRent;
+
+            // Calculate recommended funding
+            const recommendedFunding = Math.max(0, projectedYearEnd - deposits529);
+            const suggestedMonthlyDeposit = remainingMonths > 0 ? 
+                recommendedFunding / remainingMonths : 0;
+
+            return {
+                ytdQualified: qualifiedExpenses,
+                ytdDeposits: deposits529,
+                monthlyProjection: averageMonthlyNonRentExpense + monthlyRent,
+                yearEndProjection: projectedYearEnd,
+                recommendedTotal: recommendedFunding,
+                suggestedMonthly: suggestedMonthlyDeposit
+            };
+        }
+
+        function update529Display(projections) {
+            // Format numbers as currency
+            const formatCurrency = num => `$${num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+
+            // Update summary values
+            document.getElementById('ytd-qualified-expenses').textContent = formatCurrency(projections.ytdQualified);
+            document.getElementById('ytd-529-deposits').textContent = formatCurrency(projections.ytdDeposits);
+            document.getElementById('projected-monthly-expenses').textContent = formatCurrency(projections.monthlyProjection);
+            document.getElementById('projected-year-end').textContent = formatCurrency(projections.yearEndProjection);
+            document.getElementById('recommended-funding').textContent = formatCurrency(projections.recommendedTotal);
+            document.getElementById('suggested-monthly-deposit').textContent = formatCurrency(projections.suggestedMonthly);
+
+            // Update progress bar
+            const totalNeeded = projections.yearEndProjection; // Use total projected expenses instead of remaining needed
+            const progressPercent = totalNeeded > 0 ? 
+                (projections.ytdDeposits / totalNeeded) * 100 : 100;
+            
+            document.getElementById('funding-progress-bar').style.width = `${Math.min(100, progressPercent)}%`;
+            document.getElementById('funding-progress-text').textContent = 
+                `${formatCurrency(projections.ytdDeposits)}/${formatCurrency(totalNeeded)}`; // Show total needed instead of remaining
+        }
+
+        function update529TransactionsList(expenses) {
+            const transactionsList = document.getElementById('529-transactions-list');
+            const transactions = expenses.filter(expense => 
+                expense.category === 'Deposit529' || expense.category === 'Withdrawal529'
+            );
+
+            transactionsList.innerHTML = transactions
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .map(transaction => `
+                    <div class="expense-item" id="transaction-${transaction.expenseID}">
+                        <div>
+                            <div>${new Date(transaction.date).toLocaleDateString()}</div>
+                            <div>${transaction.category === 'Deposit529' ? 'Deposit' : 'Withdrawal'}</div>
+                            <div>${transaction.notes}</div>
+                        </div>
+                        <div>
+                            <span style="color: ${transaction.category === 'Deposit529' ? '#10B981' : '#EF4444'}">
+                                ${transaction.category === 'Deposit529' ? '+' : '-'}$${transaction.amount.toFixed(2)}
+                            </span>
+                            <button onclick="deleteExpenseHandler('${transaction.expenseID}')" 
+                                    class="delete-btn">Delete</button>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        // Add event listener for 529 transaction form
+        document.getElementById('529-transaction-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const submitButton = this.querySelector('.submit-button');
+            const originalText = submitButton.textContent;
+            
+            const inputDate = new Date(document.getElementById('529-transaction-date').value);
+            inputDate.setDate(inputDate.getDate() + 1);  // Add one day
+            
+            const transactionData = {
+                category: document.getElementById('529-transaction-type').value,
+                amount: parseFloat(document.getElementById('529-transaction-amount').value),
+                date: inputDate.toISOString().split('T')[0],
+                notes: document.getElementById('529-transaction-notes').value || '',
+                isQualified: false,  // 529 transactions aren't qualified expenses
+                needsReceipt: false
+            };
+
+            try {
+                await createExpense(transactionData);
+                submitButton.textContent = "✓";
+                showSuccess('529 transaction recorded successfully!');
+                loadExpenses();
+                
+                setTimeout(() => {
+                    submitButton.textContent = originalText;
+                    this.reset();
+                }, 1500);
+            } catch (error) {
+                showError(error.message);
+                submitButton.textContent = originalText;
             }
         });
 
-        // Update the qualified checkbox based on selected category
+        function showExampleModal() {
+            document.getElementById('example-modal').style.display = 'flex';
+        }
+
+        function hideExampleModal() {
+            document.getElementById('example-modal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const exampleModal = document.getElementById('example-modal');
+            const howToModal = document.getElementById('how-to-modal');
+            const deleteModal = document.getElementById('delete-confirmation-modal');
+            
+            if (event.target == exampleModal) {
+                hideExampleModal();
+            }
+            if (event.target == howToModal) {
+                hideHowToModal();
+            }
+            if (event.target == deleteModal) {
+                hideDeleteModal();
+            }
+        }
+
+        // Add this function to handle qualified expense checkbox updates
         function updateQualifiedCheckbox() {
-            const categorySelect = document.getElementById('expense-category');
+            const category = document.getElementById('expense-category').value;
+            const customCategory = document.getElementById('custom-category').value;
             const qualifiedCheckbox = document.getElementById('qualified-expense');
             
-            // Gather all qualified categories dynamically
-            const qualifiedCategories = Array.from(document.querySelectorAll('.qualified-category'))
-                .map(option => option.value);
+            // List of qualified categories
+            const qualifiedCategories = ['Groceries', 'WiFi', 'Supplies', 'Utilities'];
+            
+            // Check if the selected category is in the qualified list
+            if (qualifiedCategories.includes(category)) {
+                qualifiedCheckbox.checked = true;
+            } else if (category === 'Custom') {
+                qualifiedCheckbox.checked = false;
+            } else {
+                qualifiedCheckbox.checked = false;
+            }
+        }
 
-            qualifiedCheckbox.checked = qualifiedCategories.includes(categorySelect.value);
+        function showHowToModal() {
+            document.getElementById('how-to-modal').style.display = 'flex';
+        }
+
+        function hideHowToModal() {
+            document.getElementById('how-to-modal').style.display = 'none';
         }
     </script>
 </body>
