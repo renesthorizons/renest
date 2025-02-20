@@ -2683,8 +2683,14 @@ document.getElementById('signOutLink').addEventListener('click', (e) => {
 
 // Initialize on load
 document.addEventListener('DOMContentLoaded', async () => {
-    await initializePage();
-    // Remove the redundant loadCurrentBudgets call
+    // First load the budgets
+    await loadCurrentBudgets();
+    
+    // Then display the editable budgets which includes the stipend section
+    displayEditableBudgets();
+    
+    // Finally set up the budget status
+    updateBudgetStatus();
 });
 
 const menuButton = document.querySelector('.menu-button');
