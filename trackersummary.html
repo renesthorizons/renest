@@ -846,6 +846,10 @@ body {
             opacity: 0.7;
             font-size: 0.9rem;
         }
+
+        .hide-on-mobile {
+            display: none !important;
+        }
 </style>
 <body>
     <nav class="navbar">
@@ -2240,7 +2244,7 @@ function updateCategoryDisplay(expenses) {
                     <div class="category-name">
                         <span>${categoryIcons[category] || '📊'}</span>
                         <span>${category}</span>
-                        ${isQualified ? '<span class="qualified-badge">✓ Qualified</span>' : ''}
+                        ${isQualified ? '<span class="qualified-badge hide-on-mobile">✓ Qualified</span>' : ''}
                     </div>
                     <div class="category-amounts">$${spent.toFixed(2)} of $${budget}</div>
                 </div>
@@ -2355,7 +2359,7 @@ function updateCategoryDisplayForMonth(expenses, selectedDate) {
                     <div class="category-name">
                         <span>${categoryIcons[category] || '📊'}</span>
                         <span>${category}</span>
-                        ${isQualified ? '<span class="qualified-badge">✓ Qualified</span>' : ''}
+                        ${isQualified ? '<span class="qualified-badge hide-on-mobile">✓ Qualified</span>' : ''}
                     </div>
                     <div class="category-amounts">$${spent.toFixed(2)} of $${budget}</div>
                 </div>
@@ -2858,7 +2862,7 @@ function displayEditableBudgets() {
                                ${category === 'Rent' ? 'readonly' : ''}
                                onchange="updateCategoryName('${category}', this.value)">
                         ${qualifiedCategories.includes(category) ? 
-                            '<span class="qualified-badge">✓ Qualified</span>' : ''}
+                            '<span class="qualified-badge hide-on-mobile">✓ Qualified</span>' : ''}
                     </div>
                     <div class="category-amounts">
                         <span>$</span>
@@ -2893,7 +2897,10 @@ function updateBudget(category, amount) {
     }
     
     currentBudgets[category].amount = newAmount;
+    
+    // Update both the budget status and stipend display immediately
     updateBudgetStatus();
+    updateStipendDisplay();
 }
 
 function updateCategoryName(oldName, newName) {
