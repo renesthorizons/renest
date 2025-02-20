@@ -907,30 +907,28 @@ input[type="number"] {
 }
 
 @media (max-width: 768px) {
-    .category-header {
-        justify-content: flex-start;  /* Override space-between */
-        gap: 0.1rem;  /* Add explicit gap */
-    }
-
-    .category-name {
-        margin-right: 0.1rem;  /* Explicit margin in edit mode */
-        flex: 0 1 auto;  /* Don't grow, allow shrink, auto base size */
-    }
-
-    .category-amounts {
-        flex: 0 1 auto;  /* Don't grow, allow shrink, auto base size */
-        margin-left: 0.1rem;  /* Small margin from category name */
-    }
-
-    /* If you need even tighter control */
     .category.edit-mode .category-header {
         display: flex;
-        align-items: center;
+        justify-content: flex-start;
         width: 100%;
+        padding-right: 2rem;
     }
 
     .category.edit-mode .category-name {
-        margin-right: 0.1rem;  /* Very small margin in edit mode */
+        flex: 1;
+        max-width: 60%;
+    }
+
+    .category.edit-mode .category-amounts {
+        flex: 0 0 auto;
+        margin-left: 0.5rem;
+    }
+
+    .category.edit-mode .delete-category {
+        position: absolute;
+        right: 0.5rem;
+        top: 50%;
+        transform: translateY(-50%);
     }
 }
 </style>
