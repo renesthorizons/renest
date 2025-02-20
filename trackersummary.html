@@ -2845,16 +2845,27 @@ async function loadCurrentBudgets() {
 }
 
 function updateBudgetStatus() {
+    console.log('updateBudgetStatus called');
+    console.log('Current budgets:', currentBudgets);
+    
     const totalBudgeted = Object.values(currentBudgets)
         .reduce((sum, cat) => sum + cat.amount, 0);
+    console.log('Total budgeted:', totalBudgeted);
+    console.log('Current stipend:', currentStipend);
+    
     const remaining = currentStipend - totalBudgeted;
+    console.log('Remaining amount:', remaining);
     
     const statusElement = document.getElementById('budgetStatus');
     if (statusElement) {
-        statusElement.textContent = remaining >= 0 
+        const newText = remaining >= 0 
             ? `Remaining: $${remaining.toFixed(2)}` 
             : `Over budget by: $${Math.abs(remaining).toFixed(2)}`;
+        console.log('Updating status element with:', newText);
+        statusElement.textContent = newText;
         statusElement.className = `budget-status ${remaining >= 0 ? 'positive' : 'negative'}`;
+    } else {
+        console.warn('Budget status element not found');
     }
 }
 
