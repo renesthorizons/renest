@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -996,13 +995,13 @@ input[type="number"] {
             </div>
 
             <!-- Modify the budget summary div -->
-            <div class="budget-summary" style="margin-bottom: 1.5rem;">
+            <!-- <div class="budget-summary" style="margin-bottom: 1.5rem;">
                 <div class="stipend-container">
                     <div>Monthly Stipend: <span id="stipendAmount">$0.00</span></div>
                     <button id="editStipend" class="edit-button">✏️</button>
                 </div>
                 <div id="budgetStatus">Remaining: $0.00</div>
-            </div>
+            </div> -->
 
             <div class="progress-container">
                 <div class="section-header">
@@ -2588,6 +2587,14 @@ window.addEventListener('resize', function() {
 
 // Main Initialization
 async function initializePage() {
+    console.log('Initializing page');
+    
+    // Remove the old event listener setup
+    console.log('Skipping old stipend event listener setup');
+    
+    // Log other initialization steps
+    console.log('Page initialization complete');
+    
     const loadingOverlay = document.getElementById('loadingOverlay');
     try {
         loadingOverlay.style.display = 'flex';
@@ -2654,15 +2661,15 @@ async function initializePage() {
 
         // Add these new initializations
         const editBudgetsBtn = document.getElementById('editBudgets');
-        const editStipendBtn = document.getElementById('editStipend');
+        // const editStipendBtn = document.getElementById('editStipend');
         
         editBudgetsBtn.addEventListener('click', toggleEditMode);
-        editStipendBtn.addEventListener('click', async () => {
-            const newAmount = prompt('Enter new monthly stipend amount:', currentStipend);
-            if (newAmount && !isNaN(newAmount)) {
-                await updateStipend(Number(newAmount));
-            }
-        });
+        // editStipendBtn.addEventListener('click', async () => {
+        //     const newAmount = prompt('Enter new monthly stipend amount:', currentStipend);
+        //     if (newAmount && !isNaN(newAmount)) {
+        //         await updateStipend(Number(newAmount));
+        //     }
+        // });
 
         // Load initial budgets
         await loadCurrentBudgets();
@@ -2845,44 +2852,58 @@ async function loadCurrentBudgets() {
     }
 }
 
-function updateBudgetStatus() {
-    console.log('updateBudgetStatus called');
-    console.log('Current budgets:', currentBudgets);
-    
-    // Log each category's amount before summing
-    Object.entries(currentBudgets).forEach(([category, data]) => {
-        console.log(`${category} budget:`, data.amount);
+// Modify updateStipendDisplay to only update in edit mode
+function updateStipendDisplay() {
+    console.log('updateStipendDisplay called', {
+        isEditMode,
+        currentStipend
     });
     
-    const totalBudgeted = Object.entries(currentBudgets)
-        .reduce((sum, [category, data]) => {
-            const amount = Number(data.amount);
-            console.log(`Adding to total: ${category} = ${amount}`);
-            return sum + amount;
-        }, 0);
+    if (isEditMode) {
+        const stipendElement = document.getElementById('stipendAmount');
+        console.log('Stipend element found:', !!stipendElement);
+        
+        if (stipendElement) {
+            stipendElement.textContent = `${currentStipend.toFixed(2)}`;
+        } else {
+            console.warn('Stipend element not found in edit mode');
+        }
+    }
+}
+
+// Modify updateBudgetStatus to only reference budgetStatus in edit mode
+function updateBudgetStatus() {
+    console.log('updateBudgetStatus called', {
+        isEditMode,
+        currentStipend
+    });
     
-    console.log('Total budgeted:', totalBudgeted);
-    console.log('Current stipend:', currentStipend);
+    if (!isEditMode) {
+        console.log('Skipping budget status update - not in edit mode');
+        return;
+    }
+    
+    const totalBudgeted = Object.entries(currentBudgets)
+        .reduce((sum, [_, data]) => sum + Number(data.amount), 0);
     
     const remaining = currentStipend - totalBudgeted;
-    console.log('Remaining amount:', remaining);
+    console.log('Budget calculations:', {
+        totalBudgeted,
+        remaining
+    });
     
     const statusElement = document.getElementById('budgetStatus');
+    console.log('Status element found:', !!statusElement);
+    
     if (statusElement) {
         const newText = remaining >= 0 
             ? `Remaining: $${remaining.toFixed(2)}` 
             : `Over budget by: $${Math.abs(remaining).toFixed(2)}`;
-        console.log('Updating status element with:', newText);
         statusElement.textContent = newText;
         statusElement.className = `budget-status ${remaining >= 0 ? 'positive' : 'negative'}`;
     } else {
         console.warn('Budget status element not found');
     }
-}
-
-function updateStipendDisplay() {
-    // console.log('Updating stipend display with value:', currentStipend);
-    document.getElementById('stipendAmount').textContent = `$${currentStipend.toFixed(2)}`;
 }
 
 // Modify removeCategory to just update local state
@@ -2976,25 +2997,47 @@ async function saveBudgetChanges() {
 
 // Modify displayEditableBudgets to show all categories
 function displayEditableBudgets() {
+    console.log('displayEditableBudgets called', {
+        currentStipend,
+        budgetsExist: !!currentBudgets
+    });
+    
     const container = document.getElementById('categoriesContainer');
+    console.log('Categories container found:', !!container);
+    
+    if (!container) {
+        console.error('Categories container not found - cannot display editable budgets');
+        return;
+    }
+    
     container.innerHTML = '';
     
-    // Add stipend section first
-    container.insertAdjacentHTML('beforeend', `
-        <div class="stipend-section">
-            <div class="stipend-header">
-                <h3>Monthly Stipend</h3>
-                <div class="stipend-amount">
-                    <span>$</span>
-                    <span id="stipendAmount">${currentStipend.toFixed(2)}</span>
-                    <button id="editStipend" onclick="editStipendAmount()">Edit</button>
+    // Add stipend section
+    try {
+        container.insertAdjacentHTML('beforeend', `
+            <div class="stipend-section">
+                <div class="stipend-header">
+                    <h3>Monthly Stipend</h3>
+                    <div class="stipend-amount">
+                        <span>$</span>
+                        <span id="stipendAmount">${currentStipend.toFixed(2)}</span>
+                        <button id="editStipend" onclick="editStipendAmount()">Edit</button>
+                    </div>
+                </div>
+                <div id="budgetStatus" class="budget-status">
+                    Remaining: $${(currentStipend - Object.values(currentBudgets).reduce((sum, cat) => sum + Number(cat.amount), 0)).toFixed(2)}
                 </div>
             </div>
-            <div id="budgetStatus" class="budget-status">
-                Remaining: $${(currentStipend - Object.values(currentBudgets).reduce((sum, cat) => sum + Number(cat.amount), 0)).toFixed(2)}
-            </div>
-        </div>
-    `);
+        `);
+        console.log('Stipend section added successfully');
+    } catch (error) {
+        console.error('Error adding stipend section:', error);
+    }
+    
+    // Verify editStipendAmount exists
+    if (typeof editStipendAmount !== 'function') {
+        console.error('editStipendAmount function not found');
+    }
     
     // Display all categories with modified input handler
     Object.entries(currentBudgets).forEach(([category, data]) => {
