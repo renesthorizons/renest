@@ -2683,14 +2683,8 @@ document.getElementById('signOutLink').addEventListener('click', (e) => {
 
 // Initialize on load
 document.addEventListener('DOMContentLoaded', async () => {
-    // First load the budgets
-    await loadCurrentBudgets();
-    
-    // Then display the editable budgets which includes the stipend section
-    displayEditableBudgets();
-    
-    // Finally set up the budget status
-    updateBudgetStatus();
+    await initializePage();
+    // Remove the redundant loadCurrentBudgets call
 });
 
 const menuButton = document.querySelector('.menu-button');
@@ -2878,12 +2872,8 @@ function updateBudgetStatus() {
             ? `Remaining: $${remaining.toFixed(2)}` 
             : `Over budget by: $${Math.abs(remaining).toFixed(2)}`;
         console.log('Updating status element with:', newText);
-        
-        // Force DOM update by recreating the element's content
-        const tempDiv = document.createElement('div');
-        tempDiv.className = `budget-status ${remaining >= 0 ? 'positive' : 'negative'}`;
-        tempDiv.textContent = newText;
-        statusElement.parentNode.replaceChild(tempDiv, statusElement);
+        statusElement.textContent = newText;
+        statusElement.className = `budget-status ${remaining >= 0 ? 'positive' : 'negative'}`;
     } else {
         console.warn('Budget status element not found');
     }
@@ -3255,69 +3245,6 @@ async function cancelEditMode() {
     
     const expenses = await fetchExpenses();
     updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
-}
-
-// Add near the top of your script
-document.addEventListener('DOMContentLoaded', () => {
-    // Initial setup of budget status
-    updateBudgetStatus();
-    
-    // Add event listeners to all budget inputs
-    const budgetInputs = document.querySelectorAll('.budget-input');
-    budgetInputs.forEach(input => {
-        const category = input.closest('[data-category]').getAttribute('data-category');
-        input.addEventListener('input', (e) => {
-            updateBudget(category, e.target.value);
-        });
-    });
-});
-
-// Update displayEditableBudgets to ensure event listeners are added
-function displayEditableBudgets() {
-    const container = document.getElementById('categoriesContainer');
-    container.innerHTML = '';
-    
-    // ... existing stipend section code ...
-    
-    // Display all categories with modified input handler
-    Object.entries(currentBudgets).forEach(([category, data]) => {
-        const div = document.createElement('div');
-        div.className = 'category edit-mode';
-        div.setAttribute('data-category', category);
-        
-        div.innerHTML = `
-            <div class="category-header">
-                <div class="category-name">
-                    <span>${categoryIcons[category] || '📊'}</span>
-                    <input type="text" class="category-name-input" 
-                           value="${category}" 
-                           ${category === 'Rent' ? 'readonly' : ''}
-                           onchange="updateCategoryName('${category}', this.value)">
-                    ${qualifiedCategories.includes(category) ? 
-                        '<span class="qualified-badge">✓ Qualified</span>' : ''}
-                </div>
-                <div class="category-amounts">
-                    <span>$</span>
-                    <input type="number" class="budget-input" 
-                           value="${data.amount}">
-                    ${category !== 'Rent' ? 
-                        `<button class="delete-category" onclick="removeCategory('${category}')">×</button>` : 
-                        ''}
-                </div>
-            </div>
-        `;
-        
-        // Add event listener directly to the input
-        const input = div.querySelector('.budget-input');
-        input.addEventListener('input', (e) => {
-            console.log('Input event fired for', category);
-            updateBudget(category, e.target.value);
-        });
-        
-        container.appendChild(div);
-    });
-    
-    // ... existing new category button code ...
 }
 </script>
 </html>
