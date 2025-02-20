@@ -3012,7 +3012,12 @@ function displayEditableBudgets() {
     
     container.innerHTML = '';
     
-    // Add stipend section
+    // Calculate remaining budget
+    const totalBudgeted = Object.values(currentBudgets).reduce((sum, cat) => sum + Number(cat.amount), 0);
+    const remaining = currentStipend - totalBudgeted;
+    const isPositive = remaining >= 0;
+    
+    // Add stipend section with colored status
     try {
         container.insertAdjacentHTML('beforeend', `
             <div class="stipend-section">
@@ -3024,8 +3029,8 @@ function displayEditableBudgets() {
                         <button id="editStipend" onclick="editStipendAmount()">Edit</button>
                     </div>
                 </div>
-                <div id="budgetStatus" class="budget-status">
-                    Remaining: $${(currentStipend - Object.values(currentBudgets).reduce((sum, cat) => sum + Number(cat.amount), 0)).toFixed(2)}
+                <div id="budgetStatus" class="budget-status ${isPositive ? 'positive' : 'negative'}">
+                    ${isPositive ? 'Remaining: ' : 'Over budget by: '}$${Math.abs(remaining).toFixed(2)}
                 </div>
             </div>
         `);
