@@ -2597,7 +2597,6 @@ async function initializePage() {
 
         // Initialize variables and load data
         currentDisplayMonth = new Date();
-        await loadUserProfile();
         await loadCurrentBudgets();
         
         // Set up event listeners for elements that always exist
@@ -2625,9 +2624,6 @@ async function initializePage() {
         if (editBudgetsBtn) {
             editBudgetsBtn.addEventListener('click', toggleEditMode);
         }
-
-        // Remove the event listener setup for the now-removed static editStipend button
-        // The event listener for editStipend will now be handled through the onclick in displayEditableBudgets
 
         // Initialize the display
         updateMonthDisplay();
