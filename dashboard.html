@@ -772,6 +772,28 @@
                 margin: 0.5rem;
             }
         }
+
+        .modal-container {
+            position: relative;
+        }
+        
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            padding: 5px 10px;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+        
+        .close-button:hover {
+            color: #333;
+        }
     </style>
 </head>
 <body>
@@ -2596,6 +2618,7 @@ const statePersonalExemptionDB = {
                 <div class="modal-overlay" style="display: flex;">
                     <div class="modal-container">
                         <div class="modal-content">
+                            <button class="close-button" onclick="closeState529Modal()" aria-label="Close">×</button>
                             <h2 style="margin-bottom: 1rem;">Open Your ${stateInfo.name}</h2>
                             <p style="margin-bottom: 1.5rem;">You'll be redirected to your state's official 529 plan website. There, you can:</p>
                             <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem;">
@@ -2610,10 +2633,7 @@ const statePersonalExemptionDB = {
                             ` : ''}
                             <div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
                                 <button class="button button-primary" onclick="alreadyHave529()">I have a 529 account in ${userState}</button>
-                                <div>
-                                    <button class="button button-secondary" onclick="closeState529Modal()">Cancel</button>
-                                    <button class="button button-primary" onclick="openState529Link('${stateInfo.url}')">Open 529</button>
-                                </div>
+                                <button class="button button-primary" onclick="openState529Link('${stateInfo.url}')">Open 529</button>
                             </div>
                         </div>
                     </div>
