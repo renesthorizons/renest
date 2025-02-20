@@ -994,14 +994,6 @@ input[type="number"] {
                 </div>
             </div>
 
-            <!-- Modify the budget summary div -->
-            <div class="budget-summary" style="margin-bottom: 1.5rem;">
-                <div class="stipend-container">
-                    <div>Monthly Stipend: <span id="stipendAmount">$0.00</span></div>
-                    <button id="editStipend" class="edit-button">✏️</button>
-                </div>
-                <div id="budgetStatus">Remaining: $0.00</div>
-            </div>
 
             <div class="progress-container">
                 <div class="section-header">
@@ -2845,37 +2837,20 @@ async function loadCurrentBudgets() {
 }
 
 function updateBudgetStatus() {
-    console.log('updateBudgetStatus called');
-    console.log('Current budgets:', currentBudgets);
+    // Calculate total budgeted amount
+    const totalBudgeted = Object.values(currentBudgets)
+        .reduce((sum, data) => sum + Number(data.amount), 0);
     
-    // Log each category's amount before summing
-    Object.entries(currentBudgets).forEach(([category, data]) => {
-        console.log(`${category} budget:`, data.amount);
-    });
-    
-    const totalBudgeted = Object.entries(currentBudgets)
-        .reduce((sum, [category, data]) => {
-            const amount = Number(data.amount);
-            console.log(`Adding to total: ${category} = ${amount}`);
-            return sum + amount;
-        }, 0);
-    
-    console.log('Total budgeted:', totalBudgeted);
-    console.log('Current stipend:', currentStipend);
-    
+    // Calculate remaining budget
     const remaining = currentStipend - totalBudgeted;
-    console.log('Remaining amount:', remaining);
     
+    // Update the status display
     const statusElement = document.getElementById('budgetStatus');
     if (statusElement) {
-        const newText = remaining >= 0 
+        statusElement.textContent = remaining >= 0 
             ? `Remaining: $${remaining.toFixed(2)}` 
             : `Over budget by: $${Math.abs(remaining).toFixed(2)}`;
-        console.log('Updating status element with:', newText);
-        statusElement.textContent = newText;
         statusElement.className = `budget-status ${remaining >= 0 ? 'positive' : 'negative'}`;
-    } else {
-        console.warn('Budget status element not found');
     }
 }
 
@@ -2978,6 +2953,11 @@ function displayEditableBudgets() {
     const container = document.getElementById('categoriesContainer');
     container.innerHTML = '';
     
+    // Calculate initial total budgeted for stipend section
+    const totalBudgeted = Object.values(currentBudgets)
+        .reduce((sum, data) => sum + Number(data.amount), 0);
+    const remaining = currentStipend - totalBudgeted;
+    
     // Add stipend section first
     container.insertAdjacentHTML('beforeend', `
         <div class="stipend-section">
@@ -2989,8 +2969,10 @@ function displayEditableBudgets() {
                     <button id="editStipend" onclick="editStipendAmount()">Edit</button>
                 </div>
             </div>
-            <div id="budgetStatus" class="budget-status">
-                Remaining: $${(currentStipend - Object.values(currentBudgets).reduce((sum, cat) => sum + Number(cat.amount), 0)).toFixed(2)}
+            <div id="budgetStatus" class="budget-status ${remaining >= 0 ? 'positive' : 'negative'}">
+                ${remaining >= 0 
+                    ? `Remaining: $${remaining.toFixed(2)}` 
+                    : `Over budget by: $${Math.abs(remaining).toFixed(2)}`}
             </div>
         </div>
     `);
@@ -3055,22 +3037,8 @@ function updateBudget(category, amount) {
     // Update the budget amount
     currentBudgets[category].amount = newAmount;
     
-    // Calculate new total budgeted amount
-    const totalBudgeted = Object.values(currentBudgets)
-        .reduce((sum, data) => sum + Number(data.amount), 0);
-    
-    // Calculate remaining budget
-    const remaining = currentStipend - totalBudgeted;
-    
-    // Update the status display
-    const statusElement = document.getElementById('budgetStatus');
-    if (statusElement) {
-        const newText = remaining >= 0 
-            ? `Remaining: $${remaining.toFixed(2)}` 
-            : `Over budget by: $${Math.abs(remaining).toFixed(2)}`;
-        statusElement.textContent = newText;
-        statusElement.className = `budget-status ${remaining >= 0 ? 'positive' : 'negative'}`;
-    }
+    // Update budget status
+    updateBudgetStatus();
 }
 
 function updateCategoryName(oldName, newName) {
