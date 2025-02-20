@@ -2587,90 +2587,53 @@ window.addEventListener('resize', function() {
 
 // Main Initialization
 async function initializePage() {
-    const loadingOverlay = document.getElementById('loadingOverlay');
     try {
-        loadingOverlay.style.display = 'flex';
-        
-        const token = API.getToken();
+        // Get auth token
+        const token = localStorage.getItem('authToken');
         if (!token) {
-            window.location.href = 'signin529.html';
+            window.location.href = 'login.html';
             return;
         }
 
-        // Fetch all initial data in parallel
-        const [userProfile, expenses, budgets] = await Promise.all([
-            fetchUserProfile(),
-            fetchExpenses(),
-            loadCurrentBudgets()
-        ]);
-
-        if (!userProfile) throw new Error('Failed to load user profile');
-
-        // Calculate benefits
-        const benefits = calculateBenefits(expenses, userProfile.state, userProfile.income);
-
-        // Only update profile if benefits have changed
-        if (benefits.ytdBenefit !== userProfile.currentBenefit) {
-            try {
-                await updateProfile({
-                    currentBenefit: benefits.ytdBenefit
-                });
-            } catch (error) {
-                console.warn('Failed to update profile with new benefits:', error);
-            }
+        // Initialize variables and load data
+        currentDisplayMonth = new Date();
+        await loadUserProfile();
+        await loadCurrentBudgets();
+        
+        // Set up event listeners for elements that always exist
+        const menuButton = document.querySelector('.menu-button');
+        const navLinks = document.querySelector('.nav-links');
+        if (menuButton && navLinks) {
+            menuButton.addEventListener('click', () => {
+                navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+            });
         }
 
-        // Update UI with expenses parameter
-        updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
-        updateBenefitDisplay(benefits, userProfile.state, userProfile.accountStatus, expenses);
-        updateMonthDisplay();
+        const prevMonthBtn = document.getElementById('prevMonth');
+        const nextMonthBtn = document.getElementById('nextMonth');
+        if (prevMonthBtn && nextMonthBtn) {
+            prevMonthBtn.addEventListener('click', () => navigateMonth(-1));
+            nextMonthBtn.addEventListener('click', () => navigateMonth(1));
+        }
 
-        initializeViewToggle();
-        
-        // Update the month navigation to handle both views
-        document.getElementById('prevMonth').addEventListener('click', () => {
-            currentDisplayMonth = new Date(currentDisplayMonth.getFullYear(), 
-                currentDisplayMonth.getMonth() - 1);
-            updateMonthDisplay();
-            updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
-            if (chartContainer.style.display !== 'none') {
-                createRadarChart(expenses, currentDisplayMonth);
-            }
-        });
+        const viewToggleBtn = document.getElementById('viewToggle');
+        if (viewToggleBtn) {
+            viewToggleBtn.addEventListener('click', toggleView);
+        }
 
-        document.getElementById('nextMonth').addEventListener('click', () => {
-            const now = new Date();
-            if (currentDisplayMonth < now) {
-                currentDisplayMonth = new Date(currentDisplayMonth.getFullYear(), 
-                    currentDisplayMonth.getMonth() + 1);
-                updateMonthDisplay();
-                updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
-                if (chartContainer.style.display !== 'none') {
-                    createRadarChart(expenses, currentDisplayMonth);
-                }
-            }
-        });
-
-        // Add these new initializations
         const editBudgetsBtn = document.getElementById('editBudgets');
-        const editStipendBtn = document.getElementById('editStipend');
-        
-        editBudgetsBtn.addEventListener('click', toggleEditMode);
-        editStipendBtn.addEventListener('click', async () => {
-            const newAmount = prompt('Enter new monthly stipend amount:', currentStipend);
-            if (newAmount && !isNaN(newAmount)) {
-                await updateStipend(Number(newAmount));
-            }
-        });
+        if (editBudgetsBtn) {
+            editBudgetsBtn.addEventListener('click', toggleEditMode);
+        }
 
-        // Load initial budgets
-        await loadCurrentBudgets();
+        // Remove the event listener setup for the now-removed static editStipend button
+        // The event listener for editStipend will now be handled through the onclick in displayEditableBudgets
+
+        // Initialize the display
+        updateMonthDisplay();
         
     } catch (error) {
         console.error('Error initializing page:', error);
-        alert('Error loading data. Please try again.');
-    } finally {
-        loadingOverlay.style.display = 'none';
     }
 }
 
