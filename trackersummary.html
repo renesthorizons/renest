@@ -896,14 +896,13 @@ input[type="number"] {
 }
 
 @media (max-width: 768px) {
-    .view-toggle-button {
-        padding: 0.15rem 0.35rem;  /* Smaller padding */
-        font-size: 0.75rem;        /* Smaller font */
-        gap: 0.15rem;              /* Reduced gap between icon and text */
+    .view-toggle-button .toggle-icon {
+        display: none;  /* Hide icons on mobile */
     }
-
-    .toggle-icon {
-        font-size: 0.875rem;       /* Slightly smaller icons */
+    
+    .view-toggle-button {
+        padding: 0.15rem 0.35rem;  /* Adjust padding since there's no icon */
+        font-size: 0.75rem;
     }
 }
 
@@ -914,12 +913,24 @@ input[type="number"] {
     }
 
     .category-name {
-        margin-right: auto;  /* Push the amounts to the right while maintaining spacing */
+        margin-right: 0.1rem;  /* Explicit margin in edit mode */
+        flex: 0 1 auto;  /* Don't grow, allow shrink, auto base size */
+    }
+
+    .category-amounts {
+        flex: 0 1 auto;  /* Don't grow, allow shrink, auto base size */
+        margin-left: 0.1rem;  /* Small margin from category name */
     }
 
     /* If you need even tighter control */
+    .category.edit-mode .category-header {
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
+
     .category.edit-mode .category-name {
-        margin-right: 0.1rem;  /* Explicit margin in edit mode */
+        margin-right: 0.1rem;  /* Very small margin in edit mode */
     }
 }
 </style>
