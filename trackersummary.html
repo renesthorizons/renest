@@ -2818,6 +2818,21 @@ async function saveBudgetChanges() {
 }
 
 // Modify displayEditableBudgets to show all categories
+function updateRemainingStipend() {
+    const totalBudgeted = Object.values(currentBudgets)
+        .reduce((sum, cat) => sum + cat.amount, 0);
+    const remaining = currentStipend - totalBudgeted;
+    
+    const statusElement = document.getElementById('budgetStatus');
+    if (statusElement) {
+        statusElement.textContent = remaining >= 0 
+            ? `Remaining: $${remaining.toFixed(2)}` 
+            : `Over budget by: $${Math.abs(remaining).toFixed(2)}`;
+        statusElement.className = `budget-status ${remaining >= 0 ? 'positive' : 'negative'}`;
+    }
+}
+
+// Modify displayEditableBudgets to use live updates
 function displayEditableBudgets() {
     const container = document.getElementById('categoriesContainer');
     container.innerHTML = '';
@@ -2892,10 +2907,8 @@ function updateBudget(category, amount) {
     }
     
     currentBudgets[category].amount = newAmount;
-    updateBudgetStatus();
-    updateRemainingStipend();
-}
-function updateRemainingStipend() {
+    
+    // Calculate new total and update display immediately
     const totalBudgeted = Object.values(currentBudgets)
         .reduce((sum, cat) => sum + cat.amount, 0);
     const remaining = currentStipend - totalBudgeted;
@@ -2903,8 +2916,8 @@ function updateRemainingStipend() {
     const statusElement = document.getElementById('budgetStatus');
     if (statusElement) {
         statusElement.textContent = remaining >= 0 
-            ? `Remaining: $${remaining.toFixed(2)}` 
-            : `Over budget by: $${Math.abs(remaining).toFixed(2)}`;
+            ? `Remaining: ${remaining.toFixed(2)}` 
+            : `Over budget by: ${Math.abs(remaining).toFixed(2)}`;
         statusElement.className = `budget-status ${remaining >= 0 ? 'positive' : 'negative'}`;
     }
 }
