@@ -871,11 +871,7 @@ body {
     }
 }
 
-@media (max-width: 768px) {
-    .category.edit-mode .category-header {
-        gap: .01rem !important;  /* Reduce space between category name and amount when in edit mode */
-    }
-}
+
 
 /* Remove spinner arrows from number inputs */
 input[type="number"]::-webkit-inner-spin-button,
@@ -908,6 +904,22 @@ input[type="number"] {
 
     .toggle-icon {
         font-size: 0.875rem;       /* Slightly smaller icons */
+    }
+}
+
+@media (max-width: 768px) {
+    .category-header {
+        justify-content: flex-start;  /* Override space-between */
+        gap: 0.5rem;  /* Add explicit gap */
+    }
+
+    .category-name {
+        margin-right: auto;  /* Push the amounts to the right while maintaining spacing */
+    }
+
+    /* If you need even tighter control */
+    .category.edit-mode .category-name {
+        margin-right: 0.5rem;  /* Explicit margin in edit mode */
     }
 }
 </style>
