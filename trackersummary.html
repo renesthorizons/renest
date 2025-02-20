@@ -994,6 +994,14 @@ input[type="number"] {
                 </div>
             </div>
 
+            <!-- Modify the budget summary div -->
+            <!-- <div class="budget-summary" style="margin-bottom: 1.5rem;">
+                <div class="stipend-container">
+                    <div>Monthly Stipend: <span id="stipendAmount">$0.00</span></div>
+                    <button id="editStipend" class="edit-button">✏️</button>
+                </div>
+                <div id="budgetStatus">Remaining: $0.00</div>
+            </div> -->
 
             <div class="progress-container">
                 <div class="section-header">
@@ -2824,6 +2832,8 @@ async function loadCurrentBudgets() {
         // Update displays
         if (isEditMode) {
             displayEditableBudgets();
+            updateStipendDisplay();
+            updateBudgetStatus();
         } else {
             const expenses = await fetchExpenses();
             updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
@@ -2837,14 +2847,13 @@ async function loadCurrentBudgets() {
 }
 
 function updateBudgetStatus() {
-    // Calculate total budgeted amount
+    // Only update if in edit mode
+    if (!isEditMode) return;
+    
     const totalBudgeted = Object.values(currentBudgets)
         .reduce((sum, data) => sum + Number(data.amount), 0);
-    
-    // Calculate remaining budget
     const remaining = currentStipend - totalBudgeted;
     
-    // Update the status display
     const statusElement = document.getElementById('budgetStatus');
     if (statusElement) {
         statusElement.textContent = remaining >= 0 
@@ -2855,8 +2864,13 @@ function updateBudgetStatus() {
 }
 
 function updateStipendDisplay() {
-    // console.log('Updating stipend display with value:', currentStipend);
-    document.getElementById('stipendAmount').textContent = `$${currentStipend.toFixed(2)}`;
+    // Only update if in edit mode
+    if (!isEditMode) return;
+    
+    const stipendElement = document.getElementById('stipendAmount');
+    if (stipendElement) {
+        stipendElement.textContent = `$${currentStipend.toFixed(2)}`;
+    }
 }
 
 // Modify removeCategory to just update local state
@@ -2953,11 +2967,6 @@ function displayEditableBudgets() {
     const container = document.getElementById('categoriesContainer');
     container.innerHTML = '';
     
-    // Calculate initial total budgeted for stipend section
-    const totalBudgeted = Object.values(currentBudgets)
-        .reduce((sum, data) => sum + Number(data.amount), 0);
-    const remaining = currentStipend - totalBudgeted;
-    
     // Add stipend section first
     container.insertAdjacentHTML('beforeend', `
         <div class="stipend-section">
@@ -2969,10 +2978,8 @@ function displayEditableBudgets() {
                     <button id="editStipend" onclick="editStipendAmount()">Edit</button>
                 </div>
             </div>
-            <div id="budgetStatus" class="budget-status ${remaining >= 0 ? 'positive' : 'negative'}">
-                ${remaining >= 0 
-                    ? `Remaining: $${remaining.toFixed(2)}` 
-                    : `Over budget by: $${Math.abs(remaining).toFixed(2)}`}
+            <div id="budgetStatus" class="budget-status">
+                Remaining: $${(currentStipend - Object.values(currentBudgets).reduce((sum, cat) => sum + Number(cat.amount), 0)).toFixed(2)}
             </div>
         </div>
     `);
@@ -3037,8 +3044,22 @@ function updateBudget(category, amount) {
     // Update the budget amount
     currentBudgets[category].amount = newAmount;
     
-    // Update budget status
-    updateBudgetStatus();
+    // Calculate new total budgeted amount
+    const totalBudgeted = Object.values(currentBudgets)
+        .reduce((sum, data) => sum + Number(data.amount), 0);
+    
+    // Calculate remaining budget
+    const remaining = currentStipend - totalBudgeted;
+    
+    // Update the status display
+    const statusElement = document.getElementById('budgetStatus');
+    if (statusElement) {
+        const newText = remaining >= 0 
+            ? `Remaining: $${remaining.toFixed(2)}` 
+            : `Over budget by: $${Math.abs(remaining).toFixed(2)}`;
+        statusElement.textContent = newText;
+        statusElement.className = `budget-status ${remaining >= 0 ? 'positive' : 'negative'}`;
+    }
 }
 
 function updateCategoryName(oldName, newName) {
