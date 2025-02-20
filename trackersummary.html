@@ -3054,18 +3054,8 @@ function updateBudget(category, amount) {
     
     currentBudgets[category].amount = newAmount;
     
-    // Calculate total budgeted amount
-    const totalBudgeted = Object.values(currentBudgets)
-        .reduce((sum, cat) => sum + Number(cat.amount), 0);
-    
-    // Update just the remaining stipend display
-    const remaining = currentStipend - totalBudgeted;
-    const statusElement = document.getElementById('budgetStatus');
-    if (statusElement) {
-        statusElement.textContent = remaining >= 0 
-            ? `Remaining: $${remaining.toFixed(2)}` 
-            : `Over budget by: $${Math.abs(remaining).toFixed(2)}`;
-    }
+    // Call updateBudgetStatus to refresh the display
+    updateBudgetStatus();
 }
 
 function updateCategoryName(oldName, newName) {
