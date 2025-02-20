@@ -2647,67 +2647,7 @@ const defaultBudgets = {
 };
 
 // Modify loadCurrentBudgets to properly handle all categories
-async function loadCurrentBudgets() {
-    try {
-        // console.log('Starting loadCurrentBudgets...');
-        const response = await fetch(`${budgetManagerAPI}/budgets`, {
-            headers: {
-                'Authorization': `Bearer ${API.getToken()}`
-            }
-        });
-        
-        if (!response.ok) throw new Error('Failed to fetch budgets');
-        
-        const data = await response.json();
-        // console.log('Budget API Response:', data);
-        
-        // Initialize with default budgets
-        // First check if we have categories from the API
-        if (data.categories && data.categories.length > 0) {
-            // If we have API categories, use those
-            currentBudgets = {};
-            data.categories.forEach(apiCategory => {
-                currentBudgets[apiCategory.categoryName] = {
-                    amount: Number(apiCategory.budgetAmount),
-                    id: apiCategory.categoryId
-                };
-            });
-        } else {
-            // If no API categories exist, initialize with default budgets
-            currentBudgets = { ...defaultBudgets };
-            
-            // Set rent from localStorage
-            const monthlyRent = localStorage.getItem('monthlyRent');
-            if (monthlyRent) {
-                currentBudgets['Rent'].amount = Number(monthlyRent);
-            }
-        }
-        
-        // console.log('Initialized currentBudgets:', currentBudgets);
-        
-        // Set stipend from API
-        currentStipend = Number(data.monthlyStipend) || 0;
-        if (currentStipend === 0) {
-            const income = localStorage.getItem('income');
-            if (income) {
-                currentStipend = Math.round(Number(income) / 12);
-            }
-        }
-        
-        // Update displays
-        if (isEditMode) {
-            displayEditableBudgets();
-        } else {
-            const expenses = await fetchExpenses();
-            updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
-        }
-        
-        updateStipendDisplay();
-        updateBudgetStatus();
-    } catch (error) {
-        console.error('Error in loadCurrentBudgets:', error);
-    }
-}
+
 
 function updateBudgetStatus() {
     const totalBudgeted = Object.values(currentBudgets)
@@ -2818,29 +2758,61 @@ async function saveBudgetChanges() {
 }
 
 // Modify displayEditableBudgets to show all categories
-function updateRemainingStipend() {
+function updateBudget(category, amount) {
+    console.log('updateBudget called:', { category, amount });
+    
+    const newAmount = Number(amount);
+    if (isNaN(newAmount) || newAmount < 0) {
+        console.warn('Invalid amount:', amount);
+        alert('Please enter a valid amount');
+        return;
+    }
+    
+    console.log('Previous budget amount:', currentBudgets[category].amount);
+    currentBudgets[category].amount = newAmount;
+    console.log('Updated budget amount:', currentBudgets[category].amount);
+    
+    // Calculate new total and update status
     const totalBudgeted = Object.values(currentBudgets)
         .reduce((sum, cat) => sum + cat.amount, 0);
+    console.log('Total budgeted:', totalBudgeted);
+    console.log('Current stipend:', currentStipend);
+    
     const remaining = currentStipend - totalBudgeted;
+    console.log('Remaining amount:', remaining);
     
     const statusElement = document.getElementById('budgetStatus');
     if (statusElement) {
+        console.log('Updating status element');
         statusElement.textContent = remaining >= 0 
             ? `Remaining: $${remaining.toFixed(2)}` 
             : `Over budget by: $${Math.abs(remaining).toFixed(2)}`;
         statusElement.className = `budget-status ${remaining >= 0 ? 'positive' : 'negative'}`;
+    } else {
+        console.warn('Status element not found');
     }
 }
 
-// Modify displayEditableBudgets to use live updates
 function displayEditableBudgets() {
+    console.log('displayEditableBudgets called');
+    console.log('Current budgets:', currentBudgets);
+    console.log('Current stipend:', currentStipend);
+    
     const container = document.getElementById('categoriesContainer');
+    if (!container) {
+        console.error('Categories container not found');
+        return;
+    }
+    
     container.innerHTML = '';
     
-    // Calculate initial total budgeted amount
+    // Calculate total budgeted amount
     const totalBudgeted = Object.values(currentBudgets)
         .reduce((sum, cat) => sum + cat.amount, 0);
+    console.log('Total budgeted:', totalBudgeted);
+    
     const remaining = currentStipend - totalBudgeted;
+    console.log('Remaining amount:', remaining);
     
     // Add stipend section with remaining budget
     container.insertAdjacentHTML('beforeend', `
@@ -2861,8 +2833,9 @@ function displayEditableBudgets() {
         </div>
     `);
     
-    // Display all categories with live update functionality
+    // Display all categories from currentBudgets
     Object.entries(currentBudgets).forEach(([category, data]) => {
+        console.log('Adding category:', category, data);
         container.insertAdjacentHTML('beforeend', `
             <div class="category" data-category="${category}">
                 <div class="category-header">
@@ -2899,26 +2872,60 @@ function displayEditableBudgets() {
     `);
 }
 
-function updateBudget(category, amount) {
-    const newAmount = Number(amount);
-    if (isNaN(newAmount) || newAmount < 0) {
-        alert('Please enter a valid amount');
-        return;
-    }
-    
-    currentBudgets[category].amount = newAmount;
-    
-    // Calculate new total and update display immediately
-    const totalBudgeted = Object.values(currentBudgets)
-        .reduce((sum, cat) => sum + cat.amount, 0);
-    const remaining = currentStipend - totalBudgeted;
-    
-    const statusElement = document.getElementById('budgetStatus');
-    if (statusElement) {
-        statusElement.textContent = remaining >= 0 
-            ? `Remaining: ${remaining.toFixed(2)}` 
-            : `Over budget by: ${Math.abs(remaining).toFixed(2)}`;
-        statusElement.className = `budget-status ${remaining >= 0 ? 'positive' : 'negative'}`;
+async function loadCurrentBudgets() {
+    console.log('loadCurrentBudgets called');
+    try {
+        const response = await fetch(`${budgetManagerAPI}/budgets`, {
+            headers: {
+                'Authorization': `Bearer ${API.getToken()}`
+            }
+        });
+        
+        if (!response.ok) {
+            console.error('Failed to fetch budgets:', response.status);
+            throw new Error('Failed to fetch budgets');
+        }
+        
+        const data = await response.json();
+        console.log('Budget API Response:', data);
+        
+        if (data.categories && data.categories.length > 0) {
+            currentBudgets = {};
+            data.categories.forEach(apiCategory => {
+                currentBudgets[apiCategory.categoryName] = {
+                    amount: Number(apiCategory.budgetAmount),
+                    id: apiCategory.categoryId
+                };
+            });
+            console.log('Initialized budgets from API:', currentBudgets);
+        } else {
+            currentBudgets = { ...defaultBudgets };
+            console.log('Initialized with default budgets:', currentBudgets);
+        }
+        
+        currentStipend = Number(data.monthlyStipend) || 0;
+        if (currentStipend === 0) {
+            const income = localStorage.getItem('income');
+            if (income) {
+                currentStipend = Math.round(Number(income) / 12);
+                console.log('Set stipend from income:', currentStipend);
+            }
+        }
+        
+        console.log('Final currentBudgets:', currentBudgets);
+        console.log('Final currentStipend:', currentStipend);
+        
+        if (isEditMode) {
+            displayEditableBudgets();
+        } else {
+            const expenses = await fetchExpenses();
+            updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
+        }
+        
+        updateStipendDisplay();
+        updateBudgetStatus();
+    } catch (error) {
+        console.error('Error in loadCurrentBudgets:', error);
     }
 }
 
