@@ -3069,9 +3069,19 @@ function updateBudget(category, amount) {
         const newText = remaining >= 0 
             ? `Remaining: $${remaining.toFixed(2)}` 
             : `Over budget by: $${Math.abs(remaining).toFixed(2)}`;
-        statusElement.textContent = newText;
-        statusElement.className = `budget-status ${remaining >= 0 ? 'positive' : 'negative'}`;
-        console.log('Updated status text to:', newText);
+        
+        // Force DOM update
+        requestAnimationFrame(() => {
+            statusElement.textContent = newText;
+            statusElement.className = `budget-status ${remaining >= 0 ? 'positive' : 'negative'}`;
+            console.log('Updated status text to:', newText);
+            
+            // Also update the stipend display
+            const stipendAmount = document.getElementById('stipendAmount');
+            if (stipendAmount) {
+                stipendAmount.textContent = currentStipend.toFixed(2);
+            }
+        });
     } else {
         console.warn('Budget status element not found');
     }
