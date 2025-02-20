@@ -1115,6 +1115,59 @@
         .submit-button.success span {
             opacity: 0;
         }
+
+        /* Update the date input styles */
+        input[type="date"] {
+            -webkit-appearance: none;
+            min-height: 48px;
+            padding: 0.875rem;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            color: var(--text-dark);
+            cursor: pointer;
+            position: relative;
+        }
+
+        /* Style the calendar icon */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            background: transparent;
+            bottom: 0;
+            color: transparent;
+            cursor: pointer;
+            height: auto;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: auto;
+            padding: 0.75rem;
+        }
+
+        /* Add a custom calendar icon */
+        input[type="date"]::after {
+            content: "📅";
+            position: absolute;
+            top: 50%;
+            right: 0.75rem;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        /* Ensure text color is visible when a date is selected */
+        input[type="date"]:not(:placeholder-shown) {
+            color: var(--text-dark);
+        }
+
+        /* Style for iOS devices */
+        @supports (-webkit-touch-callout: none) {
+            input[type="date"] {
+                display: flex;
+                align-items: center;
+                min-height: 48px;
+            }
+        }
     </style>
 </head>
 <body>
