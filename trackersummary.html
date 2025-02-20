@@ -3052,36 +3052,19 @@ function updateBudget(category, amount) {
         return;
     }
     
-    console.log('Previous budget amount:', currentBudgets[category].amount);
     currentBudgets[category].amount = newAmount;
-    console.log('New budget amount:', currentBudgets[category].amount);
     
-    // Calculate new total and update status directly
-    const totalBudgeted = Object.entries(currentBudgets)
-        .reduce((sum, [cat, data]) => sum + Number(data.amount), 0);
-    console.log('New total budgeted:', totalBudgeted);
+    // Calculate total budgeted amount
+    const totalBudgeted = Object.values(currentBudgets)
+        .reduce((sum, cat) => sum + Number(cat.amount), 0);
     
+    // Update just the remaining stipend display
     const remaining = currentStipend - totalBudgeted;
-    console.log('New remaining:', remaining);
-    
     const statusElement = document.getElementById('budgetStatus');
     if (statusElement) {
-        const newText = remaining >= 0 
+        statusElement.textContent = remaining >= 0 
             ? `Remaining: $${remaining.toFixed(2)}` 
             : `Over budget by: $${Math.abs(remaining).toFixed(2)}`;
-        
-        // Update both text content and HTML
-        statusElement.textContent = newText;
-        statusElement.innerHTML = newText;
-        statusElement.className = `budget-status ${remaining >= 0 ? 'positive' : 'negative'}`;
-        console.log('Updated status text to:', newText);
-        
-        // Force a reflow
-        statusElement.style.display = 'none';
-        statusElement.offsetHeight; // Force reflow
-        statusElement.style.display = '';
-    } else {
-        console.warn('Budget status element not found');
     }
 }
 
