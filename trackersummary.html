@@ -931,6 +931,12 @@ input[type="number"] {
         transform: translateY(-50%);
     }
 }
+
+@media (max-width: 768px) {
+    .category.edit-mode .category-amounts span {
+        display: none;  /* Hides the dollar sign */
+    }
+}
 </style>
 <body>
     <nav class="navbar">
@@ -2934,7 +2940,7 @@ function displayEditableBudgets() {
     // Display all categories from currentBudgets
     Object.entries(currentBudgets).forEach(([category, data]) => {
         container.insertAdjacentHTML('beforeend', `
-            <div class="category edit-mode" data-category="${category}">  // Added edit-mode class here
+            <div class="category edit-mode" data-category="${category}">
                 <div class="category-header">
                     <div class="category-name">
                         <span>${categoryIcons[category] || '📊'}</span>
