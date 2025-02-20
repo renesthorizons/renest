@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -995,13 +996,13 @@ input[type="number"] {
             </div>
 
             <!-- Modify the budget summary div -->
-            <!-- <div class="budget-summary" style="margin-bottom: 1.5rem;">
+            <div class="budget-summary" style="margin-bottom: 1.5rem;">
                 <div class="stipend-container">
                     <div>Monthly Stipend: <span id="stipendAmount">$0.00</span></div>
                     <button id="editStipend" class="edit-button">✏️</button>
                 </div>
                 <div id="budgetStatus">Remaining: $0.00</div>
-            </div> -->
+            </div>
 
             <div class="progress-container">
                 <div class="section-header">
@@ -2587,134 +2588,92 @@ window.addEventListener('resize', function() {
 
 // Main Initialization
 async function initializePage() {
+    const loadingOverlay = document.getElementById('loadingOverlay');
     try {
-        console.log('Starting page initialization...');
+        loadingOverlay.style.display = 'flex';
         
-        // Get auth token
-        const token = localStorage.getItem('authToken');
+        const token = API.getToken();
         if (!token) {
-            window.location.href = 'login.html';
+            window.location.href = 'signin529.html';
             return;
         }
 
-        // Initialize variables and load data
-        currentDisplayMonth = new Date();
-        console.log('Loading budgets...');
-        await loadCurrentBudgets();
-        console.log('Budgets loaded');
-        
-        console.log('Updating tracking status...');
-        await updateTrackingStatus();
-        console.log('Tracking status updated');
-        
-        console.log('Updating account status...');
-        await updateAccountStatus();
-        console.log('Account status updated');
-        
-        console.log('Loading benefits display...');
-        await updateBenefitsDisplay();
-        console.log('Benefits display updated');
-        
-        console.log('Loading expenses...');
-        const expenses = await fetchExpenses();
-        await updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
-        console.log('Expenses loaded and displayed');
-        
-        // Set up event listeners
-        const menuButton = document.querySelector('.menu-button');
-        const navLinks = document.querySelector('.nav-links');
-        if (menuButton && navLinks) {
-            menuButton.addEventListener('click', () => {
-                navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-            });
+        // Fetch all initial data in parallel
+        const [userProfile, expenses, budgets] = await Promise.all([
+            fetchUserProfile(),
+            fetchExpenses(),
+            loadCurrentBudgets()
+        ]);
+
+        if (!userProfile) throw new Error('Failed to load user profile');
+
+        // Calculate benefits
+        const benefits = calculateBenefits(expenses, userProfile.state, userProfile.income);
+
+        // Only update profile if benefits have changed
+        if (benefits.ytdBenefit !== userProfile.currentBenefit) {
+            try {
+                await updateProfile({
+                    currentBenefit: benefits.ytdBenefit
+                });
+            } catch (error) {
+                console.warn('Failed to update profile with new benefits:', error);
+            }
         }
 
-        const prevMonthBtn = document.getElementById('prevMonth');
-        const nextMonthBtn = document.getElementById('nextMonth');
-        if (prevMonthBtn && nextMonthBtn) {
-            prevMonthBtn.addEventListener('click', () => navigateMonth(-1));
-            nextMonthBtn.addEventListener('click', () => navigateMonth(1));
-        }
-
-        const viewToggleBtn = document.getElementById('viewToggle');
-        if (viewToggleBtn) {
-            initializeViewToggle();
-        }
-
-        const editBudgetsBtn = document.getElementById('editBudgets');
-        if (editBudgetsBtn) {
-            editBudgetsBtn.addEventListener('click', toggleEditMode);
-        }
-
-        // Initialize the display
+        // Update UI with expenses parameter
+        updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
+        updateBenefitDisplay(benefits, userProfile.state, userProfile.accountStatus, expenses);
         updateMonthDisplay();
+
+        initializeViewToggle();
         
-        // Remove loading spinner
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        if (loadingOverlay) {
-            loadingOverlay.style.display = 'none';
-        }
+        // Update the month navigation to handle both views
+        document.getElementById('prevMonth').addEventListener('click', () => {
+            currentDisplayMonth = new Date(currentDisplayMonth.getFullYear(), 
+                currentDisplayMonth.getMonth() - 1);
+            updateMonthDisplay();
+            updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
+            if (chartContainer.style.display !== 'none') {
+                createRadarChart(expenses, currentDisplayMonth);
+            }
+        });
+
+        document.getElementById('nextMonth').addEventListener('click', () => {
+            const now = new Date();
+            if (currentDisplayMonth < now) {
+                currentDisplayMonth = new Date(currentDisplayMonth.getFullYear(), 
+                    currentDisplayMonth.getMonth() + 1);
+                updateMonthDisplay();
+                updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
+                if (chartContainer.style.display !== 'none') {
+                    createRadarChart(expenses, currentDisplayMonth);
+                }
+            }
+        });
+
+        // Add these new initializations
+        const editBudgetsBtn = document.getElementById('editBudgets');
+        const editStipendBtn = document.getElementById('editStipend');
         
-        console.log('Page initialization complete!');
+        editBudgetsBtn.addEventListener('click', toggleEditMode);
+        editStipendBtn.addEventListener('click', async () => {
+            const newAmount = prompt('Enter new monthly stipend amount:', currentStipend);
+            if (newAmount && !isNaN(newAmount)) {
+                await updateStipend(Number(newAmount));
+            }
+        });
+
+        // Load initial budgets
+        await loadCurrentBudgets();
         
     } catch (error) {
         console.error('Error initializing page:', error);
+        alert('Error loading data. Please try again.');
+    } finally {
+        loadingOverlay.style.display = 'none';
     }
 }
-
-// Make sure these functions are properly defined and working
-async function updateBenefitsDisplay() {
-    console.log('Starting benefits calculation...');
-    try {
-        const currentMonthElement = document.getElementById('currentMonthBenefit');
-        const totalElement = document.getElementById('totalBenefit');
-        
-        // Calculate benefits (replace with your actual calculation logic)
-        const currentBenefit = await calculateCurrentMonthBenefit();
-        const totalBenefit = await calculateYearToDateBenefit();
-        
-        console.log('Benefits calculated:', { currentBenefit, totalBenefit });
-        
-        if (currentMonthElement) {
-            currentMonthElement.textContent = `$${currentBenefit.toFixed(2)}`;
-        }
-        if (totalElement) {
-            totalElement.textContent = `$${totalBenefit.toFixed(2)}`;
-        }
-    } catch (error) {
-        console.error('Error updating benefits display:', error);
-    }
-}
-
-async function updateTrackingStatus() {
-    console.log('Starting tracking status update...');
-    try {
-        const statusElement = document.getElementById('trackingStatus');
-        if (statusElement) {
-            const status = await fetchTrackingStatus(); // Your existing status fetch function
-            statusElement.textContent = status;
-            console.log('Tracking status set to:', status);
-        }
-    } catch (error) {
-        console.error('Error updating tracking status:', error);
-    }
-}
-
-async function updateAccountStatus() {
-    console.log('Starting account status update...');
-    try {
-        const statusElement = document.getElementById('accountStatus');
-        if (statusElement) {
-            const status = await fetchAccountStatus(); // Your existing status fetch function
-            statusElement.textContent = status;
-            console.log('Account status set to:', status);
-        }
-    } catch (error) {
-        console.error('Error updating account status:', error);
-    }
-}
-
-document.addEventListener('DOMContentLoaded', initializePage);
 
 // Event Listeners
 document.getElementById('signOutLink').addEventListener('click', (e) => {
@@ -2874,8 +2833,6 @@ async function loadCurrentBudgets() {
         // Update displays
         if (isEditMode) {
             displayEditableBudgets();
-            updateStipendDisplay();
-            updateBudgetStatus();
         } else {
             const expenses = await fetchExpenses();
             updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
@@ -2889,30 +2846,43 @@ async function loadCurrentBudgets() {
 }
 
 function updateBudgetStatus() {
-    // Only update if in edit mode
-    if (!isEditMode) return;
+    console.log('updateBudgetStatus called');
+    console.log('Current budgets:', currentBudgets);
     
-    const totalBudgeted = Object.values(currentBudgets)
-        .reduce((sum, data) => sum + Number(data.amount), 0);
+    // Log each category's amount before summing
+    Object.entries(currentBudgets).forEach(([category, data]) => {
+        console.log(`${category} budget:`, data.amount);
+    });
+    
+    const totalBudgeted = Object.entries(currentBudgets)
+        .reduce((sum, [category, data]) => {
+            const amount = Number(data.amount);
+            console.log(`Adding to total: ${category} = ${amount}`);
+            return sum + amount;
+        }, 0);
+    
+    console.log('Total budgeted:', totalBudgeted);
+    console.log('Current stipend:', currentStipend);
+    
     const remaining = currentStipend - totalBudgeted;
+    console.log('Remaining amount:', remaining);
     
     const statusElement = document.getElementById('budgetStatus');
     if (statusElement) {
-        statusElement.textContent = remaining >= 0 
+        const newText = remaining >= 0 
             ? `Remaining: $${remaining.toFixed(2)}` 
             : `Over budget by: $${Math.abs(remaining).toFixed(2)}`;
+        console.log('Updating status element with:', newText);
+        statusElement.textContent = newText;
         statusElement.className = `budget-status ${remaining >= 0 ? 'positive' : 'negative'}`;
+    } else {
+        console.warn('Budget status element not found');
     }
 }
 
 function updateStipendDisplay() {
-    // Only update if in edit mode
-    if (!isEditMode) return;
-    
-    const stipendElement = document.getElementById('stipendAmount');
-    if (stipendElement) {
-        stipendElement.textContent = `$${currentStipend.toFixed(2)}`;
-    }
+    // console.log('Updating stipend display with value:', currentStipend);
+    document.getElementById('stipendAmount').textContent = `$${currentStipend.toFixed(2)}`;
 }
 
 // Modify removeCategory to just update local state
