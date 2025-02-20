@@ -2978,12 +2978,7 @@ function displayEditableBudgets() {
     const container = document.getElementById('categoriesContainer');
     container.innerHTML = '';
     
-    // Calculate total budgeted amount
-    const totalBudgeted = Object.values(currentBudgets)
-        .reduce((sum, cat) => sum + cat.amount, 0);
-    const remaining = currentStipend - totalBudgeted;
-    
-    // Add stipend section with remaining budget
+    // Add stipend section first
     container.insertAdjacentHTML('beforeend', `
         <div class="stipend-section">
             <div class="stipend-header">
@@ -2994,51 +2989,57 @@ function displayEditableBudgets() {
                     <button id="editStipend" onclick="editStipendAmount()">Edit</button>
                 </div>
             </div>
-            <div id="budgetStatus" class="budget-status ${remaining >= 0 ? 'positive' : 'negative'}">
-                ${remaining >= 0 ? 
-                    `Remaining: $${remaining.toFixed(2)}` : 
-                    `Over budget by: $${Math.abs(remaining).toFixed(2)}`}
+            <div id="budgetStatus" class="budget-status">
+                Remaining: $${(currentStipend - Object.values(currentBudgets).reduce((sum, cat) => sum + Number(cat.amount), 0)).toFixed(2)}
             </div>
         </div>
     `);
     
-    // Display all categories from currentBudgets
+    // Display all categories with modified input handler
     Object.entries(currentBudgets).forEach(([category, data]) => {
-        container.insertAdjacentHTML('beforeend', `
-            <div class="category edit-mode" data-category="${category}">
-                <div class="category-header">
-                    <div class="category-name">
-                        <span>${categoryIcons[category] || '📊'}</span>
-                        <input type="text" class="category-name-input" 
-                               value="${category}" 
-                               ${category === 'Rent' ? 'readonly' : ''}
-                               onchange="updateCategoryName('${category}', this.value)">
-                        ${qualifiedCategories.includes(category) ? 
-                            '<span class="qualified-badge">✓ Qualified</span>' : ''}
-                    </div>
-                    <div class="category-amounts">
-                        <span>$</span>
-                        <input type="number" class="budget-input" 
-                               value="${data.amount}" 
-                               oninput="updateBudget('${category}', this.value)">
-                        ${category !== 'Rent' ? 
-                            `<button class="delete-category" onclick="removeCategory('${category}')">×</button>` : 
-                            ''}
-                    </div>
+        const div = document.createElement('div');
+        div.className = 'category edit-mode';
+        div.setAttribute('data-category', category);
+        
+        div.innerHTML = `
+            <div class="category-header">
+                <div class="category-name">
+                    <span>${categoryIcons[category] || '📊'}</span>
+                    <input type="text" class="category-name-input" 
+                           value="${category}" 
+                           ${category === 'Rent' ? 'readonly' : ''}
+                           onchange="updateCategoryName('${category}', this.value)">
+                    ${qualifiedCategories.includes(category) ? 
+                        '<span class="qualified-badge">✓ Qualified</span>' : ''}
+                </div>
+                <div class="category-amounts">
+                    <span>$</span>
+                    <input type="number" class="budget-input" 
+                           value="${data.amount}">
+                    ${category !== 'Rent' ? 
+                        `<button class="delete-category" onclick="removeCategory('${category}')">×</button>` : 
+                        ''}
                 </div>
             </div>
-        `);
+        `;
+        
+        // Add event listener directly to the input
+        const input = div.querySelector('.budget-input');
+        input.addEventListener('input', (e) => {
+            console.log('Input event fired for', category);
+            updateBudget(category, e.target.value);
+        });
+        
+        container.appendChild(div);
     });
     
-    // Add button for new categories
+    // Add new category button
     container.insertAdjacentHTML('beforeend', `
         <button class="add-category-button" onclick="addNewCategory()">
             <span>+</span>
             Add New Category
         </button>
     `);
-    
-    updateBudgetStatus();
 }
 
 function updateBudget(category, amount) {
