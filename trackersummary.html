@@ -2588,6 +2588,8 @@ window.addEventListener('resize', function() {
 // Main Initialization
 async function initializePage() {
     try {
+        console.log('Starting page initialization...');
+        
         // Get auth token
         const token = localStorage.getItem('authToken');
         if (!token) {
@@ -2597,9 +2599,28 @@ async function initializePage() {
 
         // Initialize variables and load data
         currentDisplayMonth = new Date();
+        console.log('Loading budgets...');
         await loadCurrentBudgets();
+        console.log('Budgets loaded');
         
-        // Set up event listeners for elements that always exist
+        console.log('Updating tracking status...');
+        await updateTrackingStatus();
+        console.log('Tracking status updated');
+        
+        console.log('Updating account status...');
+        await updateAccountStatus();
+        console.log('Account status updated');
+        
+        console.log('Loading benefits display...');
+        await updateBenefitsDisplay();
+        console.log('Benefits display updated');
+        
+        console.log('Loading expenses...');
+        const expenses = await fetchExpenses();
+        await updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
+        console.log('Expenses loaded and displayed');
+        
+        // Set up event listeners
         const menuButton = document.querySelector('.menu-button');
         const navLinks = document.querySelector('.nav-links');
         if (menuButton && navLinks) {
@@ -2628,28 +2649,72 @@ async function initializePage() {
         // Initialize the display
         updateMonthDisplay();
         
-        // Initialize health and account status
-        await updateTrackingStatus();
-        await updateAccountStatus();
-        
-        // Initialize benefits display
-        await updateBenefitsDisplay();
-        
         // Remove loading spinner
         const loadingOverlay = document.getElementById('loadingOverlay');
         if (loadingOverlay) {
             loadingOverlay.style.display = 'none';
         }
         
+        console.log('Page initialization complete!');
+        
     } catch (error) {
         console.error('Error initializing page:', error);
-        // Remove loading spinner even if there's an error
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        if (loadingOverlay) {
-            loadingOverlay.style.display = 'none';
-        }
     }
 }
+
+// Make sure these functions are properly defined and working
+async function updateBenefitsDisplay() {
+    console.log('Starting benefits calculation...');
+    try {
+        const currentMonthElement = document.getElementById('currentMonthBenefit');
+        const totalElement = document.getElementById('totalBenefit');
+        
+        // Calculate benefits (replace with your actual calculation logic)
+        const currentBenefit = await calculateCurrentMonthBenefit();
+        const totalBenefit = await calculateYearToDateBenefit();
+        
+        console.log('Benefits calculated:', { currentBenefit, totalBenefit });
+        
+        if (currentMonthElement) {
+            currentMonthElement.textContent = `$${currentBenefit.toFixed(2)}`;
+        }
+        if (totalElement) {
+            totalElement.textContent = `$${totalBenefit.toFixed(2)}`;
+        }
+    } catch (error) {
+        console.error('Error updating benefits display:', error);
+    }
+}
+
+async function updateTrackingStatus() {
+    console.log('Starting tracking status update...');
+    try {
+        const statusElement = document.getElementById('trackingStatus');
+        if (statusElement) {
+            const status = await fetchTrackingStatus(); // Your existing status fetch function
+            statusElement.textContent = status;
+            console.log('Tracking status set to:', status);
+        }
+    } catch (error) {
+        console.error('Error updating tracking status:', error);
+    }
+}
+
+async function updateAccountStatus() {
+    console.log('Starting account status update...');
+    try {
+        const statusElement = document.getElementById('accountStatus');
+        if (statusElement) {
+            const status = await fetchAccountStatus(); // Your existing status fetch function
+            statusElement.textContent = status;
+            console.log('Account status set to:', status);
+        }
+    } catch (error) {
+        console.error('Error updating account status:', error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', initializePage);
 
 // Event Listeners
 document.getElementById('signOutLink').addEventListener('click', (e) => {
@@ -2660,22 +2725,8 @@ document.getElementById('signOutLink').addEventListener('click', (e) => {
 
 // Initialize on load
 document.addEventListener('DOMContentLoaded', async () => {
-    try {
-        await initializePage();
-        
-        // Initialize view in non-edit mode by default
-        isEditMode = false;
-        const expenses = await fetchExpenses();
-        await updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
-        
-    } catch (error) {
-        console.error('Error during page load:', error);
-        // Remove loading spinner if there's an error
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        if (loadingOverlay) {
-            loadingOverlay.style.display = 'none';
-        }
-    }
+    await initializePage();
+    // Remove the redundant loadCurrentBudgets call
 });
 
 const menuButton = document.querySelector('.menu-button');
