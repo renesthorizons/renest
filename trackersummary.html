@@ -2978,12 +2978,7 @@ function displayEditableBudgets() {
     const container = document.getElementById('categoriesContainer');
     container.innerHTML = '';
     
-    // Calculate total budgeted amount
-    const totalBudgeted = Object.values(currentBudgets)
-        .reduce((sum, cat) => sum + cat.amount, 0);
-    const remaining = currentStipend - totalBudgeted;
-    
-    // Add stipend section with remaining budget
+    // Add stipend section with remaining budget FIRST
     container.insertAdjacentHTML('beforeend', `
         <div class="stipend-section">
             <div class="stipend-header">
@@ -2994,10 +2989,8 @@ function displayEditableBudgets() {
                     <button id="editStipend" onclick="editStipendAmount()">Edit</button>
                 </div>
             </div>
-            <div id="budgetStatus" class="budget-status ${remaining >= 0 ? 'positive' : 'negative'}">
-                ${remaining >= 0 ? 
-                    `Remaining: $${remaining.toFixed(2)}` : 
-                    `Over budget by: $${Math.abs(remaining).toFixed(2)}`}
+            <div id="budgetStatus" class="budget-status">
+                Calculating...
             </div>
         </div>
     `);
@@ -3038,7 +3031,8 @@ function displayEditableBudgets() {
         </button>
     `);
     
-    updateBudgetStatus();
+    // Call updateBudgetStatus AFTER all elements are added to DOM
+    setTimeout(() => updateBudgetStatus(), 0);
 }
 
 function updateBudget(category, amount) {
