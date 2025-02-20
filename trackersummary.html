@@ -2999,7 +2999,7 @@ function displayEditableBudgets() {
                         <span>$</span>
                         <input type="number" class="budget-input" 
                                value="${data.amount}" 
-                               onchange="updateBudget('${category}', this.value)">
+                               oninput="updateBudget('${category}', this.value)">
                         ${category !== 'Rent' ? 
                             `<button class="delete-category" onclick="removeCategory('${category}')">×</button>` : 
                             ''}
@@ -3021,13 +3021,19 @@ function displayEditableBudgets() {
 }
 
 function updateBudget(category, amount) {
+    console.log('updateBudget called:', { category, amount });
+    
     const newAmount = Number(amount);
     if (isNaN(newAmount) || newAmount < 0) {
+        console.log('Invalid amount entered:', amount);
         alert('Please enter a valid amount');
         return;
     }
     
+    console.log('Previous budget amount:', currentBudgets[category].amount);
     currentBudgets[category].amount = newAmount;
+    console.log('New budget amount:', currentBudgets[category].amount);
+    
     updateBudgetStatus();
 }
 
