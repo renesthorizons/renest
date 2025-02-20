@@ -565,11 +565,18 @@ body {
 }
 
 .budget-input {
-    width: 100px;
+    width: 90px;  /* Reduce from 100px to 80px */
     padding: 0.25rem;
     border: 1px solid var(--border);
     border-radius: 4px;
     font-size: 0.875rem;
+}
+
+@media (max-width: 768px) {
+    .budget-input {
+        width: 40px;  /* Even smaller on mobile */
+        padding: 0.25rem;
+    }
 }
 
 /* Add these styles for edit mode */
@@ -861,43 +868,6 @@ body {
 @media screen and (max-width: 768px) {
     .qualified-badge {
         display: none !important;
-    }
-}
-
-@media (max-width: 768px) {
-    /* Existing mobile styles */
-
-    /* Specific styles for budget inputs in edit mode */
-    .category.edit-mode {
-        position: relative;
-        padding: 0.75rem;
-    }
-
-    .category.edit-mode .category-header {
-        display: flex;
-        flex-direction: row; /* Change to row to place items side by side */
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-    }
-
-    .category.edit-mode .category-amounts {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem; /* Space between input and delete button */
-    }
-
-    .category.edit-mode .budget-input {
-        width: 70px; /* Much smaller width */
-        padding: 0.25rem;
-        font-size: 0.875rem;
-        text-align: right;
-    }
-
-    .category.edit-mode .delete-category {
-        font-size: 1rem;
-        padding: 0.25rem;
-        margin-left: 0.25rem; /* Space between input and delete button */
     }
 }
 </style>
