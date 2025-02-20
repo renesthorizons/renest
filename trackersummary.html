@@ -3052,10 +3052,25 @@ function updateBudget(category, amount) {
         return;
     }
     
+    // Update the budget amount
     currentBudgets[category].amount = newAmount;
     
-    // Call updateBudgetStatus to refresh the display
-    updateBudgetStatus();
+    // Calculate new total budgeted amount
+    const totalBudgeted = Object.values(currentBudgets)
+        .reduce((sum, data) => sum + Number(data.amount), 0);
+    
+    // Calculate remaining budget
+    const remaining = currentStipend - totalBudgeted;
+    
+    // Update the status display
+    const statusElement = document.getElementById('budgetStatus');
+    if (statusElement) {
+        const newText = remaining >= 0 
+            ? `Remaining: $${remaining.toFixed(2)}` 
+            : `Over budget by: $${Math.abs(remaining).toFixed(2)}`;
+        statusElement.textContent = newText;
+        statusElement.className = `budget-status ${remaining >= 0 ? 'positive' : 'negative'}`;
+    }
 }
 
 function updateCategoryName(oldName, newName) {
