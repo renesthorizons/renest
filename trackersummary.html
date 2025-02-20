@@ -2537,20 +2537,50 @@ function createRadarChart(expenses, selectedDate) {
             ]
         },
         options: {
-            responsive: true,
             maintainAspectRatio: false,
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false  // Hide legend on mobile
+                }
+            },
             scales: {
                 r: {
-                    beginAtZero: true,
                     ticks: {
-                        stepSize: 200,
-                        callback: value => `$${value}`
+                        display: window.innerWidth > 768,  // Hide numerical labels on mobile
+                        maxTicksLimit: 5
+                    },
+                    pointLabels: {
+                        font: {
+                            size: window.innerWidth > 768 ? 12 : 8  // Smaller font on mobile
+                        },
+                        // Rotate labels to be vertical on mobile
+                        callback: function(value) {
+                            if (window.innerWidth <= 768) {
+                                // Add line breaks between words for vertical stacking
+                                return value.split(' ').join('\n');
+                            }
+                            return value;
+                        },
+                        centerPointLabels: true,
+                        padding: window.innerWidth > 768 ? 20 : 0  // Reduce padding on mobile
                     }
                 }
             }
         }
     });
 }
+
+// Add resize handler to update chart options
+window.addEventListener('resize', function() {
+    if (radarChart) {
+        const isMobile = window.innerWidth <= 768;
+        radarChart.options.scales.r.ticks.display = !isMobile;
+        radarChart.options.scales.r.pointLabels.font.size = isMobile ? 8 : 12;
+        radarChart.options.scales.r.pointLabels.padding = isMobile ? 0 : 20;
+        radarChart.update();
+    }
+});
 
 // Main Initialization
 async function initializePage() {
