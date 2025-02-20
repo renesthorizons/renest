@@ -2848,8 +2848,18 @@ function updateBudgetStatus() {
     console.log('updateBudgetStatus called');
     console.log('Current budgets:', currentBudgets);
     
-    const totalBudgeted = Object.values(currentBudgets)
-        .reduce((sum, cat) => sum + cat.amount, 0);
+    // Log each category's amount before summing
+    Object.entries(currentBudgets).forEach(([category, data]) => {
+        console.log(`${category} budget:`, data.amount);
+    });
+    
+    const totalBudgeted = Object.entries(currentBudgets)
+        .reduce((sum, [category, data]) => {
+            const amount = Number(data.amount);
+            console.log(`Adding to total: ${category} = ${amount}`);
+            return sum + amount;
+        }, 0);
+    
     console.log('Total budgeted:', totalBudgeted);
     console.log('Current stipend:', currentStipend);
     
