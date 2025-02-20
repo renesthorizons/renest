@@ -2617,7 +2617,7 @@ async function initializePage() {
 
         const viewToggleBtn = document.getElementById('viewToggle');
         if (viewToggleBtn) {
-            initializeViewToggle(); // Changed from toggleView to initializeViewToggle
+            initializeViewToggle();
         }
 
         const editBudgetsBtn = document.getElementById('editBudgets');
@@ -2628,8 +2628,26 @@ async function initializePage() {
         // Initialize the display
         updateMonthDisplay();
         
+        // Initialize health and account status
+        await updateTrackingStatus();
+        await updateAccountStatus();
+        
+        // Initialize benefits display
+        await updateBenefitsDisplay();
+        
+        // Remove loading spinner
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        if (loadingOverlay) {
+            loadingOverlay.style.display = 'none';
+        }
+        
     } catch (error) {
         console.error('Error initializing page:', error);
+        // Remove loading spinner even if there's an error
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        if (loadingOverlay) {
+            loadingOverlay.style.display = 'none';
+        }
     }
 }
 
@@ -2642,8 +2660,22 @@ document.getElementById('signOutLink').addEventListener('click', (e) => {
 
 // Initialize on load
 document.addEventListener('DOMContentLoaded', async () => {
-    await initializePage();
-    // Remove the redundant loadCurrentBudgets call
+    try {
+        await initializePage();
+        
+        // Initialize view in non-edit mode by default
+        isEditMode = false;
+        const expenses = await fetchExpenses();
+        await updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
+        
+    } catch (error) {
+        console.error('Error during page load:', error);
+        // Remove loading spinner if there's an error
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        if (loadingOverlay) {
+            loadingOverlay.style.display = 'none';
+        }
+    }
 });
 
 const menuButton = document.querySelector('.menu-button');
