@@ -846,121 +846,257 @@ body {
             opacity: 0.7;
             font-size: 0.9rem;
         }
-    </style>
-`;
 
+/* Add these mobile-specific styles */
+@media screen and (max-width: 768px) {
+    /* General layout adjustments */
+    .container {
+        padding: 0.5rem;
+    }
 
+    .budget-health {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .budget-health > div {
+        width: 100%;
+    }
+
+    /* Category adjustments */
+    .category {
+        padding: 0.75rem;
+    }
+
+    .category-header {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+    }
+
+    .category-name {
+        font-size: 0.9rem;
+        width: 100%;
+    }
+
+    .category-amounts {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* Budget editing adjustments */
+    .budget-input {
+        width: 80px;
+        font-size: 0.9rem;
+    }
+
+    .category-name-input {
+        width: calc(100% - 40px);
+        font-size: 0.9rem;
+    }
+
+    /* Button adjustments */
+    .view-toggle-button {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    .section-header {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .section-header > div {
+        width: 100%;
+    }
+
+    /* Month selector adjustments */
+    .month-selector {
+        width: 100%;
+        justify-content: space-between;
+        padding: 0.5rem;
+    }
+
+    .month-nav {
+        padding: 0.5rem 1rem;
+    }
+
+    /* Stipend section adjustments */
+    .stipend-container {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+    }
+
+    .edit-button {
+        padding: 0.25rem 0.5rem;
+    }
+
+    /* Chart container adjustments */
+    #chartContainer {
+        height: 300px;
+        margin: 10px auto;
+    }
+
+    /* Modal adjustments */
+    .swal2-popup {
+        width: 90% !important;
+        max-width: 400px;
+    }
+
+    .new-category-modal input {
+        width: 100%;
+        margin: 0.5rem 0;
+    }
+
+    /* Footer adjustments */
+    .footer-content {
+        flex-direction: column;
+        gap: 1.5rem;
+        text-align: center;
+    }
+
+    .footer-links {
+        margin-top: 1rem;
+    }
+}
+
+/* Add these utility classes */
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.gap-1 {
+    gap: 1rem;
+}
+
+.w-full {
+    width: 100%;
+}
 </style>
-<body>
-    <nav class="navbar">
-        <a href="https://renesthorizons.com" class="logo">RENEST</a>
-        <div class="nav-links">
-            <a href="#" id="signOutLink" class="active">Sign Out</a>
-            <!-- <a href="dashboard.html">Dashboard</a> -->
-            <a href="529expensetracker.html">Expense Tracker</a>
-            <a href="dashboard.html" class="talk-button">Dashboard</a>
-        </div>
-        <button class="menu-button" aria-label="Toggle menu" aria-expanded="false">☰</button>
-    </nav>
 
-    <main class="main-content">
-        <div class="budget-container">
-            <div class="progress-container" style="margin-bottom: 1.5rem;">
-                <h2 class="section-title2" style="margin-bottom: .8rem;">529 Benefits Unlocked</h2>
-                <div class="insights-grid" style="margin-bottom: 0;">
-                    <div class="insight-card" style="box-shadow: none; border: none; height: auto; padding: 0;">
-                        <div class="section-title" id="currentMonthBenefit">$0.00</div>
-                        <div class="insight-trend">Current Month</div>
-                    </div>
-                    <div class="insight-card" style="box-shadow: none; border: none; height: auto; padding: 0;">
-                        <div class="section-title" id="totalBenefit">$0.00</div>
-                        <div class="insight-trend">Year-to-Date</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="budget-health-banner">
-                <div style="flex: 1;">
-                    <div class="budget-health-title">Tracking Status</div>
-                    <div class="budget-health-status" id="trackingStatus">Loading tracking status...</div>
-                </div>
-                <div style="flex: 1;" id="accountStatusContainer">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div class="budget-health-title">Account Status</div>
-                        <label class="ignore-toggle">
-                            <input type="checkbox" id="ignoreStatus">
-                            <span>Ignore</span>
-                        </label>
-                    </div>
-                    <div class="budget-health-status" id="accountStatus">Loading account status...</div>
-                </div>
-            </div>
-
-            <!-- Modify the budget summary div -->
-            <div class="budget-summary" style="margin-bottom: 1.5rem; display: none;">
-                <div class="stipend-container">
-                    <div>Monthly Stipend: <span id="stipendAmount">$0.00</span></div>
-                    <button id="editStipend" class="edit-button">✏️</button>
-                </div>
-                <div id="budgetStatus">Remaining: $0.00</div>
-            </div>
-
-            <div class="progress-container">
-                <div class="section-header">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
-                        <h2 class="section-title2">Expenses Summary</h2>
-                        <div style="display: flex; gap: 0.5rem;">
-                            <button id="editBudgets" class="view-toggle-button">
-                                <span class="toggle-icon">✏️</span>
-                                <span class="toggle-text">Edit Budgets</span>
-                            </button>
-                            <button id="viewToggle" class="view-toggle-button">
-                                <span class="toggle-icon">📊</span>
-                                <span class="toggle-text">Switch View</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="month-selector">
-                        <button id="prevMonth" class="month-nav">←</button>
-                        <span id="currentMonthDisplay">Loading...</span>
-                        <button id="nextMonth" class="month-nav">→</button>
-                    </div>
-                </div>
-                <div id="categoriesContainer">
-                    <!-- Categories will be populated dynamically -->
-                </div>
-                <div id="chartContainer" style="display: none; height: 400px; margin: 20px auto;">
-                    <canvas id="radarChart"></canvas>
-                </div>
-                <div style="text-align: center; margin-top: 2rem;">
-                    <a href="529expensetracker.html" class="tracker-button">Go To Tracker</a>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <div id="loadingOverlay" class="loading-overlay">
-        <div class="loading-spinner"></div>
+<!-- Update the buttons container -->
+<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;" class="flex-wrap gap-1">
+    <h2 class="section-title2">Expenses Summary</h2>
+    <div style="display: flex; gap: 0.5rem;" class="flex-wrap">
+        <button id="editBudgets" class="view-toggle-button">
+            <span class="toggle-icon">✏️</span>
+            <span class="toggle-text">Edit Budgets</span>
+        </button>
+        <button id="viewToggle" class="view-toggle-button">
+            <span class="toggle-icon">📊</span>
+            <span class="toggle-text">Switch View</span>
+        </button>
     </div>
+</div>
 
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-brand">
-                <div class="footer-logo">RENEST</div>
-                <p class="copyright">©2025 Renest Horizons Inc.</p>
+<!-- Update the budget editing form -->
+<script>
+// Modify displayEditableBudgets function
+function displayEditableBudgets() {
+    const container = document.getElementById('categoriesContainer');
+    container.innerHTML = '';
+    
+    // Add stipend section with improved mobile layout
+    container.insertAdjacentHTML('beforeend', `
+        <div class="stipend-section w-full">
+            <div class="stipend-header flex-wrap">
+                <h3>Monthly Stipend</h3>
+                <div class="stipend-amount">
+                    <span>$</span>
+                    <span id="stipendAmount">${currentStipend.toFixed(2)}</span>
+                    <button id="editStipend" class="edit-button" onclick="editStipendAmount()">Edit</button>
+                </div>
             </div>
-            <div class="footer-links">
-                <h3>Company</h3>
-                <a href="aboutus529.html">About us</a>
-            </div>
-            <div class="footer-links">
-                <h3>Resources</h3>
-                <a href="contactus529.html">Contact us</a>
-                <a href="faq529.html">FAQ</a>
-                <!-- <a href="https://www-renesthorizons-com.translate.goog/?_x_tr_sl=auto&_x_tr_tl=es&_x_tr_hl=en&_x_tr_pto=wapp">Español</a> -->
+            <div id="budgetStatus" class="budget-status ${remaining >= 0 ? 'positive' : 'negative'} w-full">
+                ${remaining >= 0 ? 
+                    `Remaining: $${remaining.toFixed(2)}` : 
+                    `Over budget by: $${Math.abs(remaining).toFixed(2)}`}
             </div>
         </div>
-    </footer>
+    `);
+    
+    // Update category display with improved mobile layout
+    Object.entries(currentBudgets).forEach(([category, data]) => {
+        container.insertAdjacentHTML('beforeend', `
+            <div class="category w-full" data-category="${category}">
+                <div class="category-header">
+                    <div class="category-name w-full">
+                        <span>${categoryIcons[category] || '📊'}</span>
+                        <input type="text" class="category-name-input" 
+                               value="${category}" 
+                               ${category === 'Rent' ? 'readonly' : ''}
+                               onchange="updateCategoryName('${category}', this.value)">
+                        ${qualifiedCategories.includes(category) ? 
+                            '<span class="qualified-badge">✓ Qualified</span>' : ''}
+                    </div>
+                    <div class="category-amounts w-full">
+                        <div class="amount-input-container">
+                            <span>$</span>
+                            <input type="number" class="budget-input" 
+                                   value="${data.amount}" 
+                                   onchange="updateBudget('${category}', this.value)">
+                        </div>
+                        ${category !== 'Rent' ? 
+                            `<button class="delete-category" onclick="removeCategory('${category}')">×</button>` : 
+                            ''}
+                    </div>
+                </div>
+            </div>
+        `);
+    });
+    
+    // Add new category button with full width on mobile
+    container.insertAdjacentHTML('beforeend', `
+        <button class="add-category-button w-full">
+            <span>+</span>
+            Add New Category
+        </button>
+    `);
+    
+    updateBudgetStatus();
+}
+
+// Update the Sweet Alert modal configuration
+async function editStipendAmount() {
+    const result = await Swal.fire({
+        title: 'Update Monthly Stipend',
+        html: `
+            <div class="new-category-modal w-full">
+                <div class="stipend-input-container w-full">
+                    <span class="currency-symbol">$</span>
+                    <input 
+                        id="swal-stipendAmount" 
+                        type="number" 
+                        class="swal2-input w-full" 
+                        value="${currentStipend}"
+                        min="0"
+                        step="100"
+                    >
+                </div>
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Save',
+        confirmButtonColor: 'var(--primary)',
+        cancelButtonColor: 'var(--warning)',
+        customClass: {
+            container: 'custom-swal-container',
+            popup: 'custom-swal-popup',
+            title: 'custom-swal-title',
+            input: 'custom-swal-input'
+        },
+        width: 'auto',
+        padding: '1rem'
+    });
+
+    if (result.isConfirmed) {
+        await updateStipend(result.value);
+    }
+}
+</script>
 </body>
 
 <script>
@@ -2834,19 +2970,11 @@ function displayEditableBudgets() {
     // Add stipend section with remaining budget
     container.insertAdjacentHTML('beforeend', `
         <div class="stipend-section">
-            <div class="stipend-header">
-                <h3>Monthly Stipend</h3>
-                <div class="stipend-amount">
-                    <span>$</span>
-                    <span id="stipendAmount">${currentStipend.toFixed(2)}</span>
-                    <button id="editStipend" onclick="editStipendAmount()">Edit</button>
-                </div>
+            <div class="stipend-container">
+                <div>Monthly Stipend: <span id="stipendAmount">$0.00</span></div>
+                <button id="editStipend" class="edit-button">✏️</button>
             </div>
-            <div id="budgetStatus" class="budget-status ${remaining >= 0 ? 'positive' : 'negative'}">
-                ${remaining >= 0 ? 
-                    `Remaining: $${remaining.toFixed(2)}` : 
-                    `Over budget by: $${Math.abs(remaining).toFixed(2)}`}
-            </div>
+            <div id="budgetStatus">Remaining: $0.00</div>
         </div>
     `);
     
@@ -2857,22 +2985,17 @@ function displayEditableBudgets() {
                 <div class="category-header">
                     <div class="category-name">
                         <span>${categoryIcons[category] || '📊'}</span>
-                        <input type="text" class="category-name-input" 
-                               value="${category}" 
-                               ${category === 'Rent' ? 'readonly' : ''}
-                               onchange="updateCategoryName('${category}', this.value)">
+                        <span>${category}</span>
                         ${qualifiedCategories.includes(category) ? 
                             '<span class="qualified-badge">✓ Qualified</span>' : ''}
                     </div>
-                    <div class="category-amounts">
-                        <span>$</span>
-                        <input type="number" class="budget-input" 
-                               value="${data.amount}" 
-                               onchange="updateBudget('${category}', this.value)">
-                        ${category !== 'Rent' ? 
-                            `<button class="delete-category" onclick="removeCategory('${category}')">×</button>` : 
-                            ''}
+                    <div class="category-amounts">$${data.amount} of $${categoryBudgets[category]}</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-spent" style="width: ${Math.min((data.amount / categoryBudgets[category] * 100), 100)}%; 
+                         background: ${qualifiedCategories.includes(category) ? 'var(--success)' : 'var(--primary)'}">
                     </div>
+                    <div class="progress-label">${Math.min((data.amount / categoryBudgets[category] * 100), 100)}%</div>
                 </div>
             </div>
         `);
