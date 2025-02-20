@@ -727,29 +727,50 @@
         @media (max-width: 768px) {
             .button-container {
                 display: flex;
-                flex-direction: row;
-                flex-wrap: wrap;
+                flex-direction: column;
                 gap: 0.75rem;
-                justify-content: space-between;
             }
 
-            .button-container button.button-primary {
+            .button-container button {
                 width: 100%;
-                margin-bottom: 0.75rem;
             }
 
-            .button-container button.button-secondary,
-            .button-container button.popup-close {
-                flex: 0 1 calc(50% - 0.375rem);
+            /* For the last step, create a row for the final two buttons */
+            #step2 .button-container {
+                flex-direction: column;
+            }
+
+            #step2 .button-container button:not(:last-child):not(:nth-last-child(2)) {
+                width: 100%;
+            }
+
+            /* Create a row for the last two buttons */
+            #step2 .button-container {
+                display: grid;
+                grid-template-rows: auto auto;
+            }
+
+            #step2 .button-container .button-secondary,
+            #step2 .button-container .button-primary {
+                grid-row: 2;
+                width: 100%;
+            }
+
+            #step2 .button-container .button-secondary {
+                grid-column: 1;
+            }
+
+            #step2 .button-container .button-primary {
+                grid-column: 2;
             }
 
             .modal-content {
                 padding: 1rem;
-                margin: 0.5rem;
             }
 
             .modal-container {
                 max-width: 90%;
+                margin: 0.5rem;
             }
         }
     </style>
