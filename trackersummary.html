@@ -2547,24 +2547,28 @@ function createRadarChart(expenses, selectedDate) {
             scales: {
                 r: {
                     ticks: {
-                        display: window.innerWidth > 768,  // Hide numerical labels on mobile
+                        display: false,  // Hide numerical labels
                         maxTicksLimit: 5
                     },
                     pointLabels: {
                         font: {
-                            size: window.innerWidth > 768 ? 12 : 8  // Smaller font on mobile
+                            size: window.innerWidth > 768 ? 12 : 10
                         },
-                        // Rotate labels to be vertical on mobile
+                        // Abbreviate category names on mobile
                         callback: function(value) {
                             if (window.innerWidth <= 768) {
-                                // Add line breaks between words for vertical stacking
-                                return value.split(' ').join('\n');
+                                return value.substring(0, 4);
                             }
                             return value;
                         },
-                        centerPointLabels: true,
-                        padding: window.innerWidth > 768 ? 20 : 0  // Reduce padding on mobile
-                    }
+                        padding: window.innerWidth > 768 ? 20 : 5  // Minimal padding on mobile
+                    },
+                    // Make the chart take up more space
+                    angleLines: {
+                        display: true
+                    },
+                    suggestedMin: 0,
+                    suggestedMax: Math.max(...budgetData) * 1.1  // Give 10% extra space at the top
                 }
             }
         }
@@ -2575,9 +2579,8 @@ function createRadarChart(expenses, selectedDate) {
 window.addEventListener('resize', function() {
     if (radarChart) {
         const isMobile = window.innerWidth <= 768;
-        radarChart.options.scales.r.ticks.display = !isMobile;
-        radarChart.options.scales.r.pointLabels.font.size = isMobile ? 8 : 12;
-        radarChart.options.scales.r.pointLabels.padding = isMobile ? 0 : 20;
+        radarChart.options.scales.r.pointLabels.font.size = isMobile ? 10 : 12;
+        radarChart.options.scales.r.pointLabels.padding = isMobile ? 5 : 20;
         radarChart.update();
     }
 });
