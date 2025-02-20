@@ -872,6 +872,7 @@
             display: block;
         }
 
+        /* Updated modal styles for better mobile experience */
         .modal {
             position: fixed;
             top: 0;
@@ -883,15 +884,98 @@
             justify-content: center;
             align-items: center;
             z-index: 1000;
+            padding: 1rem;
         }
 
         .modal-content {
             background: white;
-            padding: 2rem;
-            border-radius: 8px;
+            padding: 1.5rem;
+            border-radius: 16px;
+            max-width: 700px;
+            width: 100%;
             max-height: 90vh;
             overflow-y: auto;
             position: relative;
+            margin: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .modal-content {
+                padding: 1.25rem;
+                margin: 0.5rem;
+                font-size: 0.95rem;
+            }
+
+            .modal-content h2 {
+                font-size: 1.25rem;
+                margin-bottom: 1rem;
+            }
+
+            .modal-content h3 {
+                font-size: 1.1rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .modal-content ol {
+                margin-left: 1rem;
+                padding-right: 0.5rem;
+            }
+
+            .modal-content li {
+                margin-bottom: 0.75rem;
+                line-height: 1.4;
+            }
+
+            .modal-content p {
+                margin-bottom: 0.75rem;
+                line-height: 1.4;
+            }
+
+            .modal-content .submit-button {
+                width: 100%;
+                margin-top: 1rem;
+                padding: 0.875rem;
+                font-size: 1rem;
+            }
+
+            /* Improved scrolling experience on mobile */
+            .modal-content {
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: thin;
+            }
+
+            /* Custom scrollbar styling for WebKit browsers */
+            .modal-content::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            .modal-content::-webkit-scrollbar-track {
+                background: #f1f1f1;
+                border-radius: 3px;
+            }
+
+            .modal-content::-webkit-scrollbar-thumb {
+                background: #888;
+                border-radius: 3px;
+            }
+
+            /* Add some spacing between sections in modals */
+            .modal-section {
+                padding: 1rem;
+                margin-bottom: 1rem;
+                background: #F9FAFB;
+                border-radius: 8px;
+            }
+
+            /* Make the close button sticky on mobile */
+            .modal-footer {
+                position: sticky;
+                bottom: -1.25rem;
+                background: white;
+                padding-top: 1rem;
+                margin: 0 -1.25rem -1.25rem;
+                border-top: 1px solid #E5E7EB;
+            }
         }
 
         /* Add these new styles */
@@ -1335,42 +1419,38 @@
 
                 <!-- Example Modal -->
                 <div id="example-modal" class="modal" style="display: none;">
-                    <div class="modal-content" style="max-width: 700px;">
+                    <div class="modal-content">
                         <h2 style="color: var(--text-dark); margin-bottom: 1.5rem;">529 Usage Examples</h2>
                         
-                        <div style="margin-bottom: 2rem;">
-                            <h3 style="color: var(--primary); margin-bottom: 1rem;">Scenario 1: Lump Sum Deposit</h3>
-                            <div style="background: #F9FAFB; padding: 1.5rem; border-radius: 8px;">
-                                <p style="line-height: 1.6; margin-bottom: 1rem;">
-                                    Sarah knows she'll have $10,000+ in qualified expenses this year ($850/month in rent). She has $14,000 in savings.
-                                </p>
-                                <p style="line-height: 1.6; margin-bottom: 1rem;">
-                                    <strong>Her Strategy:</strong>
-                                    <br>• Deposits $10,000 into her 529 account in January hitting her state's maximum savings (Illinois: $495)
-                                    <br>• She could withdraw it right away but instead she lets the money earn interest tax-free throughout the year
-                                    <br>• Withdraws the money as needed for monthly expenses
-                                    <br>• Benefits from both tax deductions and tax-free earnings
-                                </p>
-                            </div>
+                        <div class="modal-section">
+                            <h3 style="color: var(--primary); margin-bottom: 1rem;">Scenario 1: Lump Sum</h3>
+                            <p style="line-height: 1.6;">
+                                Sarah has $10,000+ in yearly expenses:
+                            </p>
+                            <ul style="margin: 0.75rem 0; padding-left: 1.25rem;">
+                                <li>Deposits $10,000 in January</li>
+                                <li>Lets money earn interest tax-free</li>
+                                <li>Withdraws as needed monthly</li>
+                                <li>Maximum tax benefit: $495 (IL)</li>
+                            </ul>
                         </div>
 
-                        <div style="margin-bottom: 2rem;">
-                            <h3 style="color: var(--primary); margin-bottom: 1rem;">Scenario 2: Monthly Deposits</h3>
-                            <div style="background: #F9FAFB; padding: 1.5rem; border-radius: 8px;">
-                                <p style="line-height: 1.6; margin-bottom: 1rem;">
-                                    Mike also has $10,000+ in yearly qualified expenses but prefers a monthly approach.
-                                </p>
-                                <p style="line-height: 1.6; margin-bottom: 1rem;">
-                                    <strong>His Strategy:</strong>
-                                    <br>• Deposits $830 to his 529 account on the 1st of each month
-                                    <br>• Pays rent on the 2nd of each month
-                                    <br>• Withdraws $830 from his 529 account
-                                    <br>• By the end of the year he has hit the maximum savings for his state (Illinois: $495)
-                                </p>
-                            </div>
+                        <div class="modal-section">
+                            <h3 style="color: var(--primary); margin-bottom: 1rem;">Scenario 2: Monthly</h3>
+                            <p style="line-height: 1.6;">
+                                Mike prefers monthly deposits:
+                            </p>
+                            <ul style="margin: 0.75rem 0; padding-left: 1.25rem;">
+                                <li>Deposits $830 monthly</li>
+                                <li>Pays expenses next day</li>
+                                <li>Withdraws $830 monthly</li>
+                                <li>Same tax benefit: $495 (IL)</li>
+                            </ul>
                         </div>
 
-                        <button onclick="hideExampleModal()" class="submit-button">Close</button>
+                        <div class="modal-footer">
+                            <button onclick="hideExampleModal()" class="submit-button">Close</button>
+                        </div>
                     </div>
                 </div>
 
@@ -1434,42 +1514,77 @@
         </div>
     </footer>
 
-    <!-- Add this modal before the closing body tag -->
+    <!-- Updated How To Modal Structure -->
     <div id="how-to-modal" class="modal" style="display: none;">
-        <div class="modal-content" style="max-width: 700px;">
+        <div class="modal-content">
             <h2 style="color: var(--text-dark); margin-bottom: 1.5rem;">How to Use the Expense Tracker</h2>
             
-            <div style="margin-bottom: 2rem;">
+            <div class="modal-section">
                 <h3 style="color: var(--primary); margin-bottom: 1rem;">Minimum 529 Savings Tracker</h3>
-                <div style="background: #F9FAFB; padding: 1.5rem; border-radius: 8px;">
-                    <ol style="line-height: 1.6; margin-left: 1.5rem;">
-                        <li style="margin-bottom: 0.5rem;">Record your monthly rent payment using the Rent Tracking tab</li>
-                        <li style="margin-bottom: 0.5rem;">Track groceries in the Groceries & Other Expenses tab</li>
-                        <li style="margin-bottom: 0.5rem;">Deposit money to your 529 account equal to these expenses</li>
-                        <li style="margin-bottom: 0.5rem;">Withdraw the money right away to pay for your expenses</li>
-                    </ol>
-                    <p style="margin-top: 1rem; color: #6B7280;">
-                        This simple approach ensures you maximize your tax benefits for essential qualified expenses.
-                    </p>
-                </div>
+                <ol style="line-height: 1.6; margin-left: 1.5rem;">
+                    <li>Record your monthly rent payment</li>
+                    <li>Track groceries and other expenses</li>
+                    <li>Deposit money to your 529 account</li>
+                    <li>Withdraw for qualified expenses</li>
+                </ol>
+                <p style="margin-top: 1rem; color: #6B7280;">
+                    This simple approach ensures you maximize your tax benefits.
+                </p>
             </div>
 
-            <div style="margin-bottom: 2rem;">
+            <div class="modal-section">
                 <h3 style="color: var(--primary); margin-bottom: 1rem;">Budget and Expense Tracker</h3>
-                <div style="background: #F9FAFB; padding: 1.5rem; border-radius: 8px;">
-                    <ol style="line-height: 1.6; margin-left: 1.5rem;">
-                        <li style="margin-bottom: 0.5rem;">Track all your expenses to create a complete budget</li>
-                        <li style="margin-bottom: 0.5rem;">Monitor both qualified and non-qualified expenses</li>
-                        <li style="margin-bottom: 0.5rem;">Use the Summary tab to review your spending patterns</li>
-                        <li style="margin-bottom: 0.5rem;">Follow the recommended 529 funding schedule</li>
-                    </ol>
-                    <p style="margin-top: 1rem; color: #6B7280;">
-                        This comprehensive approach helps you manage all expenses while optimizing your 529 benefits.
-                    </p>
-                </div>
+                <ol style="line-height: 1.6; margin-left: 1.5rem;">
+                    <li>Track all expenses for budgeting</li>
+                    <li>Monitor qualified expenses</li>
+                    <li>Review spending patterns</li>
+                    <li>Follow 529 funding recommendations</li>
+                </ol>
+                <p style="margin-top: 1rem; color: #6B7280;">
+                    Manage expenses while optimizing 529 benefits.
+                </p>
             </div>
 
-            <button onclick="hideHowToModal()" class="submit-button">Close</button>
+            <div class="modal-footer">
+                <button onclick="hideHowToModal()" class="submit-button">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Updated Example Modal Structure -->
+    <div id="example-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2 style="color: var(--text-dark); margin-bottom: 1.5rem;">529 Usage Examples</h2>
+            
+            <div class="modal-section">
+                <h3 style="color: var(--primary); margin-bottom: 1rem;">Scenario 1: Lump Sum</h3>
+                <p style="line-height: 1.6;">
+                    Sarah has $10,000+ in yearly expenses:
+                </p>
+                <ul style="margin: 0.75rem 0; padding-left: 1.25rem;">
+                    <li>Deposits $10,000 in January</li>
+                    <li>Lets money earn interest tax-free</li>
+                    <li>Withdraws as needed monthly</li>
+                    <li>Maximum tax benefit: $495 (IL)</li>
+                </ul>
+            </div>
+
+            <div class="modal-section">
+                <h3 style="color: var(--primary); margin-bottom: 1rem;">Scenario 2: Monthly</h3>
+                <p style="line-height: 1.6;">
+                    Mike prefers monthly deposits:
+                </p>
+                <ul style="margin: 0.75rem 0; padding-left: 1.25rem;">
+                    <li>Deposits $830 monthly</li>
+                    <li>Pays expenses next day</li>
+                    <li>Withdraws $830 monthly</li>
+                    <li>Same tax benefit: $495 (IL)</li>
+                </ul>
+            </div>
+
+            <div class="modal-footer">
+                <button onclick="hideExampleModal()" class="submit-button">Close</button>
+            </div>
         </div>
     </div>
 
