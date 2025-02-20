@@ -2822,7 +2822,7 @@ function displayEditableBudgets() {
     const container = document.getElementById('categoriesContainer');
     container.innerHTML = '';
     
-    // Calculate total budgeted amount
+    // Calculate initial total budgeted amount
     const totalBudgeted = Object.values(currentBudgets)
         .reduce((sum, cat) => sum + cat.amount, 0);
     const remaining = currentStipend - totalBudgeted;
@@ -2846,7 +2846,7 @@ function displayEditableBudgets() {
         </div>
     `);
     
-    // Display all categories from currentBudgets
+    // Display all categories with live update functionality
     Object.entries(currentBudgets).forEach(([category, data]) => {
         container.insertAdjacentHTML('beforeend', `
             <div class="category" data-category="${category}">
@@ -2864,6 +2864,7 @@ function displayEditableBudgets() {
                         <span>$</span>
                         <input type="number" class="budget-input" 
                                value="${data.amount}" 
+                               oninput="updateBudget('${category}', this.value)"
                                onchange="updateBudget('${category}', this.value)">
                         ${category !== 'Rent' ? 
                             `<button class="delete-category" onclick="removeCategory('${category}')">×</button>` : 
@@ -2881,8 +2882,6 @@ function displayEditableBudgets() {
             Add New Category
         </button>
     `);
-    
-    updateBudgetStatus();
 }
 
 function updateBudget(category, amount) {
@@ -2894,6 +2893,20 @@ function updateBudget(category, amount) {
     
     currentBudgets[category].amount = newAmount;
     updateBudgetStatus();
+    updateRemainingStipend();
+}
+function updateRemainingStipend() {
+    const totalBudgeted = Object.values(currentBudgets)
+        .reduce((sum, cat) => sum + cat.amount, 0);
+    const remaining = currentStipend - totalBudgeted;
+    
+    const statusElement = document.getElementById('budgetStatus');
+    if (statusElement) {
+        statusElement.textContent = remaining >= 0 
+            ? `Remaining: $${remaining.toFixed(2)}` 
+            : `Over budget by: $${Math.abs(remaining).toFixed(2)}`;
+        statusElement.className = `budget-status ${remaining >= 0 ? 'positive' : 'negative'}`;
+    }
 }
 
 function updateCategoryName(oldName, newName) {
