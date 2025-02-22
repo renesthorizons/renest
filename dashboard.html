@@ -2646,9 +2646,32 @@ const statePersonalExemptionDB = {
 
         // Add this new function to handle the guide download
         function downloadGuide() {
+            const userState = localStorage.getItem('state');
+            if (!userState) {
+                console.error('User state not found');
+                return;
+            }
+
+            // Map of state codes to their PDF filenames
+            const statePDFMap = {
+                'IL': 'Illinois_529_Manual_Open_Guide.pdf',
+                'NY': 'New_York_529_Manual_Open_Guide.pdf',
+                'PA': 'Pennsylvania_529_Manual_Open_Guide.pdf',
+                'CO': 'Colorado_529_Manual_Open_Guide.pdf',
+                'IN': 'Indiana_529_Manual_Open_Guide.pdf',
+                'MI': 'Michigan_529_Manual_Open_Guide.pdf',
+                'SC': 'South_Carolina_529_Manual_Open_Guide.pdf',
+                'AL': 'Alabama_529_Manual_Open_Guide.pdf',
+                // Add more states as PDFs become available
+            };
+
+            // Get the PDF filename for the user's state
+            const pdfFilename = statePDFMap[userState] || 'Generic_529_Manual_Open_Guide.pdf';
+
+            // Create and trigger download
             const link = document.createElement('a');
-            link.href = 'Illinois_529_Manual_Open_Guide.pdf';
-            link.download = 'Illinois_529_Manual_Open_Guide.pdf';
+            link.href = `guides/${pdfFilename}`; // Assuming PDFs are stored in a 'guides' directory
+            link.download = pdfFilename;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
