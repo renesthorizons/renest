@@ -281,20 +281,23 @@ body {
 /* New CSS for comparison section */
 .comparison-container {
     width: 100%;
-    max-width: 1200px;
+    max-width: 800px;
     margin: 0 auto;
     padding: 0 2rem;
-    min-height: 400vh; /* Increased scrollable space */
+    min-height: 200vh;
+    margin-bottom: 100vh;
+    position: relative;
 }
 
 .comparison-wrapper {
     display: flex;
-    gap: 2rem;
+    justify-content: center; /* Center the content */
     position: relative;
 }
 
 .comparison-side {
     flex: 1;
+    max-width: 600px; /* Add max-width for better control */
     position: relative;
     display: flex;
     flex-direction: column;
@@ -307,7 +310,7 @@ body {
     padding: 2rem 0;
     font-size: 2rem;
     position: sticky;
-    top: 100px;
+    top: 30px;
     background: white;
     z-index: 10;
 }
@@ -336,6 +339,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 2rem;
 }
 
 .comparison-item.visible {
@@ -348,8 +352,6 @@ body {
     height: auto;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    display: block;
-    margin: 0 auto;
 }
 
 .transition-group {
@@ -393,7 +395,7 @@ body {
 /* Fixed state styles */
 .comparison-wrapper.fixed {
     position: fixed;
-    top: 100px;
+    top: 30px;
     left: 50%;
     transform: translateX(-50%);
     width: 100%;
@@ -401,6 +403,11 @@ body {
     padding: 0 2rem;
     display: flex;
     justify-content: center;
+    transition: opacity 0.5s ease; /* Add smooth transition for opacity */
+}
+
+.comparison-wrapper.fixed.fade-out {
+    opacity: 0;
 }
 
 .comparison-side .content-wrapper {
@@ -408,7 +415,111 @@ body {
     margin: 0;
     padding: 0;
 }
-       
+.calculator-result {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.result-box {
+    background: linear-gradient(145deg, rgba(75, 34, 122, 0.05), rgba(255, 105, 180, 0.05));
+    padding: 2rem;
+    border-radius: 12px;
+    max-width: 800px;
+    margin: 2rem auto;
+}
+
+.result-text {
+    font-size: 1.2rem;
+    line-height: 1.6;
+}
+.highlight {
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 1.4rem;
+}
+
+.unlocked-savings {
+    padding: 6rem 2rem;
+    background: #fff;
+    text-align: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.unlocked-savings h2 {
+    color: var(--primary);
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+}
+
+.savings-options {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    flex-wrap: wrap;
+}
+
+.savings-option {
+    flex: 1;
+    min-width: 250px;
+    max-width: 350px;
+    padding: 2rem;
+    background: linear-gradient(145deg, rgba(75, 34, 122, 0.05), rgba(255, 105, 180, 0.05));
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+}
+
+.savings-option:hover {
+    transform: translateY(-5px);
+}
+
+.savings-option img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 1.5rem;
+}
+
+.savings-option h3 {
+    color: var(--primary);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.savings-option p {
+    color: #666;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .unlocked-savings h2 {
+        font-size: 2rem;
+    }
+
+    .savings-options {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .savings-option {
+        width: 100%;
+        max-width: 400px;
+    }
+}
+
+/* Add new styles for caption */
+.image-caption {
+    flex: 1;
+    max-width: 300px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: var(--text-dark);
+}
+
+.image-caption.visible {
+    opacity: 1;
+}
 </style>
 <body>
     <!-- Google Tag Manager (noscript) -->
@@ -432,242 +543,310 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <section class="hero">
             <h1>How it works</h1>
         </section>
-
+        <div class="calculator-result">
+            <!-- <h2>Sara's Renest Journey</h2> -->
+            <div class="result-box">
+                <p class="result-text">Sara, a PhD student in Aerospace Engineering at CU Boulder, used our calculator and discovered she could get a <span class="highlight">$924 annual tax refund</span> using a 529 plan for her qualified expenses. Here's how Renest helps her get there:</p>
+            </div>
+        </div>
 
         <!-- Add this after the hero section in your HTML -->
         <section class="comparison-container desktop-view">
             <div class="comparison-wrapper">
                 <div class="comparison-side without-side">
-                    <h2 class="comparison-title">Without Renest</h2>
                     <div class="content-wrapper">
                         <div class="comparison-item" id="wor1">
-                            <img src="wor/wor1.png" alt="Without Renest 1" class="comparison-image">
+                            <img src="hiw/wor1.png" alt="Without Renest 1" class="comparison-image">
+                            <div class="image-caption">Sara receives her $2,900 monthly stipend.</div>
                         </div>
                         <div class="comparison-item" id="wor2">
-                            <img src="wor/wor2.png" alt="Without Renest 2" class="comparison-image">
+                            <img src="hiw/wor2.png" alt="Without Renest 2" class="comparison-image">
+                            <div class="image-caption">She spends it during the month across various categories.</div>
                         </div>
                         <div class="comparison-item" id="wor3">
-                            <img src="wor/wor3.png" alt="Without Renest 3" class="comparison-image">
+                            <img src="hiw/wor3.png" alt="Without Renest 3" class="comparison-image">
+                            <div class="image-caption">She does not accurately track her expenses or use a 529.</div>
                         </div>
                         <div class="comparison-item" id="wor4">
-                            <img src="wor/wor4.png" alt="Without Renest 4" class="comparison-image">
+                            <img src="hiw/wor4.png" alt="Without Renest 4" class="comparison-image">
+                            <div class="image-caption">Unfortunately, she misses out on valuable cash back on her spending.</div>
                         </div>
-                    </div>
-                </div>
-                
-                <div class="comparison-side with-side">
-                    <h2 class="comparison-title">With Renest</h2>
-                    <div class="content-wrapper">
-                        <div class="comparison-item" id="wr1">
-                            <img src="wr/wr1.png" alt="With Renest 1" class="comparison-image">
-                        </div>
-                        <div class="comparison-item" id="wr2">
-                            <img src="wr/wr2.png" alt="With Renest 2" class="comparison-image">
-                        </div>
-                        <div class="comparison-item transition-group" id="wr-transition">
-                            <div class="transition-item" id="wr3">
-                                <img src="wr/wr3.png" alt="With Renest 3" class="comparison-image">
-                            </div>
-                            <div class="transition-item" id="wr4">
-                                <img src="wr/wr4.png" alt="With Renest 4" class="comparison-image">
-                            </div>
-                        </div>
-                        <div class="comparison-item" id="wr5">
-                            <img src="wr/wr5.png" alt="With Renest 5" class="comparison-image">
-                        </div>
-                        <div class="comparison-item" id="wr6">
-                            <img src="wr/wr6.png" alt="With Renest 6" class="comparison-image">
-                        </div>
-                        <div class="comparison-item" id="wr7">
-                            <img src="wr/wr7.png" alt="With Renest 7" class="comparison-image">
+                        <div class="comparison-item" id="wr3">
+                            <img src="hiw/wr3.png" alt="With Renest 3" class="comparison-image">
+                            <div class="image-caption">Now, with Renest, Sara sees how much she spends in each category.</div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Add mobile section here later -->
+        <!-- Add this new section after the comparison section -->
+        <section class="unlocked-savings">
+            <h2>What You Can Do With Your Unlocked Savings</h2>
+            <div class="savings-options">
+                <div class="savings-option">
+                    <img src="icons/invest.png" alt="Investment Icon">
+                    <h3>Invest in Your Future</h3>
+                    <p>Put your tax savings into investments or retirement accounts to build long-term wealth.</p>
+                </div>
+                <div class="savings-option">
+                    <img src="icons/emergency.png" alt="Emergency Fund Icon">
+                    <h3>Build Emergency Fund</h3>
+                    <p>Create a financial safety net with your extra savings to handle unexpected expenses.</p>
+                </div>
+                <div class="savings-option">
+                    <img src="icons/lifestyle.png" alt="Lifestyle Icon">
+                    <h3>Enhance Your Lifestyle</h3>
+                    <p>Use the savings to improve your quality of life, whether it's better housing or self-care.</p>
+                </div>
+            </div>
+        </section>
 
-
-
-
-
-
-
-
-
-
-
+        <!-- Existing footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="footer-logo">RENEST</div>
+                    <p class="copyright">©2025 Renest Horizons Inc.</p>
+                </div>
+                <div class="footer-links">
+                    <h3>Company</h3>
+                    <a href="aboutus529.html">About us</a>
+                </div>
+                <div class="footer-links">
+                    <h3>Resources</h3>
+                    <a href="contactus529.html">Contact us</a>
+                    <a href="faq529.html">FAQ</a>
+                </div>
+            </div>
+        </footer>
     </main>
 
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-brand">
-                <div class="footer-logo">RENEST</div>
-                <p class="copyright">©2025 Renest Horizons Inc.</p>
-            </div>
-            <div class="footer-links">
-                <h3>Company</h3>
-                <a href="aboutus529.html">About us</a>
-            </div>
-            <div class="footer-links">
-                <h3>Resources</h3>
-                <a href="contactus529.html">Contact us</a>
-                <a href="faq529.html">FAQ</a>
-            </div>
-        </div>
-    </footer>
-<script>
-// Mobile menu functionality
-const menuButton = document.querySelector('.menu-button');
-const navLinks = document.querySelector('.nav-links');
+    <script>
+    // Mobile menu functionality
+    const menuButton = document.querySelector('.menu-button');
+    const navLinks = document.querySelector('.nav-links');
 
-menuButton.addEventListener('click', function(e) {
-    e.stopPropagation();
-    navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-    menuButton.setAttribute('aria-expanded', navLinks.style.display === 'flex');
-});
+    menuButton.addEventListener('click', function(e) {
+        e.stopPropagation();
+        navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        menuButton.setAttribute('aria-expanded', navLinks.style.display === 'flex');
+    });
 
-document.addEventListener('click', function(e) {
-    if (window.innerWidth < 768 && !navLinks.contains(e.target) && e.target !== menuButton) {
-        navLinks.style.display = 'none';
-        menuButton.setAttribute('aria-expanded', false);
-    }
-});
+    document.addEventListener('click', function(e) {
+        if (window.innerWidth < 768 && !navLinks.contains(e.target) && e.target !== menuButton) {
+            navLinks.style.display = 'none';
+            menuButton.setAttribute('aria-expanded', false);
+        }
+    });
 
+    // Scroll functionality for Without Renest section
+    document.addEventListener('DOMContentLoaded', function() {
+        const comparisonWrapper = document.querySelector('.comparison-wrapper');
+        const items = {
+            wor1: document.getElementById('wor1'),
+            wor2: document.getElementById('wor2'),
+            wor3: document.getElementById('wor3'),
+            wor4: document.getElementById('wor4'),
+            wr3: document.getElementById('wr3')
+        };
 
+        // Make wor1 visible immediately
+        items.wor1.classList.add('visible');
 
-// Add this to your existing script
-document.addEventListener('DOMContentLoaded', function() {
-    const comparisonWrapper = document.querySelector('.comparison-wrapper');
-    const items = {
-        wor1: document.getElementById('wor1'),
-        wor2: document.getElementById('wor2'),
-        wor3: document.getElementById('wor3'),
-        wor4: document.getElementById('wor4'),
-        wr1: document.getElementById('wr1'),
-        wr2: document.getElementById('wr2'),
-        wrTransition: document.getElementById('wr-transition'),
-        wr3: document.getElementById('wr3'),
-        wr4: document.getElementById('wr4'),
-        wr5: document.getElementById('wr5'),
-        wr6: document.getElementById('wr6'),
-        wr7: document.getElementById('wr7')
-    };
+        const navbar = document.querySelector('.navbar');
+        const wor1Position = items.wor1.getBoundingClientRect().top + window.pageYOffset;
+        const navbarHeight = navbar.offsetHeight;
+        const fixTrigger = wor1Position - navbarHeight - 32;
 
-    const triggers = {
-        fix: 300,
-        wor1_wr1: 400,
-        wor2_wr2: 600,
-        wor3: 800,
-        wor4: 1000,
-        wr2_to_wr3: 1200,
-        wr3_to_wr4: 1400,
-        wr4_to_wr5: 1600,
-        wr6: 1800,
-        wr7: 2000  // New trigger point after wr6
-    };
+        let lastWor3Top = null;
+        let stabilizedPosition = null;
+        let lastWor4Top = null;
+        let wor4StabilizedPosition = null;
+        let wr3StabilizedPosition = null;
+        let wr4StabilizedPosition = null;
+        let wr5StabilizedPosition = null;
+        let wr6StabilizedPosition = null;
+        let wr7StabilizedPosition = null;
 
-    let wr2Position = 0;
+        // Add scroll speed limiting with position locking
+        let lastScrollTime = Date.now();
+        let lastScrollY = window.scrollY;
+        const scrollDelay =1; // Minimum time between scrolls
+        const maxScrollSpeed = 500; // Maximum pixels per scrollDelay
 
-    function handleScroll() {
-        const scrollPosition = window.scrollY;
-        console.log('Scroll position:', scrollPosition);
+        window.addEventListener('wheel', function(e) {
+            const currentTime = Date.now();
+            const currentScrollY = window.scrollY;
+            const timeDiff = currentTime - lastScrollTime;
+            const scrollDiff = Math.abs(currentScrollY - lastScrollY);
+            
+            // If scrolling too fast, prevent scroll and return to previous position
+            if (timeDiff < scrollDelay || scrollDiff > maxScrollSpeed) {
+                e.preventDefault();
+                window.scrollTo(0, lastScrollY);
+                return;
+            }
 
-        comparisonWrapper.classList.toggle('fixed', scrollPosition > triggers.fix);
+            lastScrollTime = currentTime;
+            lastScrollY = currentScrollY;
+        }, { passive: false });
 
-        items.wor1.classList.toggle('visible', scrollPosition > triggers.wor1_wr1);
-        items.wr1.classList.toggle('visible', scrollPosition > triggers.wor1_wr1);
+        function handleScroll() {
+            const scrollPosition = window.scrollY;
+            const windowHeight = window.innerHeight;
+            const wor3Top = items.wor3.getBoundingClientRect().top;
+            const wor4Top = items.wor4.getBoundingClientRect().top;
+            const wor2Top = items.wor2.getBoundingClientRect().top;
+            
+            console.log('Scroll Position:', scrollPosition);
+            console.log('Wor3 Top Position:', wor3Top);
+            console.log('Wor4 Top Position:', wor4Top);
+            console.log('Wor2 Top Position:', wor2Top);
 
-        const showWor2Wr2 = scrollPosition > triggers.wor2_wr2;
-        items.wor2.classList.toggle('visible', showWor2Wr2);
-        
-        // Show wor3 until wor4's trigger point
-        items.wor3.classList.toggle('visible', scrollPosition > triggers.wor3 && scrollPosition <= triggers.wor4);
-        // Show wor4 after its trigger point, replacing wor3
-        items.wor4.classList.toggle('visible', scrollPosition > triggers.wor4);
-        
-        // Position wor4 at the same position as wor3
-        if (items.wor3.offsetTop) {
-            items.wor4.style.position = 'absolute';
-            items.wor4.style.top = `${items.wor3.offsetTop}px`;
+            // Fix wrapper position
+            if (scrollPosition > fixTrigger) {
+                comparisonWrapper.classList.add('fixed');
+                comparisonWrapper.style.top = `${navbarHeight + 32}px`;
+            } else {
+                comparisonWrapper.classList.remove('fixed');
+                comparisonWrapper.style.top = '';
+            }
+
+            // Show wor1 caption immediately
+            items.wor1.querySelector('.image-caption').classList.add('visible');
+
+            // Show wor2 when it comes into view
+            items.wor2.classList.toggle('visible', wor2Top <= windowHeight * 0.75);
+            items.wor2.querySelector('.image-caption').classList.toggle('visible', wor2Top <= windowHeight * 0.75);
+
+            // Handle wor3 and wor4 visibility
+            if (wor3Top <= windowHeight * 0.75) {
+                items.wor3.style.opacity = '1';
+                items.wor3.classList.add('visible');
+                items.wor3.querySelector('.image-caption').classList.add('visible');
+                
+                if (lastWor3Top === wor3Top && stabilizedPosition === null) {
+                    stabilizedPosition = scrollPosition;
+                }
+                
+                if (stabilizedPosition && scrollPosition > stabilizedPosition + 200) {
+                    items.wor3.style.opacity = '0';
+                    items.wor3.style.display = 'none';
+                    items.wor4.classList.add('visible');
+                    items.wor4.querySelector('.image-caption').classList.add('visible');
+
+                    if (lastWor4Top === wor4Top && wor4StabilizedPosition === null) {
+                        wor4StabilizedPosition = scrollPosition;
+                    }
+
+                    if (wor4StabilizedPosition && scrollPosition > wor4StabilizedPosition + 200) {
+                        // First change wor1 to wr1
+                        const wor1Image = items.wor1.querySelector('img');
+                        const wor1Caption = items.wor1.querySelector('.image-caption');
+                        const wor2Caption = items.wor2.querySelector('.image-caption');
+                        const wor4Caption = items.wor4.querySelector('.image-caption');
+                        
+                        wor1Image.src = 'hiw/wr1.png';
+                        wor1Image.alt = 'With Renest 1';
+                        wor1Caption.textContent = 'With Renest, Sara starts her journey to smart savings.';
+                        wor2Caption.textContent = ''; // Clear wor2 caption when wr1 appears
+                        wor4Caption.textContent = ''; // Clear wor4 caption
+
+                        // Set up next transition point for wr3
+                        if (wr3StabilizedPosition === null) {
+                            wr3StabilizedPosition = scrollPosition;
+                        }
+
+                        // After wr1, change wor2 to wr3
+                        if (wr3StabilizedPosition && scrollPosition > wr3StabilizedPosition + 200) {
+                            const wor2Image = items.wor2.querySelector('img');
+                            
+                            wor2Image.src = 'hiw/wr3.png';
+                            wor2Image.alt = 'With Renest 3';
+                            wor2Caption.textContent = 'Renest guides Sara through setting up her 529 plan seamlessly.';
+                            
+                            if (wr4StabilizedPosition === null) {
+                                wr4StabilizedPosition = scrollPosition;
+                            }
+
+                            // Change to wr4 after another scroll interval
+                            if (wr4StabilizedPosition && scrollPosition > wr4StabilizedPosition + 200) {
+                                wor2Image.src = 'hiw/wr4.png';
+                                wor2Image.alt = 'With Renest 4';
+                                wor2Caption.textContent = 'Sara contributes to her 529 plan through our user-friendly platform.';
+                                
+                                if (wr5StabilizedPosition === null) {
+                                    wr5StabilizedPosition = scrollPosition;
+                                }
+
+                                // Change to wr5 after another scroll interval
+                                if (wr5StabilizedPosition && scrollPosition > wr5StabilizedPosition + 200) {
+                                    wor2Image.src = 'hiw/wr5.png';
+                                    wor2Image.alt = 'With Renest 5';
+                                    wor2Caption.textContent = 'Her contributions are automatically used for qualified expenses.';
+                                    
+                                    if (wr6StabilizedPosition === null) {
+                                        wr6StabilizedPosition = scrollPosition;
+                                    }
+
+                                    // Change wor4 to wr6 after wr5 appears
+                                    if (wr6StabilizedPosition && scrollPosition > wr6StabilizedPosition + 200) {
+                                        const wor4Image = items.wor4.querySelector('img');
+                                        wor4Image.src = 'hiw/wr6.png';
+                                        wor4Image.alt = 'With Renest 6';
+                                        wor2Caption.textContent = ''; // Clear wor2 caption
+                                        wor4Caption.textContent = 'Renest handles all the tax documentation automatically.';
+
+                                        if (wr7StabilizedPosition === null) {
+                                            wr7StabilizedPosition = scrollPosition;
+                                        }
+
+                                        // Change to wr7 after another scroll interval
+                                        if (wr7StabilizedPosition && scrollPosition > wr7StabilizedPosition + 200) {
+                                            wor4Image.src = 'hiw/wr7.png';
+                                            wor4Image.alt = 'With Renest 7';
+                                            wor2Caption.textContent = ''; // Keep wor2 caption clear
+                                            wor4Caption.textContent = 'Sara enjoys her tax savings while focusing on her studies.';
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                items.wor3.classList.remove('visible');
+                items.wor4.classList.remove('visible');
+                items.wor3.querySelector('.image-caption').classList.remove('visible');
+                items.wor4.querySelector('.image-caption').classList.remove('visible');
+                stabilizedPosition = null;
+                wor4StabilizedPosition = null;
+                wr3StabilizedPosition = null;
+                wr4StabilizedPosition = null;
+                wr5StabilizedPosition = null;
+                wr6StabilizedPosition = null;
+                wr7StabilizedPosition = null;
+            }
+
+            lastWor3Top = wor3Top;
+            lastWor4Top = wor4Top;
+
+            // Add check for unlocked savings
+            const unlockedSavings = document.querySelector('.unlocked-savings');
+            const unlockedSavingsTop = unlockedSavings.getBoundingClientRect().top;
+            
+            // If we're approaching the unlocked savings section
+            if (unlockedSavingsTop <= windowHeight) {
+                comparisonWrapper.classList.add('fade-out');
+            } else {
+                comparisonWrapper.classList.remove('fade-out');
+            }
         }
 
-        if (showWor2Wr2 && scrollPosition <= triggers.wr2_to_wr3) {
-            items.wr2.classList.add('visible');
-            items.wr2.style.display = 'block';
-            items.wrTransition.style.display = 'none';
-            // Store wr2's position when it's visible
-            wr2Position = items.wr2.offsetTop;
-            console.log('Storing wr2 position:', wr2Position);
-        } else if (scrollPosition > triggers.wr2_to_wr3) {
-            items.wr2.classList.remove('visible');
-            items.wr2.style.display = 'none';
-            items.wrTransition.style.display = 'block';
-            // Position the transition group at wr2's last position
-            items.wrTransition.style.top = `${wr2Position}px`;
-            console.log('Setting transition group position to:', wr2Position);
-        }
-
-        items.wr3.classList.toggle('visible', scrollPosition > triggers.wr2_to_wr3 && scrollPosition <= triggers.wr3_to_wr4);
-        items.wr4.classList.toggle('visible', scrollPosition > triggers.wr3_to_wr4 && scrollPosition <= triggers.wr4_to_wr5);
-        items.wr5.classList.toggle('visible', scrollPosition > triggers.wr4_to_wr5);
-        
-        // Log positions of relevant elements
-        console.log('Positions:', {
-            'wor3 top': items.wor3.offsetTop,
-            'wor4 top': items.wor4.offsetTop,
-            'wr5 top': items.wr5.offsetTop,
-            'wr6 top': items.wr6.offsetTop,
-            'wr7 top': items.wr7.offsetTop
-        });
-
-        // Position wr6 at the same vertical position as wor3
-        if (items.wor3.offsetTop) {
-            items.wr6.style.top = `${items.wor3.offsetTop}px`;
-            items.wr6.style.position = 'absolute';
-            items.wr6.style.left = '50%';
-            items.wr6.style.transform = 'translateX(-50%)';
-        }
-        
-        // Position wr7 at the same vertical position as wor4
-        if (items.wor4.offsetTop) {
-            items.wr7.style.top = `${items.wor4.offsetTop}px`;
-            items.wr7.style.position = 'absolute';
-            items.wr7.style.left = '50%';
-            items.wr7.style.transform = 'translateX(-50%)';
-        }
-        
-        // Show wr6 and wr7 after their respective trigger points
-        items.wr6.classList.toggle('visible', scrollPosition > triggers.wr6);
-        items.wr7.classList.toggle('visible', scrollPosition > triggers.wr7);
-
-        if (scrollPosition > triggers.wr2_to_wr3 && scrollPosition <= triggers.wr3_to_wr4) {
-            items.wrTransition.classList.add('visible');
-            items.wr3.classList.add('visible');
-            items.wr4.classList.remove('visible');
-            items.wr5.classList.remove('visible');
-        } else if (scrollPosition > triggers.wr3_to_wr4 && scrollPosition <= triggers.wr4_to_wr5) {
-            items.wrTransition.classList.add('visible');
-            items.wr3.classList.remove('visible');
-            items.wr4.classList.add('visible');
-            items.wr5.classList.remove('visible');
-        } else if (scrollPosition > triggers.wr4_to_wr5) {
-            items.wrTransition.classList.add('visible');
-            items.wr3.classList.remove('visible');
-            items.wr4.classList.remove('visible');
-            items.wr5.classList.add('visible');
-        } else {
-            items.wrTransition.classList.remove('visible');
-            items.wr3.classList.remove('visible');
-            items.wr4.classList.remove('visible');
-            items.wr5.classList.remove('visible');
-        }
-    }
-
-    window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Initial check
-});
-</script>
+        window.addEventListener('scroll', handleScroll);
+        handleScroll(); // Initial check
+    });
+    </script>
 </body>
 </html>
