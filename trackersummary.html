@@ -2327,6 +2327,7 @@ function calculateStateBenefit(state, totalQualifiedExpenses, income) {
     const stateDeduction = state529DB[state]?.deduction || 0;
     const taxableStateIncome = income - stateTaxDeduction;
     const taxRate = calculateStateTaxRate(taxableStateIncome, state);
+    
 
     const deductibleAmount = Math.min(
         totalQualifiedExpenses,
@@ -2339,6 +2340,12 @@ function calculateStateBenefit(state, totalQualifiedExpenses, income) {
         return Math.min(contributionCredit, 1500, taxRate * taxableStateIncome);
     } else if (state === 'OR') {
         return 180;
+    } else if (state === 'MN') {
+        if (income < 88810) {
+            return Math.min(500, taxRate * taxableStateIncome);
+        } else {
+            return 0;
+        }
     } else {
         return Math.min(deductibleAmount * taxRate, taxRate * taxableStateIncome);
     }

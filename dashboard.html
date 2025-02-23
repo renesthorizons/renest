@@ -3003,6 +3003,12 @@ const statePersonalExemptionDB = {
                 benefit = Math.min(contributionCredit, 1500, taxespaid);
             } else if (state === 'OR') {
                 benefit = 180;
+            } else if (state === 'MN') {
+                if (income < 88810) {
+                    benefit = Math.min(500, taxespaid, .5*annualExpenses);
+                } else {
+                    benefit = 0;
+                }
             } else {
                 benefit = Math.min(deductibleAmount * taxRate, taxespaid);
             }
