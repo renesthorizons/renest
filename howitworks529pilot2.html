@@ -565,6 +565,148 @@ body {
     font-weight: 700;
     font-size: 1.4rem;
 }
+
+/* Add these animation styles */
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+.logo-transition {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--primary);
+    opacity: 0;
+    z-index: 2;
+}
+
+.logo-transition.animate {
+    animation: fadeIn 0.5s ease-in forwards, fadeOut 0.5s ease-out 1s forwards;
+}
+
+.carousel-slide.fade-out {
+    animation: fadeOut 0.5s ease-out forwards;
+}
+.security-features {
+    background: #f8f8f8;
+    padding: 6rem 0;
+    width: 100vw;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    position: relative;
+}
+
+.security-features .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.security-features h2 {
+    text-align: center;
+    color: var(--text-dark);
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+}
+
+.security-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.security-item {
+    text-align: center;
+    padding: 2.5rem 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease;
+}
+
+.security-item:hover {
+    transform: translateY(-5px);
+}
+
+.security-item h3 {
+    color: var(--primary);
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+}
+
+/* CTA Section */
+.cta-section {
+    padding: 6rem 0;
+    text-align: center;
+    background: linear-gradient(145deg, rgba(75, 34, 122, 0.05), rgba(255, 105, 180, 0.05));
+    width: 100vw;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    position: relative;
+    margin-bottom: 0;
+}
+
+.cta-section .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.cta-section h2 {
+    color: var(--text-dark);
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.cta-section p {
+    font-size: 1.2rem;
+    color: var(--text-dark);
+    margin-bottom: 2rem;
+}
+
+.cta-button {
+    display: inline-block;
+    background: var(--primary);
+    color: white;
+    padding: 1rem 3rem;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.2rem;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cta-button:hover {
+    background: linear-gradient(45deg, var(--primary), var(--accent));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(75, 34, 122, 0.2);
+}
+
+@media (max-width: 768px) {
+    .security-grid {
+        grid-template-columns: 1fr;
+        padding: 0 1rem;
+    }
+
+    .security-features .container,
+    .cta-section .container {
+        padding: 0 1rem;
+    }
+
+    .security-features {
+        padding: 4rem 0;
+    }
+
+    .cta-section {
+        padding: 4rem 0;
+    }
+}
+
 </style>
 <body>
     <!-- Google Tag Manager (noscript) -->
@@ -659,6 +801,34 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 </div>
             </div>
         </section>
+
+        <section class="security-features">
+            <div class="container">
+                <h2>Security & Compliance</h2>
+                <div class="security-grid">
+                    <div class="security-item">
+                        <h3>Bank-Level Security</h3>
+                        <p>All financial data is protected with enterprise-grade encryption</p>
+                    </div>
+                    <div class="security-item">
+                        <h3>Secure Documentation</h3>
+                        <p>All records are maintained securely for the required retention period</p>
+                    </div>
+                    <div class="security-item">
+                        <h3>Compliance Guaranteed</h3>
+                        <p>Our process ensures full compliance with 529 plan regulations</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <div class="container">
+                <h2>Ready to Maximize Your Benefits?</h2>
+                <p></p>
+                <a href="signin529.html" class="cta-button">Get Started</a>
+            </div>
+        </section>
     </main>
 
     <footer class="footer">
@@ -704,15 +874,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const finalSection = document.querySelector('.final-section');
     let currentSlide = 0;
 
+    // Create logo element for transition
+    const logoTransition = document.createElement('div');
+    logoTransition.className = 'logo-transition';
+    logoTransition.textContent = 'RENEST';
+    carouselContainer.appendChild(logoTransition);
+
     // Hide prev button initially
     prevButton.style.display = 'none';
 
-    function showSlide(index) {
+    function showSlide(index, direction = 'next') {
         if (index >= slides.length) {
-            // Show final section
             carouselContainer.style.display = 'none';
             finalSection.classList.add('active');
-            // Scroll to icons section
             const iconsContainer = document.querySelector('.icons-container');
             iconsContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
             return;
@@ -723,6 +897,31 @@ document.addEventListener('DOMContentLoaded', function() {
             carouselContainer.style.display = 'block';
         }
 
+        // Special transition between wor2 and wr3
+        if (direction === 'next' && currentSlide === 1 && index === 2) {
+            // Current slide (wor2) fade out
+            slides[currentSlide].classList.add('fade-out');
+            
+            // Show and animate logo
+            logoTransition.classList.add('animate');
+            
+            // After logo animation, show next slide
+            setTimeout(() => {
+                slides.forEach(slide => {
+                    slide.classList.remove('active', 'fade-out');
+                });
+                slides[index].classList.add('active');
+                currentSlide = index;
+                logoTransition.classList.remove('animate');
+                
+                // Show/hide prev button based on current slide
+                prevButton.style.display = currentSlide === 0 ? 'none' : 'block';
+            }, 1500); // Total animation duration
+            
+            return;
+        }
+
+        // Normal slide transition
         slides.forEach(slide => slide.classList.remove('active'));
         currentSlide = (index + slides.length) % slides.length;
         slides[currentSlide].classList.add('active');
@@ -733,14 +932,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     prevButton.addEventListener('click', () => {
         if (finalSection.classList.contains('active')) {
-            showSlide(slides.length - 1);
+            showSlide(slides.length - 1, 'prev');
         } else {
-            showSlide(currentSlide - 1);
+            showSlide(currentSlide - 1, 'prev');
         }
     });
 
     nextButton.addEventListener('click', () => {
-        showSlide(currentSlide + 1);
+        showSlide(currentSlide + 1, 'next');
     });
 });
 </script>
