@@ -4026,7 +4026,7 @@ function updatePricingDisplay(benefit, earlyAmount) {
             'MN': {
                 url: 'https://www.mnsaves.org/',
                 name: 'Minnesota College Savings Plan',
-                benefit:"$83"
+                benefit:"$500"
             },
 
             'MS': {
@@ -6351,6 +6351,12 @@ const statePersonalExemptionDB = {
         benefit = Math.min(contributionCredit, 1500, taxespaid);
     } else if (state === 'OR') {
         benefit = 180;
+    } else if (state === 'MN') {
+        if (income < 88810) {
+            benefit = Math.min(500, .5*annualExpenses, taxespaid);
+        } else {
+            benefit = 0;
+        }
     } else {
         benefit = Math.min(deductibleAmount * taxRate, taxespaid);
     }
