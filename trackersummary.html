@@ -2403,13 +2403,18 @@ function updateBenefitDisplay(benefits, state, accountStatus, expenses) {
     
     document.getElementById('trackingStatus').textContent = trackingStatusText;
 
-    // Calculate total qualified expenses and deposits
+    // Calculate total qualified expenses and deposits for current year only
+    const currentYear = new Date().getFullYear();
+    const startOfYear = new Date(currentYear, 0, 1);
+
     const totalQualifiedExpenses = expenses
-        ?.filter(e => qualifiedCategories.includes(e.category) || e.isQualified)
+        ?.filter(e => (qualifiedCategories.includes(e.category) || e.isQualified) && 
+                     new Date(e.date) >= startOfYear)
         ?.reduce((sum, e) => sum + e.amount, 0) || 0;
     
     const totalDeposits = expenses
-        ?.filter(e => e.category === 'Deposit529')
+        ?.filter(e => e.category === 'Deposit529' && 
+                     new Date(e.date) >= startOfYear)
         ?.reduce((sum, e) => sum + e.amount, 0) || 0;
 
     let ratio, statusColor, statusText;
@@ -2417,17 +2422,17 @@ function updateBenefitDisplay(benefits, state, accountStatus, expenses) {
     if (totalQualifiedExpenses === 0) {
         ratio = 1;
         statusColor = '#10B981'; // green
-        statusText = 'No qualified expenses yet';
+        statusText = 'No qualified expenses yet this year';
     } else {
         ratio = totalDeposits / totalQualifiedExpenses;
         const neededDeposit = totalQualifiedExpenses - totalDeposits;
         
         if (ratio < 1.0) {
             statusColor = ratio < 0.8 ? '#EF4444' : '#F59E0B'; // red or yellow
-            statusText = `Please deposit $${neededDeposit.toFixed(2)} into your 529`;
+            statusText = `Please deposit $${neededDeposit.toFixed(2)} into your 529 to cover this year's qualified expenses`;
         } else {
             statusColor = '#10B981'; // green
-            statusText = `Good work, you have $${totalDeposits - totalQualifiedExpenses.toFixed(2)} remaining of qualified spend`;
+            statusText = `Good work, you have $${(totalDeposits - totalQualifiedExpenses).toFixed(2)} remaining of qualified spend this year`;
         }
     }
 
