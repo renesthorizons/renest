@@ -2326,11 +2326,15 @@ function calculateBenefits(expenses, state, income) {
 }
 
 function calculateStateBenefit(state, totalQualifiedExpenses, income) {
+    // If no qualified expenses or deposits, return 0
+    if (totalQualifiedExpenses <= 0) {
+        return 0;
+    }
+
     const stateTaxDeduction = statePersonalExemptionDB[state]?.amount || 0;
     const stateDeduction = state529DB[state]?.deduction || 0;
     const taxableStateIncome = income - stateTaxDeduction;
     const taxRate = calculateStateTaxRate(taxableStateIncome, state);
-    
 
     const deductibleAmount = Math.min(
         totalQualifiedExpenses,
@@ -2342,13 +2346,14 @@ function calculateStateBenefit(state, totalQualifiedExpenses, income) {
         const contributionCredit = deductibleAmount * 0.20;
         return Math.min(contributionCredit, 1500, taxRate * taxableStateIncome);
     } else if (state === 'OR') {
-        return 180;
+        // Oregon gives $1 for every $1 in 529 deposits up to $180
+        return Math.min(totalQualifiedExpenses, 180);
     } else if (state === 'MN') {
         if (income < 88810) {
-            return Math.min(500, taxRate * taxableStateIncome);
-        } else {
-            return 0;
+            // Minnesota gives $0.50 for every $1 in 529 deposits up to $500
+            return Math.min(totalQualifiedExpenses * 0.5, 500);
         }
+        return 0;
     } else {
         return Math.min(deductibleAmount * taxRate, taxRate * taxableStateIncome);
     }
