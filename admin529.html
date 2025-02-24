@@ -19,6 +19,120 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     --text-dark: #1E0A3C;
     --background: #FFFFFF;
 }
+ .email-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-width: 500px;
+        }
+
+        .email-input {
+            padding: 1rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .submit-button {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .submit-button:hover {
+            background-color: var(--primary);
+            background-position: 100% 100% !important;
+            transform: translateY(-2px);
+        }
+
+        .newsletter {
+            padding: 4rem 1rem;
+            text-align: center;
+            background-color: #f8f8f8;
+        }
+
+        .newsletter h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero {
+            margin-top: 5rem;
+            padding: 2rem 1rem;
+            background: linear-gradient(45deg, #4B227A, #FF69B4);
+            color: white;
+            min-height: 65vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            color: white;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+.hero-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left:    0rem;
+}
+
+/* Hide image container by default (mobile) */
+.hero-image-container {
+    display: none;
+}
+
+/* Control image size and position */
+.hero-phone {
+    width: 300px; /* Controls the width of the phone image */
+    height: auto;
+    transform:  scale(2);
+    object-fit: contain;
+    transform: translateY(20px) translateX(50px); /* Adjusts vertical position */
+}
+
+/* Desktop styles */
+@media (min-width: 768px) {
+    .hero-phone{transform:  scale(1.2)}
+    .hero {
+                padding: 4rem 2rem;
+            }
+
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+
+    .hero-content {
+        justify-content: space-between;
+        padding: 0 2rem;
+    }
+
+    .hero-image-container {
+        display: block; /* Show image on desktop */
+        flex: 0 0 30%; /* Controls how much space the image takes */
+        margin-right: 2rem;
+    }
+
+    .hero-text {
+        flex: 0 0 85%; /* Controls how much space the text takes */
+    }
+}
 
 * {
     margin: 0;
@@ -27,19 +141,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-.about-hero {
-    margin-top: 5rem;
-    padding: 4rem 2rem;
-    background: linear-gradient(45deg, #4B227A, #FF69B4);
-    color: white;
-    text-align: center;
-}
 
-.about-hero h1 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    line-height: 1.2;
-}
 
 .impact-section {
     padding: 3rem 2rem;
@@ -171,9 +273,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         grid-template-columns: 1fr;
     }
     
-    .about-hero h1 {
-        font-size: 2rem;
-    }
+    
 }
 .navbar {
             position: fixed;
@@ -672,75 +772,109 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </nav>
 
     <main>
-        <section class="about-hero">
-            <h1>Empowering Employers and Students Through Financial Innovation</h1>
-            <p>Renest helps employers and working students unlock savings through 529 account management</p>
-        </section>
-
-        <section class="impact-section">
-            <h2 class="impact-title">Calculate Your Benefit</h2>
-            <div class="calculator-container">
-                <!-- Calculator Type Selector -->
-                <div class="slider-container">
-    <label id="institutionLabel">Select your institution type:</label>
-</div>
-                <div class="tab-buttons">
-                    <button class="tab-button active" data-calc="university">University</button>
-                    <button class="tab-button" data-calc="business">Business</button>
+        <section class="hero">
+            <div class="hero-content">
+                <!-- Add this new div for the image -->
+                
+                <!-- Wrap existing content in a div -->
+                <div class="hero-text">
+                    <h1>Empowering Employers<br> and Students Through<br> Financial Innovation</h1>
+                    <p>Renest helps employers and working students unlock savings through 529 account management</p>
+                    <form class="email-form" id="emailForm" onsubmit="submitToGoogleForm(event)">
+                        <input type="email" class="email-input" id="emailInput" placeholder="Enter your email" required>
+                        <button type="submit" class="submit-button">Schedule a Demo</button>
+                    </form>
                 </div>
-
-                <!-- State Search -->
-                <div class="state-select">
-                    <input type="text" 
-                           id="stateSearch" 
-                           class="state-input" 
-                           placeholder="Search for your state..." 
-                           oninput="handleStateSearch(event)">
-                    <div id="stateSuggestions" class="suggestions" style="display: none;"></div>
-                </div>
-
-                <!-- Student Count Slider -->
-                <div class="slider-container">
-                    <label for="studentSlider" id="sliderLabel">Number of Student Workers:</label>
-                    <input type="range" 
-                           id="studentSlider" 
-                           class="slider" 
-                           min="100" 
-                           max="10000" 
-                           value="1000" 
-                           step="1">
-                    <span id="studentCount">1000 students</span>
-                    <!-- <p id="rangeHint" class="text-hint">Typical range: 500-5000 graduate student workers</p> -->
-                </div>
-
-                <!-- Results Display -->
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <h3>Annual Student Benefit</h3>
-                        <div class="stat-value" id="studentBenefit">$0</div>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Annual Employer Tax Savings</h3>
-                        <div class="stat-value" id="employerBenefit">$0</div>
-                    </div>
-                </div>
-
-                <!-- State Program Details -->
-                <div id="stateDetails" class="state-details" style="display: none;">
-                    <h4>State Program Details</h4>
-                    <p id="stateNotes"></p>
+                <div class="hero-image-container">
+                    <img src="529iphoneimage3hero.png" alt="Renest App Interface" class="hero-phone">
                 </div>
             </div>
         </section>
 
+        <section class="impact-section">
+            <!-- <h2 class="impact-title">Calculate Your Benefit</h2> -->
+            <div class="calculator-container">
+                <!-- Step 1: Institution Type -->
+                <div class="calculator-step" id="step1">
+                    <div class="slider-container">
+                        <label id="institutionLabel">Select your institution type:</label>
+                    </div>
+                    <div class="tab-buttons">
+                        <button class="tab-button" data-calc="university">University</button>
+                        <button class="tab-button" data-calc="business">Business</button>
+                    </div>
+                </div>
+
+                <!-- Step 2: State Search (initially hidden) -->
+                <div class="calculator-step" id="step2" style="display: none;">
+                    <div class="state-select">
+                        <input type="text" 
+                               id="stateSearch" 
+                               class="state-input" 
+                               placeholder="Search for your state (not all states offer employer benefits)..." 
+                               oninput="handleStateSearch(event)">
+                        <div id="stateSuggestions" class="suggestions" style="display: none;"></div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Student Count Slider (initially hidden) -->
+                <div class="calculator-step" id="step3" style="display: none;">
+                    <div class="slider-container">
+                        <label for="studentSlider" id="sliderLabel">Number of Student Workers:</label>
+                        <input type="range" 
+                               id="studentSlider" 
+                               class="slider" 
+                               min="0" 
+                               max="10000" 
+                               value="0" 
+                               step="1">
+                        <span id="studentCount">0 students</span>
+                    </div>
+                </div>
+
+                <!-- Step 4: Results Display (initially hidden) -->
+                <div class="calculator-step" id="step4" style="display: none;">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3>Annual Student Benefit</h3>
+                            <div class="stat-value" id="studentBenefit">$0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Annual Employer Tax Savings</h3>
+                            <div class="stat-value" id="employerBenefit">$0</div>
+                        </div>
+                    </div>
+
+                    <!-- State Program Details -->
+                    <div id="stateDetails" class="state-details">
+                        <h4>State Program Details</h4>
+                        <p id="stateNotes"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
         <section class="process-grid">
             <div class="process-card">
                 <h3>How It Works: Win-Win</h3>
                 <p>Employers direct student employee's compensation through their state's 529 plan instead of direct payment. <b>Employers & employees</b> receive valuable tax credits from the state.</p>
             </div>
             <div class="process-card">
-                <h3>Simple and Cost Effective</h3>
-                <p>Our quick and efficient solution means more benefits in less time. Comprehensive support ensures the maximum savings for you and your employees.</p>
+                <h3>Simple</h3>
+                <p>Our quick and efficient solution means more benefits in less time. Renest is easy to deploy and manage, and we provide ongoing support to ensure you and your employees get the most out of your benefits.</p>
+            </div>
+            <div class="process-card">
+                <h3>Cost Effective</h3>
+                <p>Comprehensive support ensures the maximum savings for you and your employees. Employers who use Renest increase the value of their pay to student workers by up to 20% - at no cost to you!</p>
+            </div>
+            
+            <div class="process-card">
+                <h3>Works Full-time, Part-time, All the Time</h3>
+                <p>Renest can provide benefits for multiple employee groups, enabling you to support different pay structures and schedules.</p>
+            </div>
+            <div class="process-card">
+                <h3>Attract Top Talent</h3>
+                <p>Renest helps your business stand out by offering valuable benefits that other employers don't provide to student workers.</p>
             </div>
             <div class="process-card">
                 <h3>Compliance Assured</h3>
@@ -867,6 +1001,60 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </footer>
     </main>
     <script>
+
+        function submitToGoogleForm(event) {
+            event.preventDefault();
+            
+            
+            const email = document.getElementById('emailInput').value;
+            const googleFormUrl = `https://docs.google.com/forms/d/e/1FAIpQLSelWASsDQusIT5Arxfra-x2ZaF7UdpQwL7311kBjNgRAIXIrQ/formResponse?entry.1579285691=${encodeURIComponent(email)}`;
+            
+            // Create a hidden iframe to submit the form
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
+            
+            // Submit the form through the iframe
+            iframe.src = googleFormUrl;
+            
+            // Create and show styled thank you message
+            const thankYouModal = document.createElement('div');
+            thankYouModal.style.position = 'fixed';
+            thankYouModal.style.top = '0';
+            thankYouModal.style.left = '0';
+            thankYouModal.style.width = '100%';
+            thankYouModal.style.height = '100%';
+            thankYouModal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+            thankYouModal.style.display = 'flex';
+            thankYouModal.style.justifyContent = 'center';
+            thankYouModal.style.alignItems = 'center';
+            thankYouModal.style.zIndex = '2000';
+            
+            thankYouModal.innerHTML = `
+                <div style="background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); max-width: 500px; width: 90%; text-align: center; position: relative;">
+                    <div style="width: 48px; height: 48px; margin: 0 auto 1rem; background: linear-gradient(45deg, #4B227A, #FF69B4); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                    <h2 style="color: #4B227A; font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem;">Thank You for Your Interest!</h2>
+                    <p style="color: #666; font-size: 1.1rem; margin-bottom: 2rem;">A team member will be in contact shortly.</p>
+                    <button style="background: linear-gradient(45deg, #4B227A, #FF69B4); color: white; padding: 0.75rem 2rem; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; transition: all 0.3s ease;" onclick="this.parentElement.parentElement.remove()">Continue</button>
+                </div>
+            `;
+            
+            document.body.appendChild(thankYouModal);
+            
+            // Clear the input
+            document.getElementById('emailInput').value = '';
+            
+            // Remove the iframe after submission
+            setTimeout(() => {
+                document.body.removeChild(iframe);
+            }, 1000);
+        }
+
+
         const state529DB = {
     'AR': {
         planName: 'Arkansas',
@@ -1021,63 +1209,62 @@ function selectState(code) {
     const state = state529DB[code];
     document.getElementById('stateSearch').value = `${code} - ${state.planName}`;
     document.getElementById('stateSuggestions').style.display = 'none';
-    updateCalculations();
+    
+    // Show step 3 after state selection and set initial value to 0
+    document.getElementById('step3').style.display = 'block';
+    const slider = document.getElementById('studentSlider');
+    slider.value = "0";
+    document.getElementById('studentCount').textContent = "0 students";
 }
 
 function updateCalculatorType(type) {
     calculatorType = type;
     const slider = document.getElementById('studentSlider');
     const label = document.getElementById('sliderLabel');
-    const hint = document.getElementById('rangeHint');
     
     if (type === 'university') {
-        slider.min = "100";
+        slider.min = "0";  // Changed to start at 0
         slider.max = "10000";
-        slider.value = "1000";
+        slider.value = "0"; // Set initial value to 0
         label.textContent = 'Number of Student Workers:';
-        hint.textContent = 'Typical range: 500-5000 graduate student workers';
     } else {
-        slider.min = "1";
+        slider.min = "0";  // Changed to start at 0
         slider.max = "100";
-        slider.value = "25";
+        slider.value = "0"; // Set initial value to 0
         label.textContent = 'Number of Student Employees:';
-        hint.textContent = 'Typical range: 5-50 student employees';
     }
     
-    document.getElementById('studentCount').textContent = `${slider.value} students`;
-    updateCalculations();
-}
-
-function updateCalculations() {
-    if (!selectedState) return;
+    document.getElementById('studentCount').textContent = "0 students";
     
-    const studentCount = parseInt(document.getElementById('studentSlider').value);
-    const state = state529DB[selectedState];
-    
-    // Update student count display
-    document.getElementById('studentCount').textContent = `${studentCount} students`;
-    
-    // Calculate and update benefits
-    const studentBenefit = state.studentBenefit* studentCount;
-    const totalEmployerCredit = state.employerCredit * studentCount;
-    
-    document.getElementById('studentBenefit').textContent = 
-        new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
-            .format(studentBenefit);
-    
-    document.getElementById('employerBenefit').textContent = 
-        new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
-            .format(totalEmployerCredit);
-    
-    // Show state details
-    document.getElementById('stateDetails').style.display = 'block';
-    document.getElementById('stateNotes').textContent = state.notes;
+    // Show step 2 after calculator type selection
+    document.getElementById('step2').style.display = 'block';
+    // Hide step 4 if it was previously shown
+    document.getElementById('step4').style.display = 'none';
 }
 
 // Initialize the calculator
 document.addEventListener('DOMContentLoaded', function() {
-    // Calculator slider event listener
-    document.getElementById('studentSlider').addEventListener('input', updateCalculations);
+    let sliderTimeout;
+    
+    // Calculator slider event listener with debounce
+    document.getElementById('studentSlider').addEventListener('input', function(e) {
+        const studentCount = parseInt(e.target.value);
+        document.getElementById('studentCount').textContent = `${studentCount} students`;
+        
+        // Clear any existing timeout
+        clearTimeout(sliderTimeout);
+        
+        // Only show results if value is greater than 0
+        if (studentCount > 0) {
+            // Set a new timeout to update calculations after user stops sliding
+            sliderTimeout = setTimeout(() => {
+                updateCalculations();
+                document.getElementById('step4').style.display = 'block';
+            }, 800); // Wait 500ms after user stops moving slider
+        } else {
+            document.getElementById('step4').style.display = 'none';
+        }
+    });
     
     // Calculator tab buttons
     document.querySelectorAll('[data-calc]').forEach(button => {
@@ -1114,6 +1301,34 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+function updateCalculations() {
+    if (!selectedState) return;
+    
+    const studentCount = parseInt(document.getElementById('studentSlider').value);
+    const state = state529DB[selectedState];
+    
+    // Update student count display
+    document.getElementById('studentCount').textContent = `${studentCount} students`;
+    
+    // Calculate and update benefits
+    const studentBenefit = state.studentBenefit * studentCount;
+    const totalEmployerCredit = state.employerCredit * studentCount;
+    
+    document.getElementById('studentBenefit').textContent = 
+        new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
+            .format(studentBenefit);
+    
+    document.getElementById('employerBenefit').textContent = 
+        new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
+            .format(totalEmployerCredit);
+    
+    // Update state program details
+    document.getElementById('stateNotes').textContent = state.notes;
+    
+    // Show step 4 after calculations
+    document.getElementById('step4').style.display = 'block';
+}
     </script>
 </body>
 </html>
