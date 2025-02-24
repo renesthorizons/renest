@@ -438,6 +438,87 @@
             padding: 1.5rem;
         }
 
+        /* Expense Tracking Modal Specific Styles */
+        .expense-tracking-modal .modal-overlay {
+            z-index: 1050;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .expense-tracking-modal .modal-container {
+            max-height: 90vh;
+            overflow-y: auto;
+            margin: auto;
+        }
+
+        .expense-tracking-modal .modal-content {
+            overflow-y: auto;
+        }
+
+        /* Close button styles */
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            padding: 5px 10px;
+            line-height: 1;
+            transition: color 0.2s;
+            z-index: 2;
+        }
+        
+        .close-button:hover {
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            /* Mobile styles for expense tracking modal only */
+            .expense-tracking-modal .modal-overlay {
+                align-items: flex-start;
+                padding: 4rem 1rem 1rem 1rem;
+            }
+
+            .expense-tracking-modal .modal-container {
+                margin: 0;
+                max-height: 80vh;
+                width: 100%;
+            }
+
+            .expense-tracking-modal .modal-content {
+                padding: 1rem;
+                font-size: 0.95rem;
+            }
+
+            .expense-tracking-modal .modal-content h2 {
+                font-size: 1.3rem;
+                margin-bottom: 1rem;
+                padding-right: 2rem;
+            }
+
+            .expense-tracking-modal .modal-content ol {
+                padding-left: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .expense-tracking-modal .modal-content p {
+                margin-bottom: 1rem;
+            }
+
+            /* State 529 modal mobile adjustments */
+            .state-529-modal .close-button {
+                top: 15px;
+                right: 15px;
+            }
+
+            .state-529-modal .modal-content h2 {
+                padding-right: 2.5rem;
+            }
+        }
+
         .progress-container1 {
             margin-bottom: 1.5rem;
             text-align: center;
@@ -2660,7 +2741,7 @@ const statePersonalExemptionDB = {
 
             // Create and show modal with conditional download button
             const modalHtml = `
-                <div class="modal-overlay" style="display: flex;">
+                <div class="modal-overlay state-529-modal" style="display: flex;">
                     <div class="modal-container">
                         <div class="modal-content">
                             <button class="close-button" onclick="closeState529Modal()" aria-label="Close">×</button>
@@ -3097,7 +3178,7 @@ const statePersonalExemptionDB = {
 
         function showExpenseTrackingModal() {
             const modalHtml = `
-                <div class="modal-overlay" style="display: flex;">
+                <div class="modal-overlay expense-tracking-modal" style="display: flex;">
                     <div class="modal-container">
                         <div class="modal-content">
                             <button class="close-button" onclick="closeExpenseTrackingModal()" aria-label="Close">×</button>
