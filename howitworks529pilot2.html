@@ -899,13 +899,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Special transition between wor2 and wr3
         if (direction === 'next' && currentSlide === 1 && index === 2) {
+            // Hide navigation arrows
+            prevButton.style.display = 'none';
+            nextButton.style.display = 'none';
+            
             // Current slide (wor2) fade out
             slides[currentSlide].classList.add('fade-out');
             
             // Show and animate logo
             logoTransition.classList.add('animate');
             
-            // After logo animation, show next slide
+            // After logo animation, show next slide and restore arrows
             setTimeout(() => {
                 slides.forEach(slide => {
                     slide.classList.remove('active', 'fade-out');
@@ -916,6 +920,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Show/hide prev button based on current slide
                 prevButton.style.display = currentSlide === 0 ? 'none' : 'block';
+                nextButton.style.display = 'block';
             }, 1500); // Total animation duration
             
             return;
