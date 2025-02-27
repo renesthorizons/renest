@@ -858,7 +858,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <label id="institutionLabel">Select your institution type:</label>
                     </div>
                     <div class="tab-buttons">
-                        <button class="tab-button" data-calc="university">University</button>
+                        <button class="tab-button" data-calc="university">Educational</button>
                         <button class="tab-button" data-calc="business">Business</button>
                     </div>
                 </div>
@@ -1289,24 +1289,33 @@ function updateCalculatorType(type) {
         existingContainer.remove();
     }
     
+    // Create a container for the label and button
+    const labelContainer = document.createElement('div');
+    labelContainer.className = 'label-container';
+    
     if (type === 'university') {
         slider.min = "0";
         slider.max = "10000";
         slider.value = "0";
         label.textContent = 'Number of Student Workers:';
+        
+        // Create the qualify button with university-specific tooltip
+        const qualifyButton = document.createElement('button');
+        qualifyButton.className = 'qualify-button';
+        qualifyButton.textContent = 'Who Qualifies?';
+        qualifyButton.setAttribute('data-tooltip', 'Educational institutions, including universities, community colleges, and trade schools, are able to save money when hiring their own students. This includes undergraduate students working in campus facilities (dining halls, gyms, offices, etc.) or graduate students serving as researchers and teaching assistants. Additionally, university career centers can leverage Renest to attract and entice employers to hire more students, creating more opportunities for their students and strengthening industry partnerships.');
+        
+        // Move the label into the container and add the button
+        label.parentNode.insertBefore(labelContainer, label);
+        labelContainer.appendChild(label);
+        labelContainer.appendChild(qualifyButton);
     } else {
         slider.min = "0";
         slider.max = "500";
         slider.value = "0";
-        
-        // Create a container for the label and button
-        const labelContainer = document.createElement('div');
-        labelContainer.className = 'label-container';
-        
-        // Set up the label
         label.textContent = 'Number of Student Employees:';
         
-        // Create the qualify button
+        // Create the qualify button with business-specific tooltip
         const qualifyButton = document.createElement('button');
         qualifyButton.className = 'qualify-button';
         qualifyButton.textContent = 'Who Qualifies?';
