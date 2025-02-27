@@ -168,6 +168,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     margin: 1rem 0;
     display: flex;
     flex-direction: column;
+    gap: 1rem;
+}
+
+.label-container {
+    display: flex;
+    align-items: center;
     gap: 0.5rem;
 }
 
@@ -753,6 +759,58 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 .tabi-content.active {
   display: block;
 }
+
+.qualify-button {
+    background: none;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    height: fit-content;
+    margin-left: 0.5rem;
+}
+
+.qualify-button:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.qualify-button[data-tooltip]:before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 1rem;
+    background: white;
+    color: var(--text-dark);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    width: max-content;
+    max-width: 400px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    margin-bottom: 0.75rem;
+    border: 1px solid var(--primary);
+    text-align: left;
+    line-height: 1.5;
+    white-space: normal;
+}
+
+.qualify-button:hover[data-tooltip]:before {
+    opacity: 1;
+    visibility: visible;
+}
 </style>
 <body>
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TGZL6PTS"
@@ -1224,23 +1282,44 @@ function updateCalculatorType(type) {
     const slider = document.getElementById('studentSlider');
     const label = document.getElementById('sliderLabel');
     
+    // Clean up any existing label container and restore original label position
+    const existingContainer = label.parentElement;
+    if (existingContainer.className === 'label-container') {
+        existingContainer.parentNode.insertBefore(label, existingContainer);
+        existingContainer.remove();
+    }
+    
     if (type === 'university') {
-        slider.min = "0";  // Changed to start at 0
+        slider.min = "0";
         slider.max = "10000";
-        slider.value = "0"; // Set initial value to 0
+        slider.value = "0";
         label.textContent = 'Number of Student Workers:';
     } else {
-        slider.min = "0";  // Changed to start at 0
-        slider.max = "100";
-        slider.value = "0"; // Set initial value to 0
+        slider.min = "0";
+        slider.max = "500";
+        slider.value = "0";
+        
+        // Create a container for the label and button
+        const labelContainer = document.createElement('div');
+        labelContainer.className = 'label-container';
+        
+        // Set up the label
         label.textContent = 'Number of Student Employees:';
+        
+        // Create the qualify button
+        const qualifyButton = document.createElement('button');
+        qualifyButton.className = 'qualify-button';
+        qualifyButton.textContent = 'Who Qualifies?';
+        qualifyButton.setAttribute('data-tooltip', 'Student: Anyone enrolled (full-time or part-time) in an educational institution such as a university, community college, or trade school during the current calendar year — including those who were previously enrolled or will be enrolled within this year. Employee: Anyone in a paid position, including interns, apprentices, and part-time or full-time workers.');
+        
+        // Move the label into the container and add the button
+        label.parentNode.insertBefore(labelContainer, label);
+        labelContainer.appendChild(label);
+        labelContainer.appendChild(qualifyButton);
     }
     
     document.getElementById('studentCount').textContent = "0 students";
-    
-    // Show step 2 after calculator type selection
     document.getElementById('step2').style.display = 'block';
-    // Hide step 4 if it was previously shown
     document.getElementById('step4').style.display = 'none';
 }
 
