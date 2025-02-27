@@ -707,6 +707,21 @@ body {
     }
 }
 
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: var(--primary);
+    color: white;
+}
+
+.btn:hover {
+    background: var(--accent);
+}
+
 </style>
 <body>
     <!-- Google Tag Manager (noscript) -->
@@ -765,7 +780,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <img src="hiw/wr7.png" alt="Step 7" class="carousel-image">
                 <p class="carousel-caption">Renest provides Sara with the tracking, documentation and calculations necessary to unlock her full 529 benefit of $924 effortlessly, efficiently and with confidence, each year.</p>
             </div>
-            <div class="carousel-navigation">
+            <div class="carousel-navigation" style="display: none;">
                 <button class="carousel-nav prev-button">
                     <img src="backbtn.png" alt="Previous">
                 </button>
@@ -774,6 +789,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 </button>
             </div>
         </section>
+        <button class="btn" id="firstNextButton" style="display: block; margin: 20px auto;">Next</button>
 
         <section class="final-section">
             <div class="stacked-images">
@@ -873,7 +889,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const slides = document.querySelectorAll('.carousel-slide');
     const prevButton = document.querySelector('.prev-button');
     const nextButton = document.querySelector('.next-button');
+    const firstNextButton = document.getElementById('firstNextButton');
     const carouselContainer = document.querySelector('.carousel-container');
+    const carouselNavigation = document.querySelector('.carousel-navigation');
     const finalSection = document.querySelector('.final-section');
     let currentSlide = 0;
 
@@ -883,8 +901,9 @@ document.addEventListener('DOMContentLoaded', function() {
     logoTransition.textContent = 'RENEST';
     carouselContainer.appendChild(logoTransition);
 
-    // Hide prev button initially
-    prevButton.style.display = 'none';
+    // Initially hide arrow navigation and show text button
+    carouselNavigation.style.display = 'none';
+    firstNextButton.style.display = 'block';
 
     function showSlide(index, direction = 'next') {
         if (index >= slides.length) {
@@ -902,9 +921,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Special transition between wor2 and wr3
         if (direction === 'next' && currentSlide === 1 && index === 2) {
-            // Hide navigation arrows
-            prevButton.style.display = 'none';
-            nextButton.style.display = 'none';
+            // Hide all navigation
+            carouselNavigation.style.display = 'none';
+            firstNextButton.style.display = 'none';
             
             // Current slide (wor2) fade out
             slides[currentSlide].classList.add('fade-out');
@@ -921,9 +940,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 currentSlide = index;
                 logoTransition.classList.remove('animate');
                 
-                // Show/hide prev button based on current slide
-                prevButton.style.display = currentSlide === 0 ? 'none' : 'block';
-                nextButton.style.display = 'block';
+                // Show arrow navigation for non-first slide
+                carouselNavigation.style.display = 'block';
+                firstNextButton.style.display = 'none';
             }, 1500); // Total animation duration
             
             return;
@@ -934,8 +953,14 @@ document.addEventListener('DOMContentLoaded', function() {
         currentSlide = (index + slides.length) % slides.length;
         slides[currentSlide].classList.add('active');
 
-        // Show/hide prev button based on current slide
-        prevButton.style.display = currentSlide === 0 ? 'none' : 'block';
+        // Show/hide appropriate navigation based on slide
+        if (currentSlide === 0) {
+            carouselNavigation.style.display = 'none';
+            firstNextButton.style.display = 'block';
+        } else {
+            carouselNavigation.style.display = 'block';
+            firstNextButton.style.display = 'none';
+        }
     }
 
     prevButton.addEventListener('click', () => {
@@ -947,6 +972,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     nextButton.addEventListener('click', () => {
+        showSlide(currentSlide + 1, 'next');
+    });
+
+    firstNextButton.addEventListener('click', () => {
         showSlide(currentSlide + 1, 'next');
     });
 });
