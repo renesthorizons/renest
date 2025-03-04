@@ -535,10 +535,11 @@
         <a href="https://renesthorizons.com" class="logo">RENEST</a>
         <div class="nav-links">
             <a href="signin529employer.html" id="signOutLink" class="active">Sign Out</a>
-            <a href="businessprofile.html">Profile</a>
+            <a href="educationprofile.html">Profile</a>
             <!-- <a href="dashboard.html">Dashboard</a> -->
-            <a href="businessaddemployee.html">Add Employee</a>
-            <a href="businessdashboard.html" class="talk-button">Dashboard</a>
+            <a href="educationaddemployee.html">Add Students</a>
+            <a href="educationaddbusiness.html">Add Employer</a>
+            <a href="educationdashboard.html" class="talk-button">Dashboard</a>
         </div>
         <button class="menu-button" aria-label="Toggle menu" aria-expanded="false">☰</button>
     </nav>
@@ -547,7 +548,7 @@
     <main class="main-content" id="mainContent">
         <div class="hero-banner">
             <div class="container">
-                <h1 id="welcomeMessage">Add Employees</h1>
+                <h1 id="welcomeMessage">Add Students</h1>
                 <!-- <p>Manage your employee benefits efficiently</p> -->
             </div>
         </div>
@@ -555,7 +556,7 @@
         <div class="container">
             <div class="section">
                 <div class="btn-container">
-                    <button class="btn" id="addEmployeeBtn">Add Employee</button>
+                    <button class="btn" id="addEmployeeBtn">Add Student</button>
                     <label class="file-label">
                         Upload CSV/Excel
                         <input type="file" class="file-input" id="csvUpload" accept=".csv,.xlsx,.xls">
@@ -564,7 +565,7 @@
                 </div>
 
                 <div class="success-message" id="successMessage">
-                    Success! Employees have been invited.
+                    Success! Students have been invited.
                 </div>
 
                 <div class="success-message" id="copyMessage">
@@ -578,6 +579,7 @@
                         <div>Name</div>
                         <div>Phone</div>
                         <div>Email</div>
+                        <div>Tag</div>
                         <div>Status</div>
                         <div></div>
                     </div>
@@ -585,7 +587,7 @@
                 </div>
 
                 <div class="btn-container" style="margin-top: 2rem;">
-                    <button class="btn btn-secondary" id="inviteAllBtn">Invite to Benefit</button>
+                    <button class="btn btn-secondary" id="inviteAllBtn">Invite Students</button>
                 </div>
             </div>
         </div>
@@ -593,7 +595,7 @@
 
     <div class="modal" id="employeeModal">
         <div class="modal-content">
-            <h2 style="margin-bottom: 1.5rem">Add New Employee</h2>
+            <h2 style="margin-bottom: 1.5rem">Add New Student</h2>
             <form id="employeeForm">
                 <div class="input-group">
                     <label class="input-label" for="firstName">First Name</label>
@@ -611,9 +613,13 @@
                     <label class="input-label" for="email">Email*</label>
                     <input type="email" id="email" class="input-field" required>
                 </div>
+                <div class="input-group">
+                    <label class="input-label" for="tag">Tag</label>
+                    <input type="text" id="tag" class="input-field" placeholder="e.g. Freshman, Senior, Math101">
+                </div>
                 <div class="btn-container">
                     <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
-                    <button type="submit" class="btn">Add Employee</button>
+                    <button type="submit" class="btn">Add Student</button>
                 </div>
             </form>
         </div>
@@ -714,6 +720,7 @@
                 lastName: document.getElementById('lastName').value,
                 phone: document.getElementById('phone').value,
                 email: document.getElementById('email').value,
+                tag: document.getElementById('tag').value,
                 status: 'pending'
             };
 
@@ -730,6 +737,9 @@
             const file = e.target.files[0];
             if (!file) return;
 
+            // Prompt for tag for this batch of students
+            const batchTag = prompt('Enter a tag for this group of students (optional):');
+            
             const reader = new FileReader();
             
             if (file.name.endsWith('.csv')) {
@@ -738,17 +748,29 @@
                     const text = e.target.result;
                     const rows = text.split('\n');
                     
+                    // Check if CSV has a tag column
+                    const headers = rows[0].toLowerCase().split(',');
+                    const hasTagColumn = headers.includes('tag');
+                    const tagIndex = hasTagColumn ? headers.indexOf('tag') : -1;
+                    
                     // Skip header row and process data
                     for (let i = 1; i < rows.length; i++) {
-                        const [firstName, lastName, phone, email] = rows[i].split(',');
-                        if (firstName && lastName && phone && email) {
-                            employees.push({
-                                firstName: firstName.trim(),
-                                lastName: lastName.trim(),
-                                phone: phone.trim(),
-                                email: email.trim(),
-                                status: 'pending'
-                            });
+                        const values = rows[i].split(',');
+                        if (values.length >= 4) { // Ensure we have at least the required fields
+                            const [firstName, lastName, phone, email] = values;
+                            // Use individual tag from CSV if available, otherwise use batch tag
+                            const tag = hasTagColumn && values[tagIndex] ? values[tagIndex].trim() : (batchTag || '');
+                            
+                            if (firstName && lastName && phone && email) {
+                                employees.push({
+                                    firstName: firstName.trim(),
+                                    lastName: lastName.trim(),
+                                    phone: phone.trim(),
+                                    email: email.trim(),
+                                    tag: tag,
+                                    status: 'pending'
+                                });
+                            }
                         }
                     }
                     
@@ -769,17 +791,29 @@
                     // Convert to JSON
                     const rows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
                     
+                    // Check if Excel has a tag column
+                    const headers = rows[0].map(h => h.toLowerCase());
+                    const hasTagColumn = headers.includes('tag');
+                    const tagIndex = hasTagColumn ? headers.indexOf('tag') : -1;
+                    
                     // Skip header row and process data
                     for (let i = 1; i < rows.length; i++) {
-                        const [firstName, lastName, phone, email] = rows[i];
-                        if (firstName && lastName && phone && email) {
-                            employees.push({
-                                firstName: firstName.toString().trim(),
-                                lastName: lastName.toString().trim(),
-                                phone: phone.toString().trim(),
-                                email: email.toString().trim(),
-                                status: 'pending'
-                            });
+                        const row = rows[i];
+                        if (row.length >= 4) { // Ensure we have at least the required fields
+                            const [firstName, lastName, phone, email] = row;
+                            // Use individual tag from Excel if available, otherwise use batch tag
+                            const tag = hasTagColumn && row[tagIndex] ? row[tagIndex].toString().trim() : (batchTag || '');
+                            
+                            if (firstName && lastName && phone && email) {
+                                employees.push({
+                                    firstName: firstName.toString().trim(),
+                                    lastName: lastName.toString().trim(),
+                                    phone: phone.toString().trim(),
+                                    email: email.toString().trim(),
+                                    tag: tag,
+                                    status: 'pending'
+                                });
+                            }
                         }
                     }
                     
@@ -798,6 +832,7 @@
                     <div>Name</div>
                     <div>Phone</div>
                     <div>Email</div>
+                    <div>Tag</div>
                     <div>Status</div>
                     <div></div>
                 </div>
@@ -810,6 +845,7 @@
                     <div>${employee.firstName} ${employee.lastName}</div>
                     <div>${employee.phone}</div>
                     <div>${employee.email}</div>
+                    <div>${employee.tag}</div>
                     <div class="status status-${employee.status}">${employee.status}</div>
                     <div>
                         <button class="btn btn-secondary" onclick="removeEmployee(${index})">Remove</button>

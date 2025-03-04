@@ -343,11 +343,12 @@
 
         .employee-item {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr auto auto;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr auto;
             gap: 1rem;
             padding: 1rem;
             border-bottom: 1px solid #eee;
             align-items: center;
+            transition: background-color 0.2s ease;
         }
 
         .employee-item:last-child {
@@ -359,6 +360,7 @@
             border-radius: 20px;
             font-size: 0.875rem;
             text-align: center;
+            display: inline-block;
         }
 
         .status-pending {
@@ -476,7 +478,7 @@
 
         .employee-list-header {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr auto auto;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr auto;
             gap: 1rem;
             padding: 1rem;
             border-bottom: 2px solid #eee;
@@ -485,7 +487,23 @@
         }
 
         .employee-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr auto;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            align-items: center;
             transition: background-color 0.2s ease;
+        }
+
+        .business-name-cell {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .business-name-cell .btn {
+            width: fit-content;
         }
 
         .employee-item:hover {
@@ -528,6 +546,84 @@
                 opacity: 1;
             }
         }
+
+        /* Add these new styles before the media queries */
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .section-description {
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .marketing-materials {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .material-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .material-item:hover {
+            background: #f1f3f5;
+        }
+
+        .material-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        .material-info {
+            flex: 1;
+        }
+
+        .material-name {
+            font-weight: 500;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .material-size {
+            font-size: 0.875rem;
+            color: #666;
+        }
+
+        .material-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .material-button {
+            padding: 0.5rem;
+            border: none;
+            background: none;
+            color: #666;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .material-button:hover {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+        }
     </style>
 </head>
 <body>
@@ -535,10 +631,11 @@
         <a href="https://renesthorizons.com" class="logo">RENEST</a>
         <div class="nav-links">
             <a href="signin529employer.html" id="signOutLink" class="active">Sign Out</a>
-            <a href="businessprofile.html">Profile</a>
+            <a href="educationprofile.html">Profile</a>
             <!-- <a href="dashboard.html">Dashboard</a> -->
-            <a href="businessaddemployee.html">Add Employee</a>
-            <a href="businessdashboard.html" class="talk-button">Dashboard</a>
+            <a href="educationaddemployee.html">Add Students</a>
+            <a href="educationaddbusiness.html">Add Employer</a>
+            <a href="educationdashboard.html" class="talk-button">Dashboard</a>
         </div>
         <button class="menu-button" aria-label="Toggle menu" aria-expanded="false">☰</button>
     </nav>
@@ -547,15 +644,14 @@
     <main class="main-content" id="mainContent">
         <div class="hero-banner">
             <div class="container">
-                <h1 id="welcomeMessage">Add Employees</h1>
-                <!-- <p>Manage your employee benefits efficiently</p> -->
+                <h1 id="welcomeMessage">Add Businesses</h1>
             </div>
         </div>
 
         <div class="container">
             <div class="section">
                 <div class="btn-container">
-                    <button class="btn" id="addEmployeeBtn">Add Employee</button>
+                    <button class="btn" id="addEmployeeBtn">Add Business</button>
                     <label class="file-label">
                         Upload CSV/Excel
                         <input type="file" class="file-input" id="csvUpload" accept=".csv,.xlsx,.xls">
@@ -564,7 +660,7 @@
                 </div>
 
                 <div class="success-message" id="successMessage">
-                    Success! Employees have been invited.
+                    Success! Businesses have been invited.
                 </div>
 
                 <div class="success-message" id="copyMessage">
@@ -575,17 +671,35 @@
             <div class="section">
                 <div class="employee-list" id="employeeList">
                     <div class="employee-list-header">
-                        <div>Name</div>
+                        <div>Business Name</div>
+                        <div>Contact Person</div>
                         <div>Phone</div>
                         <div>Email</div>
+                        <div>Website</div>
                         <div>Status</div>
-                        <div></div>
                     </div>
-                    <!-- Employee items will be added here dynamically -->
+                    <!-- Business items will be added here dynamically -->
                 </div>
 
                 <div class="btn-container" style="margin-top: 2rem;">
-                    <button class="btn btn-secondary" id="inviteAllBtn">Invite to Benefit</button>
+                    <button class="btn btn-secondary" id="inviteAllBtn">Invite Businesses</button>
+                </div>
+            </div>
+
+            <!-- Marketing Materials Section -->
+            <div class="section">
+                <h2 class="section-title">Marketing Materials</h2>
+                <p class="section-description">These materials are automatically sent to employers when they receive an invite.</p>
+                
+                <div class="marketing-materials" id="marketingMaterialsList">
+                    <!-- Marketing materials will be added here dynamically -->
+                </div>
+
+                <div class="btn-container" style="margin-top: 1rem;">
+                    <label class="file-label">
+                        Upload New Material
+                        <input type="file" class="file-input" id="materialUpload" accept=".pdf">
+                    </label>
                 </div>
             </div>
         </div>
@@ -593,15 +707,15 @@
 
     <div class="modal" id="employeeModal">
         <div class="modal-content">
-            <h2 style="margin-bottom: 1.5rem">Add New Employee</h2>
+            <h2 style="margin-bottom: 1.5rem">Add New Business</h2>
             <form id="employeeForm">
                 <div class="input-group">
-                    <label class="input-label" for="firstName">First Name</label>
-                    <input type="text" id="firstName" class="input-field">
+                    <label class="input-label" for="businessName">Business Name</label>
+                    <input type="text" id="businessName" class="input-field">
                 </div>
                 <div class="input-group">
-                    <label class="input-label" for="lastName">Last Name</label>
-                    <input type="text" id="lastName" class="input-field">
+                    <label class="input-label" for="contactPerson">Contact Person</label>
+                    <input type="text" id="contactPerson" class="input-field">
                 </div>
                 <div class="input-group">
                     <label class="input-label" for="phone">Phone Number</label>
@@ -611,9 +725,13 @@
                     <label class="input-label" for="email">Email*</label>
                     <input type="email" id="email" class="input-field" required>
                 </div>
+                <div class="input-group">
+                    <label class="input-label" for="website">Website</label>
+                    <input type="url" id="website" class="input-field" placeholder="https://example.com">
+                </div>
                 <div class="btn-container">
                     <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
-                    <button type="submit" class="btn">Add Employee</button>
+                    <button type="submit" class="btn">Add Business</button>
                 </div>
             </form>
         </div>
@@ -654,21 +772,21 @@
         const getInviteLinkBtn = document.getElementById('getInviteLinkBtn');
         const copyMessage = document.getElementById('copyMessage');
 
-        // Store employees
+        // Store businesses
         let employees = [];
 
-        // Load employees from localStorage on page load
+        // Load businesses from localStorage on page load
         document.addEventListener('DOMContentLoaded', () => {
-            const storedEmployees = localStorage.getItem('renestEmployees');
+            const storedEmployees = localStorage.getItem('renestBusinesses');
             if (storedEmployees) {
                 employees = JSON.parse(storedEmployees);
                 updateEmployeeList();
             }
         });
 
-        // Function to save employees to localStorage
+        // Function to save businesses to localStorage
         function saveEmployeesToStorage() {
-            localStorage.setItem('renestEmployees', JSON.stringify(employees));
+            localStorage.setItem('renestBusinesses', JSON.stringify(employees));
         }
 
         // Show modal
@@ -709,15 +827,16 @@
         employeeForm.addEventListener('submit', (e) => {
             e.preventDefault();
             
-            const employee = {
-                firstName: document.getElementById('firstName').value,
-                lastName: document.getElementById('lastName').value,
+            const business = {
+                businessName: document.getElementById('businessName').value,
+                contactPerson: document.getElementById('contactPerson').value,
                 phone: document.getElementById('phone').value,
                 email: document.getElementById('email').value,
+                website: document.getElementById('website').value,
                 status: 'pending'
             };
 
-            employees.push(employee);
+            employees.push(business);
             updateEmployeeList();
             saveEmployeesToStorage();
             
@@ -729,7 +848,7 @@
         csvUpload.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
-
+            
             const reader = new FileReader();
             
             if (file.name.endsWith('.csv')) {
@@ -740,15 +859,20 @@
                     
                     // Skip header row and process data
                     for (let i = 1; i < rows.length; i++) {
-                        const [firstName, lastName, phone, email] = rows[i].split(',');
-                        if (firstName && lastName && phone && email) {
-                            employees.push({
-                                firstName: firstName.trim(),
-                                lastName: lastName.trim(),
-                                phone: phone.trim(),
-                                email: email.trim(),
-                                status: 'pending'
-                            });
+                        const values = rows[i].split(',');
+                        if (values.length >= 4) { // Ensure we have at least the required fields
+                            const [businessName, contactPerson, phone, email, website] = values;
+                            
+                            if (email) { // Only email is required
+                                employees.push({
+                                    businessName: businessName ? businessName.trim() : '',
+                                    contactPerson: contactPerson ? contactPerson.trim() : '',
+                                    phone: phone ? phone.trim() : '',
+                                    email: email.trim(),
+                                    website: website ? website.trim() : '',
+                                    status: 'pending'
+                                });
+                            }
                         }
                     }
                     
@@ -771,15 +895,20 @@
                     
                     // Skip header row and process data
                     for (let i = 1; i < rows.length; i++) {
-                        const [firstName, lastName, phone, email] = rows[i];
-                        if (firstName && lastName && phone && email) {
-                            employees.push({
-                                firstName: firstName.toString().trim(),
-                                lastName: lastName.toString().trim(),
-                                phone: phone.toString().trim(),
-                                email: email.toString().trim(),
-                                status: 'pending'
-                            });
+                        const row = rows[i];
+                        if (row.length >= 4) { // Ensure we have at least the required fields
+                            const [businessName, contactPerson, phone, email, website] = row;
+                            
+                            if (email) { // Only email is required
+                                employees.push({
+                                    businessName: businessName ? businessName.toString().trim() : '',
+                                    contactPerson: contactPerson ? contactPerson.toString().trim() : '',
+                                    phone: phone ? phone.toString().trim() : '',
+                                    email: email.toString().trim(),
+                                    website: website ? website.toString().trim() : '',
+                                    status: 'pending'
+                                });
+                            }
                         }
                     }
                     
@@ -790,36 +919,39 @@
             }
         });
 
-        // Update employee list display
+        // Update business list display
         function updateEmployeeList() {
             const employeeListContainer = document.getElementById('employeeList');
             employeeListContainer.innerHTML = `
                 <div class="employee-list-header">
-                    <div>Name</div>
+                    <div>Business Name</div>
+                    <div>Contact Person</div>
                     <div>Phone</div>
                     <div>Email</div>
+                    <div>Website</div>
                     <div>Status</div>
-                    <div></div>
                 </div>
             `;
             
-            employees.forEach((employee, index) => {
-                const employeeItem = document.createElement('div');
-                employeeItem.className = 'employee-item';
-                employeeItem.innerHTML = `
-                    <div>${employee.firstName} ${employee.lastName}</div>
-                    <div>${employee.phone}</div>
-                    <div>${employee.email}</div>
-                    <div class="status status-${employee.status}">${employee.status}</div>
-                    <div>
+            employees.forEach((business, index) => {
+                const businessItem = document.createElement('div');
+                businessItem.className = 'employee-item';
+                businessItem.innerHTML = `
+                    <div class="business-name-cell">
+                        <div>${business.businessName || '-'}</div>
                         <button class="btn btn-secondary" onclick="removeEmployee(${index})">Remove</button>
                     </div>
+                    <div>${business.contactPerson || '-'}</div>
+                    <div>${business.phone || '-'}</div>
+                    <div>${business.email}</div>
+                    <div>${business.website || '-'}</div>
+                    <div><span class="status status-${business.status}">${business.status}</span></div>
                 `;
-                employeeListContainer.appendChild(employeeItem);
+                employeeListContainer.appendChild(businessItem);
             });
         }
 
-        // Remove employee function
+        // Remove business function
         function removeEmployee(index) {
             employees.splice(index, 1);
             updateEmployeeList();
@@ -828,8 +960,8 @@
 
         // Handle invite all
         inviteAllBtn.addEventListener('click', () => {
-            employees = employees.map(employee => ({
-                ...employee,
+            employees = employees.map(business => ({
+                ...business,
                 status: 'invited'
             }));
             updateEmployeeList();
@@ -842,7 +974,7 @@
 
         // Handle get invite link
         getInviteLinkBtn.addEventListener('click', () => {
-            const inviteLink = 'https://renest.com/onboard'; // Replace with your actual onboarding URL
+            const inviteLink = 'https://renest.com/business/onboard'; // Replace with your actual onboarding URL
             navigator.clipboard.writeText(inviteLink).then(() => {
                 copyMessage.style.display = 'block';
                 setTimeout(() => {
@@ -850,21 +982,102 @@
                 }, 3000);
             });
         });
-    const menuButton = document.querySelector('.menu-button');
-    const navLinks = document.querySelector('.nav-links');
 
-    menuButton.addEventListener('click', function(e) {
-        e.stopPropagation();
-        navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-        menuButton.setAttribute('aria-expanded', navLinks.style.display === 'flex');
-    });
+        const menuButton = document.querySelector('.menu-button');
+        const navLinks = document.querySelector('.nav-links');
 
-    document.addEventListener('click', function(e) {
-        if (window.innerWidth < 768 && !navLinks.contains(e.target) && e.target !== menuButton) {
-            navLinks.style.display = 'none';
-            menuButton.setAttribute('aria-expanded', false);
+        menuButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+            menuButton.setAttribute('aria-expanded', navLinks.style.display === 'flex');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (window.innerWidth < 768 && !navLinks.contains(e.target) && e.target !== menuButton) {
+                navLinks.style.display = 'none';
+                menuButton.setAttribute('aria-expanded', false);
+            }
+        });
+
+        // Marketing Materials Management
+        const marketingMaterialsList = document.getElementById('marketingMaterialsList');
+        const materialUpload = document.getElementById('materialUpload');
+        let marketingMaterials = [];
+
+        // Load marketing materials from localStorage
+        document.addEventListener('DOMContentLoaded', () => {
+            const storedMaterials = localStorage.getItem('renestMarketingMaterials');
+            if (storedMaterials) {
+                marketingMaterials = JSON.parse(storedMaterials);
+                updateMarketingMaterialsList();
+            }
+        });
+
+        // Save marketing materials to localStorage
+        function saveMaterialsToStorage() {
+            localStorage.setItem('renestMarketingMaterials', JSON.stringify(marketingMaterials));
         }
-    });
+
+        // Handle material upload
+        materialUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file || !file.type.includes('pdf')) return;
+
+            const material = {
+                id: Date.now(),
+                name: file.name,
+                size: formatFileSize(file.size),
+                uploadDate: new Date().toISOString()
+            };
+
+            marketingMaterials.push(material);
+            updateMarketingMaterialsList();
+            saveMaterialsToStorage();
+            materialUpload.value = '';
+        });
+
+        // Format file size
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Remove marketing material
+        function removeMaterial(id) {
+            marketingMaterials = marketingMaterials.filter(material => material.id !== id);
+            updateMarketingMaterialsList();
+            saveMaterialsToStorage();
+        }
+
+        // Update marketing materials list
+        function updateMarketingMaterialsList() {
+            marketingMaterialsList.innerHTML = '';
+            
+            if (marketingMaterials.length === 0) {
+                marketingMaterialsList.innerHTML = '<p style="text-align: center; color: #666;">No marketing materials uploaded yet.</p>';
+                return;
+            }
+
+            marketingMaterials.forEach(material => {
+                const materialItem = document.createElement('div');
+                materialItem.className = 'material-item';
+                materialItem.innerHTML = `
+                    <div class="material-icon">📄</div>
+                    <div class="material-info">
+                        <div class="material-name">${material.name}</div>
+                        <div class="material-size">${material.size}</div>
+                    </div>
+                    <div class="material-actions">
+                        <button class="material-button" onclick="window.open('#', '_blank')" title="View">👁️</button>
+                        <button class="material-button" onclick="removeMaterial(${material.id})" title="Remove">🗑️</button>
+                    </div>
+                `;
+                marketingMaterialsList.appendChild(materialItem);
+            });
+        }
     </script>
 
     <!-- Add SheetJS library -->

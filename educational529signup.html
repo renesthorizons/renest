@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-TGZL6PTS');</script>
+    <!-- End Google Tag Manager -->
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educational Institution Sign Up - RENEST</title>
+    <link rel="icon" href="blogo2.png" type="image/png">
+    
+    <style>
+        :root {
+            --primary: #4B227A;
+            --accent: #FF69B4;
+            --text-dark: #1E0A3C;
+            --background: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background:white;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-title {
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .form-subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .signup-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn-container {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .add-state {
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            white-space: nowrap;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .add-state:hover {
+            background: #ff4da6;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 2rem;
+            white-space: nowrap;
+            font-size: 0.95rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #5c2b96;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .spinner {
+            display: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+            margin-left: 8px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .btn-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .section-title {
+            grid-column: 1 / -1;
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 0.5rem;
+        }
+
+        .state-container {
+            grid-column: 1 / -1;
+            display: grid;
+            gap: 1rem;
+        }
+
+        .state-group {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1rem;
+            align-items: start;
+        }
+
+        .remove-state {
+            background: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 0.75rem;
+            cursor: pointer;
+            margin-top: 2rem;
+        }
+
+        .state-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .state-suggestion {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+        }
+
+        .state-suggestion:hover {
+            background: #f0f0f0;
+        }
+
+        .checkbox-group, .radio-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .checkbox-item, .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checkbox-item input[type="checkbox"], .radio-item input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .federal-code-container {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .lookup-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .lookup-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Multi-step form styles */
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #ddd;
+            z-index: 1;
+        }
+
+        .progress-step {
+            position: relative;
+            z-index: 2;
+            background: white;
+            padding: 0 1rem;
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #ddd;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            font-weight: bold;
+        }
+
+        .step-title {
+            font-size: 0.9rem;
+            color: #666;
+            text-align: center;
+        }
+
+        .progress-step.active .step-number {
+            background: var(--primary);
+        }
+
+        .progress-step.completed .step-number {
+            background: var(--accent);
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        .btn-prev {
+            background: #666;
+        }
+
+        .btn-prev:hover {
+            background: #555;
+        }
+
+        .btn-next {
+            background: var(--primary);
+        }
+
+        .btn-next:hover {
+            background: #5c2b96;
+        }
+
+        .btn-submit {
+            display: none;
+        }
+
+        .btn-submit.visible {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TGZL6PTS"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <div class="container">
+        <h1 class="form-title">Educational Institution Registration</h1>
+        <p class="form-subtitle">Please provide your information to get started</p>
+        
+        <div class="progress-bar">
+            <div class="progress-step active" data-step="1">
+                <div class="step-number">1</div>
+                <div class="step-title">Basic Info</div>
+            </div>
+            <div class="progress-step" data-step="2">
+                <div class="step-number">2</div>
+                <div class="step-title">Programs</div>
+            </div>
+            <div class="progress-step" data-step="3">
+                <div class="step-number">3</div>
+                <div class="step-title">Location</div>
+            </div>
+            <div class="progress-step" data-step="4">
+                <div class="step-number">4</div>
+                <div class="step-title">Contact</div>
+            </div>
+        </div>
+
+        <form class="signup-form" id="businessSignupForm">
+            <!-- Step 1: Basic Information -->
+            <div class="form-step active" data-step="1">
+                <h2 class="section-title">Basic Institution Information</h2>
+                
+                <div class="input-group">
+                    <label class="input-label" for="registeredName">Official Registered Name*</label>
+                    <input type="text" id="registeredName" class="input-field" required>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label" for="dbaName">DBA Name (if applicable)</label>
+                    <input type="text" id="dbaName" class="input-field">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label" for="fein">Federal Employer ID Number (FEIN)*</label>
+                    <input type="text" id="fein" class="input-field" placeholder="XX-XXXXXXX" required>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label" for="nevadaTaxId">State Taxpayer ID*</label>
+                    <input type="text" id="nevadaTaxId" class="input-field" required>
+                </div>
+
+                <div class="btn-container">
+                    <button type="button" class="btn btn-next">Next</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Programs and Designation -->
+            <div class="form-step" data-step="2">
+                <h2 class="section-title">Programs and Institution Designation</h2>
+
+                <div class="input-group full-width">
+                    <label class="input-label">Programs Offered (Select all that apply)*</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="apprenticeships" name="programs" value="apprenticeships">
+                            <label for="apprenticeships">Apprenticeships</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="masters" name="programs" value="masters">
+                            <label for="masters">Masters</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="undergraduate4" name="programs" value="4_year_undergraduate">
+                            <label for="undergraduate4">4 Year Undergraduate</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="undergraduate2" name="programs" value="2_year_undergraduate">
+                            <label for="undergraduate2">2 Year Undergraduate</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="phd" name="programs" value="phd">
+                            <label for="phd">PhD</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="md" name="programs" value="md">
+                            <label for="md">MD</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="jd" name="programs" value="jd">
+                            <label for="jd">JD</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="dvm" name="programs" value="dvm">
+                            <label for="dvm">DVM</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group full-width">
+                    <label class="input-label">Institution Designation*</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="forProfit" name="designation" value="for_profit">
+                            <label for="forProfit">For Profit</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="nonProfit" name="designation" value="non_profit">
+                            <label for="nonProfit">Non Profit</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="other" name="designation" value="other">
+                            <label for="other">Other</label>
+                        </div>
+                    </div>
+                    <div id="designationDetails" style="display: none; margin-top: 1rem;">
+                        <input type="text" id="designationInput" class="input-field" placeholder="Enter designation details (e.g., 501(c)3)">
+                    </div>
+                </div>
+
+                <div class="input-group full-width">
+                    <label class="input-label" for="federalSchoolCode">Federal School Code*</label>
+                    <div class="federal-code-container">
+                        <input type="text" id="federalSchoolCode" class="input-field" required>
+                        <a href="https://studentaid.gov/fafsa-apply/colleges" target="_blank" class="lookup-link">Look up code</a>
+                    </div>
+                </div>
+
+                <div class="btn-container">
+                    <button type="button" class="btn btn-prev">Previous</button>
+                    <button type="button" class="btn btn-next">Next</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Location Information -->
+            <div class="form-step" data-step="3">
+                <h2 class="section-title">Location Information</h2>
+
+                <div class="state-container" id="stateContainer">
+                    <div class="state-group">
+                        <div class="input-group">
+                            <label class="input-label" for="state-0">State*</label>
+                            <input type="text" id="state-0" class="input-field state-input" required>
+                            <div class="state-suggestions" style="display: none;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="add-state" id="addStateBtn">Add Another Location</button>
+
+                <div class="btn-container">
+                    <button type="button" class="btn btn-prev">Previous</button>
+                    <button type="button" class="btn btn-next">Next</button>
+                </div>
+            </div>
+
+            <!-- Step 4: Contact Information -->
+            <div class="form-step" data-step="4">
+                <h2 class="section-title">Contact Person Information</h2>
+
+                <div class="input-group">
+                    <label class="input-label" for="contactName">Contact Person Name*</label>
+                    <input type="text" id="contactName" class="input-field" required>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label" for="position">Position/Title*</label>
+                    <input type="text" id="position" class="input-field" required>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label" for="phone">Phone Number*</label>
+                    <input type="tel" id="phone" class="input-field" placeholder="(XXX) XXX-XXXX" required>
+                </div>
+
+                <div class="btn-container">
+                    <button type="button" class="btn btn-prev">Previous</button>
+                    <button type="submit" class="btn btn-submit visible">
+                        <div class="btn-content">
+                            <span>Submit</span>
+                            <div class="spinner" id="spinner"></div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const stateOptions = {
+            'AL': 'Alabama',
+            'AK': 'Alaska',
+            'AZ': 'Arizona',
+            'AR': 'Arkansas',
+            'CA': 'California',
+            'CO': 'Colorado',
+            'CT': 'Connecticut',
+            'DE': 'Delaware',
+            'DC': 'District of Columbia',
+            'FL': 'Florida',
+            'GA': 'Georgia',
+            'HI': 'Hawaii',
+            'ID': 'Idaho',
+            'IL': 'Illinois',
+            'IN': 'Indiana',
+            'IA': 'Iowa',
+            'KS': 'Kansas',
+            'KY': 'Kentucky',
+            'LA': 'Louisiana',
+            'ME': 'Maine',
+            'MD': 'Maryland',
+            'MA': 'Massachusetts',
+            'MI': 'Michigan',
+            'MN': 'Minnesota',
+            'MS': 'Mississippi',
+            'MO': 'Missouri',
+            'MT': 'Montana',
+            'NE': 'Nebraska',
+            'NV': 'Nevada',
+            'NH': 'New Hampshire',
+            'NJ': 'New Jersey',
+            'NM': 'New Mexico',
+            'NY': 'New York',
+            'NYC': 'New York City',
+            'NC': 'North Carolina',
+            'ND': 'North Dakota',
+            'OH': 'Ohio',
+            'OK': 'Oklahoma',
+            'OR': 'Oregon',
+            'PA': 'Pennsylvania',
+            'PR': 'Puerto Rico',
+            'RI': 'Rhode Island',
+            'SC': 'South Carolina',
+            'SD': 'South Dakota',
+            'TN': 'Tennessee',
+            'TX': 'Texas',
+            'UT': 'Utah',
+            'VT': 'Vermont',
+            'VA': 'Virginia',
+            'WA': 'Washington',
+            'WV': 'West Virginia',
+            'WI': 'Wisconsin',
+            'WY': 'Wyoming'
+        };
+
+        // Format FEIN input
+        document.getElementById('fein').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 9) {
+                value = value.slice(0, 9);
+            }
+            if (value.length > 0) {
+                if (value.length <= 2) {
+                    value = value;
+                } else {
+                    value = value.slice(0, 2) + '-' + value.slice(2);
+                }
+            }
+            e.target.value = value;
+        });
+
+        // Format phone number
+        document.getElementById('phone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 0) {
+                if (value.length <= 3) {
+                    value = `(${value}`;
+                } else if (value.length <= 6) {
+                    value = `(${value.slice(0,3)}) ${value.slice(3)}`;
+                } else {
+                    value = `(${value.slice(0,3)}) ${value.slice(3,6)}-${value.slice(6,10)}`;
+                }
+            }
+            e.target.value = value;
+        });
+
+        // State input functionality
+        let stateCounter = 1;
+
+        function createStateInput() {
+            const stateGroup = document.createElement('div');
+            stateGroup.className = 'state-group';
+            
+            const inputGroup = document.createElement('div');
+            inputGroup.className = 'input-group';
+            
+            const label = document.createElement('label');
+            label.className = 'input-label';
+            label.htmlFor = `state-${stateCounter}`;
+            label.textContent = 'State*';
+            
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.id = `state-${stateCounter}`;
+            input.className = 'input-field state-input';
+            input.required = true;
+            
+            const suggestions = document.createElement('div');
+            suggestions.className = 'state-suggestions';
+            suggestions.style.display = 'none';
+            
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.className = 'remove-state';
+            removeBtn.textContent = 'Remove';
+            removeBtn.onclick = () => stateGroup.remove();
+            
+            inputGroup.appendChild(label);
+            inputGroup.appendChild(input);
+            inputGroup.appendChild(suggestions);
+            stateGroup.appendChild(inputGroup);
+            stateGroup.appendChild(removeBtn);
+            
+            setupStateInput(input, suggestions);
+            return stateGroup;
+        }
+
+        function setupStateInput(input, suggestions) {
+            input.addEventListener('input', function() {
+                const value = this.value.toLowerCase();
+                const matches = Object.entries(stateOptions)
+                    .filter(([code, name]) => 
+                        code.toLowerCase().includes(value) || 
+                        name.toLowerCase().includes(value)
+                    );
+
+                if (matches.length && value) {
+                    suggestions.style.display = 'block';
+                    suggestions.innerHTML = matches
+                        .map(([code, name]) => 
+                            `<div class="state-suggestion" data-code="${code}">${name} (${code})</div>`
+                        )
+                        .join('');
+                } else {
+                    suggestions.style.display = 'none';
+                }
+            });
+
+            suggestions.addEventListener('click', function(e) {
+                if (e.target.classList.contains('state-suggestion')) {
+                    input.value = e.target.dataset.code;
+                    suggestions.style.display = 'none';
+                }
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!input.contains(e.target) && !suggestions.contains(e.target)) {
+                    suggestions.style.display = 'none';
+                }
+            });
+        }
+
+        document.getElementById('addStateBtn').addEventListener('click', function() {
+            const stateContainer = document.getElementById('stateContainer');
+            stateContainer.appendChild(createStateInput());
+            stateCounter++;
+        });
+
+        // Setup initial state input
+        setupStateInput(
+            document.querySelector('.state-input'),
+            document.querySelector('.state-suggestions')
+        );
+
+        // Handle designation input visibility
+        const designationRadios = document.querySelectorAll('input[name="designation"]');
+        const designationDetails = document.getElementById('designationDetails');
+        const designationInput = document.getElementById('designationInput');
+
+        designationRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'non_profit' || this.value === 'other') {
+                    designationDetails.style.display = 'block';
+                    designationInput.required = true;
+                    designationInput.placeholder = this.value === 'non_profit' ? 
+                        'Enter non-profit designation (e.g., 501(c)3)' : 
+                        'Please specify designation';
+                } else {
+                    designationDetails.style.display = 'none';
+                    designationInput.required = false;
+                    designationInput.value = '';
+                }
+            });
+        });
+
+        // Multi-step form functionality
+        const formSteps = document.querySelectorAll('.form-step');
+        const progressSteps = document.querySelectorAll('.progress-step');
+        let currentStep = 1;
+
+        function updateFormSteps() {
+            formSteps.forEach(step => {
+                if (parseInt(step.dataset.step) === currentStep) {
+                    step.classList.add('active');
+                } else {
+                    step.classList.remove('active');
+                }
+            });
+
+            progressSteps.forEach(step => {
+                const stepNum = parseInt(step.dataset.step);
+                if (stepNum < currentStep) {
+                    step.classList.add('completed');
+                } else if (stepNum === currentStep) {
+                    step.classList.add('active');
+                    step.classList.remove('completed');
+                } else {
+                    step.classList.remove('active', 'completed');
+                }
+            });
+
+            // Show/hide submit button
+            const submitBtn = document.querySelector('.btn-submit');
+            submitBtn.classList.toggle('visible', currentStep === 4);
+        }
+
+        function validateStep(step) {
+            const requiredFields = step.querySelectorAll('[required]');
+            let isValid = true;
+
+            requiredFields.forEach(field => {
+                if (!field.value) {
+                    isValid = false;
+                    field.classList.add('error');
+                } else {
+                    field.classList.remove('error');
+                }
+            });
+
+            // Special validation for programs
+            if (step.dataset.step === '2') {
+                const programs = step.querySelectorAll('input[name="programs"]:checked');
+                if (programs.length === 0) {
+                    isValid = false;
+                    alert('Please select at least one program');
+                }
+            }
+
+            return isValid;
+        }
+
+        document.querySelectorAll('.btn-next').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const currentStepElement = document.querySelector(`.form-step[data-step="${currentStep}"]`);
+                if (validateStep(currentStepElement)) {
+                    currentStep++;
+                    updateFormSteps();
+                }
+            });
+        });
+
+        document.querySelectorAll('.btn-prev').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (currentStep > 1) {
+                    currentStep--;
+                    updateFormSteps();
+                }
+            });
+        });
+
+        // Initialize form
+        updateFormSteps();
+
+        document.getElementById('businessSignupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Show spinner
+            const spinner = document.getElementById('spinner');
+            const submitBtn = document.querySelector('.btn-submit');
+            spinner.style.display = 'block';
+            submitBtn.disabled = true;
+
+            try {
+                // Collect form data
+                const formData = {
+                    registeredName: document.getElementById('registeredName').value,
+                    dbaName: document.getElementById('dbaName').value,
+                    fein: document.getElementById('fein').value,
+                    nevadaTaxId: document.getElementById('nevadaTaxId').value,
+                    contactName: document.getElementById('contactName').value,
+                    position: document.getElementById('position').value,
+                    phone: document.getElementById('phone').value,
+                    state: document.getElementById('state-0').value,
+                    programs: Array.from(document.querySelectorAll('input[name="programs"]:checked')).map(input => input.value),
+                    designation: document.querySelector('input[name="designation"]:checked').value,
+                    designationDetails: document.getElementById('designationInput').value,
+                    federalSchoolCode: document.getElementById('federalSchoolCode').value
+                };
+
+                // Store the data in localStorage for the next step
+                localStorage.setItem('businessSignupData', JSON.stringify(formData));
+
+                // Redirect to the next step (you'll need to create this page)
+                window.location.href = 'educationaddemployee.html';
+
+            } catch (error) {
+                console.error('Form submission error:', error);
+                alert('An error occurred. Please try again.');
+            } finally {
+                // Hide spinner and re-enable button
+                spinner.style.display = 'none';
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html> 

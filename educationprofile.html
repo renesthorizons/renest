@@ -430,10 +430,11 @@
         <a href="https://renesthorizons.com" class="logo">RENEST</a>
         <div class="nav-links">
             <a href="signin529employer.html" id="signOutLink" class="active">Sign Out</a>
-            <a href="businessprofile.html">Profile</a>
-            <!-- <a href="dashboard.html">Dashboard</a> -->
-            <a href="businessaddemployee.html">Add Employee</a>
-            <a href="businessdashboard.html" class="talk-button">Dashboard</a>
+            <a href="educationprofile.html">Profile</a>
+            <!-- <a href="educationdashboard.html">Dashboard</a> -->
+            <a href="educationaddemployee.html">Add Student</a>
+            <a href="educationaddbusiness.html">Add Employer</a>
+            <a href="educationdashboard.html" class="talk-button">Dashboard</a>
         </div>
         <button class="menu-button" aria-label="Toggle menu" aria-expanded="false">☰</button>
     </nav>
@@ -441,14 +442,14 @@
 
     <main class="main-content" id="mainContent">
         <div class="hero-banner">
-            <h1 id="welcomeMessage" style="text-align: center;">Business Profile</h1>
+            <h1 id="welcomeMessage" style="text-align: center;">Educational Institution Profile</h1>
         </div>
         <div class="profile-container" style="max-width: 800px; margin: 2rem auto; padding: 2rem;">
-            <!-- Business Information Section -->
+            <!-- Institution Information Section -->
             <div class="profile-section" style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                    <h2 style="color: var(--primary); margin-bottom: 0;">Business Information</h2>
-                    <button id="editBusinessButton" class="edit-button">Edit Business Info</button>
+                    <h2 style="color: var(--primary); margin-bottom: 0;">Institution Information</h2>
+                    <button id="editBusinessButton" class="edit-button">Edit Institution Info</button>
                 </div>
                 <div class="profile-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
                     <div class="profile-item">
@@ -460,8 +461,12 @@
                         <p id="displayDbaName" style="font-size: 1.1rem; margin-top: 0.5rem;"></p>
                     </div>
                     <div class="profile-item" style="grid-column: 1 / -1;">
-                        <h3 style="font-size: 0.9rem; color: #666;">Business Focus</h3>
-                        <p id="displayBusinessFocus" style="font-size: 1.1rem; margin-top: 0.5rem;"></p>
+                        <h3 style="font-size: 0.9rem; color: #666;">Institution Designation</h3>
+                        <p id="displayDesignation" style="font-size: 1.1rem; margin-top: 0.5rem;"></p>
+                    </div>
+                    <div class="profile-item" style="grid-column: 1 / -1;">
+                        <h3 style="font-size: 0.9rem; color: #666;">Federal School Code</h3>
+                        <p id="displayFederalSchoolCode" style="font-size: 1.1rem; margin-top: 0.5rem;"></p>
                     </div>
                     <div class="profile-item" style="grid-column: 1 / -1;">
                         <h3 style="font-size: 0.9rem; color: #666;">States Operating In</h3>
@@ -493,7 +498,7 @@
                 </div>
             </div>
 
-            <!-- Tax Center Section -->
+            <!-- Resources Section -->
             <div class="profile-section" style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
                     <h2 style="color: var(--primary); margin-bottom: 0;">Resources</h2>
@@ -517,15 +522,15 @@
                         <div class="document-list" style="margin-top: 1rem;">
                             <div class="document-item" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                                 <span>529 Program Guide</span>
-                                <button class="download-button" onclick="downloadDocument('guides/employers/nevada/529programguide.pdf')">Download</button>
+                                <button class="download-button" onclick="downloadDocument('guides/education/529programguide.pdf')">Download</button>
                             </div>
                             <div class="document-item" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                                <span>MBT Guide</span>
-                                <button class="download-button" onclick="downloadDocument('guides/employers/nevada/mbtguide.pdf')">Download</button>
+                                <span>Student Aid Guide</span>
+                                <button class="download-button" onclick="downloadDocument('guides/education/studentaidguide.pdf')">Download</button>
                             </div>
                             <div class="document-item" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                                 <span>529 Tax Credit Guide</span>
-                                <button class="download-button" onclick="downloadDocument('guides/employers/nevada/529-tax-credit-guide.pdf')">Download</button>
+                                <button class="download-button" onclick="downloadDocument('guides/education/529-tax-credit-guide.pdf')">Download</button>
                             </div>
                         </div>
                         <button id="contactUsButton" class="contact-button" style="margin-top: 1rem; width: 100%;">Contact Us</button>
@@ -645,23 +650,25 @@
             document.getElementById('displayContactName').textContent = businessData.contactName || 'Not provided';
             document.getElementById('displayPosition').textContent = businessData.position || 'Not provided';
             document.getElementById('displayPhone').textContent = businessData.phone || 'Not provided';
-            document.getElementById('displayBusinessFocus').textContent = businessData.businessFocus || 'Not provided';
+            document.getElementById('displayDesignation').textContent = businessData.designation ? 
+                (businessData.designation === 'other' ? businessData.designationDetails : businessData.designation) : 'Not provided';
+            document.getElementById('displayFederalSchoolCode').textContent = businessData.federalSchoolCode || 'Not provided';
             updateStatesList();
         } else {
             document.querySelector('.profile-container').innerHTML = `
                 <div class="profile-section" style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center;">
                     <h2 style="color: var(--primary); margin-bottom: 1rem;">No Profile Data Found</h2>
-                    <p>Please complete the business signup process to view your profile.</p>
+                    <p>Please complete the educational institution signup process to view your profile.</p>
                 </div>
             `;
             editBusinessButton.style.display = 'none';
             editContactButton.style.display = 'none';
         }
 
-        // Edit business information
+        // Edit institution information
         editBusinessButton.addEventListener('click', function() {
-            const businessFields = ['RegisteredName', 'DbaName', 'BusinessFocus'];
-            toggleEditMode(businessFields, this);
+            const institutionFields = ['RegisteredName', 'DbaName', 'Designation', 'FederalSchoolCode'];
+            toggleEditMode(institutionFields, this);
         });
 
         // Edit contact information
@@ -696,7 +703,7 @@
                     displayElement.textContent = newValue || 'Not provided';
                     editableField.style.display = 'none';
                     displayElement.style.display = 'block';
-                    button.textContent = button === editBusinessButton ? 'Edit Business Info' : 'Edit Contact Info';
+                    button.textContent = button === editBusinessButton ? 'Edit Institution Info' : 'Edit Contact Info';
                 }
             });
             
