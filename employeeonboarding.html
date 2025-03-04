@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Renest - Employee Onboarding</title>
+    <style>
+        :root {
+            --primary: #6366F1;
+            --primary-dark: #4F46E5;
+            --accent: #EC4899;
+            --text-dark: #1F2937;
+            --background: #F9FAFB;
+            --border: #E5E7EB;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .welcome-section {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .welcome-section h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-section p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .benefit-highlights {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .benefit-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        .benefit-item h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--border);
+            color: var(--text-dark);
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .result-section {
+            text-align: center;
+            padding: 2rem;
+            display: none;
+        }
+
+        .benefit-amount {
+            font-size: 3rem;
+            color: var(--primary);
+            margin: 1rem 0;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        #accountNumberSection {
+            display: none;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .success-message {
+            background: #D1FAE5;
+            color: #065F46;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="welcome-section">
+            <h1>Welcome to Your Employee Benefits!</h1>
+            <p>Your employer is offering a generous 529 education benefit that can help cover your education expenses or save for future education.</p>
+            
+            <div class="benefit-highlights">
+                <div class="benefit-item">
+                    <h3>Up to $2,000 Match</h3>
+                    <p>Your employer will match your 529 contributions up to $2,000</p>
+                </div>
+                <div class="benefit-item">
+                    <h3>Flexible Usage</h3>
+                    <p>Use for tuition, rent, groceries, and required education supplies</p>
+                </div>
+                <div class="benefit-item">
+                    <h3>Future Planning</h3>
+                    <p>Save for your education or your family members</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <form id="benefitForm">
+                <div class="form-step active" data-step="1">
+                    <h2>Let's Get Started</h2>
+                    <div class="form-group">
+                        <label>Are you currently a student or were you a student this year?</label>
+                        <div class="radio-group">
+                            <label>
+                                <input type="radio" name="isStudent" value="yes" required>
+                                Yes
+                            </label>
+                            <label>
+                                <input type="radio" name="isStudent" value="no" required>
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-step" data-step="2">
+                    <h2>Education Details</h2>
+                    <div class="form-group">
+                        <label>University Name</label>
+                        <input type="text" class="form-control" id="university" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Enrollment Status</label>
+                        <div class="radio-group">
+                            <label>
+                                <input type="radio" name="enrollmentStatus" value="fullTime" required>
+                                Full Time
+                            </label>
+                            <label>
+                                <input type="radio" name="enrollmentStatus" value="halfTime" required>
+                                Half Time
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Number of Months as Student This Year</label>
+                        <input type="number" class="form-control" id="monthsAsStudent" min="1" max="12" required>
+                    </div>
+                </div>
+
+                <div class="form-step" data-step="3">
+                    <h2>Education Expenses</h2>
+                    <div class="form-group">
+                        <label>Tuition Expenses</label>
+                        <input type="number" class="form-control" id="tuition" placeholder="Enter amount in USD" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Monthly Rent</label>
+                        <input type="number" class="form-control" id="rent" placeholder="Enter monthly amount in USD" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Monthly Groceries</label>
+                        <input type="number" class="form-control" id="groceries" placeholder="Enter monthly amount in USD" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Required Education Supplies</label>
+                        <input type="number" class="form-control" id="supplies" placeholder="Enter amount in USD" required>
+                    </div>
+                </div>
+
+                <div class="form-step" data-step="4">
+                    <h2>Your 529 Benefit</h2>
+                    <div class="result-section" id="resultSection">
+                        <h3>Based on your qualified expenses, you are eligible for:</h3>
+                        <div class="benefit-amount" id="benefitAmount">$0</div>
+                        <p>Would you like to participate in this program?</p>
+                        <div class="action-buttons">
+                            <button type="button" class="btn btn-primary" id="openAccountBtn">Open a 529 Account</button>
+                            <button type="button" class="btn btn-secondary" id="declineBtn">Decline Benefit</button>
+                        </div>
+                        <div id="accountNumberSection">
+                            <div class="form-group">
+                                <label>Enter your 529 Account Number</label>
+                                <input type="text" class="form-control" id="accountNumber" placeholder="Enter your account number">
+                            </div>
+                            <button type="button" class="btn btn-primary" id="submitAccountBtn">Submit</button>
+                        </div>
+                        <div class="success-message" id="successMessage">
+                            Your 529 account has been successfully linked!
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-container">
+                    <button type="button" class="btn btn-secondary" id="prevBtn" style="display: none">Previous</button>
+                    <button type="button" class="btn btn-primary" id="nextBtn">Next</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const form = document.getElementById('benefitForm');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const openAccountBtn = document.getElementById('openAccountBtn');
+        const declineBtn = document.getElementById('declineBtn');
+        const accountNumberSection = document.getElementById('accountNumberSection');
+        const submitAccountBtn = document.getElementById('submitAccountBtn');
+        const successMessage = document.getElementById('successMessage');
+
+        function showStep(step) {
+            document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+            document.querySelector(`.form-step[data-step="${step}"]`).classList.add('active');
+            
+            prevBtn.style.display = step === 1 ? 'none' : 'block';
+            
+            if (step === 4) {
+                calculateBenefit();
+                document.getElementById('resultSection').style.display = 'block';
+                nextBtn.style.display = 'none';
+            } else {
+                nextBtn.style.display = 'block';
+            }
+        }
+
+        function calculateBenefit() {
+            const isStudent = document.querySelector('input[name="isStudent"]:checked').value;
+            
+            if (isStudent === 'yes') {
+                const tuition = parseFloat(document.getElementById('tuition').value) || 0;
+                const rent = parseFloat(document.getElementById('rent').value) || 0;
+                const groceries = parseFloat(document.getElementById('groceries').value) || 0;
+                const supplies = parseFloat(document.getElementById('supplies').value) || 0;
+                const months = parseFloat(document.getElementById('monthsAsStudent').value) || 0;
+                
+                const totalExpenses = tuition + (rent + groceries) * months + supplies;
+                const benefit = Math.min(totalExpenses, 2000);
+                
+                document.getElementById('benefitAmount').textContent = `$${benefit.toFixed(2)}`;
+            } else {
+                document.getElementById('benefitAmount').textContent = '$2,000';
+            }
+        }
+
+        prevBtn.addEventListener('click', () => {
+            if (currentStep > 1) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            const currentStepElement = document.querySelector(`.form-step[data-step="${currentStep}"]`);
+            const inputs = currentStepElement.querySelectorAll('input[required]');
+            let isValid = true;
+
+            inputs.forEach(input => {
+                if (!input.value) {
+                    isValid = false;
+                }
+            });
+
+            if (isValid) {
+                if (currentStep === 1) {
+                    const isStudent = document.querySelector('input[name="isStudent"]:checked').value;
+                    if (isStudent === 'no') {
+                        currentStep = 4;
+                    } else {
+                        currentStep++;
+                    }
+                } else {
+                    currentStep++;
+                }
+                showStep(currentStep);
+            }
+        });
+
+        openAccountBtn.addEventListener('click', () => {
+            window.open('https://www.futurepathnevada.com', '_blank');
+            accountNumberSection.style.display = 'block';
+        });
+
+        declineBtn.addEventListener('click', () => {
+            // Handle decline action
+            alert('Thank you for considering. You can always enroll later through your benefits portal.');
+        });
+
+        submitAccountBtn.addEventListener('click', () => {
+            const accountNumber = document.getElementById('accountNumber').value;
+            if (accountNumber) {
+                // Here you would typically send this to your backend
+                successMessage.style.display = 'block';
+                submitAccountBtn.disabled = true;
+            }
+        });
+
+        // Initialize radio button handlers
+        document.querySelectorAll('input[name="isStudent"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                if (e.target.value === 'no') {
+                    // Skip to final step for non-students
+                    currentStep = 4;
+                    showStep(currentStep);
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

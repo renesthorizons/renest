@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Renest - Dashboard</title>
+    <style>
+        :root {
+            --primary: #6366F1;
+            --primary-dark: #4F46E5;
+            --accent: #EC4899;
+            --text-dark: #1F2937;
+            --background: #F9FAFB;
+            --border: #E5E7EB;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            min-height: 100vh;
+        }
+
+        .hidden {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+        
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+            background: var(--primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .nav-links a {
+            color: var(--text-dark);
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            display: block;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(75, 34, 122, 0.05);
+            transform: translateX(5px);
+        }
+
+        .nav-links .talk-button {
+            background-color: var(--primary);
+            color: white !important;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 0.5rem;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            background-image: linear-gradient(45deg, var(--primary) 0%, var(--primary) 100%);
+            background-size: 200% 200%;
+            background-position: 0% 0%;
+        }
+
+        .nav-links .talk-button:hover {
+            background-image: linear-gradient(45deg, var(--primary) 0%, var(--primary) 45%, var(--accent) 100%) !important;
+            background-position: 100% 100% !important;
+            transform: translateY(-2px);
+        }
+
+        .menu-button {
+            background: none;
+            border: 2px solid var(--primary);
+            border-radius: 4px;
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.5rem 0.75rem;
+            color: var(--primary);
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .menu-button:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        
+
+        .main-content {
+            padding-top: 84px;
+            min-height: calc(100vh - 64px);
+        }
+
+        .main-content.expanded {
+            margin-left: 0;
+        }
+
+        .hero-banner {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 5rem 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .hero-banner h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero-banner p {
+            font-size: 1.25rem;
+        }
+
+
+
+        .footer {
+            background-color: rgb(235, 232, 252,.5);
+            padding: 3rem 1rem;
+        }
+
+        .footer.expanded {
+            margin-left: 0;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 2rem;
+        }
+
+       
+
+       
+
+        .footer-links h3 {
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            display: block;
+            color: var(--text-dark);
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .menu-button {
+                display: none;
+            }
+
+            .nav-links {
+                position: static;
+                display: flex !important;
+                flex-direction: row;
+                padding: 0;
+                box-shadow: none;
+                gap: 0;
+                align-items: center;
+            }
+
+            .nav-links a {
+                margin-left: 2rem;
+                padding: 0.5rem 1rem;
+            }
+
+            .hero-banner {
+                padding: 6rem 3rem;
+            }
+
+            .hero-banner h1 {
+                font-size: 3.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 0;
+            }
+            .footer {
+                margin-left: 0;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Modal Styles */
+        
+
+        /* Footer Styles */
+        
+
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        
+
+        /* Add loading spinner styles */
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+            margin-left: 8px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .btn-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+     
+
+.hidden {
+    display: none;
+}
+.footer-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .copyright {
+            color: var(--text-dark);
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        
+        /* Add these new styles */
+        .edit-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            margin-left: auto;
+        }
+
+        .edit-button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .edit-button i {
+            font-size: 1.1rem;
+        }
+
+        .editable-field {
+            display: none;
+            margin-top: 0.5rem;
+        }
+
+        .editable-field input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .save-button {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .save-button:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .add-button {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-button:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .download-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .download-button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .contact-button {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .contact-button:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .state-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            background-color: #f3f4f6;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+
+        .state-item button {
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .state-item button:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="https://renesthorizons.com" class="logo">RENEST</a>
+        <div class="nav-links">
+            <a href="#" id="signOutLink" class="active">Sign Out</a>
+            <a href="businessprofile.html">Profile</a>
+            <!-- <a href="dashboard.html">Dashboard</a> -->
+            <a href="businessaddemployee.html">Add Employee</a>
+            <a href="businessdashboard.html" class="talk-button">Dashboard</a>
+        </div>
+        <button class="menu-button" aria-label="Toggle menu" aria-expanded="false">☰</button>
+    </nav>
+    
+
+    <main class="main-content" id="mainContent">
+        <div class="hero-banner">
+            <h1 id="welcomeMessage">Business Profile</h1>
+        </div>
+        <div class="profile-container" style="max-width: 800px; margin: 2rem auto; padding: 2rem;">
+            <!-- Business Information Section -->
+            <div class="profile-section" style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2 style="color: var(--primary); margin-bottom: 0;">Business Information</h2>
+                    <button id="editBusinessButton" class="edit-button">Edit Business Info</button>
+                </div>
+                <div class="profile-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
+                    <div class="profile-item">
+                        <h3 style="font-size: 0.9rem; color: #666;">Registered Name</h3>
+                        <p id="displayRegisteredName" style="font-size: 1.1rem; margin-top: 0.5rem;"></p>
+                    </div>
+                    <div class="profile-item">
+                        <h3 style="font-size: 0.9rem; color: #666;">DBA Name</h3>
+                        <p id="displayDbaName" style="font-size: 1.1rem; margin-top: 0.5rem;"></p>
+                    </div>
+                    <div class="profile-item" style="grid-column: 1 / -1;">
+                        <h3 style="font-size: 0.9rem; color: #666;">Business Focus</h3>
+                        <p id="displayBusinessFocus" style="font-size: 1.1rem; margin-top: 0.5rem;"></p>
+                    </div>
+                    <div class="profile-item" style="grid-column: 1 / -1;">
+                        <h3 style="font-size: 0.9rem; color: #666;">States Operating In</h3>
+                        <div id="statesList" style="margin-top: 0.5rem;"></div>
+                        <button id="addStateButton" class="add-button" style="margin-top: 1rem;">Add Another State</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Information Section -->
+            <div class="profile-section" style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2 style="color: var(--primary); margin-bottom: 0;">Contact Information</h2>
+                    <button id="editContactButton" class="edit-button">Edit Contact Info</button>
+                </div>
+                <div class="profile-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
+                    <div class="profile-item">
+                        <h3 style="font-size: 0.9rem; color: #666;">Contact Name</h3>
+                        <p id="displayContactName" style="font-size: 1.1rem; margin-top: 0.5rem;"></p>
+                    </div>
+                    <div class="profile-item">
+                        <h3 style="font-size: 0.9rem; color: #666;">Position</h3>
+                        <p id="displayPosition" style="font-size: 1.1rem; margin-top: 0.5rem;"></p>
+                    </div>
+                    <div class="profile-item">
+                        <h3 style="font-size: 0.9rem; color: #666;">Phone</h3>
+                        <p id="displayPhone" style="font-size: 1.1rem; margin-top: 0.5rem;"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tax Center Section -->
+            <div class="profile-section" style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2 style="color: var(--primary); margin-bottom: 0;">Resources</h2>
+                </div>
+                <div class="profile-grid" style="display: grid; grid-template-columns: 1fr; gap: 1.5rem;">
+                    <div class="profile-item">
+                        <h3 style="font-size: 0.9rem; color: #666;">Tax Information</h3>
+                        <div class="tax-info" style="margin-top: 1rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <span>FEIN</span>
+                                <p id="displayFein" style="font-size: 1.1rem; margin: 0;"></p>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span>State Tax ID</span>
+                                <p id="displayNevadaTaxId" style="font-size: 1.1rem; margin: 0;"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="profile-item">
+                        <h3 style="font-size: 0.9rem; color: #666;">Helpful Documents</h3>
+                        <div class="document-list" style="margin-top: 1rem;">
+                            <div class="document-item" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <span>529 Program Guide</span>
+                                <button class="download-button" onclick="downloadDocument('guides/employers/nevada/529programguide.pdf')">Download</button>
+                            </div>
+                            <div class="document-item" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <span>MBT Guide</span>
+                                <button class="download-button" onclick="downloadDocument('guides/employers/nevada/mbtguide.pdf')">Download</button>
+                            </div>
+                            <div class="document-item" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <span>529 Tax Credit Guide</span>
+                                <button class="download-button" onclick="downloadDocument('guides/employers/nevada/529-tax-credit-guide.pdf')">Download</button>
+                            </div>
+                        </div>
+                        <button id="contactUsButton" class="contact-button" style="margin-top: 1rem; width: 100%;">Contact Us</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="footer-logo">RENEST</div>
+                <p class="copyright">©2025 Renest Horizons Inc.</p>
+            </div>
+            <div class="footer-links">
+                <h3>Company</h3>
+                <a href="aboutus529.html">About us</a>
+                <a href="privacypolicy529.html">Privacy Policy</a>
+                <a href="termsofservice529.html">Terms of Service</a>
+            </div>
+            <div class="footer-links">
+                <h3>Resources</h3>
+                <a href="contactus529.html">Contact us</a>
+                <a href="faq529.html">FAQ</a>
+                <!-- <a href="https://www-renesthorizons-com.translate.goog/?_x_tr_sl=auto&_x_tr_tl=es&_x_tr_hl=en&_x_tr_pto=wapp">Español</a> -->
+            </div>
+        </div>
+    </footer>
+
+    
+
+    <script>
+    const menuButton = document.querySelector('.menu-button');
+    const navLinks = document.querySelector('.nav-links');
+
+    menuButton.addEventListener('click', function(e) {
+        e.stopPropagation();
+        navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        menuButton.setAttribute('aria-expanded', navLinks.style.display === 'flex');
+    });
+
+    document.addEventListener('click', function(e) {
+        if (window.innerWidth < 768 && !navLinks.contains(e.target) && e.target !== menuButton) {
+            navLinks.style.display = 'none';
+            menuButton.setAttribute('aria-expanded', false);
+        }
+    });
+
+    // Load and display business profile data
+    document.addEventListener('DOMContentLoaded', function() {
+        const businessData = JSON.parse(localStorage.getItem('businessSignupData')) || {};
+        const editBusinessButton = document.getElementById('editBusinessButton');
+        const editContactButton = document.getElementById('editContactButton');
+        const addStateButton = document.getElementById('addStateButton');
+        const statesList = document.getElementById('statesList');
+        
+        // Initialize states array if it doesn't exist
+        if (!businessData.states) {
+            businessData.states = [businessData.state].filter(Boolean);
+            localStorage.setItem('businessSignupData', JSON.stringify(businessData));
+        }
+
+        function updateStatesList() {
+            statesList.innerHTML = '';
+            businessData.states.forEach((state, index) => {
+                const stateItem = document.createElement('div');
+                stateItem.className = 'state-item';
+                stateItem.innerHTML = `
+                    <span>${state}</span>
+                    <button onclick="removeState(${index})">Remove</button>
+                `;
+                statesList.appendChild(stateItem);
+            });
+        }
+
+        window.removeState = function(index) {
+            businessData.states.splice(index, 1);
+            localStorage.setItem('businessSignupData', JSON.stringify(businessData));
+            updateStatesList();
+        };
+
+        addStateButton.addEventListener('click', function() {
+            const newState = prompt('Enter new state:');
+            if (newState && !businessData.states.includes(newState)) {
+                businessData.states.push(newState);
+                localStorage.setItem('businessSignupData', JSON.stringify(businessData));
+                updateStatesList();
+            }
+        });
+
+        window.downloadDocument = function(filename) {
+            // Create an anchor element
+            const link = document.createElement('a');
+            link.href = filename;
+            
+            // Set the download attribute to get the original filename
+            const originalFilename = filename.split('/').pop();
+            link.download = originalFilename;
+            
+            // Append to body, click, and remove
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+
+        document.getElementById('contactUsButton').addEventListener('click', function() {
+            window.location.href = 'contactus529.html';
+        });
+
+        // Display initial data
+        if (businessData) {
+            document.getElementById('displayRegisteredName').textContent = businessData.registeredName || 'Not provided';
+            document.getElementById('displayDbaName').textContent = businessData.dbaName || 'Not provided';
+            document.getElementById('displayFein').textContent = businessData.fein || 'Not provided';
+            document.getElementById('displayNevadaTaxId').textContent = businessData.nevadaTaxId || 'Not provided';
+            document.getElementById('displayContactName').textContent = businessData.contactName || 'Not provided';
+            document.getElementById('displayPosition').textContent = businessData.position || 'Not provided';
+            document.getElementById('displayPhone').textContent = businessData.phone || 'Not provided';
+            document.getElementById('displayBusinessFocus').textContent = businessData.businessFocus || 'Not provided';
+            updateStatesList();
+        } else {
+            document.querySelector('.profile-container').innerHTML = `
+                <div class="profile-section" style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center;">
+                    <h2 style="color: var(--primary); margin-bottom: 1rem;">No Profile Data Found</h2>
+                    <p>Please complete the business signup process to view your profile.</p>
+                </div>
+            `;
+            editBusinessButton.style.display = 'none';
+            editContactButton.style.display = 'none';
+        }
+
+        // Edit business information
+        editBusinessButton.addEventListener('click', function() {
+            const businessFields = ['RegisteredName', 'DbaName', 'BusinessFocus'];
+            toggleEditMode(businessFields, this);
+        });
+
+        // Edit contact information
+        editContactButton.addEventListener('click', function() {
+            const contactFields = ['ContactName', 'Position', 'Phone'];
+            toggleEditMode(contactFields, this);
+        });
+
+        function toggleEditMode(fields, button) {
+            fields.forEach(field => {
+                const displayElement = document.getElementById(`display${field}`);
+                const item = displayElement.closest('.profile-item');
+                
+                if (!item.querySelector('.editable-field')) {
+                    const inputField = document.createElement('div');
+                    inputField.className = 'editable-field';
+                    inputField.innerHTML = `
+                        <input type="text" id="edit${field}" value="${businessData[field] || ''}">
+                    `;
+                    item.appendChild(inputField);
+                }
+                
+                const editableField = item.querySelector('.editable-field');
+                
+                if (editableField.style.display === 'none' || !editableField.style.display) {
+                    editableField.style.display = 'block';
+                    displayElement.style.display = 'none';
+                    button.textContent = 'Save Changes';
+                } else {
+                    const newValue = item.querySelector('input').value;
+                    businessData[field] = newValue;
+                    displayElement.textContent = newValue || 'Not provided';
+                    editableField.style.display = 'none';
+                    displayElement.style.display = 'block';
+                    button.textContent = button === editBusinessButton ? 'Edit Business Info' : 'Edit Contact Info';
+                }
+            });
+            
+            if (button.textContent.includes('Save')) {
+                localStorage.setItem('businessSignupData', JSON.stringify(businessData));
+            }
+        }
+    });
+    </script>
+</body>
+</html>
+
+

@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-TGZL6PTS');</script>
+    <!-- End Google Tag Manager -->
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Sign Up - RENEST</title>
+    <link rel="icon" href="blogo2.png" type="image/png">
+    
+    <style>
+        :root {
+            --primary: #4B227A;
+            --accent: #FF69B4;
+            --text-dark: #1E0A3C;
+            --background: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background:white;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-title {
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .form-subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .signup-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn-container {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .add-state {
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            white-space: nowrap;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .add-state:hover {
+            background: #ff4da6;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn {
+            background: var(--primary);
+            padding: 0.75rem 2rem;
+            white-space: nowrap;
+            font-size: 0.95rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:hover {
+            background: #5c2b96;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .spinner {
+            display: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+            margin-left: 8px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .btn-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .section-title {
+            grid-column: 1 / -1;
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 0.5rem;
+        }
+
+        .state-container {
+            grid-column: 1 / -1;
+            display: grid;
+            gap: 1rem;
+        }
+
+        .state-group {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1rem;
+            align-items: start;
+        }
+
+        .remove-state {
+            background: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 0.75rem;
+            cursor: pointer;
+            margin-top: 2rem;
+        }
+
+        .state-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .state-suggestion {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+        }
+
+        .state-suggestion:hover {
+            background: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TGZL6PTS"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <div class="container">
+        <h1 class="form-title">Business Registration</h1>
+        <p class="form-subtitle">Please provide your business information to get started</p>
+        
+        <form class="signup-form" id="businessSignupForm">
+            <h2 class="section-title">Business Information</h2>
+            
+            <div class="input-group">
+                <label class="input-label" for="registeredName">Official Registered Name*</label>
+                <input type="text" id="registeredName" class="input-field" required>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label" for="dbaName">DBA Name (if applicable)</label>
+                <input type="text" id="dbaName" class="input-field">
+            </div>
+
+            <div class="input-group">
+                <label class="input-label" for="fein">Federal Employer ID Number (FEIN)*</label>
+                <input type="text" id="fein" class="input-field" placeholder="XX-XXXXXXX" required>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label" for="nevadaTaxId">State Taxpayer ID*</label>
+                <input type="text" id="nevadaTaxId" class="input-field" required>
+            </div>
+
+            <div class="input-group full-width">
+                <label class="input-label" for="businessFocus">Business Focus*</label>
+                <input type="text" id="businessFocus" class="input-field" required>
+            </div>
+
+            <div class="state-container" id="stateContainer">
+                <div class="state-group">
+                    <div class="input-group">
+                        <label class="input-label" for="state-0">State*</label>
+                        <input type="text" id="state-0" class="input-field state-input" required>
+                        <div class="state-suggestions" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title">Contact Person Information</h2>
+
+            <div class="input-group">
+                <label class="input-label" for="contactName">Contact Person Name*</label>
+                <input type="text" id="contactName" class="input-field" required>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label" for="position">Position/Title*</label>
+                <input type="text" id="position" class="input-field" required>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label" for="phone">Phone Number*</label>
+                <input type="tel" id="phone" class="input-field" placeholder="(XXX) XXX-XXXX" required>
+            </div>
+
+            <div class="btn-container">
+                <button type="button" class="add-state" id="addStateBtn">Add Another State</button>
+                <button type="submit" class="btn" id="submitBtn">
+                    <div class="btn-content">
+                        <span>Next</span>
+                        <div class="spinner" id="spinner"></div>
+                    </div>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const stateOptions = {
+            'AL': 'Alabama',
+            'AK': 'Alaska',
+            'AZ': 'Arizona',
+            'AR': 'Arkansas',
+            'CA': 'California',
+            'CO': 'Colorado',
+            'CT': 'Connecticut',
+            'DE': 'Delaware',
+            'DC': 'District of Columbia',
+            'FL': 'Florida',
+            'GA': 'Georgia',
+            'HI': 'Hawaii',
+            'ID': 'Idaho',
+            'IL': 'Illinois',
+            'IN': 'Indiana',
+            'IA': 'Iowa',
+            'KS': 'Kansas',
+            'KY': 'Kentucky',
+            'LA': 'Louisiana',
+            'ME': 'Maine',
+            'MD': 'Maryland',
+            'MA': 'Massachusetts',
+            'MI': 'Michigan',
+            'MN': 'Minnesota',
+            'MS': 'Mississippi',
+            'MO': 'Missouri',
+            'MT': 'Montana',
+            'NE': 'Nebraska',
+            'NV': 'Nevada',
+            'NH': 'New Hampshire',
+            'NJ': 'New Jersey',
+            'NM': 'New Mexico',
+            'NY': 'New York',
+            'NYC': 'New York City',
+            'NC': 'North Carolina',
+            'ND': 'North Dakota',
+            'OH': 'Ohio',
+            'OK': 'Oklahoma',
+            'OR': 'Oregon',
+            'PA': 'Pennsylvania',
+            'PR': 'Puerto Rico',
+            'RI': 'Rhode Island',
+            'SC': 'South Carolina',
+            'SD': 'South Dakota',
+            'TN': 'Tennessee',
+            'TX': 'Texas',
+            'UT': 'Utah',
+            'VT': 'Vermont',
+            'VA': 'Virginia',
+            'WA': 'Washington',
+            'WV': 'West Virginia',
+            'WI': 'Wisconsin',
+            'WY': 'Wyoming'
+        };
+
+        // Format FEIN input
+        document.getElementById('fein').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 9) {
+                value = value.slice(0, 9);
+            }
+            if (value.length > 0) {
+                if (value.length <= 2) {
+                    value = value;
+                } else {
+                    value = value.slice(0, 2) + '-' + value.slice(2);
+                }
+            }
+            e.target.value = value;
+        });
+
+        // Format phone number
+        document.getElementById('phone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 0) {
+                if (value.length <= 3) {
+                    value = `(${value}`;
+                } else if (value.length <= 6) {
+                    value = `(${value.slice(0,3)}) ${value.slice(3)}`;
+                } else {
+                    value = `(${value.slice(0,3)}) ${value.slice(3,6)}-${value.slice(6,10)}`;
+                }
+            }
+            e.target.value = value;
+        });
+
+        // State input functionality
+        let stateCounter = 1;
+
+        function createStateInput() {
+            const stateGroup = document.createElement('div');
+            stateGroup.className = 'state-group';
+            
+            const inputGroup = document.createElement('div');
+            inputGroup.className = 'input-group';
+            
+            const label = document.createElement('label');
+            label.className = 'input-label';
+            label.htmlFor = `state-${stateCounter}`;
+            label.textContent = 'State*';
+            
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.id = `state-${stateCounter}`;
+            input.className = 'input-field state-input';
+            input.required = true;
+            
+            const suggestions = document.createElement('div');
+            suggestions.className = 'state-suggestions';
+            suggestions.style.display = 'none';
+            
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.className = 'remove-state';
+            removeBtn.textContent = 'Remove';
+            removeBtn.onclick = () => stateGroup.remove();
+            
+            inputGroup.appendChild(label);
+            inputGroup.appendChild(input);
+            inputGroup.appendChild(suggestions);
+            stateGroup.appendChild(inputGroup);
+            stateGroup.appendChild(removeBtn);
+            
+            setupStateInput(input, suggestions);
+            return stateGroup;
+        }
+
+        function setupStateInput(input, suggestions) {
+            input.addEventListener('input', function() {
+                const value = this.value.toLowerCase();
+                const matches = Object.entries(stateOptions)
+                    .filter(([code, name]) => 
+                        code.toLowerCase().includes(value) || 
+                        name.toLowerCase().includes(value)
+                    );
+
+                if (matches.length && value) {
+                    suggestions.style.display = 'block';
+                    suggestions.innerHTML = matches
+                        .map(([code, name]) => 
+                            `<div class="state-suggestion" data-code="${code}">${name} (${code})</div>`
+                        )
+                        .join('');
+                } else {
+                    suggestions.style.display = 'none';
+                }
+            });
+
+            suggestions.addEventListener('click', function(e) {
+                if (e.target.classList.contains('state-suggestion')) {
+                    input.value = e.target.dataset.code;
+                    suggestions.style.display = 'none';
+                }
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!input.contains(e.target) && !suggestions.contains(e.target)) {
+                    suggestions.style.display = 'none';
+                }
+            });
+        }
+
+        document.getElementById('addStateBtn').addEventListener('click', function() {
+            const stateContainer = document.getElementById('stateContainer');
+            stateContainer.appendChild(createStateInput());
+            stateCounter++;
+        });
+
+        // Setup initial state input
+        setupStateInput(
+            document.querySelector('.state-input'),
+            document.querySelector('.state-suggestions')
+        );
+
+        document.getElementById('businessSignupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Show spinner
+            const spinner = document.getElementById('spinner');
+            const submitBtn = document.getElementById('submitBtn');
+            spinner.style.display = 'block';
+            submitBtn.disabled = true;
+
+            try {
+                // Collect form data
+                const formData = {
+                    registeredName: document.getElementById('registeredName').value,
+                    dbaName: document.getElementById('dbaName').value,
+                    fein: document.getElementById('fein').value,
+                    nevadaTaxId: document.getElementById('nevadaTaxId').value,
+                    contactName: document.getElementById('contactName').value,
+                    position: document.getElementById('position').value,
+                    phone: document.getElementById('phone').value,
+                    state: document.getElementById('state-0').value,
+                    businessFocus: document.getElementById('businessFocus').value
+                };
+
+                // Store the data in localStorage for the next step
+                localStorage.setItem('businessSignupData', JSON.stringify(formData));
+
+                // Redirect to the next step (you'll need to create this page)
+                window.location.href = 'businessaddemployee.html';
+
+            } catch (error) {
+                console.error('Form submission error:', error);
+                alert('An error occurred. Please try again.');
+            } finally {
+                // Hide spinner and re-enable button
+                spinner.style.display = 'none';
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html> 

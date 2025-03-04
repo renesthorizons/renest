@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Renest - Dashboard</title>
+    <style>
+        :root {
+            --primary: #6366F1;
+            --primary-dark: #4F46E5;
+            --accent: #EC4899;
+            --text-dark: #1F2937;
+            --background: #F9FAFB;
+            --border: #E5E7EB;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            min-height: 100vh;
+        }
+
+        .hidden {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+        
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+            background: var(--primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .nav-links a {
+            color: var(--text-dark);
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            display: block;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(75, 34, 122, 0.05);
+            transform: translateX(5px);
+        }
+
+        .nav-links .talk-button {
+            background-color: var(--primary);
+            color: white !important;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 0.5rem;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            background-image: linear-gradient(45deg, var(--primary) 0%, var(--primary) 100%);
+            background-size: 200% 200%;
+            background-position: 0% 0%;
+        }
+
+        .nav-links .talk-button:hover {
+            background-image: linear-gradient(45deg, var(--primary) 0%, var(--primary) 45%, var(--accent) 100%) !important;
+            background-position: 100% 100% !important;
+            transform: translateY(-2px);
+        }
+
+        .menu-button {
+            background: none;
+            border: 2px solid var(--primary);
+            border-radius: 4px;
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.5rem 0.75rem;
+            color: var(--primary);
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .menu-button:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        
+
+        .main-content {
+            padding-top: 84px;
+            min-height: calc(100vh - 64px);
+        }
+
+        .main-content.expanded {
+            margin-left: 0;
+        }
+
+        .hero-banner {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 5rem 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .hero-banner h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero-banner p {
+            font-size: 1.25rem;
+        }
+
+
+
+        .footer {
+            background-color: rgb(235, 232, 252,.5);
+            padding: 3rem 1rem;
+        }
+
+        .footer.expanded {
+            margin-left: 0;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 2rem;
+        }
+
+       
+
+       
+
+        .footer-links h3 {
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            display: block;
+            color: var(--text-dark);
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .menu-button {
+                display: none;
+            }
+
+            .nav-links {
+                position: static;
+                display: flex !important;
+                flex-direction: row;
+                padding: 0;
+                box-shadow: none;
+                gap: 0;
+                align-items: center;
+            }
+
+            .nav-links a {
+                margin-left: 2rem;
+                padding: 0.5rem 1rem;
+            }
+
+            .hero-banner {
+                padding: 6rem 3rem;
+            }
+
+            .hero-banner h1 {
+                font-size: 3.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 0;
+            }
+            .footer {
+                margin-left: 0;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Modal Styles */
+        
+
+        /* Footer Styles */
+        
+
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        
+
+        /* Add loading spinner styles */
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+            margin-left: 8px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .btn-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+     
+
+.hidden {
+    display: none;
+}
+.footer-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .copyright {
+            color: var(--text-dark);
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        .form-title {
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .form-subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 1rem;
+            margin: 2rem 0;
+            justify-content: center;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-secondary {
+            background: var(--accent);
+        }
+
+        .employee-list {
+            margin-top: 2rem;
+        }
+
+        .employee-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr auto auto;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+        }
+
+        .employee-item:last-child {
+            border-bottom: none;
+        }
+
+        .status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            text-align: center;
+        }
+
+        .status-pending {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .status-invited {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-label {
+            display: inline-block;
+            padding: 0.75rem 2rem;
+            background: var(--accent);
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .file-label:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .success-message {
+            display: none;
+            background: #D1FAE5;
+            color: #065F46;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            text-align: center;
+        }
+        
+        /* Add these new styles before the media queries */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .employee-list {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .employee-list-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr auto auto;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 2px solid #eee;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .employee-item {
+            transition: background-color 0.2s ease;
+        }
+
+        .employee-item:hover {
+            background-color: rgba(99, 102, 241, 0.05);
+        }
+
+        .hero-banner {
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-banner::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.1));
+            z-index: 1;
+        }
+
+        .hero-banner > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .success-message {
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="https://renesthorizons.com" class="logo">RENEST</a>
+        <div class="nav-links">
+            <a href="#" id="signOutLink" class="active">Sign Out</a>
+            <a href="businessprofile.html">Profile</a>
+            <!-- <a href="dashboard.html">Dashboard</a> -->
+            <a href="businessaddemployee.html">Add Employee</a>
+            <a href="businessdashboard.html" class="talk-button">Dashboard</a>
+        </div>
+        <button class="menu-button" aria-label="Toggle menu" aria-expanded="false">☰</button>
+    </nav>
+    
+
+    <main class="main-content" id="mainContent">
+        <div class="hero-banner">
+            <div class="container">
+                <h1 id="welcomeMessage">Add Employees</h1>
+                <!-- <p>Manage your employee benefits efficiently</p> -->
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="section">
+                <div class="btn-container">
+                    <button class="btn" id="addEmployeeBtn">Add Employee</button>
+                    <label class="file-label">
+                        Upload CSV/Excel
+                        <input type="file" class="file-input" id="csvUpload" accept=".csv,.xlsx,.xls">
+                    </label>
+                    <button class="btn" id="getInviteLinkBtn">Get Invite Link</button>
+                </div>
+
+                <div class="success-message" id="successMessage">
+                    Success! Employees have been invited.
+                </div>
+
+                <div class="success-message" id="copyMessage">
+                    Link copied to clipboard!
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="employee-list" id="employeeList">
+                    <div class="employee-list-header">
+                        <div>Name</div>
+                        <div>Phone</div>
+                        <div>Email</div>
+                        <div>Status</div>
+                        <div></div>
+                    </div>
+                    <!-- Employee items will be added here dynamically -->
+                </div>
+
+                <div class="btn-container" style="margin-top: 2rem;">
+                    <button class="btn btn-secondary" id="inviteAllBtn">Invite to Benefit</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal" id="employeeModal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 1.5rem">Add New Employee</h2>
+            <form id="employeeForm">
+                <div class="input-group">
+                    <label class="input-label" for="firstName">First Name</label>
+                    <input type="text" id="firstName" class="input-field">
+                </div>
+                <div class="input-group">
+                    <label class="input-label" for="lastName">Last Name</label>
+                    <input type="text" id="lastName" class="input-field">
+                </div>
+                <div class="input-group">
+                    <label class="input-label" for="phone">Phone Number</label>
+                    <input type="tel" id="phone" class="input-field" placeholder="(XXX) XXX-XXXX">
+                </div>
+                <div class="input-group">
+                    <label class="input-label" for="email">Email*</label>
+                    <input type="email" id="email" class="input-field" required>
+                </div>
+                <div class="btn-container">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn">Add Employee</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="footer-logo">RENEST</div>
+                <p class="copyright">©2025 Renest Horizons Inc.</p>
+            </div>
+            <div class="footer-links">
+                <h3>Company</h3>
+                <a href="aboutus529.html">About us</a>
+                <a href="privacypolicy529.html">Privacy Policy</a>
+                <a href="termsofservice529.html">Terms of Service</a>
+            </div>
+            <div class="footer-links">
+                <h3>Resources</h3>
+                <a href="contactus529.html">Contact us</a>
+                <a href="faq529.html">FAQ</a>
+                <!-- <a href="https://www-renesthorizons-com.translate.goog/?_x_tr_sl=auto&_x_tr_tl=es&_x_tr_hl=en&_x_tr_pto=wapp">Español</a> -->
+            </div>
+        </div>
+    </footer>
+
+    
+
+    <script>
+        const addEmployeeBtn = document.getElementById('addEmployeeBtn');
+        const employeeModal = document.getElementById('employeeModal');
+        const employeeForm = document.getElementById('employeeForm');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const csvUpload = document.getElementById('csvUpload');
+        const employeeList = document.getElementById('employeeList');
+        const inviteAllBtn = document.getElementById('inviteAllBtn');
+        const successMessage = document.getElementById('successMessage');
+        const getInviteLinkBtn = document.getElementById('getInviteLinkBtn');
+        const copyMessage = document.getElementById('copyMessage');
+
+        // Store employees
+        let employees = [];
+
+        // Load employees from localStorage on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const storedEmployees = localStorage.getItem('renestEmployees');
+            if (storedEmployees) {
+                employees = JSON.parse(storedEmployees);
+                updateEmployeeList();
+            }
+        });
+
+        // Function to save employees to localStorage
+        function saveEmployeesToStorage() {
+            localStorage.setItem('renestEmployees', JSON.stringify(employees));
+        }
+
+        // Show modal
+        addEmployeeBtn.addEventListener('click', () => {
+            employeeModal.style.display = 'flex';
+        });
+
+        // Hide modal
+        cancelBtn.addEventListener('click', () => {
+            employeeModal.style.display = 'none';
+            employeeForm.reset();
+        });
+
+        // Close modal when clicking outside
+        employeeModal.addEventListener('click', (e) => {
+            if (e.target === employeeModal) {
+                employeeModal.style.display = 'none';
+                employeeForm.reset();
+            }
+        });
+
+        // Format phone number
+        document.getElementById('phone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 0) {
+                if (value.length <= 3) {
+                    value = `(${value}`;
+                } else if (value.length <= 6) {
+                    value = `(${value.slice(0,3)}) ${value.slice(3)}`;
+                } else {
+                    value = `(${value.slice(0,3)}) ${value.slice(3,6)}-${value.slice(6,10)}`;
+                }
+            }
+            e.target.value = value;
+        });
+
+        // Handle form submission
+        employeeForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const employee = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                status: 'pending'
+            };
+
+            employees.push(employee);
+            updateEmployeeList();
+            saveEmployeesToStorage();
+            
+            employeeModal.style.display = 'none';
+            employeeForm.reset();
+        });
+
+        // Handle CSV and Excel upload
+        csvUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            
+            if (file.name.endsWith('.csv')) {
+                // Handle CSV
+                reader.onload = function(e) {
+                    const text = e.target.result;
+                    const rows = text.split('\n');
+                    
+                    // Skip header row and process data
+                    for (let i = 1; i < rows.length; i++) {
+                        const [firstName, lastName, phone, email] = rows[i].split(',');
+                        if (firstName && lastName && phone && email) {
+                            employees.push({
+                                firstName: firstName.trim(),
+                                lastName: lastName.trim(),
+                                phone: phone.trim(),
+                                email: email.trim(),
+                                status: 'pending'
+                            });
+                        }
+                    }
+                    
+                    updateEmployeeList();
+                    saveEmployeesToStorage();
+                };
+                reader.readAsText(file);
+            } else {
+                // Handle Excel
+                reader.onload = function(e) {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    
+                    // Get first sheet
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    
+                    // Convert to JSON
+                    const rows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                    
+                    // Skip header row and process data
+                    for (let i = 1; i < rows.length; i++) {
+                        const [firstName, lastName, phone, email] = rows[i];
+                        if (firstName && lastName && phone && email) {
+                            employees.push({
+                                firstName: firstName.toString().trim(),
+                                lastName: lastName.toString().trim(),
+                                phone: phone.toString().trim(),
+                                email: email.toString().trim(),
+                                status: 'pending'
+                            });
+                        }
+                    }
+                    
+                    updateEmployeeList();
+                    saveEmployeesToStorage();
+                };
+                reader.readAsArrayBuffer(file);
+            }
+        });
+
+        // Update employee list display
+        function updateEmployeeList() {
+            const employeeListContainer = document.getElementById('employeeList');
+            employeeListContainer.innerHTML = `
+                <div class="employee-list-header">
+                    <div>Name</div>
+                    <div>Phone</div>
+                    <div>Email</div>
+                    <div>Status</div>
+                    <div></div>
+                </div>
+            `;
+            
+            employees.forEach((employee, index) => {
+                const employeeItem = document.createElement('div');
+                employeeItem.className = 'employee-item';
+                employeeItem.innerHTML = `
+                    <div>${employee.firstName} ${employee.lastName}</div>
+                    <div>${employee.phone}</div>
+                    <div>${employee.email}</div>
+                    <div class="status status-${employee.status}">${employee.status}</div>
+                    <div>
+                        <button class="btn btn-secondary" onclick="removeEmployee(${index})">Remove</button>
+                    </div>
+                `;
+                employeeListContainer.appendChild(employeeItem);
+            });
+        }
+
+        // Remove employee function
+        function removeEmployee(index) {
+            employees.splice(index, 1);
+            updateEmployeeList();
+            saveEmployeesToStorage();
+        }
+
+        // Handle invite all
+        inviteAllBtn.addEventListener('click', () => {
+            employees = employees.map(employee => ({
+                ...employee,
+                status: 'invited'
+            }));
+            updateEmployeeList();
+            saveEmployeesToStorage();
+            successMessage.style.display = 'block';
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 3000);
+        });
+
+        // Handle get invite link
+        getInviteLinkBtn.addEventListener('click', () => {
+            const inviteLink = 'https://renest.com/onboard'; // Replace with your actual onboarding URL
+            navigator.clipboard.writeText(inviteLink).then(() => {
+                copyMessage.style.display = 'block';
+                setTimeout(() => {
+                    copyMessage.style.display = 'none';
+                }, 3000);
+            });
+        });
+    const menuButton = document.querySelector('.menu-button');
+    const navLinks = document.querySelector('.nav-links');
+
+    menuButton.addEventListener('click', function(e) {
+        e.stopPropagation();
+        navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        menuButton.setAttribute('aria-expanded', navLinks.style.display === 'flex');
+    });
+
+    document.addEventListener('click', function(e) {
+        if (window.innerWidth < 768 && !navLinks.contains(e.target) && e.target !== menuButton) {
+            navLinks.style.display = 'none';
+            menuButton.setAttribute('aria-expanded', false);
+        }
+    });
+    </script>
+
+    <!-- Add SheetJS library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</body>
+</html>
+
+
