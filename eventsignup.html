@@ -292,6 +292,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 grid-template-columns: 2fr 1fr 1fr;
             }
         }
+
+        .custom-school-input {
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .custom-school-input.visible {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -315,23 +324,29 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <main>
         <section class="contact-section">
             <h1 class="contact-title">Event Sign Up</h1>
-            <!-- <p style="text-align: center; color: var(--text-dark); margin-bottom: 2rem; font-size: 1.1rem; max-width: 600px; margin-left: auto; margin-right: auto;">
-                Learn how to unlock savings available to graduate students and.
-            </p> -->
+            <p style="text-align: center; color: var(--text-dark); margin-bottom: 2rem; font-size: 1.1rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                Learn how to unlock thousands of dollars in savings available to graduate students and grow your financial awareness and literacy. 
+            </p>
             <div class="contact-form">
                 <form id="eventForm">
                     <div class="form-group">
                         <label>Which date will you attend? *</label>
                         <div class="radio-group">
                             <div class="radio-option">
-                                <input type="radio" id="date1" name="date" value="May 7th at 4-4:30pm" required>
+                                <input type="radio" id="date1" name="date" value="May 7th, 4-4:30pm" required>
                                 <label for="date1">May 7th, 4-4:30pm PST</label>
                             </div>
                             <div class="radio-option">
-                                <input type="radio" id="date2" name="date" value="May 9th 1-1:30PM" required>
+                                <input type="radio" id="date2" name="date" value="May 9th, 1-1:30pm" required>
                                 <label for="date2">May 9th, 1-1:30PM PST</label>
                             </div>
                         </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="currentSchool">What school do you currently attend? *</label>
+                        <input type="text" id="currentSchool" name="currentSchool" required placeholder="Type to search...">
+                        <div class="suggestions-dropdown" id="schoolDropdown"></div>
+                        <input type="text" id="customSchool" name="customSchool" class="custom-school-input" placeholder="Type your school name...">
                     </div>
                     <div class="form-group">
                         <label for="state">Where will you be attending graduate school? Select undecided if you are unsure. *</label>
@@ -431,10 +446,157 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             'OO': 'Undecided'
         };
 
+        const schoolOptions = [
+            'UC Berkeley',
+            'UC Davis',
+            'UC Irvine',
+            'UCLA',
+            'UC Merced',
+            'UC Riverside',
+            'UC San Diego',
+            'UC San Francisco',
+            'UC Santa Barbara',
+            'UC Santa Cruz',
+            'Cal Poly Humboldt',
+            'Cal Poly Pomona',
+            'Cal Poly San Luis Obispo',
+            'Cal State Bakersfield',
+            'Cal State Channel Islands',
+            'Cal State Chico',
+            'Cal State Dominguez Hills',
+            'Cal State East Bay',
+            'Cal State Fresno',
+            'Cal State Fullerton',
+            'Cal State LA',
+            'Cal State Long Beach',
+            'Cal State Monterey Bay',
+            'Cal State Northridge',
+            'Cal State Sacramento',
+            'Cal State San Bernardino',
+            'Cal State San Diego',
+            'Cal State San Francisco',
+            'Cal State San Jose',
+            'Cal State San Marcos',
+            'Cal State Sonoma',
+            'Cal State Stanislaus'
+        ];
+
         // State selection functionality
         const stateInput = document.getElementById('state');
         const suggestionsDropdown = document.getElementById('suggestionsDropdown');
         let selectedIndex = -1;
+
+        // School selection functionality
+        const schoolInput = document.getElementById('currentSchool');
+        const customSchoolInput = document.getElementById('customSchool');
+        const schoolDropdown = document.getElementById('schoolDropdown');
+        let schoolSelectedIndex = -1;
+
+        schoolInput.addEventListener('input', function(e) {
+            const searchText = e.target.value.toLowerCase();
+            const suggestions = schoolOptions.filter(school => 
+                school.toLowerCase().includes(searchText)
+            );
+
+            // Clear previous suggestions
+            schoolDropdown.innerHTML = '';
+            schoolSelectedIndex = -1;
+
+            if (searchText.length > 0) {
+                // Add new suggestions
+                suggestions.forEach((school, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'suggestion-item';
+                    div.textContent = school;
+                    div.addEventListener('click', () => {
+                        schoolInput.value = school;
+                        schoolDropdown.style.display = 'none';
+                        customSchoolInput.classList.remove('visible');
+                    });
+                    schoolDropdown.appendChild(div);
+                });
+
+                // Add custom school option
+                const customDiv = document.createElement('div');
+                customDiv.className = 'suggestion-item custom-school';
+                customDiv.textContent = "My school isn't listed (click here)";
+                customDiv.addEventListener('click', () => {
+                    schoolInput.value = '';
+                    schoolDropdown.style.display = 'none';
+                    customSchoolInput.classList.add('visible');
+                    customSchoolInput.focus();
+                });
+                schoolDropdown.appendChild(customDiv);
+
+                schoolDropdown.style.display = 'block';
+            } else {
+                schoolDropdown.style.display = 'none';
+            }
+        });
+
+        // Handle custom school input
+        customSchoolInput.addEventListener('input', function(e) {
+            if (this.value.length > 0) {
+                schoolInput.value = this.value;
+            } else {
+                schoolInput.value = '';
+            }
+        });
+
+        // Add focus event to reset when main input is focused
+        schoolInput.addEventListener('focus', function() {
+            if (this.value === '') {
+                this.placeholder = "Type to search...";
+                customSchoolInput.classList.remove('visible');
+            }
+        });
+
+        // Handle keyboard navigation for school input
+        schoolInput.addEventListener('keydown', function(e) {
+            const items = schoolDropdown.getElementsByClassName('suggestion-item');
+            
+            if (items.length === 0) return;
+
+            switch(e.key) {
+                case 'ArrowDown':
+                    e.preventDefault();
+                    if (schoolSelectedIndex < items.length - 1) {
+                        if (schoolSelectedIndex >= 0) items[schoolSelectedIndex].classList.remove('selected');
+                        schoolSelectedIndex++;
+                        items[schoolSelectedIndex].classList.add('selected');
+                        schoolInput.value = items[schoolSelectedIndex].textContent;
+                    }
+                    break;
+                case 'ArrowUp':
+                    e.preventDefault();
+                    if (schoolSelectedIndex > 0) {
+                        items[schoolSelectedIndex].classList.remove('selected');
+                        schoolSelectedIndex--;
+                        items[schoolSelectedIndex].classList.add('selected');
+                        schoolInput.value = items[schoolSelectedIndex].textContent;
+                    }
+                    break;
+                case 'Enter':
+                    e.preventDefault();
+                    if (schoolSelectedIndex >= 0) {
+                        schoolDropdown.style.display = 'none';
+                    }
+                    break;
+                case 'Escape':
+                    schoolDropdown.style.display = 'none';
+                    break;
+            }
+        });
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!stateInput.contains(e.target) && !suggestionsDropdown.contains(e.target)) {
+                suggestionsDropdown.style.display = 'none';
+            }
+            if (!schoolInput.contains(e.target) && !schoolDropdown.contains(e.target)) {
+                schoolDropdown.style.display = 'none';
+            }
+        });
 
         stateInput.addEventListener('input', function(e) {
             const searchText = e.target.value.toLowerCase();
@@ -530,12 +692,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             e.preventDefault();
             
             const date = encodeURIComponent(document.querySelector('input[name="date"]:checked').value);
+            const currentSchool = encodeURIComponent(customSchoolInput.classList.contains('visible') ? customSchoolInput.value : schoolInput.value);
             const state = encodeURIComponent(document.getElementById('state').value);
             const email = encodeURIComponent(document.getElementById('email').value);
             const comments = encodeURIComponent(document.getElementById('comments').value);
             
             const baseUrl = 'https://docs.google.com/forms/d/e/1FAIpQLScgmOT3JEm9ErKObGHL_FXdZX8pHO4E6hpjIqnl0rjKKpq10A/formResponse';
-            const queryString = `?entry.2011191131=${date}&entry.1858725853=${state}&entry.2014706406=${email}&entry.817475050=${comments}`;
+            const queryString = `?entry.2011191131=${date}&entry.109512033=${currentSchool}&entry.1858725853=${state}&entry.2014706406=${email}&entry.817475050=${comments}`;
             
             // Using a hidden iframe to submit the form without redirecting
             const iframe = document.createElement('iframe');
