@@ -474,7 +474,7 @@
                 <span id="link-spinner" class="loading-spinner" style="display: none;"></span>
             </button>
 
-            <div id="status-container" class="status-container">
+            <div id="status-container" class="status-container" style="display: none;">
                 <h3 class="status-heading">Connection Status</h3>
                 
                 <div id="link-token-status" class="status-item">
@@ -578,6 +578,9 @@
             // Disable button and show spinner
             plaidLinkButton.disabled = true;
             linkSpinner.style.display = 'inline-block';
+            
+            // Show the status container
+            document.getElementById('status-container').style.display = 'block';
             
             try {
                 // Update status
@@ -802,8 +805,8 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        accountStatus: 'COMPLETE',
-                        progressPercentage: 90
+                        accountStatus: 'AUTOMATIC',
+                        progressPercentage: 80
                     })
                 });
 
