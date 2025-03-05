@@ -1263,6 +1263,71 @@
                 
             </div>
         </div>
+        <!-- Add this right after the automation-section div -->
+<div id="automatic-controls" style="display: none; margin-top: 1rem;" class="automation-section">
+    <!-- Transaction search and filter controls -->
+    <div class="tracker-card">
+        <h2 class="section-title">Transaction Search & Category Management</h2>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;">
+            <div style="flex: 1; min-width: 250px;">
+                <label style="display: block; margin-bottom: 0.5rem;">Search Transactions</label>
+                <input type="text" id="transaction-search" class="form-control" placeholder="Search by merchant or description...">
+            </div>
+            <div style="flex: 1; min-width: 200px;">
+                <label style="display: block; margin-bottom: 0.5rem;">Category Filter</label>
+                <div class="select-container">
+                    <select id="category-filter" class="form-control">
+                        <option value="">All Categories</option>
+                        <!-- Categories will be populated dynamically -->
+                    </select>
+                </div>
+            </div>
+            <div style="flex: 1; min-width: 200px;">
+                <label style="display: block; margin-bottom: 0.5rem;">Date Range</label>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="month" id="transaction-month" class="form-control" style="flex: 1;">
+                </div>
+            </div>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; margin-bottom: 1rem;">
+            <div>
+                <span id="last-update-time" style="color: #6B7280; font-size: 0.9rem;">Last updated: Never</span>
+            </div>
+            <div>
+                <button id="update-transactions" class="automation-button">Update Transactions</button>
+                <button id="show-manual-controls" class="outline-button" style="margin-left: 0.5rem;">Show Manual Controls</button>
+            </div>
+        </div>
+        
+        <!-- Transaction table -->
+        <div class="transaction-table-container" style="overflow-x: auto; margin-top: 1rem;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="border-bottom: 2px solid #E5E7EB;">
+                        <th style="text-align: left; padding: 0.75rem 1rem;">Date</th>
+                        <th style="text-align: left; padding: 0.75rem 1rem;">Merchant</th>
+                        <th style="text-align: right; padding: 0.75rem 1rem;">Amount</th>
+                        <th style="text-align: left; padding: 0.75rem 1rem;">Category</th>
+                        <th style="text-align: center; padding: 0.75rem 1rem;">Qualified</th>
+                        <th style="text-align: center; padding: 0.75rem 1rem;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="transactions-tbody">
+                    <!-- Transactions will be populated here -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination controls -->
+        <div style="display: flex; justify-content: center; margin-top: 1rem;">
+            <button id="prev-page" class="outline-button" style="margin-right: 0.5rem;" disabled>Previous</button>
+            <span id="page-info" style="line-height: 2.5rem; margin: 0 1rem;">Page 1 of 1</span>
+            <button id="next-page" class="outline-button" style="margin-left: 0.5rem;" disabled>Next</button>
+        </div>
+    </div>
+</div>
+
 
         <div class="container">
             <div class="tab-container">
@@ -2042,29 +2107,7 @@
         });
 
         // Automation toggle handler
-        document.getElementById('automation-toggle').addEventListener('change', function() {
-            if (this.checked) {
-                // Prevent the toggle from switching on
-                this.checked = false;
-                // Show message about upcoming functionality
-                const messageDiv = document.createElement('div');
-                messageDiv.style.cssText = `
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    background: white;
-                    padding: 1rem 2rem;
-                    border-radius: 8px;
-                    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-                    z-index: 2000;
-                    border-left: 4px solid var(--primary);
-                `;
-                messageDiv.textContent = 'Automation functionality coming soon!';
-                document.body.appendChild(messageDiv);
-                setTimeout(() => messageDiv.remove(), 3000);
-            }
-        });
+        
 
         // Category selection handler
         document.getElementById('expense-category').addEventListener('change', function() {
@@ -2308,6 +2351,611 @@
         function hideHowToModal() {
             document.getElementById('how-to-modal').style.display = 'none';
         }
+        // Global variables for pagination
+let currentPage = 1;
+let transactionsPerPage = 10;
+let filteredTransactions = [];
+let allTransactions = [];
+let plaidConnected = false;
+
+// Update the automation toggle handler
+document.getElementById('automation-toggle').addEventListener('change', async function() {
+    try {
+        const isAutomatic = this.checked;
+        
+        if (isAutomatic) {
+            // Check if Plaid is already connected
+            const userProfile = await fetchUserProfile();
+            plaidConnected = userProfile.accountStatus === 'AUTOMATIC';
+            
+            if (!plaidConnected) {
+                // Ask user to connect Plaid
+                if (confirm('To enable automatic expense tracking, you need to connect your bank account. Would you like to do this now?')) {
+                    // Redirect to Plaid connection page
+                    window.location.href = 'plaidrenestsandbox.html';
+                    return;
+                } else {
+                    // User declined, revert toggle
+                    this.checked = false;
+                    return;
+                }
+            }
+            
+            // User already has Plaid connected
+            await updateAccountStatus('AUTOMATIC');
+            toggleManualControls(false);
+            
+        } else {
+            // User wants to go back to manual mode
+            await updateAccountStatus('MANUAL');
+            toggleManualControls(true);
+        }
+    } catch (error) {
+        console.error('Error toggling automation mode:', error);
+        // Revert toggle to previous state
+        this.checked = !this.checked;
+        showError('Failed to update tracking mode. Please try again.');
+    }
+});
+
+// Function to update account status in the database
+async function updateAccountStatus(status) {
+    try {
+        const token = API.getToken();
+        if (!token) throw new Error('No authentication token found');
+
+        const response = await fetch('https://jmqfabgm02.execute-api.us-east-2.amazonaws.com/update-profile', {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                accountStatus: status
+            })
+        });
+        
+        if (!response.ok) throw new Error('Failed to update account status');
+        
+        return await response.json();
+    } catch (error) {
+        console.error('Error updating account status:', error);
+        throw error;
+    }
+}
+
+// Function to toggle visibility of manual controls
+function toggleManualControls(show) {
+    // Get all tab content elements
+    const tabs = ['rent-tab', 'expenses-tab', 'account-tab', 'summary-tab'];
+    
+    if (show) {
+        // Show manual controls, hide automatic controls
+        document.getElementById('automatic-controls').style.display = 'none';
+        
+        // Show all tabs
+        tabs.forEach(tabId => {
+            const tab = document.getElementById(tabId);
+            if (tab) tab.style.display = tab.classList.contains('active') ? 'block' : 'none';
+        });
+        
+        // Enable tab buttons
+        document.querySelectorAll('.tab-button').forEach(btn => {
+            btn.disabled = false;
+        });
+    } else {
+        // Hide manual controls, show automatic controls
+        document.getElementById('automatic-controls').style.display = 'block';
+        
+        // Hide all tabs
+        tabs.forEach(tabId => {
+            const tab = document.getElementById(tabId);
+            if (tab) tab.style.display = 'none';
+        });
+        
+        // Disable tab buttons
+        document.querySelectorAll('.tab-button').forEach(btn => {
+            btn.disabled = true;
+        });
+        
+        // Load Plaid transactions
+        loadPlaidTransactions();
+    }
+}
+
+// Event listener for "Show Manual Controls" button
+document.getElementById('show-manual-controls').addEventListener('click', function() {
+    // Show tabs but keep automatic controls visible
+    const tabs = ['rent-tab', 'expenses-tab', 'account-tab', 'summary-tab'];
+    
+    // Show the first tab
+    tabs.forEach((tabId, index) => {
+        const tab = document.getElementById(tabId);
+        if (tab) tab.style.display = index === 0 ? 'block' : 'none';
+    });
+    
+    // Enable tab buttons
+    document.querySelectorAll('.tab-button').forEach((btn, index) => {
+        btn.disabled = false;
+        btn.classList.toggle('active', index === 0);
+    });
+});
+
+// Function to load Plaid transactions
+async function loadPlaidTransactions() {
+    try {
+        const token = API.getToken();
+        if (!token) throw new Error('No authentication token found');
+
+        // Show loading indicator
+        const tableBody = document.getElementById('transactions-tbody');
+        tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem;">Loading transactions...</td></tr>';
+
+        // Get the selected month/year filter
+        const monthInput = document.getElementById('transaction-month');
+        const selectedMonth = monthInput.value ? new Date(monthInput.value + '-01') : new Date();
+        const month = selectedMonth.getMonth() + 1;
+        const year = selectedMonth.getFullYear();
+
+        // Call the API to get transaction data
+        const response = await fetch('https://fq3oz4hac8.execute-api.us-east-2.amazonaws.com/plaid', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                action: 'getExpenseSummary',
+                userId: await getUserId(token),
+                month: month,
+                year: year
+            })
+        });
+
+        if (!response.ok) throw new Error('Failed to fetch transactions');
+        
+        const data = await response.json();
+        
+        // Update last update time
+        if (data.lastUpdate) {
+            const lastUpdateDate = new Date(data.lastUpdate);
+            document.getElementById('last-update-time').textContent = 
+                `Last updated: ${lastUpdateDate.toLocaleString()}`;
+        }
+        
+        // Process transactions from all categories
+        allTransactions = [];
+        Object.entries(data.summary).forEach(([category, categoryData]) => {
+            categoryData.transactions.forEach(transaction => {
+                // Add category to each transaction
+                transaction.category = category;
+                allTransactions.push(transaction);
+            });
+        });
+        
+        // Update category filter dropdown
+        updateCategoryFilter(data.summary);
+        
+        // Apply filters and update display
+        applyFiltersAndUpdateDisplay();
+        
+    } catch (error) {
+        console.error('Error loading transactions:', error);
+        document.getElementById('transactions-tbody').innerHTML = 
+            `<tr><td colspan="6" style="text-align: center; padding: 2rem; color: #EF4444;">
+                Error loading transactions: ${error.message}
+            </td></tr>`;
+    }
+}
+
+// Function to update the category filter dropdown
+function updateCategoryFilter(categorySummary) {
+    const categoryFilter = document.getElementById('category-filter');
+    
+    // Clear existing options (except "All Categories")
+    while (categoryFilter.options.length > 1) {
+        categoryFilter.remove(1);
+    }
+    
+    // Add an option for each category
+    Object.keys(categorySummary).forEach(category => {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category;
+        
+        // Add special styling for qualified categories
+        if (isQualifiedCategory(category)) {
+            option.className = 'qualified-category';
+        }
+        
+        categoryFilter.appendChild(option);
+    });
+}
+
+// Function to check if a category is qualified
+function isQualifiedCategory(category) {
+    const qualifiedCategories = ['Rent', 'Groceries', 'WiFi', 'Required Supplies', 'Utilities'];
+    return qualifiedCategories.includes(category);
+}
+
+// Function to apply filters and update the display
+function applyFiltersAndUpdateDisplay() {
+    // Get filter values
+    const searchText = document.getElementById('transaction-search').value.toLowerCase();
+    const categoryFilter = document.getElementById('category-filter').value;
+    
+    // Filter transactions
+    filteredTransactions = allTransactions.filter(transaction => {
+        // Apply search filter
+        const matchesSearch = !searchText || 
+            transaction.name.toLowerCase().includes(searchText) || 
+            (transaction.description && transaction.description.toLowerCase().includes(searchText));
+        
+        // Apply category filter
+        const matchesCategory = !categoryFilter || transaction.category === categoryFilter;
+        
+        return matchesSearch && matchesCategory;
+    });
+    
+    // Sort transactions by date (newest first)
+    filteredTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+    
+    // Update pagination information
+    const totalPages = Math.ceil(filteredTransactions.length / transactionsPerPage);
+    if (currentPage > totalPages && totalPages > 0) {
+        currentPage = totalPages;
+    }
+    
+    // Enable/disable pagination buttons
+    document.getElementById('prev-page').disabled = currentPage <= 1;
+    document.getElementById('next-page').disabled = currentPage >= totalPages;
+    document.getElementById('page-info').textContent = 
+        `Page ${currentPage} of ${totalPages > 0 ? totalPages : 1}`;
+    
+    // Display the current page of transactions
+    displayTransactionsPage();
+}
+
+// Function to display the current page of transactions
+function displayTransactionsPage() {
+    const tableBody = document.getElementById('transactions-tbody');
+    tableBody.innerHTML = '';
+    
+    const startIndex = (currentPage - 1) * transactionsPerPage;
+    const endIndex = Math.min(startIndex + transactionsPerPage, filteredTransactions.length);
+    
+    if (filteredTransactions.length === 0) {
+        tableBody.innerHTML = 
+            `<tr><td colspan="6" style="text-align: center; padding: 2rem;">
+                No transactions found. Try adjusting your filters.
+            </td></tr>`;
+        return;
+    }
+    
+    for (let i = startIndex; i < endIndex; i++) {
+        const transaction = filteredTransactions[i];
+        const row = document.createElement('tr');
+        row.style.borderBottom = '1px solid #E5E7EB';
+        
+        // Format date
+        const date = new Date(transaction.date);
+        const formattedDate = date.toLocaleDateString();
+        
+        // Create row cells
+        row.innerHTML = `
+            <td style="padding: 0.75rem 1rem;">${formattedDate}</td>
+            <td style="padding: 0.75rem 1rem;">
+                ${transaction.name}
+                <div style="font-size: 0.8rem; color: #6B7280;">${transaction.description || ''}</div>
+            </td>
+            <td style="padding: 0.75rem 1rem; text-align: right;">$${transaction.amount.toFixed(2)}</td>
+            <td style="padding: 0.75rem 1rem;">
+                <span class="${isQualifiedCategory(transaction.category) ? 'qualified-category' : ''}">${transaction.category}</span>
+            </td>
+            <td style="padding: 0.75rem 1rem; text-align: center;">
+                <div class="custom-checkbox" style="justify-content: center;">
+                    <span class="checkmark ${transaction.isQualified ? 'checked' : ''}"></span>
+                </div>
+            </td>
+            <td style="padding: 0.75rem 1rem; text-align: center;">
+                <button class="outline-button" style="padding: 0.3rem 0.5rem; font-size: 0.8rem;"
+                    onclick="editTransaction('${transaction.id}')">Edit</button>
+            </td>
+        `;
+        
+        tableBody.appendChild(row);
+    }
+}
+
+// Function to handle editing a transaction
+function editTransaction(transactionId) {
+    // Find the transaction
+    const transaction = allTransactions.find(t => t.id === transactionId);
+    if (!transaction) return;
+    
+    // Populate the edit modal
+    document.getElementById('edit-transaction-name').value = transaction.name;
+    document.getElementById('edit-transaction-amount').value = `$${transaction.amount.toFixed(2)}`;
+    
+    // Populate category dropdown
+    const categorySelect = document.getElementById('edit-transaction-category');
+    categorySelect.innerHTML = '';
+    
+    // Add all unique categories from transactions
+    const categories = [...new Set(allTransactions.map(t => t.category))];
+    categories.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category;
+        if (isQualifiedCategory(category)) {
+            option.className = 'qualified-category';
+        }
+        categorySelect.appendChild(option);
+    });
+    
+    // Set current category
+    categorySelect.value = transaction.category;
+    
+    // Set qualified checkbox
+    document.getElementById('edit-transaction-qualified').checked = transaction.isQualified;
+    
+    // Store transaction ID for later use
+    categorySelect.dataset.transactionId = transactionId;
+    
+    // Show the modal
+    document.getElementById('category-modal').style.display = 'flex';
+}
+
+// Function to hide the category modal
+function hideCategoryModal() {
+    document.getElementById('category-modal').style.display = 'none';
+}
+
+// Function to save transaction changes
+async function saveTransactionChanges() {
+    try {
+        const transactionId = document.getElementById('edit-transaction-category').dataset.transactionId;
+        const newCategory = document.getElementById('edit-transaction-category').value;
+        const isQualified = document.getElementById('edit-transaction-qualified').checked;
+        const createRule = document.getElementById('create-category-rule').checked;
+        
+        const token = API.getToken();
+        if (!token) throw new Error('No authentication token found');
+        
+        // Call API to update category
+        const categoryResponse = await fetch('https://fq3oz4hac8.execute-api.us-east-2.amazonaws.com/plaid', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                action: 'updateTransactionCategory',
+                userId: await getUserId(token),
+                transactionId: transactionId,
+                newCategory: newCategory,
+                createRule: createRule
+            })
+        });
+        
+        if (!categoryResponse.ok) throw new Error('Failed to update category');
+        
+        // Call API to update qualified status
+        const qualifiedResponse = await fetch('https://fq3oz4hac8.execute-api.us-east-2.amazonaws.com/plaid', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                action: 'updateTransactionQualified',
+                userId: await getUserId(token),
+                transactionId: transactionId,
+                isQualified: isQualified
+            })
+        });
+        
+        if (!qualifiedResponse.ok) throw new Error('Failed to update qualified status');
+        
+        // Update local transaction data
+        const transaction = allTransactions.find(t => t.id === transactionId);
+        if (transaction) {
+            transaction.category = newCategory;
+            transaction.isQualified = isQualified;
+        }
+        
+        // Hide modal
+        hideCategoryModal();
+        
+        // Show success message
+        showSuccess('Transaction updated successfully!');
+        
+        // Refresh display
+        applyFiltersAndUpdateDisplay();
+        
+    } catch (error) {
+        console.error('Error saving transaction changes:', error);
+        showError('Failed to update transaction: ' + error.message);
+    }
+}
+
+// Event listeners for filter and pagination
+document.getElementById('transaction-search').addEventListener('input', applyFiltersAndUpdateDisplay);
+document.getElementById('category-filter').addEventListener('change', applyFiltersAndUpdateDisplay);
+document.getElementById('transaction-month').addEventListener('change', loadPlaidTransactions);
+document.getElementById('prev-page').addEventListener('click', () => {
+    if (currentPage > 1) {
+        currentPage--;
+        displayTransactionsPage();
+    }
+});
+document.getElementById('next-page').addEventListener('click', () => {
+    const totalPages = Math.ceil(filteredTransactions.length / transactionsPerPage);
+    if (currentPage < totalPages) {
+        currentPage++;
+        displayTransactionsPage();
+    }
+});
+
+// Event listener for Update button
+document.getElementById('update-transactions').addEventListener('click', async function() {
+    try {
+        const token = API.getToken();
+        if (!token) throw new Error('No authentication token found');
+        
+        // Show loading state
+        this.disabled = true;
+        this.innerHTML = 'Updating...';
+        
+        // Call API to update transactions
+        const response = await fetch('https://fq3oz4hac8.execute-api.us-east-2.amazonaws.com/plaid', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                action: 'updateExpenses',
+                userId: await getUserId(token)
+            })
+        });
+        
+        if (!response.ok) throw new Error('Failed to update transactions');
+        
+        const data = await response.json();
+        
+        // Show success message
+        showSuccess(data.message || 'Transactions updated successfully!');
+        
+        // Reload transactions
+        loadPlaidTransactions();
+        
+    } catch (error) {
+        console.error('Error updating transactions:', error);
+        showError('Failed to update transactions: ' + error.message);
+    } finally {
+        // Reset button state
+        this.disabled = false;
+        this.innerHTML = 'Update Transactions';
+    }
+});
+
+// Helper function to get user ID from token
+async function getUserId(token) {
+    try {
+        const response = await fetch('https://g4gri8abii.execute-api.us-east-2.amazonaws.com/prod/profile', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch user profile');
+        }
+
+        const userData = await response.json();
+        return userData.userId || userData.email;
+        
+    } catch (error) {
+        console.error('Error fetching user ID:', error);
+        throw error;
+    }
+}
+
+// Add initialization code to check status on page load
+document.addEventListener('DOMContentLoaded', async () => {
+    const token = API.getToken();
+    if (!token) {
+        window.location.href = 'signin529.html';
+        return;
+    }
+    
+    try {
+        // Check user's automation status
+        const userProfile = await fetchUserProfile();
+        const isAutomatic = userProfile.accountStatus === 'AUTOMATIC';
+        
+        // Set toggle to match current status
+        document.getElementById('automation-toggle').checked = isAutomatic;
+        
+        // Setup UI based on mode
+        if (isAutomatic) {
+            toggleManualControls(false);
+            plaidConnected = true;
+        } else {
+            toggleManualControls(true);
+        }
+        
+        // Load expenses normally
+        loadExpenses();
+        
+    } catch (error) {
+        console.error('Error initializing page:', error);
+        showError('Error loading data. Please try again.');
+    }
+});
+
+// Helper function to fetch user profile
+async function fetchUserProfile() {
+    try {
+        const token = API.getToken();
+        if (!token) throw new Error('No authentication token found');
+
+        const response = await fetch('https://g4gri8abii.execute-api.us-east-2.amazonaws.com/prod/profile', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        if (!response.ok) throw new Error('Failed to fetch profile');
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching profile:', error);
+        throw error;
+    }
+}
     </script>
+    
+<!-- Add this at the end of your HTML before the closing body tag -->
+<div id="category-modal" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 500px;">
+        <h2>Edit Transaction</h2>
+        <div class="form-group">
+            <label>Transaction</label>
+            <input type="text" id="edit-transaction-name" class="form-control" readonly>
+        </div>
+        <div class="form-group">
+            <label>Amount</label>
+            <input type="text" id="edit-transaction-amount" class="form-control" readonly>
+        </div>
+        <div class="form-group">
+            <label>Category</label>
+            <div class="select-container">
+                <select id="edit-transaction-category" class="form-control">
+                    <!-- Categories will be populated dynamically -->
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="custom-checkbox">
+                <input type="checkbox" id="edit-transaction-qualified">
+                <span class="checkmark"></span>
+                Qualified Expense
+            </label>
+        </div>
+        <div class="form-group">
+            <label class="custom-checkbox">
+                <input type="checkbox" id="create-category-rule">
+                <span class="checkmark"></span>
+                Apply to all similar transactions
+            </label>
+        </div>
+        <div class="modal-footer">
+            <button class="outline-button" onclick="hideCategoryModal()">Cancel</button>
+            <button class="submit-button" onclick="saveTransactionChanges()">Save Changes</button>
+        </div>
+    </div>
+</div>
 </body>
 </html>
