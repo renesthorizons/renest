@@ -3667,6 +3667,20 @@ function updatePricingDisplay(benefit, earlyAmount) {
         ],
         notes: 'Nevada has no state income tax or capital gains tax.'
     },
+    'DC': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: true,
+        brackets: [
+            { threshold: 10000, rate: 4 },
+            { threshold: 40000, rate: 6 },
+            { threshold: 60000, rate:6.5 },
+            { threshold: 250000, rate:8.5 },
+            { threshold: 500000, rate:9.25 },
+            { threshold: 1000000, rate: 9.75 },
+            { threshold: Infinity, rate:10.75 }
+        ],
+        notes: 'DC taxes capital gains as ordinary income with progressive rates.'
+    },
     'NY': {
         hasStateCapGains: true,
         taxesWithZeroIncome: false,
@@ -4301,6 +4315,11 @@ const statePersonalExemptionDB = {
                 deduction: 0,
                 notes: 'Nevada taxpayers cannot deduct'
             },
+            'DC': {
+                planName: 'DC College Savings Plan',
+                deduction: 4000,
+                notes: 'DC College Savings Plan allows $4,000 deduction per year'
+            },            
             'NH': {
                 planName: 'NH 529 Plan',
                 deduction: 0,
@@ -5247,7 +5266,7 @@ const statePersonalExemptionDB = {
             'CO': 'Colorado',
             'CT': 'Connecticut',
             'DE': 'Delaware',
-            'DC': 'District of Columbia',
+            'DC': 'Washington District of Columbia',
             'FL': 'Florida',
             'GA': 'Georgia',
             'HI': 'Hawaii',
