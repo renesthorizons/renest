@@ -2501,7 +2501,7 @@ document.getElementById('show-manual-controls').addEventListener('click', functi
 });
 
 // Function to load Plaid transactions
-async function loadPlaidTransactions() {
+async function loadPlaidTransactions(month, year) {
     try {
         const token = API.getToken();
         if (!token) throw new Error('No authentication token found');
@@ -2510,11 +2510,29 @@ async function loadPlaidTransactions() {
         const tableBody = document.getElementById('transactions-tbody');
         tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem;">Loading transactions...</td></tr>';
 
-        // Get the selected month/year filter
-        const monthInput = document.getElementById('transaction-month');
-        const selectedMonth = monthInput.value ? new Date(monthInput.value + '-01') : new Date();
-        const month = selectedMonth.getMonth() + 1;
-        const year = selectedMonth.getFullYear();
+        // Get date range from the selector if month/year not provided
+        if (!month || !year) {
+            const dateRangeSelect = document.getElementById('date-range-select');
+            if (dateRangeSelect.value === 'custom') {
+                const startDate = document.getElementById('start-date').value;
+                const endDate = document.getElementById('end-date').value;
+                if (startDate && endDate) {
+                    const startDateObj = new Date(startDate);
+                    month = startDateObj.getMonth() + 1;
+                    year = startDateObj.getFullYear();
+                } else {
+                    const today = new Date();
+                    month = today.getMonth() + 1;
+                    year = today.getFullYear();
+                }
+            } else if (dateRangeSelect.value) {
+                [year, month] = dateRangeSelect.value.split('-').map(num => parseInt(num));
+            } else {
+                const today = new Date();
+                month = today.getMonth() + 1;
+                year = today.getFullYear();
+            }
+        }
 
         // Call the API to get transaction data
         const response = await fetch('https://fq3oz4hac8.execute-api.us-east-2.amazonaws.com/plaid', {
@@ -2545,7 +2563,22 @@ async function loadPlaidTransactions() {
         // Process transactions from all categories
         allTransactions = [];
         Object.entries(data.summary).forEach(([category, categoryData]) => {
-            categoryData.transactions.forEach(transaction => {
+            let transactions = categoryData.transactions;
+            
+            // Filter by custom date range if selected
+            if (document.getElementById('date-range-select').value === 'custom') {
+                const startDate = document.getElementById('start-date').value;
+                const endDate = document.getElementById('end-date').value;
+                if (startDate && endDate) {
+                    transactions = transactions.filter(transaction => {
+                        const transactionDate = new Date(transaction.date);
+                        return transactionDate >= new Date(startDate) && 
+                               transactionDate <= new Date(endDate);
+                    });
+                }
+            }
+            
+            transactions.forEach(transaction => {
                 // Add category to each transaction
                 transaction.category = category;
                 allTransactions.push(transaction);
@@ -2892,6 +2925,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
     try {
+        // Initialize date range selector first
+        initializeDateRanges();
+        
         // Check user's automation status
         const userProfile = await fetchUserProfile();
         const isAutomatic = userProfile.accountStatus === 'AUTOMATIC';
