@@ -1284,8 +1284,20 @@
             </div>
             <div style="flex: 1; min-width: 200px;">
                 <label style="display: block; margin-bottom: 0.5rem;">Date Range</label>
-                <div style="display: flex; gap: 0.5rem;">
-                    <input type="month" id="transaction-month" class="form-control" style="flex: 1;">
+                <div class="select-container">
+                    <select id="date-range-select" class="form-control">
+                        <!-- Will be populated with months dynamically -->
+                    </select>
+                </div>
+                
+                <!-- Custom date range inputs (hidden by default) -->
+                <div id="custom-date-range" style="display: none; margin-top: 0.5rem;">
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        <input type="date" id="start-date" class="form-control" style="flex: 1;">
+                        <span>to</span>
+                        <input type="date" id="end-date" class="form-control" style="flex: 1;">
+                    </div>
+                    <button id="apply-custom-range" class="outline-button" style="width: 100%; margin-top: 0.5rem;">Apply</button>
                 </div>
             </div>
         </div>
@@ -2364,8 +2376,15 @@ document.getElementById('automation-toggle').addEventListener('change', async fu
         const isAutomatic = this.checked;
         
         if (isAutomatic) {
-            // Check if Plaid is already connected
+            // Check if user has the correct email
             const userProfile = await fetchUserProfile();
+            if (userProfile.email !== 'pntl162@gmail.com') {
+                alert('Automation feature is currently under development. Please use manual tracking for now.');
+                this.checked = false;
+                return;
+            }
+            
+            // Check if Plaid is already connected
             plaidConnected = userProfile.accountStatus === 'AUTOMATIC';
             
             if (!plaidConnected) {
@@ -2482,20 +2501,30 @@ document.getElementById('show-manual-controls').addEventListener('click', functi
 });
 
 // Function to load Plaid transactions
-async function loadPlaidTransactions() {
+async function loadPlaidTransactions(month, year) {
     try {
         const token = API.getToken();
         if (!token) throw new Error('No authentication token found');
+
+        // Use current month/year if not specified
+        if (!month || !year) {
+            const today = new Date();
+            month = today.getMonth() + 1; // +1 because months are 0-indexed
+            year = today.getFullYear();
+        }
 
         // Show loading indicator
         const tableBody = document.getElementById('transactions-tbody');
         tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem;">Loading transactions...</td></tr>';
 
-        // Get the selected month/year filter
-        const monthInput = document.getElementById('transaction-month');
-        const selectedMonth = monthInput.value ? new Date(monthInput.value + '-01') : new Date();
-        const month = selectedMonth.getMonth() + 1;
-        const year = selectedMonth.getFullYear();
+        // Get custom date range if selected
+        let startDate = null;
+        let endDate = null;
+        const dateRangeSelect = document.getElementById('date-range-select');
+        if (dateRangeSelect.value === 'custom') {
+            startDate = document.getElementById('start-date').value;
+            endDate = document.getElementById('end-date').value;
+        }
 
         // Call the API to get transaction data
         const response = await fetch('https://fq3oz4hac8.execute-api.us-east-2.amazonaws.com/plaid', {
@@ -2508,7 +2537,9 @@ async function loadPlaidTransactions() {
                 action: 'getExpenseSummary',
                 userId: await getUserId(token),
                 month: month,
-                year: year
+                year: year,
+                startDate: startDate,
+                endDate: endDate
             })
         });
 
@@ -2526,7 +2557,17 @@ async function loadPlaidTransactions() {
         // Process transactions from all categories
         allTransactions = [];
         Object.entries(data.summary).forEach(([category, categoryData]) => {
-            categoryData.transactions.forEach(transaction => {
+            // Filter transactions by date range if custom range is selected
+            let transactions = categoryData.transactions;
+            if (startDate && endDate) {
+                transactions = transactions.filter(transaction => {
+                    const transactionDate = new Date(transaction.date);
+                    return transactionDate >= new Date(startDate) && 
+                           transactionDate <= new Date(endDate);
+                });
+            }
+            
+            transactions.forEach(transaction => {
                 // Add category to each transaction
                 transaction.category = category;
                 allTransactions.push(transaction);
@@ -2914,6 +2955,134 @@ async function fetchUserProfile() {
         console.error('Error fetching profile:', error);
         throw error;
     }
+}
+
+// Initialize the date range selector with monthly options
+function initializeDateRanges() {
+    const dateSelect = document.getElementById('date-range-select');
+    dateSelect.innerHTML = ''; // Clear any existing options
+    
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth();
+    
+    // Generate options for the past 3 years (36 months)
+    for (let i = 0; i < 36; i++) {
+        // Calculate year and month for this option
+        let optionYear = currentYear;
+        let optionMonth = currentMonth - i;
+        
+        // Adjust for negative months
+        while (optionMonth < 0) {
+            optionMonth += 12;
+            optionYear -= 1;
+        }
+        
+        // Create the option element
+        const option = document.createElement('option');
+        
+        // Format month name and year
+        const monthName = new Date(optionYear, optionMonth, 1)
+            .toLocaleString('default', { month: 'long' });
+            
+        option.value = `${optionYear}-${String(optionMonth + 1).padStart(2, '0')}`; // +1 because months are 0-indexed
+        option.textContent = `${monthName} ${optionYear}`;
+        
+        // Set current month as selected by default
+        if (i === 0) {
+            option.selected = true;
+        }
+        
+        dateSelect.appendChild(option);
+    }
+    
+    // Add custom range option
+    const customOption = document.createElement('option');
+    customOption.value = 'custom';
+    customOption.textContent = 'Custom Range...';
+    dateSelect.appendChild(customOption);
+    
+    // Initialize custom date range inputs
+    const endDate = new Date();
+    document.getElementById('end-date').valueAsDate = endDate;
+    
+    const startDate = new Date();
+    startDate.setDate(1); // First day of current month
+    document.getElementById('start-date').valueAsDate = startDate;
+}
+
+// Event listener for date range select change
+document.getElementById('date-range-select').addEventListener('change', function() {
+    const customRangeDiv = document.getElementById('custom-date-range');
+    
+    if (this.value === 'custom') {
+        // Show custom date range inputs
+        customRangeDiv.style.display = 'block';
+    } else {
+        // Hide custom date range inputs
+        customRangeDiv.style.display = 'none';
+        
+        // Parse selected year and month
+        const [year, month] = this.value.split('-').map(num => parseInt(num));
+        
+        // Load transactions for selected month
+        loadPlaidTransactions(month, year);
+    }
+});
+
+// Event listener for custom range apply button
+document.getElementById('apply-custom-range').addEventListener('click', function() {
+    const startDate = document.getElementById('start-date').value;
+    const endDate = document.getElementById('end-date').value;
+    
+    if (!startDate || !endDate) {
+        showError('Please select both start and end dates');
+        return;
+    }
+    
+    // Find what month contains this range
+    // (Using the month of the start date for simplicity)
+    const startDateObj = new Date(startDate);
+    const month = startDateObj.getMonth() + 1; // +1 because months are 0-indexed
+    const year = startDateObj.getFullYear();
+    
+    // Load transactions for the month containing the start date
+    loadPlaidTransactions(month, year);
+    
+    // Show notice about date range
+    showInfo(`Showing transactions from ${new Date(startDate).toLocaleDateString()} to ${new Date(endDate).toLocaleDateString()}`);
+});
+
+// ... existing code ...
+
+// Add initialization to your DOMContentLoaded event
+document.addEventListener('DOMContentLoaded', async () => {
+    // Initialize date range selector
+    initializeDateRanges();
+    
+    // Your existing initialization code
+    // ... existing code ...
+});
+
+// Helper function to show info message
+function showInfo(message) {
+    const infoDiv = document.createElement('div');
+    infoDiv.className = 'info-message';
+    infoDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 1rem;
+        background-color: #EFF6FF;
+        color: #1E40AF;
+        border-left: 4px solid #3B82F6;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        z-index: 1000;
+    `;
+    infoDiv.textContent = message;
+    document.body.appendChild(infoDiv);
+    setTimeout(() => infoDiv.remove(), 5000);
 }
     </script>
     
