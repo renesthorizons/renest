@@ -4054,6 +4054,11 @@ function updatePricingDisplay(benefit, earlyAmount) {
                 name: 'SSGA Upromise 529 Plan',
                 benefit:"$0"
             },
+            'DC': {
+                url: 'https://www.dccollegesavings.com/',
+                name: 'DC College Savings Plan',
+                benefit:"$240"
+            },
             'NH': {
                 url: 'https://www.fidelity.com/529-plans/new-hampshire',
                 name: 'UNIQUE College Investing Plan',
@@ -4267,6 +4272,20 @@ function updatePricingDisplay(benefit, earlyAmount) {
             { threshold: Infinity, rate: 6.6 }
         ],
         notes: 'Delaware taxes capital gains as ordinary income with progressive rates.'
+    },
+    'DC': {
+        hasStateCapGains: true,
+        taxesWithZeroIncome: true,
+        brackets: [
+            { threshold: 10000, rate: 4 },
+            { threshold: 40000, rate: 6 },
+            { threshold: 60000, rate:6.5 },
+            { threshold: 250000, rate:8.5 },
+            { threshold: 500000, rate:9.25 },
+            { threshold: 1000000, rate: 9.75 },
+            { threshold: Infinity, rate:10.75 }
+        ],
+        notes: 'DC taxes capital gains as ordinary income with progressive rates.'
     },
     'FL': {
         hasStateCapGains: false,
@@ -5164,6 +5183,11 @@ const statePersonalExemptionDB = {
                 planName: 'NV 529 Plan',
                 deduction: 0,
                 notes: 'Nevada taxpayers cannot deduct'
+            },
+            'DC': {
+                planName: 'DC College Savings Plan',
+                deduction: 4000,
+                notes: 'DC taxpayers can deduct up to $4,000 ($8,000 married filing jointly) per year for 529 contributions'
             },
             'NH': {
                 planName: 'NH 529 Plan',
@@ -6111,7 +6135,7 @@ const statePersonalExemptionDB = {
             'CO': 'Colorado',
             'CT': 'Connecticut',
             'DE': 'Delaware',
-            'DC': 'District of Columbia',
+            'DC': 'Washington District of Columbia',
             'FL': 'Florida',
             'GA': 'Georgia',
             'HI': 'Hawaii',
