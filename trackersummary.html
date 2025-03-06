@@ -2828,16 +2828,10 @@ window.addEventListener('resize', function() {
     }
 });
 
-// Add this near other global variables
-let budgetCache = {
-    data: null,
-    timestamp: null,
-    maxAge: 5 * 60 * 1000  // 5 minutes
-};
-
 // Main Initialization
 async function initializePage() {
     console.time('Total Page Load');
+    // console.log('Starting initializePage');
     
     const loadingOverlay = document.getElementById('loadingOverlay');
     try {
@@ -2855,22 +2849,26 @@ async function initializePage() {
         console.time('User Profile Load');
         const userProfile = await fetchUserProfile();
         console.timeEnd('User Profile Load');
+        // console.log('User profile loaded:', userProfile);
         if (!userProfile) throw new Error('Failed to load user profile');
 
         // 2. Load current budgets
         console.time('Budgets Load');
         const budgets = await loadCurrentBudgets();
         console.timeEnd('Budgets Load');
+        // console.log('Current budgets loaded:', budgets);
 
         // 3. Fetch all expenses (both manual and automatic)
         console.time('Expenses Load');
         const expenses = await fetchExpenses();
         console.timeEnd('Expenses Load');
+        // console.log('All expenses loaded:', expenses);
 
         // 4. Calculate benefits using combined transactions data
         console.time('Benefits Calculation');
         const benefits = calculateBenefits(expenses, userProfile.state, userProfile.income);
         console.timeEnd('Benefits Calculation');
+        // console.log('Benefits calculated:', benefits);
 
         // 5. Update profile if benefits have changed
         if (benefits.ytdBenefit !== userProfile.currentBenefit) {
@@ -2899,7 +2897,8 @@ async function initializePage() {
             updateMonthDisplay();
             
             // Fetch expenses for the new month
-            const monthExpenses = await fetchExpenses();
+            const monthExpenses = await fetchExpenses(); // This will get both data sources
+            // console.log('Month expenses loaded:', monthExpenses);
             
             updateCategoryDisplayForMonth(monthExpenses, currentDisplayMonth);
             if (chartContainer.style.display !== 'none') {
@@ -2915,7 +2914,8 @@ async function initializePage() {
                 updateMonthDisplay();
                 
                 // Fetch expenses for the new month
-                const monthExpenses = await fetchExpenses();
+                const monthExpenses = await fetchExpenses(); // This will get both data sources
+                // console.log('Month expenses loaded:', monthExpenses);
                 
                 updateCategoryDisplayForMonth(monthExpenses, currentDisplayMonth);
                 if (chartContainer.style.display !== 'none') {
@@ -2937,17 +2937,117 @@ async function initializePage() {
     }
 }
 
-// Modify loadCurrentBudgets to add caching
+// Event Listeners
+document.getElementById('signOutLink').addEventListener('click', (e) => {
+    e.preventDefault();
+    localStorage.removeItem('authToken');
+    window.location.href = 'signin529.html';
+});
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', async () => {
+    await initializePage();
+    // Remove the redundant loadCurrentBudgets call
+});
+
+const menuButton = document.querySelector('.menu-button');
+const navLinks = document.querySelector('.nav-links');
+
+menuButton.addEventListener('click', function(e) {
+    e.stopPropagation();
+    navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+    menuButton.setAttribute('aria-expanded', navLinks.style.display === 'flex');
+});
+
+// Add near the top of your existing script section
+const budgetManagerAPI = 'https://vpomsl3zd7.execute-api.us-east-2.amazonaws.com';
+let isEditMode = false;
+let currentStipend = 0;
+let currentBudgets = {};
+
+// Add this constant at the top of your script to maintain category order
+const orderedCategories = [
+    'Rent',
+    'Groceries',
+    'Utilities',
+    'Transportation',
+    'Healthcare',
+    'Education',
+    'Entertainment',
+    'Shopping',
+    'Other'
+];
+
+// Add these functions to your existing script
+async function toggleEditMode() {
+    isEditMode = !isEditMode;
+    const editButton = document.getElementById('editBudgets');
+    const viewToggle = document.getElementById('viewToggle');
+    
+    if (isEditMode) {
+        // Store current budgets for cancel functionality
+        window.previousBudgets = JSON.stringify(currentBudgets);
+        
+        editButton.classList.add('editing');
+        editButton.querySelector('.toggle-text').textContent = 'Save';
+        
+        // Add cancel button
+        const cancelButton = document.createElement('button');
+        cancelButton.id = 'cancelEdit';
+        cancelButton.textContent = 'Cancel';
+        cancelButton.onclick = cancelEditMode;
+        editButton.parentNode.insertBefore(cancelButton, editButton.nextSibling);
+        
+        viewToggle.style.display = 'none';
+        await loadCurrentBudgets();
+        displayEditableBudgets();
+    } else {
+        editButton.classList.remove('editing');
+        editButton.querySelector('.toggle-text').textContent = 'Edit Budgets';
+        
+        // Remove cancel button
+        const cancelButton = document.getElementById('cancelEdit');
+        if (cancelButton) cancelButton.remove();
+        
+        viewToggle.style.display = 'block';
+        await saveBudgetChanges();
+        const expenses = await fetchExpenses();
+        updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
+    }
+}
+
+// Update default budget configuration
+const defaultBudgets = {
+    'Rent': {
+        amount: 0,  // Will be set from localStorage
+        id: 'cat_rent'
+    },
+    'Groceries': {
+        amount: 325,
+        id: 'cat_groceries'
+    },
+    'Utilities': {
+        amount: 250,
+        id: 'cat_utilities'
+    },
+    'Technology': {
+        amount: 200,
+        id: 'cat_technology'
+    },
+    'Transportation': {
+        amount: 200,
+        id: 'cat_transportation'
+    },
+    'Restaurants': {
+        amount: 250,
+        id: 'cat_restaurants'
+    }
+};
+
+// Modify loadCurrentBudgets to properly handle all categories
 async function loadCurrentBudgets() {
     try {
-        // Check cache first
-        const now = Date.now();
-        if (budgetCache.data && budgetCache.timestamp && (now - budgetCache.timestamp < budgetCache.maxAge)) {
-            currentBudgets = budgetCache.data.budgets;
-            currentStipend = budgetCache.data.stipend;
-            return currentBudgets;
-        }
-
+        // console.log('Starting loadCurrentBudgets...');
         const response = await fetch(`${budgetManagerAPI}/budgets`, {
             headers: {
                 'Authorization': `Bearer ${API.getToken()}`
@@ -2957,8 +3057,10 @@ async function loadCurrentBudgets() {
         if (!response.ok) throw new Error('Failed to fetch budgets');
         
         const data = await response.json();
+        // console.log('Budget API Response:', data);
         
         // Initialize with default budgets
+        // First check if we have categories from the API
         if (data.categories && data.categories.length > 0) {
             // If we have API categories, use those
             currentBudgets = {};
@@ -2979,6 +3081,8 @@ async function loadCurrentBudgets() {
             }
         }
         
+        // console.log('Initialized currentBudgets:', currentBudgets);
+        
         // Set stipend from API
         currentStipend = Number(data.monthlyStipend) || 0;
         if (currentStipend === 0) {
@@ -2991,28 +3095,15 @@ async function loadCurrentBudgets() {
         // Update displays
         if (isEditMode) {
             displayEditableBudgets();
+        } else {
+            const expenses = await fetchExpenses();
+            updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
         }
         
         updateStipendDisplay();
         updateBudgetStatus();
-
-        // Cache the results
-        budgetCache.data = {
-            budgets: currentBudgets,
-            stipend: currentStipend
-        };
-        budgetCache.timestamp = now;
-        
-        return currentBudgets;
     } catch (error) {
         console.error('Error in loadCurrentBudgets:', error);
-        // If cache exists and there's an error, use cached data as fallback
-        if (budgetCache.data) {
-            currentBudgets = budgetCache.data.budgets;
-            currentStipend = budgetCache.data.stipend;
-            return currentBudgets;
-        }
-        throw error;
     }
 }
 
