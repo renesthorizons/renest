@@ -2802,6 +2802,12 @@ function editTransaction(transactionId) {
     const categorySelect = document.getElementById('edit-transaction-category');
     categorySelect.innerHTML = '';
     
+    // Add default option
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.textContent = 'Select Category';
+    categorySelect.appendChild(defaultOption);
+    
     // Add all unique categories from transactions
     const categories = [...new Set(allTransactions.map(t => t.category))];
     categories.forEach(category => {
@@ -2814,8 +2820,20 @@ function editTransaction(transactionId) {
         categorySelect.appendChild(option);
     });
     
+    // Add custom option
+    const customOption = document.createElement('option');
+    customOption.value = 'custom';
+    customOption.textContent = 'Custom Category';
+    categorySelect.appendChild(customOption);
+    
     // Set current category
-    categorySelect.value = transaction.category;
+    if (categories.includes(transaction.category)) {
+        categorySelect.value = transaction.category;
+    } else {
+        categorySelect.value = 'custom';
+        document.getElementById('custom-category-input').value = transaction.category;
+        document.getElementById('custom-category-group').style.display = 'block';
+    }
     
     // Set qualified checkbox
     document.getElementById('edit-transaction-qualified').checked = transaction.isQualified;
@@ -2827,18 +2845,39 @@ function editTransaction(transactionId) {
     document.getElementById('category-modal').style.display = 'flex';
 }
 
-// Function to hide the category modal
-function hideCategoryModal() {
-    document.getElementById('category-modal').style.display = 'none';
+// Function to handle category dropdown change
+function handleCategoryChange() {
+    const categorySelect = document.getElementById('edit-transaction-category');
+    const customCategoryGroup = document.getElementById('custom-category-group');
+    const customCategoryInput = document.getElementById('custom-category-input');
+    
+    if (categorySelect.value === 'custom') {
+        customCategoryGroup.style.display = 'block';
+        customCategoryInput.focus();
+    } else {
+        customCategoryGroup.style.display = 'none';
+        customCategoryInput.value = '';
+    }
 }
 
 // Function to save transaction changes
 async function saveTransactionChanges() {
     try {
         const transactionId = document.getElementById('edit-transaction-category').dataset.transactionId;
-        const newCategory = document.getElementById('edit-transaction-category').value;
+        const categorySelect = document.getElementById('edit-transaction-category');
+        const customCategoryInput = document.getElementById('custom-category-input');
         const isQualified = document.getElementById('edit-transaction-qualified').checked;
         const createRule = document.getElementById('create-category-rule').checked;
+        
+        // Get the final category value
+        let newCategory = categorySelect.value;
+        if (newCategory === 'custom') {
+            newCategory = customCategoryInput.value.trim();
+            if (!newCategory) {
+                showError('Please enter a custom category');
+                return;
+            }
+        }
         
         const token = API.getToken();
         if (!token) throw new Error('No authentication token found');
@@ -3070,10 +3109,14 @@ async function fetchUserProfile() {
         <div class="form-group">
             <label>Category</label>
             <div class="select-container">
-                <select id="edit-transaction-category" class="form-control">
+                <select id="edit-transaction-category" class="form-control" onchange="handleCategoryChange()">
                     <!-- Categories will be populated dynamically -->
                 </select>
             </div>
+        </div>
+        <div class="form-group" id="custom-category-group" style="display: none;">
+            <label>Custom Category</label>
+            <input type="text" id="custom-category-input" class="form-control" placeholder="Enter custom category">
         </div>
         <div class="form-group">
             <label class="custom-checkbox">
