@@ -2540,9 +2540,13 @@ function updateCategoryDisplay(expenses) {
 
     Object.entries(categoryBudgets).forEach(([category, budget]) => {
         const categoryExpenses = expenses.filter(e => e.category === category);
-        const spent = categoryExpenses.reduce((sum, e) => sum + e.amount, 0);
+        // Sum all transactions (positive and negative)
+        const sum = categoryExpenses.reduce((sum, e) => sum + e.amount, 0);
+        // Use absolute value for display and calculations
+        const spent = Math.abs(sum);
         const percentage = (spent / budget * 100).toFixed(1);
         const isQualified = qualifiedCategories.includes(category);
+        const isPositive = sum > 0;
 
         container.insertAdjacentHTML('beforeend', `
             <div class="category">
@@ -2556,7 +2560,7 @@ function updateCategoryDisplay(expenses) {
                 </div>
                 <div class="progress-bar">
                     <div class="progress-spent" style="width: ${Math.min(percentage, 100)}%; 
-                         background: ${isQualified ? 'var(--success)' : 'var(--primary)'}">
+                         background: ${isPositive ? '#FFD700' : isQualified ? 'var(--success)' : 'var(--primary)'}">
                     </div>
                     <div class="progress-label">${percentage}%</div>
                 </div>
