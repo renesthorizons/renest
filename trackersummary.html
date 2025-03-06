@@ -2382,21 +2382,23 @@ async function fetchExpenses() {
         let allExpenses = manualData.expenses || [];
         console.log('Manual expenses:', allExpenses);
         
-        // 3. If account status is AUTOMATIC, also fetch Plaid transactions
+        // 3. If account status is AUTOMATIC, fetch Plaid transactions for all months in current year
         if (userProfile && userProfile.accountStatus === 'AUTOMATIC') {
             console.log('Fetching Plaid transactions for automatic account');
-            const plaidTransactions = await fetchPlaidTransactions(
-                currentDisplayMonth.getMonth() + 1,  // Plaid API expects 1-12 for months
-                currentDisplayMonth.getFullYear()
-            );
+            const currentYear = new Date().getFullYear();
             
-            // 4. Combine both data sources
-            if (plaidTransactions && plaidTransactions.summary) {
-                console.log('Plaid transactions received:', plaidTransactions);
-                // Convert Plaid's categorized summary format to flat expense array
-                const plaidExpenses = convertPlaidToExpenses(plaidTransactions.summary);
-                allExpenses = [...allExpenses, ...plaidExpenses];
-                console.log('Combined all expenses:', allExpenses);
+            // Fetch transactions for all months in the current year
+            for (let month = 1; month <= 12; month++) {
+                const plaidTransactions = await fetchPlaidTransactions(month, currentYear);
+                
+                // Combine both data sources
+                if (plaidTransactions && plaidTransactions.summary) {
+                    console.log(`Plaid transactions received for ${month}/${currentYear}:`, plaidTransactions);
+                    // Convert Plaid's categorized summary format to flat expense array
+                    const plaidExpenses = convertPlaidToExpenses(plaidTransactions.summary);
+                    allExpenses = [...allExpenses, ...plaidExpenses];
+                    console.log(`Combined all expenses after ${month}/${currentYear}:`, allExpenses);
+                }
             }
         }
         
