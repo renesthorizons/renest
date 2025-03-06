@@ -286,6 +286,21 @@
             border-bottom: 2px solid #eee;
             flex-wrap: wrap;
             gap: 0.5rem;
+            position: relative;
+        }
+
+        .tab-content {
+            display: none;
+            position: absolute;
+            left: 0;
+            right: 0;
+            width: 100%;
+            background: white;
+        }
+
+        .tab-content.active {
+            display: block;
+            position: relative;
         }
 
         .tab-button {
@@ -1840,14 +1855,29 @@
 
         // Tab switching functionality
         function showTab(tabName) {
+            // Hide all tab content first
             const tabs = document.querySelectorAll('.tab-content');
             const buttons = document.querySelectorAll('.tab-button');
             
-            tabs.forEach(tab => tab.style.display = 'none');
+            tabs.forEach(tab => {
+                tab.style.display = 'none';
+                tab.classList.remove('active');
+            });
+            
             buttons.forEach(btn => btn.classList.remove('active'));
             
-            document.getElementById(`${tabName}-tab`).style.display = 'block';
-            document.querySelector(`[onclick="showTab('${tabName}')"]`).classList.add('active');
+            // Show the selected tab
+            const selectedTab = document.getElementById(`${tabName}-tab`);
+            const selectedButton = document.querySelector(`[onclick="showTab('${tabName}')"]`);
+            
+            if (selectedTab) {
+                selectedTab.style.display = 'block';
+                selectedTab.classList.add('active');
+            }
+            
+            if (selectedButton) {
+                selectedButton.classList.add('active');
+            }
         }
 
         // File upload handling
@@ -3167,6 +3197,11 @@ function hideCategoryModal() {
     document.getElementById('custom-category-input').value = '';
     document.getElementById('custom-category-group').style.display = 'none';
 }
+
+        // Initialize the first tab as active when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            showTab('rent');
+        });
     </script>
     
 <!-- Add this at the end of your HTML before the closing body tag -->
