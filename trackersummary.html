@@ -2312,53 +2312,37 @@ async function getUserId(token) {
 function convertPlaidToExpenses(categorySummary) {
     const expenses = [];
     
-    console.log('Converting Plaid transactions to expenses. Category summary:', JSON.stringify(categorySummary, null, 2));
+    console.log('Converting Plaid transactions to expenses. Category summary:', categorySummary);
     
     // Iterate through each category in the summary
     Object.entries(categorySummary).forEach(([category, data]) => {
-        console.log(`Processing category: ${category}`, {
-            data: JSON.stringify(data, null, 2),
-            hasTransactions: data && data.transactions,
-            transactionCount: data && data.transactions ? data.transactions.length : 0
-        });
-        
+        console.log(`Processing category: ${category}`);
         // Each category contains an array of transactions
-        if (data && data.transactions && Array.isArray(data.transactions)) {
-            data.transactions.forEach(transaction => {
-                const isQualifiedCategory = qualifiedCategories.includes(category);
-                console.log('Transaction details:', {
-                    id: transaction.id,
-                    category: category,
-                    amount: transaction.amount,
-                    isQualified: transaction.isQualified,
-                    isQualifiedCategory: isQualifiedCategory,
-                    date: transaction.date,
-                    description: transaction.description,
-                    fullTransaction: JSON.stringify(transaction, null, 2)
-                });
-                
-                // Create an expense object for each transaction
-                const expense = {
-                    expenseID: transaction.id,               // Use Plaid transaction ID
-                    category: category,                      // Use category from summary
-                    amount: transaction.amount,              // Amount
-                    date: transaction.date,                  // Date
-                    notes: transaction.description || '',    // Description as notes
-                    isQualified: transaction.isQualified || isQualifiedCategory,    // Qualified if either flag is true
-                    source: 'automatic'                      // Add source flag
-                };
-                
-                expenses.push(expense);
+        data.transactions.forEach(transaction => {
+            console.log('Transaction details:', {
+                id: transaction.id,
+                category: category,
+                amount: transaction.amount,
+                isQualified: transaction.isQualified,
+                isQualifiedCategory: qualifiedCategories.includes(category)
             });
-        } else {
-            console.log(`No transactions array found for category: ${category}`, {
-                dataType: typeof data,
-                data: JSON.stringify(data, null, 2)
-            });
-        }
+            
+            // Create an expense object for each transaction
+            const expense = {
+                expenseID: transaction.id,               // Use Plaid transaction ID
+                category: category,                      // Use category from summary
+                amount: transaction.amount,              // Amount
+                date: transaction.date,                  // Date
+                notes: transaction.description || '',    // Description as notes
+                isQualified: transaction.isQualified,    // Qualified status
+                source: 'automatic'                      // Add source flag
+            };
+            
+            expenses.push(expense);
+        });
     });
     
-    console.log('Converted Plaid expenses:', JSON.stringify(expenses, null, 2));
+    console.log('Converted Plaid expenses:', expenses);
     return expenses;
 }
 
@@ -2417,17 +2401,35 @@ function calculateBenefits(expenses, state, income) {
     const startOfYear = new Date(currentDate.getFullYear(), 0, 1);
     const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
 
+    console.log('Date ranges:', {
+        currentDate: currentDate.toISOString(),
+        startOfYear: startOfYear.toISOString(),
+        firstDayOfMonth: firstDayOfMonth.toISOString()
+    });
+
     // Get total deposits year to date (D)
-    const totalDeposits = expenses
-        .filter(e => e.category === 'Deposit529' && 
-                     new Date(e.date) >= startOfYear)
+    const deposits = expenses.filter(e => e.category === 'Deposit529');
+    console.log('All deposits:', deposits);
+    
+    const totalDeposits = deposits
+        .filter(e => new Date(e.date) >= startOfYear)
         .reduce((sum, e) => sum + e.amount, 0);
     console.log('Total deposits:', totalDeposits);
     
     // Get total qualified expenses year to date (Q)
-    const qualifiedExpenses = expenses.filter(e => 
-        (qualifiedCategories.includes(e.category) || e.isQualified) && 
-        new Date(e.date) >= startOfYear
+    const allExpenses = expenses.map(e => ({
+        ...e,
+        dateObj: new Date(e.date),
+        isQualifiedCategory: qualifiedCategories.includes(e.category),
+        isQualifiedExpense: e.isQualified,
+        isInYear: new Date(e.date) >= startOfYear
+    }));
+    
+    console.log('All expenses with qualification details:', allExpenses);
+    
+    const qualifiedExpenses = allExpenses.filter(e => 
+        (e.isQualifiedCategory || e.isQualifiedExpense) && 
+        e.isInYear
     );
     console.log('Qualified expenses:', qualifiedExpenses);
     
@@ -2435,17 +2437,18 @@ function calculateBenefits(expenses, state, income) {
     console.log('Total qualified expenses:', totalQualifiedExpenses);
 
     // Get qualified expenses before current month (M)
-    const qualifiedExpensesBeforeMonth = expenses
-        .filter(e => (qualifiedCategories.includes(e.category) || e.isQualified) && 
-                     new Date(e.date) >= startOfYear &&
-                     new Date(e.date) < firstDayOfMonth)
+    const qualifiedExpensesBeforeMonth = allExpenses
+        .filter(e => (e.isQualifiedCategory || e.isQualifiedExpense) && 
+                     e.isInYear &&
+                     e.dateObj < firstDayOfMonth)
         .reduce((sum, e) => sum + e.amount, 0);
     console.log('Qualified expenses before current month:', qualifiedExpensesBeforeMonth);
 
     // Get current month's qualified expenses (E)
-    const currentMonthQualifiedExpenses = expenses
-        .filter(e => (qualifiedCategories.includes(e.category) || e.isQualified) && 
-                     new Date(e.date) >= firstDayOfMonth)
+    const currentMonthQualifiedExpenses = allExpenses
+        .filter(e => (e.isQualifiedCategory || e.isQualifiedExpense) && 
+                     e.isInYear &&
+                     e.dateObj >= firstDayOfMonth)
         .reduce((sum, e) => sum + e.amount, 0);
     console.log('Current month qualified expenses:', currentMonthQualifiedExpenses);
 
