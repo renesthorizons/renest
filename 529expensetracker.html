@@ -1264,6 +1264,7 @@
             </div>
         </div>
         <!-- Add this right after the automation-section div -->
+<!-- Add this right after the automation-section div -->
 <div id="automatic-controls" style="display: none; margin-top: 1rem;" class="automation-section">
     <!-- Transaction search and filter controls -->
     <div class="tracker-card">
@@ -1327,6 +1328,7 @@
         </div>
     </div>
 </div>
+
 
 
         <div class="container">
@@ -2443,30 +2445,32 @@ function toggleManualControls(show) {
         // Show all tabs
         tabs.forEach(tabId => {
             const tab = document.getElementById(tabId);
-            if (tab) tab.style.display = tab.classList.contains('active') ? 'block' : 'none';
+            if (tab) tab.style.display = 'block';
         });
         
         // Enable tab buttons
         document.querySelectorAll('.tab-button').forEach(btn => {
             btn.disabled = false;
+            btn.style.display = 'block';
         });
     } else {
         // Hide manual controls, show automatic controls
         document.getElementById('automatic-controls').style.display = 'block';
         
-        // Hide all tabs
+        // Show all tabs below automatic controls
         tabs.forEach(tabId => {
             const tab = document.getElementById(tabId);
-            if (tab) tab.style.display = 'none';
+            if (tab) tab.style.display = 'block';
         });
         
-        // Disable tab buttons
+        // Hide the show manual controls button
+        document.getElementById('show-manual-controls').style.display = 'none';
+        
+        // Enable tab buttons but hide them
         document.querySelectorAll('.tab-button').forEach(btn => {
-            btn.disabled = true;
+            btn.disabled = false;
+            btn.style.display = 'none';
         });
-        
-        // Load Plaid transactions
-        loadPlaidTransactions();
     }
 }
 
@@ -2498,9 +2502,13 @@ async function loadPlaidTransactions() {
         const tableBody = document.getElementById('transactions-tbody');
         tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem;">Loading transactions...</td></tr>';
 
-        // Get the selected month/year filter
+        // Get the selected month/year filter or default to current month
         const monthInput = document.getElementById('transaction-month');
-        const selectedMonth = monthInput.value ? new Date(monthInput.value + '-01') : new Date();
+        if (!monthInput.value) {
+            const now = new Date();
+            monthInput.value = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}`;
+        }
+        const selectedMonth = new Date(monthInput.value + '-01');
         const month = selectedMonth.getMonth() + 1;
         const year = selectedMonth.getFullYear();
 
@@ -2524,34 +2532,55 @@ async function loadPlaidTransactions() {
         const data = await response.json();
         
         // Update last update time
+        const lastUpdateTime = document.getElementById('last-update-time');
         if (data.lastUpdate) {
-            const lastUpdateDate = new Date(data.lastUpdate);
-            document.getElementById('last-update-time').textContent = 
-                `Last updated: ${lastUpdateDate.toLocaleString()}`;
+            const updateDate = new Date(data.lastUpdate);
+            lastUpdateTime.textContent = `Last updated: ${updateDate.toLocaleString()}`;
         }
+
+        // Clear and populate transactions table
+        tableBody.innerHTML = '';
         
-        // Process transactions from all categories
-        allTransactions = [];
-        Object.entries(data.summary).forEach(([category, categoryData]) => {
-            categoryData.transactions.forEach(transaction => {
-                // Add category to each transaction
-                transaction.category = category;
-                allTransactions.push(transaction);
+        // Get all categories for the filter dropdown
+        const categories = new Set();
+        Object.keys(data.summary).forEach(category => categories.add(category));
+        
+        // Update category filter dropdown
+        const categoryFilter = document.getElementById('category-filter');
+        categoryFilter.innerHTML = '<option value="">All Categories</option>';
+        Array.from(categories).sort().forEach(category => {
+            categoryFilter.innerHTML += `<option value="${category}">${category}</option>`;
+        });
+        
+        // Populate transactions
+        Object.entries(data.summary).forEach(([category, info]) => {
+            info.transactions.forEach(transaction => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td style="padding: 0.75rem 1rem;">${new Date(transaction.date).toLocaleDateString()}</td>
+                    <td style="padding: 0.75rem 1rem;">${transaction.name}</td>
+                    <td style="padding: 0.75rem 1rem; text-align: right;">$${transaction.amount.toFixed(2)}</td>
+                    <td style="padding: 0.75rem 1rem;">${category}</td>
+                    <td style="padding: 0.75rem 1rem; text-align: center;">
+                        ${transaction.isQualified ? '✓' : ''}
+                    </td>
+                    <td style="padding: 0.75rem 1rem; text-align: center;">
+                        <button onclick="editTransaction('${transaction.id}')" class="action-button">Edit</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
             });
         });
         
-        // Update category filter dropdown
-        updateCategoryFilter(data.summary);
-        
-        // Apply filters and update display
-        applyFiltersAndUpdateDisplay();
-        
+        // Add event listener for month changes if not already added
+        if (!monthInput.hasChangeListener) {
+            monthInput.addEventListener('change', loadPlaidTransactions);
+            monthInput.hasChangeListener = true;
+        }
+
     } catch (error) {
         console.error('Error loading transactions:', error);
-        document.getElementById('transactions-tbody').innerHTML = 
-            `<tr><td colspan="6" style="text-align: center; padding: 2rem; color: #EF4444;">
-                Error loading transactions: ${error.message}
-            </td></tr>`;
+        showError('Failed to load transactions. Please try again.');
     }
 }
 
@@ -2925,6 +2954,7 @@ async function fetchUserProfile() {
     </script>
     
 <!-- Add this at the end of your HTML before the closing body tag -->
+
 <div id="category-modal" class="modal" style="display: none;">
     <div class="modal-content" style="max-width: 500px;">
         <h2>Edit Transaction</h2>
