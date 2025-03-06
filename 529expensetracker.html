@@ -2517,14 +2517,14 @@ async function loadPlaidTransactions() {
         
         // If no month/year is selected, default to current
         if (!monthSelect.value) {
-            monthSelect.value = (now.getMonth() + 1).toString().padStart(2, '0');
+            monthSelect.value = (now.getMonth()).toString().padStart(2, '0');
         }
         if (!yearSelect.value) {
             yearSelect.value = now.getFullYear().toString();
         }
         
         // Add 1 to month to correct the offset
-        const month = parseInt(monthSelect.value) + 1;
+        const month = parseInt(monthSelect.value);
         const year = parseInt(yearSelect.value);
         
         // Adjust year if month overflows
