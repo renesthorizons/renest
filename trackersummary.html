@@ -2339,20 +2339,18 @@ function convertPlaidToExpenses(categorySummary) {
                     amount: transaction.amount,
                     isQualified: transaction.isQualified,
                     date: transaction.date,
-                    description: transaction.description,
-                    transactionType: transaction.transactionType
+                    description: transaction.description
                 });
                 
                 // Create an expense object for each transaction
                 const expense = {
                     expenseID: transaction.id,               // Use Plaid transaction ID
                     category: category,                      // Use category from summary
-                    amount: transaction.transactionType === 'negative' ? -transaction.amount : transaction.amount,  // Adjust amount based on transaction type
+                    amount: transaction.amount,              // Amount
                     date: transaction.date,                  // Date
                     notes: transaction.description || '',    // Description as notes
                     isQualified: transaction.isQualified,    // Qualified status
-                    source: 'automatic',                     // Add source flag
-                    transactionType: transaction.transactionType || 'negative'  // Use Plaid's transaction type, default to negative for manual
+                    source: 'automatic'                      // Add source flag
                 };
                 
                 expenses.push(expense);
