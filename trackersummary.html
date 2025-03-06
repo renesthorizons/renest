@@ -2312,18 +2312,18 @@ async function getUserId(token) {
 function convertPlaidToExpenses(categorySummary) {
     const expenses = [];
     
-    console.log('Converting Plaid transactions to expenses. Category summary:', categorySummary);
+    console.log('Converting Plaid transactions to expenses. Category summary:', JSON.stringify(categorySummary, null, 2));
     
     // Iterate through each category in the summary
     Object.entries(categorySummary).forEach(([category, data]) => {
         console.log(`Processing category: ${category}`, {
-            data: data,
-            transactions: data.transactions,
-            transactionCount: data.transactions ? data.transactions.length : 0
+            data: JSON.stringify(data, null, 2),
+            hasTransactions: data && data.transactions,
+            transactionCount: data && data.transactions ? data.transactions.length : 0
         });
         
         // Each category contains an array of transactions
-        if (data.transactions && Array.isArray(data.transactions)) {
+        if (data && data.transactions && Array.isArray(data.transactions)) {
             data.transactions.forEach(transaction => {
                 const isQualifiedCategory = qualifiedCategories.includes(category);
                 console.log('Transaction details:', {
@@ -2333,7 +2333,8 @@ function convertPlaidToExpenses(categorySummary) {
                     isQualified: transaction.isQualified,
                     isQualifiedCategory: isQualifiedCategory,
                     date: transaction.date,
-                    description: transaction.description
+                    description: transaction.description,
+                    fullTransaction: JSON.stringify(transaction, null, 2)
                 });
                 
                 // Create an expense object for each transaction
@@ -2350,11 +2351,14 @@ function convertPlaidToExpenses(categorySummary) {
                 expenses.push(expense);
             });
         } else {
-            console.log(`No transactions array found for category: ${category}`);
+            console.log(`No transactions array found for category: ${category}`, {
+                dataType: typeof data,
+                data: JSON.stringify(data, null, 2)
+            });
         }
     });
     
-    console.log('Converted Plaid expenses:', expenses);
+    console.log('Converted Plaid expenses:', JSON.stringify(expenses, null, 2));
     return expenses;
 }
 
