@@ -2619,18 +2619,19 @@ async function loadPlaidTransactions() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                action: 'getExpenses',
+                action: 'getExpenseSummary',
                 userId: await getUserId(token),
                 month: adjustedMonth,
                 year: adjustedYear
             })
         });
 
-        if (!response.ok) throw new Error('Failed to load transactions');
+        if (!response.ok) throw new Error('Failed to fetch transactions');
         
         const data = await response.json();
-        console.log('Raw transaction data:', data);
-
+        console.log('API Response data:', data);
+        console.log('Summary data:', data.summary);
+        
         // Clear and populate transactions table
         tableBody.innerHTML = '';
         
@@ -2641,12 +2642,14 @@ async function loadPlaidTransactions() {
         Object.entries(data.summary).forEach(([category, info]) => {
             console.log('Processing category:', category, 'Info:', info);
             info.transactions.forEach(transaction => {
-                console.log('Processing transaction:', {
+                console.log('Transaction details:', {
                     id: transaction.id,
                     name: transaction.name,
                     amount: transaction.amount,
-                    transactionType: transaction.transactionType,
-                    category: category
+                    type: transaction.transactionType,
+                    date: transaction.date,
+                    category: category,
+                    isQualified: transaction.isQualified
                 });
                 
                 // Add to allTransactions array
@@ -2657,6 +2660,11 @@ async function loadPlaidTransactions() {
             });
         });
 
+        console.log('All transactions array:', allTransactions);
+        
+        // Update category filter
+        updateCategoryFilter(data.summary);
+        
         // Apply initial filters
         applyFiltersAndUpdateDisplay();
 
@@ -2746,14 +2754,21 @@ function applyFiltersAndUpdateDisplay() {
 
 // Function to display the current page of transactions
 function displayTransactionsPage() {
-    console.log('Displaying transactions page. All transactions:', allTransactions);
+    console.log('Starting to display transactions page');
+    console.log('Current page:', currentPage);
+    console.log('Transactions per page:', transactionsPerPage);
+    console.log('Filtered transactions:', filteredTransactions);
+    
     const tableBody = document.getElementById('transactions-tbody');
     tableBody.innerHTML = '';
     
     const startIndex = (currentPage - 1) * transactionsPerPage;
     const endIndex = Math.min(startIndex + transactionsPerPage, filteredTransactions.length);
     
+    console.log('Display range:', { startIndex, endIndex });
+    
     if (filteredTransactions.length === 0) {
+        console.log('No transactions to display');
         tableBody.innerHTML = 
             `<tr><td colspan="6" style="text-align: center; padding: 2rem;">
                 No transactions found. Try adjusting your filters.
@@ -2763,44 +2778,15 @@ function displayTransactionsPage() {
     
     for (let i = startIndex; i < endIndex; i++) {
         const transaction = filteredTransactions[i];
-        console.log('Rendering transaction:', {
+        console.log('Rendering transaction row:', {
+            index: i,
             id: transaction.id,
             name: transaction.name,
             amount: transaction.amount,
-            transactionType: transaction.transactionType,
-            category: transaction.category
+            type: transaction.transactionType,
+            category: transaction.category,
+            isQualified: transaction.isQualified
         });
-
-        const row = document.createElement('tr');
-        row.style.borderBottom = '1px solid #E5E7EB';
-        
-        // Format date
-        const date = new Date(transaction.date);
-        const formattedDate = date.toLocaleDateString();
-        
-        // Create row cells
-        row.innerHTML = `
-            <td style="padding: 0.75rem 1rem;">${formattedDate}</td>
-            <td style="padding: 0.75rem 1rem;">
-                ${transaction.name}
-                <div style="font-size: 0.8rem; color: #6B7280;">${transaction.description || ''}</div>
-            </td>
-            <td style="padding: 0.75rem 1rem; text-align: right; ${transaction.transactionType === 'negative' ? 'color: #DC2626;' : 'color: #059669;'}">
-                ${transaction.transactionType === 'negative' ? '-' : '+'}$${Math.abs(transaction.amount).toFixed(2)}
-            </td>
-            <td style="padding: 0.75rem 1rem;">${transaction.category}</td>
-            <td style="padding: 0.75rem 1rem; text-align: center;">
-                <div class="custom-checkbox" style="justify-content: center;">
-                    <span class="checkmark ${transaction.isQualified ? 'checked' : ''}"></span>
-                </div>
-            </td>
-            <td style="padding: 0.75rem 1rem; text-align: center;">
-                <button class="outline-button" style="padding: 0.3rem 0.5rem; font-size: 0.8rem;"
-                    onclick="editTransaction('${transaction.id}')">Edit</button>
-            </td>
-        `;
-        
-        tableBody.appendChild(row);
     }
 }
 
