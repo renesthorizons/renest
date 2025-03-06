@@ -2644,30 +2644,30 @@ async function loadPlaidTransactions() {
         
         // Populate transactions
         Object.entries(data.summary).forEach(([category, info]) => {
+            console.log('Category info:', {
+                category,
+                negative: info.negative,
+                net: info.net,
+                transactions: info.transactions.length
+            });
             info.transactions.forEach(transaction => {
+                console.log('Transaction in', category, ':', {
+                    id: transaction.id,
+                    name: transaction.name,
+                    amount: transaction.amount,
+                    categoryNegative: info.negative
+                });
+                
                 // Add to allTransactions array
                 allTransactions.push({
                     ...transaction,
-                    category: category
+                    category: category,
+                    isNegative: info.negative
                 });
-                
-                const row = document.createElement('tr');
-                row.style.borderBottom = '1px solid #E5E7EB';
-                row.innerHTML = `
-                    <td style="padding: 0.75rem 1rem;">${new Date(transaction.date).toLocaleDateString()}</td>
-                    <td style="padding: 0.75rem 1rem;">${transaction.name}</td>
-                    <td style="padding: 0.75rem 1rem; text-align: right;">$${transaction.amount.toFixed(2)}</td>
-                    <td style="padding: 0.75rem 1rem;">${category}</td>
-                    <td style="padding: 0.75rem 1rem; text-align: center;">
-                        ${transaction.isQualified ? '✓' : ''}
-                    </td>
-                    <td style="padding: 0.75rem 1rem; text-align: center;">
-                        <button onclick="editTransaction('${transaction.id}')" class="action-button">Edit</button>
-                    </td>
-                `;
-                tableBody.appendChild(row);
             });
         });
+
+        console.log('All transactions with negative flag:', allTransactions);
         
         // Update category filter
         updateCategoryFilter(data.summary);
@@ -2777,6 +2777,12 @@ function displayTransactionsPage() {
     
     for (let i = startIndex; i < endIndex; i++) {
         const transaction = filteredTransactions[i];
+        console.log('Displaying transaction:', {
+            name: transaction.name,
+            amount: transaction.amount,
+            isNegative: transaction.isNegative
+        });
+        
         const row = document.createElement('tr');
         row.style.borderBottom = '1px solid #E5E7EB';
         
@@ -2791,7 +2797,9 @@ function displayTransactionsPage() {
                 ${transaction.name}
                 <div style="font-size: 0.8rem; color: #6B7280;">${transaction.description || ''}</div>
             </td>
-            <td style="padding: 0.75rem 1rem; text-align: right;">$${transaction.amount.toFixed(2)}</td>
+            <td style="padding: 0.75rem 1rem; text-align: right; ${transaction.isNegative ? 'color: #DC2626;' : 'color: #059669;'}">
+                ${transaction.isNegative ? '-' : '+'}$${Math.abs(transaction.amount).toFixed(2)}
+            </td>
             <td style="padding: 0.75rem 1rem;">${transaction.category}</td>
             <td style="padding: 0.75rem 1rem; text-align: center;">
                 <div class="custom-checkbox" style="justify-content: center;">
