@@ -2323,36 +2323,36 @@ async function getUserId(token) {
 function convertPlaidToExpenses(categorySummary) {
     const expenses = [];
     
-    console.log('Converting Plaid transactions to expenses. Category summary:', categorySummary);
+    // console.log('Converting Plaid transactions to expenses. Category summary:', categorySummary);
     
     // Log Rent category data specifically
-    if (categorySummary.Rent) {
-        console.log('Rent category data:', {
-            hasTransactions: Array.isArray(categorySummary.Rent.transactions),
-            transactionCount: categorySummary.Rent.transactions?.length || 0,
-            fullData: categorySummary.Rent
-        });
-    }
+    // if (categorySummary.Rent) {
+    //     console.log('Rent category data:', {
+    //         hasTransactions: Array.isArray(categorySummary.Rent.transactions),
+    //         transactionCount: categorySummary.Rent.transactions?.length || 0,
+    //         fullData: categorySummary.Rent
+    //     });
+    // }
     
     // Iterate through each category in the summary
     Object.entries(categorySummary).forEach(([category, data]) => {
-        console.log(`Processing category: ${category}`, {
-            hasTransactions: Array.isArray(data.transactions),
-            transactionCount: data.transactions?.length || 0
-        });
+        // console.log(`Processing category: ${category}`, {
+        //     hasTransactions: Array.isArray(data.transactions),
+        //     transactionCount: data.transactions?.length || 0
+        // });
         
         // Each category contains an array of transactions
         if (Array.isArray(data.transactions)) {
             data.transactions.forEach(transaction => {
-                console.log('Transaction details:', {
-                    id: transaction.id,
-                    category: category,
-                    amount: transaction.amount,
-                    isQualified: transaction.isQualified,
-                    date: transaction.date,
-                    description: transaction.description,
-                    transactionType: transaction.transactionType
-                });
+                // console.log('Transaction details:', {
+                //     id: transaction.id,
+                //     category: category,
+                //     amount: transaction.amount,
+                //     isQualified: transaction.isQualified,
+                //     date: transaction.date,
+                //     description: transaction.description,
+                //     transactionType: transaction.transactionType
+                // });
                 
                 // Create an expense object for each transaction
                 const expense = {
@@ -2373,7 +2373,7 @@ function convertPlaidToExpenses(categorySummary) {
         }
     });
     
-    console.log('Converted Plaid expenses:', expenses);
+    // console.log('Converted Plaid expenses:', expenses);
     return expenses;
 }
 
@@ -2428,30 +2428,30 @@ function clearTransactionCache() {
 
 // Calculation Functions
 function calculateBenefits(expenses, state, income) {
-    console.log('Starting calculateBenefits with:', {
-        expensesCount: expenses.length,
-        state,
-        income
-    });
+    // console.log('Starting calculateBenefits with:', {
+    //     expensesCount: expenses.length,
+    //     state,
+    //     income
+    // });
     
     const currentDate = new Date();
     const startOfYear = new Date(currentDate.getFullYear(), 0, 1);
     const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
 
-    console.log('Date ranges:', {
-        currentDate: currentDate.toISOString(),
-        startOfYear: startOfYear.toISOString(),
-        firstDayOfMonth: firstDayOfMonth.toISOString()
-    });
+    // console.log('Date ranges:', {
+    //     currentDate: currentDate.toISOString(),
+    //     startOfYear: startOfYear.toISOString(),
+    //     firstDayOfMonth: firstDayOfMonth.toISOString()
+    // });
 
     // Get total deposits year to date (D)
     const deposits = expenses.filter(e => e.category === 'Deposit529');
-    console.log('All deposits:', deposits);
+    // console.log('All deposits:', deposits);
     
     const totalDeposits = deposits
         .filter(e => new Date(e.date) >= startOfYear)
         .reduce((sum, e) => sum + e.amount, 0);
-    console.log('Total deposits:', totalDeposits);
+    // console.log('Total deposits:', totalDeposits);
     
     // Get total qualified expenses year to date (Q)
     const allExpenses = expenses.map(e => ({
@@ -2462,16 +2462,16 @@ function calculateBenefits(expenses, state, income) {
         isInYear: new Date(e.date) >= startOfYear
     }));
     
-    console.log('All expenses with qualification details:', allExpenses);
+    // console.log('All expenses with qualification details:', allExpenses);
     
     const qualifiedExpenses = allExpenses.filter(e => 
         (e.isQualifiedCategory || e.isQualifiedExpense) && 
         e.isInYear
     );
-    console.log('Qualified expenses:', qualifiedExpenses);
+    // console.log('Qualified expenses:', qualifiedExpenses);
     
     const totalQualifiedExpenses = qualifiedExpenses.reduce((sum, e) => sum + e.amount, 0);
-    console.log('Total qualified expenses:', totalQualifiedExpenses);
+    // console.log('Total qualified expenses:', totalQualifiedExpenses);
 
     // Get qualified expenses before current month (M)
     const qualifiedExpensesBeforeMonth = allExpenses
@@ -2479,7 +2479,7 @@ function calculateBenefits(expenses, state, income) {
                      e.isInYear &&
                      e.dateObj < firstDayOfMonth)
         .reduce((sum, e) => sum + e.amount, 0);
-    console.log('Qualified expenses before current month:', qualifiedExpensesBeforeMonth);
+    // console.log('Qualified expenses before current month:', qualifiedExpensesBeforeMonth);
 
     // Get current month's qualified expenses (E)
     const currentMonthQualifiedExpenses = allExpenses
@@ -2487,11 +2487,11 @@ function calculateBenefits(expenses, state, income) {
                      e.isInYear &&
                      e.dateObj >= firstDayOfMonth)
         .reduce((sum, e) => sum + e.amount, 0);
-    console.log('Current month qualified expenses:', currentMonthQualifiedExpenses);
+    // console.log('Current month qualified expenses:', currentMonthQualifiedExpenses);
 
     // Calculate year to date benefit
     const ytdBenefit = calculateStateBenefit(state, Math.min(totalDeposits, totalQualifiedExpenses), income);
-    console.log('Year to date benefit:', ytdBenefit);
+    // console.log('Year to date benefit:', ytdBenefit);
 
     // Calculate current month benefit
     let currentMonthBenefit = 0;
@@ -2500,7 +2500,7 @@ function calculateBenefits(expenses, state, income) {
         currentMonthBenefit = calculateStateBenefit(state, 
             Math.min(remainingDeposits, currentMonthQualifiedExpenses), income);
     }
-    console.log('Current month benefit:', currentMonthBenefit);
+    // console.log('Current month benefit:', currentMonthBenefit);
 
     const result = {
         currentMonthBenefit,
@@ -2508,7 +2508,7 @@ function calculateBenefits(expenses, state, income) {
         qualifiedAmount: Math.min(totalDeposits, totalQualifiedExpenses),
         depositBalance: totalDeposits - totalQualifiedExpenses // L = D - Q (for status display)
     };
-    console.log('Final benefits calculation result:', result);
+    // console.log('Final benefits calculation result:', result);
     return result;
 }
 
@@ -2830,7 +2830,7 @@ window.addEventListener('resize', function() {
 
 // Main Initialization
 async function initializePage() {
-    console.log('Starting initializePage');
+    // console.log('Starting initializePage');
     
     const loadingOverlay = document.getElementById('loadingOverlay');
     try {
@@ -2844,24 +2844,24 @@ async function initializePage() {
 
         // 1. First get the user profile
         const userProfile = await fetchUserProfile();
-        console.log('User profile loaded:', userProfile);
+        // console.log('User profile loaded:', userProfile);
         if (!userProfile) throw new Error('Failed to load user profile');
 
         // 2. Load current budgets
         const budgets = await loadCurrentBudgets();
-        console.log('Current budgets loaded:', budgets);
+        // console.log('Current budgets loaded:', budgets);
 
         // 3. Fetch all expenses (both manual and automatic)
         const expenses = await fetchExpenses();
-        console.log('All expenses loaded:', expenses);
+        // console.log('All expenses loaded:', expenses);
 
         // 4. Calculate benefits using combined transactions data
         const benefits = calculateBenefits(expenses, userProfile.state, userProfile.income);
-        console.log('Benefits calculated:', benefits);
+        // console.log('Benefits calculated:', benefits);
 
         // 5. Update profile if benefits have changed
         if (benefits.ytdBenefit !== userProfile.currentBenefit) {
-            console.log('Benefits have changed, updating profile');
+            // console.log('Benefits have changed, updating profile');
             try {
                 await updateProfile({
                     currentBenefit: benefits.ytdBenefit
@@ -2886,7 +2886,7 @@ async function initializePage() {
             
             // Fetch expenses for the new month
             const monthExpenses = await fetchExpenses(); // This will get both data sources
-            console.log('Month expenses loaded:', monthExpenses);
+            // console.log('Month expenses loaded:', monthExpenses);
             
             updateCategoryDisplayForMonth(monthExpenses, currentDisplayMonth);
             if (chartContainer.style.display !== 'none') {
@@ -2903,7 +2903,7 @@ async function initializePage() {
                 
                 // Fetch expenses for the new month
                 const monthExpenses = await fetchExpenses(); // This will get both data sources
-                console.log('Month expenses loaded:', monthExpenses);
+                // console.log('Month expenses loaded:', monthExpenses);
                 
                 updateCategoryDisplayForMonth(monthExpenses, currentDisplayMonth);
                 if (chartContainer.style.display !== 'none') {
@@ -3096,14 +3096,14 @@ async function loadCurrentBudgets() {
 
 // Modify updateStipendDisplay to only update in edit mode
 function updateStipendDisplay() {
-    console.log('updateStipendDisplay called', {
-        isEditMode,
-        currentStipend
-    });
+    // console.log('updateStipendDisplay called', {
+    //     isEditMode,
+    //     currentStipend
+    // });
     
     if (isEditMode) {
         const stipendElement = document.getElementById('stipendAmount');
-        console.log('Stipend element found:', !!stipendElement);
+        // console.log('Stipend element found:', !!stipendElement);
         
         if (stipendElement) {
             stipendElement.textContent = `${currentStipend.toFixed(2)}`;
@@ -3115,13 +3115,13 @@ function updateStipendDisplay() {
 
 // Modify updateBudgetStatus to only reference budgetStatus in edit mode
 function updateBudgetStatus() {
-    console.log('updateBudgetStatus called', {
-        isEditMode,
-        currentStipend
-    });
+    // console.log('updateBudgetStatus called', {
+    //     isEditMode,
+    //     currentStipend
+    // });
     
     if (!isEditMode) {
-        console.log('Skipping budget status update - not in edit mode');
+        // console.log('Skipping budget status update - not in edit mode');
         return;
     }
     
@@ -3129,13 +3129,13 @@ function updateBudgetStatus() {
         .reduce((sum, [_, data]) => sum + Number(data.amount), 0);
     
     const remaining = currentStipend - totalBudgeted;
-    console.log('Budget calculations:', {
-        totalBudgeted,
-        remaining
-    });
+    // console.log('Budget calculations:', {
+    //     totalBudgeted,
+    //     remaining
+    // });
     
     const statusElement = document.getElementById('budgetStatus');
-    console.log('Status element found:', !!statusElement);
+    // console.log('Status element found:', !!statusElement);
     
     if (statusElement) {
         const newText = remaining >= 0 
@@ -3239,13 +3239,13 @@ async function saveBudgetChanges() {
 
 // Modify displayEditableBudgets to show all categories
 function displayEditableBudgets() {
-    console.log('displayEditableBudgets called', {
-        currentStipend,
-        budgetsExist: !!currentBudgets
-    });
+    // console.log('displayEditableBudgets called', {
+    //     currentStipend,
+    //     budgetsExist: !!currentBudgets
+    // });
     
     const container = document.getElementById('categoriesContainer');
-    console.log('Categories container found:', !!container);
+    // console.log('Categories container found:', !!container);
     
     if (!container) {
         console.error('Categories container not found - cannot display editable budgets');
@@ -3276,7 +3276,7 @@ function displayEditableBudgets() {
                 </div>
             </div>
         `);
-        console.log('Stipend section added successfully');
+        // console.log('Stipend section added successfully');
     } catch (error) {
         console.error('Error adding stipend section:', error);
     }
@@ -3317,7 +3317,7 @@ function displayEditableBudgets() {
         // Add event listener directly to the input
         const input = div.querySelector('.budget-input');
         input.addEventListener('input', (e) => {
-            console.log('Input event fired for', category);
+            // console.log('Input event fired for', category);
             updateBudget(category, e.target.value);
         });
         
@@ -3334,11 +3334,11 @@ function displayEditableBudgets() {
 }
 
 function updateBudget(category, amount) {
-    console.log('updateBudget called:', { category, amount });
+    // console.log('updateBudget called:', { category, amount });
     
     const newAmount = Number(amount);
     if (isNaN(newAmount) || newAmount < 0) {
-        console.log('Invalid amount entered:', amount);
+        // console.log('Invalid amount entered:', amount);
         alert('Please enter a valid amount');
         return;
     }
