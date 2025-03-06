@@ -2557,11 +2557,11 @@ function updateCategoryDisplay(expenses) {
         // Calculate total for the category, considering transaction types
         const total = categoryExpenses.reduce((sum, e) => sum + e.amount, 0);
         
-        // If total is negative (net credit), use absolute value and gold color
-        const isCredit = total < 0;
+        // For display purposes, always show positive numbers
         const displayAmount = Math.abs(total);
         const percentage = (displayAmount / budget * 100).toFixed(1);
         const isQualified = qualifiedCategories.includes(category);
+        const isCredit = total < 0;  // Track if this is a credit category
 
         container.insertAdjacentHTML('beforeend', `
             <div class="category">
