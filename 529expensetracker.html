@@ -2798,46 +2798,24 @@ function editTransaction(transactionId) {
     document.getElementById('edit-transaction-name').value = transaction.name;
     document.getElementById('edit-transaction-amount').value = `$${transaction.amount.toFixed(2)}`;
     
-    // Show original Plaid category
-    document.getElementById('plaid-category').textContent = transaction.plaidCategory || 'N/A';
-    
-    // Show app's mapped category
-    document.getElementById('mapped-category').textContent = transaction.mappedCategory || transaction.category;
-    
-    // Populate user category dropdown
+    // Populate category dropdown
     const categorySelect = document.getElementById('edit-transaction-category');
     categorySelect.innerHTML = '';
     
-    // Add Custom option at the top
-    const customOption = document.createElement('option');
-    customOption.value = 'Custom';
-    customOption.textContent = 'Custom Category';
-    categorySelect.appendChild(customOption);
-    
     // Add all unique categories from transactions
-    const categories = [...new Set(allTransactions.map(t => t.userCategory || t.category))];
-    categories
-        .filter(category => category !== 'Custom')
-        .sort()
-        .forEach(category => {
-            const option = document.createElement('option');
-            option.value = category;
-            option.textContent = category;
-            if (isQualifiedCategory(category)) {
-                option.className = 'qualified-category';
-            }
-            categorySelect.appendChild(option);
-        });
+    const categories = [...new Set(allTransactions.map(t => t.category))];
+    categories.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category;
+        if (isQualifiedCategory(category)) {
+            option.className = 'qualified-category';
+        }
+        categorySelect.appendChild(option);
+    });
     
     // Set current category
-    categorySelect.value = transaction.userCategory || transaction.category;
-    
-    // Show/hide custom category input based on selection
-    const customCategoryInput = document.getElementById('edit-custom-category');
-    customCategoryInput.style.display = categorySelect.value === 'Custom' ? 'block' : 'none';
-    if (categorySelect.value === 'Custom') {
-        customCategoryInput.value = transaction.userCategory || '';
-    }
+    categorySelect.value = transaction.category;
     
     // Set qualified checkbox
     document.getElementById('edit-transaction-qualified').checked = transaction.isQualified;
@@ -2849,34 +2827,18 @@ function editTransaction(transactionId) {
     document.getElementById('category-modal').style.display = 'flex';
 }
 
-// Add category selection handler for edit modal
-document.getElementById('edit-transaction-category').addEventListener('change', function() {
-    const customCategoryInput = document.getElementById('edit-custom-category');
-    if (this.value === 'Custom') {
-        customCategoryInput.style.display = 'block';
-        customCategoryInput.focus();
-    } else {
-        customCategoryInput.style.display = 'none';
-    }
-});
+// Function to hide the category modal
+function hideCategoryModal() {
+    document.getElementById('category-modal').style.display = 'none';
+}
 
-// Update save transaction changes to handle custom category
+// Function to save transaction changes
 async function saveTransactionChanges() {
     try {
         const transactionId = document.getElementById('edit-transaction-category').dataset.transactionId;
-        const categorySelect = document.getElementById('edit-transaction-category');
-        const customCategoryInput = document.getElementById('edit-custom-category');
+        const newCategory = document.getElementById('edit-transaction-category').value;
         const isQualified = document.getElementById('edit-transaction-qualified').checked;
         const createRule = document.getElementById('create-category-rule').checked;
-        
-        // Get the new category (either selected or custom)
-        const newCategory = categorySelect.value === 'Custom' ? 
-            customCategoryInput.value.trim() : 
-            categorySelect.value;
-            
-        if (categorySelect.value === 'Custom' && !newCategory) {
-            throw new Error('Please enter a custom category name');
-        }
         
         const token = API.getToken();
         if (!token) throw new Error('No authentication token found');
@@ -2919,8 +2881,7 @@ async function saveTransactionChanges() {
         // Update local transaction data
         const transaction = allTransactions.find(t => t.id === transactionId);
         if (transaction) {
-            transaction.userCategory = newCategory;
-            transaction.category = newCategory; // For display purposes
+            transaction.category = newCategory;
             transaction.isQualified = isQualified;
         }
         
@@ -2937,11 +2898,6 @@ async function saveTransactionChanges() {
         console.error('Error saving transaction changes:', error);
         showError('Failed to update transaction: ' + error.message);
     }
-}
-
-// Function to hide the category modal
-function hideCategoryModal() {
-    document.getElementById('category-modal').style.display = 'none';
 }
 
 // Event listeners for filter and pagination
@@ -3112,21 +3068,11 @@ async function fetchUserProfile() {
             <input type="text" id="edit-transaction-amount" class="form-control" readonly>
         </div>
         <div class="form-group">
-            <label>Original Plaid Category</label>
-            <div id="plaid-category" class="form-control" style="background: #f3f4f6; cursor: not-allowed;"></div>
-        </div>
-        <div class="form-group">
-            <label>App Mapped Category</label>
-            <div id="mapped-category" class="form-control" style="background: #f3f4f6; cursor: not-allowed;"></div>
-        </div>
-        <div class="form-group">
-            <label>Your Category</label>
+            <label>Category</label>
             <div class="select-container">
                 <select id="edit-transaction-category" class="form-control">
                     <!-- Categories will be populated dynamically -->
                 </select>
-                <input type="text" id="edit-custom-category" class="form-control" 
-                       placeholder="Enter custom category" style="display: none; margin-top: 0.5rem;">
             </div>
         </div>
         <div class="form-group">
