@@ -2339,19 +2339,20 @@ function convertPlaidToExpenses(categorySummary) {
                     amount: transaction.amount,
                     isQualified: transaction.isQualified,
                     date: transaction.date,
-                    description: transaction.description
+                    description: transaction.description,
+                    transactionType: transaction.transactionType
                 });
                 
                 // Create an expense object for each transaction
                 const expense = {
                     expenseID: transaction.id,               // Use Plaid transaction ID
                     category: category,                      // Use category from summary
-                    amount: transaction.amount,              // Amount
+                    amount: transaction.transactionType === 'negative' ? -transaction.amount : transaction.amount,  // Adjust amount based on transaction type
                     date: transaction.date,                  // Date
                     notes: transaction.description || '',    // Description as notes
                     isQualified: transaction.isQualified,    // Qualified status
                     source: 'automatic',                     // Add source flag
-                    transactionType: transaction.amount < 0 ? 'expense' : 'deposit'  // Add transaction type based on amount
+                    transactionType: transaction.transactionType || 'negative'  // Use Plaid's transaction type, default to negative for manual
                 };
                 
                 expenses.push(expense);
@@ -2541,17 +2542,6 @@ function updateCategoryDisplay(expenses) {
 
     Object.entries(categoryBudgets).forEach(([category, budget]) => {
         const categoryExpenses = expenses.filter(e => e.category === category);
-        
-        // Log each expense's transactionType
-        categoryExpenses.forEach(expense => {
-            console.log('Expense details:', {
-                category: expense.category,
-                amount: expense.amount,
-                transactionType: expense.transactionType,
-                fullExpense: expense
-            });
-        });
-
         const spent = categoryExpenses.reduce((sum, e) => sum + e.amount, 0);
         const percentage = (spent / budget * 100).toFixed(1);
         const isQualified = qualifiedCategories.includes(category);
