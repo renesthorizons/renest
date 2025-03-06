@@ -2831,6 +2831,7 @@ window.addEventListener('resize', function() {
 // Main Initialization
 async function initializePage() {
     console.time('Total Page Load');
+    // console.log('Starting initializePage');
     
     const loadingOverlay = document.getElementById('loadingOverlay');
     try {
@@ -2844,23 +2845,32 @@ async function initializePage() {
         }
         console.timeEnd('Auth Check');
 
-        // Load all initial data in parallel
-        console.time('Initial Data Load');
-        const [userProfile, budgets, expenses] = await Promise.all([
-            fetchUserProfile(),
-            loadCurrentBudgets(),
-            fetchExpenses()
-        ]);
-        console.timeEnd('Initial Data Load');
-
+        // 1. First get the user profile
+        console.time('User Profile Load');
+        const userProfile = await fetchUserProfile();
+        console.timeEnd('User Profile Load');
+        // console.log('User profile loaded:', userProfile);
         if (!userProfile) throw new Error('Failed to load user profile');
 
-        // Calculate benefits
+        // 2. Load current budgets
+        console.time('Budgets Load');
+        const budgets = await loadCurrentBudgets();
+        console.timeEnd('Budgets Load');
+        // console.log('Current budgets loaded:', budgets);
+
+        // 3. Fetch all expenses (both manual and automatic)
+        console.time('Expenses Load');
+        const expenses = await fetchExpenses();
+        console.timeEnd('Expenses Load');
+        // console.log('All expenses loaded:', expenses);
+
+        // 4. Calculate benefits using combined transactions data
         console.time('Benefits Calculation');
         const benefits = calculateBenefits(expenses, userProfile.state, userProfile.income);
         console.timeEnd('Benefits Calculation');
+        // console.log('Benefits calculated:', benefits);
 
-        // Update profile if needed
+        // 5. Update profile if benefits have changed
         if (benefits.ytdBenefit !== userProfile.currentBenefit) {
             console.time('Profile Update');
             try {
@@ -2873,12 +2883,51 @@ async function initializePage() {
             console.timeEnd('Profile Update');
         }
 
-        // Update UI
+        // 6. Update UI with all data
         updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
         updateBenefitDisplay(benefits, userProfile.state, userProfile.accountStatus, expenses);
         updateMonthDisplay();
-        initializeViewToggle();
 
+        initializeViewToggle();
+        
+        // Update the month navigation to handle both views
+        document.getElementById('prevMonth').addEventListener('click', async () => {
+            currentDisplayMonth = new Date(currentDisplayMonth.getFullYear(), 
+                currentDisplayMonth.getMonth() - 1);
+            updateMonthDisplay();
+            
+            // Fetch expenses for the new month
+            const monthExpenses = await fetchExpenses(); // This will get both data sources
+            // console.log('Month expenses loaded:', monthExpenses);
+            
+            updateCategoryDisplayForMonth(monthExpenses, currentDisplayMonth);
+            if (chartContainer.style.display !== 'none') {
+                createRadarChart(monthExpenses, currentDisplayMonth);
+            }
+        });
+
+        document.getElementById('nextMonth').addEventListener('click', async () => {
+            const now = new Date();
+            if (currentDisplayMonth < now) {
+                currentDisplayMonth = new Date(currentDisplayMonth.getFullYear(), 
+                    currentDisplayMonth.getMonth() + 1);
+                updateMonthDisplay();
+                
+                // Fetch expenses for the new month
+                const monthExpenses = await fetchExpenses(); // This will get both data sources
+                // console.log('Month expenses loaded:', monthExpenses);
+                
+                updateCategoryDisplayForMonth(monthExpenses, currentDisplayMonth);
+                if (chartContainer.style.display !== 'none') {
+                    createRadarChart(monthExpenses, currentDisplayMonth);
+                }
+            }
+        });
+
+        // Add these new initializations
+        const editBudgetsBtn = document.getElementById('editBudgets');
+        editBudgetsBtn.addEventListener('click', toggleEditMode);
+        
     } catch (error) {
         console.error('Error initializing page:', error);
         alert('Error loading data. Please try again.');
@@ -2995,24 +3044,10 @@ const defaultBudgets = {
     }
 };
 
-// Add this near the top with other global variables
-let budgetCache = {
-    data: null,
-    timestamp: null,
-    maxAge: 5 * 60 * 1000  // 5 minutes in milliseconds
-};
-
 // Modify loadCurrentBudgets to properly handle all categories
 async function loadCurrentBudgets() {
     try {
-        // Check cache first
-        const now = Date.now();
-        if (budgetCache.data && budgetCache.timestamp && (now - budgetCache.timestamp < budgetCache.maxAge)) {
-            console.log('Using cached budget data');
-            return budgetCache.data;
-        }
-
-        console.time('API Call');
+        // console.log('Starting loadCurrentBudgets...');
         const response = await fetch(`${budgetManagerAPI}/budgets`, {
             headers: {
                 'Authorization': `Bearer ${API.getToken()}`
@@ -3022,51 +3057,53 @@ async function loadCurrentBudgets() {
         if (!response.ok) throw new Error('Failed to fetch budgets');
         
         const data = await response.json();
-        console.timeEnd('API Call');
+        // console.log('Budget API Response:', data);
         
-        // Process the data
+        // Initialize with default budgets
+        // First check if we have categories from the API
         if (data.categories && data.categories.length > 0) {
-            // Use API categories
-            currentBudgets = Object.fromEntries(
-                data.categories.map(cat => [
-                    cat.categoryName,
-                    {
-                        amount: Number(cat.budgetAmount),
-                        id: cat.categoryId
-                    }
-                ])
-            );
+            // If we have API categories, use those
+            currentBudgets = {};
+            data.categories.forEach(apiCategory => {
+                currentBudgets[apiCategory.categoryName] = {
+                    amount: Number(apiCategory.budgetAmount),
+                    id: apiCategory.categoryId
+                };
+            });
         } else {
-            // Use default budgets
+            // If no API categories exist, initialize with default budgets
             currentBudgets = { ...defaultBudgets };
+            
+            // Set rent from localStorage
             const monthlyRent = localStorage.getItem('monthlyRent');
             if (monthlyRent) {
                 currentBudgets['Rent'].amount = Number(monthlyRent);
             }
         }
         
-        // Set stipend
-        currentStipend = Number(data.monthlyStipend) || 
-                        Number(localStorage.getItem('income')) / 12 || 0;
+        // console.log('Initialized currentBudgets:', currentBudgets);
         
-        // Update UI only if needed
+        // Set stipend from API
+        currentStipend = Number(data.monthlyStipend) || 0;
+        if (currentStipend === 0) {
+            const income = localStorage.getItem('income');
+            if (income) {
+                currentStipend = Math.round(Number(income) / 12);
+            }
+        }
+        
+        // Update displays
         if (isEditMode) {
             displayEditableBudgets();
+        } else {
+            const expenses = await fetchExpenses();
+            updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
         }
         
-        // Cache the results
-        budgetCache.data = currentBudgets;
-        budgetCache.timestamp = now;
-        
-        return currentBudgets;
+        updateStipendDisplay();
+        updateBudgetStatus();
     } catch (error) {
         console.error('Error in loadCurrentBudgets:', error);
-        // If cache exists and there's an error, use cached data as fallback
-        if (budgetCache.data) {
-            console.log('Using cached data as fallback after error');
-            return budgetCache.data;
-        }
-        throw error;
     }
 }
 
