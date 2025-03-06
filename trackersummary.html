@@ -2735,7 +2735,8 @@ function createRadarChart(expenses, selectedDate) {
     
     const spentData = categories.map(category => {
         const categoryExpenses = monthExpenses.filter(e => e.category === category);
-        return categoryExpenses.reduce((sum, e) => sum + e.amount, 0);
+        const total = categoryExpenses.reduce((sum, e) => sum + e.amount, 0);
+        return Math.abs(total); // Use absolute value for display
     });
     
     const budgetData = categories.map(category => currentBudgets[category].amount);
