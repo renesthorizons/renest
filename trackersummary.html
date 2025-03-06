@@ -2350,7 +2350,8 @@ function convertPlaidToExpenses(categorySummary) {
                     date: transaction.date,                  // Date
                     notes: transaction.description || '',    // Description as notes
                     isQualified: transaction.isQualified,    // Qualified status
-                    source: 'automatic'                      // Add source flag
+                    source: 'automatic',                     // Add source flag
+                    transactionType: transaction.amount < 0 ? 'expense' : 'deposit'  // Add transaction type based on amount
                 };
                 
                 expenses.push(expense);
