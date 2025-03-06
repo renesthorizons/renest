@@ -2319,12 +2319,13 @@ function convertPlaidToExpenses(categorySummary) {
         console.log(`Processing category: ${category}`);
         // Each category contains an array of transactions
         data.transactions.forEach(transaction => {
+            const isQualifiedCategory = qualifiedCategories.includes(category);
             console.log('Transaction details:', {
                 id: transaction.id,
                 category: category,
                 amount: transaction.amount,
                 isQualified: transaction.isQualified,
-                isQualifiedCategory: qualifiedCategories.includes(category)
+                isQualifiedCategory: isQualifiedCategory
             });
             
             // Create an expense object for each transaction
@@ -2334,7 +2335,7 @@ function convertPlaidToExpenses(categorySummary) {
                 amount: transaction.amount,              // Amount
                 date: transaction.date,                  // Date
                 notes: transaction.description || '',    // Description as notes
-                isQualified: transaction.isQualified,    // Qualified status
+                isQualified: transaction.isQualified || isQualifiedCategory,    // Qualified if either flag is true
                 source: 'automatic'                      // Add source flag
             };
             
