@@ -2780,15 +2780,14 @@ function displayTransactionsPage() {
         console.log('Displaying transaction:', {
             name: transaction.name,
             amount: transaction.amount,
-            isNegative: transaction.isNegative
+            date: transaction.date
         });
         
         const row = document.createElement('tr');
         row.style.borderBottom = '1px solid #E5E7EB';
         
-        // Format date
-        const date = new Date(transaction.date);
-        const formattedDate = date.toLocaleDateString();
+        // Format date - use the date string directly from the transaction
+        const formattedDate = transaction.date;
         
         // Create row cells
         row.innerHTML = `
@@ -2797,9 +2796,7 @@ function displayTransactionsPage() {
                 ${transaction.name}
                 <div style="font-size: 0.8rem; color: #6B7280;">${transaction.description || ''}</div>
             </td>
-            <td style="padding: 0.75rem 1rem; text-align: right; ${transaction.isNegative ? 'color: #DC2626;' : 'color: #059669;'}">
-                ${transaction.isNegative ? '-' : '+'}$${Math.abs(transaction.amount).toFixed(2)}
-            </td>
+            <td style="padding: 0.75rem 1rem; text-align: right;">$${transaction.amount.toFixed(2)}</td>
             <td style="padding: 0.75rem 1rem;">${transaction.category}</td>
             <td style="padding: 0.75rem 1rem; text-align: center;">
                 <div class="custom-checkbox" style="justify-content: center;">
