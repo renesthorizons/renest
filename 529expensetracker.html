@@ -2808,9 +2808,23 @@ function editTransaction(transactionId) {
     defaultOption.textContent = 'Select Category';
     categorySelect.appendChild(defaultOption);
     
-    // Add all unique categories from transactions
-    const categories = [...new Set(allTransactions.map(t => t.category))];
-    categories.forEach(category => {
+    // Add all predefined categories
+    const PREDEFINED_CATEGORIES = [
+        'Rent',
+        'Groceries',
+        'WiFi',
+        'Supplies',
+        'Utilities',
+        'Transportation',
+        'Healthcare',
+        'Education',
+        'Entertainment',
+        'Shopping',
+        'Other'
+    ];
+    
+    // Add all predefined categories
+    PREDEFINED_CATEGORIES.forEach(category => {
         const option = document.createElement('option');
         option.value = category;
         option.textContent = category;
@@ -2827,7 +2841,7 @@ function editTransaction(transactionId) {
     categorySelect.appendChild(customOption);
     
     // Set current category
-    if (categories.includes(transaction.category)) {
+    if (PREDEFINED_CATEGORIES.includes(transaction.category)) {
         categorySelect.value = transaction.category;
     } else {
         categorySelect.value = 'custom';
@@ -2850,13 +2864,17 @@ function handleCategoryChange() {
     const categorySelect = document.getElementById('edit-transaction-category');
     const customCategoryGroup = document.getElementById('custom-category-group');
     const customCategoryInput = document.getElementById('custom-category-input');
+    const qualifiedCheckbox = document.getElementById('edit-transaction-qualified');
     
     if (categorySelect.value === 'custom') {
         customCategoryGroup.style.display = 'block';
         customCategoryInput.focus();
+        qualifiedCheckbox.checked = false;
     } else {
         customCategoryGroup.style.display = 'none';
         customCategoryInput.value = '';
+        // Update qualified checkbox based on selected category
+        qualifiedCheckbox.checked = isQualifiedCategory(categorySelect.value);
     }
 }
 
@@ -3090,6 +3108,14 @@ async function fetchUserProfile() {
         console.error('Error fetching profile:', error);
         throw error;
     }
+}
+
+// Function to hide the category modal
+function hideCategoryModal() {
+    document.getElementById('category-modal').style.display = 'none';
+    // Clear custom category input when hiding modal
+    document.getElementById('custom-category-input').value = '';
+    document.getElementById('custom-category-group').style.display = 'none';
 }
     </script>
     
