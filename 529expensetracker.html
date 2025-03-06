@@ -1220,6 +1220,28 @@
                 min-height: 48px;
             }
         }
+
+        /* Add loading spinner styles */
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Remove qualified category styling */
+        .qualified-category {
+            color: var(--text-dark) !important;
+        }
     </style>
 </head>
 <body>
@@ -2881,6 +2903,15 @@ function handleCategoryChange() {
 // Function to save transaction changes
 async function saveTransactionChanges() {
     try {
+        const saveButton = document.querySelector('.submit-button');
+        const saveSpinner = document.getElementById('save-spinner');
+        const saveText = document.getElementById('save-text');
+        
+        // Show loading state
+        saveSpinner.style.display = 'inline-block';
+        saveText.textContent = 'Saving...';
+        saveButton.disabled = true;
+
         const transactionId = document.getElementById('edit-transaction-category').dataset.transactionId;
         const categorySelect = document.getElementById('edit-transaction-category');
         const customCategoryInput = document.getElementById('custom-category-input');
@@ -2954,6 +2985,14 @@ async function saveTransactionChanges() {
     } catch (error) {
         console.error('Error saving transaction changes:', error);
         showError('Failed to update transaction: ' + error.message);
+    } finally {
+        // Reset button state
+        const saveButton = document.querySelector('.submit-button');
+        const saveSpinner = document.getElementById('save-spinner');
+        const saveText = document.getElementById('save-text');
+        saveSpinner.style.display = 'none';
+        saveText.textContent = 'Save Changes';
+        saveButton.disabled = false;
     }
 }
 
@@ -3160,7 +3199,10 @@ function hideCategoryModal() {
         </div>
         <div class="modal-footer">
             <button class="outline-button" onclick="hideCategoryModal()">Cancel</button>
-            <button class="submit-button" onclick="saveTransactionChanges()">Save Changes</button>
+            <button class="submit-button" onclick="saveTransactionChanges()">
+                <span class="spinner" id="save-spinner"></span>
+                <span id="save-text">Save Changes</span>
+            </button>
         </div>
     </div>
 </div>
