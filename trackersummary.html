@@ -2316,31 +2316,42 @@ function convertPlaidToExpenses(categorySummary) {
     
     // Iterate through each category in the summary
     Object.entries(categorySummary).forEach(([category, data]) => {
-        console.log(`Processing category: ${category}`);
-        // Each category contains an array of transactions
-        data.transactions.forEach(transaction => {
-            const isQualifiedCategory = qualifiedCategories.includes(category);
-            console.log('Transaction details:', {
-                id: transaction.id,
-                category: category,
-                amount: transaction.amount,
-                isQualified: transaction.isQualified,
-                isQualifiedCategory: isQualifiedCategory
-            });
-            
-            // Create an expense object for each transaction
-            const expense = {
-                expenseID: transaction.id,               // Use Plaid transaction ID
-                category: category,                      // Use category from summary
-                amount: transaction.amount,              // Amount
-                date: transaction.date,                  // Date
-                notes: transaction.description || '',    // Description as notes
-                isQualified: transaction.isQualified || isQualifiedCategory,    // Qualified if either flag is true
-                source: 'automatic'                      // Add source flag
-            };
-            
-            expenses.push(expense);
+        console.log(`Processing category: ${category}`, {
+            data: data,
+            transactions: data.transactions,
+            transactionCount: data.transactions ? data.transactions.length : 0
         });
+        
+        // Each category contains an array of transactions
+        if (data.transactions && Array.isArray(data.transactions)) {
+            data.transactions.forEach(transaction => {
+                const isQualifiedCategory = qualifiedCategories.includes(category);
+                console.log('Transaction details:', {
+                    id: transaction.id,
+                    category: category,
+                    amount: transaction.amount,
+                    isQualified: transaction.isQualified,
+                    isQualifiedCategory: isQualifiedCategory,
+                    date: transaction.date,
+                    description: transaction.description
+                });
+                
+                // Create an expense object for each transaction
+                const expense = {
+                    expenseID: transaction.id,               // Use Plaid transaction ID
+                    category: category,                      // Use category from summary
+                    amount: transaction.amount,              // Amount
+                    date: transaction.date,                  // Date
+                    notes: transaction.description || '',    // Description as notes
+                    isQualified: transaction.isQualified || isQualifiedCategory,    // Qualified if either flag is true
+                    source: 'automatic'                      // Add source flag
+                };
+                
+                expenses.push(expense);
+            });
+        } else {
+            console.log(`No transactions array found for category: ${category}`);
+        }
     });
     
     console.log('Converted Plaid expenses:', expenses);
