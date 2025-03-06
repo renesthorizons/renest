@@ -2366,12 +2366,15 @@ function convertPlaidToExpenses(categorySummary) {
 
 async function fetchExpenses() {
     try {
-        console.log('Starting fetchExpenses');
+        // If we already have all transactions, return them
+        if (allTransactions) {
+            return allTransactions;
+        }
+
         // 1. First get the user profile to check account status
         const userProfile = await fetchUserProfile();
-        console.log('User profile:', userProfile);
         
-        // 2. Fetch manual transactions (keep existing functionality)
+        // 2. Fetch manual transactions
         const response = await fetch(`${API.expenseUrl}/expenses`, {
             headers: {
                 'Authorization': `Bearer ${API.getToken()}`
@@ -2380,33 +2383,34 @@ async function fetchExpenses() {
         if (!response.ok) throw new Error('Failed to fetch manual expenses');
         const manualData = await response.json();
         let allExpenses = manualData.expenses || [];
-        console.log('Manual expenses:', allExpenses);
         
         // 3. If account status is AUTOMATIC, fetch Plaid transactions for all months in current year
         if (userProfile && userProfile.accountStatus === 'AUTOMATIC') {
-            console.log('Fetching Plaid transactions for automatic account');
             const currentYear = new Date().getFullYear();
             
             // Fetch transactions for all months in the current year
             for (let month = 1; month <= 12; month++) {
                 const plaidTransactions = await fetchPlaidTransactions(month, currentYear);
                 
-                // Combine both data sources
                 if (plaidTransactions && plaidTransactions.summary) {
-                    console.log(`Plaid transactions received for ${month}/${currentYear}:`, plaidTransactions);
-                    // Convert Plaid's categorized summary format to flat expense array
                     const plaidExpenses = convertPlaidToExpenses(plaidTransactions.summary);
                     allExpenses = [...allExpenses, ...plaidExpenses];
-                    console.log(`Combined all expenses after ${month}/${currentYear}:`, allExpenses);
                 }
             }
         }
         
+        // Store all transactions in memory
+        allTransactions = allExpenses;
         return allExpenses;
     } catch (error) {
         console.error('Error fetching expenses:', error);
         return [];
     }
+}
+
+// Add a function to clear the cached transactions when needed
+function clearTransactionCache() {
+    allTransactions = null;
 }
 
 // Calculation Functions
@@ -3579,6 +3583,29 @@ async function cancelEditMode() {
     
     const expenses = await fetchExpenses();
     updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
+}
+
+// Add at the top with other global variables
+let allTransactions = null;
+
+// Update the month navigation to use cached data
+async function loadMonthExpenses(month, year) {
+    try {
+        // Get all transactions if we haven't already
+        const allExpenses = await fetchExpenses();
+        
+        // Filter expenses for the selected month
+        const monthExpenses = allExpenses.filter(expense => {
+            const expenseDate = new Date(expense.date);
+            return expenseDate.getMonth() === month && expenseDate.getFullYear() === year;
+        });
+        
+        // Update UI with filtered expenses
+        updateCategoryDisplay(monthExpenses);
+        updateBenefitDisplay(calculateBenefits(monthExpenses, currentState, currentIncome), currentState, currentAccountStatus, monthExpenses);
+    } catch (error) {
+        console.error('Error loading month expenses:', error);
+    }
 }
 </script>
 </html>
