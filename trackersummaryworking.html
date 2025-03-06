@@ -2258,113 +2258,17 @@ async function updateProfile(profileData) {
         return null;
     }
 }
-async function fetchPlaidTransactions(month, year) {
-    try {
-        const token = API.getToken();
-        if (!token) throw new Error('No authentication token found');
-
-        const response = await fetch('https://fq3oz4hac8.execute-api.us-east-2.amazonaws.com/plaid', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                action: 'getExpenseSummary',
-                userId: await getUserId(token),
-                month: month,
-                year: year
-            })
-        });
-
-        if (!response.ok) throw new Error('Failed to fetch Plaid transactions');
-        
-        return await response.json();
-    } catch (error) {
-        console.error('Error fetching Plaid transactions:', error);
-        return null;
-    }
-}
-async function getUserId(token) {
-    try {
-        const response = await fetch(`${API.profileUrl}/profile`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to fetch user profile');
-        }
-
-        const userData = await response.json();
-        return userData.userId || userData.email;
-        
-    } catch (error) {
-        console.error('Error fetching user ID:', error);
-        throw error;
-    }
-}
-
-// Convert Plaid's categorized summary format to the flat expense array format
-function convertPlaidToExpenses(categorySummary) {
-    const expenses = [];
-    
-    // Iterate through each category in the summary
-    Object.entries(categorySummary).forEach(([category, data]) => {
-        // Each category contains an array of transactions
-        data.transactions.forEach(transaction => {
-            // Create an expense object for each transaction
-            const expense = {
-                expenseID: transaction.id,               // Use Plaid transaction ID
-                category: category,                      // Use category from summary
-                amount: transaction.amount,              // Amount
-                date: transaction.date,                  // Date
-                notes: transaction.description || '',    // Description as notes
-                isQualified: transaction.isQualified,    // Qualified status
-                source: 'automatic'                      // Add source flag
-            };
-            
-            expenses.push(expense);
-        });
-    });
-    
-    return expenses;
-}
 
 async function fetchExpenses() {
     try {
-        // 1. First get the user profile to check account status
-        const userProfile = await fetchUserProfile();
-        
-        // 2. Fetch manual transactions (keep existing functionality)
         const response = await fetch(`${API.expenseUrl}/expenses`, {
             headers: {
                 'Authorization': `Bearer ${API.getToken()}`
             }
         });
-        if (!response.ok) throw new Error('Failed to fetch manual expenses');
-        const manualData = await response.json();
-        let allExpenses = manualData.expenses || [];
-        
-        // 3. If account status is AUTOMATIC, also fetch Plaid transactions
-        if (userProfile && userProfile.accountStatus === 'AUTOMATIC') {
-            const plaidTransactions = await fetchPlaidTransactions(
-                currentDisplayMonth.getMonth() + 1,  // Plaid API expects 1-12 for months
-                currentDisplayMonth.getFullYear()
-            );
-            
-            // 4. Combine both data sources
-            if (plaidTransactions && plaidTransactions.summary) {
-                // Convert Plaid's categorized summary format to flat expense array
-                const plaidExpenses = convertPlaidToExpenses(plaidTransactions.summary);
-                allExpenses = [...allExpenses, ...plaidExpenses];
-            }
-        }
-        
-        return allExpenses;
+        if (!response.ok) throw new Error('Failed to fetch expenses');
+        const data = await response.json();
+        return data.expenses || [];
     } catch (error) {
         console.error('Error fetching expenses:', error);
         return [];
@@ -2733,6 +2637,12 @@ window.addEventListener('resize', function() {
 async function initializePage() {
     console.log('Initializing page');
     
+    // Remove the old event listener setup
+    console.log('Skipping old stipend event listener setup');
+    
+    // Log other initialization steps
+    console.log('Page initialization complete');
+    
     const loadingOverlay = document.getElementById('loadingOverlay');
     try {
         loadingOverlay.style.display = 'flex';
@@ -2746,13 +2656,13 @@ async function initializePage() {
         // Fetch all initial data in parallel
         const [userProfile, expenses, budgets] = await Promise.all([
             fetchUserProfile(),
-            fetchExpenses(),  // This now gets both manual and automatic transactions
+            fetchExpenses(),
             loadCurrentBudgets()
         ]);
 
         if (!userProfile) throw new Error('Failed to load user profile');
 
-        // Calculate benefits using combined transactions data
+        // Calculate benefits
         const benefits = calculateBenefits(expenses, userProfile.state, userProfile.income);
 
         // Only update profile if benefits have changed
@@ -2774,40 +2684,40 @@ async function initializePage() {
         initializeViewToggle();
         
         // Update the month navigation to handle both views
-        document.getElementById('prevMonth').addEventListener('click', async () => {
+        document.getElementById('prevMonth').addEventListener('click', () => {
             currentDisplayMonth = new Date(currentDisplayMonth.getFullYear(), 
                 currentDisplayMonth.getMonth() - 1);
             updateMonthDisplay();
-            
-            // Fetch expenses for the new month
-            const monthExpenses = await fetchExpenses(); // This will get both data sources
-            
-            updateCategoryDisplayForMonth(monthExpenses, currentDisplayMonth);
+            updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
             if (chartContainer.style.display !== 'none') {
-                createRadarChart(monthExpenses, currentDisplayMonth);
+                createRadarChart(expenses, currentDisplayMonth);
             }
         });
 
-        document.getElementById('nextMonth').addEventListener('click', async () => {
+        document.getElementById('nextMonth').addEventListener('click', () => {
             const now = new Date();
             if (currentDisplayMonth < now) {
                 currentDisplayMonth = new Date(currentDisplayMonth.getFullYear(), 
                     currentDisplayMonth.getMonth() + 1);
                 updateMonthDisplay();
-                
-                // Fetch expenses for the new month
-                const monthExpenses = await fetchExpenses(); // This will get both data sources
-                
-                updateCategoryDisplayForMonth(monthExpenses, currentDisplayMonth);
+                updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
                 if (chartContainer.style.display !== 'none') {
-                    createRadarChart(monthExpenses, currentDisplayMonth);
+                    createRadarChart(expenses, currentDisplayMonth);
                 }
             }
         });
 
         // Add these new initializations
         const editBudgetsBtn = document.getElementById('editBudgets');
+        // const editStipendBtn = document.getElementById('editStipend');
+        
         editBudgetsBtn.addEventListener('click', toggleEditMode);
+        // editStipendBtn.addEventListener('click', async () => {
+        //     const newAmount = prompt('Enter new monthly stipend amount:', currentStipend);
+        //     if (newAmount && !isNaN(newAmount)) {
+        //         await updateStipend(Number(newAmount));
+        //     }
+        // });
 
         // Load initial budgets
         await loadCurrentBudgets();
@@ -3258,59 +3168,6 @@ function updateBudget(category, amount) {
         statusElement.textContent = newText;
         statusElement.className = `budget-status ${remaining >= 0 ? 'positive' : 'negative'}`;
     }
-}
-function updateCategoryDisplayForMonth(expenses, selectedDate) {
-    const container = document.getElementById('categoriesContainer');
-    container.innerHTML = '';
-    
-    if (isEditMode) {
-        displayEditableBudgets();
-        return;
-    }
-
-    // Filter expenses for selected month
-    const monthExpenses = expenses.filter(expense => {
-        const expenseDate = new Date(expense.date);
-        return expenseDate.getMonth() === selectedDate.getMonth() &&
-               expenseDate.getFullYear() === selectedDate.getFullYear();
-    });
-
-    // Display all categories from currentBudgets
-    Object.entries(currentBudgets).forEach(([category, data]) => {
-        const budget = data.amount;
-        const categoryExpenses = monthExpenses.filter(e => e.category === category);
-        const spent = categoryExpenses.reduce((sum, e) => sum + e.amount, 0);
-        const percentage = (spent / budget * 100).toFixed(1);
-        const isQualified = qualifiedCategories.includes(category);
-        
-        // Count how many transactions were automatic vs manual for this category (optional)
-        const automaticCount = categoryExpenses.filter(e => e.source === 'automatic').length;
-        const manualCount = categoryExpenses.length - automaticCount;
-        
-        // Optional: Add indicator for categories with automatic data
-        const autoIndicator = automaticCount > 0 ? 
-            `<span class="auto-indicator" title="${automaticCount} automatic transactions">🔄</span>` : '';
-
-        container.insertAdjacentHTML('beforeend', `
-            <div class="category">
-                <div class="category-header">
-                    <div class="category-name">
-                        <span>${categoryIcons[category] || '📊'}</span>
-                        <span>${category}</span>
-                        ${autoIndicator}
-                        ${isQualified ? '<span class="qualified-badge">✓ Qualified</span>' : ''}
-                    </div>
-                    <div class="category-amounts">$${spent.toFixed(2)} of $${budget}</div>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-spent" style="width: ${Math.min(percentage, 100)}%; 
-                         background: ${isQualified ? 'var(--success)' : 'var(--primary)'}">
-                    </div>
-                    <div class="progress-label">${percentage}%</div>
-                </div>
-            </div>
-        `);
-    });
 }
 
 function updateCategoryName(oldName, newName) {
