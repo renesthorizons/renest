@@ -2610,8 +2610,7 @@ async function loadPlaidTransactions() {
         const adjustedMonth = month > 12 ? 1 : month;
         const adjustedYear = month > 12 ? year + 1 : year;
 
-        console.log('Fetching transactions for:', { month: adjustedMonth, year: adjustedYear });
-
+        // Call the API to get transaction data
         const response = await fetch('https://fq3oz4hac8.execute-api.us-east-2.amazonaws.com/plaid', {
             method: 'POST',
             headers: {
@@ -2629,9 +2628,14 @@ async function loadPlaidTransactions() {
         if (!response.ok) throw new Error('Failed to fetch transactions');
         
         const data = await response.json();
-        console.log('API Response data:', data);
-        console.log('Summary data:', data.summary);
         
+        // Update last update time
+        const lastUpdateTime = document.getElementById('last-update-time');
+        if (data.lastUpdate) {
+            const updateDate = new Date(data.lastUpdate);
+            lastUpdateTime.textContent = `Last updated: ${updateDate.toLocaleString()}`;
+        }
+
         // Clear and populate transactions table
         tableBody.innerHTML = '';
         
@@ -2640,27 +2644,30 @@ async function loadPlaidTransactions() {
         
         // Populate transactions
         Object.entries(data.summary).forEach(([category, info]) => {
-            console.log('Processing category:', category, 'Info:', info);
             info.transactions.forEach(transaction => {
-                console.log('Transaction details:', {
-                    id: transaction.id,
-                    name: transaction.name,
-                    amount: transaction.amount,
-                    type: transaction.transactionType,
-                    date: transaction.date,
-                    category: category,
-                    isQualified: transaction.isQualified
-                });
-                
                 // Add to allTransactions array
                 allTransactions.push({
                     ...transaction,
                     category: category
                 });
+                
+                const row = document.createElement('tr');
+                row.style.borderBottom = '1px solid #E5E7EB';
+                row.innerHTML = `
+                    <td style="padding: 0.75rem 1rem;">${new Date(transaction.date).toLocaleDateString()}</td>
+                    <td style="padding: 0.75rem 1rem;">${transaction.name}</td>
+                    <td style="padding: 0.75rem 1rem; text-align: right;">$${transaction.amount.toFixed(2)}</td>
+                    <td style="padding: 0.75rem 1rem;">${category}</td>
+                    <td style="padding: 0.75rem 1rem; text-align: center;">
+                        ${transaction.isQualified ? '✓' : ''}
+                    </td>
+                    <td style="padding: 0.75rem 1rem; text-align: center;">
+                        <button onclick="editTransaction('${transaction.id}')" class="action-button">Edit</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
             });
         });
-
-        console.log('All transactions array:', allTransactions);
         
         // Update category filter
         updateCategoryFilter(data.summary);
@@ -2754,21 +2761,13 @@ function applyFiltersAndUpdateDisplay() {
 
 // Function to display the current page of transactions
 function displayTransactionsPage() {
-    console.log('Starting to display transactions page');
-    console.log('Current page:', currentPage);
-    console.log('Transactions per page:', transactionsPerPage);
-    console.log('Filtered transactions:', filteredTransactions);
-    
     const tableBody = document.getElementById('transactions-tbody');
     tableBody.innerHTML = '';
     
     const startIndex = (currentPage - 1) * transactionsPerPage;
     const endIndex = Math.min(startIndex + transactionsPerPage, filteredTransactions.length);
     
-    console.log('Display range:', { startIndex, endIndex });
-    
     if (filteredTransactions.length === 0) {
-        console.log('No transactions to display');
         tableBody.innerHTML = 
             `<tr><td colspan="6" style="text-align: center; padding: 2rem;">
                 No transactions found. Try adjusting your filters.
@@ -2778,15 +2777,34 @@ function displayTransactionsPage() {
     
     for (let i = startIndex; i < endIndex; i++) {
         const transaction = filteredTransactions[i];
-        console.log('Rendering transaction row:', {
-            index: i,
-            id: transaction.id,
-            name: transaction.name,
-            amount: transaction.amount,
-            type: transaction.transactionType,
-            category: transaction.category,
-            isQualified: transaction.isQualified
-        });
+        const row = document.createElement('tr');
+        row.style.borderBottom = '1px solid #E5E7EB';
+        
+        // Format date
+        const date = new Date(transaction.date);
+        const formattedDate = date.toLocaleDateString();
+        
+        // Create row cells
+        row.innerHTML = `
+            <td style="padding: 0.75rem 1rem;">${formattedDate}</td>
+            <td style="padding: 0.75rem 1rem;">
+                ${transaction.name}
+                <div style="font-size: 0.8rem; color: #6B7280;">${transaction.description || ''}</div>
+            </td>
+            <td style="padding: 0.75rem 1rem; text-align: right;">$${transaction.amount.toFixed(2)}</td>
+            <td style="padding: 0.75rem 1rem;">${transaction.category}</td>
+            <td style="padding: 0.75rem 1rem; text-align: center;">
+                <div class="custom-checkbox" style="justify-content: center;">
+                    <span class="checkmark ${transaction.isQualified ? 'checked' : ''}"></span>
+                </div>
+            </td>
+            <td style="padding: 0.75rem 1rem; text-align: center;">
+                <button class="outline-button" style="padding: 0.3rem 0.5rem; font-size: 0.8rem;"
+                    onclick="editTransaction('${transaction.id}')">Edit</button>
+            </td>
+        `;
+        
+        tableBody.appendChild(row);
     }
 }
 
