@@ -3010,14 +3010,18 @@ document.getElementById('transaction-month').addEventListener('change', loadPlai
 document.getElementById('prev-page').addEventListener('click', () => {
     if (currentPage > 1) {
         currentPage--;
-        displayTransactionsPage();
+        applyFiltersAndUpdateDisplay();
+        // Scroll to top of transaction table
+        document.querySelector('.transaction-table-container').scrollIntoView({ behavior: 'smooth' });
     }
 });
 document.getElementById('next-page').addEventListener('click', () => {
     const totalPages = Math.ceil(filteredTransactions.length / transactionsPerPage);
     if (currentPage < totalPages) {
         currentPage++;
-        displayTransactionsPage();
+        applyFiltersAndUpdateDisplay();
+        // Scroll to top of transaction table
+        document.querySelector('.transaction-table-container').scrollIntoView({ behavior: 'smooth' });
     }
 });
 
