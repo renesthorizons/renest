@@ -2323,7 +2323,7 @@ function convertPlaidToExpenses(categorySummary) {
                 amount: transaction.amount,              // Amount
                 date: transaction.date,                  // Date
                 notes: transaction.description || '',    // Description as notes
-                isQualified: transaction.isQualified,    // Qualified status
+                isQualified: transaction.isQualified || qualifiedCategories.includes(category),    // Qualified status
                 source: 'automatic'                      // Add source flag
             };
             
