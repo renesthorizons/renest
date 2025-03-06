@@ -3281,9 +3281,13 @@ function updateCategoryDisplayForMonth(expenses, selectedDate) {
         const categoryExpenses = monthExpenses.filter(e => e.category === category);
         const spent = categoryExpenses.reduce((sum, e) => sum + e.amount, 0);
         const percentage = (spent / budget * 100).toFixed(1);
-        const isQualified = qualifiedCategories.includes(category);
         
-        // Count how many transactions were automatic vs manual for this category (optional)
+        // Check if any transaction in this category is qualified
+        const hasQualifiedExpenses = categoryExpenses.some(e => 
+            qualifiedCategories.includes(e.category) || e.isQualified
+        );
+        
+        // Count how many transactions were automatic vs manual for this category
         const automaticCount = categoryExpenses.filter(e => e.source === 'automatic').length;
         const manualCount = categoryExpenses.length - automaticCount;
         
@@ -3298,13 +3302,13 @@ function updateCategoryDisplayForMonth(expenses, selectedDate) {
                         <span>${categoryIcons[category] || '📊'}</span>
                         <span>${category}</span>
                         ${autoIndicator}
-                        ${isQualified ? '<span class="qualified-badge">✓ Qualified</span>' : ''}
+                        ${hasQualifiedExpenses ? '<span class="qualified-badge">✓ Qualified</span>' : ''}
                     </div>
                     <div class="category-amounts">$${spent.toFixed(2)} of $${budget}</div>
                 </div>
                 <div class="progress-bar">
                     <div class="progress-spent" style="width: ${Math.min(percentage, 100)}%; 
-                         background: ${isQualified ? 'var(--success)' : 'var(--primary)'}">
+                         background: ${hasQualifiedExpenses ? 'var(--success)' : 'var(--primary)'}">
                     </div>
                     <div class="progress-label">${percentage}%</div>
                 </div>
