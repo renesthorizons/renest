@@ -2437,40 +2437,31 @@ async function updateAccountStatus(status) {
 function toggleManualControls(show) {
     // Get all tab content elements
     const tabs = ['rent-tab', 'expenses-tab', 'account-tab', 'summary-tab'];
+    const automaticControls = document.getElementById('automatic-controls');
     
     if (show) {
-        // Show manual controls, hide automatic controls
-        document.getElementById('automatic-controls').style.display = 'none';
-        
-        // Show all tabs
-        tabs.forEach(tabId => {
-            const tab = document.getElementById(tabId);
-            if (tab) tab.style.display = 'block';
-        });
-        
-        // Enable tab buttons
-        document.querySelectorAll('.tab-button').forEach(btn => {
-            btn.disabled = false;
-            btn.style.display = 'block';
-        });
+        // Manual mode - hide automatic controls
+        automaticControls.style.display = 'none';
     } else {
-        // Hide manual controls, show automatic controls
-        document.getElementById('automatic-controls').style.display = 'block';
-        
-        // Show all tabs below automatic controls
-        tabs.forEach(tabId => {
-            const tab = document.getElementById(tabId);
-            if (tab) tab.style.display = 'block';
-        });
-        
-        // Hide the show manual controls button
+        // Automatic mode - show both automatic and manual controls
+        automaticControls.style.display = 'block';
+    }
+    
+    // Always show all tabs and enable tab buttons
+    tabs.forEach(tabId => {
+        const tab = document.getElementById(tabId);
+        if (tab) tab.style.display = 'block';
+    });
+    
+    // Always enable and show tab buttons
+    document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.disabled = false;
+        btn.style.display = 'block';
+    });
+    
+    // Hide the show manual controls button in automatic mode
+    if (!show) {
         document.getElementById('show-manual-controls').style.display = 'none';
-        
-        // Enable tab buttons but hide them
-        document.querySelectorAll('.tab-button').forEach(btn => {
-            btn.disabled = false;
-            btn.style.display = 'none';
-        });
     }
 }
 
@@ -2502,15 +2493,18 @@ async function loadPlaidTransactions() {
         const tableBody = document.getElementById('transactions-tbody');
         tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem;">Loading transactions...</td></tr>';
 
-        // Get the selected month/year filter or default to current month
+        // Get the selected month/year filter
         const monthInput = document.getElementById('transaction-month');
+        const now = new Date();
+        
+        // If no month is selected, default to current month
         if (!monthInput.value) {
-            const now = new Date();
             monthInput.value = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}`;
         }
-        const selectedMonth = new Date(monthInput.value + '-01');
-        const month = selectedMonth.getMonth() + 1;
-        const year = selectedMonth.getFullYear();
+        
+        const selectedDate = new Date(monthInput.value + '-01');
+        const month = selectedDate.getMonth() + 1;
+        const year = selectedDate.getFullYear();
 
         // Call the API to get transaction data
         const response = await fetch('https://fq3oz4hac8.execute-api.us-east-2.amazonaws.com/plaid', {
@@ -2541,21 +2535,20 @@ async function loadPlaidTransactions() {
         // Clear and populate transactions table
         tableBody.innerHTML = '';
         
-        // Get all categories for the filter dropdown
-        const categories = new Set();
-        Object.keys(data.summary).forEach(category => categories.add(category));
-        
-        // Update category filter dropdown
-        const categoryFilter = document.getElementById('category-filter');
-        categoryFilter.innerHTML = '<option value="">All Categories</option>';
-        Array.from(categories).sort().forEach(category => {
-            categoryFilter.innerHTML += `<option value="${category}">${category}</option>`;
-        });
+        // Store all transactions for filtering
+        allTransactions = [];
         
         // Populate transactions
         Object.entries(data.summary).forEach(([category, info]) => {
             info.transactions.forEach(transaction => {
+                // Add to allTransactions array
+                allTransactions.push({
+                    ...transaction,
+                    category: category
+                });
+                
                 const row = document.createElement('tr');
+                row.style.borderBottom = '1px solid #E5E7EB';
                 row.innerHTML = `
                     <td style="padding: 0.75rem 1rem;">${new Date(transaction.date).toLocaleDateString()}</td>
                     <td style="padding: 0.75rem 1rem;">${transaction.name}</td>
@@ -2572,15 +2565,25 @@ async function loadPlaidTransactions() {
             });
         });
         
-        // Add event listener for month changes if not already added
-        if (!monthInput.hasChangeListener) {
-            monthInput.addEventListener('change', loadPlaidTransactions);
-            monthInput.hasChangeListener = true;
-        }
+        // Update category filter
+        updateCategoryFilter(data.summary);
+        
+        // Apply initial filters
+        applyFiltersAndUpdateDisplay();
 
     } catch (error) {
         console.error('Error loading transactions:', error);
-        showError('Failed to load transactions. Please try again.');
+        showError('Failed to load transactions: ' + error.message);
+        
+        // Clear the table and show error message
+        const tableBody = document.getElementById('transactions-tbody');
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="6" style="text-align: center; padding: 2rem; color: #DC2626;">
+                    Failed to load transactions. Please try again.
+                </td>
+            </tr>
+        `;
     }
 }
 
@@ -2920,6 +2923,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (isAutomatic) {
             toggleManualControls(false);
             plaidConnected = true;
+            
+            // Set up month selector for Plaid transactions
+            const monthInput = document.getElementById('transaction-month');
+            monthInput.addEventListener('change', loadPlaidTransactions);
+            
+            // Load initial Plaid transactions
+            loadPlaidTransactions();
         } else {
             toggleManualControls(true);
         }
