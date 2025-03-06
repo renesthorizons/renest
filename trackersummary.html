@@ -2540,8 +2540,11 @@ function updateCategoryDisplay(expenses) {
 
     Object.entries(categoryBudgets).forEach(([category, budget]) => {
         const categoryExpenses = expenses.filter(e => e.category === category);
-        // Sum all transactions (positive and negative)
-        const sum = categoryExpenses.reduce((sum, e) => sum + e.amount, 0);
+        // Sum transactions based on transactionType
+        const sum = categoryExpenses.reduce((sum, e) => {
+            const amount = e.transactionType === 'negative' ? -e.amount : e.amount;
+            return sum + amount;
+        }, 0);
         // Use absolute value for display and calculations
         const spent = Math.abs(sum);
         const percentage = (spent / budget * 100).toFixed(1);
