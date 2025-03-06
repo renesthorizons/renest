@@ -1242,33 +1242,6 @@
         .qualified-category {
             color: var(--text-dark) !important;
         }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content:first-of-type {
-            display: block;
-        }
-
-        .tab-button {
-            padding: 0.75rem 1rem;
-            background: none;
-            border: none;
-            border-bottom: 2px solid transparent;
-            margin-bottom: -2px;
-            cursor: pointer;
-            font-weight: 500;
-            color: var(--text-dark);
-            flex: 1;
-            min-width: 140px;
-            text-align: center;
-        }
-
-        .tab-button.active {
-            color: var(--primary);
-            border-bottom-color: var(--primary);
-        }
     </style>
 </head>
 <body>
@@ -1859,10 +1832,14 @@
     </div>
 
     <script>
-        // Initialize the first tab when the page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            showTab('rent');
-        });
+        // Hide all tabs except rent immediately
+        (function() {
+            const tabs = ['expenses-tab', 'account-tab', 'summary-tab'];
+            tabs.forEach(tabId => {
+                const tab = document.getElementById(tabId);
+                if (tab) tab.style.display = 'none';
+            });
+        })();
 
         // API Configuration
         const API = {
