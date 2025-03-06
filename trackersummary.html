@@ -2830,38 +2830,49 @@ window.addEventListener('resize', function() {
 
 // Main Initialization
 async function initializePage() {
+    console.time('Total Page Load');
     // console.log('Starting initializePage');
     
     const loadingOverlay = document.getElementById('loadingOverlay');
     try {
         loadingOverlay.style.display = 'flex';
         
+        console.time('Auth Check');
         const token = API.getToken();
         if (!token) {
             window.location.href = 'signin529.html';
             return;
         }
+        console.timeEnd('Auth Check');
 
         // 1. First get the user profile
+        console.time('User Profile Load');
         const userProfile = await fetchUserProfile();
+        console.timeEnd('User Profile Load');
         // console.log('User profile loaded:', userProfile);
         if (!userProfile) throw new Error('Failed to load user profile');
 
         // 2. Load current budgets
+        console.time('Budgets Load');
         const budgets = await loadCurrentBudgets();
+        console.timeEnd('Budgets Load');
         // console.log('Current budgets loaded:', budgets);
 
         // 3. Fetch all expenses (both manual and automatic)
+        console.time('Expenses Load');
         const expenses = await fetchExpenses();
+        console.timeEnd('Expenses Load');
         // console.log('All expenses loaded:', expenses);
 
         // 4. Calculate benefits using combined transactions data
+        console.time('Benefits Calculation');
         const benefits = calculateBenefits(expenses, userProfile.state, userProfile.income);
+        console.timeEnd('Benefits Calculation');
         // console.log('Benefits calculated:', benefits);
 
         // 5. Update profile if benefits have changed
         if (benefits.ytdBenefit !== userProfile.currentBenefit) {
-            // console.log('Benefits have changed, updating profile');
+            console.time('Profile Update');
             try {
                 await updateProfile({
                     currentBenefit: benefits.ytdBenefit
@@ -2869,6 +2880,7 @@ async function initializePage() {
             } catch (error) {
                 console.warn('Failed to update profile with new benefits:', error);
             }
+            console.timeEnd('Profile Update');
         }
 
         // 6. Update UI with all data
@@ -2921,6 +2933,7 @@ async function initializePage() {
         alert('Error loading data. Please try again.');
     } finally {
         loadingOverlay.style.display = 'none';
+        console.timeEnd('Total Page Load');
     }
 }
 
