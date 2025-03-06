@@ -2312,10 +2312,21 @@ async function getUserId(token) {
 function convertPlaidToExpenses(categorySummary) {
     const expenses = [];
     
+    console.log('Converting Plaid transactions to expenses. Category summary:', categorySummary);
+    
     // Iterate through each category in the summary
     Object.entries(categorySummary).forEach(([category, data]) => {
+        console.log(`Processing category: ${category}`);
         // Each category contains an array of transactions
         data.transactions.forEach(transaction => {
+            console.log('Transaction details:', {
+                id: transaction.id,
+                category: category,
+                amount: transaction.amount,
+                isQualified: transaction.isQualified,
+                isQualifiedCategory: qualifiedCategories.includes(category)
+            });
+            
             // Create an expense object for each transaction
             const expense = {
                 expenseID: transaction.id,               // Use Plaid transaction ID
@@ -2331,13 +2342,16 @@ function convertPlaidToExpenses(categorySummary) {
         });
     });
     
+    console.log('Converted Plaid expenses:', expenses);
     return expenses;
 }
 
 async function fetchExpenses() {
     try {
+        console.log('Starting fetchExpenses');
         // 1. First get the user profile to check account status
         const userProfile = await fetchUserProfile();
+        console.log('User profile:', userProfile);
         
         // 2. Fetch manual transactions (keep existing functionality)
         const response = await fetch(`${API.expenseUrl}/expenses`, {
@@ -2348,9 +2362,11 @@ async function fetchExpenses() {
         if (!response.ok) throw new Error('Failed to fetch manual expenses');
         const manualData = await response.json();
         let allExpenses = manualData.expenses || [];
+        console.log('Manual expenses:', allExpenses);
         
         // 3. If account status is AUTOMATIC, also fetch Plaid transactions
         if (userProfile && userProfile.accountStatus === 'AUTOMATIC') {
+            console.log('Fetching Plaid transactions for automatic account');
             const plaidTransactions = await fetchPlaidTransactions(
                 currentDisplayMonth.getMonth() + 1,  // Plaid API expects 1-12 for months
                 currentDisplayMonth.getFullYear()
@@ -2358,9 +2374,11 @@ async function fetchExpenses() {
             
             // 4. Combine both data sources
             if (plaidTransactions && plaidTransactions.summary) {
+                console.log('Plaid transactions received:', plaidTransactions);
                 // Convert Plaid's categorized summary format to flat expense array
                 const plaidExpenses = convertPlaidToExpenses(plaidTransactions.summary);
                 allExpenses = [...allExpenses, ...plaidExpenses];
+                console.log('Combined all expenses:', allExpenses);
             }
         }
         
@@ -2373,6 +2391,12 @@ async function fetchExpenses() {
 
 // Calculation Functions
 function calculateBenefits(expenses, state, income) {
+    console.log('Starting calculateBenefits with:', {
+        expensesCount: expenses.length,
+        state,
+        income
+    });
+    
     const currentDate = new Date();
     const startOfYear = new Date(currentDate.getFullYear(), 0, 1);
     const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
@@ -2382,12 +2406,17 @@ function calculateBenefits(expenses, state, income) {
         .filter(e => e.category === 'Deposit529' && 
                      new Date(e.date) >= startOfYear)
         .reduce((sum, e) => sum + e.amount, 0);
+    console.log('Total deposits:', totalDeposits);
     
     // Get total qualified expenses year to date (Q)
-    const totalQualifiedExpenses = expenses
-        .filter(e => (qualifiedCategories.includes(e.category) || e.isQualified) && 
-                     new Date(e.date) >= startOfYear)
-        .reduce((sum, e) => sum + e.amount, 0);
+    const qualifiedExpenses = expenses.filter(e => 
+        (qualifiedCategories.includes(e.category) || e.isQualified) && 
+        new Date(e.date) >= startOfYear
+    );
+    console.log('Qualified expenses:', qualifiedExpenses);
+    
+    const totalQualifiedExpenses = qualifiedExpenses.reduce((sum, e) => sum + e.amount, 0);
+    console.log('Total qualified expenses:', totalQualifiedExpenses);
 
     // Get qualified expenses before current month (M)
     const qualifiedExpensesBeforeMonth = expenses
@@ -2395,15 +2424,18 @@ function calculateBenefits(expenses, state, income) {
                      new Date(e.date) >= startOfYear &&
                      new Date(e.date) < firstDayOfMonth)
         .reduce((sum, e) => sum + e.amount, 0);
+    console.log('Qualified expenses before current month:', qualifiedExpensesBeforeMonth);
 
     // Get current month's qualified expenses (E)
     const currentMonthQualifiedExpenses = expenses
         .filter(e => (qualifiedCategories.includes(e.category) || e.isQualified) && 
                      new Date(e.date) >= firstDayOfMonth)
         .reduce((sum, e) => sum + e.amount, 0);
+    console.log('Current month qualified expenses:', currentMonthQualifiedExpenses);
 
     // Calculate year to date benefit
     const ytdBenefit = calculateStateBenefit(state, Math.min(totalDeposits, totalQualifiedExpenses), income);
+    console.log('Year to date benefit:', ytdBenefit);
 
     // Calculate current month benefit
     let currentMonthBenefit = 0;
@@ -2412,13 +2444,16 @@ function calculateBenefits(expenses, state, income) {
         currentMonthBenefit = calculateStateBenefit(state, 
             Math.min(remainingDeposits, currentMonthQualifiedExpenses), income);
     }
+    console.log('Current month benefit:', currentMonthBenefit);
 
-    return {
+    const result = {
         currentMonthBenefit,
         ytdBenefit,
         qualifiedAmount: Math.min(totalDeposits, totalQualifiedExpenses),
         depositBalance: totalDeposits - totalQualifiedExpenses // L = D - Q (for status display)
     };
+    console.log('Final benefits calculation result:', result);
+    return result;
 }
 
 function calculateStateBenefit(state, totalQualifiedExpenses, income) {
@@ -2731,7 +2766,7 @@ window.addEventListener('resize', function() {
 
 // Main Initialization
 async function initializePage() {
-    console.log('Initializing page');
+    console.log('Starting initializePage');
     
     const loadingOverlay = document.getElementById('loadingOverlay');
     try {
@@ -2745,19 +2780,24 @@ async function initializePage() {
 
         // 1. First get the user profile
         const userProfile = await fetchUserProfile();
+        console.log('User profile loaded:', userProfile);
         if (!userProfile) throw new Error('Failed to load user profile');
 
         // 2. Load current budgets
         const budgets = await loadCurrentBudgets();
+        console.log('Current budgets loaded:', budgets);
 
         // 3. Fetch all expenses (both manual and automatic)
         const expenses = await fetchExpenses();
+        console.log('All expenses loaded:', expenses);
 
         // 4. Calculate benefits using combined transactions data
         const benefits = calculateBenefits(expenses, userProfile.state, userProfile.income);
+        console.log('Benefits calculated:', benefits);
 
         // 5. Update profile if benefits have changed
         if (benefits.ytdBenefit !== userProfile.currentBenefit) {
+            console.log('Benefits have changed, updating profile');
             try {
                 await updateProfile({
                     currentBenefit: benefits.ytdBenefit
@@ -2782,6 +2822,7 @@ async function initializePage() {
             
             // Fetch expenses for the new month
             const monthExpenses = await fetchExpenses(); // This will get both data sources
+            console.log('Month expenses loaded:', monthExpenses);
             
             updateCategoryDisplayForMonth(monthExpenses, currentDisplayMonth);
             if (chartContainer.style.display !== 'none') {
@@ -2798,6 +2839,7 @@ async function initializePage() {
                 
                 // Fetch expenses for the new month
                 const monthExpenses = await fetchExpenses(); // This will get both data sources
+                console.log('Month expenses loaded:', monthExpenses);
                 
                 updateCategoryDisplayForMonth(monthExpenses, currentDisplayMonth);
                 if (chartContainer.style.display !== 'none') {
