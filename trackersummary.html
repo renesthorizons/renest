@@ -2323,7 +2323,7 @@ function convertPlaidToExpenses(categorySummary) {
                 amount: transaction.amount,              // Amount
                 date: transaction.date,                  // Date
                 notes: transaction.description || '',    // Description as notes
-                isQualified: transaction.isQualified || qualifiedCategories.includes(category),    // Qualified status
+                isQualified: transaction.isQualified,    // Qualified status
                 source: 'automatic'                      // Add source flag
             };
             
@@ -2743,19 +2743,20 @@ async function initializePage() {
             return;
         }
 
-        // Fetch all initial data in parallel
-        const [userProfile, expenses, budgets] = await Promise.all([
-            fetchUserProfile(),
-            fetchExpenses(),  // This now gets both manual and automatic transactions
-            loadCurrentBudgets()
-        ]);
-
+        // 1. First get the user profile
+        const userProfile = await fetchUserProfile();
         if (!userProfile) throw new Error('Failed to load user profile');
 
-        // Calculate benefits using combined transactions data
+        // 2. Load current budgets
+        const budgets = await loadCurrentBudgets();
+
+        // 3. Fetch all expenses (both manual and automatic)
+        const expenses = await fetchExpenses();
+
+        // 4. Calculate benefits using combined transactions data
         const benefits = calculateBenefits(expenses, userProfile.state, userProfile.income);
 
-        // Only update profile if benefits have changed
+        // 5. Update profile if benefits have changed
         if (benefits.ytdBenefit !== userProfile.currentBenefit) {
             try {
                 await updateProfile({
@@ -2766,7 +2767,7 @@ async function initializePage() {
             }
         }
 
-        // Update UI with expenses parameter
+        // 6. Update UI with all data
         updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
         updateBenefitDisplay(benefits, userProfile.state, userProfile.accountStatus, expenses);
         updateMonthDisplay();
@@ -2808,9 +2809,6 @@ async function initializePage() {
         // Add these new initializations
         const editBudgetsBtn = document.getElementById('editBudgets');
         editBudgetsBtn.addEventListener('click', toggleEditMode);
-
-        // Load initial budgets
-        await loadCurrentBudgets();
         
     } catch (error) {
         console.error('Error initializing page:', error);
