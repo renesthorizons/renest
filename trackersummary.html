@@ -2557,11 +2557,11 @@ function updateCategoryDisplay(expenses) {
         // Calculate total for the category, considering transaction types
         const total = categoryExpenses.reduce((sum, e) => sum + e.amount, 0);
         
-        // For display purposes, always show positive numbers
+        // If total is negative (net credit), use absolute value and gold color
+        const isCredit = total < 0;
         const displayAmount = Math.abs(total);
         const percentage = (displayAmount / budget * 100).toFixed(1);
         const isQualified = qualifiedCategories.includes(category);
-        const isCredit = total < 0;  // Track if this is a credit category
 
         container.insertAdjacentHTML('beforeend', `
             <div class="category">
@@ -3382,32 +3382,26 @@ function updateCategoryDisplayForMonth(expenses, selectedDate) {
     Object.entries(currentBudgets).forEach(([category, data]) => {
         const budget = data.amount;
         const categoryExpenses = monthExpenses.filter(e => e.category === category);
-        const spent = categoryExpenses.reduce((sum, e) => sum + e.amount, 0);
-        const percentage = (spent / budget * 100).toFixed(1);
+        const total = categoryExpenses.reduce((sum, e) => sum + e.amount, 0);
+        const displayAmount = Math.abs(total);
+        const percentage = (displayAmount / budget * 100).toFixed(1);
         const isQualified = qualifiedCategories.includes(category);
+        const isCredit = total < 0;  // Track if this is a credit category
         
-        // Count how many transactions were automatic vs manual for this category (optional)
-        const automaticCount = categoryExpenses.filter(e => e.source === 'automatic').length;
-        const manualCount = categoryExpenses.length - automaticCount;
-        
-        // Optional: Add indicator for categories with automatic data
-        const autoIndicator = automaticCount > 0 ? 
-            `<span class="auto-indicator" title="${automaticCount} automatic transactions">🔄</span>` : '';
-
         container.insertAdjacentHTML('beforeend', `
             <div class="category">
                 <div class="category-header">
                     <div class="category-name">
                         <span>${categoryIcons[category] || '📊'}</span>
                         <span>${category}</span>
-                        ${autoIndicator}
+                        ${isCredit ? '<span class="credit-badge">💰 Credit</span>' : ''}
                         ${isQualified ? '<span class="qualified-badge">✓ Qualified</span>' : ''}
                     </div>
-                    <div class="category-amounts">$${spent.toFixed(2)} of $${budget}</div>
+                    <div class="category-amounts">$${displayAmount.toFixed(2)} of $${budget}</div>
                 </div>
                 <div class="progress-bar">
                     <div class="progress-spent" style="width: ${Math.min(percentage, 100)}%; 
-                         background: ${isQualified ? 'var(--success)' : 'var(--primary)'}">
+                         background: ${isCredit ? 'var(--gold)' : (isQualified ? 'var(--success)' : 'var(--primary)')}">
                     </div>
                     <div class="progress-label">${percentage}%</div>
                 </div>
