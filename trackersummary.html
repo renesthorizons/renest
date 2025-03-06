@@ -2388,11 +2388,10 @@ async function fetchExpenses() {
     try {
         console.time('Total Expenses Load');
         
-        // Check cache first
-        const now = Date.now();
-        if (expenseCache.data && expenseCache.timestamp && (now - expenseCache.timestamp < expenseCache.maxAge)) {
-            console.log('Using cached expense data');
-            return expenseCache.data;
+        // Use existing cache
+        if (allTransactions) {
+            console.log('Using cached transactions');
+            return allTransactions;
         }
 
         // 1. Get user profile
@@ -2412,25 +2411,22 @@ async function fetchExpenses() {
         let allExpenses = manualData.expenses || [];
         console.timeEnd('Manual Expenses');
         
-        // 3. If automatic account, fetch Plaid transactions for current month plus previous two months
+        // 3. If automatic account, fetch Plaid transactions for year-to-date in parallel
         if (userProfile && userProfile.accountStatus === 'AUTOMATIC') {
             console.time('Plaid Transactions');
             const currentDate = new Date();
             const currentYear = currentDate.getFullYear();
-            const currentMonth = currentDate.getMonth() + 1;
+            const currentMonth = currentDate.getMonth() + 1; // 1-based month
             
-            // Fetch last 3 months in parallel
-            const monthsToFetch = [];
-            for (let i = 0; i < 3; i++) {
-                let month = currentMonth - i;
-                let year = currentYear;
-                if (month <= 0) {
-                    month += 12;
-                    year -= 1;
-                }
-                monthsToFetch.push({ month, year });
-            }
+            // Create array of months from January to current month
+            const monthsToFetch = Array.from(
+                { length: currentMonth }, 
+                (_, i) => ({ month: i + 1, year: currentYear })
+            );
             
+            console.log(`Fetching ${monthsToFetch.length} months of transactions in parallel`);
+            
+            // Fetch all months in parallel
             const plaidResults = await Promise.all(
                 monthsToFetch.map(({ month, year }) => 
                     fetchPlaidTransactions(month, year)
@@ -2452,27 +2448,20 @@ async function fetchExpenses() {
             console.timeEnd('Plaid Transactions');
         }
         
-        // Cache the results
-        expenseCache.data = allExpenses;
-        expenseCache.timestamp = now;
+        // Store in existing cache
+        allTransactions = allExpenses;
         
         console.timeEnd('Total Expenses Load');
         return allExpenses;
     } catch (error) {
         console.error('Error fetching expenses:', error);
-        // If cache exists and there's an error, use cached data as fallback
-        if (expenseCache.data) {
-            console.log('Using cached data as fallback after error');
-            return expenseCache.data;
-        }
         return [];
     }
 }
 
-// Add function to clear expense cache when needed
-function clearExpenseCache() {
-    expenseCache.data = null;
-    expenseCache.timestamp = null;
+// Use existing clearTransactionCache function
+function clearTransactionCache() {
+    allTransactions = null;
 }
 
 // Calculation Functions
