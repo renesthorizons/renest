@@ -1286,7 +1286,24 @@
             <div style="flex: 1; min-width: 200px;">
                 <label style="display: block; margin-bottom: 0.5rem;">Date Range</label>
                 <div style="display: flex; gap: 0.5rem;">
-                    <input type="month" id="transaction-month" class="form-control" style="flex: 1;">
+                    <select id="transaction-month" class="form-control" style="flex: 1;">
+                        <option value="01">January</option>
+                        <option value="02">February</option>
+                        <option value="03">March</option>
+                        <option value="04">April</option>
+                        <option value="05">May</option>
+                        <option value="06">June</option>
+                        <option value="07">July</option>
+                        <option value="08">August</option>
+                        <option value="09">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                    <select id="transaction-year" class="form-control" style="flex: 1;">
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -2493,18 +2510,26 @@ async function loadPlaidTransactions() {
         const tableBody = document.getElementById('transactions-tbody');
         tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem;">Loading transactions...</td></tr>';
 
-        // Get the selected month/year filter
-        const monthInput = document.getElementById('transaction-month');
+        // Get the selected month/year
+        const monthSelect = document.getElementById('transaction-month');
+        const yearSelect = document.getElementById('transaction-year');
         const now = new Date();
         
-        // If no month is selected, default to current month
-        if (!monthInput.value) {
-            monthInput.value = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}`;
+        // If no month/year is selected, default to current
+        if (!monthSelect.value) {
+            monthSelect.value = (now.getMonth() + 1).toString().padStart(2, '0');
+        }
+        if (!yearSelect.value) {
+            yearSelect.value = now.getFullYear().toString();
         }
         
-        const selectedDate = new Date(monthInput.value + '-01');
-        const month = selectedDate.getMonth() + 1;
-        const year = selectedDate.getFullYear();
+        // Add 1 to month to correct the offset
+        const month = parseInt(monthSelect.value) + 1;
+        const year = parseInt(yearSelect.value);
+        
+        // Adjust year if month overflows
+        const adjustedMonth = month > 12 ? 1 : month;
+        const adjustedYear = month > 12 ? year + 1 : year;
 
         // Call the API to get transaction data
         const response = await fetch('https://fq3oz4hac8.execute-api.us-east-2.amazonaws.com/plaid', {
@@ -2516,8 +2541,8 @@ async function loadPlaidTransactions() {
             body: JSON.stringify({
                 action: 'getExpenseSummary',
                 userId: await getUserId(token),
-                month: month,
-                year: year
+                month: adjustedMonth,
+                year: adjustedYear
             })
         });
 
@@ -2924,9 +2949,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             toggleManualControls(false);
             plaidConnected = true;
             
-            // Set up month selector for Plaid transactions
-            const monthInput = document.getElementById('transaction-month');
-            monthInput.addEventListener('change', loadPlaidTransactions);
+            // Set up month and year selectors for Plaid transactions
+            const monthSelect = document.getElementById('transaction-month');
+            const yearSelect = document.getElementById('transaction-year');
+            
+            // Set default values to current month/year
+            const now = new Date();
+            monthSelect.value = (now.getMonth() + 1).toString().padStart(2, '0');
+            yearSelect.value = now.getFullYear().toString();
+            
+            // Add event listeners
+            monthSelect.addEventListener('change', loadPlaidTransactions);
+            yearSelect.addEventListener('change', loadPlaidTransactions);
             
             // Load initial Plaid transactions
             loadPlaidTransactions();
