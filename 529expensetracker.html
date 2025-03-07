@@ -3229,6 +3229,37 @@ document.getElementById('update-transactions').addEventListener('click', async f
         const token = API.getToken();
         if (!token) throw new Error('No authentication token found');
         
+        // Check last update time
+        const lastUpdateElement = document.getElementById('last-update-time');
+        const lastUpdateText = lastUpdateElement.textContent;
+        console.log('Last update text:', lastUpdateText);
+        
+        if (lastUpdateText && lastUpdateText !== 'Last updated: Never') {
+            // Extract the date string and parse it
+            const dateStr = lastUpdateText.replace('Last updated: ', '');
+            console.log('Extracted date string:', dateStr);
+            
+            const lastUpdate = new Date(dateStr);
+            const now = new Date();
+            console.log('Last update:', lastUpdate);
+            console.log('Current time:', now);
+            
+            if (lastUpdate.toString() === 'Invalid Date') {
+                console.error('Failed to parse last update date');
+            } else {
+                const hoursSinceLastUpdate = (now - lastUpdate) / (1000 * 60 * 60);
+                console.log('Hours since last update:', hoursSinceLastUpdate);
+                
+                if (hoursSinceLastUpdate < 24) {
+                    const hoursRemaining = Math.ceil(24 - hoursSinceLastUpdate);
+                    const errorMsg = `Please wait ${hoursRemaining} more hours before updating again. Updates are allowed once every 24 hours.`;
+                    console.log('Showing error:', errorMsg);
+                    showError(errorMsg);
+                    return;
+                }
+            }
+        }
+        
         // Show loading state
         this.disabled = true;
         this.innerHTML = 'Updating...';
@@ -3252,6 +3283,10 @@ document.getElementById('update-transactions').addEventListener('click', async f
         
         // Show success message
         showSuccess(data.message || 'Transactions updated successfully!');
+        
+        // Update the last update time immediately
+        const currentTime = new Date().toLocaleString();
+        lastUpdateElement.textContent = `Last updated: ${currentTime}`;
         
         // Reload transactions
         loadPlaidTransactions();
