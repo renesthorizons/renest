@@ -1243,48 +1243,82 @@
             color: var(--text-dark) !important;
         }
 
-        /* Add mobile styles for transaction table */
         @media (max-width: 768px) {
-            .transaction-table-container {
-                margin: 0.5rem -1rem;
-                padding: 0 1rem;
+            .automation-section .tracker-card {
+                padding: 1rem;
+                margin: 0.5rem 0;
             }
 
-            .transaction-table-container table {
+            .automation-section .section-title {
+                font-size: 1.25rem;
+                margin-bottom: 1rem;
+            }
+
+            .automation-section .form-control {
+                font-size: 0.875rem;
+                padding: 0.5rem;
+                height: 2.5rem;
+            }
+
+            .automation-section .select-container select {
+                height: 2.5rem;
+            }
+
+            /* Make the filter controls stack on mobile */
+            .automation-section .tracker-card > div:first-of-type {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .automation-section .tracker-card > div:first-of-type > div {
+                width: 100%;
+                min-width: 100%;
+            }
+
+            /* Adjust the date range selects to be full width */
+            .automation-section .tracker-card > div:first-of-type > div:last-child > div {
+                flex-direction: row;
+                gap: 0.5rem;
+            }
+
+            /* Make the update buttons stack and full width */
+            .automation-section .tracker-card > div:nth-of-type(2) {
+                flex-direction: column;
+                gap: 0.75rem;
+                align-items: stretch;
+            }
+
+            .automation-section .tracker-card > div:nth-of-type(2) > div:last-child {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .automation-section .tracker-card > div:nth-of-type(2) button {
+                width: 100%;
+                margin: 0 !important;
+            }
+
+            /* Adjust the last update time text */
+            .automation-section #last-update-time {
+                display: block;
+                text-align: center;
+                margin-bottom: 0.5rem;
+            }
+
+            /* Make pagination controls more compact */
+            .automation-section .transaction-table-container + div {
+                gap: 0.5rem;
+                margin-top: 0.75rem;
+            }
+
+            .automation-section .transaction-table-container + div button {
+                padding: 0.5rem 1rem;
                 font-size: 0.875rem;
             }
 
-            .transaction-table-container th,
-            .transaction-table-container td {
-                padding: 0.5rem !important;
-            }
-
-            .transaction-table-container th:nth-child(4),
-            .transaction-table-container td:nth-child(4) {
-                display: none;
-            }
-
-            .transaction-table-container th:nth-child(2),
-            .transaction-table-container td:nth-child(2) {
-                max-width: 120px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
-
-            .transaction-table-container th:nth-child(3),
-            .transaction-table-container td:nth-child(3) {
-                padding-right: 0.25rem !important;
-            }
-
-            .transaction-table-container th:nth-child(5),
-            .transaction-table-container td:nth-child(5) {
-                padding-left: 0.25rem !important;
-            }
-
-            .transaction-table-container button {
-                padding: 0.25rem 0.5rem;
-                font-size: 0.75rem;
+            .automation-section .transaction-table-container + div span {
+                font-size: 0.875rem;
             }
         }
 
