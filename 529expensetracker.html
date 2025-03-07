@@ -1379,6 +1379,62 @@
             justify-content: space-between;
             align-items: center;
         }
+
+        /* Make horizontal scrollbar always visible */
+        .transaction-table-container {
+            overflow-x: auto;
+            margin-top: 1rem;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+        }
+
+        .transaction-table-container::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+        }
+
+        .transaction-table-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .transaction-table-container::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+
+        .transaction-table-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            /* Previous mobile styles... */
+
+            /* Fix pagination button size */
+            .automation-section .transaction-table-container + div {
+                gap: 0.5rem;
+                margin-top: 0.75rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .automation-section .transaction-table-container + div button {
+                padding: 4px 12px;
+                font-size: 0.75rem;
+                height: 28px;
+                min-height: unset;
+                line-height: 1;
+                margin: 0;
+            }
+
+            .automation-section .transaction-table-container + div span {
+                font-size: 0.75rem;
+                height: 28px;
+                line-height: 28px;
+                margin: 0 0.5rem !important;
+            }
+        }
     </style>
 </head>
 <body>
