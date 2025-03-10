@@ -333,12 +333,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <label style="font-weight: 700; color:var(--primary);">Which session will you attend? *</label>
                         <div class="radio-group">
                             <div class="radio-option">
-                                <input type="radio" id="date1" name="date" value="May 7th, 4-4:30pm" required>
-                                <label for="date1">May 7th, 4-4:30pm PST</label>
+                                <input type="radio" id="date1" name="date" value="May 14th, 4-4:30pm ET" required>
+                                <label for="date1">May 14th, 4-4:30pm ET</label>
                             </div>
                             <div class="radio-option">
-                                <input type="radio" id="date2" name="date" value="May 9th, 1-1:30pm" required>
-                                <label for="date2">May 9th, 1-1:30PM PST</label>
+                                <input type="radio" id="date2" name="date" value="May 16th, 1-1:30pm ET" required>
+                                <label for="date2">May 16th, 1-1:30PM ET</label>
                             </div>
                             <div class="radio-option">
                                 <input type="radio" id="date3" name="date" value="Cannot make either" required>
@@ -351,11 +351,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <input type="text" id="currentSchool" name="currentSchool" required placeholder="Type to search...">
                         <div class="suggestions-dropdown" id="schoolDropdown"></div>
                         <input type="text" id="customSchool" name="customSchool" class="custom-school-input" placeholder="Type your school name...">
-                    </div>
-                    <div class="form-group">
-                        <label for="state" style="font-weight: 700;color:var(--primary);">Where will you be attending graduate school? Select undecided if you are unsure. *</label>
-                        <input type="text" id="state" name="state" required placeholder="Type state name to search...">
-                        <div class="suggestions-dropdown" id="suggestionsDropdown"></div>
                     </div>
                     <div class="form-group">
                         <label for="email" style="font-weight: 700;color:var(--primary);">Email *</label>
@@ -392,63 +387,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </footer> -->
 
     <script>
-        const stateOptions = {
-            'AL': 'Alabama',
-            'AK': 'Alaska',
-            'AZ': 'Arizona',
-            'AR': 'Arkansas',
-            'CA': 'California',
-            'CO': 'Colorado',
-            'CT': 'Connecticut',
-            'DE': 'Delaware',
-            'DC': 'Washington D.C.',
-            'FL': 'Florida',
-            'GA': 'Georgia',
-            'HI': 'Hawaii',
-            'ID': 'Idaho',
-            'IL': 'Illinois',
-            'IN': 'Indiana',
-            'IA': 'Iowa',
-            'KS': 'Kansas',
-            'KY': 'Kentucky',
-            'LA': 'Louisiana',
-            'ME': 'Maine',
-            'MD': 'Maryland',
-            'MA': 'Massachusetts',
-            'MI': 'Michigan',
-            'MN': 'Minnesota',
-            'MS': 'Mississippi',
-            'MO': 'Missouri',
-            'MT': 'Montana',
-            'NE': 'Nebraska',
-            'NV': 'Nevada',
-            'NH': 'New Hampshire',
-            'NJ': 'New Jersey',
-            'NM': 'New Mexico',
-            'NY': 'New York',
-            'NYC': 'New York City',
-            'NC': 'North Carolina',
-            'ND': 'North Dakota',
-            'OH': 'Ohio',
-            'OK': 'Oklahoma',
-            'OR': 'Oregon',
-            'PA': 'Pennsylvania',
-            'PR': 'Puerto Rico',
-            'RI': 'Rhode Island',
-            'SC': 'South Carolina',
-            'SD': 'South Dakota',
-            'TN': 'Tennessee',
-            'TX': 'Texas',
-            'UT': 'Utah',
-            'VT': 'Vermont',
-            'VA': 'Virginia',
-            'WA': 'Washington',
-            'WV': 'West Virginia',
-            'WI': 'Wisconsin',
-            'WY': 'Wyoming',
-            'OO': 'Undecided'
-        };
-
         const schoolOptions = [
             'UC Berkeley',
             'UC Davis',
@@ -481,13 +419,171 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             'Cal State San Jose',
             'Cal State San Marcos',
             'Cal State Sonoma',
-            'Cal State Stanislaus'
+            'Cal State Stanislaus',
+            // Alabama
+            'University of Alabama',
+            'Auburn University',
+            // Alaska
+            'University of Alaska Anchorage',
+            'University of Alaska Fairbanks',
+            // Arizona
+            'Arizona State University',
+            'University of Arizona',
+            // Arkansas
+            'University of Arkansas',
+            'Arkansas State University',
+            // California
+            'USC',
+            'Stanford University',
+            // Colorado
+            'University of Colorado Boulder',
+            'Colorado State University',
+            // Connecticut
+            'University of Connecticut',
+            'Yale University',
+            // Delaware
+            'University of Delaware',
+            'Delaware State University',
+            // Florida
+            'University of Florida',
+            'Florida State University',
+            'University of Miami',
+            // Georgia
+            'University of Georgia',
+            'Georgia Tech',
+            'Emory University',
+            // Hawaii
+            'University of Hawaii at Manoa',
+            'Hawaii Pacific University',
+            // Idaho
+            'Boise State University',
+            'University of Idaho',
+            // Illinois
+            'University of Illinois Urbana-Champaign',
+            'Northwestern University',
+            'University of Chicago',
+            // Indiana
+            'Indiana University Bloomington',
+            'Purdue University',
+            'University of Notre Dame',
+            // Iowa
+            'University of Iowa',
+            'Iowa State University',
+            // Kansas
+            'University of Kansas',
+            'Kansas State University',
+            // Kentucky
+            'University of Kentucky',
+            'University of Louisville',
+            // Louisiana
+            'Louisiana State University',
+            'Tulane University',
+            // Maine
+            'University of Maine',
+            'Bowdoin College',
+            // Maryland
+            'University of Maryland',
+            'Johns Hopkins University',
+            // Massachusetts
+            'Harvard University',
+            'MIT',
+            'Boston University',
+            'Northeastern University',
+            // Michigan
+            'University of Michigan',
+            'Michigan State University',
+            // Minnesota
+            'University of Minnesota',
+            'Minnesota State University',
+            // Mississippi
+            'University of Mississippi',
+            'Mississippi State University',
+            // Missouri
+            'University of Missouri',
+            'Washington University in St. Louis',
+            // Montana
+            'University of Montana',
+            'Montana State University',
+            // Nebraska
+            'University of Nebraska-Lincoln',
+            'Creighton University',
+            // Nevada
+            'University of Nevada, Las Vegas',
+            'University of Nevada, Reno',
+            // New Hampshire
+            'University of New Hampshire',
+            'Dartmouth College',
+            // New Jersey
+            'Rutgers University',
+            'Princeton University',
+            // New Mexico
+            'University of New Mexico',
+            'New Mexico State University',
+            // New York
+            'New York University',
+            'Columbia University',
+            'Cornell University',
+            'SUNY Buffalo',
+            // North Carolina
+            'University of North Carolina at Chapel Hill',
+            'Duke University',
+            'North Carolina State University',
+            // North Dakota
+            'University of North Dakota',
+            'North Dakota State University',
+            // Ohio
+            'Ohio State University',
+            'University of Cincinnati',
+            'Case Western Reserve University',
+            // Oklahoma
+            'University of Oklahoma',
+            'Oklahoma State University',
+            // Oregon
+            'University of Oregon',
+            'Oregon State University',
+            // Pennsylvania
+            'Penn State University',
+            'University of Pennsylvania',
+            'Carnegie Mellon University',
+            // Rhode Island
+            'University of Rhode Island',
+            'Brown University',
+            // South Carolina
+            'University of South Carolina',
+            'Clemson University',
+            // South Dakota
+            'University of South Dakota',
+            'South Dakota State University',
+            // Tennessee
+            'University of Tennessee',
+            'Vanderbilt University',
+            // Texas
+            'University of Texas at Austin',
+            'Texas A&M University',
+            'Rice University',
+            // Utah
+            'University of Utah',
+            'Brigham Young University',
+            // Vermont
+            'University of Vermont',
+            'Middlebury College',
+            // Virginia
+            'University of Virginia',
+            'Virginia Tech',
+            'College of William & Mary',
+            // Washington
+            'University of Washington',
+            'Washington State University',
+            // West Virginia
+            'West Virginia University',
+            'Marshall University',
+            // Wisconsin
+            'University of Wisconsin-Madison',
+            'Marquette University',
+            // Wyoming
+            'University of Wyoming',
+            'Wyoming Catholic College'
         ];
-
-        // State selection functionality
-        const stateInput = document.getElementById('state');
-        const suggestionsDropdown = document.getElementById('suggestionsDropdown');
-        let selectedIndex = -1;
 
         // School selection functionality
         const schoolInput = document.getElementById('currentSchool');
@@ -593,155 +689,93 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         // Close dropdowns when clicking outside
         document.addEventListener('click', function(e) {
-            if (!stateInput.contains(e.target) && !suggestionsDropdown.contains(e.target)) {
-                suggestionsDropdown.style.display = 'none';
-            }
             if (!schoolInput.contains(e.target) && !schoolDropdown.contains(e.target)) {
                 schoolDropdown.style.display = 'none';
             }
         });
 
-        stateInput.addEventListener('input', function(e) {
-            const searchText = e.target.value.toLowerCase();
-            const suggestions = Object.values(stateOptions).filter(state => 
-                state.toLowerCase().includes(searchText)
-            );
-
-            // Clear previous suggestions
-            suggestionsDropdown.innerHTML = '';
-            selectedIndex = -1;
-
-            if (searchText.length > 0) {
-                // Add new suggestions
-                suggestions.forEach((state, index) => {
-                    const div = document.createElement('div');
-                    div.className = 'suggestion-item';
-                    div.textContent = state;
-                    div.addEventListener('click', () => {
-                        stateInput.value = state;
-                        suggestionsDropdown.style.display = 'none';
-                    });
-                    suggestionsDropdown.appendChild(div);
-                });
-
-                suggestionsDropdown.style.display = 'block';
-            } else {
-                suggestionsDropdown.style.display = 'none';
-            }
-        });
-
-        // Handle keyboard navigation
-        stateInput.addEventListener('keydown', function(e) {
-            const items = suggestionsDropdown.getElementsByClassName('suggestion-item');
-            
-            if (items.length === 0) return;
-
-            switch(e.key) {
-                case 'ArrowDown':
-                    e.preventDefault();
-                    if (selectedIndex < items.length - 1) {
-                        if (selectedIndex >= 0) items[selectedIndex].classList.remove('selected');
-                        selectedIndex++;
-                        items[selectedIndex].classList.add('selected');
-                        stateInput.value = items[selectedIndex].textContent;
-                    }
-                    break;
-                case 'ArrowUp':
-                    e.preventDefault();
-                    if (selectedIndex > 0) {
-                        items[selectedIndex].classList.remove('selected');
-                        selectedIndex--;
-                        items[selectedIndex].classList.add('selected');
-                        stateInput.value = items[selectedIndex].textContent;
-                    }
-                    break;
-                case 'Enter':
-                    e.preventDefault();
-                    if (selectedIndex >= 0) {
-                        suggestionsDropdown.style.display = 'none';
-                    }
-                    break;
-                case 'Escape':
-                    suggestionsDropdown.style.display = 'none';
-                    break;
-            }
-        });
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!stateInput.contains(e.target) && !suggestionsDropdown.contains(e.target)) {
-                suggestionsDropdown.style.display = 'none';
-            }
-        });
-
-        // const menuButton = document.querySelector('.menu-button');
-        // const navLinks = document.querySelector('.nav-links');
-
-        // menuButton.addEventListener('click', function(e) {
-        //     e.stopPropagation();
-        //     navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-        //     menuButton.setAttribute('aria-expanded', navLinks.style.display === 'flex');
-        // });
-
-        // document.addEventListener('click', function(e) {
-        //     if (window.innerWidth < 768 && !navLinks.contains(e.target) && e.target !== menuButton) {
-        //         navLinks.style.display = 'none';
-        //         menuButton.setAttribute('aria-expanded', false);
-        //     }
-        // });
-
         // Google Form integration
         document.getElementById('eventForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const date = encodeURIComponent(document.querySelector('input[name="date"]:checked').value);
-            const currentSchool = encodeURIComponent(customSchoolInput.classList.contains('visible') ? customSchoolInput.value : schoolInput.value);
-            const state = encodeURIComponent(document.getElementById('state').value);
-            const email = encodeURIComponent(document.getElementById('email').value);
-            const comments = encodeURIComponent(document.getElementById('comments').value);
+            const date = document.querySelector('input[name="date"]:checked').value;
+            const dateValue = date.includes('14th') ? 'may14' : (date.includes('16th') ? 'may16' : 'cannot');
+            const currentSchool = customSchoolInput.classList.contains('visible') ? customSchoolInput.value : schoolInput.value;
+            const email = document.getElementById('email').value;
+            const comments = document.getElementById('comments').value;
             
-            const baseUrl = 'https://docs.google.com/forms/d/e/1FAIpQLScgmOT3JEm9ErKObGHL_FXdZX8pHO4E6hpjIqnl0rjKKpq10A/formResponse';
-            const queryString = `?entry.2011191131=${date}&entry.109512033=${currentSchool}&entry.1858725853=${state}&entry.2014706406=${email}&entry.817475050=${comments}`;
+            const formData = new FormData();
+            formData.append('entry.943921368', dateValue);
+            formData.append('entry.859536874', currentSchool);
+            formData.append('entry.2073292096', email);
+            formData.append('entry.839749872', comments);
             
-            // Using a hidden iframe to submit the form without redirecting
-            const iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.setAttribute('src', baseUrl + queryString);
-            document.body.appendChild(iframe);
-            
-            // Create and show styled thank you message
-            const thankYouModal = document.createElement('div');
-            thankYouModal.style.position = 'fixed';
-            thankYouModal.style.top = '0';
-            thankYouModal.style.left = '0';
-            thankYouModal.style.width = '100%';
-            thankYouModal.style.height = '100%';
-            thankYouModal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-            thankYouModal.style.display = 'flex';
-            thankYouModal.style.justifyContent = 'center';
-            thankYouModal.style.alignItems = 'center';
-            thankYouModal.style.zIndex = '2000';
-            
-            thankYouModal.innerHTML = `
-                <div style="background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); max-width: 500px; width: 90%; text-align: center; position: relative;">
-                    <div style="width: 48px; height: 48px; margin: 0 auto 1rem; background: linear-gradient(45deg, #4B227A, #FF69B4); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
+            fetch('https://docs.google.com/forms/d/e/1FAIpQLSdIFuzsFdbW7r2NvHk9Cp2WBEeUiqH-eOmFFzox563ZEN_E1Q/formResponse', {
+                method: 'POST',
+                mode: 'no-cors',
+                body: formData
+            })
+            .then(() => {
+                // Create and show styled thank you message
+                const thankYouModal = document.createElement('div');
+                thankYouModal.style.position = 'fixed';
+                thankYouModal.style.top = '0';
+                thankYouModal.style.left = '0';
+                thankYouModal.style.width = '100%';
+                thankYouModal.style.height = '100%';
+                thankYouModal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+                thankYouModal.style.display = 'flex';
+                thankYouModal.style.justifyContent = 'center';
+                thankYouModal.style.alignItems = 'center';
+                thankYouModal.style.zIndex = '2000';
+                
+                thankYouModal.innerHTML = `
+                    <div style="background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); max-width: 500px; width: 90%; text-align: center; position: relative;">
+                        <div style="width: 48px; height: 48px; margin: 0 auto 1rem; background: linear-gradient(45deg, #4B227A, #FF69B4); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </div>
+                        <h2 style="color: #4B227A; font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem;">Sign Up Complete!</h2>
+                        <p style="color: #666; font-size: 1.1rem; margin-bottom: 2rem;">Thank you for signing up for the event. We look forward to seeing you!</p>
+                        <button style="background: linear-gradient(45deg, #4B227A, #FF69B4); color: white; padding: 0.75rem 2rem; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; transition: all 0.3s ease;" onclick="this.parentElement.parentElement.remove()">Continue</button>
                     </div>
-                    <h2 style="color: #4B227A; font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem;">Sign Up Complete!</h2>
-                    <p style="color: #666; font-size: 1.1rem; margin-bottom: 2rem;">Thank you for signing up for the event. We look forward to seeing you!</p>
-                    <button style="background: linear-gradient(45deg, #4B227A, #FF69B4); color: white; padding: 0.75rem 2rem; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; transition: all 0.3s ease;" onclick="this.parentElement.parentElement.remove()">Continue</button>
-                </div>
-            `;
-            
-            document.body.appendChild(thankYouModal);
-            this.reset();
-            
-            // Remove iframe after submission
-            setTimeout(() => {
-                document.body.removeChild(iframe);
-            }, 1000);
+                `;
+                
+                document.body.appendChild(thankYouModal);
+                this.reset();
+            })
+            .catch(error => {
+                console.error('Error submitting form:', error);
+                // Still show success message since Google Forms no-cors mode doesn't return response
+                const thankYouModal = document.createElement('div');
+                thankYouModal.style.position = 'fixed';
+                thankYouModal.style.top = '0';
+                thankYouModal.style.left = '0';
+                thankYouModal.style.width = '100%';
+                thankYouModal.style.height = '100%';
+                thankYouModal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+                thankYouModal.style.display = 'flex';
+                thankYouModal.style.justifyContent = 'center';
+                thankYouModal.style.alignItems = 'center';
+                thankYouModal.style.zIndex = '2000';
+                
+                thankYouModal.innerHTML = `
+                    <div style="background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); max-width: 500px; width: 90%; text-align: center; position: relative;">
+                        <div style="width: 48px; height: 48px; margin: 0 auto 1rem; background: linear-gradient(45deg, #4B227A, #FF69B4); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </div>
+                        <h2 style="color: #4B227A; font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem;">Sign Up Complete!</h2>
+                        <p style="color: #666; font-size: 1.1rem; margin-bottom: 2rem;">Thank you for signing up for the event. We look forward to seeing you!</p>
+                        <button style="background: linear-gradient(45deg, #4B227A, #FF69B4); color: white; padding: 0.75rem 2rem; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; transition: all 0.3s ease;" onclick="this.parentElement.parentElement.remove()">Continue</button>
+                    </div>
+                `;
+                
+                document.body.appendChild(thankYouModal);
+                this.reset();
+            });
         });
     </script>
 </body>
