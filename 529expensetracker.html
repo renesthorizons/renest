@@ -2493,35 +2493,15 @@
             }
             loadExpenses();
             
-            console.log('About to hide tabs except rent tab');
-            // Hide all tabs except rent tab on initial load
-            const tabs = document.querySelectorAll('.tab-content');
-            console.log('Found tab elements:', tabs.length);
+            console.log('About to call showTab function to show only rent tab');
+            // Call the showTab function directly to ensure only rent tab is visible
+            showTab('rent');
             
-            tabs.forEach(tab => {
-                console.log('Processing tab:', tab.id, 'Current display:', tab.style.display);
-                if (tab.id === 'rent-tab') {
-                    tab.style.display = 'block';
-                    console.log('Set rent-tab to display:block');
-                } else {
-                    tab.style.display = 'none';
-                    console.log('Set', tab.id, 'to display:none');
-                }
-            });
-            
-            // Force the tab visibility again after a short delay
+            // Add a small delay to ensure the tab visibility is set after any other initialization
             setTimeout(() => {
-                console.log('Forcing tab visibility again after delay');
-                document.querySelectorAll('.tab-content').forEach(tab => {
-                    if (tab.id === 'rent-tab') {
-                        tab.style.display = 'block';
-                        console.log('Forced rent-tab to display:block');
-                    } else {
-                        tab.style.display = 'none';
-                        console.log('Forced', tab.id, 'to display:none');
-                    }
-                });
-            }, 100);
+                console.log('Forcing rent tab visibility after delay');
+                showTab('rent');
+            }, 200);
         });
 
         // 529 Account Management Functions
@@ -2811,11 +2791,32 @@ function toggleManualControls(show) {
         automaticControls.style.display = 'block';
     }
     
-    // Always show all tabs and enable tab buttons
-    tabs.forEach(tabId => {
-        const tab = document.getElementById(tabId);
-        if (tab) tab.style.display = 'block';
-    });
+    // Instead of showing all tabs, call showTab to ensure only the active tab is visible
+    // Find which tab button is currently active
+    const activeTabButton = document.querySelector('.tab-button.active');
+    if (activeTabButton) {
+        // Extract the tab name from the onclick attribute
+        const onclickAttr = activeTabButton.getAttribute('onclick');
+        if (onclickAttr) {
+            const tabNameMatch = onclickAttr.match(/showTab\('(.+?)'\)/);
+            if (tabNameMatch && tabNameMatch[1]) {
+                console.log('Calling showTab with active tab:', tabNameMatch[1]);
+                showTab(tabNameMatch[1]);
+            } else {
+                // Default to rent tab if we can't determine the active tab
+                console.log('Defaulting to rent tab');
+                showTab('rent');
+            }
+        } else {
+            // Default to rent tab if onclick attribute is missing
+            console.log('Defaulting to rent tab (no onclick)');
+            showTab('rent');
+        }
+    } else {
+        // No active tab button found, default to rent tab
+        console.log('No active tab found, defaulting to rent tab');
+        showTab('rent');
+    }
     
     // Always enable and show tab buttons
     document.querySelectorAll('.tab-button').forEach(btn => {
@@ -2831,20 +2832,20 @@ function toggleManualControls(show) {
 
 // Event listener for "Show Manual Controls" button
 document.getElementById('show-manual-controls').addEventListener('click', function() {
-    // Show tabs but keep automatic controls visible
-    const tabs = ['rent-tab', 'expenses-tab', 'account-tab', 'summary-tab'];
-    
-    // Show the first tab
-    tabs.forEach((tabId, index) => {
-        const tab = document.getElementById(tabId);
-        if (tab) tab.style.display = index === 0 ? 'block' : 'none';
-    });
+    console.log('Show manual controls button clicked');
     
     // Enable tab buttons
     document.querySelectorAll('.tab-button').forEach((btn, index) => {
         btn.disabled = false;
-        btn.classList.toggle('active', index === 0);
+        if (index === 0) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
     });
+    
+    // Use the showTab function to show only the rent tab
+    showTab('rent');
 });
 
 // Function to load Plaid transactions
@@ -3397,6 +3398,7 @@ async function getUserId(token) {
 
 // Add initialization code to check status on page load
 document.addEventListener('DOMContentLoaded', async () => {
+    console.log('Main DOMContentLoaded event fired');
     const token = API.getToken();
     if (!token) {
         window.location.href = 'signin529.html';
@@ -3438,9 +3440,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Load expenses normally
         loadExpenses();
         
+        // Ensure rent tab is visible regardless of other initialization
+        console.log('Forcing rent tab visibility after all initialization');
+        showTab('rent');
+        
     } catch (error) {
         console.error('Error initializing page:', error);
         showError('Error loading data. Please try again.');
+        
+        // Even if there's an error, try to show the rent tab
+        showTab('rent');
     }
 });
 
