@@ -3447,62 +3447,44 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         </div>
                     </div>
                     <div class="tab-content active" id="early">
-                        <div class="pricing-grid-two">
+                        <div class="pricing-grid-two" style="grid-template-columns: 1fr; max-width: 550px; margin: 0 auto;">
                             
-                            <div class="pricing-card locked-state">
+                            <div class="pricing-card pricing-card-featured locked-state" style="box-shadow: 0 8px 30px rgba(75, 34, 122, 0.15); transform: scale(1.02);">
                                 <div class="locked-message">Complete the calculator above to unlock your options</div>
-                                <h3 class="pricing-title">Complete 529 Management</h3>
-                                <h3 class="pricing-subtitle">Never think about your 529 again</h3>
+                                <span class="featured-label">Recommended</span>
+                                <h3 class="pricing-title">Get Your Benefit Today</h3>
+                                <h3 class="pricing-subtitle">Complete Automated Management</h3>
                                 <div class="pricing-features">
                                     <ul class="step-list">
                                         <li>
                                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                                                 <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                             </svg>
-                                            <span>Account management and documentation</span>
+                                            <span><strong>Get your tax benefit now</strong> instead of waiting for tax season</span>
                                         </li>
                                         <li>
                                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                                                 <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                             </svg>
-                                            <span>Automated tracking & qualification</span>
+                                            <span>Full 529 account setup & optimization</span>
+                                        </li>
+                                        <li>
+                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                            <span>Automated expense tracking & qualification</span>
+                                        </li>
+                                        <li>
+                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                            <span>IRS-ready documentation for 3 years</span>
                                         </li>
                                     </ul>
                                 </div>
-                                <h3 class="pricing-title">Cost</h3>
-                                <!-- <div class="price">$1/month</div> -->
-                                <div>We receive the full 529 benefit when you file your state taxes, and an $89 tracking fee</div>
-                            </div>
-
-                            <div class="pricing-card locked-state">
-                                <div class="locked-message">Complete the calculator above to unlock your options</div>
-                                <h3 class="pricing-title">Manual Tracking</h3>
-                                <div class="pricing-features">
-                                    <ul class="step-list">
-                                        <li>
-                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                            <span>A Simple Expense Tracker for You to Log Your Expenses</span>
-                                        </li>
-                                        <li>
-                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                            <span>We Store Your Documentation for 3 Years</span>
-                                        </li>
-                                        <li>
-                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                            <span>We Remind You to Maintain Tracking</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <h3 class="pricing-title">Cost</h3>
-                                <!-- <div class="price">$1/month</div> -->
-                                <div>We receive the full 529 benefit when you file your state taxes, and a $15 tracking fee</div>
-                                
+                                <h3 class="pricing-title">How It Works</h3>
+                                <div>We advance your tax benefit today and handle all the paperwork. We receive the full 529 benefit when you file your state taxes, plus a small service fee.</div>
+                                <div class="guarantee" style="margin-top: 1rem;">Your maximum tax benefit guaranteed</div>
                             </div>
                         </div>
                     </div>
@@ -6447,6 +6429,7 @@ const statePersonalExemptionDB = {
     const pricingCards = document.querySelectorAll('.pricing-card');
     pricingCards.forEach(card => {
         card.classList.remove('locked-state');
+        card.classList.add('unlocked-state');
         const lockedMessage = card.querySelector('.locked-message');
         if (lockedMessage) {
             lockedMessage.remove();
@@ -6465,8 +6448,24 @@ const statePersonalExemptionDB = {
             'Open Account to Check Eligibility';
     }
 
-    // Update pricing card display
-    const completeManagementCard = document.querySelector('.pricing-card:not(.pricing-card-featured)');
+    // Update the featured card in the early tab with the early amount
+    const earlyFeaturedCard = document.querySelector('#early .pricing-card-featured');
+    if (earlyFeaturedCard) {
+        // Update the subtitle to include the amount
+        const subtitle = earlyFeaturedCard.querySelector('.pricing-subtitle');
+        if (subtitle) {
+            subtitle.innerHTML = `Get <strong>${formattedEarlyAmount}</strong> Today`;
+        }
+        
+        // Add a note about the amount in the How It Works section
+        const howItWorksDiv = earlyFeaturedCard.querySelector('h3.pricing-title + div');
+        if (howItWorksDiv) {
+            howItWorksDiv.innerHTML = `We advance your tax benefit of ${formattedEarlyAmount} today and handle all the paperwork. We receive the full ${formattedBenefit} benefit when you file your state taxes, plus a small service fee.`;
+        }
+    }
+
+    // Update pricing card display for the later tab
+    const completeManagementCard = document.querySelector('#later .pricing-card:first-child');
     if (completeManagementCard) {
         const priceElement = completeManagementCard.querySelector('.price-period');
         if (priceElement) {
