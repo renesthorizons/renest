@@ -2485,6 +2485,7 @@
 
         // Initial load
         document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM fully loaded');
             const token = API.getToken();
             if (!token) {
                 window.location.href = 'signin529.html';
@@ -2492,15 +2493,35 @@
             }
             loadExpenses();
             
+            console.log('About to hide tabs except rent tab');
             // Hide all tabs except rent tab on initial load
             const tabs = document.querySelectorAll('.tab-content');
+            console.log('Found tab elements:', tabs.length);
+            
             tabs.forEach(tab => {
+                console.log('Processing tab:', tab.id, 'Current display:', tab.style.display);
                 if (tab.id === 'rent-tab') {
                     tab.style.display = 'block';
+                    console.log('Set rent-tab to display:block');
                 } else {
                     tab.style.display = 'none';
+                    console.log('Set', tab.id, 'to display:none');
                 }
             });
+            
+            // Force the tab visibility again after a short delay
+            setTimeout(() => {
+                console.log('Forcing tab visibility again after delay');
+                document.querySelectorAll('.tab-content').forEach(tab => {
+                    if (tab.id === 'rent-tab') {
+                        tab.style.display = 'block';
+                        console.log('Forced rent-tab to display:block');
+                    } else {
+                        tab.style.display = 'none';
+                        console.log('Forced', tab.id, 'to display:none');
+                    }
+                });
+            }, 100);
         });
 
         // 529 Account Management Functions
