@@ -2491,6 +2491,16 @@
                 return;
             }
             loadExpenses();
+            
+            // Hide all tabs except rent tab on initial load
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => {
+                if (tab.id === 'rent-tab') {
+                    tab.style.display = 'block';
+                } else {
+                    tab.style.display = 'none';
+                }
+            });
         });
 
         // 529 Account Management Functions
