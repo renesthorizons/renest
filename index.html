@@ -6403,7 +6403,7 @@ const statePersonalExemptionDB = {
     const dailyRate = 0.05 / 365; // 5% APY converted to daily rate
     const lendingDays = 400;
     const serviceFee = 20;
-    const baseFee = 0;
+    const baseFee = 89;
     
     const potentialEarlyAmount = benefit;
     const lendingCost = potentialEarlyAmount * (1 + dailyRate * lendingDays) - potentialEarlyAmount;
@@ -6411,7 +6411,7 @@ const statePersonalExemptionDB = {
     const totalCosts = baseFee + serviceFee + lendingCost;
     const calculatedEarlyAmount = benefit - totalCosts;
     
-    const maxEarlyAmount = benefit*.825;
+    const maxEarlyAmount = benefit*.80;
     const earlyAmount = Math.min(calculatedEarlyAmount, maxEarlyAmount);
     
     const isViable = earlyAmount > 0;
@@ -6558,7 +6558,7 @@ const statePersonalExemptionDB = {
             const dailyRate = 0.05 / 365; // 5% APY converted to daily rate
             const lendingDays = 400;
             const serviceFee = 20;
-            const baseFee = 0;
+            const baseFee = 89;
             
             // Calculate potential early amount for lending cost calculation
             const potentialEarlyAmount = benefit;
@@ -6569,7 +6569,7 @@ const statePersonalExemptionDB = {
             const calculatedEarlyAmount = benefit - totalCosts;
             
             // Cap at 70% of benefit
-            const maxEarlyAmount = benefit * 0.825;
+            const maxEarlyAmount = benefit * 0.8;
             const earlyAmount = Math.min(calculatedEarlyAmount, maxEarlyAmount);
             
             // Only check if the amount is positive since we've already capped it
