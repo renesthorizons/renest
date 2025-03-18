@@ -3029,6 +3029,7 @@ async function toggleEditMode() {
         
         editButton.classList.add('editing');
         editButton.querySelector('.toggle-text').textContent = 'Save';
+        editButton.style.backgroundColor = 'var(--success)';
         
         // Add cancel button
         const cancelButton = document.createElement('button');
@@ -3044,13 +3045,14 @@ async function toggleEditMode() {
     } else {
         editButton.classList.remove('editing');
         editButton.querySelector('.toggle-text').textContent = 'Edit Budgets';
+        editButton.style.backgroundColor = '';
         
         // Remove cancel button
         const cancelButton = document.getElementById('cancelEdit');
         if (cancelButton) cancelButton.remove();
         
         viewToggle.style.display = 'block';
-        if (trackerButton) trackerButton.style.display = 'inline-block';
+        if (trackerButton) trackerButton.style.display = 'block';
         await saveBudgetChanges();
         const expenses = await fetchExpenses();
         updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
