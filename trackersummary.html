@@ -3322,6 +3322,14 @@ function displayEditableBudgets() {
     
     container.innerHTML = '';
     
+    // Add new category button at the top
+    container.insertAdjacentHTML('beforeend', `
+        <button class="add-category-button" onclick="addNewCategory()">
+            <span>+</span>
+            Add New Category
+        </button>
+    `);
+    
     // Calculate remaining budget
     const totalBudgeted = Object.values(currentBudgets).reduce((sum, cat) => sum + Number(cat.amount), 0);
     const remaining = currentStipend - totalBudgeted;
@@ -3391,14 +3399,6 @@ function displayEditableBudgets() {
         
         container.appendChild(div);
     });
-    
-    // Add new category button
-    container.insertAdjacentHTML('beforeend', `
-        <button class="add-category-button" onclick="addNewCategory()">
-            <span>+</span>
-            Add New Category
-        </button>
-    `);
 }
 
 function updateBudget(category, amount) {
