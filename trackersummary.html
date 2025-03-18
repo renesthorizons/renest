@@ -3353,13 +3353,6 @@ function displayEditableBudgets() {
     if (typeof editStipendAmount !== 'function') {
         console.error('editStipendAmount function not found');
     }
-    // Add new category button
-    container.insertAdjacentHTML('beforeend', `
-        <button class="add-category-button" onclick="addNewCategory()">
-            <span>+</span>
-            Add New Category
-        </button>
-    `);
     
     // Display all categories with modified input handler
     Object.entries(currentBudgets).forEach(([category, data]) => {
@@ -3399,7 +3392,13 @@ function displayEditableBudgets() {
         container.appendChild(div);
     });
     
-    
+    // Add new category button
+    container.insertAdjacentHTML('beforeend', `
+        <button class="add-category-button" onclick="addNewCategory()">
+            <span>+</span>
+            Add New Category
+        </button>
+    `);
 }
 
 function updateBudget(category, amount) {
