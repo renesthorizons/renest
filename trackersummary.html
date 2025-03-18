@@ -438,17 +438,15 @@ body {
     background-position: 0% 0%;
 }
 
+/* Hide tracker button container when in edit mode */
+.editing ~ #trackerButtonContainer {
+    display: none;
+}
+
 .tracker-button:hover {
     background-image: linear-gradient(45deg, var(--primary) 0%, var(--primary) 45%, var(--accent) 100%) !important;
     background-position: 100% 100% !important;
     transform: translateY(-2px);
-}
-
-/* Hide and disable tracker button in edit mode */
-#editBudgets.editing ~ .tracker-button,
-#editBudgets.editing + .tracker-button {
-    display: none;
-    pointer-events: none;
 }
 
 .month-selector {
@@ -764,7 +762,7 @@ body {
 }
 
 #editBudgets.editing {
-    background-color: var(--success);
+    background-color: var(--accent);
     color: white;
     border: none;
 }
@@ -1068,7 +1066,7 @@ input[type="number"] {
                 <div id="chartContainer" style="display: none; height: 400px; margin: 20px auto;">
                     <canvas id="radarChart"></canvas>
                 </div>
-                <div style="text-align: center; margin-top: 2rem;">
+                <div id="trackerButtonContainer" style="text-align: center; margin-top: 2rem;">
                     <a href="529expensetracker.html" class="tracker-button">Go To Tracker</a>
                 </div>
             </div>
