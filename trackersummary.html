@@ -438,11 +438,6 @@ body {
     background-position: 0% 0%;
 }
 
-/* Hide tracker button container when in edit mode */
-.editing ~ #trackerButtonContainer {
-    display: none;
-}
-
 .tracker-button:hover {
     background-image: linear-gradient(45deg, var(--primary) 0%, var(--primary) 45%, var(--accent) 100%) !important;
     background-position: 100% 100% !important;
@@ -1066,7 +1061,7 @@ input[type="number"] {
                 <div id="chartContainer" style="display: none; height: 400px; margin: 20px auto;">
                     <canvas id="radarChart"></canvas>
                 </div>
-                <div id="trackerButtonContainer" style="text-align: center; margin-top: 2rem;">
+                <div style="text-align: center; margin-top: 2rem;">
                     <a href="529expensetracker.html" class="tracker-button">Go To Tracker</a>
                 </div>
             </div>
@@ -3026,6 +3021,7 @@ async function toggleEditMode() {
     isEditMode = !isEditMode;
     const editButton = document.getElementById('editBudgets');
     const viewToggle = document.getElementById('viewToggle');
+    const trackerButton = document.querySelector('.tracker-button');
     
     if (isEditMode) {
         // Store current budgets for cancel functionality
@@ -3042,6 +3038,7 @@ async function toggleEditMode() {
         editButton.parentNode.insertBefore(cancelButton, editButton.nextSibling);
         
         viewToggle.style.display = 'none';
+        if (trackerButton) trackerButton.style.display = 'none';
         await loadCurrentBudgets();
         displayEditableBudgets();
     } else {
@@ -3053,6 +3050,7 @@ async function toggleEditMode() {
         if (cancelButton) cancelButton.remove();
         
         viewToggle.style.display = 'block';
+        if (trackerButton) trackerButton.style.display = 'inline-block';
         await saveBudgetChanges();
         const expenses = await fetchExpenses();
         updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
