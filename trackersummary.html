@@ -3021,7 +3021,6 @@ async function toggleEditMode() {
     isEditMode = !isEditMode;
     const editButton = document.getElementById('editBudgets');
     const viewToggle = document.getElementById('viewToggle');
-    const trackerButtonContainer = document.getElementById('trackerButtonContainer');
     
     if (isEditMode) {
         // Store current budgets for cancel functionality
@@ -3037,14 +3036,6 @@ async function toggleEditMode() {
         cancelButton.onclick = cancelEditMode;
         editButton.parentNode.insertBefore(cancelButton, editButton.nextSibling);
         
-        // Replace tracker button with Save and Cancel buttons
-        trackerButtonContainer.innerHTML = `
-            <div style="display: flex; gap: 1rem; justify-content: center;">
-                <button onclick="handleBottomSave()" class="tracker-button">Save</button>
-                <button onclick="cancelEditMode()" class="tracker-button" style="background-color: #dc2626;">Cancel</button>
-            </div>
-        `;
-        
         viewToggle.style.display = 'none';
         await loadCurrentBudgets();
         displayEditableBudgets();
@@ -3055,9 +3046,6 @@ async function toggleEditMode() {
         // Remove cancel button
         const cancelButton = document.getElementById('cancelEdit');
         if (cancelButton) cancelButton.remove();
-        
-        // Restore tracker button
-        trackerButtonContainer.innerHTML = '<a href="529expensetracker.html" class="tracker-button">Go To Tracker</a>';
         
         viewToggle.style.display = 'block';
         await saveBudgetChanges();
@@ -3666,14 +3654,10 @@ async function cancelEditMode() {
     const editButton = document.getElementById('editBudgets');
     const viewToggle = document.getElementById('viewToggle');
     const cancelButton = document.getElementById('cancelEdit');
-    const trackerButtonContainer = document.getElementById('trackerButtonContainer');
     
     editButton.classList.remove('editing');
     editButton.querySelector('.toggle-text').textContent = 'Edit Budgets';
     if (cancelButton) cancelButton.remove();
-    
-    // Restore tracker button
-    trackerButtonContainer.innerHTML = '<a href="529expensetracker.html" class="tracker-button">Go To Tracker</a>';
     
     viewToggle.style.display = 'block';
     
@@ -3702,28 +3686,6 @@ async function loadMonthExpenses(month, year) {
     } catch (error) {
         console.error('Error loading month expenses:', error);
     }
-}
-
-// Add a new function to handle saving from the bottom button
-async function handleBottomSave() {
-    await saveBudgetChanges();
-    isEditMode = false;
-    const editButton = document.getElementById('editBudgets');
-    const viewToggle = document.getElementById('viewToggle');
-    const cancelButton = document.getElementById('cancelEdit');
-    const trackerButtonContainer = document.getElementById('trackerButtonContainer');
-    
-    editButton.classList.remove('editing');
-    editButton.querySelector('.toggle-text').textContent = 'Edit Budgets';
-    if (cancelButton) cancelButton.remove();
-    
-    // Restore tracker button
-    trackerButtonContainer.innerHTML = '<a href="529expensetracker.html" class="tracker-button">Go To Tracker</a>';
-    
-    viewToggle.style.display = 'block';
-    
-    const expenses = await fetchExpenses();
-    updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
 }
 </script>
 </html>
