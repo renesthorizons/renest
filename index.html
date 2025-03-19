@@ -3182,7 +3182,61 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
 }
 
-</style>
+/* Email Modal Styles */
+#emailModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 90%;
+    position: relative;
+}
+
+.close-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+}
+
+.contact-form input {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.submit-button {
+    width: 100%;
+    padding: 0.75rem;
+    background: linear-gradient(45deg, #4B227A, #FF69B4);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+    </style>
 </head>
 <body>
     <!-- Google Tag Manager (noscript) -->
@@ -3401,6 +3455,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                             </div>
                         </div>
                         <div class="benefit-amount" id="benefitResult">$0</div>
+                        <!-- <div style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">Minimum time commitment: 9-13 min</div> -->
                     </div>
                 </div>
 
@@ -3415,6 +3470,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <a href="signin529.html" class="getst-button">
               Join Our Free Pilot Today
             </a>
+            <div style="margin-top: 2rem;">
+                <a href="#" onclick="openEmailModal(); return false;">or, join our financial tips newsletter</a>
+            </div>
         </div>
        
         
@@ -3563,19 +3621,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <a href="#" onclick="openEmailModal(); return false;" style="color: #4B227A; text-decoration: underline; font-size: 1.1rem;">Use the Renest manual tracker for free!</a>
         </div> -->
 
-        <!-- <div id="emailModal">
+        <div id="emailModal">
             <div class="modal-content">
                 <button class="close-button" onclick="closeEmailModal()">✕</button>
-                <h2 style="color: var(--primary); font-size: 1.5rem; font-weight: bold; margin-bottom: 1.5rem;">Create Your Account</h2>
+                <h2 style="color: var(--primary); font-size: 1.5rem; font-weight: bold; margin-bottom: 1.5rem;"> </h2>
                 <form id="emailForm" class="contact-form">
                     <div class="form-group">
-                        <label for="emailInput" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Email</label>
+                        <label for="emailInput" style="display: block; margin-bottom: 0.5rem; font-weight: 500;"> </label>
                         <input type="email" id="emailInput" required placeholder="Enter your email">
                     </div>
-                    <button type="submit" class="submit-button">Continue</button>
+                    <button type="submit" class="submit-button">Submit</button>
                 </form>
             </div>
-        </div> -->
+        </div>
         
 
             <!-- <h2 class="section-title" style="   margin-top:     4rem;">Use Your Unlocked Cash How You Like!</h2>
@@ -6871,6 +6929,73 @@ const statePersonalExemptionDB = {
         }
 
         document.addEventListener('DOMContentLoaded', handleScreenshots);
+    </script>
+
+    <script>
+        // Email Modal Functions
+        function openEmailModal() {
+            document.getElementById('emailModal').style.display = 'flex';
+        }
+
+        function closeEmailModal() {
+            document.getElementById('emailModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('emailModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEmailModal();
+            }
+        });
+
+        // Handle form submission
+        document.getElementById('emailForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = encodeURIComponent(document.getElementById('emailInput').value);
+            const baseUrl = 'https://docs.google.com/forms/d/e/1FAIpQLScZ04ro2nS9fPEclOjblV8kv-rTFxQNH1pMN_xy8H1gbGKQtQ/formResponse?usp=pp_url&entry.1358827248=';
+            
+            // Using a hidden iframe to submit the form without redirecting
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.setAttribute('src', baseUrl + email);
+            document.body.appendChild(iframe);
+            
+            // Create and show styled thank you message
+            const thankYouModal = document.createElement('div');
+            thankYouModal.style.position = 'fixed';
+            thankYouModal.style.top = '0';
+            thankYouModal.style.left = '0';
+            thankYouModal.style.width = '100%';
+            thankYouModal.style.height = '100%';
+            thankYouModal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+            thankYouModal.style.display = 'flex';
+            thankYouModal.style.justifyContent = 'center';
+            thankYouModal.style.alignItems = 'center';
+            thankYouModal.style.zIndex = '2000';
+            
+            thankYouModal.innerHTML = `
+                <div style="background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); max-width: 500px; width: 90%; text-align: center; position: relative;">
+                    <div style="width: 48px; height: 48px; margin: 0 auto 1rem; background: linear-gradient(45deg, #4B227A, #FF69B4); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                    <h2 style="color: #4B227A; font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem;">Welcome to Renest!</h2>
+                    <p style="color: #666; font-size: 1.1rem; margin-bottom: 2rem;"> </p>
+                    <button style="background: linear-gradient(45deg, #4B227A, #FF69B4); color: white; padding: 0.75rem 2rem; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; transition: all 0.3s ease;" onclick="this.parentElement.parentElement.remove()">Continue</button>
+                </div>
+            `;
+            
+            document.body.appendChild(thankYouModal);
+            this.reset();
+            closeEmailModal();
+            
+            // Remove iframe after submission
+            setTimeout(() => {
+                document.body.removeChild(iframe);
+            }, 1000);
+        });
     </script>
 </body>
 </html>
