@@ -881,6 +881,114 @@ body {
     }
 }
 
+/* Add modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1001;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow-y: auto;
+}
+
+.modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 0;
+    padding: 2.5rem;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 700px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    animation: modalSlideIn 0.3s ease-out;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(-100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-title {
+    color: var(--primary);
+    font-size: 2.2rem;
+    margin-bottom: 1.8rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.modal-text {
+    color: var(--text-dark);
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 1.8rem;
+    opacity: 0.9;
+}
+
+.modal-text:last-child {
+    margin-bottom: 0;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(75, 34, 122, 0.1);
+}
+
+.close-modal {
+    position: absolute;
+    right: 1.5rem;
+    top: 1.5rem;
+    font-size: 1.8rem;
+    font-weight: 300;
+    color: var(--text-dark);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.close-modal:hover {
+    color: var(--primary);
+    background-color: rgba(75, 34, 122, 0.05);
+}
+
+@media (max-width: 768px) {
+    .modal-content {
+        padding: 2rem;
+        width: 95%;
+        max-width: 500px;
+        max-height: 70vh;
+    }
+
+    .modal-title {
+        font-size: 1.8rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .modal-text {
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: 1.2rem;
+    }
+}
+
 </style>
 <body>
     <!-- Google Tag Manager (noscript) -->
@@ -914,7 +1022,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         a comprehensive view of your finances, but also 
                     automatically unlocks savings without any changes
                      to your spending habits. What sets Renest apart and gives you an advantage 
-                     is our unique integration with 529 plans.</p>
+                     is our unique integration with <a href="#" class="modal-trigger" style="color: var(--primary); text-decoration: underline;">529 plans</a>.</p>
                     <p>Whether you choose our free or our automated tracker ($6/month), Renest gives you the money management tools
                         to get a clear, confident view of your finances. 
                     Renest also helps you unlock hundreds of dollars each year in savings through a 529 plan. <br><br>
@@ -1059,6 +1167,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 </div>
             </div>
         </footer>
+    <!-- Add modal HTML -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 class="modal-title">What is a 529 Plan?</h2>
+            <p class="modal-text">A 529 plan is a special savings account for education, similar to how a 401(k) is for retirement. When you're a student, you can use a 529 just like you use your 401(k) when you retire.</p>
+            <p class="modal-text">The key benefit? If you use a 529 account to track and report your education expenses (e.g., student loans, tuition, housing, groceries and more) to your state, they'll give you money back!</p>
+            <p class="modal-text">Renest makes this simple. We automatically identify your qualified education expenses, track them for you, and streamline your 529 account setup and use. No changes to your spending habits required!</p>
+        </div>
+    </div>
 <script>
 // Mobile menu functionality
 const menuButton = document.querySelector('.menu-button');
@@ -1169,6 +1287,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
     firstNextButton.addEventListener('click', () => {
         showSlide(currentSlide + 1, 'next');
+    });
+});
+
+// Add modal functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('modal');
+    const modalTrigger = document.querySelector('.modal-trigger');
+    const closeModal = document.querySelector('.close-modal');
+
+    modalTrigger.addEventListener('click', function(e) {
+        e.preventDefault();
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+    });
+
+    closeModal.addEventListener('click', function() {
+        modal.classList.remove('show');
+        document.body.style.overflow = 'auto'; // Restore scrolling
+    });
+
+    window.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.classList.remove('show');
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        }
     });
 });
 </script>
