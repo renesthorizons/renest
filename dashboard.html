@@ -2477,6 +2477,23 @@ const statePersonalExemptionDB = {
                 e.preventDefault();
                 selectItems.classList.toggle('hidden');
                 selectSelected.classList.toggle('active');
+            } else if (e.key.length === 1 && /^[a-zA-Z]$/.test(e.key)) {
+                e.preventDefault();
+                // Show dropdown if hidden
+                if (selectItems.classList.contains('hidden')) {
+                    selectItems.classList.remove('hidden');
+                    selectSelected.classList.add('active');
+                }
+                
+                // Find first state starting with the pressed letter
+                const items = selectItems.getElementsByTagName('div');
+                for (let i = 0; i < items.length; i++) {
+                    if (items[i].textContent.toLowerCase().startsWith(e.key.toLowerCase())) {
+                        // Scroll the item into view
+                        items[i].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                        break;
+                    }
+                }
             }
         });
 
