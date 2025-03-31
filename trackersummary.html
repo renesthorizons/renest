@@ -3495,11 +3495,19 @@ function updateCategoryName(oldName, newName) {
 }
 
 async function addNewCategory() {
+    // Get all existing categories from currentBudgets
+    const existingCategories = Object.keys(currentBudgets);
+    
     const result = await Swal.fire({
         title: 'Add New Category',
         html: `
             <div class="new-category-modal">
-                <input id="categoryName" class="swal2-input" placeholder="Category Name">
+                <select id="categoryName" class="swal2-input" style="width: 100%; margin-bottom: 1rem;">
+                    <option value="">Select existing category</option>
+                    ${existingCategories.map(cat => `<option value="${cat}">${cat}</option>`).join('')}
+                    <option value="custom">Custom Category</option>
+                </select>
+                <input id="customCategoryName" class="swal2-input" placeholder="Enter custom category name" style="display: none;">
                 <input id="categoryBudget" type="number" class="swal2-input" placeholder="Budget Amount">
             </div>
         `,
@@ -3507,9 +3515,31 @@ async function addNewCategory() {
         confirmButtonText: 'Add Category',
         confirmButtonColor: 'var(--primary)',
         cancelButtonColor: 'var(--warning)',
+        didOpen: () => {
+            // Add event listener for category selection
+            const categorySelect = document.getElementById('categoryName');
+            const customInput = document.getElementById('customCategoryName');
+            
+            categorySelect.addEventListener('change', () => {
+                customInput.style.display = categorySelect.value === 'custom' ? 'block' : 'none';
+            });
+        },
         preConfirm: () => {
-            const name = document.getElementById('categoryName').value;
+            const categorySelect = document.getElementById('categoryName');
+            const customInput = document.getElementById('customCategoryName');
             const amount = document.getElementById('categoryBudget').value;
+            
+            let name;
+            if (categorySelect.value === 'custom') {
+                name = customInput.value.trim();
+                if (!name) {
+                    Swal.showValidationMessage('Please enter a custom category name');
+                    return false;
+                }
+            } else {
+                name = categorySelect.value;
+            }
+            
             if (!name || !amount) {
                 Swal.showValidationMessage('Please fill in all fields');
                 return false;
