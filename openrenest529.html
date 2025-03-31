@@ -1052,7 +1052,7 @@
                                         </a>
                                     </div>
                                     <div class="benefit-info">
-                                        <span>Maximum Annual Savings:</span>
+                                        <span>Maximum annual savings:</span>
                                         <span class="benefit-amount">${stateInfo.benefit}</span>
                                     </div>
                                     <div class="estimated-benefit">
@@ -1092,6 +1092,12 @@
                 button.addEventListener('click', () => {
                     ownershipButtons.forEach(btn => btn.classList.remove('selected'));
                     button.classList.add('selected');
+
+                    // Remove any existing Next button
+                    const existingNextButton = document.querySelector('.action-button.primary[style*="margin: 2rem auto"]');
+                    if (existingNextButton) {
+                        existingNextButton.remove();
+                    }
 
                     if (button.dataset.option === 'no') {
                         stateSearchContainer.style.display = 'block';
