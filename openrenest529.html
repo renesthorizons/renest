@@ -319,11 +319,59 @@
             align-items: center;
             gap: 0.5rem;
             font-size: 1.1rem;
+            margin-bottom: 1rem;
         }
 
         .benefit-amount {
             font-weight: 600;
             color: #4B227A;
+        }
+
+        .estimated-benefit {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .action-buttons {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .action-button {
+            padding: 1rem 2rem;
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: white;
+            color: var(--primary);
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+        }
+
+        .action-button.primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .action-button.primary:hover {
+            background: var(--primary-dark);
         }
 
         @keyframes slideIn {
@@ -508,19 +556,20 @@
     <div class="main-content">
         <div class="hero-banner">
             <h1>Open Your 529 Plan</h1>
-            <p>Find your state's 529 plan and get started saving for education</p>
+            <!-- <p>Find your state's 529 plan and get started saving for education</p> -->
         </div>
 
         <div class="ownership-question">
-            <h2 class="ownership-title">Do you currently own a 529 plan?</h2>
+            <h2 class="ownership-title">Do you currently own a 529 plan? This does not include plans parents or grandparents may have opened for you.</h2>
             <div class="ownership-options">
-                <button class="ownership-button" data-option="yes">Yes, I own a 529 plan</button>
+                <button class="ownership-button" data-option="yes">Yes, I've made my own 529 plan</button>
                 <button class="ownership-button" data-option="no">No, I don't have a 529 plan</button>
             </div>
         </div>
 
         <div class="state-search-container">
             <h2 class="search-header">Find Your State's 529 Plan</h2>
+            <p>Based on your profile</p>
             
             <div class="search-wrapper">
                 <span class="search-icon">🔍</span>
@@ -535,6 +584,15 @@
             </div>
             
             <div id="selectedStateInfo" class="selected-state-info" style="display: none;"></div>
+        </div>
+
+        <div class="action-buttons" style="display: none;">
+            <button id="downloadGuideBtn" class="action-button">
+                <span>📥</span> Download 529 Walkthrough Guide
+            </button>
+            <button id="open529Btn" class="action-button primary">
+                Open 529
+            </button>
         </div>
 
         <footer class="footer">
@@ -933,6 +991,9 @@
             const selectedStateInfo = document.getElementById('selectedStateInfo');
             const ownershipButtons = document.querySelectorAll('.ownership-button');
             const stateSearchContainer = document.querySelector('.state-search-container');
+            const actionButtons = document.querySelector('.action-buttons');
+            const downloadGuideBtn = document.getElementById('downloadGuideBtn');
+            const open529Btn = document.getElementById('open529Btn');
 
             // Get user profile data
             const authToken = localStorage.getItem('authToken');
@@ -967,8 +1028,13 @@
                                         <span>Maximum Annual Savings:</span>
                                         <span class="benefit-amount">${stateInfo.benefit}</span>
                                     </div>
+                                    <div class="estimated-benefit">
+                                        <span>Estimate of your benefit only including rent and groceries:</span>
+                                        <span class="benefit-amount">${userData.potentialBenefit || '$0'}</span>
+                                    </div>
                                 `;
                                 selectedStateInfo.style.display = 'block';
+                                actionButtons.style.display = 'flex';
                             }
                         }
                     }
@@ -976,6 +1042,23 @@
                     console.error('Error fetching user profile:', error);
                 }
             }
+
+            // Handle download guide button click
+            downloadGuideBtn.addEventListener('click', () => {
+                const stateCode = Object.entries(stateOptions).find(([_, name]) => name === searchInput.value)?.[0];
+                if (stateCode && statePDFMap[stateCode]) {
+                    const pdfUrl = statePDFMap[stateCode];
+                    window.open(pdfUrl, '_blank');
+                }
+            });
+
+            // Handle open 529 button click
+            open529Btn.addEventListener('click', () => {
+                const stateCode = Object.entries(stateOptions).find(([_, name]) => name === searchInput.value)?.[0];
+                if (stateCode && state529linkDB[stateCode]) {
+                    window.open(state529linkDB[stateCode].url, '_blank');
+                }
+            });
 
             // Handle ownership button clicks
             ownershipButtons.forEach(button => {
