@@ -3495,8 +3495,10 @@ function updateCategoryName(oldName, newName) {
 }
 
 async function addNewCategory() {
-    // Get all existing categories from currentBudgets
-    const existingCategories = Object.keys(currentBudgets);
+    // Get all categories from expenses that are not in currentBudgets
+    const expenses = await fetchExpenses();
+    const expenseCategories = [...new Set(expenses.map(exp => exp.category))];
+    const inactiveCategories = expenseCategories.filter(cat => !currentBudgets[cat]);
     
     const result = await Swal.fire({
         title: 'Add New Category',
@@ -3504,7 +3506,7 @@ async function addNewCategory() {
             <div class="new-category-modal">
                 <select id="categoryName" class="swal2-input" style="width: 100%; margin-bottom: 1rem;">
                     <option value="">Select existing category</option>
-                    ${existingCategories.map(cat => `<option value="${cat}">${cat}</option>`).join('')}
+                    ${inactiveCategories.map(cat => `<option value="${cat}">${cat}</option>`).join('')}
                     <option value="custom">Custom Category</option>
                 </select>
                 <input id="customCategoryName" class="swal2-input" placeholder="Enter custom category name" style="display: none;">
