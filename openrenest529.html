@@ -155,6 +155,14 @@
             text-align: center;
         }
 
+        .ownership-subtitle {
+            color: var(--text-dark);
+            font-size: 1.1rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
         .ownership-options {
             display: flex;
             flex-direction: column;
@@ -560,16 +568,17 @@
         </div>
 
         <div class="ownership-question">
-            <h2 class="ownership-title">Do you currently own a 529 plan? This does not include plans parents or grandparents may have opened for you.</h2>
+            <h2 class="ownership-title">Do you currently own a 529 account?</h2>
+            <p class="ownership-subtitle">This does not include accounts parents or grandparents may have opened for you.</p>
             <div class="ownership-options">
-                <button class="ownership-button" data-option="yes">Yes, I've made my own 529 plan</button>
-                <button class="ownership-button" data-option="no">No, I don't have a 529 plan</button>
+                <button class="ownership-button" data-option="yes">Yes, I've made my own 529 account</button>
+                <button class="ownership-button" data-option="no">No, I don't have a 529 account</button>
             </div>
         </div>
 
-        <div class="state-search-container">
+        <div class="state-search-container" style="display: none;">
             <h2 class="search-header">Find Your State's 529 Plan</h2>
-            <p>Based on your profile</p>
+            <p class="ownership-subtitle">Based on your profile</p>
             
             <div class="search-wrapper">
                 <span class="search-icon">🔍</span>
@@ -1030,7 +1039,7 @@
                                     </div>
                                     <div class="estimated-benefit">
                                         <span>Estimate of your benefit only including rent and groceries:</span>
-                                        <span class="benefit-amount">${userData.potentialBenefit || '$0'}</span>
+                                        <span class="benefit-amount">$${Math.round(userData.totalPotentialBenefit || 0)}</span>
                                     </div>
                                 `;
                                 selectedStateInfo.style.display = 'block';
@@ -1047,7 +1056,7 @@
             downloadGuideBtn.addEventListener('click', () => {
                 const stateCode = Object.entries(stateOptions).find(([_, name]) => name === searchInput.value)?.[0];
                 if (stateCode && statePDFMap[stateCode]) {
-                    const pdfUrl = statePDFMap[stateCode];
+                    const pdfUrl = `https://renesthorizons.com/guides/${statePDFMap[stateCode]}`;
                     window.open(pdfUrl, '_blank');
                 }
             });
@@ -1068,6 +1077,7 @@
 
                     if (button.dataset.option === 'no') {
                         stateSearchContainer.style.display = 'block';
+                        actionButtons.style.display = 'none';
                         // If user has a state, show their state's information
                         if (searchInput.value) {
                             const stateCode = Object.entries(stateOptions).find(([_, name]) => name === searchInput.value)?.[0];
@@ -1075,12 +1085,22 @@
                                 const stateInfo = state529linkDB[stateCode];
                                 if (stateInfo) {
                                     selectedStateInfo.style.display = 'block';
+                                    actionButtons.style.display = 'flex';
                                 }
                             }
                         }
                     } else {
                         stateSearchContainer.style.display = 'none';
                         selectedStateInfo.style.display = 'none';
+                        actionButtons.style.display = 'none';
+                        // Add next button for users who have a 529 account
+                        const nextButton = document.createElement('button');
+                        nextButton.className = 'action-button primary';
+                        nextButton.style.display = 'block';
+                        nextButton.style.margin = '2rem auto';
+                        nextButton.textContent = 'Next';
+                        nextButton.onclick = () => window.location.href = 'dashboard.html';
+                        document.querySelector('.state-search-container').after(nextButton);
                     }
                 });
             });
