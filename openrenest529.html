@@ -606,7 +606,7 @@
         </div>
 
         <div class="ownership-question">
-            <h2 class="ownership-title">Do you currently own a 529 account?</h2>
+            <h2 class="ownership-title">Do you currently have a <span id="userState"></span> 529 account?</h2>
             <p class="ownership-subtitle">This does not include accounts parents or grandparents may have opened for you.</p>
             <div class="ownership-options">
                 <button class="ownership-button" data-option="yes">Yes, I've made my own 529 account</button>
@@ -1045,6 +1045,7 @@
             const actionButtons = document.querySelector('.action-buttons');
             const downloadGuideBtn = document.getElementById('downloadGuideBtn');
             const open529Btn = document.getElementById('open529Btn');
+            const userStateSpan = document.getElementById('userState');
 
             // Get user profile data
             const authToken = localStorage.getItem('authToken');
@@ -1063,6 +1064,7 @@
                         if (userData.state) {
                             const stateName = stateOptions[userData.state];
                             searchInput.value = stateName;
+                            userStateSpan.textContent = stateName;
 
                             // Display the state information
                             const stateInfo = state529linkDB[userData.state];
