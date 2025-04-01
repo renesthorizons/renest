@@ -981,7 +981,7 @@ input[type="number"] {
 
 .new-category-modal select {
     width: 100%;
-    padding: 0.5rem;
+    padding: 0.5 rem;
     margin-bottom: 1rem;
     border: 1px solid var(--border);
     border-radius: 4px;
@@ -3140,30 +3140,18 @@ const defaultBudgets = {
 // Modify loadCurrentBudgets to properly handle all categories
 async function loadCurrentBudgets() {
     try {
-        console.time('Total Budget Load');
-        
-        // Time the API request setup
-        console.time('API Request Setup');
-        const token = API.getToken();
-        const requestOptions = {
+        const response = await fetch(`${budgetManagerAPI}/budgets`, {
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${API.getToken()}`
             }
-        };
-        console.timeEnd('API Request Setup');
-
-        // Time the actual network request
-        console.time('API Network Call');
-        const response = await fetch(`${budgetManagerAPI}/budgets`, requestOptions);
-        console.timeEnd('API Network Call');
-
-        // Time the JSON parsing
-        console.time('API Response Parsing');
-        const data = await response.json();
-        console.timeEnd('API Response Parsing');
+        });
         
-        // Time the data processing
-        console.time('Budget Data Processing');
+        if (!response.ok) throw new Error('Failed to fetch budgets');
+        
+        const data = await response.json();
+        
+        // Initialize with default budgets
+        // First check if we have categories from the API
         if (data.categories && data.categories.length > 0) {
             // If we have API categories, use those
             currentBudgets = {};
@@ -3183,10 +3171,8 @@ async function loadCurrentBudgets() {
                 currentBudgets['Rent'].amount = Number(monthlyRent);
             }
         }
-        console.timeEnd('Budget Data Processing');
         
-        // Time stipend processing
-        console.time('Stipend Processing');
+        // Set stipend from API
         currentStipend = Number(data.monthlyStipend) || 0;
         if (currentStipend === 0) {
             const income = localStorage.getItem('income');
@@ -3194,23 +3180,19 @@ async function loadCurrentBudgets() {
                 currentStipend = Math.round(Number(income) / 12);
             }
         }
-        console.timeEnd('Stipend Processing');
         
-        // Time UI updates
-        console.time('Budget UI Updates');
+        // Update displays
         if (isEditMode) {
             displayEditableBudgets();
+        } else {
+            const expenses = await fetchExpenses();
+            updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
         }
         
         updateStipendDisplay();
         updateBudgetStatus();
-        console.timeEnd('Budget UI Updates');
-
-        console.timeEnd('Total Budget Load');
-        return currentBudgets;
     } catch (error) {
         console.error('Error in loadCurrentBudgets:', error);
-        throw error;
     }
 }
 
