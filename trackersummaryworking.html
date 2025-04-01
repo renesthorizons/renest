@@ -22,6 +22,7 @@
     --accent: #EC4899;
     --text-dark: #1F2937;
     --background: #F9FAFB;
+    --gold: #FF7286;  /* Adding gold color for credit categories */
 }
 
 * {
@@ -967,10 +968,70 @@ input[type="number"] {
         display: none;  /* Hides the dollar sign */
     }
 }
+
+.credit-badge {
+    background-color: var(--gold);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-left: 0.5rem;
+}
+
+.new-category-modal select {
+    width: 100%;
+    padding: 0.5 rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: white;
+    color: var(--text);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 1.2em;
+    transition: all 0.2s ease;
+}
+
+.new-category-modal select:hover {
+    border-color: var(--primary);
+}
+
+.new-category-modal select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.new-category-modal select option {
+    padding: 0.5rem;
+    background-color: white;
+    color: var(--text);
+}
+
+.new-category-modal select option:hover {
+    background-color: rgba(99, 102, 241, 0.1);
+}
+
+.new-category-modal select option:checked {
+    background-color: var(--primary);
+    color: white;
+}
+
+.new-category-modal select option[value="custom"] {
+    color: var(--primary);
+    font-weight: 500;
+}
 </style>
 <body>
     <nav class="navbar">
-        <a href="https://renesthorizons.com" class="logo">RENEST</a>
+        <a href="dashboard.html" class="logo">RENEST</a>
         <div class="nav-links">
             <a href="#" id="signOutLink" class="active">Sign Out</a>
             <a href="profile529.html">Profile</a>
@@ -2258,56 +2319,267 @@ async function updateProfile(profileData) {
         return null;
     }
 }
+async function fetchPlaidTransactions(month, year) {
+    try {
+        const token = API.getToken();
+        if (!token) throw new Error('No authentication token found');
+
+        const response = await fetch('https://fq3oz4hac8.execute-api.us-east-2.amazonaws.com/plaid', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                action: 'getExpenseSummary',
+                userId: await getUserId(token),
+                month: month,
+                year: year
+            })
+        });
+
+        if (!response.ok) throw new Error('Failed to fetch Plaid transactions');
+        
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching Plaid transactions:', error);
+        return null;
+    }
+}
+async function getUserId(token) {
+    try {
+        const response = await fetch(`${API.profileUrl}/profile`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch user profile');
+        }
+
+        const userData = await response.json();
+        return userData.userId || userData.email;
+        
+    } catch (error) {
+        console.error('Error fetching user ID:', error);
+        throw error;
+    }
+}
+
+// Convert Plaid's categorized summary format to the flat expense array format
+function convertPlaidToExpenses(categorySummary) {
+    const expenses = [];
+    
+    // console.log('Converting Plaid transactions to expenses. Category summary:', categorySummary);
+    
+    // Log Rent category data specifically
+    // if (categorySummary.Rent) {
+    //     console.log('Rent category data:', {
+    //         hasTransactions: Array.isArray(categorySummary.Rent.transactions),
+    //         transactionCount: categorySummary.Rent.transactions?.length || 0,
+    //         fullData: categorySummary.Rent
+    //     });
+    // }
+    
+    // Iterate through each category in the summary
+    Object.entries(categorySummary).forEach(([category, data]) => {
+        // console.log(`Processing category: ${category}`, {
+        //     hasTransactions: Array.isArray(data.transactions),
+        //     transactionCount: data.transactions?.length || 0
+        // });
+        
+        // Each category contains an array of transactions
+        if (Array.isArray(data.transactions)) {
+            data.transactions.forEach(transaction => {
+                // console.log('Transaction details:', {
+                //     id: transaction.id,
+                //     category: category,
+                //     amount: transaction.amount,
+                //     isQualified: transaction.isQualified,
+                //     date: transaction.date,
+                //     description: transaction.description,
+                //     transactionType: transaction.transactionType
+                // });
+                
+                // Create an expense object for each transaction
+                const expense = {
+                    expenseID: transaction.id,               // Use Plaid transaction ID
+                    category: category,                      // Use category from summary
+                    amount: transaction.transactionType === 'positive' ? -transaction.amount : transaction.amount,  // Negate positive transactions
+                    date: transaction.date,                  // Date
+                    notes: transaction.description || '',    // Description as notes
+                    isQualified: transaction.isQualified,    // Qualified status
+                    source: 'automatic',                     // Add source flag
+                    transactionType: transaction.transactionType  // Store the transaction type
+                };
+                
+                expenses.push(expense);
+            });
+        } else {
+            console.log(`Warning: No transactions array found for category ${category}`);
+        }
+    });
+    
+    // console.log('Converted Plaid expenses:', expenses);
+    return expenses;
+}
+
+// Add near the top with other global variables
+let expenseCache = {
+    data: null,
+    timestamp: null,
+    maxAge: 5 * 60 * 1000  // 5 minutes
+};
 
 async function fetchExpenses() {
     try {
+        console.time('Total Expenses Load');
+        
+        // Use existing cache
+        if (allTransactions) {
+            console.log('Using cached transactions');
+            return allTransactions;
+        }
+
+        // 1. Get user profile
+        console.time('Profile Check');
+        const userProfile = await fetchUserProfile();
+        console.timeEnd('Profile Check');
+
+        // 2. Fetch manual transactions
+        console.time('Manual Expenses');
         const response = await fetch(`${API.expenseUrl}/expenses`, {
             headers: {
                 'Authorization': `Bearer ${API.getToken()}`
             }
         });
-        if (!response.ok) throw new Error('Failed to fetch expenses');
-        const data = await response.json();
-        return data.expenses || [];
+        if (!response.ok) throw new Error('Failed to fetch manual expenses');
+        const manualData = await response.json();
+        let allExpenses = manualData.expenses || [];
+        console.timeEnd('Manual Expenses');
+        
+        // 3. If automatic account, fetch Plaid transactions for year-to-date in parallel
+        if (userProfile && userProfile.accountStatus === 'AUTOMATIC') {
+            console.time('Plaid Transactions');
+            const currentDate = new Date();
+            const currentYear = currentDate.getFullYear();
+            const currentMonth = currentDate.getMonth() + 1; // 1-based month
+            
+            // Create array of months from January to current month
+            const monthsToFetch = Array.from(
+                { length: currentMonth }, 
+                (_, i) => ({ month: i + 1, year: currentYear })
+            );
+            
+            console.log(`Fetching ${monthsToFetch.length} months of transactions in parallel`);
+            
+            // Fetch all months in parallel
+            const plaidResults = await Promise.all(
+                monthsToFetch.map(({ month, year }) => 
+                    fetchPlaidTransactions(month, year)
+                        .catch(err => {
+                            console.warn(`Failed to fetch transactions for ${year}-${month}:`, err);
+                            return null;
+                        })
+                )
+            );
+            
+            // Process results
+            plaidResults.forEach(result => {
+                if (result && result.summary) {
+                    const plaidExpenses = convertPlaidToExpenses(result.summary);
+                    allExpenses = [...allExpenses, ...plaidExpenses];
+                }
+            });
+            
+            console.timeEnd('Plaid Transactions');
+        }
+        
+        // Store in existing cache
+        allTransactions = allExpenses;
+        
+        console.timeEnd('Total Expenses Load');
+        return allExpenses;
     } catch (error) {
         console.error('Error fetching expenses:', error);
         return [];
     }
 }
 
+// Use existing clearTransactionCache function
+function clearTransactionCache() {
+    allTransactions = null;
+}
+
 // Calculation Functions
 function calculateBenefits(expenses, state, income) {
+    // console.log('Starting calculateBenefits with:', {
+    //     expensesCount: expenses.length,
+    //     state,
+    //     income
+    // });
+    
     const currentDate = new Date();
     const startOfYear = new Date(currentDate.getFullYear(), 0, 1);
     const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
 
+    // console.log('Date ranges:', {
+    //     currentDate: currentDate.toISOString(),
+    //     startOfYear: startOfYear.toISOString(),
+    //     firstDayOfMonth: firstDayOfMonth.toISOString()
+    // });
+
     // Get total deposits year to date (D)
-    const totalDeposits = expenses
-        .filter(e => e.category === 'Deposit529' && 
-                     new Date(e.date) >= startOfYear)
+    const deposits = expenses.filter(e => e.category === 'Deposit529');
+    // console.log('All deposits:', deposits);
+    
+    const totalDeposits = deposits
+        .filter(e => new Date(e.date) >= startOfYear)
         .reduce((sum, e) => sum + e.amount, 0);
+    // console.log('Total deposits:', totalDeposits);
     
     // Get total qualified expenses year to date (Q)
-    const totalQualifiedExpenses = expenses
-        .filter(e => (qualifiedCategories.includes(e.category) || e.isQualified) && 
-                     new Date(e.date) >= startOfYear)
-        .reduce((sum, e) => sum + e.amount, 0);
+    const allExpenses = expenses.map(e => ({
+        ...e,
+        dateObj: new Date(e.date),
+        isQualifiedCategory: qualifiedCategories.includes(e.category),
+        isQualifiedExpense: e.isQualified,
+        isInYear: new Date(e.date) >= startOfYear
+    }));
+    
+    // console.log('All expenses with qualification details:', allExpenses);
+    
+    const qualifiedExpenses = allExpenses.filter(e => 
+        (e.isQualifiedCategory || e.isQualifiedExpense) && 
+        e.isInYear
+    );
+    // console.log('Qualified expenses:', qualifiedExpenses);
+    
+    const totalQualifiedExpenses = qualifiedExpenses.reduce((sum, e) => sum + e.amount, 0);
+    // console.log('Total qualified expenses:', totalQualifiedExpenses);
 
     // Get qualified expenses before current month (M)
-    const qualifiedExpensesBeforeMonth = expenses
-        .filter(e => (qualifiedCategories.includes(e.category) || e.isQualified) && 
-                     new Date(e.date) >= startOfYear &&
-                     new Date(e.date) < firstDayOfMonth)
+    const qualifiedExpensesBeforeMonth = allExpenses
+        .filter(e => (e.isQualifiedCategory || e.isQualifiedExpense) && 
+                     e.isInYear &&
+                     e.dateObj < firstDayOfMonth)
         .reduce((sum, e) => sum + e.amount, 0);
+    // console.log('Qualified expenses before current month:', qualifiedExpensesBeforeMonth);
 
     // Get current month's qualified expenses (E)
-    const currentMonthQualifiedExpenses = expenses
-        .filter(e => (qualifiedCategories.includes(e.category) || e.isQualified) && 
-                     new Date(e.date) >= firstDayOfMonth)
+    const currentMonthQualifiedExpenses = allExpenses
+        .filter(e => (e.isQualifiedCategory || e.isQualifiedExpense) && 
+                     e.isInYear &&
+                     e.dateObj >= firstDayOfMonth)
         .reduce((sum, e) => sum + e.amount, 0);
+    // console.log('Current month qualified expenses:', currentMonthQualifiedExpenses);
 
     // Calculate year to date benefit
     const ytdBenefit = calculateStateBenefit(state, Math.min(totalDeposits, totalQualifiedExpenses), income);
+    // console.log('Year to date benefit:', ytdBenefit);
 
     // Calculate current month benefit
     let currentMonthBenefit = 0;
@@ -2316,13 +2588,16 @@ function calculateBenefits(expenses, state, income) {
         currentMonthBenefit = calculateStateBenefit(state, 
             Math.min(remainingDeposits, currentMonthQualifiedExpenses), income);
     }
+    // console.log('Current month benefit:', currentMonthBenefit);
 
-    return {
+    const result = {
         currentMonthBenefit,
         ytdBenefit,
         qualifiedAmount: Math.min(totalDeposits, totalQualifiedExpenses),
         depositBalance: totalDeposits - totalQualifiedExpenses // L = D - Q (for status display)
     };
+    // console.log('Final benefits calculation result:', result);
+    return result;
 }
 
 function calculateStateBenefit(state, totalQualifiedExpenses, income) {
@@ -2366,8 +2641,14 @@ function updateCategoryDisplay(expenses) {
 
     Object.entries(categoryBudgets).forEach(([category, budget]) => {
         const categoryExpenses = expenses.filter(e => e.category === category);
-        const spent = categoryExpenses.reduce((sum, e) => sum + e.amount, 0);
-        const percentage = (spent / budget * 100).toFixed(1);
+        
+        // Calculate total for the category, considering transaction types
+        const total = categoryExpenses.reduce((sum, e) => sum + e.amount, 0);
+        
+        // If total is negative (net credit), use absolute value and gold color
+        const isCredit = total < 0;
+        const displayAmount = Math.abs(total);
+        const percentage = (displayAmount / budget * 100).toFixed(1);
         const isQualified = qualifiedCategories.includes(category);
 
         container.insertAdjacentHTML('beforeend', `
@@ -2376,13 +2657,14 @@ function updateCategoryDisplay(expenses) {
                     <div class="category-name">
                         <span>${categoryIcons[category] || '📊'}</span>
                         <span>${category}</span>
+                        ${isCredit ? '<span class="credit-badge">💰</span>' : ''}
                         ${isQualified ? '<span class="qualified-badge">✓ Qualified</span>' : ''}
                     </div>
-                    <div class="category-amounts">$${spent.toFixed(2)} of $${budget}</div>
+                    <div class="category-amounts">$${displayAmount.toFixed(2)} of $${budget}</div>
                 </div>
                 <div class="progress-bar">
                     <div class="progress-spent" style="width: ${Math.min(percentage, 100)}%; 
-                         background: ${isQualified ? 'var(--success)' : 'var(--primary)'}">
+                         background: ${isCredit ? 'var(--gold)' : (isQualified ? 'var(--success)' : 'var(--primary)')}">
                     </div>
                     <div class="progress-label">${percentage}%</div>
                 </div>
@@ -2541,7 +2823,8 @@ function createRadarChart(expenses, selectedDate) {
     
     const spentData = categories.map(category => {
         const categoryExpenses = monthExpenses.filter(e => e.category === category);
-        return categoryExpenses.reduce((sum, e) => sum + e.amount, 0);
+        const total = categoryExpenses.reduce((sum, e) => sum + e.amount, 0);
+        return Math.abs(total); // Use absolute value for display
     });
     
     const budgetData = categories.map(category => currentBudgets[category].amount);
@@ -2635,38 +2918,49 @@ window.addEventListener('resize', function() {
 
 // Main Initialization
 async function initializePage() {
-    console.log('Initializing page');
-    
-    // Remove the old event listener setup
-    console.log('Skipping old stipend event listener setup');
-    
-    // Log other initialization steps
-    console.log('Page initialization complete');
+    console.time('Total Page Load');
+    // console.log('Starting initializePage');
     
     const loadingOverlay = document.getElementById('loadingOverlay');
     try {
         loadingOverlay.style.display = 'flex';
         
+        console.time('Auth Check');
         const token = API.getToken();
         if (!token) {
             window.location.href = 'signin529.html';
             return;
         }
+        console.timeEnd('Auth Check');
 
-        // Fetch all initial data in parallel
-        const [userProfile, expenses, budgets] = await Promise.all([
-            fetchUserProfile(),
-            fetchExpenses(),
-            loadCurrentBudgets()
-        ]);
-
+        // 1. First get the user profile
+        console.time('User Profile Load');
+        const userProfile = await fetchUserProfile();
+        console.timeEnd('User Profile Load');
+        // console.log('User profile loaded:', userProfile);
         if (!userProfile) throw new Error('Failed to load user profile');
 
-        // Calculate benefits
-        const benefits = calculateBenefits(expenses, userProfile.state, userProfile.income);
+        // 2. Load current budgets
+        console.time('Budgets Load');
+        const budgets = await loadCurrentBudgets();
+        console.timeEnd('Budgets Load');
+        // console.log('Current budgets loaded:', budgets);
 
-        // Only update profile if benefits have changed
+        // 3. Fetch all expenses (both manual and automatic)
+        console.time('Expenses Load');
+        const expenses = await fetchExpenses();
+        console.timeEnd('Expenses Load');
+        // console.log('All expenses loaded:', expenses);
+
+        // 4. Calculate benefits using combined transactions data
+        console.time('Benefits Calculation');
+        const benefits = calculateBenefits(expenses, userProfile.state, userProfile.income);
+        console.timeEnd('Benefits Calculation');
+        // console.log('Benefits calculated:', benefits);
+
+        // 5. Update profile if benefits have changed
         if (benefits.ytdBenefit !== userProfile.currentBenefit) {
+            console.time('Profile Update');
             try {
                 await updateProfile({
                     currentBenefit: benefits.ytdBenefit
@@ -2674,9 +2968,10 @@ async function initializePage() {
             } catch (error) {
                 console.warn('Failed to update profile with new benefits:', error);
             }
+            console.timeEnd('Profile Update');
         }
 
-        // Update UI with expenses parameter
+        // 6. Update UI with all data
         updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
         updateBenefitDisplay(benefits, userProfile.state, userProfile.accountStatus, expenses);
         updateMonthDisplay();
@@ -2684,49 +2979,49 @@ async function initializePage() {
         initializeViewToggle();
         
         // Update the month navigation to handle both views
-        document.getElementById('prevMonth').addEventListener('click', () => {
+        document.getElementById('prevMonth').addEventListener('click', async () => {
             currentDisplayMonth = new Date(currentDisplayMonth.getFullYear(), 
                 currentDisplayMonth.getMonth() - 1);
             updateMonthDisplay();
-            updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
+            
+            // Fetch expenses for the new month
+            const monthExpenses = await fetchExpenses(); // This will get both data sources
+            // console.log('Month expenses loaded:', monthExpenses);
+            
+            updateCategoryDisplayForMonth(monthExpenses, currentDisplayMonth);
             if (chartContainer.style.display !== 'none') {
-                createRadarChart(expenses, currentDisplayMonth);
+                createRadarChart(monthExpenses, currentDisplayMonth);
             }
         });
 
-        document.getElementById('nextMonth').addEventListener('click', () => {
+        document.getElementById('nextMonth').addEventListener('click', async () => {
             const now = new Date();
             if (currentDisplayMonth < now) {
                 currentDisplayMonth = new Date(currentDisplayMonth.getFullYear(), 
                     currentDisplayMonth.getMonth() + 1);
                 updateMonthDisplay();
-                updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
+                
+                // Fetch expenses for the new month
+                const monthExpenses = await fetchExpenses(); // This will get both data sources
+                // console.log('Month expenses loaded:', monthExpenses);
+                
+                updateCategoryDisplayForMonth(monthExpenses, currentDisplayMonth);
                 if (chartContainer.style.display !== 'none') {
-                    createRadarChart(expenses, currentDisplayMonth);
+                    createRadarChart(monthExpenses, currentDisplayMonth);
                 }
             }
         });
 
         // Add these new initializations
         const editBudgetsBtn = document.getElementById('editBudgets');
-        // const editStipendBtn = document.getElementById('editStipend');
-        
         editBudgetsBtn.addEventListener('click', toggleEditMode);
-        // editStipendBtn.addEventListener('click', async () => {
-        //     const newAmount = prompt('Enter new monthly stipend amount:', currentStipend);
-        //     if (newAmount && !isNaN(newAmount)) {
-        //         await updateStipend(Number(newAmount));
-        //     }
-        // });
-
-        // Load initial budgets
-        await loadCurrentBudgets();
         
     } catch (error) {
         console.error('Error initializing page:', error);
         alert('Error loading data. Please try again.');
     } finally {
         loadingOverlay.style.display = 'none';
+        console.timeEnd('Total Page Load');
     }
 }
 
@@ -2776,6 +3071,7 @@ async function toggleEditMode() {
     isEditMode = !isEditMode;
     const editButton = document.getElementById('editBudgets');
     const viewToggle = document.getElementById('viewToggle');
+    const trackerButton = document.querySelector('.tracker-button');
     
     if (isEditMode) {
         // Store current budgets for cancel functionality
@@ -2783,6 +3079,7 @@ async function toggleEditMode() {
         
         editButton.classList.add('editing');
         editButton.querySelector('.toggle-text').textContent = 'Save';
+        editButton.style.backgroundColor = 'var(--success)';
         
         // Add cancel button
         const cancelButton = document.createElement('button');
@@ -2792,17 +3089,20 @@ async function toggleEditMode() {
         editButton.parentNode.insertBefore(cancelButton, editButton.nextSibling);
         
         viewToggle.style.display = 'none';
+        if (trackerButton) trackerButton.style.display = 'none';
         await loadCurrentBudgets();
         displayEditableBudgets();
     } else {
         editButton.classList.remove('editing');
         editButton.querySelector('.toggle-text').textContent = 'Edit Budgets';
+        editButton.style.backgroundColor = 'white';
         
         // Remove cancel button
         const cancelButton = document.getElementById('cancelEdit');
         if (cancelButton) cancelButton.remove();
         
         viewToggle.style.display = 'block';
+        if (trackerButton) trackerButton.style.display = 'block';
         await saveBudgetChanges();
         const expenses = await fetchExpenses();
         updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
@@ -2840,7 +3140,7 @@ const defaultBudgets = {
 // Modify loadCurrentBudgets to properly handle all categories
 async function loadCurrentBudgets() {
     try {
-        // console.log('Starting loadCurrentBudgets...');
+        console.log('Starting loadCurrentBudgets...');
         const response = await fetch(`${budgetManagerAPI}/budgets`, {
             headers: {
                 'Authorization': `Bearer ${API.getToken()}`
@@ -2850,11 +3150,12 @@ async function loadCurrentBudgets() {
         if (!response.ok) throw new Error('Failed to fetch budgets');
         
         const data = await response.json();
-        // console.log('Budget API Response:', data);
+        console.log('Budget API Response:', data);
         
         // Initialize with default budgets
         // First check if we have categories from the API
         if (data.categories && data.categories.length > 0) {
+            console.log('Found categories in API response:', data.categories);
             // If we have API categories, use those
             currentBudgets = {};
             data.categories.forEach(apiCategory => {
@@ -2863,7 +3164,9 @@ async function loadCurrentBudgets() {
                     id: apiCategory.categoryId
                 };
             });
+            console.log('Loaded categories from API:', Object.keys(currentBudgets));
         } else {
+            console.log('No categories found in API, using default budgets');
             // If no API categories exist, initialize with default budgets
             currentBudgets = { ...defaultBudgets };
             
@@ -2872,9 +3175,33 @@ async function loadCurrentBudgets() {
             if (monthlyRent) {
                 currentBudgets['Rent'].amount = Number(monthlyRent);
             }
+            console.log('Loaded default categories:', Object.keys(currentBudgets));
+
+            // Post default categories to the API
+            console.log('Posting default categories to API...');
+            const today = new Date();
+            const savePromises = Object.entries(currentBudgets).map(([name, data]) => {
+                console.log('Posting default category:', name, data);
+                return fetch(`${budgetManagerAPI}/budgets`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${API.getToken()}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        categoryName: name,
+                        budgetAmount: data.amount,
+                        categoryId: data.id,
+                        date: today.toISOString(),
+                        isDefault: true
+                    })
+                });
+            });
+
+            // Wait for all default categories to be saved
+            await Promise.all(savePromises);
+            console.log('Default categories posted successfully');
         }
-        
-        // console.log('Initialized currentBudgets:', currentBudgets);
         
         // Set stipend from API
         currentStipend = Number(data.monthlyStipend) || 0;
@@ -2902,14 +3229,14 @@ async function loadCurrentBudgets() {
 
 // Modify updateStipendDisplay to only update in edit mode
 function updateStipendDisplay() {
-    console.log('updateStipendDisplay called', {
-        isEditMode,
-        currentStipend
-    });
+    // console.log('updateStipendDisplay called', {
+    //     isEditMode,
+    //     currentStipend
+    // });
     
     if (isEditMode) {
         const stipendElement = document.getElementById('stipendAmount');
-        console.log('Stipend element found:', !!stipendElement);
+        // console.log('Stipend element found:', !!stipendElement);
         
         if (stipendElement) {
             stipendElement.textContent = `${currentStipend.toFixed(2)}`;
@@ -2921,13 +3248,13 @@ function updateStipendDisplay() {
 
 // Modify updateBudgetStatus to only reference budgetStatus in edit mode
 function updateBudgetStatus() {
-    console.log('updateBudgetStatus called', {
-        isEditMode,
-        currentStipend
-    });
+    // console.log('updateBudgetStatus called', {
+    //     isEditMode,
+    //     currentStipend
+    // });
     
     if (!isEditMode) {
-        console.log('Skipping budget status update - not in edit mode');
+        // console.log('Skipping budget status update - not in edit mode');
         return;
     }
     
@@ -2935,13 +3262,13 @@ function updateBudgetStatus() {
         .reduce((sum, [_, data]) => sum + Number(data.amount), 0);
     
     const remaining = currentStipend - totalBudgeted;
-    console.log('Budget calculations:', {
-        totalBudgeted,
-        remaining
-    });
+    // console.log('Budget calculations:', {
+    //     totalBudgeted,
+    //     remaining
+    // });
     
     const statusElement = document.getElementById('budgetStatus');
-    console.log('Status element found:', !!statusElement);
+    // console.log('Status element found:', !!statusElement);
     
     if (statusElement) {
         const newText = remaining >= 0 
@@ -2988,11 +3315,13 @@ async function removeCategory(category) {
     }
     
     try {
+        console.log('Attempting to delete category:', category, 'with ID:', currentBudgets[category].id);
         // Call the API to delete the category
         await deleteCategory(currentBudgets[category].id);
         
         // Remove from local state
         delete currentBudgets[category];
+        console.log('Category deleted successfully. Current categories:', Object.keys(currentBudgets));
         
         // Update the UI
         displayEditableBudgets();
@@ -3016,6 +3345,8 @@ async function saveBudgetChanges() {
             budgetAmount: data.amount
         }));
 
+        console.log('Saving budget changes. Categories to save:', categories);
+
         const response = await fetch(`${budgetManagerAPI}/budgets/month`, {
             method: 'PUT',
             headers: {
@@ -3034,6 +3365,8 @@ async function saveBudgetChanges() {
             throw new Error(errorData.error || 'Failed to save budget changes');
         }
         
+        console.log('Budget changes saved successfully');
+        
         // Refresh the display
         const expenses = await fetchExpenses();
         updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
@@ -3045,13 +3378,13 @@ async function saveBudgetChanges() {
 
 // Modify displayEditableBudgets to show all categories
 function displayEditableBudgets() {
-    console.log('displayEditableBudgets called', {
-        currentStipend,
-        budgetsExist: !!currentBudgets
-    });
+    // console.log('displayEditableBudgets called', {
+    //     currentStipend,
+    //     budgetsExist: !!currentBudgets
+    // });
     
     const container = document.getElementById('categoriesContainer');
-    console.log('Categories container found:', !!container);
+    // console.log('Categories container found:', !!container);
     
     if (!container) {
         console.error('Categories container not found - cannot display editable budgets');
@@ -3082,7 +3415,7 @@ function displayEditableBudgets() {
                 </div>
             </div>
         `);
-        console.log('Stipend section added successfully');
+        // console.log('Stipend section added successfully');
     } catch (error) {
         console.error('Error adding stipend section:', error);
     }
@@ -3123,7 +3456,7 @@ function displayEditableBudgets() {
         // Add event listener directly to the input
         const input = div.querySelector('.budget-input');
         input.addEventListener('input', (e) => {
-            console.log('Input event fired for', category);
+            // console.log('Input event fired for', category);
             updateBudget(category, e.target.value);
         });
         
@@ -3140,11 +3473,11 @@ function displayEditableBudgets() {
 }
 
 function updateBudget(category, amount) {
-    console.log('updateBudget called:', { category, amount });
+    // console.log('updateBudget called:', { category, amount });
     
     const newAmount = Number(amount);
     if (isNaN(newAmount) || newAmount < 0) {
-        console.log('Invalid amount entered:', amount);
+        // console.log('Invalid amount entered:', amount);
         alert('Please enter a valid amount');
         return;
     }
@@ -3169,6 +3502,53 @@ function updateBudget(category, amount) {
         statusElement.className = `budget-status ${remaining >= 0 ? 'positive' : 'negative'}`;
     }
 }
+function updateCategoryDisplayForMonth(expenses, selectedDate) {
+    const container = document.getElementById('categoriesContainer');
+    container.innerHTML = '';
+    
+    if (isEditMode) {
+        displayEditableBudgets();
+        return;
+    }
+
+    // Filter expenses for selected month
+    const monthExpenses = expenses.filter(expense => {
+        const expenseDate = new Date(expense.date);
+        return expenseDate.getMonth() === selectedDate.getMonth() &&
+               expenseDate.getFullYear() === selectedDate.getFullYear();
+    });
+
+    // Display all categories from currentBudgets
+    Object.entries(currentBudgets).forEach(([category, data]) => {
+        const budget = data.amount;
+        const categoryExpenses = monthExpenses.filter(e => e.category === category);
+        const total = categoryExpenses.reduce((sum, e) => sum + e.amount, 0);
+        const displayAmount = Math.abs(total);
+        const percentage = (displayAmount / budget * 100).toFixed(1);
+        const isQualified = qualifiedCategories.includes(category);
+        const isCredit = total < 0;  // Track if this is a credit category
+        
+        container.insertAdjacentHTML('beforeend', `
+            <div class="category">
+                <div class="category-header">
+                    <div class="category-name">
+                        <span>${categoryIcons[category] || '📊'}</span>
+                        <span>${category}</span>
+                        ${isCredit ? '<span class="credit-badge">💰</span>' : ''}
+                        ${isQualified ? '<span class="qualified-badge">✓ Qualified</span>' : ''}
+                    </div>
+                    <div class="category-amounts">$${displayAmount.toFixed(2)} of $${budget}</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-spent" style="width: ${Math.min(percentage, 100)}%; 
+                         background: ${isCredit ? 'var(--gold)' : (isQualified ? 'var(--success)' : 'var(--primary)')}">
+                    </div>
+                    <div class="progress-label">${percentage}%</div>
+                </div>
+            </div>
+        `);
+    });
+}
 
 function updateCategoryName(oldName, newName) {
     if (newName === oldName) return;
@@ -3184,11 +3564,21 @@ function updateCategoryName(oldName, newName) {
 }
 
 async function addNewCategory() {
+    // Get all categories from expenses that are not in currentBudgets
+    const expenses = await fetchExpenses();
+    const expenseCategories = [...new Set(expenses.map(exp => exp.category))];
+    const inactiveCategories = expenseCategories.filter(cat => !currentBudgets[cat]);
+    
     const result = await Swal.fire({
         title: 'Add New Category',
         html: `
             <div class="new-category-modal">
-                <input id="categoryName" class="swal2-input" placeholder="Category Name">
+                <select id="categoryName" class="swal2-input" style="width: 100%; margin-bottom: 1rem;">
+                    <option value="">Select existing category</option>
+                    ${inactiveCategories.map(cat => `<option value="${cat}">${cat}</option>`).join('')}
+                    <option value="custom">Custom Category</option>
+                </select>
+                <input id="customCategoryName" class="swal2-input" placeholder="Enter custom category name" style="display: none;">
                 <input id="categoryBudget" type="number" class="swal2-input" placeholder="Budget Amount">
             </div>
         `,
@@ -3196,9 +3586,31 @@ async function addNewCategory() {
         confirmButtonText: 'Add Category',
         confirmButtonColor: 'var(--primary)',
         cancelButtonColor: 'var(--warning)',
+        didOpen: () => {
+            // Add event listener for category selection
+            const categorySelect = document.getElementById('categoryName');
+            const customInput = document.getElementById('customCategoryName');
+            
+            categorySelect.addEventListener('change', () => {
+                customInput.style.display = categorySelect.value === 'custom' ? 'block' : 'none';
+            });
+        },
         preConfirm: () => {
-            const name = document.getElementById('categoryName').value;
+            const categorySelect = document.getElementById('categoryName');
+            const customInput = document.getElementById('customCategoryName');
             const amount = document.getElementById('categoryBudget').value;
+            
+            let name;
+            if (categorySelect.value === 'custom') {
+                name = customInput.value.trim();
+                if (!name) {
+                    Swal.showValidationMessage('Please enter a custom category name');
+                    return false;
+                }
+            } else {
+                name = categorySelect.value;
+            }
+            
             if (!name || !amount) {
                 Swal.showValidationMessage('Please fill in all fields');
                 return false;
@@ -3209,12 +3621,40 @@ async function addNewCategory() {
 
     if (result.isConfirmed) {
         const { name, amount } = result.value;
-        currentBudgets[name] = {
-            amount: amount,
-            id: `cat_${name.toLowerCase().replace(/\s+/g, '')}`
-        };
-        displayEditableBudgets();
-        updateBudgetStatus();
+        const categoryId = `cat_${name.toLowerCase().replace(/\s+/g, '')}`;
+        
+        try {
+            // Create the category using POST /budgets
+            const response = await fetch(`${budgetManagerAPI}/budgets`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${API.getToken()}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    categoryName: name,
+                    budgetAmount: amount,
+                    categoryId: categoryId,
+                    date: new Date().toISOString()
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to create category');
+            }
+
+            // Add to local state
+            currentBudgets[name] = {
+                amount: amount,
+                id: categoryId
+            };
+            
+            displayEditableBudgets();
+            updateBudgetStatus();
+        } catch (error) {
+            console.error('Error creating category:', error);
+            alert('Failed to create category. Please try again.');
+        }
     }
 }
 
@@ -3351,12 +3791,36 @@ async function cancelEditMode() {
     
     editButton.classList.remove('editing');
     editButton.querySelector('.toggle-text').textContent = 'Edit Budgets';
+    editButton.style.backgroundColor = 'white';
     if (cancelButton) cancelButton.remove();
     
     viewToggle.style.display = 'block';
     
     const expenses = await fetchExpenses();
     updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
+}
+
+// Add at the top with other global variables
+let allTransactions = null;
+
+// Update the month navigation to use cached data
+async function loadMonthExpenses(month, year) {
+    try {
+        // Get all transactions if we haven't already
+        const allExpenses = await fetchExpenses();
+        
+        // Filter expenses for the selected month
+        const monthExpenses = allExpenses.filter(expense => {
+            const expenseDate = new Date(expense.date);
+            return expenseDate.getMonth() === month && expenseDate.getFullYear() === year;
+        });
+        
+        // Update UI with filtered expenses
+        updateCategoryDisplay(monthExpenses);
+        updateBenefitDisplay(calculateBenefits(monthExpenses, currentState, currentIncome), currentState, currentAccountStatus, monthExpenses);
+    } catch (error) {
+        console.error('Error loading month expenses:', error);
+    }
 }
 </script>
 </html>
