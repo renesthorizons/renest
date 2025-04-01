@@ -3342,6 +3342,29 @@ async function saveBudgetChanges() {
         const today = new Date();
         const monthKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
 
+        // Get all categories from the API first
+        const response = await fetch(`${budgetManagerAPI}/budgets`, {
+            headers: {
+                'Authorization': `Bearer ${API.getToken()}`
+            }
+        });
+        
+        if (!response.ok) throw new Error('Failed to fetch budgets');
+        
+        const data = await response.json();
+        const existingCategories = data.categories || [];
+        
+        // Find categories that need to be deleted (exist in API but not in currentBudgets)
+        const categoriesToDelete = existingCategories.filter(apiCat => 
+            !Object.keys(currentBudgets).includes(apiCat.categoryName)
+        );
+        
+        // Delete categories that are no longer in currentBudgets
+        for (const category of categoriesToDelete) {
+            console.log('Deleting category:', category.categoryName);
+            await deleteCategory(category.categoryId);
+        }
+
         // Send current state of all categories
         const categories = Object.entries(currentBudgets).map(([name, data]) => ({
             categoryId: data.id,
@@ -3351,7 +3374,7 @@ async function saveBudgetChanges() {
 
         console.log('Saving budget changes. Categories to save:', categories);
 
-        const response = await fetch(`${budgetManagerAPI}/budgets/month`, {
+        const saveResponse = await fetch(`${budgetManagerAPI}/budgets/month`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${API.getToken()}`,
@@ -3364,8 +3387,8 @@ async function saveBudgetChanges() {
             })
         });
 
-        if (!response.ok) {
-            const errorData = await response.json();
+        if (!saveResponse.ok) {
+            const errorData = await saveResponse.json();
             throw new Error(errorData.error || 'Failed to save budget changes');
         }
         
