@@ -3313,34 +3313,27 @@ async function saveBudgetChanges() {
         const today = new Date();
         const monthKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
 
-        // Send current state of all categories
-        const categories = Object.entries(currentBudgets).map(([name, data]) => ({
-            categoryId: data.id,
-            categoryName: name,
-            budgetAmount: data.amount
-        }));
-
-        console.log('Saving budget changes. Categories to save:', categories);
-
-        const response = await fetch(`${budgetManagerAPI}/budgets/month`, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `Bearer ${API.getToken()}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                date: monthKey,
-                monthlyStipend: currentStipend,
-                categories
-            })
+        // Save each category individually using POST /budgets
+        const savePromises = Object.entries(currentBudgets).map(([name, data]) => {
+            console.log('Saving category:', name, data);
+            return fetch(`${budgetManagerAPI}/budgets`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${API.getToken()}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    categoryName: name,
+                    budgetAmount: data.amount,
+                    categoryId: data.id,
+                    date: today.toISOString()
+                })
+            });
         });
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Failed to save budget changes');
-        }
-        
-        console.log('Budget changes saved successfully');
+        // Wait for all saves to complete
+        await Promise.all(savePromises);
+        console.log('All budget changes saved successfully');
         
         // Refresh the display
         const expenses = await fetchExpenses();
