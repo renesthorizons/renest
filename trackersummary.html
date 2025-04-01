@@ -3285,6 +3285,7 @@ function updateBudgetStatus() {
 // First, add the deleteCategory API function
 async function deleteCategory(categoryId) {
     try {
+        const today = new Date();
         const response = await fetch(`${budgetManagerAPI}/budgets`, {
             method: 'DELETE',
             headers: {
@@ -3293,7 +3294,7 @@ async function deleteCategory(categoryId) {
             },
             body: JSON.stringify({
                 categoryId: categoryId,
-                date: `${currentDisplayMonth.getFullYear()}-${String(currentDisplayMonth.getMonth() + 1).padStart(2, '0')}`
+                date: today.toISOString()
             })
         });
 
@@ -3310,6 +3311,10 @@ async function deleteCategory(categoryId) {
 
 // Modify removeCategory to handle the deletion
 async function removeCategory(categoryName) {
+    if (!confirm(`Are you sure you want to remove the ${categoryName} category?`)) {
+        return;
+    }
+    
     try {
         console.log('Attempting to delete category:', categoryName);
         const categoryId = currentBudgets[categoryName].id;
