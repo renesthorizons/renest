@@ -2614,7 +2614,10 @@
 
             // Update withdrawal information
             const currentBalance = projections.ytdDeposits - projections.totalWithdrawals;
-            const availableForWithdrawal = Math.max(0, projections.ytdQualified - projections.totalWithdrawals);
+            const availableForWithdrawal = Math.min(
+                Math.max(0, projections.ytdQualified - projections.totalWithdrawals),
+                currentBalance
+            );
             
             document.getElementById('current-529-balance').textContent = formatCurrency(currentBalance);
             document.getElementById('total-withdrawals').textContent = formatCurrency(projections.totalWithdrawals);
@@ -2622,14 +2625,14 @@
 
             // Update withdrawal status message
             const withdrawalStatus = document.getElementById('withdrawal-status');
-            if (availableForWithdrawal > currentBalance) {
+            if (projections.ytdQualified > projections.totalWithdrawals && currentBalance < (projections.ytdQualified - projections.totalWithdrawals)) {
                 withdrawalStatus.style.background = '#FEE2E2';
                 withdrawalStatus.style.color = '#DC2626';
-                withdrawalStatus.innerHTML = `⚠️ You need to deposit $${formatCurrency(availableForWithdrawal - currentBalance)} into your 529 account to cover your qualified expenses.`;
+                withdrawalStatus.innerHTML = `⚠️ You need to deposit ${formatCurrency(projections.ytdQualified - projections.totalWithdrawals - currentBalance)} into your 529 account to cover your qualified expenses.`;
             } else if (availableForWithdrawal > 0) {
                 withdrawalStatus.style.background = '#EEF2FF';
                 withdrawalStatus.style.color = 'var(--primary)';
-                withdrawalStatus.innerHTML = `You can withdraw up to $${formatCurrency(availableForWithdrawal)} from your 529 account for qualified expenses.`;
+                withdrawalStatus.innerHTML = `You can withdraw up to ${formatCurrency(availableForWithdrawal)} from your 529 account for qualified expenses.`;
             } else {
                 withdrawalStatus.style.background = '#F0FDF4';
                 withdrawalStatus.style.color = '#16A34A';
