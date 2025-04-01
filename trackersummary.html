@@ -3141,10 +3141,7 @@ const defaultBudgets = {
 async function loadCurrentBudgets() {
     try {
         console.log('Starting loadCurrentBudgets...');
-        const today = new Date();
-        const monthKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
-        
-        const response = await fetch(`${budgetManagerAPI}/budgets/month?date=${monthKey}`, {
+        const response = await fetch(`${budgetManagerAPI}/budgets`, {
             headers: {
                 'Authorization': `Bearer ${API.getToken()}`
             }
@@ -3325,7 +3322,7 @@ async function saveBudgetChanges() {
 
         console.log('Saving budget changes. Categories to save:', categories);
 
-        const response = await fetch(`${budgetManagerAPI}/budgets/month`, {
+        const response = await fetch(`${budgetManagerAPI}/budgets`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${API.getToken()}`,
