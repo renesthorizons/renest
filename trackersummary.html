@@ -3283,28 +3283,39 @@ function updateBudgetStatus() {
 
 // Modify removeCategory to just update local state
 // First, add the deleteCategory API function
-async function deleteCategory(categoryId) {
+async function deleteCategory(categoryName) {
     try {
-        const response = await fetch(`${budgetManagerAPI}/budgets`, {
+        console.log('Attempting to delete category:', categoryName);
+        const categoryId = currentBudgets[categoryName].id;
+        
+        // Delete from backend first
+        const response = await fetch(`${budgetManagerAPI}/budgets/${categoryId}`, {
             method: 'DELETE',
             headers: {
-                'Authorization': `Bearer ${API.getToken()}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                categoryId: categoryId,
-                date: `${currentDisplayMonth.getFullYear()}-${String(currentDisplayMonth.getMonth() + 1).padStart(2, '0')}`
-            })
+                'Authorization': `Bearer ${API.getToken()}`
+            }
         });
 
         if (!response.ok) {
-            throw new Error('Failed to delete category');
+            throw new Error('Failed to delete category from backend');
         }
 
-        return await response.json();
+        // If backend deletion successful, update local state
+        delete currentBudgets[categoryName];
+        console.log('Category deleted successfully. Current categories:', Object.keys(currentBudgets));
+        
+        // Update the display
+        if (isEditMode) {
+            displayEditableBudgets();
+        } else {
+            const expenses = await fetchExpenses();
+            updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
+        }
+        
+        updateBudgetStatus();
     } catch (error) {
         console.error('Error deleting category:', error);
-        throw error;
+        alert('Failed to delete category. Please try again.');
     }
 }
 
