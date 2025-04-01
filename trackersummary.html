@@ -3140,6 +3140,7 @@ const defaultBudgets = {
 // Modify loadCurrentBudgets to properly handle all categories
 async function loadCurrentBudgets() {
     try {
+        console.log('Starting loadCurrentBudgets...');
         const response = await fetch(`${budgetManagerAPI}/budgets`, {
             headers: {
                 'Authorization': `Bearer ${API.getToken()}`
@@ -3149,10 +3150,12 @@ async function loadCurrentBudgets() {
         if (!response.ok) throw new Error('Failed to fetch budgets');
         
         const data = await response.json();
+        console.log('Budget API Response:', data);
         
         // Initialize with default budgets
         // First check if we have categories from the API
         if (data.categories && data.categories.length > 0) {
+            console.log('Found categories in API response:', data.categories);
             // If we have API categories, use those
             currentBudgets = {};
             data.categories.forEach(apiCategory => {
@@ -3161,7 +3164,9 @@ async function loadCurrentBudgets() {
                     id: apiCategory.categoryId
                 };
             });
+            console.log('Loaded categories from API:', Object.keys(currentBudgets));
         } else {
+            console.log('No categories found in API, using default budgets');
             // If no API categories exist, initialize with default budgets
             currentBudgets = { ...defaultBudgets };
             
@@ -3170,6 +3175,7 @@ async function loadCurrentBudgets() {
             if (monthlyRent) {
                 currentBudgets['Rent'].amount = Number(monthlyRent);
             }
+            console.log('Loaded default categories:', Object.keys(currentBudgets));
         }
         
         // Set stipend from API
@@ -3284,11 +3290,13 @@ async function removeCategory(category) {
     }
     
     try {
+        console.log('Attempting to delete category:', category, 'with ID:', currentBudgets[category].id);
         // Call the API to delete the category
         await deleteCategory(currentBudgets[category].id);
         
         // Remove from local state
         delete currentBudgets[category];
+        console.log('Category deleted successfully. Current categories:', Object.keys(currentBudgets));
         
         // Update the UI
         displayEditableBudgets();
@@ -3312,6 +3320,8 @@ async function saveBudgetChanges() {
             budgetAmount: data.amount
         }));
 
+        console.log('Saving budget changes. Categories to save:', categories);
+
         const response = await fetch(`${budgetManagerAPI}/budgets/month`, {
             method: 'PUT',
             headers: {
@@ -3329,6 +3339,8 @@ async function saveBudgetChanges() {
             const errorData = await response.json();
             throw new Error(errorData.error || 'Failed to save budget changes');
         }
+        
+        console.log('Budget changes saved successfully');
         
         // Refresh the display
         const expenses = await fetchExpenses();
