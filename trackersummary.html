@@ -3141,7 +3141,10 @@ const defaultBudgets = {
 async function loadCurrentBudgets() {
     try {
         console.log('Starting loadCurrentBudgets...');
-        const response = await fetch(`${budgetManagerAPI}/budgets`, {
+        const today = new Date();
+        const monthKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+        
+        const response = await fetch(`${budgetManagerAPI}/budgets/month?date=${monthKey}`, {
             headers: {
                 'Authorization': `Bearer ${API.getToken()}`
             }
