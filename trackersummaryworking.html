@@ -3285,6 +3285,7 @@ function updateBudgetStatus() {
 // First, add the deleteCategory API function
 async function deleteCategory(categoryId) {
     try {
+        const today = new Date();
         const response = await fetch(`${budgetManagerAPI}/budgets`, {
             method: 'DELETE',
             headers: {
@@ -3293,7 +3294,7 @@ async function deleteCategory(categoryId) {
             },
             body: JSON.stringify({
                 categoryId: categoryId,
-                date: `${currentDisplayMonth.getFullYear()}-${String(currentDisplayMonth.getMonth() + 1).padStart(2, '0')}`
+                date: today.toISOString()
             })
         });
 
@@ -3308,27 +3309,35 @@ async function deleteCategory(categoryId) {
     }
 }
 
-// Then update the existing removeCategory function
-async function removeCategory(category) {
-    if (!confirm(`Are you sure you want to remove the ${category} category?`)) {
+// Modify removeCategory to handle the deletion
+async function removeCategory(categoryName) {
+    if (!confirm(`Are you sure you want to remove the ${categoryName} category?`)) {
         return;
     }
     
     try {
-        console.log('Attempting to delete category:', category, 'with ID:', currentBudgets[category].id);
-        // Call the API to delete the category
-        await deleteCategory(currentBudgets[category].id);
+        console.log('Attempting to delete category:', categoryName);
+        const categoryId = currentBudgets[categoryName].id;
+        console.log('Attempting to delete category:', categoryId);
         
-        // Remove from local state
-        delete currentBudgets[category];
+        await deleteCategory(categoryId);
+        
+        // Update local state after successful deletion
+        delete currentBudgets[categoryName];
         console.log('Category deleted successfully. Current categories:', Object.keys(currentBudgets));
         
-        // Update the UI
-        displayEditableBudgets();
+        // Update the display
+        if (isEditMode) {
+            displayEditableBudgets();
+        } else {
+            const expenses = await fetchExpenses();
+            updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
+        }
+        
         updateBudgetStatus();
     } catch (error) {
-        alert('Failed to delete category. Please try again.');
         console.error('Error in removeCategory:', error);
+        alert('Failed to delete category. Please try again.');
     }
 }
 
@@ -3337,6 +3346,29 @@ async function saveBudgetChanges() {
     try {
         const today = new Date();
         const monthKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+
+        // Get all categories from the API first
+        const response = await fetch(`${budgetManagerAPI}/budgets`, {
+            headers: {
+                'Authorization': `Bearer ${API.getToken()}`
+            }
+        });
+        
+        if (!response.ok) throw new Error('Failed to fetch budgets');
+        
+        const data = await response.json();
+        const existingCategories = data.categories || [];
+        
+        // Find categories that need to be deleted (exist in API but not in currentBudgets)
+        const categoriesToDelete = existingCategories.filter(apiCat => 
+            !Object.keys(currentBudgets).includes(apiCat.categoryName)
+        );
+        
+        // Delete categories that are no longer in currentBudgets
+        for (const category of categoriesToDelete) {
+            console.log('Deleting category:', category.categoryName);
+            await deleteCategory(category.categoryId);
+        }
 
         // Send current state of all categories
         const categories = Object.entries(currentBudgets).map(([name, data]) => ({
@@ -3347,7 +3379,7 @@ async function saveBudgetChanges() {
 
         console.log('Saving budget changes. Categories to save:', categories);
 
-        const response = await fetch(`${budgetManagerAPI}/budgets/month`, {
+        const saveResponse = await fetch(`${budgetManagerAPI}/budgets/month`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${API.getToken()}`,
@@ -3360,8 +3392,8 @@ async function saveBudgetChanges() {
             })
         });
 
-        if (!response.ok) {
-            const errorData = await response.json();
+        if (!saveResponse.ok) {
+            const errorData = await saveResponse.json();
             throw new Error(errorData.error || 'Failed to save budget changes');
         }
         
