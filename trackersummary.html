@@ -3596,12 +3596,40 @@ async function addNewCategory() {
 
     if (result.isConfirmed) {
         const { name, amount } = result.value;
-        currentBudgets[name] = {
-            amount: amount,
-            id: `cat_${name.toLowerCase().replace(/\s+/g, '')}`
-        };
-        displayEditableBudgets();
-        updateBudgetStatus();
+        const categoryId = `cat_${name.toLowerCase().replace(/\s+/g, '')}`;
+        
+        try {
+            // Create the category using POST /budgets
+            const response = await fetch(`${budgetManagerAPI}/budgets`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${API.getToken()}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    categoryName: name,
+                    budgetAmount: amount,
+                    categoryId: categoryId,
+                    date: new Date().toISOString()
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to create category');
+            }
+
+            // Add to local state
+            currentBudgets[name] = {
+                amount: amount,
+                id: categoryId
+            };
+            
+            displayEditableBudgets();
+            updateBudgetStatus();
+        } catch (error) {
+            console.error('Error creating category:', error);
+            alert('Failed to create category. Please try again.');
+        }
     }
 }
 
