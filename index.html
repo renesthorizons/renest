@@ -1556,12 +1556,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           box-shadow: 0 2px 4px rgba(0,0,0,0.1);
           
           position: absolute;
-          z-index: 1000;
-          width: 300px;
-          left: 50%;
-          top: 100%;
-          transform: translateX(-50%);
-          margin-top: 10px;
+          z-index: 10;
+          width: calc(100vw - 40px);
+          max-width: 300px;
+          left: 100%;  
+          top: -50%;  /* Move it up */
+          transform: translate(-100%, -80%);  /* Adjust transform */
+          margin-left: -10px;
         }
 
 
@@ -2847,6 +2848,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     color: #495057;
     font-weight: 500;
     line-height: 1.4;
+    text-align: center;
     /* Optional: control text wrapping behavior */
     word-wrap: break-word;
     /* Optional: prevent single words from breaking */
@@ -3233,7 +3235,52 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     cursor: pointer;
 }
 
+.stat-wheel-container {
+    height: 60px;
+    width: 220px;
+    overflow: hidden;
+    position: relative;
+    padding: 0 0px;
+}
+
+.stat-wheel {
+    position: absolute;
+    width: 100%;
+    transition: transform 0.5s ease-in-out;
+    text-align: left;
+}
+
+.stat-wheel-item {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--primary);
+    white-space: nowrap;
+    padding: 0 5px;
+    box-sizing: border-box;
+} 
+
+        /* Add review animation styles */
+        @keyframes fadeInOut {
+            0% { opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        .review-card {
+            animation: fadeInOut 12s infinite;
+        }
+
+        .review-card:nth-child(1) { animation-delay: 0s; }
+        .review-card:nth-child(2) { animation-delay: 4s; }
+        .review-card:nth-child(3) { animation-delay: 8s; }
     </style>
+    <!-- <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script> -->
 </head>
 <body>
     <!-- Google Tag Manager (noscript) -->
@@ -3243,12 +3290,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <nav class="navbar">
         <a href="https://renesthorizons.com" class="logo">RENEST</a>
         <div class="nav-links">
-            <a href="signin529.html">Sign In</a>
+            <!-- <a href="signin529.html">Sign In</a> -->
             <a href="aboutus529.html">About Us</a>
             <a href="faq529.html">FAQ</a>
             <a href="howitworks529.html">How It Works</a>
             <a href="admin529.html">For Businesses & Universities</a>
-            <a href="getstarted529.html" class="talk-button">Get Started</a>
+            <a href="signin529.html" class="talk-button">Get Started</a>
         </div>
         <button class="menu-button" aria-label="Toggle menu" aria-expanded="false">☰</button>
     </nav>
@@ -3260,8 +3307,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 
                 <!-- Wrap existing content in a div -->
                 <div class="hero-text">
-                    <h1>Unlocking Savings<br>For Graduate Students</h1>
-                    <p style="font-size:1.2rem;">Financial confidence and clarity while saving an average of $450 more per year</p>
+                    <h1>Financial Confidence<br>For Working Students</h1>
+                    <p style="font-size:1.2rem;">One step today, makes every tomorrow easier</p>
                     <div class="hero-auth-container">
                         <a href="signin529.html" class="hero-auth-btn hero-auth-btn-solid">Sign In</a>
                         <!-- <a href="signup529.html" class="hero-auth-btn hero-auth-btn-solid">Sign Up</a> -->
@@ -3275,26 +3322,51 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <section class="stats-banner">
             <div class="stats-container">
                 <div class="stat-item">
-                    <!-- <img src="StudentLoans3.png" alt="Students Icon" class="stat-icon"> -->
                     <div class="stat-content">
-                        <div class="stat-number">2,000+</div>
-                        <div class="stat-label">Graduate Students Supported</div>
+                        <div class="stat-wheel-container">
+                            <div class="stat-wheel">
+                                <div class="stat-wheel-item">2,000+</div>
+                                <div class="stat-wheel-item">PhD</div>
+                                <div class="stat-wheel-item">Master</div>
+                                <div class="stat-wheel-item">Bachelor's</div>
+                                <div class="stat-wheel-item">Associate</div>
+                                <!-- <div class="stat-wheel-item">You</div> -->
+                            </div>
+                        </div>
+                        <div class="stat-label">Students Supported</div>
                     </div>
                 </div>
                 <div class="stat-divider"></div>
                 <div class="stat-item">
-                    <!-- <img src="expensescomb.png" alt="Expenses Icon" class="stat-icon"> -->
                     <div class="stat-content">
-                        <div class="stat-number">$55M+</div>
+                        <div class="stat-wheel-container">
+                            <div class="stat-wheel">
+                                <div class="stat-wheel-item">$55M+</div>
+                                <div class="stat-wheel-item">Rent</div>
+                                <div class="stat-wheel-item">Groceries</div>
+                                <div class="stat-wheel-item">Utilities</div>
+                                <div class="stat-wheel-item">WiFi</div>
+                                <!-- <div class="stat-wheel-item">Required Supplies</div> -->
+                            </div>
+                        </div>
                         <div class="stat-label">Qualified Spend Identified</div>
                     </div>
                 </div>
                 <div class="stat-divider"></div>
                 <div class="stat-item">
-                    <!-- <img src="Savingscomb.png" alt="Savings Icon" class="stat-icon"> -->
                     <div class="stat-content">
-                        <div class="stat-number">$1.2M+</div>
-                        <div class="stat-label">Unlocked for Graduate Students</div>
+                        <div class="stat-wheel-container">
+                            <div class="stat-wheel">
+                                <div class="stat-wheel-item">$1.2M+</div>
+                                <div class="stat-wheel-item">Flights</div>
+                                <div class="stat-wheel-item">Savings</div>
+                                <!-- <div class="stat-wheel-item"></div> -->
+                                <div class="stat-wheel-item">Time</div>
+                                
+                                <div class="stat-wheel-item">Calmness</div>
+                            </div>
+                        </div>
+                        <div class="stat-label">Unlocked for Students</div>
                     </div>
                 </div>
                 <a href="Renest_Pilot_Data.pdf" target="_blank" class="stats-details-link">see details</a>
@@ -3311,7 +3383,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <!-- </div> -->
             
 
-            <h2 class="section-title" style="   margin-top:2.5rem;">A Money Management App<br> Built for Graduate Students</h2>
+            <h2 class="section-title" style="   margin-top:2.5rem;">Money Management<br> for Students with Income</h2>
             <h3 class="section-subtitle" style="color: #4B227A; font-weight: 600; font-size: 1.3rem; text-align:  center;">Save Time, Money and Grow Your Financial Knowledge</h3>
             <section class="screenshot-section-mobile">
                 <section class="screenshot-gallery">
@@ -3321,7 +3393,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 <img src="529iphoneimage3style.png" alt="Dashboard Screenshot" class="screenshot-image">
                             </div>
                             <div class="screenshot-caption">
-                                <p>No More Guesswork — Complete view and control of your expenses and savings</p>
+                                <!-- <p>No More Guesswork — Complete view and control of your expenses and savings</p> -->
+                                <p> Free Up Your Mental Bandwidth — Complete view and control of your expenses and savings</p>
                             </div>
                         </div>
                         
@@ -3330,7 +3403,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 <img src="529iphoneimage2style.png" alt="Expense Tracker Screenshot" class="screenshot-image">
                             </div>
                             <div class="screenshot-caption">
-                                <p>Quick and Easy — Link all your accounts in one place</p>
+                                <!-- <p>Quick and Easy — Link all your accounts in one place</p> -->
+                                <p> Clarity and Informed Decisions — Link all your accounts in one place</p>
                             </div>
                         </div>
                         
@@ -3339,7 +3413,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 <img src="529iphoneimage1style.png" alt="Account Management Screenshot" class="screenshot-image">
                             </div>
                             <div class="screenshot-caption">
-                                <p>The Renest Advantage — Unlock cash back on your student expenses</p>
+                                <p>The Renest Advantage — Unlock cash back on your student expenses, from groceries to rent. </p>
                             </div>
                         </div>
                     </div>
@@ -3354,21 +3428,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 <div class="desktop-screenshot-container">
                                     <img src="529iphoneimage3style.png" class="desktop-screenshot-image" alt="Dashboard Screenshot" style="opacity: 1;">
                                     <div class="desktop-screenshot-caption">
-                                        <p>No More Guesswork — Complete view and control of your expenses and savings</p>
+                                        <p> Free Up Your Mental Bandwidth — Complete view and control of your expenses and savings</p>
                                     </div>
                                 </div>
                                 
                                 <div class="desktop-screenshot-container">
                                     <img src="529iphoneimage2style.png" class="desktop-screenshot-image" alt="Expense Tracker Screenshot">
                                     <div class="desktop-screenshot-caption">
-                                        <p>Quick and Easy — Link all your accounts in one place</p>
+                                        <p> Clarity and Informed Decisions — Link all your accounts in one place</p>
                                     </div>
                                 </div>
                                 
                                 <div class="desktop-screenshot-container">
                                     <img src="529iphoneimage1style.png" class="desktop-screenshot-image" alt="Account Management Screenshot">
                                     <div class="desktop-screenshot-caption">
-                                        <p>The Renest Advantage — Unlock cash back on your student expenses</p>
+                                        <p>The Renest Advantage — Unlock cash back on your student expenses, from groceries to rent.</p>
                                     </div>
                                 </div>
                             </div>
@@ -3382,11 +3456,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p style="text-align: justify; max-width: 510px; margin: 0 auto 2rem; font-size: 1.2rem;">
                 <!-- You could be saving hundreds of dollars every year on core expenses like rent and groceries by using your state's 529 plan. 
                 Renest makes this process quick and easy so you start maximizing your savings and growing your financial literacy today. -->
-                Renest goes beyond expense tracking and budgeting — we uncover overlooked value,
-                even finding you savings on money that's already spent!
+                <!-- Renest goes beyond expense tracking and budgeting — we uncover overlooked value,
+                even finding you savings on money that's already spent! 
+                There's no points, no credit, no partner merchants, no gimmicks. It's simply financial literacy at work.
                 Streamline your focus with a clear view of your finances
                 as Renest automatically unlocks your 529 plan benefits.
-                Save time and money today while developing the financial skills that build lasting confidence.
+                Save time and money today while developing the financial skills that build lasting confidence. -->
+                Renest goes beyond expense tracking and budgeting — 
+                we help you build a foundation for lifelong financial success.
+                 By uncovering overlooked value and even finding you savings on money that's already spent, 
+                 you're not just saving more today, 
+                 you're developing skills that will benefit you and those around you for decades to come.
+                 There are no points, no credit, no partner merchants, no gimmicks —             
+                    it's simply financial literacy at work.
+                   
+                  <!-- Start your journey today and watch how small,consistent financial decisions grow into significant long-term advantages  -->
+                  Save time and money today while developing the financial skills that builds lasting confidence.
+                  <!-- and habit (perspective, insight, security, control, calmness, approach) that compound over time. -->
             </p>
             <div class="state-search-container" style="margin: 1.5rem auto; max-width: 500px;">
                          <h4 style="color: #4B227A; margin-bottom: 1rem; font-size: 1.1rem; text-align: center;">Find Your State's 529 Plan</h4>
@@ -3406,9 +3492,84 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                          ></div>
                      </div>
 
+                     <section class="reviews-section" style="padding: 2rem 1rem; background-color: white; margin-top: 2rem;">
+                        <div class="container" style="max-width: 600px; margin: 0 auto; position: relative; min-height: 250px; height: auto;">
+                            <h2 class="section-title">What Students Say</h2>
+                            <h2 style="text-align: center; color: black; margin-bottom: 2rem; font-size: 2rem;"></h2>
+                            <div class="reviews-container" style="position: relative; height: auto; min-height: 200px;">
+                                <!-- Review Card 1 -->
+                                <div class="review-card" style="background: #f8f9fa; padding: 1.5rem 1.5rem 1rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: absolute; width: 100%; height: auto; min-height: 160px; opacity: 0;">
+                                    <div style="position: absolute; top: 0.75rem; right: 1rem;">
+                                        <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener" style="color: var(--primary); font-size: 0.8rem;">
+                                            Read on Trustpilot
+                                        </a>
+                                    </div>
+                                    <div style="display: flex; gap: 1rem; height: 100%; padding-top: 1.5rem;">
+                                        <div style="flex: 0 0 60px;">
+                                            <img src="JavierP.png" alt="Javier Patrón" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;" onerror="this.outerHTML='<div style=\'width: 60px; height: 60px; border-radius: 50%; background-color: #8B4513; color: white; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 500;\'>J</div>'">
+                                            <div style="margin-top: 0.5rem; text-align: center;">
+                                                <p style="margin: 0; font-size: 0.9rem; color: var(--primary);">Javier P.</p>
+                                            </div>
+                                        </div>
+                                        <div style="flex: 1; overflow: hidden;">
+                                            <p style="font-style: italic; margin: 0; line-height: 1.6; font-size: 1rem; word-wrap: break-word;">
+                                                "The Renest team was extremely responsive and answered all my questions in great detail. Learned a lot and definitely recommend them if you are a student or recent graduate!"
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
 
+                                <!-- Review Card 2 -->
+                                <div class="review-card" style="background: #f8f9fa; padding: 1.5rem 1.5rem 1rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: absolute; width: 100%; height: auto; min-height: 160px; opacity: 0;">
+                                    <div style="position: absolute; top: 0.75rem; right: 1rem;">
+                                        <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener" style="color: var(--primary); font-size: 0.8rem;">
+                                            See reviews on Trustpilot
+                                        </a>
+                                    </div>
+                                    <div style="display: flex; gap: 1rem; height: 100%; padding-top: 1.5rem;">
+                                        <div style="flex: 0 0 60px;">
+                                            <img src="AlfonsoA.png" alt="Alfonso Amayuelas" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;" onerror="this.outerHTML='<div style=\'width: 60px; height: 60px; border-radius: 50%; background-color: #4B0082; color: white; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 500;\'>A</div>'">
+                                            <div style="margin-top: 0.5rem; text-align: center;">
+                                                <p style="margin: 0; font-size: 0.9rem; color: var(--primary);">Alfonso A.</p>
+                                            </div>
+                                        </div>
+                                        <div style="flex: 1; overflow: hidden;">
+                                            <p style="font-style: italic; margin: 0; line-height: 1.6; font-size: 1rem; word-wrap: break-word;">
+                                                "Taxes in the US can be incredibly complex, especially if you've worked in multiple states like I did last year. The team at Renest has been incredibly helpful at every step, always ready to help whenever I had specific questions!"
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
 
-            <h2 class="section-title">How Much Can I Unlock?</h2>
+                                <!-- Review Card 3 -->
+                                <div class="review-card" style="background: #f8f9fa; padding: 1.5rem 1.5rem 1rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: absolute; width: 100%; height: auto; min-height: 160px; opacity: 0;">
+                                    <div style="position: absolute; top: 0.75rem; right: 1rem;">
+                                        <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener" style="color: var(--primary); font-size: 0.8rem;">
+                                            See reviews on Trustpilot
+                                        </a>
+                                    </div>
+                                    <div style="display: flex; gap: 1rem; height: 100%; padding-top: 1.5rem;">
+                                        <div style="flex: 0 0 60px;">
+                                            <img src="NirvaanK.png" alt="Nirvaan Khera" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;" onerror="this.outerHTML='<div style=\'width: 60px; height: 60px; border-radius: 50%; background-color: #483D8B; color: white; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 500;\'>N</div>'">
+                                            <div style="margin-top: 0.5rem; text-align: center;">
+                                                <p style="margin: 0; font-size: 0.9rem; color: var(--primary);">Nirvaan K.</p>
+                                            </div>
+                                        </div>
+                                        <div style="flex: 1; overflow: hidden;">
+                                            <p style="font-style: italic; margin: 0; line-height: 1.6; font-size: 1rem; word-wrap: break-word;">
+                                                "Pretty wild that something like this exists and actually works. Especially since im an international student. Lol this makes taxes much less frustrating. Renest actually just got me like 500$ out of nothing"
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <div style="text-align: center; margin-bottom: 2rem; position: relative; z-index: 10;">
+                        <a href="https://calendly.com/renesthorizons/30min" target="_blank" rel="noopener" style="color: var(--primary); text-decoration: none; font-size: 1rem; cursor: pointer; display: inline-block; padding: 0.5rem;">Join our office hours →</a>
+                    </div>
+
+            <h2 class="section-title" style="margin-top: 5rem;">How Much Can I Unlock?</h2>
                 <div class="form-container">
             <!-- <h2 class="calculator-title">Benefits Calculator</h2> -->
             <div class="progress-bar">
@@ -3474,151 +3635,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <a href="signin529.html" class="getst-button">
               Join Our Free Trial Today
             </a>
+            <div style="margin-top: 1rem; color: var(--primary); font-size: 1.1rem;">
+                then, $7/month
+            </div>
             <div style="margin-top: 2rem;">
                 <a href="#" onclick="openEmailModal(); return false;">or, join our financial tips newsletter</a>
             </div>
         </div>
+
+        
        
         
-        <div class="pricing-calculator-section">
-
-            <!-- <div class="pricing-intro">
-                <p>Fill out the calculator above to see your personalized benefit options</p>
-            </div> -->
-
-            <div class="benefit-toggle-container">
-                <div class="toggle-buttons">
-                    <button class="toggle-button active" data-tab="early" id="early-toggle">
-                        <div class="toggle-content">
-                            <!-- <div class="toggle-title">Calculate Your Early Amount</div> -->
-                            <div class="toggle-subtitle" id="early-amount-display">Get Your Benefit Today</div>
-                        </div>
-                    </button>
-                    <button class="toggle-button" data-tab="later" id="later-toggle">
-                        <div class="toggle-content">
-                            <!-- <div class="toggle-title">Get Full Benefit Later</div> -->
-                            <div class="toggle-subtitle" id="later-amount-display">Get Your Benefit Later</div>
-                        </div>
-                    </button>
-                </div>
-
-                <div class="benefit-content-box">
-                    <div class="section-overlay" id="calculator-overlay">
-                        <div class="overlay-message">
-                            Complete the calculator above to unlock your options
-                        </div>
-                    </div>
-                    <div class="tab-content active" id="early">
-                        <div class="pricing-grid-two" style="grid-template-columns: 1fr; max-width: 550px; margin: 0 auto;">
-                            
-                            <div class="pricing-card locked-state">
-                                <div class="locked-message">Complete the calculator above to unlock your options</div>
-                                <h3 class="pricing-title">Get Your Benefit Today</h3>
-                                <h3 class="pricing-subtitle">Complete Automated Management</h3>
-                                <div class="pricing-features">
-                                    <ul class="step-list">
-                                        <li>
-                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                            <span><strong>Get your tax benefit now</strong> instead of waiting for tax season</span>
-                                        </li>
-                                        <li>
-                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                            <span>Full 529 account setup & optimization</span>
-                                        </li>
-                                        <li>
-                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                            <span>Automated expense tracking & qualification</span>
-                                        </li>
-                                        <li>
-                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                            <span>IRS-ready documentation for 3 years</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <h3 class="pricing-title">How It Works</h3>
-                                <div>We advance your tax benefit today and handle all the paperwork. We receive the full 529 benefit when you file your state taxes.</div>
-                                <div class="guarantee" style="margin-top: 1rem;">Your maximum tax benefit guaranteed</div>
-                            </div>
-                        </div>
-                    </div>
-
-                  
-                    <div class="tab-content" id="later">
-                        <div class="pricing-grid-two">
-                          
-                            <div class="pricing-card locked-state">
-                                <div class="locked-message">Complete the calculator above to unlock your options</div>
-                                <h3 class="pricing-title">Complete 529 Management</h3>
-                                <h3 class="pricing-subtitle">Never think about your 529 again</h3>
-                                <div class="pricing-features">
-                                    <ul class="step-list">
-                                        <li>
-                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                            <span>Account management and documentation</span>
-                                        </li>
-                                        <li>
-                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                            <span>Automated tracking & qualification</span>
-                                        </li>
-                                        <li>
-                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                            <span>Your maximum 529 benefit</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="price">$6/month</div>
-                                <div class="price-period"> <span style="font-size: 1 rem; font-weight: 700;">or $89</span> when you receive your tax benefit</div>
-                            </div>
-
-                            <div class="pricing-card locked-state">
-                                <div class="locked-message">Complete the calculator above to unlock your options</div>
-                                <h3 class="pricing-title">Manual Tracking</h3>
-                                <div class="pricing-features">
-                                    <ul class="step-list">
-                                        <li>
-                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                            <span>A Simple Expense Tracker for You to Log Your Expenses</span>
-                                        </li>
-                                        <li>
-                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                            <span>We Store Your Documentation for 3 Years</span>
-                                        </li>
-                                        <li>
-                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                                <path d="M16.667 5L7.5 14.167L3.333 10" stroke="#4B227A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                            <span>We Remind You to Maintain Tracking</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="price">Free</div>
-                                <!-- <div class="price-period"> <span style="font-size: 1 rem; font-weight: 700;">or $15</span> when you receive your tax benefit</div> -->
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            </div>
-        </div>
+        <!-- Removing the entire pricing-calculator-section -->
 
 
         <!-- <div class="text-center" style="margin-top: 1.5rem; margin-bottom: 1rem;">
@@ -4201,7 +4229,7 @@ function updatePricingDisplay(benefit, earlyAmount) {
             'WA': {
                 url: 'https://www.dreamahead.wa.gov/',
                 name: 'DreamAhead College Investment Plan',
-                benefit:"$0"
+                benefit:"$1,028"
             },
             'WV': {
                 url: 'https://www.smart529.com/',
@@ -5445,7 +5473,6 @@ const statePersonalExemptionDB = {
                 notes: 'Wyoming DFS'
             }
         };
-        
         // School database (same as before)
         const schoolsDB = {
             'other': {
@@ -6256,7 +6283,22 @@ const statePersonalExemptionDB = {
             'school_state': school.state
         });
         }
-
+        document.addEventListener('DOMContentLoaded', function() {
+            const wheels = document.querySelectorAll('.stat-wheel');
+            
+            wheels.forEach(wheel => {
+                const items = wheel.querySelectorAll('.stat-wheel-item');
+                let currentIndex = 0;
+                
+                function rotateWheel() {
+                    currentIndex = (currentIndex + 1) % items.length;
+                    wheel.style.transform = `translateY(-${currentIndex * 60}px)`;
+                }
+                
+                // Start the rotation
+                setInterval(rotateWheel, 2000);
+            });
+        }); 
         // Add selectState function
         function selectState(abbr, name) {
             selectedState = abbr;
@@ -6449,7 +6491,9 @@ const statePersonalExemptionDB = {
     } else {
         benefit = Math.min(deductibleAmount * taxRate, taxespaid);
     }
-
+    const interestEarned = annualExpenses*.03;
+    const deductiblebenefit = benefit;
+    benefit += interestEarned;
     // Format benefit for display
     const formattedBenefit = new Intl.NumberFormat('en-US', {
         style: 'currency',
@@ -6462,44 +6506,10 @@ const statePersonalExemptionDB = {
     document.getElementById('benefitResult').textContent = formattedBenefit;
     
     // Calculate early refund amount
-    const dailyRate = 0.05 / 365; // 5% APY converted to daily rate
-    const lendingDays = 400;
-    const serviceFee = 20;
-    const baseFee = 89;
-    
-    const potentialEarlyAmount = benefit;
-    const lendingCost = potentialEarlyAmount * (1 + dailyRate * lendingDays) - potentialEarlyAmount;
-    
-    const totalCosts = baseFee + serviceFee + lendingCost;
-    const calculatedEarlyAmount = benefit - totalCosts;
-    
-    const maxEarlyAmount = benefit*.80;
-    const earlyAmount = Math.min(calculatedEarlyAmount, maxEarlyAmount);
-    
-    const isViable = earlyAmount > 0;
-    const finalEarlyAmount = isViable ? Math.floor(earlyAmount) : 0;
-    
-    const formattedEarlyAmount = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0
-    }).format(finalEarlyAmount);
+   
 
     // Remove locked state from pricing cards
-    const pricingCards = document.querySelectorAll('.pricing-card');
-    pricingCards.forEach(card => {
-        card.classList.remove('locked-state');
-        card.classList.add('unlocked-state');
-        const lockedMessage = card.querySelector('.locked-message');
-        if (lockedMessage) {
-            lockedMessage.remove();
-        }
-    });
-
-    // Update early and later amounts in toggle displays
-    document.getElementById('early-amount-display').textContent = `You Get ${formattedEarlyAmount} Today`;
-    document.getElementById('later-amount-display').textContent = `You Get ${formattedBenefit} at Tax Time`;
+    
 
     // Update CTA button
     const mainCtaButton = document.getElementById('main-cta-button');
@@ -6550,7 +6560,7 @@ const statePersonalExemptionDB = {
             style: 'currency',
             currency: 'USD',
             minimumFractionDigits: 0
-        }).format(annualExpenses)}/year
+        }).format(annualExpenses)}
         <br>
         • Deductible amount: ${new Intl.NumberFormat('en-US', {
             style: 'currency',
@@ -6558,7 +6568,19 @@ const statePersonalExemptionDB = {
             minimumFractionDigits: 0
         }).format(deductibleAmount)}
         <br>
-        Your benefit is doubled if you are married.
+        • Deduction Benefit: ${new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 0
+        }).format(deductiblebenefit)}
+        <br>
+        • Tax-Free Interest Earned: ${new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 0
+        }).format(interestEarned)}
+        <br>
+        Your deduction benefit is doubled if you are married.
     `;
     const overlay = document.getElementById('calculator-overlay');
     if (overlay) {
@@ -6616,47 +6638,7 @@ const statePersonalExemptionDB = {
                 suggestionsDiv.classList.add('hidden');
             }
         }
-        function updateEarlyRefundCard(benefit) {
-            const dailyRate = 0.05 / 365; // 5% APY converted to daily rate
-            const lendingDays = 400;
-            const serviceFee = 20;
-            const baseFee = 89;
-            
-            // Calculate potential early amount for lending cost calculation
-            const potentialEarlyAmount = benefit;
-            const lendingCost = potentialEarlyAmount * (1 + dailyRate * lendingDays) - potentialEarlyAmount;
-            
-            // Total costs and calculate early amount
-            const totalCosts = baseFee + serviceFee + lendingCost;
-            const calculatedEarlyAmount = benefit - totalCosts;
-            
-            // Cap at 70% of benefit
-            const maxEarlyAmount = benefit * 0.8;
-            const earlyAmount = Math.min(calculatedEarlyAmount, maxEarlyAmount);
-            
-            // Only check if the amount is positive since we've already capped it
-            const isViable = earlyAmount > 0;
-            const finalAmount = isViable ? Math.floor(earlyAmount) : 0;
-            
-            const formattedEarlyAmount = new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD',
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
-            }).format(finalAmount);
-            
-            // Update UI elements
-            const earlyRefundAmount = document.getElementById('early-refund-amount');
-            const ctaButton = document.getElementById('main-cta-button');
-            const earlyRefundDetails = document.getElementById('early-refund-details');
-            
-            if (earlyRefundAmount) earlyRefundAmount.textContent = formattedEarlyAmount;
-            if (ctaButton) {
-                ctaButton.textContent = finalAmount > 0 ? 
-                    `Get ${formattedEarlyAmount} Today` : 
-                    'Open Account to Check Eligibility';
-            }
-        }
+        
 
         // New function to show state selection
         function showStateSelection() {
@@ -6880,8 +6862,8 @@ const statePersonalExemptionDB = {
                                             ${stateInfo.name} ↗
                                         </a>
                                         <div style="color: #4B227A; font-weight: 500;">
-                                            Annual Savings: ${stateInfo.benefit}
-                                        </div>
+                                            ${stateInfo.benefit === "$0" ? "Tax-Free Growth" : `Annual Benefit: ${stateInfo.benefit}`}
+                </div>
                                     </div>
                                 `;
                                 selectedStateInfo.style.display = 'block';
@@ -7001,5 +6983,38 @@ const statePersonalExemptionDB = {
             }, 1000);
         });
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const reviewCards = document.querySelectorAll('.review-card');
+            let currentIndex = 0;
+
+            function showReview(index) {
+                reviewCards.forEach((card, i) => {
+                    if (i === index) {
+                        card.style.opacity = '1';
+                        card.style.display = 'block';
+                        card.style.zIndex = '2';
+                    } else {
+                        card.style.opacity = '0';
+                        card.style.display = 'none';
+                        card.style.zIndex = '1';
+                    }
+                });
+            }
+
+            function nextReview() {
+                currentIndex = (currentIndex + 1) % reviewCards.length;
+                showReview(currentIndex);
+            }
+
+            // Show first review immediately
+            showReview(currentIndex);
+
+            // Change review every 5 seconds
+            setInterval(nextReview, 5000);
+        });
+    </script>
+    
 </body>
 </html>
