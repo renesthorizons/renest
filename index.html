@@ -6320,10 +6320,24 @@ const statePersonalExemptionDB = {
                 function rotateWheel() {
                     currentIndex = (currentIndex + 1) % items.length;
                     wheel.style.transform = `translateY(-${currentIndex * 60}px)`;
+                    
+                    // Check if current item is a stat number
+                    const statNumbers = ['2,000+', '$55M+', '$1.2M+'];
+                    if (statNumbers.includes(items[currentIndex].textContent)) {
+                        clearInterval(rotationInterval);
+                        rotationInterval = setInterval(rotateWheel, 5000);
+                    } else {
+                        clearInterval(rotationInterval);
+                        rotationInterval = setInterval(rotateWheel, 2000);
+                    }
                 }
+
+                // Check initial item and set appropriate interval
+                const statNumbers = ['2,000+', '$55M+', '$1.2M+'];
+                const initialInterval = statNumbers.includes(items[0].textContent) ? 5000 : 2000;
                 
                 // Start the rotation
-                setInterval(rotateWheel, 4000);
+                let rotationInterval = setInterval(rotateWheel, initialInterval);
             });
         }); 
         // Add selectState function
