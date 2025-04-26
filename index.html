@@ -3456,7 +3456,69 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 </div>
             </section>
 
-            <img src="Savingscomb.png" alt="Savings Icon" class="stat-icon">
+            <h2 class="section-title" style="margin-top: 4rem;">How Much Can I Unlock?</h2>
+                <div class="form-container">
+            <!-- <h2 class="calculator-title">Benefits Calculator</h2> -->
+            <div class="progress-bar">
+                <div class="progress-line"></div>
+                <div class="progress-step active">1</div>
+                <div class="progress-step">2</div>
+                <div class="progress-step">3</div>
+                <div class="progress-step">4</div>
+            </div>
+
+
+            <form id="signup-form">
+               
+                <div class="form-step active" data-step="1">
+                    <div class="form-group">
+                        <label>Which university do you attend?</label>
+                        <input type="text" id="schoolSearch" class="form-control" placeholder="Start typing your school name..." oninput="handleSchoolSearch(event)">
+                        <div id="schoolSuggestions" class="suggestions hidden"></div>
+                    </div>
+                    <div id="stateSelection" class="form-group hidden">
+                        <label>Choose where you go to school:</label>
+                        <div id="stateSuggestions" class="suggestions hidden"></div>
+                    </div>
+                </div>
+
+                <div class="form-step" data-step="2">
+                    <div class="form-group">
+                        <label>What's your annual income?</label>
+                        <input type="text" id="incomeInput" class="form-control" placeholder="Enter your annual income" required>
+                    </div>
+                </div>
+
+                <div class="form-step" data-step="3">
+                    <div class="form-group">
+                        <label>Monthly Rent and Utilities</label>
+                        <input type="text" id="rentInput" class="form-control" placeholder="Enter your monthly rent + utilities" required>
+                        <!-- <input type="text" id="groceryInput" class="form-control mt-4" placeholder="Enter your monthly grocery/food spend" required> -->
+                    </div>
+                </div>
+
+                <div class="form-step" data-step="4">
+                    <div class="form-group text-center">
+                        <div class="benefit-label-container">
+                            <div class="benefit-label">Your Annual Renest 529 Cash Back</div>
+                            <div class="tooltip inline-block">
+                                <div class="tooltip-icon">i</div>
+                                <div class="tooltip-content" id="benefitDetails"></div>
+                            </div>
+                        </div>
+                        <div class="benefit-amount" id="benefitResult">$0</div>
+                        <!-- <div style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">Minimum time commitment: 9-13 min</div> -->
+                    </div>
+                </div>
+
+                <div class="btn-container">
+                    <button type="button" class="btn btn-secondary" id="prevBtn" style="display: none">Back</button>
+                    <button type="button" class="btn btn-primary" id="nextBtn">Next</button>
+                </div>
+            </form>
+        </div>
+
+            <img src="Savingscomb.png" alt="Savings Icon" class="stat-icon" style="margin-top: 2rem !important;">
             <h2 class="section-title">Did You Know?</h2>
             <p style="text-align: justify; max-width: 510px; margin: 0 auto 2rem; font-size: 1.2rem;">
                 <!-- You could be saving hundreds of dollars every year on core expenses like rent and groceries by using your state's 529 plan. 
@@ -3500,6 +3562,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                      <section class="reviews-section" style="padding: 2rem 1rem; background-color: white; margin-top: 2rem;">
                         <div class="container" style="max-width: 600px; margin: 0 auto; position: relative; min-height: 250px; height: auto;">
                             <h2 class="section-title">What Students Say</h2>
+                            <div style="text-align: center; margin-bottom: 2rem; position: relative; z-index: 10;" class="office-hours-link">
+                                <a href="https://calendly.com/renesthorizons/30min" target="_blank" rel="noopener" style="color: var(--primary); text-decoration: underline; font-size: 1rem; cursor: pointer; display: inline-block; padding: 0.5rem; margin-bottom: -2rem;">Join our office hours</a>
+                            </div>
                             <h2 style="text-align: center; color: black; margin-bottom: 2rem; font-size: 2rem;"></h2>
                             <div class="reviews-container" style="position: relative; height: auto; min-height: 200px;">
                                 <!-- Review Card 1 -->
@@ -3592,71 +3657,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         </div>
                     </section>
                     
-                    <div style="text-align: center; margin-bottom: 2rem; position: relative; z-index: 10;" class="office-hours-link">
-                        <a href="https://calendly.com/renesthorizons/30min" target="_blank" rel="noopener" style="color: var(--primary); text-decoration: underline; font-size: 1rem; cursor: pointer; display: inline-block; padding: 0.5rem; margin-bottom: -2rem;">Join our office hours</a>
-                    </div>
+                    
 
-            <h2 class="section-title" style="margin-top: 4rem;">How Much Can I Unlock?</h2>
-                <div class="form-container">
-            <!-- <h2 class="calculator-title">Benefits Calculator</h2> -->
-            <div class="progress-bar">
-                <div class="progress-line"></div>
-                <div class="progress-step active">1</div>
-                <div class="progress-step">2</div>
-                <div class="progress-step">3</div>
-                <div class="progress-step">4</div>
-            </div>
-
-
-            <form id="signup-form">
-               
-                <div class="form-step active" data-step="1">
-                    <div class="form-group">
-                        <label>Which university do you attend?</label>
-                        <input type="text" id="schoolSearch" class="form-control" placeholder="Start typing your school name..." oninput="handleSchoolSearch(event)">
-                        <div id="schoolSuggestions" class="suggestions hidden"></div>
-                    </div>
-                    <div id="stateSelection" class="form-group hidden">
-                        <label>Choose where you go to school:</label>
-                        <div id="stateSuggestions" class="suggestions hidden"></div>
-                    </div>
-                </div>
-
-                <div class="form-step" data-step="2">
-                    <div class="form-group">
-                        <label>What's your annual income?</label>
-                        <input type="text" id="incomeInput" class="form-control" placeholder="Enter your annual income" required>
-                    </div>
-                </div>
-
-                <div class="form-step" data-step="3">
-                    <div class="form-group">
-                        <label>Monthly Rent and Utilities</label>
-                        <input type="text" id="rentInput" class="form-control" placeholder="Enter your monthly rent + utilities" required>
-                        <!-- <input type="text" id="groceryInput" class="form-control mt-4" placeholder="Enter your monthly grocery/food spend" required> -->
-                    </div>
-                </div>
-
-                <div class="form-step" data-step="4">
-                    <div class="form-group text-center">
-                        <div class="benefit-label-container">
-                            <div class="benefit-label">Your Annual Renest 529 Cash Back</div>
-                            <div class="tooltip inline-block">
-                                <div class="tooltip-icon">i</div>
-                                <div class="tooltip-content" id="benefitDetails"></div>
-                            </div>
-                        </div>
-                        <div class="benefit-amount" id="benefitResult">$0</div>
-                        <!-- <div style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">Minimum time commitment: 9-13 min</div> -->
-                    </div>
-                </div>
-
-                <div class="btn-container">
-                    <button type="button" class="btn btn-secondary" id="prevBtn" style="display: none">Back</button>
-                    <button type="button" class="btn btn-primary" id="nextBtn">Next</button>
-                </div>
-            </form>
-        </div>
+            
 
         <div class="text-center my-8">
             <a href="signin529.html" class="getst-button">
