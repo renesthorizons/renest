@@ -287,7 +287,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <header>
             <h1>529 ESA - Employer Benefit Calculator</h1>
             <p class="subtitle" style="font-size: 1.2rem; max-width: 800px; margin: 15px auto; line-height: 1.6;">
-                Offer your student employees the 401(k) of education savings—a win-win benefit that earns <strong>tax credits for your business</strong> while helping employees save for education. Transform your benefits package with a tax-advantaged education savings account that works for both current students and future parents.
+                Offer your employees the 401(k) of education savings—a win-win benefit that earns <strong>tax credits for your business</strong> while helping employees earn and save more. Transform your benefits package with a tax-advantaged education savings account that works for both current and future students as well as parents.
             </p>
         </header>
         
@@ -345,7 +345,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <div class="number" id="totalEmployeeBenefit">$0</div>
                     </div>
                     <div class="big-number-card">
-                        <h3>Annual Employer Cost</h3>
+                        <h3>Monthly Employer Cost</h3>
                         <div class="number" id="employerCostBig">$0</div>
                         <div class="subtext">Student Cost: <span id="studentAnnualCostBig">$0</span>/year</div>
                     </div>
@@ -394,8 +394,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                             <ul style="list-style: none; padding: 0; margin: 0;">
                                 <li style="margin-bottom: 12px;">✓ Free webinars to explain benefits to employees</li>
                                 <li style="margin-bottom: 12px;">✓ Complete documentation and implementation support</li>
-                                <li style="margin-bottom: 12px;">✓ Dedicated customer service employer and employees</li>
-                    
+                                <li style="margin-bottom: 12px;">✓ Dedicated customer service for employer and employees</li>
+                                <li style="margin-bottom: 12px;">✓ Benefit for student employees and other employees saving for their education or a family members education</li>
                                 
                 
                             </ul>
@@ -425,6 +425,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                             <li>Free educational webinars for your employees</li>
                         </ul>
                     </div>
+                </div>
+
+                <div class="notes-section" style="margin-top: 20px; padding: 15px; background-color: #f5f5f5; border-radius: 4px; font-size: 0.9rem; color: #666;">
+                    <p style="margin: 0; line-height: 1.4;">
+                        <strong>Note:</strong> Benefits shown are maximum potential benefits. Employer tax credits require minimum contributions per state requirements. Student benefits may vary based on individual circumstances.
+                    </p>
                 </div>
             </div>
         </div>
@@ -963,9 +969,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (employees <= 20) {
             monthlyRatePerStudent = 10;
         } else if (employees <= 50) {
-            monthlyRatePerStudent = 8;
+            monthlyRatePerStudent = 9;
         } else {
-            monthlyRatePerStudent = 7;
+            monthlyRatePerStudent = 8;
         }
         
         // Calculate costs and benefits
@@ -978,8 +984,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Get employer credit amount from state529DB
         let employerCreditPerStudent = 0;
+        let requiredContribution = 0;
         if (state529DB[stateCode]) {
             employerCreditPerStudent = state529DB[stateCode].employerCredit;
+            requiredContribution = state529DB[stateCode].requiredContribution;
         }
         
         // Get student benefits from state529linkDB
@@ -1055,9 +1063,17 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Update big number cards
         employerTaxCreditBigElement.textContent = formatCurrency(taxCredit);
-        employerCostBigElement.textContent = formatCurrency(annualEmployerCost);
+        employerCostBigElement.textContent = formatCurrency(annualEmployerCost / 12);
         studentAnnualCostBigElement.textContent = formatCurrency(totalStudentAnnualCost);
         totalEmployeeBenefitElement.textContent = formatCurrency(totalEmployeeBenefit);
+
+        // Update notes section based on state data
+        const notesSection = document.querySelector('.notes-section p');
+        if (state529DB[stateCode]) {
+            notesSection.innerHTML = `<strong>Note:</strong> To receive the maximum tax credit of ${formatCurrency(employerCreditPerStudent)} per employee, total pay must be ${formatCurrency(requiredContribution)} annually. For example, total pay of ${formatCurrency(requiredContribution/2)} would result in a ${formatCurrency(employerCreditPerStudent/2)} tax credit. Student benefits may vary based on individual circumstances.`;
+        } else {
+            notesSection.innerHTML = `<strong>Note:</strong> Student benefits may vary based on individual circumstances.`;
+        }
         
         // Show results
         resultsSection.classList.remove('hidden');
