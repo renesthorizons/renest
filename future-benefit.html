@@ -120,7 +120,7 @@
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
             position: relative;
             overflow: hidden;
         }
@@ -128,6 +128,10 @@
         .submit-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(75, 34, 122, 0.2);
+        }
+
+        .submit-button.submitted {
+            background: #4CAF50;
         }
 
         .contact-email {
@@ -164,33 +168,39 @@
             transition: all 0.3s ease;
         }
 
-        .checkmark svg {
-            width: 16px;
-            height: 16px;
-            stroke: var(--primary);
+        .centered-checkmark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 80px;
+            height: 80px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(75, 34, 122, 0.2);
+        }
+
+        .centered-checkmark svg {
+            width: 40px;
+            height: 40px;
+            stroke: white;
             stroke-width: 2;
         }
 
-        .submit-button.submitted {
-            background: white;
-            border: 2px solid var(--primary);
-        }
-
-        .submit-button.submitted .checkmark {
+        .centered-checkmark.show {
             transform: translate(-50%, -50%) scale(1);
             opacity: 1;
         }
 
-        .submit-button.submitted::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, var(--primary), var(--accent));
-            opacity: 0;
-            transition: opacity 0.3s ease;
+        .submit-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
         }
 
         @media (max-width: 768px) {
@@ -364,7 +374,7 @@
                 <li class="benefit-item">Get an average of $500/year back on student expenses including rent, groceries, utilities, and loan payments</li>
                 <li class="benefit-item">Unlock the tax advantages of a retirement account, but also keep the flexibility of being able to withdraw without penalty</li>
                 <li class="benefit-item">Dual-purpose account: Start optimally saving not only for your retirement and education, but also for anyone in your family (and possible future family!)</li>
-                <li class="benefit-item">Budgeting and expense tracking tools</li>
+                <li class="benefit-item">Create budgets, link your accounts and track your expenses easily and all in one place</li>
             </ul>
         </div>
 
@@ -380,21 +390,22 @@
             <input type="email" id="emailInput" class="email-input" placeholder="Enter your email" required>
             <button type="submit" class="submit-button">
                 submit
-                <div class="checkmark">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                </div>
             </button>
         </form>
         <div class="contact-email">
             Questions? Contact us at <a href="mailto:thomas@renesthorizons.com">thomas@renesthorizons.com</a>
         </div>
 
+        <div class="centered-checkmark">
+            <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </div>
+
         <div class="faq-container">
             <h3 class="faq-title">Frequently Asked Questions</h3>
             <div class="faq-item">
-                <h4 class="faq-question">Who is Renest?</h4>
+                <h4 class="faq-question">What is Renest?</h4>
                 <p class="faq-answer">We are a startup that helps working students achieve financial confidece, starting with maximizing their benefits through 529 plans, budgeting and expense tracking.</p>
             </div>
             <div class="faq-item">
@@ -418,6 +429,12 @@
             
             const email = encodeURIComponent(document.getElementById('emailInput').value);
             const baseUrl = 'https://docs.google.com/forms/d/e/1FAIpQLScZ04ro2nS9fPEclOjblV8kv-rTFxQNH1pMN_xy8H1gbGKQtQ/formResponse?usp=pp_url&entry.1358827248=';
+            const submitButton = document.querySelector('.submit-button');
+            const centeredCheckmark = document.querySelector('.centered-checkmark');
+            
+            // Disable the submit button and change its color
+            submitButton.disabled = true;
+            submitButton.classList.add('submitted');
             
             // Using a hidden iframe to submit the form without redirecting
             const iframe = document.createElement('iframe');
@@ -425,13 +442,18 @@
             iframe.setAttribute('src', baseUrl + email);
             document.body.appendChild(iframe);
             
-            // Show checkmark animation
-            const submitButton = this.querySelector('.submit-button');
-            submitButton.classList.add('submitted');
+            // Show centered checkmark
+            centeredCheckmark.classList.add('show');
             
-            // Reset form and animation after 2 seconds
+            // Hide centered checkmark after 1.5 seconds
+            setTimeout(() => {
+                centeredCheckmark.classList.remove('show');
+            }, 1500);
+            
+            // Reset form and enable button after 2 seconds
             setTimeout(() => {
                 this.reset();
+                submitButton.disabled = false;
                 submitButton.classList.remove('submitted');
             }, 2000);
             
