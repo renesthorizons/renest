@@ -137,6 +137,20 @@ label {
     margin-bottom: 30px;
 }
 
+@media (max-width: 768px) {
+    .big-numbers {
+        flex-direction: column;
+    }
+    
+    .calculator-container {
+        flex-direction: column;
+    }
+    
+    .input-section, .results-section {
+        width: 100%;
+    }
+}
+
 .big-number-card {
     flex: 1;
     background-color: #f8f9fa;
@@ -242,16 +256,6 @@ label {
     text-decoration: underline;
 }
 
-@media (max-width: 768px) {
-    .calculator-container {
-        flex-direction: column;
-    }
-    
-    .input-section, .results-section {
-        width: 100%;
-    }
-}
-
 .state-list {
     position: absolute;
     background: white;
@@ -337,7 +341,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 
                 <div class="big-numbers">
                     <div class="big-number-card">
-                        <h3>Employer Tax Credit</h3>
+                        <h3>Annual Employer Tax Credit</h3>
                         <div class="number" id="employerTaxCreditBig">$0</div>
                     </div>
                     <div class="big-number-card">
@@ -373,7 +377,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     </div>
                     
                     <div class="card">
-                        <h3>Student Benefits</h3>
+                        <h3>Per Student Benefits</h3>
                         <div class="benefit-item">
                             <span>Annual State Tax Benefit:</span>
                             <span id="studentTaxBenefit">$0</span>
@@ -421,7 +425,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                             <li>Attract and retain quality employees</li>
                             <li>Support employees with children or educational goals</li>
                             <li>Provide valuable benefits with minimal administration</li>
-                            <li>Unused tax credits roll over to future years</li>
+                            <li>Unused tax credits roll over for 5 years</li>
                             <li>Free educational webinars for your employees</li>
                         </ul>
                     </div>
@@ -967,11 +971,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Pricing tiers based on number of employees
         let monthlyRatePerStudent;
         if (employees <= 20) {
-            monthlyRatePerStudent = 10;
+            monthlyRatePerStudent = 11;
         } else if (employees <= 50) {
-            monthlyRatePerStudent = 9;
+            monthlyRatePerStudent = 10;
         } else {
-            monthlyRatePerStudent = 8;
+            monthlyRatePerStudent = 9;
         }
         
         // Calculate costs and benefits
