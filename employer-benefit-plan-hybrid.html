@@ -321,7 +321,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                             <input type="radio" id="studentOnly" name="benefitModel" value="student">
                             <label for="studentOnly">Student Benefit Only ($0 cost to employer)</label>
                         </div>
+                        <div>
+                            <input type="radio" id="hybrid" name="benefitModel" value="hybrid">
+                            <label for="hybrid">Hybrid Model (shared cost)</label>
+                        </div>
                     </div>
+                </div>
+                
+                <div id="hybridSliderContainer" class="form-group hidden">
+                    <label for="employerContribution">Employer monthly contribution per student: <span id="contributionValue">$0</span></label>
+                    <input type="range" id="employerContribution" class="slider" min="0" max="10" step="1" value="0">
                 </div>
                 
                 <button id="calculate" class="btn-calculate">Calculate Benefits</button>
@@ -818,6 +827,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // DOM elements
     const stateInput = document.getElementById('state');
     const employeesInput = document.getElementById('employees');
+    const hybridSliderContainer = document.getElementById('hybridSliderContainer');
+    const employerContributionSlider = document.getElementById('employerContribution');
+    const contributionValueDisplay = document.getElementById('contributionValue');
     const calculateBtn = document.getElementById('calculate');
     const resultsSection = document.getElementById('resultsSection');
     
@@ -837,7 +849,16 @@ document.addEventListener('DOMContentLoaded', function() {
     populateStateDropdown();
     
     // Event listeners
+    document.querySelectorAll('input[name="benefitModel"]').forEach(radio => {
+        radio.addEventListener('change', toggleHybridSlider);
+    });
+    
+    employerContributionSlider.addEventListener('input', updateContributionValue);
     calculateBtn.addEventListener('click', calculateBenefits);
+    
+    // Initialize
+    toggleHybridSlider();
+    updateContributionValue();
     
     // Functions
     function populateStateDropdown() {
@@ -913,11 +934,30 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    function toggleHybridSlider() {
+        const benefitModel = document.querySelector('input[name="benefitModel"]:checked').value;
+        if (benefitModel === 'hybrid') {
+            hybridSliderContainer.classList.remove('hidden');
+        } else {
+            hybridSliderContainer.classList.add('hidden');
+        }
+    }
+    
+    function updateContributionValue() {
+        const value = employerContributionSlider.value;
+        contributionValueDisplay.textContent = `$${value}`;
+    }
+    
+    function formatCurrency(amount) {
+        return '$' + parseFloat(amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+    }
+    
     function calculateBenefits() {
         const stateName = stateInput.value;
         const stateCode = stateInput.getAttribute('data-state-code') || getStateCodeFromName(stateName);
         const employees = parseInt(employeesInput.value);
         const benefitModel = document.querySelector('input[name="benefitModel"]:checked').value;
+        const employerContribution = parseFloat(employerContributionSlider.value);
         
         console.log('State Name:', stateName);
         console.log('State Code:', stateCode);
@@ -972,10 +1012,31 @@ document.addEventListener('DOMContentLoaded', function() {
             studentMonthlyCost = 7; // $7/month for student-only plan
             // No tax credits for student-only model
             taxCredit = 0;
+        } else if (benefitModel === 'hybrid') {
+            employerMonthlyCost = employerContribution * employees;
+            studentMonthlyCost = Math.max(0, monthlyRatePerStudent - employerContribution);
+            
+            // Calculate annual employer cost
+            annualEmployerCost = employerMonthlyCost * 12;
+            
+            // Calculate how many students this fully covers
+            const annualCostPerStudent = monthlyRatePerStudent * 12;
+            const fullyCoveredStudents = Math.floor(annualEmployerCost / annualCostPerStudent);
+            
+            // Tax credits based on number of fully covered students
+            taxCredit = employerCreditPerStudent * Math.min(fullyCoveredStudents, employees);
+            
+            console.log('Annual employer cost:', annualEmployerCost);
+            console.log('Annual cost per student:', annualCostPerStudent);
+            console.log('Fully covered students:', fullyCoveredStudents);
+            console.log('Tax credit per student:', employerCreditPerStudent);
+            console.log('Total tax credit:', taxCredit);
         }
         
-        // Calculate annual costs
-        annualEmployerCost = employerMonthlyCost * 12;
+        // Calculate annual costs if not already calculated
+        if (benefitModel !== 'hybrid') {
+            annualEmployerCost = employerMonthlyCost * 12;
+        }
         annualStudentCost = studentMonthlyCost * 12;
         
         // Calculate total employee benefit (student tax benefit * number of employees)
@@ -1020,10 +1081,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Show results
         resultsSection.classList.remove('hidden');
-    }
-
-    function formatCurrency(amount) {
-        return '$' + parseFloat(amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
     }
 });
 </script>
