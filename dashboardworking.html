@@ -3307,19 +3307,27 @@ const statePersonalExemptionDB = {
         }
 
         async function submitForm() {
+            console.log('===== FORM SUBMISSION STARTED =====');
             const submitBtn = document.getElementById('submitBtn');
             const spinner = document.getElementById('spinner');
             
             try {
+                console.log('1. Disabling submit button and showing spinner');
                 submitBtn.disabled = true;
                 spinner.style.display = 'block';
                 
                 // Validate step 3
-                if (!(await validateStep3())) {
+                console.log('2. Starting step 3 validation');
+                const step3Valid = await validateStep3();
+                console.log('Step 3 validation result:', step3Valid);
+                
+                if (!step3Valid) {
+                    console.log('Step 3 validation failed, returning');
                     return;
                 }
                 
                 // Get form values
+                console.log('3. Getting form values');
                 const firstName = document.getElementById('firstName').value;
                 const lastName = document.getElementById('lastName').value;
                 const dateOfBirth = document.getElementById('dateOfBirth').value;
@@ -3333,50 +3341,82 @@ const statePersonalExemptionDB = {
                 const enrolledMonths = Array.from(document.querySelectorAll('input[name="enrolledMonths"]:checked'))
                     .map(checkbox => parseInt(checkbox.value));
 
+                console.log('Form values collected:', {
+                    firstName,
+                    lastName,
+                    dateOfBirth,
+                    school,
+                    state,
+                    income,
+                    rent,
+                    utilities,
+                    wifi,
+                    utilitiesIncluded,
+                    enrolledMonths
+                });
+
                 // Get auth token
+                console.log('4. Getting auth token');
                 const authToken = localStorage.getItem('authToken');
                 if (!authToken) {
+                    console.error('No auth token found in localStorage');
                     throw new Error('No authentication token found');
                 }
+                console.log('Auth token found');
 
                 // First, update the user profile
+                console.log('5. Updating user profile');
+                const profileData = {
+                    firstName,
+                    lastName,
+                    dateOfBirth,
+                    school,
+                    state,
+                    income,
+                    monthlyRent: rent,
+                    progressPercentage: 33
+                };
+                console.log('Profile update payload:', profileData);
+
                 const profileResponse = await fetch('https://jmqfabgm02.execute-api.us-east-2.amazonaws.com/update-profile', {
                     method: 'PUT',
                     headers: {
                         'Authorization': `Bearer ${authToken}`,
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
-                        firstName,
-                        lastName,
-                        dateOfBirth,
-                        school,
-                        state,
-                        income,
-                        monthlyRent: rent,
-                        progressPercentage: 33
-                    })
+                    body: JSON.stringify(profileData)
                 });
 
+                console.log('Profile update response status:', profileResponse.status);
                 if (!profileResponse.ok) {
-                    throw new Error('Failed to update profile');
+                    const errorText = await profileResponse.text();
+                    console.error('Profile update failed:', errorText);
+                    throw new Error(`Failed to update profile: ${errorText}`);
                 }
+                console.log('Profile updated successfully');
 
                 // Then, create the expenses
-                await addOnboardingExpenses({
+                console.log('6. Creating onboarding expenses');
+                const expenseData = {
                     rent,
                     utilities,
                     wifi,
                     enrolledMonths,
                     utilitiesIncluded
-                });
+                };
+                console.log('Expense data:', expenseData);
+
+                await addOnboardingExpenses(expenseData);
+                console.log('Expenses created successfully');
 
                 // Hide the modal and redirect to dashboard
+                console.log('7. Hiding modal and redirecting');
                 hideOnboardingModal();
                 window.location.href = 'dashboard.html';
 
             } catch (error) {
-                console.error('Error submitting form:', error);
+                console.error('Error in form submission:', error);
+                console.error('Error stack:', error.stack);
                 
                 // Show error message
                 const errorMessage = document.createElement('div');
@@ -3386,9 +3426,105 @@ const statePersonalExemptionDB = {
                 setTimeout(() => errorMessage.remove(), 3000);
                 
             } finally {
+                console.log('8. Resetting button state');
                 // Reset button state
                 submitBtn.disabled = false;
                 spinner.style.display = 'none';
+            }
+        }
+
+        async function addOnboardingExpenses(expenseData) {
+            console.log('===== ADDING ONBOARDING EXPENSES =====');
+            const { rent, utilities, wifi, enrolledMonths, utilitiesIncluded } = expenseData;
+            const currentYear = new Date().getFullYear();
+            
+            try {
+                console.log('1. Creating rent expenses');
+                // Create rent expenses
+                for (const month of enrolledMonths) {
+                    console.log(`Creating rent expense for month ${month}`);
+                    const expense = {
+                        date: new Date(currentYear, month - 1, 1),
+                        category: 'Rent',
+                        amount: rent,
+                        notes: 'Onboarding expense',
+                        isQualified: true
+                    };
+                    console.log('Rent expense data:', expense);
+                    await createExpense(expense);
+                }
+                
+                // Create utilities expenses if not included in rent
+                if (!utilitiesIncluded) {
+                    console.log('2. Creating utilities expenses');
+                    for (const month of enrolledMonths) {
+                        console.log(`Creating utilities expense for month ${month}`);
+                        const expense = {
+                            date: new Date(currentYear, month - 1, 1),
+                            category: 'Utilities',
+                            amount: utilities,
+                            notes: 'Onboarding expense',
+                            isQualified: true
+                        };
+                        console.log('Utilities expense data:', expense);
+                        await createExpense(expense);
+                    }
+                }
+                
+                // Create WiFi expenses
+                console.log('3. Creating WiFi expenses');
+                for (const month of enrolledMonths) {
+                    console.log(`Creating WiFi expense for month ${month}`);
+                    const expense = {
+                        date: new Date(currentYear, month - 1, 1),
+                        category: 'WiFi',
+                        amount: wifi,
+                        notes: 'Onboarding expense',
+                        isQualified: true
+                    };
+                    console.log('WiFi expense data:', expense);
+                    await createExpense(expense);
+                }
+            } catch (error) {
+                console.error('Error in addOnboardingExpenses:', error);
+                console.error('Error stack:', error.stack);
+                throw error;
+            }
+        }
+
+        async function createExpense(expenseData) {
+            console.log('===== CREATING EXPENSE =====');
+            console.log('Expense data:', expenseData);
+            
+            try {
+                const authToken = localStorage.getItem('authToken');
+                if (!authToken) {
+                    throw new Error('No auth token found');
+                }
+
+                const response = await fetch('https://jmqfabgm02.execute-api.us-east-2.amazonaws.com/expenses', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(expenseData)
+                });
+
+                console.log('Create expense response status:', response.status);
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Create expense failed:', errorText);
+                    throw new Error(`Failed to create expense: ${errorText}`);
+                }
+
+                const result = await response.json();
+                console.log('Expense created successfully:', result);
+                return result;
+            } catch (error) {
+                console.error('Error in createExpense:', error);
+                console.error('Error stack:', error.stack);
+                throw error;
             }
         }
 
@@ -3549,51 +3685,6 @@ const statePersonalExemptionDB = {
             const modal = document.querySelector('.modal-overlay');
             if (modal) {
                 modal.remove();
-            }
-        }
-
-        async function addOnboardingExpenses(expenseData) {
-            const { rent, utilities, wifi, enrolledMonths, utilitiesIncluded } = expenseData;
-            const currentYear = new Date().getFullYear();
-            
-            try {
-                // Create rent expenses
-                for (const month of enrolledMonths) {
-                    await createExpense({
-                        date: new Date(currentYear, month - 1, 1),
-                        category: 'Rent',
-                        amount: rent,
-                        notes: 'Onboarding expense',
-                        isQualified: true
-                    });
-                }
-                
-                // Create utilities expenses if not included in rent
-                if (!utilitiesIncluded) {
-                    for (const month of enrolledMonths) {
-                        await createExpense({
-                            date: new Date(currentYear, month - 1, 1),
-                            category: 'Utilities',
-                            amount: utilities,
-                            notes: 'Onboarding expense',
-                            isQualified: true
-                        });
-                    }
-                }
-                
-                // Create WiFi expenses
-                for (const month of enrolledMonths) {
-                    await createExpense({
-                        date: new Date(currentYear, month - 1, 1),
-                        category: 'WiFi',
-                        amount: wifi,
-                        notes: 'Onboarding expense',
-                        isQualified: true
-                    });
-                }
-            } catch (error) {
-                console.error('Error creating expenses:', error);
-                throw error;
             }
         }
 
