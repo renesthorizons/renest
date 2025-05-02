@@ -2200,14 +2200,19 @@
         // Load and display expenses
         async function loadExpenses() {
             try {
+                console.log('=== Starting loadExpenses ===');
                 const data = await getExpenses();
+                console.log('Total expenses received:', data.expenses.length);
                 const expenseList = document.getElementById('expense-list');
                 
                 // Update regular expenses list
-                expenseList.innerHTML = data.expenses
-                    .filter(expense => 
-                        expense.category !== 'Deposit529' && 
-                        expense.category !== 'Withdrawal529')
+                const filteredExpenses = data.expenses.filter(expense => 
+                    expense.category !== 'Deposit529' && 
+                    expense.category !== 'Withdrawal529'
+                );
+                console.log('Non-529 expenses to display:', filteredExpenses.length);
+                
+                expenseList.innerHTML = filteredExpenses
                     .map(expense => `
                         <div class="expense-item" id="expense-${expense.expenseID}">
                             <div>
@@ -2231,7 +2236,9 @@
                 update529Display(projections);
                 update529TransactionsList(data.expenses);
                 updateSummary(data.expenses);
+                console.log('=== Completed loadExpenses ===');
             } catch (error) {
+                console.error('Error loading expenses:', error);
                 showError('Error loading expenses: ' + error.message);
             }
         }
@@ -2293,6 +2300,8 @@
 
         // Update the deleteExpenseHandler function
         async function deleteExpenseHandler(expenseId) {
+            console.log('=== Starting deleteExpenseHandler ===');
+            console.log('Expense to delete:', expenseId);
             currentExpenseToDelete = expenseId;
             document.getElementById('delete-confirmation-modal').style.display = 'flex';
         }
@@ -2306,16 +2315,26 @@
         async function confirmDelete() {
             if (currentExpenseToDelete) {
                 try {
+                    console.log('=== Starting confirmDelete ===');
+                    console.log('Deleting expense:', currentExpenseToDelete);
                     await deleteExpense(currentExpenseToDelete);
                     const expenseElement = document.getElementById(`expense-${currentExpenseToDelete}`);
                     const transactionElement = document.getElementById(`transaction-${currentExpenseToDelete}`);
                     
-                    if (expenseElement) expenseElement.remove();
-                    if (transactionElement) transactionElement.remove();
+                    if (expenseElement) {
+                        console.log('Removing expense element');
+                        expenseElement.remove();
+                    }
+                    if (transactionElement) {
+                        console.log('Removing transaction element');
+                        transactionElement.remove();
+                    }
                     
                     showSuccess('Expense deleted successfully');
+                    console.log('Reloading expenses after deletion');
                     loadExpenses(); // Refresh to update summary and projections
                 } catch (error) {
+                    console.error('Error in confirmDelete:', error);
                     showError('Failed to delete expense: ' + error.message);
                 }
                 hideDeleteModal();
@@ -2660,10 +2679,12 @@
         }
 
         function update529TransactionsList(expenses) {
+            console.log('=== Updating 529 Transactions List ===');
             const transactionsList = document.getElementById('529-transactions-list');
             const transactions = expenses.filter(expense => 
                 expense.category === 'Deposit529' || expense.category === 'Withdrawal529'
             );
+            console.log('Total 529 transactions to display:', transactions.length);
 
             transactionsList.innerHTML = transactions
                 .sort((a, b) => new Date(b.date) - new Date(a.date))
@@ -2683,6 +2704,7 @@
                         </div>
                     </div>
                 `).join('');
+            console.log('=== Completed 529 Transactions List Update ===');
         }
 
         // Add event listener for 529 transaction form

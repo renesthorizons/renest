@@ -2437,16 +2437,18 @@ let expenseCache = {
 async function fetchExpenses() {
     try {
         console.time('Total Expenses Load');
+        console.log('=== Starting fetchExpenses ===');
         
         // Use existing cache
         if (allTransactions) {
-            console.log('Using cached transactions');
+            console.log('Using cached transactions. Count:', allTransactions.length);
             return allTransactions;
         }
 
         // 1. Get user profile
         console.time('Profile Check');
         const userProfile = await fetchUserProfile();
+        console.log('User profile loaded:', userProfile);
         console.timeEnd('Profile Check');
 
         // 2. Fetch manual transactions
@@ -2459,6 +2461,7 @@ async function fetchExpenses() {
         if (!response.ok) throw new Error('Failed to fetch manual expenses');
         const manualData = await response.json();
         let allExpenses = manualData.expenses || [];
+        console.log('Manual expenses loaded:', allExpenses.length);
         console.timeEnd('Manual Expenses');
         
         // 3. If automatic account, fetch Plaid transactions for year-to-date in parallel
@@ -2488,18 +2491,21 @@ async function fetchExpenses() {
             );
             
             // Process results
+            let plaidExpenseCount = 0;
             plaidResults.forEach(result => {
                 if (result && result.summary) {
                     const plaidExpenses = convertPlaidToExpenses(result.summary);
+                    plaidExpenseCount += plaidExpenses.length;
                     allExpenses = [...allExpenses, ...plaidExpenses];
                 }
             });
-            
+            console.log('Plaid expenses loaded:', plaidExpenseCount);
             console.timeEnd('Plaid Transactions');
         }
         
         // Store in existing cache
         allTransactions = allExpenses;
+        console.log('Total expenses after combining manual and Plaid:', allExpenses.length);
         
         console.timeEnd('Total Expenses Load');
         return allExpenses;
@@ -2509,9 +2515,11 @@ async function fetchExpenses() {
     }
 }
 
-// Use existing clearTransactionCache function
+// Update the clearTransactionCache function
 function clearTransactionCache() {
+    console.log('Clearing transaction cache. Previous count:', allTransactions ? allTransactions.length : 0);
     allTransactions = null;
+    console.log('Cache cleared');
 }
 
 // Calculation Functions
@@ -2636,11 +2644,14 @@ function calculateStateBenefit(state, totalQualifiedExpenses, income) {
 
 // UI Update Functions
 function updateCategoryDisplay(expenses) {
+    console.log('=== Updating Category Display ===');
+    console.log('Total expenses to display:', expenses.length);
     const container = document.getElementById('categoriesContainer');
     container.innerHTML = '';
 
     Object.entries(categoryBudgets).forEach(([category, budget]) => {
         const categoryExpenses = expenses.filter(e => e.category === category);
+        console.log(`Category ${category}: ${categoryExpenses.length} expenses`);
         
         // Calculate total for the category, considering transaction types
         const total = categoryExpenses.reduce((sum, e) => sum + e.amount, 0);
@@ -2671,6 +2682,7 @@ function updateCategoryDisplay(expenses) {
             </div>
         `);
     });
+    console.log('Category display update complete');
 }
 
 function updateBenefitDisplay(benefits, state, accountStatus, expenses) {  
