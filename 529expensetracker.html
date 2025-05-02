@@ -2164,17 +2164,33 @@
                 const token = API.getToken();
                 if (!token) throw new Error('No authentication token found');
 
-                const response = await fetch(`${API.baseUrl}/expenses`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
+                let allExpenses = [];
+                let nextToken = null;
+                
+                do {
+                    const url = new URL(`${API.baseUrl}/expenses`);
+                    if (nextToken) {
+                        url.searchParams.append('nextToken', nextToken);
                     }
-                });
-                console.log('API Response status:', response.status);
-                const data = await response.json();
-                console.log('Raw API response:', data);
-                if (!response.ok) throw new Error(data.error || 'Failed to fetch expenses');
-                console.log('Total expenses in API response:', data.expenses.length);
-                return data;
+                    
+                    console.log('Fetching expenses with token:', nextToken);
+                    const response = await fetch(url, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    console.log('API Response status:', response.status);
+                    const data = await response.json();
+                    console.log('Raw API response:', data);
+                    if (!response.ok) throw new Error(data.error || 'Failed to fetch expenses');
+                    
+                    allExpenses = [...allExpenses, ...data.expenses];
+                    nextToken = data.nextToken;
+                    console.log(`Fetched ${data.expenses.length} expenses, total so far: ${allExpenses.length}`);
+                } while (nextToken);
+
+                console.log('Total expenses fetched:', allExpenses.length);
+                return { expenses: allExpenses };
             } catch (error) {
                 console.error('Error in getExpenses:', error);
                 throw error;
