@@ -2169,12 +2169,15 @@
                 let previousToken = null;
                 let pageCount = 0;
                 const MAX_PAGES = 5; // Safety limit to prevent infinite loops
+                const seenExpenseIds = new Set(); // Track unique expense IDs
                 
                 do {
                     const url = new URL(`${API.baseUrl}/expenses`);
                     if (nextToken) {
                         url.searchParams.append('nextToken', nextToken);
                     }
+                    // Request more items per page
+                    url.searchParams.append('limit', '100');
                     
                     console.log('Fetching expenses with token:', nextToken);
                     const response = await fetch(url, {
@@ -2193,12 +2196,22 @@
                         break;
                     }
                     
-                    allExpenses = [...allExpenses, ...data.expenses];
+                    // Filter out duplicate expenses
+                    const newExpenses = data.expenses.filter(expense => {
+                        if (seenExpenseIds.has(expense.expenseID)) {
+                            console.log('Skipping duplicate expense:', expense.expenseID);
+                            return false;
+                        }
+                        seenExpenseIds.add(expense.expenseID);
+                        return true;
+                    });
+                    
+                    allExpenses = [...allExpenses, ...newExpenses];
                     previousToken = nextToken;
                     nextToken = data.nextToken;
                     pageCount++;
                     
-                    console.log(`Fetched ${data.expenses.length} expenses, total so far: ${allExpenses.length}`);
+                    console.log(`Fetched ${newExpenses.length} unique expenses, total so far: ${allExpenses.length}`);
                     
                     // Break if we've hit the maximum number of pages
                     if (pageCount >= MAX_PAGES) {
@@ -2207,7 +2220,7 @@
                     }
                 } while (nextToken);
 
-                console.log('Total expenses fetched:', allExpenses.length);
+                console.log('Total unique expenses fetched:', allExpenses.length);
                 return { expenses: allExpenses };
             } catch (error) {
                 console.error('Error in getExpenses:', error);
