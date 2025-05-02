@@ -329,6 +329,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             
             <div class="results-section hidden" id="resultsSection">
                 <h2>Your Benefit Summary</h2>
+                <div id="noEmployerCreditNote" class="notes-section" style="margin-top: 10px; padding: 15px; border-radius: 4px; font-size: 0.9rem; color: #666; display: none;">
+                    <p style="margin: 0; line-height: 1.4;">
+                        <strong>Note:</strong> <span id="stateName"></span> does not offer an employer credit but offers a significant employee benefit.
+                    </p>
+                </div>
                 
                 <div class="big-numbers">
                     <div class="big-number-card">
@@ -423,7 +428,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 </div>
 
                 <div class="notes-section" style="margin-top: 20px; padding: 15px; background-color: #f5f5f5; border-radius: 4px; font-size: 0.9rem; color: #666;">
-                    <p style="margin: 0; line-height: 1.4;">
+                    <p style="margin: 0; line-height: 1.4;" id="benefitNotes">
                         <strong>Note:</strong> Benefits shown are maximum potential benefits. Employer tax credits require minimum contributions per state requirements. Student benefits may vary based on individual circumstances.
                     </p>
                 </div>
@@ -832,6 +837,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const totalEmployeeBenefitElement = document.getElementById('totalEmployeeBenefit');
     const employerTaxCreditBigElement = document.getElementById('employerTaxCreditBig');
     const employerCostBigElement = document.getElementById('employerCostBig');
+    const noEmployerCreditNote = document.getElementById('noEmployerCreditNote');
+    const stateNameSpan = document.getElementById('stateName');
+    const benefitNotes = document.getElementById('benefitNotes');
 
     // Populate state dropdown
     populateStateDropdown();
@@ -927,6 +935,18 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Please select a state and enter a valid number of employees.');
             return;
         }
+
+        // Show/hide the no employer credit note
+        if (!state529DB[stateCode]) {
+            noEmployerCreditNote.style.display = 'block';
+            stateNameSpan.textContent = stateName;
+            benefitNotes.innerHTML = `<strong>Note:</strong> Student benefits may vary based on individual circumstances.`;
+        } else {
+            noEmployerCreditNote.style.display = 'none';
+            const employerCreditPerStudent = state529DB[stateCode].employerCredit;
+            const requiredContribution = state529DB[stateCode].requiredContribution;
+            benefitNotes.innerHTML = `<strong>Note:</strong> To receive the maximum tax credit of ${formatCurrency(employerCreditPerStudent)} per employee, total pay must be ${formatCurrency(requiredContribution)} annually. For example, total pay of ${formatCurrency(requiredContribution/2)} would result in a ${formatCurrency(employerCreditPerStudent/2)} tax credit. Student benefits may vary based on individual circumstances.`;
+        }
         
         // Pricing tiers based on number of employees
         let monthlyRatePerStudent;
@@ -946,14 +966,6 @@ document.addEventListener('DOMContentLoaded', function() {
         let taxCredit = 0;
         let studentTaxBenefit = 0;
         
-        // Get employer credit amount from state529DB
-        let employerCreditPerStudent = 0;
-        let requiredContribution = 0;
-        if (state529DB[stateCode]) {
-            employerCreditPerStudent = state529DB[stateCode].employerCredit;
-            requiredContribution = state529DB[stateCode].requiredContribution;
-        }
-        
         // Get student benefits from state529linkDB
         if (state529linkDB[stateCode]) {
             const benefitStr = state529linkDB[stateCode].benefit;
@@ -966,7 +978,7 @@ document.addEventListener('DOMContentLoaded', function() {
             employerMonthlyCost = monthlyRatePerStudent * employees;
             studentMonthlyCost = 0;
             // Full tax credits for all employees
-            taxCredit = employerCreditPerStudent * employees;
+            taxCredit = state529DB[stateCode] ? state529DB[stateCode].employerCredit * employees : 0;
         } else if (benefitModel === 'student') {
             employerMonthlyCost = 0;
             studentMonthlyCost = 7; // $7/month for student-only plan
@@ -1010,14 +1022,6 @@ document.addEventListener('DOMContentLoaded', function() {
         studentAnnualCostBigElement.textContent = formatCurrency(totalStudentAnnualCost);
         totalEmployeeBenefitElement.textContent = formatCurrency(totalEmployeeBenefit);
 
-        // Update notes section based on state data
-        const notesSection = document.querySelector('.notes-section p');
-        if (state529DB[stateCode]) {
-            notesSection.innerHTML = `<strong>Note:</strong> To receive the maximum tax credit of ${formatCurrency(employerCreditPerStudent)} per employee, total pay must be ${formatCurrency(requiredContribution)} annually. For example, total pay of ${formatCurrency(requiredContribution/2)} would result in a ${formatCurrency(employerCreditPerStudent/2)} tax credit. Student benefits may vary based on individual circumstances.`;
-        } else {
-            notesSection.innerHTML = `<strong>Note:</strong> Student benefits may vary based on individual circumstances.`;
-        }
-        
         // Show results
         resultsSection.classList.remove('hidden');
     }
