@@ -3314,19 +3314,55 @@ const statePersonalExemptionDB = {
                 submitBtn.disabled = true;
                 spinner.style.display = 'block';
                 
+                // Validate step 3
                 if (!(await validateStep3())) {
                     return;
                 }
                 
                 // Get form values
-                const rent = formatCurrency(document.getElementById('monthlyRent'));
-                const utilities = formatCurrency(document.getElementById('utilities'));
-                const wifi = formatCurrency(document.getElementById('wifi'));
+                const firstName = document.getElementById('firstName').value;
+                const lastName = document.getElementById('lastName').value;
+                const dateOfBirth = document.getElementById('dateOfBirth').value;
+                const school = document.getElementById('school').value;
+                const state = document.getElementById('state').value;
+                const income = document.getElementById('income').value.replace(/[^\d]/g, '');
+                const rent = document.getElementById('monthlyRent').value.replace(/[^\d]/g, '');
+                const utilities = document.getElementById('utilities').value.replace(/[^\d]/g, '');
+                const wifi = document.getElementById('wifi').value.replace(/[^\d]/g, '');
                 const utilitiesIncluded = document.getElementById('utilitiesIncluded').checked;
                 const enrolledMonths = Array.from(document.querySelectorAll('input[name="enrolledMonths"]:checked'))
                     .map(checkbox => parseInt(checkbox.value));
-                
-                // Create expenses
+
+                // Get auth token
+                const authToken = localStorage.getItem('authToken');
+                if (!authToken) {
+                    throw new Error('No authentication token found');
+                }
+
+                // First, update the user profile
+                const profileResponse = await fetch('https://jmqfabgm02.execute-api.us-east-2.amazonaws.com/update-profile', {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        firstName,
+                        lastName,
+                        dateOfBirth,
+                        school,
+                        state,
+                        income,
+                        monthlyRent: rent,
+                        progressPercentage: 33
+                    })
+                });
+
+                if (!profileResponse.ok) {
+                    throw new Error('Failed to update profile');
+                }
+
+                // Then, create the expenses
                 await addOnboardingExpenses({
                     rent,
                     utilities,
@@ -3334,14 +3370,23 @@ const statePersonalExemptionDB = {
                     enrolledMonths,
                     utilitiesIncluded
                 });
-                
-                // Continue with existing form submission logic
-                // ... existing code ...
-                
+
+                // Hide the modal and redirect to dashboard
+                hideOnboardingModal();
+                window.location.href = 'dashboard.html';
+
             } catch (error) {
                 console.error('Error submitting form:', error);
-                alert('Error submitting form. Please try again.');
+                
+                // Show error message
+                const errorMessage = document.createElement('div');
+                errorMessage.className = 'error-message';
+                errorMessage.textContent = 'Error submitting form. Please try again.';
+                document.body.appendChild(errorMessage);
+                setTimeout(() => errorMessage.remove(), 3000);
+                
             } finally {
+                // Reset button state
                 submitBtn.disabled = false;
                 spinner.style.display = 'none';
             }
