@@ -3444,51 +3444,53 @@ const statePersonalExemptionDB = {
             const currentYear = new Date().getFullYear();
             
             try {
-                console.log('1. Creating rent expenses');
-                // Create rent expenses
-                for (const month of enrolledMonths) {
-                    console.log(`Creating rent expense for month ${month}`);
-                    const rentExpenseData = {
-                        date: new Date(2025, month - 1, 1),
-                        category: 'Rent',
-                        amount: parseFloat(rent),  // Ensure amount is a number
-                        notes: 'Onboarding expense',
-                        isQualified: true
-                    };
-                    console.log('Rent expense data:', rentExpenseData);
-                    await createExpense(rentExpenseData);
-                }
-                
-                // Create utilities expenses if not included in rent
-                if (!utilitiesIncluded) {
-                    console.log('2. Creating utilities expenses');
-                    for (const month of enrolledMonths) {
+                // Create expenses for all 12 months
+                for (let month = 1; month <= 12; month++) {
+                    const isEnrolled = enrolledMonths.includes(month);
+                    const isQualified = isEnrolled;
+                    const notes = isEnrolled ? 'Onboarding expense' : 'Not qualified expense because not enrolled as a student';
+                    
+                    // Create rent expense if amount is not 0
+                    if (parseFloat(rent) > 0) {
+                        console.log(`Creating rent expense for month ${month}`);
+                        const rentExpenseData = {
+                            date: new Date(currentYear, month - 1, 1),
+                            category: 'Rent',
+                            amount: parseFloat(rent),
+                            notes: notes,
+                            isQualified: isQualified
+                        };
+                        console.log('Rent expense data:', rentExpenseData);
+                        await createExpense(rentExpenseData);
+                    }
+
+                    // Create utilities expense if not included in rent and amount is not 0
+                    if (!utilitiesIncluded && parseFloat(utilities) > 0) {
                         console.log(`Creating utilities expense for month ${month}`);
                         const utilitiesExpenseData = {
-                            date: new Date(2025, month - 1, 1),
+                            date: new Date(currentYear, month - 1, 1),
                             category: 'Utilities',
-                            amount: parseFloat(utilities),  // Ensure amount is a number
-                            notes: 'Onboarding expense',
-                            isQualified: true
+                            amount: parseFloat(utilities),
+                            notes: notes,
+                            isQualified: isQualified
                         };
                         console.log('Utilities expense data:', utilitiesExpenseData);
                         await createExpense(utilitiesExpenseData);
                     }
-                }
-                
-                // Create WiFi expenses
-                console.log('3. Creating WiFi expenses');
-                for (const month of enrolledMonths) {
-                    console.log(`Creating WiFi expense for month ${month}`);
-                    const wifiExpenseData = {
-                        date: new Date(2025, month - 1, 1),
-                        category: 'WiFi',
-                        amount: parseFloat(wifi),  // Ensure amount is a number
-                        notes: 'Onboarding expense',
-                        isQualified: true
-                    };
-                    console.log('WiFi expense data:', wifiExpenseData);
-                    await createExpense(wifiExpenseData);
+
+                    // Create WiFi expense if amount is not 0
+                    if (parseFloat(wifi) > 0) {
+                        console.log(`Creating WiFi expense for month ${month}`);
+                        const wifiExpenseData = {
+                            date: new Date(currentYear, month - 1, 1),
+                            category: 'WiFi',
+                            amount: parseFloat(wifi),
+                            notes: notes,
+                            isQualified: isQualified
+                        };
+                        console.log('WiFi expense data:', wifiExpenseData);
+                        await createExpense(wifiExpenseData);
+                    }
                 }
             } catch (error) {
                 console.error('Error in addOnboardingExpenses:', error);
