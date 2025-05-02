@@ -3502,11 +3502,12 @@ const statePersonalExemptionDB = {
                     throw new Error('No auth token found');
                 }
 
-                const response = await fetch('https://jmqfabgm02.execute-api.us-east-2.amazonaws.com/expenses', {
+                const response = await fetch('https://g4gri8abii.execute-api.us-east-2.amazonaws.com/prod/expenses', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${authToken}`,
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
                     },
                     body: JSON.stringify(expenseData)
                 });
