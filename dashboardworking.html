@@ -998,10 +998,10 @@
                 <!-- Progress Bar -->
                 <div class="progress-container1">
                     <div class="progress-text">
-                        Step <span id="currentStep">1</span> of 2
+                        Step <span id="currentStep">1</span> of 3
                     </div>
                     <div class="progress-bar-container1">
-                        <div id="progressBar1" class="progress-bar1" style="width: 50%"></div>
+                        <div id="progressBar1" class="progress-bar1" style="width: 33%"></div>
                     </div>
                 </div>
     
@@ -1030,7 +1030,6 @@
     
                 <!-- Step 2: School Information -->
                 <div id="step2" class="form-step">
-                    <!-- <h2 class="text-xl font-semibold mb-4">School Information</h2> -->
                     <div class="form-group">
                         <label for="school" class="form-label">School Name</label>
                         <input type="text" id="school" class="form-input" placeholder="Enter school name">
@@ -1049,6 +1048,14 @@
                         <label for="income" class="form-label">Projected Total Income from all Sources this Year</label>
                         <input type="text" id="income" class="form-input" placeholder="Enter annual income">
                     </div>
+                    <div class="button-container">
+                        <button onclick="previousStep()" class="button button-secondary">Back</button>
+                        <button onclick="nextStep()" class="button button-primary">Next</button>
+                    </div>
+                </div>
+    
+                <!-- Step 3: Expenses -->
+                <div id="step3" class="form-step">
                     <div class="form-group">
                         <label for="monthlyRent" class="form-label">Monthly Rent Payment</label>
                         <input type="text" id="monthlyRent" class="form-input" placeholder="Enter monthly rent payment">
@@ -3258,6 +3265,7 @@ const statePersonalExemptionDB = {
             const monthlyRent = Number(document.getElementById('monthlyRent').value.replace(/[^\d]/g, ''));
             const utilities = Number(document.getElementById('utilities').value.replace(/[^\d]/g, ''));
             const wifi = Number(document.getElementById('wifi').value.replace(/[^\d]/g, ''));
+            const utilitiesIncluded = document.getElementById('utilitiesIncluded').checked;
             const enrolledMonths = Array.from(document.querySelectorAll('input[name="enrolledMonths"]:checked'))
                 .map(checkbox => parseInt(checkbox.value));
 
@@ -3268,18 +3276,24 @@ const statePersonalExemptionDB = {
                     });
                 });
             }
+
             if (!monthlyRent || isNaN(monthlyRent) || monthlyRent < 0) {
                 showError('Please enter a valid monthly rent payment');
                 return false;
             }
-            if (!utilities || isNaN(utilities) || utilities < 0) {
-                showError('Please enter a valid monthly utilities amount');
-                return false;
+
+            if (!utilitiesIncluded) {
+                if (!utilities || isNaN(utilities) || utilities < 0) {
+                    showError('Please enter a valid monthly utilities amount');
+                    return false;
+                }
             }
+
             if (!wifi || isNaN(wifi) || wifi < 0) {
                 showError('Please enter a valid monthly WiFi amount');
                 return false;
             }
+
             if (enrolledMonths.length === 0) {
                 showError('Please select at least one enrolled month');
                 return false;
