@@ -2166,6 +2166,9 @@
 
                 let allExpenses = [];
                 let nextToken = null;
+                let previousToken = null;
+                let pageCount = 0;
+                const MAX_PAGES = 5; // Safety limit to prevent infinite loops
                 
                 do {
                     const url = new URL(`${API.baseUrl}/expenses`);
@@ -2184,9 +2187,24 @@
                     console.log('Raw API response:', data);
                     if (!response.ok) throw new Error(data.error || 'Failed to fetch expenses');
                     
+                    // Check if we're getting the same token again
+                    if (nextToken && nextToken === previousToken) {
+                        console.log('Received same token twice, stopping pagination');
+                        break;
+                    }
+                    
                     allExpenses = [...allExpenses, ...data.expenses];
+                    previousToken = nextToken;
                     nextToken = data.nextToken;
+                    pageCount++;
+                    
                     console.log(`Fetched ${data.expenses.length} expenses, total so far: ${allExpenses.length}`);
+                    
+                    // Break if we've hit the maximum number of pages
+                    if (pageCount >= MAX_PAGES) {
+                        console.log('Reached maximum number of pages');
+                        break;
+                    }
                 } while (nextToken);
 
                 console.log('Total expenses fetched:', allExpenses.length);
