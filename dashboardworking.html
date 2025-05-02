@@ -3448,15 +3448,15 @@ const statePersonalExemptionDB = {
                 // Create rent expenses
                 for (const month of enrolledMonths) {
                     console.log(`Creating rent expense for month ${month}`);
-                    const expense = {
-                        date: new Date(currentYear, month - 1, 1),
+                    const rentExpenseData = {
+                        date: new Date(2025, month - 1, 1),
                         category: 'Rent',
-                        amount: rent,
+                        amount: parseFloat(rent),  // Ensure amount is a number
                         notes: 'Onboarding expense',
                         isQualified: true
                     };
-                    console.log('Rent expense data:', expense);
-                    await createExpense(expense);
+                    console.log('Rent expense data:', rentExpenseData);
+                    await createExpense(rentExpenseData);
                 }
                 
                 // Create utilities expenses if not included in rent
@@ -3464,15 +3464,15 @@ const statePersonalExemptionDB = {
                     console.log('2. Creating utilities expenses');
                     for (const month of enrolledMonths) {
                         console.log(`Creating utilities expense for month ${month}`);
-                        const expense = {
-                            date: new Date(currentYear, month - 1, 1),
+                        const utilitiesExpenseData = {
+                            date: new Date(2025, month - 1, 1),
                             category: 'Utilities',
-                            amount: utilities,
+                            amount: parseFloat(utilities),  // Ensure amount is a number
                             notes: 'Onboarding expense',
                             isQualified: true
                         };
-                        console.log('Utilities expense data:', expense);
-                        await createExpense(expense);
+                        console.log('Utilities expense data:', utilitiesExpenseData);
+                        await createExpense(utilitiesExpenseData);
                     }
                 }
                 
@@ -3480,15 +3480,15 @@ const statePersonalExemptionDB = {
                 console.log('3. Creating WiFi expenses');
                 for (const month of enrolledMonths) {
                     console.log(`Creating WiFi expense for month ${month}`);
-                    const expense = {
-                        date: new Date(currentYear, month - 1, 1),
+                    const wifiExpenseData = {
+                        date: new Date(2025, month - 1, 1),
                         category: 'WiFi',
-                        amount: wifi,
+                        amount: parseFloat(wifi),  // Ensure amount is a number
                         notes: 'Onboarding expense',
                         isQualified: true
                     };
-                    console.log('WiFi expense data:', expense);
-                    await createExpense(expense);
+                    console.log('WiFi expense data:', wifiExpenseData);
+                    await createExpense(wifiExpenseData);
                 }
             } catch (error) {
                 console.error('Error in addOnboardingExpenses:', error);
