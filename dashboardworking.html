@@ -3492,36 +3492,51 @@ const statePersonalExemptionDB = {
             }
         }
 
+        const API = {
+            baseUrl: 'https://wb2pd4d6gg.execute-api.us-east-2.amazonaws.com',
+            getToken: () => localStorage.getItem('authToken')
+        };
+
         async function createExpense(expenseData) {
             console.log('===== CREATING EXPENSE =====');
             console.log('Expense data:', expenseData);
             
             try {
-                const authToken = localStorage.getItem('authToken');
-                if (!authToken) {
-                    throw new Error('No auth token found');
+                const token = API.getToken();
+                if (!token) {
+                    throw new Error('No authentication token found');
                 }
 
-                const response = await fetch('https://g4gri8abii.execute-api.us-east-2.amazonaws.com/prod/expenses', {
+                // Format the expense data to match Lambda expectations
+                const formattedExpense = {
+                    category: expenseData.category,
+                    amount: expenseData.amount,
+                    date: expenseData.date,
+                    notes: expenseData.notes || 'Onboarding expense',
+                    isQualified: expenseData.isQualified || true
+                };
+
+                console.log('Formatted expense data:', formattedExpense);
+
+                const response = await fetch(`${API.baseUrl}/expenses`, {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Bearer ${authToken}`,
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(expenseData)
+                    body: JSON.stringify(formattedExpense)
                 });
 
                 console.log('Create expense response status:', response.status);
+                const data = await response.json();
+                
                 if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('Create expense failed:', errorText);
-                    throw new Error(`Failed to create expense: ${errorText}`);
+                    console.error('Create expense failed:', data);
+                    throw new Error(data.error || 'Failed to create expense');
                 }
 
-                const result = await response.json();
-                console.log('Expense created successfully:', result);
-                return result;
+                console.log('Expense created successfully:', data);
+                return data;
             } catch (error) {
                 console.error('Error in createExpense:', error);
                 console.error('Error stack:', error.stack);
