@@ -2435,83 +2435,86 @@ let expenseCache = {
 };
 
 async function fetchExpenses() {
+    console.log('=== Starting fetchExpenses ===');
+    const startTime = performance.now();
+    
     try {
-        console.time('Total Expenses Load');
-        console.log('=== Starting fetchExpenses ===');
-        
-        // Use existing cache
-        if (allTransactions) {
-            console.log('Using cached transactions. Count:', allTransactions.length);
-            return allTransactions;
+        // Check if we have cached expenses from 529expensetracker
+        const cachedExpenses = sessionStorage.getItem('cachedExpenses');
+        if (cachedExpenses) {
+            console.log('Using cached expenses from 529expensetracker');
+            const parsedExpenses = JSON.parse(cachedExpenses);
+            console.log('Cached expenses count:', parsedExpenses.length);
+            return parsedExpenses;
         }
 
-        // 1. Get user profile
-        console.time('Profile Check');
-        const userProfile = await fetchUserProfile();
-        console.log('User profile loaded:', userProfile);
-        console.timeEnd('Profile Check');
+        // If no cache, fetch expenses with pagination
+        console.log('No cached expenses found, fetching from API');
+        const token = API.getToken();
+        if (!token) throw new Error('No authentication token found');
 
-        // 2. Fetch manual transactions
-        console.time('Manual Expenses');
-        const response = await fetch(`${API.expenseUrl}/expenses`, {
-            headers: {
-                'Authorization': `Bearer ${API.getToken()}`
-            }
-        });
-        if (!response.ok) throw new Error('Failed to fetch manual expenses');
-        const manualData = await response.json();
-        let allExpenses = manualData.expenses || [];
-        console.log('Manual expenses loaded:', allExpenses.length);
-        console.timeEnd('Manual Expenses');
+        let allExpenses = [];
+        let nextToken = null;
+        let previousToken = null;
+        let pageCount = 0;
+        const MAX_PAGES = 5;
+        const seenExpenseIds = new Set();
         
-        // 3. If automatic account, fetch Plaid transactions for year-to-date in parallel
-        if (userProfile && userProfile.accountStatus === 'AUTOMATIC') {
-            console.time('Plaid Transactions');
-            const currentDate = new Date();
-            const currentYear = currentDate.getFullYear();
-            const currentMonth = currentDate.getMonth() + 1; // 1-based month
+        do {
+            const url = new URL(`${API.baseUrl}/expenses`);
+            if (nextToken) {
+                url.searchParams.append('nextToken', nextToken);
+            }
+            url.searchParams.append('limit', '100');
             
-            // Create array of months from January to current month
-            const monthsToFetch = Array.from(
-                { length: currentMonth }, 
-                (_, i) => ({ month: i + 1, year: currentYear })
-            );
-            
-            console.log(`Fetching ${monthsToFetch.length} months of transactions in parallel`);
-            
-            // Fetch all months in parallel
-            const plaidResults = await Promise.all(
-                monthsToFetch.map(({ month, year }) => 
-                    fetchPlaidTransactions(month, year)
-                        .catch(err => {
-                            console.warn(`Failed to fetch transactions for ${year}-${month}:`, err);
-                            return null;
-                        })
-                )
-            );
-            
-            // Process results
-            let plaidExpenseCount = 0;
-            plaidResults.forEach(result => {
-                if (result && result.summary) {
-                    const plaidExpenses = convertPlaidToExpenses(result.summary);
-                    plaidExpenseCount += plaidExpenses.length;
-                    allExpenses = [...allExpenses, ...plaidExpenses];
+            console.log('Fetching expenses with token:', nextToken);
+            const response = await fetch(url, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
                 }
             });
-            console.log('Plaid expenses loaded:', plaidExpenseCount);
-            console.timeEnd('Plaid Transactions');
-        }
-        
-        // Store in existing cache
-        allTransactions = allExpenses;
-        console.log('Total expenses after combining manual and Plaid:', allExpenses.length);
-        
-        console.timeEnd('Total Expenses Load');
+            
+            if (!response.ok) throw new Error('Failed to fetch expenses');
+            const data = await response.json();
+            
+            // Check if we're getting the same token again
+            if (nextToken && nextToken === previousToken) {
+                console.log('Received same token twice, stopping pagination');
+                break;
+            }
+            
+            // Filter out duplicate expenses
+            const newExpenses = data.expenses.filter(expense => {
+                if (seenExpenseIds.has(expense.expenseID)) {
+                    return false;
+                }
+                seenExpenseIds.add(expense.expenseID);
+                return true;
+            });
+            
+            allExpenses = [...allExpenses, ...newExpenses];
+            previousToken = nextToken;
+            nextToken = data.nextToken;
+            pageCount++;
+            
+            console.log(`Fetched ${newExpenses.length} unique expenses, total so far: ${allExpenses.length}`);
+            
+            if (pageCount >= MAX_PAGES) {
+                console.log('Reached maximum number of pages');
+                break;
+            }
+        } while (nextToken);
+
+        // Cache the expenses for future use
+        sessionStorage.setItem('cachedExpenses', JSON.stringify(allExpenses));
+        console.log('Total unique expenses fetched and cached:', allExpenses.length);
         return allExpenses;
     } catch (error) {
         console.error('Error fetching expenses:', error);
-        return [];
+        throw error;
+    } finally {
+        const endTime = performance.now();
+        console.log(`Expenses Load: ${Math.round(endTime - startTime)}ms - timer ended`);
     }
 }
 

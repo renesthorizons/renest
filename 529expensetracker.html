@@ -2164,19 +2164,27 @@
                 const token = API.getToken();
                 if (!token) throw new Error('No authentication token found');
 
+                // Check if we have cached expenses
+                const cachedExpenses = sessionStorage.getItem('cachedExpenses');
+                if (cachedExpenses) {
+                    console.log('Using cached expenses');
+                    const parsedExpenses = JSON.parse(cachedExpenses);
+                    console.log('Cached expenses count:', parsedExpenses.length);
+                    return { expenses: parsedExpenses };
+                }
+
                 let allExpenses = [];
                 let nextToken = null;
                 let previousToken = null;
                 let pageCount = 0;
-                const MAX_PAGES = 5; // Safety limit to prevent infinite loops
-                const seenExpenseIds = new Set(); // Track unique expense IDs
+                const MAX_PAGES = 5;
+                const seenExpenseIds = new Set();
                 
                 do {
                     const url = new URL(`${API.baseUrl}/expenses`);
                     if (nextToken) {
                         url.searchParams.append('nextToken', nextToken);
                     }
-                    // Request more items per page
                     url.searchParams.append('limit', '100');
                     
                     console.log('Fetching expenses with token:', nextToken);
@@ -2213,14 +2221,15 @@
                     
                     console.log(`Fetched ${newExpenses.length} unique expenses, total so far: ${allExpenses.length}`);
                     
-                    // Break if we've hit the maximum number of pages
                     if (pageCount >= MAX_PAGES) {
                         console.log('Reached maximum number of pages');
                         break;
                     }
                 } while (nextToken);
 
-                console.log('Total unique expenses fetched:', allExpenses.length);
+                // Cache the expenses for future use
+                sessionStorage.setItem('cachedExpenses', JSON.stringify(allExpenses));
+                console.log('Total unique expenses fetched and cached:', allExpenses.length);
                 return { expenses: allExpenses };
             } catch (error) {
                 console.error('Error in getExpenses:', error);
