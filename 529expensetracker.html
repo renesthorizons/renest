@@ -2501,6 +2501,10 @@
             
             const categorySelect = document.getElementById('expense-category');
             const customCategoryInput = document.getElementById('custom-category');
+            const amountInput = this.querySelector('input[type="number"]');
+            
+            console.log('Amount input value:', amountInput.value);
+            console.log('Amount input type:', typeof amountInput.value);
             
             // Use custom category text if 'Custom' is selected, otherwise use selected category
             const category = categorySelect.value === 'Custom' ? 
@@ -2509,7 +2513,7 @@
             
             const expenseData = {
                 category: category,
-                amount: parseFloat(this.querySelector('input[type="number"]').value),
+                amount: parseFloat(amountInput.value),
                 date: inputDate.toISOString().split('T')[0],
                 notes: this.querySelector('textarea').value || '',
                 isQualified: document.getElementById('qualified-expense').checked,
@@ -2848,14 +2852,20 @@
             const inputDate = new Date(document.getElementById('529-transaction-date').value);
             inputDate.setDate(inputDate.getDate() + 1);  // Add one day
             
+            const amountInput = document.getElementById('529-transaction-amount');
+            console.log('529 Amount input value:', amountInput.value);
+            console.log('529 Amount input type:', typeof amountInput.value);
+            
             const transactionData = {
                 category: document.getElementById('529-transaction-type').value,
-                amount: parseFloat(document.getElementById('529-transaction-amount').value),
+                amount: parseFloat(amountInput.value),
                 date: inputDate.toISOString().split('T')[0],
                 notes: document.getElementById('529-transaction-notes').value || '',
                 isQualified: false,  // 529 transactions aren't qualified expenses
                 needsReceipt: false
             };
+
+            console.log('529 Transaction data to be submitted:', transactionData);
 
             try {
                 await createExpense(transactionData);
