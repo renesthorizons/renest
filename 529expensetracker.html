@@ -2138,9 +2138,17 @@
         // API Functions
         async function createExpense(expenseData) {
             try {
+                console.log('=== Starting createExpense API call ===');
+                console.log('Expense data:', expenseData);
+                
                 const token = API.getToken();
-                if (!token) throw new Error('No authentication token found');
+                if (!token) {
+                    console.error('No authentication token found');
+                    throw new Error('No authentication token found');
+                }
+                console.log('Using token:', token.substring(0, 10) + '...');
 
+                console.log('Making API request to:', `${API.baseUrl}/expenses`);
                 const response = await fetch(`${API.baseUrl}/expenses`, {
                     method: 'POST',
                     headers: {
@@ -2149,11 +2157,20 @@
                     },
                     body: JSON.stringify(expenseData)
                 });
+                
+                console.log('API Response status:', response.status);
                 const data = await response.json();
-                if (!response.ok) throw new Error(data.error || 'Failed to create expense');
+                console.log('API Response data:', data);
+                
+                if (!response.ok) {
+                    console.error('API Error:', data);
+                    throw new Error(data.error || 'Failed to create expense');
+                }
+                
+                console.log('Expense created successfully');
                 return data;
             } catch (error) {
-                console.error('Error creating expense:', error);
+                console.error('Error in createExpense:', error);
                 throw error;
             }
         }
@@ -2475,6 +2492,7 @@
         // Form handlers
         document.getElementById('expense-form').addEventListener('submit', async function(e) {
             e.preventDefault();
+            console.log('=== Starting expense form submission ===');
             const submitButton = this.querySelector('.submit-button');
             const originalText = submitButton.textContent;
             
@@ -2493,15 +2511,20 @@
                 category: category,
                 amount: parseFloat(this.querySelector('input[type="number"]').value),
                 date: inputDate.toISOString().split('T')[0],
-                notes: this.querySelector('textarea').value || '', // Updated to use textarea
+                notes: this.querySelector('textarea').value || '',
                 isQualified: document.getElementById('qualified-expense').checked,
                 needsReceipt: !!this.querySelector('input[type="file"]').files.length
             };
 
+            console.log('Expense data to be submitted:', expenseData);
+
             try {
+                console.log('Calling createExpense API...');
                 const result = await createExpense(expenseData);
+                console.log('API Response:', result);
 
                 if (expenseData.needsReceipt && result.uploadUrl) {
+                    console.log('Uploading receipt...');
                     const file = this.querySelector('input[type="file"]').files[0];
                     await fetch(result.uploadUrl, {
                         method: 'PUT',
@@ -2510,10 +2533,12 @@
                             'Content-Type': file.type
                         }
                     });
+                    console.log('Receipt uploaded successfully');
                 }
 
                 submitButton.textContent = "✓";
                 showSuccess('Expense added successfully!');
+                console.log('Reloading expenses after successful submission...');
                 loadExpenses();
                 
                 setTimeout(() => {
@@ -2521,6 +2546,7 @@
                     this.reset();
                 }, 1500);
             } catch (error) {
+                console.error('Error in expense form submission:', error);
                 showError(error.message);
                 submitButton.textContent = originalText;
             }
