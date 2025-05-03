@@ -2646,7 +2646,7 @@
                 return expenseDate.getFullYear() === currentYear;
             });
 
-            // Calculate YTD qualified expenses
+            // Calculate YTD qualified expenses - now properly checking isQualified flag
             const qualifiedExpenses = currentYearExpenses
                 .filter(expense => expense.isQualified && 
                                   expense.category !== 'Deposit529' && 
@@ -3210,7 +3210,8 @@ function displayTransactionsPage() {
             name: transaction.name,
             amount: transaction.amount,
             date: transaction.date,
-            transactionType: transaction.transactionType
+            transactionType: transaction.transactionType,
+            isQualified: transaction.isQualified
         });
         
         const row = document.createElement('tr');
@@ -3219,6 +3220,9 @@ function displayTransactionsPage() {
         // Format date while preserving original
         const dateParts = transaction.date.split('-');
         const formattedDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0]}`;
+        
+        // Check if the transaction is in a qualified category
+        const isInQualifiedCategory = isQualifiedCategory(transaction.category);
         
         // Create row cells
         row.innerHTML = `
@@ -3233,6 +3237,8 @@ function displayTransactionsPage() {
             <td style="padding: 0.75rem 1rem;">${transaction.category}</td>
             <td style="padding: 0.75rem 1rem; text-align: center;">
                 <div class="custom-checkbox" style="justify-content: center;">
+                    <input type="checkbox" ${transaction.isQualified ? 'checked' : ''} 
+                           onchange="updateTransactionQualifiedStatus('${transaction.id}', this.checked)">
                     <span class="checkmark ${transaction.isQualified ? 'checked' : ''}"></span>
                 </div>
             </td>
@@ -3638,6 +3644,43 @@ function hideCategoryModal() {
     // Clear custom category input when hiding modal
     document.getElementById('custom-category-input').value = '';
     document.getElementById('custom-category-group').style.display = 'none';
+}
+
+// Add new function to update transaction qualified status
+async function updateTransactionQualifiedStatus(transactionId, isQualified) {
+    try {
+        const token = API.getToken();
+        if (!token) throw new Error('No authentication token found');
+
+        const response = await fetch('https://fq3oz4hac8.execute-api.us-east-2.amazonaws.com/plaid', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                action: 'updateTransactionQualified',
+                userId: await getUserId(token),
+                transactionId: transactionId,
+                isQualified: isQualified
+            })
+        });
+
+        if (!response.ok) throw new Error('Failed to update qualified status');
+
+        // Update local transaction data
+        const transaction = allTransactions.find(t => t.id === transactionId);
+        if (transaction) {
+            transaction.isQualified = isQualified;
+        }
+
+        // Refresh display
+        applyFiltersAndUpdateDisplay();
+        showSuccess('Transaction updated successfully!');
+    } catch (error) {
+        console.error('Error updating transaction qualified status:', error);
+        showError('Failed to update transaction: ' + error.message);
+    }
 }
     </script>
     
