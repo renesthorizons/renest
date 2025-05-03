@@ -2167,7 +2167,12 @@
                     throw new Error(data.error || 'Failed to create expense');
                 }
                 
-                console.log('Expense created successfully');
+                console.log('Expense created successfully:', data);
+                
+                // Clear the cache after successful creation
+                sessionStorage.removeItem('cachedExpenses');
+                console.log('Cleared cache after expense creation');
+                
                 return data;
             } catch (error) {
                 console.error('Error in createExpense:', error);
@@ -2181,14 +2186,9 @@
                 const token = API.getToken();
                 if (!token) throw new Error('No authentication token found');
 
-                // Check if we have cached expenses
-                const cachedExpenses = sessionStorage.getItem('cachedExpenses');
-                if (cachedExpenses) {
-                    console.log('Using cached expenses');
-                    const parsedExpenses = JSON.parse(cachedExpenses);
-                    console.log('Cached expenses count:', parsedExpenses.length);
-                    return { expenses: parsedExpenses };
-                }
+                // Clear the cache to ensure we get fresh data
+                sessionStorage.removeItem('cachedExpenses');
+                console.log('Cleared cached expenses');
 
                 let allExpenses = [];
                 let nextToken = null;
