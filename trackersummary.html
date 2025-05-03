@@ -2567,7 +2567,7 @@ function calculateBenefits(expenses, state, income) {
     // console.log('All expenses with qualification details:', allExpenses);
     
     const qualifiedExpenses = allExpenses.filter(e => 
-        (e.isQualifiedCategory || e.isQualifiedExpense) && 
+        e.isQualifiedExpense && // Only count expenses that are explicitly marked as qualified
         e.isInYear
     );
     // console.log('Qualified expenses:', qualifiedExpenses);
@@ -2577,7 +2577,7 @@ function calculateBenefits(expenses, state, income) {
 
     // Get qualified expenses before current month (M)
     const qualifiedExpensesBeforeMonth = allExpenses
-        .filter(e => (e.isQualifiedCategory || e.isQualifiedExpense) && 
+        .filter(e => e.isQualifiedExpense && // Only count expenses that are explicitly marked as qualified
                      e.isInYear &&
                      e.dateObj < firstDayOfMonth)
         .reduce((sum, e) => sum + e.amount, 0);
@@ -2585,7 +2585,7 @@ function calculateBenefits(expenses, state, income) {
 
     // Get current month's qualified expenses (E)
     const currentMonthQualifiedExpenses = allExpenses
-        .filter(e => (e.isQualifiedCategory || e.isQualifiedExpense) && 
+        .filter(e => e.isQualifiedExpense && // Only count expenses that are explicitly marked as qualified
                      e.isInYear &&
                      e.dateObj >= firstDayOfMonth)
         .reduce((sum, e) => sum + e.amount, 0);
