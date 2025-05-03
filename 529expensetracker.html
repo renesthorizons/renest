@@ -2631,65 +2631,100 @@
 
         // 529 Account Management Functions
         function calculate529Projections(expenses) {
+            console.log('=== Starting calculate529Projections ===');
+            console.log('Total expenses received:', expenses.length);
+            
             // Get current date info
             const currentDate = new Date();
             const currentYear = currentDate.getFullYear();
             const currentMonth = currentDate.getMonth();
             const remainingMonths = 12 - currentMonth;
+            console.log('Current date info:', { currentYear, currentMonth, remainingMonths });
 
             // Get monthly rent from localStorage
             const monthlyRent = parseFloat(localStorage.getItem('monthlyRent')) || 0;
+            console.log('Monthly rent from localStorage:', monthlyRent);
 
             // Filter expenses for current year
             const currentYearExpenses = expenses.filter(expense => {
                 const expenseDate = new Date(expense.date);
                 return expenseDate.getFullYear() === currentYear;
             });
+            console.log('Current year expenses:', currentYearExpenses.length);
 
             // Calculate YTD qualified expenses - now properly checking both category and isQualified flag
             const qualifiedExpenses = currentYearExpenses
                 .filter(expense => {
-                    // Only count expenses that are explicitly marked as qualified
-                    return expense.isQualified && 
-                           expense.category !== 'Deposit529' && 
-                           expense.category !== 'Withdrawal529';
+                    const isQualified = expense.isQualified && 
+                                      expense.category !== 'Deposit529' && 
+                                      expense.category !== 'Withdrawal529';
+                    console.log('Expense qualification check:', {
+                        id: expense.expenseID,
+                        category: expense.category,
+                        isQualified: expense.isQualified,
+                        amount: expense.amount,
+                        result: isQualified
+                    });
+                    return isQualified;
                 })
                 .reduce((sum, expense) => sum + expense.amount, 0);
+            console.log('Total qualified expenses:', qualifiedExpenses);
 
             // Calculate total 529 deposits
             const deposits529 = currentYearExpenses
                 .filter(expense => expense.category === 'Deposit529')
                 .reduce((sum, expense) => sum + expense.amount, 0);
+            console.log('Total 529 deposits:', deposits529);
 
             // Calculate total withdrawals
             const totalWithdrawals = currentYearExpenses
                 .filter(expense => expense.category === 'Withdrawal529')
                 .reduce((sum, expense) => sum + expense.amount, 0);
+            console.log('Total withdrawals:', totalWithdrawals);
 
             // Calculate average monthly qualified expenses (excluding rent)
             const nonRentExpenses = currentYearExpenses
                 .filter(expense => {
-                    // Only count non-rent expenses that are explicitly marked as qualified
-                    return expense.isQualified && 
-                           expense.category !== 'Rent' &&
-                           expense.category !== 'Deposit529' && 
-                           expense.category !== 'Withdrawal529';
+                    const isQualified = expense.isQualified && 
+                                      expense.category !== 'Rent' &&
+                                      expense.category !== 'Deposit529' && 
+                                      expense.category !== 'Withdrawal529';
+                    console.log('Non-rent expense qualification check:', {
+                        id: expense.expenseID,
+                        category: expense.category,
+                        isQualified: expense.isQualified,
+                        amount: expense.amount,
+                        result: isQualified
+                    });
+                    return isQualified;
                 })
                 .reduce((sum, expense) => sum + expense.amount, 0);
+            console.log('Total non-rent qualified expenses:', nonRentExpenses);
             
             const monthsElapsed = currentMonth + 1;
             const averageMonthlyNonRentExpense = monthsElapsed > 0 ? nonRentExpenses / monthsElapsed : 0;
+            console.log('Average monthly non-rent expense:', averageMonthlyNonRentExpense);
 
             // Calculate yearly projections using profile rent
             const yearlyRent = monthlyRent * 9; // Full year of rent from profile
             const yearlyNonRent = averageMonthlyNonRentExpense * 9; // Project other expenses for full year
             const projectedYearEnd = yearlyRent + yearlyNonRent;
+            console.log('Yearly projections:', {
+                yearlyRent,
+                yearlyNonRent,
+                projectedYearEnd
+            });
 
             // Calculate recommended funding
             const recommendedFunding = Math.max(0, projectedYearEnd - deposits529);
             const suggestedMonthlyDeposit = remainingMonths > 0 ? 
                 recommendedFunding / remainingMonths : 0;
+            console.log('Funding recommendations:', {
+                recommendedFunding,
+                suggestedMonthlyDeposit
+            });
 
+            console.log('=== Completed calculate529Projections ===');
             return {
                 ytdQualified: qualifiedExpenses,
                 ytdDeposits: deposits529,
