@@ -637,12 +637,19 @@
             <button id="downloadGuideBtn" class="action-button">
                 <span>📥</span> Download 529 Walkthrough Guide
             </button>
-            <button id="open529Btn" class="action-button primary">
+            <button id="open529Btn" class="action-button primary" style="display: none;">
                 Open 529
             </button>
         </div>
 
-        
+        <!-- Add modal for walkthrough guide message -->
+        <div id="walkthroughModal" class="modal-overlay">
+            <div class="modal">
+                <h2 class="modal-title">Important Notice</h2>
+                <p class="modal-content">Please look at every page of the walkthrough guide so you know when to reference it as you're making your 529 account.</p>
+                <button class="modal-button" onclick="closeWalkthroughModal()">Got it!</button>
+            </div>
+        </div>
     </main>
 
 
@@ -805,7 +812,7 @@
                 benefit:"$0"
             },
             'CO': {
-                url: 'https://www.collegeinvest.org/',
+                url: 'https://www.collegeinvest.org/enroll-529-savings-plan/',
                 name: 'Colorado CollegeInvest 529',
                 benefit:"$1,118"
             },
@@ -1047,6 +1054,12 @@
             const open529Btn = document.getElementById('open529Btn');
             const userStateSpan = document.getElementById('userState');
 
+            // Function to close walkthrough modal and show Open 529 button
+            window.closeWalkthroughModal = function() {
+                document.getElementById('walkthroughModal').style.display = 'none';
+                open529Btn.style.display = 'flex';
+            };
+
             // Get user profile data
             const authToken = localStorage.getItem('authToken');
             if (authToken) {
@@ -1072,10 +1085,6 @@
                                 selectedStateInfo.innerHTML = `
                                     <div class="state-info-header">
                                         <span class="state-name">${stateName}</span>
-                                        <a href="${stateInfo.url}" target="_blank" class="state-link">
-                                            Visit Official Site
-                                            <span>↗</span>
-                                        </a>
                                     </div>
                                     <div class="benefit-info">
                                         <span>Maximum annual savings:</span>
@@ -1087,7 +1096,6 @@
                                     </div>
                                 `;
                                 selectedStateInfo.style.display = 'block';
-                                actionButtons.style.display = 'flex';
                             }
                         }
                     }
@@ -1102,14 +1110,8 @@
                 if (stateCode && statePDFMap[stateCode]) {
                     const pdfUrl = `https://renesthorizons.com/guides/${statePDFMap[stateCode]}`;
                     window.open(pdfUrl, '_blank');
-                }
-            });
-
-            // Handle open 529 button click
-            open529Btn.addEventListener('click', () => {
-                const stateCode = Object.entries(stateOptions).find(([_, name]) => name === searchInput.value)?.[0];
-                if (stateCode && state529linkDB[stateCode]) {
-                    window.open(state529linkDB[stateCode].url, '_blank');
+                    // Show the modal
+                    document.getElementById('walkthroughModal').style.display = 'flex';
                 }
             });
 
@@ -1127,7 +1129,9 @@
 
                     if (button.dataset.option === 'no') {
                         stateSearchContainer.style.display = 'block';
-                        actionButtons.style.display = 'none';
+                        actionButtons.style.display = 'flex';
+                        downloadGuideBtn.style.display = 'flex';
+                        open529Btn.style.display = 'none';
                         // If user has a state, show their state's information
                         if (searchInput.value) {
                             const stateCode = Object.entries(stateOptions).find(([_, name]) => name === searchInput.value)?.[0];
@@ -1135,7 +1139,6 @@
                                 const stateInfo = state529linkDB[stateCode];
                                 if (stateInfo) {
                                     selectedStateInfo.style.display = 'block';
-                                    actionButtons.style.display = 'flex';
                                 }
                             }
                         }
@@ -1222,10 +1225,6 @@
                                 selectedStateInfo.innerHTML = `
                                     <div class="state-info-header">
                                         <span class="state-name">${name}</span>
-                                        <a href="${stateInfo.url}" target="_blank" class="state-link">
-                                            Visit Official Site
-                                            <span>↗</span>
-                                        </a>
                                     </div>
                                     <div class="benefit-info">
                                         <span>Maximum Annual Savings:</span>
@@ -1247,6 +1246,22 @@
             document.addEventListener('click', function(e) {
                 if (!searchResults.contains(e.target) && e.target !== searchInput) {
                     searchResults.style.display = 'none';
+                }
+            });
+
+            // Handle open 529 button click
+            open529Btn.addEventListener('click', () => {
+                const stateCode = Object.entries(stateOptions).find(([_, name]) => name === searchInput.value)?.[0];
+                if (stateCode && state529linkDB[stateCode]) {
+                    const url = state529linkDB[stateCode].url;
+                    console.log('Opening URL:', url); // Debug log
+                    window.open(url, '_blank');
+                    // Reload the page after a short delay
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 500);
+                } else {
+                    console.error('Could not find state code or URL for:', searchInput.value);
                 }
             });
         });
