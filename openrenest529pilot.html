@@ -1256,6 +1256,18 @@
                     searchResults.style.display = 'none';
                 }
             });
+
+            // Handle open 529 button click
+            open529Btn.addEventListener('click', () => {
+                const stateCode = Object.entries(stateOptions).find(([_, name]) => name === searchInput.value)?.[0];
+                if (stateCode && state529linkDB[stateCode]) {
+                    const url = state529linkDB[stateCode].url;
+                    console.log('Opening URL:', url); // Debug log
+                    window.open(url, '_blank');
+                } else {
+                    console.error('Could not find state code or URL for:', searchInput.value);
+                }
+            });
         });
 
         const menuButton = document.querySelector('.menu-button');
