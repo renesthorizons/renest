@@ -3282,6 +3282,50 @@ const statePersonalExemptionDB = {
             return true;
         }
 
+        // Add this function to show the congratulatory modal
+        function showCongratulationsModal(benefitAmount) {
+            const formattedAmount = '$' + Math.round(benefitAmount).toLocaleString();
+            
+            const modalHtml = `
+                <div id="congratsModal" class="modal-overlay" style="display: flex; z-index: 1100;">
+                    <div class="modal-container" style="max-width: 500px;">
+                        <div class="modal-content">
+                            <button class="close-button" onclick="handleCongratsModalClose()" aria-label="Close">×</button>
+                            <h2 style="margin-bottom: 1.5rem; color: var(--primary);">Congratulations!</h2>
+                            <p style="margin-bottom: 1.5rem; font-size: 1.1rem;">
+                                Based on your indicated spending, you qualify for a <strong style="color: var(--primary); font-size: 1.3rem;">${formattedAmount}</strong> 529 benefit this year!
+                            </p>
+                            <p style="margin-bottom: 1.5rem;">
+                                Track your groceries and required class supplies (such as books or a laptop) to unlock even more savings.
+                            </p>
+                            <p style="margin-bottom: 2rem;">
+                                In order to get this benefit, you will need to record your expenses in your state's 529 plan. Renest will show you how.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Add modal to body
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        }
+
+        // Add this function to handle the modal close button
+        function handleCongratsModalClose() {
+            const modal = document.getElementById('congratsModal');
+            if (modal) {
+                modal.remove();
+            }
+            
+            // Check if form submission is complete
+            const submitBtn = document.getElementById('submitBtn');
+            if (!submitBtn.disabled) {
+                // If button is enabled, submission is complete, redirect to tracker summary
+                window.location.href = 'trackersummary.html';
+            }
+            // Otherwise, let the submission process continue in the background
+        }
+
         async function submitForm() {
             console.log('===== FORM SUBMISSION STARTED =====');
             const submitBtn = document.getElementById('submitBtn');
@@ -3377,6 +3421,13 @@ const statePersonalExemptionDB = {
                     enrolledMonths
                 });
 
+                // Calculate benefit amount
+                const benefit = calculateBenefit(state, income, rent);
+                console.log('Calculated benefit:', benefit);
+                
+                // Show congratulations modal with the calculated benefit
+                showCongratulationsModal(benefit);
+
                 // Store data in localStorage first
                 localStorage.setItem('monthlyRent', rent);
                 localStorage.setItem('state', state);
@@ -3395,8 +3446,6 @@ const statePersonalExemptionDB = {
 
                 // First, update the user profile
                 console.log('5. Updating user profile');
-                const benefit = calculateBenefit(state, income, rent);
-                console.log('Calculated benefit:', benefit);
                 
                 const profileData = {
                     firstName,
@@ -3443,10 +3492,13 @@ const statePersonalExemptionDB = {
                 await addOnboardingExpenses(expenseData);
                 console.log('Expenses created successfully');
 
-                // Hide the modal and redirect to dashboard
-                console.log('7. Hiding modal and redirecting');
+                // Hide the modal
+                console.log('7. Hiding onboarding modal');
                 hideOnboardingModal();
-                window.location.href = 'trackersummary.html';
+                
+                // The redirect will be handled by the congratulations modal close button
+                // If user dismisses the congrats modal and submission is complete
+                // window.location.href = 'trackersummary.html';
 
             } catch (error) {
                 console.error('Error in form submission:', error);
