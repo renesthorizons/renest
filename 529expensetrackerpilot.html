@@ -1,0 +1,3828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker - Renest</title>
+    <style>
+        :root {
+            --primary: #6366F1;
+            --primary-dark: #4F46E5;
+            --accent: #EC4899;
+            --text-dark: #1F2937;
+            --background: #F9FAFB;
+            --border: #E5E7EB;
+            --rent-color: #3B82F6;
+            --expenses-color: #10B981;
+            --account-color: #F59E0B;
+            --summary-color: #8B5CF6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .main-content {
+            padding-top: 84px;
+            min-height: calc(100vh - 64px);
+        }
+
+        .tracker-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-top: 2rem;
+        }
+
+        .tracker-header h1 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .automation-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 0 auto 2rem;
+            max-width: 800px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .automation-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            text-align: left;
+        }
+
+        .automation-info p {
+            color: #6B7280;
+            font-size: 0.95rem;
+            margin: 0;
+            text-align: left;
+        }
+
+        .status-badge {
+            background: #EF4444;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .automation-button {
+            background: linear-gradient(45deg, var(--primary) 0%, var(--primary) 60%, var(--accent) 100%) !important;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            background-image: linear-gradient(45deg, var(--primary) 0%, var(--primary) 100%);
+            background-size: 200% 200%;
+            background-position: 0% 0%;
+        }
+
+        .automation-button:hover {
+            background-image: linear-gradient(45deg, var(--primary) 0%, var(--primary) 60%, var(--accent) 100%) !important;
+            background-position: 100% 100% !important;
+            transform: translateY(-2px);
+        }
+
+        .tracker-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload-label {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary);
+            color: white !important;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            text-align: center;
+            width: auto;
+            min-width: 200px;
+            margin: 0 auto;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            background-image: linear-gradient(45deg, var(--primary) 0%, var(--primary) 100%);
+            background-size: 200% 200%;
+            background-position: 0% 0%;
+        }
+
+        .file-upload-label:hover {
+            background-image: linear-gradient(45deg, var(--primary) 0%, var(--primary) 60%, var(--accent) 100%) !important;
+            background-position: 100% 100% !important;
+            transform: translateY(-2px);
+        }
+
+        .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .submit-button {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            width: auto;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            background-image: linear-gradient(45deg, var(--primary) 0%, var(--primary) 100%);
+            background-size: 200% 200%;
+            background-position: 0% 0%;
+            position: relative;
+        }
+
+        .submit-button:hover {
+            background-image: linear-gradient(45deg, var(--primary) 0%, var(--primary) 60%, var(--accent) 100%) !important;
+            background-position: 100% 100% !important;
+            transform: translateY(-2px);
+        }
+
+        .submit-button span {
+            transition: opacity 0.2s;
+            display: inline-block;
+        }
+
+        .submit-button.success::before {
+            content: "✓";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            animation: check-appear 0.3s ease-out forwards;
+        }
+
+        .submit-button.success span {
+            opacity: 0;
+        }
+
+        .form-group .submit-button {
+            width: auto;
+            margin: 0 auto;
+            display: block;
+            min-width: 200px;
+        }
+
+        .expense-list {
+            margin-top: 2rem;
+        }
+
+        .expense-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .expense-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-card {
+            background: linear-gradient(45deg, rgba(75, 34, 122, 0.05), rgba(255, 105, 180, 0.05));
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .summary-item {
+            text-align: center;
+        }
+
+        .summary-label {
+            color: var(--text-dark);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .tab-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+        }
+
+        .tab-button {
+            padding: 1.25rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(-100%) rotate(45deg);
+            transition: transform 0.6s ease;
+        }
+
+        .tab-button:hover::before {
+            transform: translateX(100%) rotate(45deg);
+        }
+
+        .tab-button[onclick*="rent"] {
+            background: var(--rent-color);
+        }
+
+        .tab-button[onclick*="expenses"] {
+            background: var(--expenses-color);
+        }
+
+        .tab-button[onclick*="account"] {
+            background: var(--account-color);
+        }
+
+        .tab-button[onclick*="summary"] {
+            background: var(--summary-color);
+        }
+
+        .tab-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .tab-button.active {
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+            transform: translateY(1px);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+            background: var(--primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .nav-links a {
+            color: var(--text-dark);
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            display: block;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(75, 34, 122, 0.05);
+            transform: translateX(5px);
+        }
+
+        .nav-links .talk-button {
+            background-color: var(--primary);
+            color: white !important;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 0.5rem;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            background-image: linear-gradient(45deg, var(--primary) 0%, var(--primary) 100%);
+            background-size: 200% 200%;
+            background-position: 0% 0%;
+        }
+
+        .nav-links .talk-button:hover {
+            background-image: linear-gradient(45deg, var(--primary) 0%, var(--primary) 45%, var(--accent) 100%) !important;
+            background-position: 100% 100% !important;
+            transform: translateY(-2px);
+        }
+
+        .menu-button {
+            background: none;
+            border: 2px solid var(--primary);
+            border-radius: 4px;
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.5rem 0.75rem;
+            color: var(--primary);
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .menu-button:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .footer {
+            background-color: rgb(235, 232, 252,.5);
+            padding: 3rem 1rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .copyright {
+            color: var(--text-dark);
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        .footer-links h3 {
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            display: block;
+            color: var(--text-dark);
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .menu-button {
+                display: none;
+            }
+
+            .nav-links {
+                position: static;
+                display: flex !important;
+                flex-direction: row;
+                padding: 0;
+                box-shadow: none;
+                gap: 0;
+                align-items: center;
+            }
+
+            .nav-links a {
+                margin-left: 2rem;
+                padding: 0.5rem 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .automation-section {
+                flex-direction: column;
+                text-align: center;
+                margin: 0 1rem 0.5rem;
+            }
+
+            .automation-info h3,
+            .automation-info p {
+                text-align: center;
+            }
+
+            .automation-controls {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+                width: 100%;
+            }
+
+            .automation-button, .outline-button {
+                width: 100%;
+                max-width: none;
+            }
+
+            .tab-container {
+                margin: 0 1rem 1.5rem;
+                justify-content: center;
+            }
+
+            .tab-button {
+                font-size: 0.9rem;
+            }
+
+            .tracker-header {
+                padding: 0.75rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .tracker-header .button-container {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                gap: 0.5rem;
+                padding: 0 1rem;
+            }
+
+            .tracker-header .automation-button,
+            .tracker-header .outline-button {
+                width: 50%;
+                font-size: 0.9rem;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* Improve date input on mobile */
+            input[type="date"] {
+                -webkit-appearance: none;
+                min-height: 45px;
+                padding: 0.5rem;
+            }
+
+            /* Larger text area for notes */
+            textarea.form-control {
+                min-height: 80px;
+                resize: vertical;
+            }
+
+            /* Better spacing for form elements */
+            .form-grid {
+                gap: 0.75rem;
+                padding: 0 0.5rem;
+            }
+
+            .tracker-card {
+                padding: 1.25rem;
+                margin: 1rem;
+                border-radius: 12px;
+            }
+
+            /* Improve select dropdowns on mobile */
+            .select-container select {
+                min-height: 45px;
+            }
+
+            /* Better button spacing */
+            .form-group .submit-button {
+                width: 100%;
+                min-height: 45px;
+                margin-top: 0.5rem;
+            }
+
+            /* Improve form spacing and readability on mobile */
+            .form-grid {
+                gap: 1.25rem;
+                padding: 0.5rem;
+            }
+
+            .form-group {
+                margin-bottom: 1rem;
+            }
+
+            .form-group label {
+                font-size: 1rem;
+                margin-bottom: 0.75rem;
+            }
+
+            /* Make inputs larger and more touch-friendly */
+            .form-control {
+                min-height: 48px;
+                font-size: 16px; /* Prevents iOS zoom on focus */
+                padding: 0.875rem;
+            }
+
+            /* Improve textarea height and readability */
+            textarea.form-control {
+                min-height: 100px;
+                line-height: 1.4;
+                padding: 0.875rem;
+                font-size: 16px;
+            }
+
+            /* Make select dropdowns more touch-friendly */
+            .select-container select {
+                min-height: 48px;
+                font-size: 16px;
+                padding: 0.875rem;
+            }
+
+            /* Improve date input on mobile */
+            input[type="date"] {
+                min-height: 48px;
+                font-size: 16px;
+                padding: 0.875rem;
+            }
+
+            /* Better spacing for number inputs */
+            input[type="number"] {
+                min-height: 48px;
+                font-size: 16px;
+                padding: 0.875rem;
+            }
+
+            /* Improve submit button size and spacing */
+            .submit-button {
+                min-height: 48px;
+                width: 100%;
+                margin-top: 1rem;
+                font-size: 1rem;
+            }
+
+            /* Adjust tracker card padding */
+            .tracker-card {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+
+            /* Improve file upload button */
+            .file-upload-label {
+                min-height: 48px;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1rem;
+                padding: 0.5rem;
+            }
+
+            .form-group {
+                grid-column: 1 !important;
+                margin-bottom: 1rem;
+            }
+
+            /* Ensure submit button is full width */
+            .form-group .submit-button {
+                width: 100%;
+                min-height: 48px;
+            }
+
+            /* Make inputs larger and more touch-friendly */
+            .form-control {
+                min-height: 48px;
+                font-size: 16px;
+                padding: 0.875rem;
+            }
+
+            /* Improve spacing between form elements */
+            .form-group:not(:last-child) {
+                margin-bottom: 1.25rem;
+            }
+
+            .ignore-toggle {
+                gap: 0.25rem;
+                font-size: 0.75rem;
+            }
+
+            .ignore-toggle input {
+                width: 2rem;
+                height: 1rem;
+            }
+
+            .ignore-toggle input:before {
+                width: 0.75rem;
+                height: 0.75rem;
+                top: 0.125rem;
+            }
+
+            .ignore-toggle input:checked:before {
+                left: 1.125rem;
+            }
+
+            .tooltip {
+                width: 12px;
+                height: 12px;
+                min-width: 12px;
+                min-height: 12px;
+                max-width: 12px;
+                max-height: 12px;
+                flex-shrink: 0;
+            }
+
+            .tooltip::after {
+                width: 80px !important; /* Increase width for better readability */
+                font-size: 0.8rem;
+                right: auto; /* Remove right positioning */
+                left: 50%; /* Center horizontally */
+                transform: translateX(-60%); /* Center horizontally */
+                bottom: 100%; /* Position above the tooltip icon */
+                margin-bottom: 8px; /* Add some space between tooltip and icon */
+            }
+
+            /* Make pagination buttons smaller on mobile */
+            .automation-section .transaction-table-container + div {
+                gap: 0.5rem;
+                margin-top: 0.75rem;
+            }
+
+            .automation-section .transaction-table-container + div button {
+                padding: 0.25rem 0.75rem;
+                font-size: 0.75rem;
+                min-height: 32px;
+                line-height: 1;
+            }
+
+            .automation-section .transaction-table-container + div span {
+                font-size: 0.75rem;
+                line-height: 32px;
+                margin: 0 0.5rem !important;
+            }
+
+            /* Adjust modal size on mobile */
+            .modal {
+                padding: 1rem;
+            }
+
+            .modal-content {
+                max-height: 80vh;
+                width: 90%;
+                padding: 1rem;
+                margin: 1rem;
+            }
+
+            .modal-section {
+                padding: 0.75rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .modal-footer {
+                padding: 0.75rem 0 0;
+            }
+
+            #category-modal .modal-content {
+                max-height: 70vh;
+                margin: 0.5rem;
+            }
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 70px;
+            height: 28px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #EF4444;
+            transition: .4s;
+            border-radius: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 8px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            top: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        .toggle-text {
+            position: absolute;
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            z-index: 1;
+        }
+
+        /* OFF text appears on right */
+        .toggle-text:first-child {
+            right: 8px;
+        }
+
+        /* ON text appears on left */
+        .toggle-text:last-child {
+            left: 8px;
+            opacity: 0;
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: #10B981;
+        }
+
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(42px);
+        }
+
+        .toggle-switch input:checked + .toggle-slider .toggle-text:first-child {
+            opacity: 0;
+        }
+
+        .toggle-switch input:checked + .toggle-slider .toggle-text:last-child {
+            opacity: 1;
+        }
+
+        .status-badge.on {
+            background: #10B981;
+        }
+        .custom-checkbox {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            gap: 8px;
+        }
+
+        .custom-checkbox input {
+            display: none; /* Hide the default checkbox */
+        }
+
+        .custom-checkbox .checkmark {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #E5E7EB;
+            border-radius: 4px;
+            background-color: white; /* Ensure the checkbox has a background */
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        /* Style for checked state */
+        .custom-checkbox input:checked + .checkmark {
+            background-color: white; /* Keep background white when checked */
+        }
+
+        /* Check mark using SVG */
+        .custom-checkbox input:checked + .checkmark::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2310B981'%3E%3Cpath d='M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+        }
+
+        /* Add hover effect */
+        .custom-checkbox:hover .checkmark {
+            border-color: #6366F1;
+        }
+        .select-container {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .select-container select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background: white;
+            padding-right: 2.5rem;
+        }
+
+        .select-container::after {
+            content: "";
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid #6B7280;
+            pointer-events: none;
+        }
+
+        .qualified-category::after {
+            content: "";
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            margin-left: 8px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2310B981' d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            vertical-align: middle;
+        }
+
+        .custom-checkbox .checkmark.checked {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2310B981'%3E%3Cpath d='M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+        }
+        .delete-btn {
+            background-color: #EF4444;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            margin-left: 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .delete-btn:hover {
+            background-color: #DC2626;
+        }
+
+        .tooltip {
+            display: inline-block;
+            margin-left: 4px;
+            width: 12px;
+            height: 12px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236B7280'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            cursor: help;
+            position: relative;
+        }
+
+        .tooltip::after {
+            content: attr(data-tooltip);
+            display: none;
+            position: absolute;
+            background: #1F2937;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            width: 300px;
+            max-width: 400px;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            bottom: 100%;
+            right: 0;
+            margin-bottom: 8px;
+            transform-origin: bottom right;
+            line-height: 1.4;
+        }
+
+        .tooltip:hover::after {
+            display: block;
+        }
+
+        /* Updated modal styles for better mobile experience */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-section {
+            background: #F9FAFB;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #E5E7EB;
+        }
+
+        .modal-section h3 {
+            color: var(--primary);
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-section p {
+            color: #4B5563;
+            line-height: 1.6;
+        }
+
+        .modal-section ul, .modal-section ol {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+            color: #4B5563;
+            line-height: 1.6;
+        }
+
+        .modal-section li {
+            margin-bottom: 0.75rem;
+        }
+
+        .modal h2 {
+            color: var(--text-dark);
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .modal-footer {
+            margin-top: 2rem;
+            text-align: right;
+        }
+
+        .modal-footer .submit-button {
+            min-width: 120px;
+        }
+
+        /* Mobile-specific styles */
+        @media (max-width: 768px) {
+            .modal-content {
+                padding: 1.25rem;
+                margin: 0.5rem;
+                font-size: 0.95rem;
+            }
+
+            .modal-content h2 {
+                font-size: 1.25rem;
+                margin-bottom: 1rem;
+            }
+
+            .modal-section {
+                padding: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .modal-footer {
+                position: sticky;
+                bottom: -1.25rem;
+                background: white;
+                padding-top: 1rem;
+                margin: 0 -1.25rem -1.25rem;
+                border-top: 1px solid #E5E7EB;
+            }
+
+            .modal-footer .submit-button {
+                width: 100%;
+            }
+        }
+
+        /* Add these new styles */
+        .qualified-category {
+            color: #10B981;
+            font-weight: 500;
+        }
+
+        .qualified-category::after {
+            content: "";
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            margin-left: 8px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2310B981' d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            vertical-align: middle;
+        }
+
+        select option.qualified-category {
+            background-color: #F0FDF4;
+        }
+
+        .outline-button {
+            background-color: transparent;
+            color: var(--primary);
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .outline-button:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Add these new styles for the delete confirmation modal */
+        .delete-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .delete-modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .delete-modal-title {
+            color: var(--text-dark);
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .delete-modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+
+        .delete-confirm-btn {
+            background: #EF4444;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .delete-confirm-btn:hover {
+            background: #DC2626;
+            transform: translateY(-2px);
+        }
+
+        .delete-cancel-btn {
+            background: #E5E7EB;
+            color: var(--text-dark);
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .delete-cancel-btn:hover {
+            background: #D1D5DB;
+            transform: translateY(-2px);
+        }
+
+        @keyframes check-appear {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .submit-button.success::before {
+            content: "✓";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            animation: check-appear 0.3s ease-out forwards;
+        }
+
+        .submit-button.success span {
+            opacity: 0;
+        }
+
+        /* Update the date input styles */
+        input[type="date"] {
+            -webkit-appearance: none;
+            min-height: 48px;
+            padding: 0.875rem;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            color: var(--text-dark);
+            cursor: pointer;
+            position: relative;
+        }
+
+        /* Style the calendar icon */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            background: transparent;
+            bottom: 0;
+            color: transparent;
+            cursor: pointer;
+            height: auto;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: auto;
+            padding: 0.75rem;
+        }
+
+        /* Add a custom calendar icon */
+        input[type="date"]::after {
+            content: "📅";
+            position: absolute;
+            top: 50%;
+            right: 0.75rem;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        /* Ensure text color is visible when a date is selected */
+        input[type="date"]:not(:placeholder-shown) {
+            color: var(--text-dark);
+        }
+
+        /* Style for iOS devices */
+        @supports (-webkit-touch-callout: none) {
+            input[type="date"] {
+                display: flex;
+                align-items: center;
+                min-height: 48px;
+            }
+        }
+
+        /* Add loading spinner styles */
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Remove qualified category styling */
+        .qualified-category {
+            color: var(--text-dark) !important;
+        }
+
+        @media (max-width: 768px) {
+            .automation-section .tracker-card {
+                padding: 1rem;
+                margin: 0.5rem 0;
+            }
+
+            .automation-section .section-title {
+                font-size: 1.25rem;
+                margin-bottom: 1rem;
+            }
+
+            .automation-section .form-control {
+                font-size: 0.875rem;
+                padding: 0.5rem;
+                height: 2.5rem;
+            }
+
+            .automation-section .select-container select {
+                height: 2.5rem;
+            }
+
+            /* Make the filter controls stack on mobile */
+            .automation-section .tracker-card > div:first-of-type {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .automation-section .tracker-card > div:first-of-type > div {
+                width: 100%;
+                min-width: 100%;
+            }
+
+            /* Adjust the date range selects to be full width */
+            .automation-section .tracker-card > div:first-of-type > div:last-child > div {
+                flex-direction: row;
+                gap: 0.5rem;
+            }
+
+            /* Make the update buttons stack and full width */
+            .automation-section .tracker-card > div:nth-of-type(2) {
+                flex-direction: column;
+                gap: 0.75rem;
+                align-items: stretch;
+            }
+
+            .automation-section .tracker-card > div:nth-of-type(2) > div:last-child {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .automation-section .tracker-card > div:nth-of-type(2) button {
+                width: 100%;
+                margin: 0 !important;
+            }
+
+            /* Adjust the last update time text */
+            .automation-section #last-update-time {
+                display: block;
+                text-align: center;
+                margin-bottom: 0.5rem;
+            }
+
+            /* Make pagination controls more compact */
+            .automation-section .transaction-table-container + div {
+                gap: 0.5rem;
+                margin-top: 0.75rem;
+            }
+
+            .automation-section .transaction-table-container + div button {
+                padding: 0.5rem 1rem;
+                font-size: 0.875rem;
+            }
+
+            .automation-section .transaction-table-container + div span {
+                font-size: 0.875rem;
+            }
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Make horizontal scrollbar always visible */
+        .transaction-table-container {
+            overflow-x: auto;
+            margin-top: 1rem;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+        }
+
+        .transaction-table-container::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+        }
+
+        .transaction-table-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .transaction-table-container::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+
+        .transaction-table-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            /* Previous mobile styles... */
+
+            /* Fix pagination button size */
+            .automation-section .transaction-table-container + div {
+                gap: 0.25rem;
+                margin-top: 0.75rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0 0.5rem;
+            }
+
+            .automation-section .transaction-table-container + div button {
+                padding: 6px 16px;
+                font-size: 0.8rem;
+                height: 36px;
+                min-height: unset;
+                line-height: 1;
+                margin: 0;
+                white-space: nowrap;
+            }
+
+            .automation-section .transaction-table-container + div span {
+                font-size: 0.8rem;
+                height: 36px;
+                line-height: 36px;
+                margin: 0 0.25rem !important;
+                white-space: nowrap;
+                min-width: 60px;
+                text-align: center;
+            }
+        }
+
+        /* Error and Success Message Styles */
+        .error-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #fee2e2;
+            border: 1px solid #ef4444;
+            color: #dc2626;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            z-index: 9999;
+            animation: slideIn 0.3s ease-out;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .success-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #dcfce7;
+            border: 1px solid #22c55e;
+            color: #16a34a;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            z-index: 9999;
+            animation: fadeInOut 3s ease-out;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="dashboard.html" class="logo">RENEST</a>
+        <div class="nav-links">
+            <a href="#" id="signOutLink" class="active">Sign Out</a>
+            <a href="profile529.html">Profile</a>
+            <!-- <a href="dashboard.html">Dashboard</a> -->
+            <a href="529expensetracker.html">Expense Tracker</a>
+            <a href="dashboard.html" class="talk-button">Dashboard</a>
+        </div>
+        <button class="menu-button" aria-label="Toggle menu" aria-expanded="false">☰</button>
+    </nav>
+
+    <main class="main-content">
+        <div class="tracker-header">
+            <h1>Expense Tracker</h1>
+            <div class="button-container" style="display: flex; gap: 1rem; justify-content: center; margin-top: 1rem;">
+                <button onclick="window.location.href='trackersummary.html'" class="automation-button">
+                    Tracker Summary
+                </button>
+                <button onclick="showHowToModal()" class="outline-button">
+                    How to Use Tracker
+                </button>
+            </div>
+            <div class="automation-section">
+                <div class="automation-info">
+                    <h3>Automation</h3>
+                    <p>Renest can track your expenses and handle your 529 account transactions.</p>
+                </div>
+                <div class="automation-controls">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="automation-toggle">
+                        <span class="toggle-slider">
+                            <span class="toggle-text">OFF</span>
+                            <span class="toggle-text">ON</span>
+                        </span>
+                    </label>
+                </div>
+                
+            </div>
+        </div>
+        <!-- Add this right after the automation-section div -->
+<div id="automatic-controls" style="display: none; margin-top: 1rem;" class="automation-section">
+    <!-- Transaction search and filter controls -->
+    <div class="tracker-card">
+        <h2 class="section-title">Transaction Search & Category Management</h2>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;">
+            <div style="flex: 1; min-width: 250px;">
+                <label style="display: block; margin-bottom: 0.5rem;">Search Transactions</label>
+                <input type="text" id="transaction-search" class="form-control" placeholder="Search by merchant or description...">
+            </div>
+            <div style="flex: 1; min-width: 200px;">
+                <label style="display: block; margin-bottom: 0.5rem;">Category Filter</label>
+                <div class="select-container">
+                    <select id="category-filter" class="form-control">
+                        <option value="">All Categories</option>
+                        <!-- Categories will be populated dynamically -->
+                    </select>
+                </div>
+            </div>
+            <div style="flex: 1; min-width: 200px;">
+                <label style="display: block; margin-bottom: 0.5rem;">Date Range</label>
+                <div style="display: flex; gap: 0.5rem;">
+                    <select id="transaction-month" class="form-control" style="flex: 1;">
+                        <option value="01">January</option>
+                        <option value="02">February</option>
+                        <option value="03">March</option>
+                        <option value="04">April</option>
+                        <option value="05">May</option>
+                        <option value="06">June</option>
+                        <option value="07">July</option>
+                        <option value="08">August</option>
+                        <option value="09">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                    <select id="transaction-year" class="form-control" style="flex: 1;">
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; margin-bottom: 1rem;">
+            <div>
+                <span id="last-update-time" style="color: #6B7280; font-size: 0.9rem;">Last updated: Never</span>
+            </div>
+            <div>
+                <button id="update-transactions" class="automation-button">Update Transactions</button>
+                <button id="show-manual-controls" class="outline-button" style="margin-left: 0.5rem;">Show Manual Controls</button>
+            </div>
+        </div>
+        
+        <!-- Transaction table -->
+        <div class="transaction-table-container" style="overflow-x: auto; margin-top: 1rem;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="border-bottom: 2px solid #E5E7EB;">
+                        <th style="text-align: left; padding: 0.75rem 1rem;">Date</th>
+                        <th style="text-align: left; padding: 0.75rem 1rem;">Merchant</th>
+                        <th style="text-align: right; padding: 0.75rem 1rem;">Amount</th>
+                        <th style="text-align: left; padding: 0.75rem 1rem;">Category</th>
+                        <th style="text-align: center; padding: 0.75rem 1rem;">Qualified</th>
+                        <th style="text-align: center; padding: 0.75rem 1rem;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="transactions-tbody">
+                    <!-- Transactions will be populated here -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination controls -->
+        <div style="display: flex; justify-content: center; margin-top: 1rem;">
+            <button id="prev-page" class="outline-button" style="margin-right: 0.5rem;" disabled>Previous</button>
+            <span id="page-info" style="line-height: 2.5rem; margin: 0 1rem;">Page 1 of 1</span>
+            <button id="next-page" class="outline-button" style="margin-left: 0.5rem;" disabled>Next</button>
+        </div>
+    </div>
+</div>
+
+
+
+        <div class="container">
+            <div class="tab-container">
+                <button class="tab-button active" onclick="showTab('rent')">Rent Tracking</button>
+                <button class="tab-button" onclick="showTab('expenses')">Groceries & Other Expenses</button>
+                <button class="tab-button" onclick="showTab('account')">529 Account</button>
+                <button class="tab-button" onclick="showTab('summary')">See All Expenses</button>
+            </div>
+
+            <div id="rent-tab" class="tab-content"> 
+                <div class="tracker-card">
+                    <h2 class="section-title">Rent Payment Tracking</h2>
+                    <form id="rent-payment-form" class="form-grid">
+                        <div class="form-group">
+                            <label>Payment Date</label>
+                            <input type="date" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Payment Amount</label>
+                            <input type="number" class="form-control" placeholder="Enter payment amount" required>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Note</label>
+                            <textarea class="form-control" placeholder="e.g., Zelle to landlord Eddie, venmo to roommate Sam" rows="3"></textarea>
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <button type="submit" class="submit-button">
+                                <span>Record Rent Payment</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="tracker-card">
+                    <h2 class="section-title">Rent Information</h2>
+                    <p style="margin-bottom: 1.5rem; color: #6B7280;">
+                        Rent is a qualified expense if it is tracked and validated. Make sure to upload your lease and record your transactions to ensure proper documentation for your 529 withdrawals.
+                    </p>
+                    <form id="rent-form" class="form-grid">
+                        <div class="form-group">
+                            <label>Lease Upload</label>
+                            <div class="file-upload">
+                                <label class="file-upload-label">
+                                    <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload(this)">
+                                    Upload Lease Document
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="expenses-tab" class="tab-content" style="display: none;">
+                <div class="tracker-card">
+                    <h2 class="section-title">Add New Expense</h2>
+                    <p style="margin-bottom: 1.5rem; color: #6B7280;">
+                        You can use this tracker to record all your expenses or just the qualified ones. Certain categories like groceries, Wi-Fi, and required supplies are automatically marked as qualified expenses. You can manually mark other expenses as qualified if they meet 529 requirements.
+                    </p>
+                    <form id="expense-form" class="form-grid">
+                        <div class="form-group">
+                            <label>Date</label>
+                            <input type="date" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <div class="select-container">
+                                <select class="form-control" id="expense-category" required onchange="updateQualifiedCheckbox()">
+                                    <option value="">Select category</option>
+                                    <option value="Groceries" class="qualified-category">Groceries</option>
+                                    <option value="WiFi" class="qualified-category">Wi-Fi</option>
+                                    <option value="Required Supplies" class="qualified-category">Required Supplies</option>
+                                    <option value="Utilities" class="qualified-category">Utilities</option>
+                                    <option value="Restaurants">Restaurants</option>
+                                    <option value="Transportation">Transportation</option>
+                                    <option value="Technology">Technology</option>
+                                    <option value="Other">Other</option>
+                                    <option value="Custom">Custom</option>
+                                </select>
+                                <input type="text" id="custom-category" class="form-control" placeholder="Enter custom category" style="display: none;" oninput="updateQualifiedCheckbox();">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Amount</label>
+                            <input type="number" class="form-control" placeholder="Enter amount" required>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Notes</label>
+                            <textarea class="form-control" placeholder="e.g., Trader Joe's groceries, laptop for research, etc." rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" id="qualified-expense">
+                                <span class="checkmark"></span>
+                                Qualified Expense
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>Receipt Upload (Recommended for Qualified Expenses)</label>
+                            <div class="file-upload">
+                                <label class="file-upload-label">
+                                    <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload(this)">
+                                    Upload Receipt
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <button type="submit" class="submit-button">
+                                <span>Add Expense</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                
+            </div>
+
+            <div id="account-tab" class="tab-content" style="display: none;">
+                <div class="tracker-card">
+                    <h2 class="section-title">529 Account Management</h2>
+                    <p style="margin-bottom: 1.5rem; color: #6B7280;">
+                        Track your 529 plan activity and view projected qualified expense needs.
+                    </p>
+                    
+                    <!-- Transaction Form -->
+                    <form id="529-transaction-form" class="form-grid">
+                        <div class="form-group">
+                            <label>Transaction Type</label>
+                            <div class="select-container">
+                                <select class="form-control" required id="529-transaction-type">
+                                    <option value="Deposit529">Deposit</option>
+                                    <option value="Withdrawal529">Withdrawal</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Amount</label>
+                            <input type="number" class="form-control" required id="529-transaction-amount">
+                        </div>
+                        <div class="form-group">
+                            <label>Date</label>
+                            <input type="date" class="form-control" required id="529-transaction-date">
+                        </div>
+                        <div class="form-group">
+                            <label>Notes (optional)</label>
+                            <input type="text" class="form-control" id="529-transaction-notes" placeholder="e.g., Initial deposit, Monthly withdrawal">
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <button type="submit" class="submit-button">
+                                <span>Record Transaction</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Projections Card -->
+                <div class="tracker-card">
+                    <h2 class="section-title">Projections & Planning</h2>
+                    <p style="margin-bottom: 1.5rem; color: #6B7280;">
+                        Track your qualified expenses and plan your 529 contributions to maximize your tax benefits. These projections are based on your current spending patterns and monthly rent.
+                    </p>
+                    <div class="summary-card" style="margin-top: 0;">
+                        <div class="summary-grid">
+                            <div class="summary-item">
+                                <div class="summary-label">
+                                    Total Qualified Expenses (YTD)
+                                    <span class="tooltip" data-tooltip="How much you've spent on qualified expenses this year."></span>
+                                </div>
+                                <div class="summary-value" id="ytd-qualified-expenses">$0.00</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-label">
+                                    Total 529 Deposits (YTD)
+                                    <span class="tooltip" data-tooltip="The total amount you've contributed to your 529 plan this year."></span>
+                                </div>
+                                <div class="summary-value" id="ytd-529-deposits">$0.00</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-label">
+                                    Projected Year-End Total
+                                    <span class="tooltip" data-tooltip="Estimated total qualified expenses for the entire year, based on your current spending and monthly rent."></span>
+                                </div>
+                                <div class="summary-value" id="projected-year-end">$0.00</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+
+                    <!-- Funding Progress -->
+                    <div style="margin-top: 2rem;">
+                        <h3 style="color: var(--text-dark); margin-bottom: 1rem;">529 Funding Progress</h3>
+                        <p style="margin-bottom: 1.5rem; color: #6B7280;">
+                            To maximize your tax benefits, you should aim to contribute enough to your 529 plan to cover your projected qualified expenses. The recommendations below will help you stay on track.
+                        </p>
+                        <div style="background: #f3f4f6; border-radius: 8px; padding: 1.5rem;">
+                            <div style="margin-bottom: 1rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                    <div style="display: flex; align-items: center;">
+                                        <span style="font-weight: 500; color: var(--text-dark);">Recommended Total Remaining 529 Funding</span>
+                                        <span class="tooltip" data-tooltip="The total amount you should contribute to your 529 plan this year to cover your projected qualified expenses."></span>
+                                    </div>
+                                    <span id="recommended-funding" style="color: var(--primary); font-weight: 600;">$0.00</span>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                    <div style="display: flex; align-items: center;">
+                                        <span style="font-weight: 500; color: var(--text-dark);">Suggested Monthly Deposit</span>
+                                        <span class="tooltip" data-tooltip="The monthly contribution needed to reach your recommended funding amount by year-end. This adjusts based on your current deposits."></span>
+                                    </div>
+                                    <span id="suggested-monthly-deposit" style="color: var(--primary); font-weight: 600;">$0.00</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Progress Bar -->
+                            <div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <div style="display: flex; align-items: center;">
+                                        <span style="font-weight: 500; color: var(--text-dark);">Current Progress</span>
+                                        <span class="tooltip" data-tooltip="Shows how much you've contributed to your 529 plan compared to your recommended funding amount for the year."></span>
+                                    </div>
+                                </div>
+                                <div style="background: #e5e7eb; border-radius: 9999px; height: 24px; position: relative; overflow: hidden;">
+                                    <div id="funding-progress-bar" style="background: var(--primary); height: 100%; width: 0%; transition: width 0.5s ease-in-out;"></div>
+                                    <div id="funding-progress-text" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">
+                                        $0/$0
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 529 Withdrawal Information -->
+                    <div style="margin-top: 2rem;">
+                        <h3 style="color: var(--text-dark); margin-bottom: 1rem;">529 Withdrawal Information</h3>
+                        <p style="margin-bottom: 1.5rem; color: #6B7280;">
+                            Track how much you can withdraw from your 529 account based on your qualified expenses and current balance.
+                        </p>
+                        <div style="background: #f3f4f6; border-radius: 8px; padding: 1.5rem;">
+                            <div style="margin-bottom: 1.5rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                    <div style="display: flex; align-items: center;">
+                                        <span style="font-weight: 500; color: var(--text-dark);">Current 529 Balance</span>
+                                        <span class="tooltip" data-tooltip="Your current 529 account balance (deposits minus withdrawals)."></span>
+                                    </div>
+                                    <span id="current-529-balance" style="color: var(--primary); font-weight: 600;">$0.00</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                    <div style="display: flex; align-items: center;">
+                                        <span style="font-weight: 500; color: var(--text-dark);">Total Withdrawals (YTD)</span>
+                                        <span class="tooltip" data-tooltip="Total amount withdrawn from your 529 account this year."></span>
+                                    </div>
+                                    <span id="total-withdrawals" style="color: var(--primary); font-weight: 600;">$0.00</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                    <div style="display: flex; align-items: center;">
+                                        <span style="font-weight: 500; color: var(--text-dark);">Available for Withdrawal</span>
+                                        <span class="tooltip" data-tooltip="Amount you can withdraw based on your qualified expenses minus withdrawals."></span>
+                                    </div>
+                                    <span id="available-for-withdrawal" style="color: var(--primary); font-weight: 600;">$0.00</span>
+                                </div>
+                                <div id="withdrawal-status" style="margin-top: 1rem; padding: 0.75rem; border-radius: 4px; background: #EEF2FF; color: var(--primary);">
+                                    <!-- Status message will be inserted here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Add after the Funding Progress section -->
+                    <div style="margin-top: 2rem; background: #EEF2FF; border-left: 4px solid var(--primary); padding: 1.5rem; border-radius: 0 8px 8px 0;">
+                        <div style="display: flex; align-items: start; gap: 1rem;">
+                            <div style="color: var(--primary); font-weight: 600;">💡 Tip:</div>
+                            <div>
+                                <p style="margin-bottom: 1rem; line-height: 1.5;">
+                                    You need to deposit money into a 529 in order to qualify for your state's benefit.
+                                     You can deposit at any time and withdraw anytime within a calendar year to cover a qualified expense. This gives you two options:
+                                    <br><br>
+                                    1. Deposit and withdraw immediately
+                                    <br>
+                                    2. Deposit and let the interest accumulate tax-free before withdrawing
+                                </p>
+                                <button onclick="showExampleModal()" class="submit-button" style="margin-top: 0.5rem;">See Examples</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Example Modal -->
+                <div id="example-modal" class="modal" style="display: none;">
+                    <div class="modal-content">
+                        <h2 style="color: var(--text-dark); margin-bottom: 1.5rem;">529 Usage Examples</h2>
+                        
+                        <div class="modal-section">
+                            <h3 style="color: var(--primary); margin-bottom: 1rem;">Scenario 1: Lump Sum</h3>
+                            <p style="line-height: 1.6;">
+                                Carla is doing her PhD in Illinois and pays $750/month in rent and has $25,000+ in yearly expenses. She also has $10,000 in savings:
+                            </p>
+                            <ul style="margin: 0.75rem 0; padding-left: 1.25rem;">
+                                <li>Tracks her expenses with Renest</li>
+                                <li>Deposits $10,000 into her 529 in January or as soon as she opens her 529 account</li>
+                                <li>Lets money earn interest tax-free throughout the year</li>
+                                <li>Can withdraw anytime throughout the year</li>
+                                <li>Withdraws the exact amount ($10,543) corresponding to her 529 qualified expenses she tracked with Renest </li>
+                                <li>Maximum tax benefit: $495 from her Illinois 529 deduction + $500 in tax-free interest</li>
+                            </ul>
+                            <p>or</p>
+                            <ul style="margin: 0.75rem 0; padding-left: 1.25rem;">
+                                <li>Tracks her expenses with Renest throughout the year</li>
+                                <li>On December 1st deposits the exact amount ($10,124) corresponding to her 529 qualified expenses she tracked with Renest</li>
+                                <li>On December 20th withdraws the $10,124</li>
+                                <li>Tax benefit: $495 from her illinois 529 deduction</li>
+                            </ul>
+                        </div>
+
+                        <div class="modal-section">
+                            <h3 style="color: var(--primary); margin-bottom: 1rem;">Scenario 2: Monthly Deposits</h3>
+                            <p style="line-height: 1.6;">
+                                Mike is also doing his PhD in Illinois but prefers monthly deposits:
+                            </p>
+                            <ul style="margin: 0.75rem 0; padding-left: 1.25rem;">
+                                <li>Tracks his expenses with Renest</li>
+                                <li>The first of each month he deposits $1030, the exact amount of qualified spend last month, into his 529</li>
+                                <li>Withdraws how much he deposited a few days later</li>
+                                <li>Tax benefit: $495 (IL)</li>
+                            </ul>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button onclick="hideExampleModal()" class="submit-button">Close</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Transactions -->
+                <div class="tracker-card">
+                    <h2 class="section-title">Recent 529 Transactions</h2>
+                    <div id="529-transactions-list" class="expense-list">
+                        <!-- Transactions will be added here dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <div id="summary-tab" class="tab-content" style="display: none;">
+                <div class="tracker-card">
+                    <h2 class="section-title">Expense Summary</h2>
+                    <div class="summary-card">
+                        <div class="summary-grid">
+                            <div class="summary-item">
+                                <div class="summary-label">Total Rent Paid</div>
+                                <div class="summary-value" id="total-rent">$0.00</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-label">Total Other Expenses</div>
+                                <div class="summary-value" id="total-expenses">$0.00</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-label">Total 529 Deposits</div>
+                                <div class="summary-value" id="deposits-display">$0.00</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-label">Total 529 Withdrawals</div>
+                                <div class="summary-value" id="withdrawals-display">$0.00</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-label">Remaining Balance</div>
+                                <div class="summary-value" id="remaining-balance">$0.00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tracker-card">
+                    <h2 class="section-title">Recent Expenses</h2>
+                    <div id="expense-list" class="expense-list">
+                        <!-- Expenses will be added here dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="footer-logo">RENEST</div>
+                <p class="copyright">©2025 Renest Horizons Inc.</p>
+            </div>
+            <div class="footer-links">
+                <h3>Company</h3>
+                <a href="aboutus529.html">About us</a>
+                <a href="privacypolicy529.html">Privacy Policy</a>
+                <a href="termsofservice529.html">Terms of Service</a>
+            </div>
+            <div class="footer-links">
+                <h3>Resources</h3>
+                <a href="contactus529.html">Contact us</a>
+                <a href="faq529.html">FAQ</a>
+                <!-- <a href="https://www-renesthorizons-com.translate.goog/?_x_tr_sl=auto&_x_tr_tl=es&_x_tr_hl=en&_x_tr_pto=wapp">Español</a> -->
+            </div>
+        </div>
+    </footer>
+
+    <!-- Updated How To Modal Structure -->
+    <div id="how-to-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2 style="color: var(--text-dark); margin-bottom: 1.5rem;">How to Use the Expense Tracker</h2>
+            
+            <div class="modal-section" style="background:white; border-left: 4px solid green;">
+                <h3 style="color: green; margin-bottom: 1rem;">Important Notice</h3>
+                <p style="line-height: 1.6;">
+                    You can still benefit from your 529 even if the qualified spend already happened. Input every month of rent and groceries <b>this calendar year</b> even before you opened your 529 account or Renest account.
+                </p>
+            </div>
+            
+            <div class="modal-section">
+                <h3 style="color: var(--primary); margin-bottom: 1rem;">Minimum 529 Savings Tracker</h3>
+                <ol style="line-height: 1.6; margin-left: 1.5rem;">
+                    <li>Record your monthly rent payment</li>
+                    <li>Track groceries</li>
+                    <li>Deposit matching amount of money to your 529 account</li>
+                    <li>Withdraw the funds from your 529 a few days after depsiting them</li>
+                </ol>
+                <p style="margin-top: 1rem; color: #6B7280;">
+                    This simple approach ensures you maximize your tax benefits. 529 accounts are unique in that as long as within the calendar year you have qualified expense and a matching 529 deposit and withdrawal then you qualify for the beneft. It does not matter what order the expense, deposit and withdrawal occurs <b>as long as it happens within the same calendar year</b>
+                </p>
+            </div>
+
+            <div class="modal-section">
+                <h3 style="color: var(--primary); margin-bottom: 1rem;">Budgeting, Expense Tracking and Savings</h3>
+                <ol style="line-height: 1.6; margin-left: 1.5rem;">
+                    <li>Track all expenses for budgeting</li>
+                    <li>Monitor qualified expenses</li>
+                    <li>Review spending patterns</li>
+                    <li>Follow 529 funding recommendations</li>
+                    <li>Learn how to use 529 as the optimal student savings account</li>
+                </ol>
+                <p style="margin-top: 1rem; color: #6B7280;">
+                    Manage expenses while optimizing 529 benefits.
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <button onclick="hideHowToModal()" class="submit-button">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Updated Example Modal Structure -->
+    <div id="example-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2 style="color: var(--text-dark); margin-bottom: 1.5rem;">529 Usage Examples</h2>
+            
+            <div class="modal-section">
+                <h3 style="color: var(--primary); margin-bottom: 1rem;">Scenario 1: Lump Sum</h3>
+                <p style="line-height: 1.6;">
+                    Sarah has $10,000+ in yearly expenses:
+                </p>
+                <ul style="margin: 0.75rem 0; padding-left: 1.25rem;">
+                    <li>Deposits $10,000 in January</li>
+                    <li>Lets money earn interest tax-free</li>
+                    <li>Withdraws as needed monthly</li>
+                    <li>Maximum tax benefit: $495 (IL)</li>
+                </ul>
+            </div>
+
+            <div class="modal-section">
+                <h3 style="color: var(--primary); margin-bottom: 1rem;">Scenario 2: Monthly</h3>
+                <p style="line-height: 1.6;">
+                    Mike prefers monthly deposits:
+                </p>
+                <ul style="margin: 0.75rem 0; padding-left: 1.25rem;">
+                    <li>Deposits $830 monthly</li>
+                    <li>Pays expenses next day</li>
+                    <li>Withdraws $830 monthly</li>
+                    <li>Same tax benefit: $495 (IL)</li>
+                </ul>
+            </div>
+
+            <div class="modal-footer">
+                <button onclick="hideExampleModal()" class="submit-button">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add this before the closing body tag -->
+    <div id="delete-confirmation-modal" class="delete-modal">
+        <div class="delete-modal-content">
+            <h3 class="delete-modal-title">Delete Expense</h3>
+            <p>Are you sure you want to delete this expense?</p>
+            <div class="delete-modal-buttons">
+                <button class="delete-cancel-btn" onclick="hideDeleteModal()">Cancel</button>
+                <button class="delete-confirm-btn" onclick="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API Configuration
+        const API = {
+            baseUrl: 'https://wb2pd4d6gg.execute-api.us-east-2.amazonaws.com',
+            getToken: () => localStorage.getItem('authToken')
+        };
+
+        // Tab switching functionality
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            const buttons = document.querySelectorAll('.tab-button');
+            
+            tabs.forEach(tab => tab.style.display = 'none');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(`${tabName}-tab`).style.display = 'block';
+            document.querySelector(`[onclick="showTab('${tabName}')"]`).classList.add('active');
+        }
+
+        // File upload handling
+        function handleFileUpload(input) {
+            const fileName = input.files[0]?.name || 'No file chosen';
+            input.parentElement.innerHTML = fileName + '<input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload(this)">';
+        }
+        
+
+        // API Functions
+        async function createExpense(expenseData) {
+            try {
+                console.log('=== Starting createExpense API call ===');
+                console.log('Expense data:', expenseData);
+                
+                const token = API.getToken();
+                if (!token) {
+                    console.error('No authentication token found');
+                    throw new Error('No authentication token found');
+                }
+                console.log('Using token:', token.substring(0, 10) + '...');
+
+                console.log('Making API request to:', `${API.baseUrl}/expenses`);
+                const response = await fetch(`${API.baseUrl}/expenses`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(expenseData)
+                });
+                
+                console.log('API Response status:', response.status);
+                const data = await response.json();
+                console.log('API Response data:', data);
+                
+                if (!response.ok) {
+                    console.error('API Error:', data);
+                    throw new Error(data.error || 'Failed to create expense');
+                }
+                
+                console.log('Expense created successfully:', data);
+                
+                // Clear the cache after successful creation
+                sessionStorage.removeItem('cachedExpenses');
+                console.log('Cleared cache after expense creation');
+                
+                return data;
+            } catch (error) {
+                console.error('Error in createExpense:', error);
+                throw error;
+            }
+        }
+
+        async function getExpenses() {
+            try {
+                console.log('=== Starting getExpenses API call ===');
+                const token = API.getToken();
+                if (!token) throw new Error('No authentication token found');
+
+                // Clear the cache to ensure we get fresh data
+                sessionStorage.removeItem('cachedExpenses');
+                console.log('Cleared cached expenses');
+
+                let allExpenses = [];
+                let nextToken = null;
+                let previousToken = null;
+                let pageCount = 0;
+                const MAX_PAGES = 5;
+                const seenExpenseIds = new Set();
+                
+                do {
+                    const url = new URL(`${API.baseUrl}/expenses`);
+                    if (nextToken) {
+                        url.searchParams.append('nextToken', nextToken);
+                    }
+                    url.searchParams.append('limit', '100');
+                    
+                    console.log('Fetching expenses with token:', nextToken);
+                    const response = await fetch(url, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    console.log('API Response status:', response.status);
+                    const data = await response.json();
+                    console.log('Raw API response:', data);
+                    if (!response.ok) throw new Error(data.error || 'Failed to fetch expenses');
+                    
+                    // Check if we're getting the same token again
+                    if (nextToken && nextToken === previousToken) {
+                        console.log('Received same token twice, stopping pagination');
+                        break;
+                    }
+                    
+                    // Filter out duplicate expenses
+                    const newExpenses = data.expenses.filter(expense => {
+                        if (seenExpenseIds.has(expense.expenseID)) {
+                            console.log('Skipping duplicate expense:', expense.expenseID);
+                            return false;
+                        }
+                        seenExpenseIds.add(expense.expenseID);
+                        return true;
+                    });
+                    
+                    allExpenses = [...allExpenses, ...newExpenses];
+                    previousToken = nextToken;
+                    nextToken = data.nextToken;
+                    pageCount++;
+                    
+                    console.log(`Fetched ${newExpenses.length} unique expenses, total so far: ${allExpenses.length}`);
+                    
+                    if (pageCount >= MAX_PAGES) {
+                        console.log('Reached maximum number of pages');
+                        break;
+                    }
+                } while (nextToken);
+
+                // Cache the expenses for future use
+                sessionStorage.setItem('cachedExpenses', JSON.stringify(allExpenses));
+                console.log('Total unique expenses fetched and cached:', allExpenses.length);
+                return { expenses: allExpenses };
+            } catch (error) {
+                console.error('Error in getExpenses:', error);
+                throw error;
+            }
+        }
+
+        async function deleteExpense(expenseId) {
+            try {
+                console.log('=== Starting deleteExpense API call ===');
+                console.log('Deleting expense ID:', expenseId);
+                const token = API.getToken();
+                if (!token) throw new Error('No authentication token found');
+
+                const response = await fetch(`${API.baseUrl}/expenses/${expenseId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                console.log('Delete API Response status:', response.status);
+                const data = await response.json();
+                console.log('Delete API response:', data);
+                if (!response.ok) throw new Error(data.error || 'Failed to delete expense');
+                console.log('Expense deleted successfully');
+                return data;
+            } catch (error) {
+                console.error('Error in deleteExpense:', error);
+                throw error;
+            }
+        }
+
+        // Load and display expenses
+        async function loadExpenses() {
+            try {
+                console.log('=== Starting loadExpenses ===');
+                const data = await getExpenses();
+                console.log('Total expenses received:', data.expenses.length);
+                const expenseList = document.getElementById('expense-list');
+                
+                // Update regular expenses list
+                const filteredExpenses = data.expenses.filter(expense => 
+                    expense.category !== 'Deposit529' && 
+                    expense.category !== 'Withdrawal529'
+                );
+                console.log('Non-529 expenses to display:', filteredExpenses.length);
+                
+                expenseList.innerHTML = filteredExpenses
+                    .map(expense => `
+                        <div class="expense-item" id="expense-${expense.expenseID}">
+                            <div>
+                                <div>${new Date(expense.date).toLocaleDateString()}</div>
+                                <div>${expense.category}</div>
+                                <div style="color: #6B7280; font-size: 0.9rem;">${expense.notes || ''}</div>
+                            </div>
+                            <div>
+                                <span>$${expense.amount.toFixed(2)}</span>
+                                <button onclick="deleteExpenseHandler('${expense.expenseID}')" 
+                                        class="delete-btn">Delete</button>
+                            </div>
+                        </div>
+                    `).join('');
+
+                // Update category dropdown with all unique categories
+                updateCategoryDropdown(data.expenses);
+
+                // Calculate and update 529 projections
+                const projections = calculate529Projections(data.expenses);
+                update529Display(projections);
+                update529TransactionsList(data.expenses);
+                updateSummary(data.expenses);
+                console.log('=== Completed loadExpenses ===');
+            } catch (error) {
+                console.error('Error loading expenses:', error);
+                showError('Error loading expenses: ' + error.message);
+            }
+        }
+
+        // Function to update category dropdown with all unique categories
+        function updateCategoryDropdown(expenses) {
+            const categorySelect = document.getElementById('expense-category');
+            const currentValue = categorySelect.value; // Store current selection
+            
+            // Get all unique categories from expenses
+            const uniqueCategories = [...new Set(expenses
+                .filter(expense => 
+                    expense.category !== 'Deposit529' && 
+                    expense.category !== 'Withdrawal529')
+                .map(expense => expense.category))];
+
+            // Clear existing options (except the first "Select category" option)
+            while (categorySelect.options.length > 1) {
+                categorySelect.remove(1);
+            }
+
+            // Add qualified categories first
+            const qualifiedCategories = ['Groceries', 'WiFi', 'Required Supplies', 'Utilities'];
+            qualifiedCategories.forEach(category => {
+                if (!uniqueCategories.includes(category)) {
+                    uniqueCategories.push(category);
+                }
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                option.className = 'qualified-category';
+                categorySelect.appendChild(option);
+            });
+
+            // Add other unique categories
+            uniqueCategories
+                .filter(category => !qualifiedCategories.includes(category))
+                .sort()
+                .forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category;
+                    option.textContent = category;
+                    categorySelect.appendChild(option);
+                });
+
+            // Add the Custom option at the end
+            const customOption = document.createElement('option');
+            customOption.value = 'Custom';
+            customOption.textContent = 'Custom';
+            categorySelect.appendChild(customOption);
+
+            // Restore previous selection if it exists
+            if (currentValue) {
+                categorySelect.value = currentValue;
+            }
+        }
+
+        let currentExpenseToDelete = null;
+
+        // Update the deleteExpenseHandler function
+        async function deleteExpenseHandler(expenseId) {
+            console.log('=== Starting deleteExpenseHandler ===');
+            console.log('Expense to delete:', expenseId);
+            currentExpenseToDelete = expenseId;
+            document.getElementById('delete-confirmation-modal').style.display = 'flex';
+        }
+
+        // Add these new functions
+        function hideDeleteModal() {
+            document.getElementById('delete-confirmation-modal').style.display = 'none';
+            currentExpenseToDelete = null;
+        }
+
+        async function confirmDelete() {
+            if (currentExpenseToDelete) {
+                try {
+                    console.log('=== Starting confirmDelete ===');
+                    console.log('Deleting expense:', currentExpenseToDelete);
+                    await deleteExpense(currentExpenseToDelete);
+                    const expenseElement = document.getElementById(`expense-${currentExpenseToDelete}`);
+                    const transactionElement = document.getElementById(`transaction-${currentExpenseToDelete}`);
+                    
+                    if (expenseElement) {
+                        console.log('Removing expense element');
+                        expenseElement.remove();
+                    }
+                    if (transactionElement) {
+                        console.log('Removing transaction element');
+                        transactionElement.remove();
+                    }
+                    
+                    showSuccess('Expense deleted successfully');
+                    console.log('Reloading expenses after deletion');
+                    loadExpenses(); // Refresh to update summary and projections
+                } catch (error) {
+                    console.error('Error in confirmDelete:', error);
+                    showError('Failed to delete expense: ' + error.message);
+                }
+                hideDeleteModal();
+            }
+        }
+
+        // Update the window.onclick handler to include the delete modal
+        window.onclick = function(event) {
+            const exampleModal = document.getElementById('example-modal');
+            const howToModal = document.getElementById('how-to-modal');
+            const deleteModal = document.getElementById('delete-confirmation-modal');
+            
+            if (event.target == exampleModal) {
+                hideExampleModal();
+            }
+            if (event.target == howToModal) {
+                hideHowToModal();
+            }
+            if (event.target == deleteModal) {
+                hideDeleteModal();
+            }
+        }
+
+        // Update summary calculations
+        function updateSummary(expenses = []) {
+            const totalRent = expenses
+                .filter(expense => expense.category === 'Rent')
+                .reduce((sum, expense) => sum + expense.amount, 0);
+                
+            const otherExpenses = expenses
+                .filter(expense => 
+                    expense.category !== 'Rent' && 
+                    expense.category !== 'Deposit529' && 
+                    expense.category !== 'Withdrawal529')
+                .reduce((sum, expense) => sum + expense.amount, 0);
+
+            const deposits529 = expenses
+                .filter(expense => expense.category === 'Deposit529')
+                .reduce((sum, expense) => sum + expense.amount, 0);
+
+            const withdrawals529 = expenses
+                .filter(expense => expense.category === 'Withdrawal529')
+                .reduce((sum, expense) => sum + expense.amount, 0);
+
+            // Update display
+            document.getElementById('total-rent').textContent = `$${totalRent.toFixed(2)}`;
+            document.getElementById('total-expenses').textContent = `$${otherExpenses.toFixed(2)}`;
+            document.getElementById('deposits-display').textContent = `$${deposits529.toFixed(2)}`;
+            document.getElementById('withdrawals-display').textContent = `$${withdrawals529.toFixed(2)}`;
+            
+            // Calculate and display remaining balance
+            const remainingBalance = deposits529 - withdrawals529;
+            document.getElementById('remaining-balance').textContent = `$${remainingBalance.toFixed(2)}`;
+        }
+
+        // Helper functions for notifications
+        function showSuccess(message) {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success-message';
+            successDiv.textContent = message;
+            document.body.appendChild(successDiv);
+            setTimeout(() => successDiv.remove(), 3000);
+        }
+
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            document.body.appendChild(errorDiv);
+            setTimeout(() => errorDiv.remove(), 3000);
+        }
+
+        // Form handlers
+        document.getElementById('expense-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            console.log('=== Starting expense form submission ===');
+            const submitButton = this.querySelector('.submit-button');
+            const originalText = submitButton.textContent;
+            
+            const inputDate = new Date(this.querySelector('input[type="date"]').value);
+            inputDate.setDate(inputDate.getDate() + 1);  // Add one day
+            
+            const categorySelect = document.getElementById('expense-category');
+            const customCategoryInput = document.getElementById('custom-category');
+            const amountInput = this.querySelector('input[type="number"]');
+            
+            console.log('Amount input value:', amountInput.value);
+            console.log('Amount input type:', typeof amountInput.value);
+            
+            // Use custom category text if 'Custom' is selected, otherwise use selected category
+            const category = categorySelect.value === 'Custom' ? 
+                customCategoryInput.value : 
+                categorySelect.value;
+            
+            const expenseData = {
+                category: category,
+                amount: parseFloat(amountInput.value),
+                date: inputDate.toISOString().split('T')[0],
+                notes: this.querySelector('textarea').value || '',
+                isQualified: document.getElementById('qualified-expense').checked,
+                needsReceipt: !!this.querySelector('input[type="file"]').files.length
+            };
+
+            console.log('Expense data to be submitted:', expenseData);
+
+            try {
+                console.log('Calling createExpense API...');
+                const result = await createExpense(expenseData);
+                console.log('API Response:', result);
+
+                if (expenseData.needsReceipt && result.uploadUrl) {
+                    console.log('Uploading receipt...');
+                    const file = this.querySelector('input[type="file"]').files[0];
+                    await fetch(result.uploadUrl, {
+                        method: 'PUT',
+                        body: file,
+                        headers: {
+                            'Content-Type': file.type
+                        }
+                    });
+                    console.log('Receipt uploaded successfully');
+                }
+
+                submitButton.textContent = "✓";
+                showSuccess('Expense added successfully!');
+                console.log('Reloading expenses after successful submission...');
+                loadExpenses();
+                
+                setTimeout(() => {
+                    submitButton.textContent = originalText;
+                    this.reset();
+                }, 1500);
+            } catch (error) {
+                console.error('Error in expense form submission:', error);
+                showError(error.message);
+                submitButton.textContent = originalText;
+            }
+        });
+        document.getElementById('rent-payment-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const submitButton = this.querySelector('.submit-button');
+            const originalText = submitButton.textContent;
+            
+            const inputDate = new Date(this.querySelector('input[type="date"]').value);
+            inputDate.setDate(inputDate.getDate() + 1);  // Add one day
+            
+            const rentPaymentData = {
+                category: 'Rent',
+                amount: parseFloat(this.querySelector('input[type="number"]').value),
+                date: inputDate.toISOString().split('T')[0],
+                notes: this.querySelector('textarea').value || 'Monthly Rent Payment', // Updated to use textarea
+                isQualified: true,
+                needsReceipt: false
+            };
+
+            try {
+                const result = await createExpense(rentPaymentData);
+                submitButton.textContent = "✓";
+                showSuccess('Rent payment recorded successfully!');
+                loadExpenses();
+                
+                setTimeout(() => {
+                    submitButton.textContent = originalText;
+                    this.reset();
+                }, 1500);
+            } catch (error) {
+                showError(error.message);
+                submitButton.textContent = originalText;
+            }
+        });
+
+        
+        document.getElementById('signOutLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('authToken');
+            window.location.href = 'signin529.html';
+        });
+
+        // Automation toggle handler
+        
+
+        // Category selection handler
+        document.getElementById('expense-category').addEventListener('change', function() {
+            const customCategoryInput = document.getElementById('custom-category');
+            if (this.value === 'Custom') {
+                customCategoryInput.style.display = 'block';
+                customCategoryInput.focus();
+            } else {
+                customCategoryInput.style.display = 'none';
+            }
+            updateQualifiedCheckbox();
+        });
+
+        // Add listener for custom category input
+        document.getElementById('custom-category').addEventListener('input', updateQualifiedCheckbox);
+
+        // Navigation menu handlers
+        const menuButton = document.querySelector('.menu-button');
+        const navLinks = document.querySelector('.nav-links');
+
+        menuButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+            menuButton.setAttribute('aria-expanded', navLinks.style.display === 'flex');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (window.innerWidth < 768 && !navLinks.contains(e.target) && e.target !== menuButton) {
+                navLinks.style.display = 'none';
+                menuButton.setAttribute('aria-expanded', false);
+            }
+        });
+
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                navLinks.style.display = 'flex';
+            } else {
+                navLinks.style.display = 'none';
+            }
+        });
+
+        // Initial load
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM fully loaded');
+            const token = API.getToken();
+            if (!token) {
+                window.location.href = 'signin529.html';
+                return;
+            }
+            loadExpenses();
+            
+            console.log('About to call showTab function to show only rent tab');
+            // Call the showTab function directly to ensure only rent tab is visible
+            showTab('rent');
+            
+            // Add a small delay to ensure the tab visibility is set after any other initialization
+            setTimeout(() => {
+                console.log('Forcing rent tab visibility after delay');
+                showTab('rent');
+            }, 200);
+        });
+
+        // 529 Account Management Functions
+        function calculate529Projections(expenses) {
+            console.log('=== Starting calculate529Projections ===');
+            console.log('Total expenses received:', expenses.length);
+            
+            // Get current date info
+            const currentDate = new Date();
+            const currentYear = currentDate.getFullYear();
+            const currentMonth = currentDate.getMonth();
+            const remainingMonths = 12 - currentMonth;
+            console.log('Current date info:', { currentYear, currentMonth, remainingMonths });
+
+            // Get monthly rent from localStorage
+            const monthlyRent = parseFloat(localStorage.getItem('monthlyRent')) || 0;
+            console.log('Monthly rent from localStorage:', monthlyRent);
+
+            // Filter expenses for current year
+            const currentYearExpenses = expenses.filter(expense => {
+                const expenseDate = new Date(expense.date);
+                return expenseDate.getFullYear() === currentYear;
+            });
+            console.log('Current year expenses:', currentYearExpenses.length);
+
+            // Calculate YTD qualified expenses - now properly checking both category and isQualified flag
+            const qualifiedExpenses = currentYearExpenses
+                .filter(expense => {
+                    const isQualified = expense.isQualified && 
+                                      expense.category !== 'Deposit529' && 
+                                      expense.category !== 'Withdrawal529';
+                    console.log('Expense qualification check:', {
+                        id: expense.expenseID,
+                        category: expense.category,
+                        isQualified: expense.isQualified,
+                        amount: expense.amount,
+                        result: isQualified
+                    });
+                    return isQualified;
+                })
+                .reduce((sum, expense) => sum + expense.amount, 0);
+            console.log('Total qualified expenses:', qualifiedExpenses);
+
+            // Calculate total 529 deposits
+            const deposits529 = currentYearExpenses
+                .filter(expense => expense.category === 'Deposit529')
+                .reduce((sum, expense) => sum + expense.amount, 0);
+            console.log('Total 529 deposits:', deposits529);
+
+            // Calculate total withdrawals
+            const totalWithdrawals = currentYearExpenses
+                .filter(expense => expense.category === 'Withdrawal529')
+                .reduce((sum, expense) => sum + expense.amount, 0);
+            console.log('Total withdrawals:', totalWithdrawals);
+
+            // Calculate average monthly qualified expenses (excluding rent)
+            const nonRentExpenses = currentYearExpenses
+                .filter(expense => {
+                    const isQualified = expense.isQualified && 
+                                      expense.category !== 'Rent' &&
+                                      expense.category !== 'Deposit529' && 
+                                      expense.category !== 'Withdrawal529';
+                    console.log('Non-rent expense qualification check:', {
+                        id: expense.expenseID,
+                        category: expense.category,
+                        isQualified: expense.isQualified,
+                        amount: expense.amount,
+                        result: isQualified
+                    });
+                    return isQualified;
+                })
+                .reduce((sum, expense) => sum + expense.amount, 0);
+            console.log('Total non-rent qualified expenses:', nonRentExpenses);
+            
+            const monthsElapsed = currentMonth + 1;
+            const averageMonthlyNonRentExpense = monthsElapsed > 0 ? nonRentExpenses / monthsElapsed : 0;
+            console.log('Average monthly non-rent expense:', averageMonthlyNonRentExpense);
+
+            // Calculate yearly projections using profile rent
+            const yearlyRent = monthlyRent * 9; // Full year of rent from profile
+            const yearlyNonRent = averageMonthlyNonRentExpense * 9; // Project other expenses for full year
+            const projectedYearEnd = yearlyRent + yearlyNonRent;
+            console.log('Yearly projections:', {
+                yearlyRent,
+                yearlyNonRent,
+                projectedYearEnd
+            });
+
+            // Calculate recommended funding
+            const recommendedFunding = Math.max(0, projectedYearEnd - deposits529);
+            const suggestedMonthlyDeposit = remainingMonths > 0 ? 
+                recommendedFunding / remainingMonths : 0;
+            console.log('Funding recommendations:', {
+                recommendedFunding,
+                suggestedMonthlyDeposit
+            });
+
+            console.log('=== Completed calculate529Projections ===');
+            return {
+                ytdQualified: qualifiedExpenses,
+                ytdDeposits: deposits529,
+                totalWithdrawals: totalWithdrawals,
+                monthlyProjection: averageMonthlyNonRentExpense + monthlyRent,
+                yearEndProjection: projectedYearEnd,
+                recommendedTotal: recommendedFunding,
+                suggestedMonthly: suggestedMonthlyDeposit
+            };
+        }
+
+        function update529Display(projections) {
+            // Format numbers as currency
+            const formatCurrency = num => `$${num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+
+            // Update summary values
+            document.getElementById('ytd-qualified-expenses').textContent = formatCurrency(projections.ytdQualified);
+            document.getElementById('ytd-529-deposits').textContent = formatCurrency(projections.ytdDeposits);
+            document.getElementById('projected-year-end').textContent = formatCurrency(projections.yearEndProjection);
+            document.getElementById('recommended-funding').textContent = formatCurrency(projections.recommendedTotal);
+            document.getElementById('suggested-monthly-deposit').textContent = formatCurrency(projections.suggestedMonthly);
+
+            // Update withdrawal information
+            const currentBalance = projections.ytdDeposits - projections.totalWithdrawals;
+            const availableForWithdrawal = Math.min(
+                Math.max(0, projections.ytdQualified - projections.totalWithdrawals),
+                currentBalance
+            );
+            
+            document.getElementById('current-529-balance').textContent = formatCurrency(currentBalance);
+            document.getElementById('total-withdrawals').textContent = formatCurrency(projections.totalWithdrawals);
+            document.getElementById('available-for-withdrawal').textContent = formatCurrency(availableForWithdrawal);
+
+            // Update withdrawal status message
+            const withdrawalStatus = document.getElementById('withdrawal-status');
+            if (projections.ytdQualified > projections.totalWithdrawals && currentBalance < (projections.ytdQualified - projections.totalWithdrawals)) {
+                withdrawalStatus.style.background = '#FEE2E2';
+                withdrawalStatus.style.color = '#DC2626';
+                withdrawalStatus.innerHTML = `⚠️ You need to deposit ${formatCurrency(projections.ytdQualified - projections.totalWithdrawals - currentBalance)} into your 529 account to cover your qualified expenses.`;
+            } else if (availableForWithdrawal > 0) {
+                withdrawalStatus.style.background = '#EEF2FF';
+                withdrawalStatus.style.color = 'var(--primary)';
+                withdrawalStatus.innerHTML = `You can withdraw up to ${formatCurrency(availableForWithdrawal)} from your 529 account.`;
+            } else {
+                withdrawalStatus.style.background = '#F0FDF4';
+                withdrawalStatus.style.color = '#16A34A';
+                withdrawalStatus.innerHTML = `✓ You have already withdrawn the maximum amount to cover the qualified expenses you have had so far this year.`;
+            }
+
+            // Update progress bar
+            const totalNeeded = projections.yearEndProjection;
+            const progressPercent = totalNeeded > 0 ? 
+                (projections.ytdDeposits / totalNeeded) * 100 : 100;
+            
+            document.getElementById('funding-progress-bar').style.width = `${Math.min(100, progressPercent)}%`;
+            document.getElementById('funding-progress-text').textContent = 
+                `${formatCurrency(projections.ytdDeposits)}/${formatCurrency(totalNeeded)}`;
+        }
+
+        function update529TransactionsList(expenses) {
+            console.log('=== Updating 529 Transactions List ===');
+            const transactionsList = document.getElementById('529-transactions-list');
+            const transactions = expenses.filter(expense => 
+                expense.category === 'Deposit529' || expense.category === 'Withdrawal529'
+            );
+            console.log('Total 529 transactions to display:', transactions.length);
+
+            transactionsList.innerHTML = transactions
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .map(transaction => `
+                    <div class="expense-item" id="transaction-${transaction.expenseID}">
+                        <div>
+                            <div>${new Date(transaction.date).toLocaleDateString()}</div>
+                            <div>${transaction.category === 'Deposit529' ? 'Deposit' : 'Withdrawal'}</div>
+                            <div>${transaction.notes}</div>
+                        </div>
+                        <div>
+                            <span style="color: ${transaction.category === 'Deposit529' ? '#10B981' : '#EF4444'}">
+                                ${transaction.category === 'Deposit529' ? '+' : '-'}$${transaction.amount.toFixed(2)}
+                            </span>
+                            <button onclick="deleteExpenseHandler('${transaction.expenseID}')" 
+                                    class="delete-btn">Delete</button>
+                        </div>
+                    </div>
+                `).join('');
+            console.log('=== Completed 529 Transactions List Update ===');
+        }
+
+        // Add event listener for 529 transaction form
+        document.getElementById('529-transaction-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const submitButton = this.querySelector('.submit-button');
+            const originalText = submitButton.textContent;
+            
+            const inputDate = new Date(document.getElementById('529-transaction-date').value);
+            inputDate.setDate(inputDate.getDate() + 1);  // Add one day
+            
+            const amountInput = document.getElementById('529-transaction-amount');
+            console.log('529 Amount input value:', amountInput.value);
+            console.log('529 Amount input type:', typeof amountInput.value);
+            
+            const transactionData = {
+                category: document.getElementById('529-transaction-type').value,
+                amount: parseFloat(amountInput.value),
+                date: inputDate.toISOString().split('T')[0],
+                notes: document.getElementById('529-transaction-notes').value || '',
+                isQualified: false,  // 529 transactions aren't qualified expenses
+                needsReceipt: false
+            };
+
+            console.log('529 Transaction data to be submitted:', transactionData);
+
+            try {
+                await createExpense(transactionData);
+                submitButton.textContent = "✓";
+                showSuccess('529 transaction recorded successfully!');
+                loadExpenses();
+                
+                setTimeout(() => {
+                    submitButton.textContent = originalText;
+                    this.reset();
+                }, 1500);
+            } catch (error) {
+                showError(error.message);
+                submitButton.textContent = originalText;
+            }
+        });
+
+        function showExampleModal() {
+            document.getElementById('example-modal').style.display = 'flex';
+        }
+
+        function hideExampleModal() {
+            document.getElementById('example-modal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const exampleModal = document.getElementById('example-modal');
+            const howToModal = document.getElementById('how-to-modal');
+            const deleteModal = document.getElementById('delete-confirmation-modal');
+            
+            if (event.target == exampleModal) {
+                hideExampleModal();
+            }
+            if (event.target == howToModal) {
+                hideHowToModal();
+            }
+            if (event.target == deleteModal) {
+                hideDeleteModal();
+            }
+        }
+
+        // Add this function to handle qualified expense checkbox updates
+        function updateQualifiedCheckbox() {
+            const category = document.getElementById('expense-category').value;
+            const customCategory = document.getElementById('custom-category').value;
+            const qualifiedCheckbox = document.getElementById('qualified-expense');
+            
+            // List of qualified categories
+            const qualifiedCategories = ['Rent', 'Groceries', 'WiFi', 'Required Supplies', 'Utilities'];
+            
+            // Check if the selected category is in the qualified list
+            if (qualifiedCategories.includes(category)) {
+                qualifiedCheckbox.checked = true;
+            } else if (category === 'Custom') {
+                qualifiedCheckbox.checked = false;
+            } else {
+                qualifiedCheckbox.checked = false;
+            }
+        }
+
+        function showHowToModal() {
+            document.getElementById('how-to-modal').style.display = 'flex';
+        }
+
+        function hideHowToModal() {
+            document.getElementById('how-to-modal').style.display = 'none';
+        }
+        // Global variables for pagination
+let currentPage = 1;
+let transactionsPerPage = 10;
+let filteredTransactions = [];
+let allTransactions = [];
+let plaidConnected = false;
+
+// Update the automation toggle handler
+document.getElementById('automation-toggle').addEventListener('change', async function() {
+    try {
+        const isAutomatic = this.checked;
+        
+        if (isAutomatic) {
+            // Check if user has the correct email
+            const userProfile = await fetchUserProfile();
+            if (userProfile.email !== 'pntl162@gmail.com' && userProfile.email !== 'mo112233@gmail.com') {
+                alert('Automation feature is currently under development. Please use manual tracking for now.');
+                this.checked = false;
+                return;
+            }
+            
+            // Check if Plaid is already connected
+            plaidConnected = userProfile.accountStatus === 'AUTOMATIC';
+            
+            if (!plaidConnected) {
+                // Ask user to connect Plaid
+                if (confirm('To enable automatic expense tracking, you need to connect your bank account. Would you like to do this now?')) {
+                    // Redirect to Plaid connection page
+                    window.location.href = 'plaidrenestsandbox.html';
+                    return;
+                } else {
+                    // User declined, revert toggle
+                    this.checked = false;
+                    return;
+                }
+            }
+            
+            // User already has Plaid connected
+            await updateAccountStatus('AUTOMATIC');
+            toggleManualControls(false);
+            
+        } else {
+            // User wants to go back to manual mode
+            await updateAccountStatus('MANUAL');
+            toggleManualControls(true);
+        }
+    } catch (error) {
+        console.error('Error toggling automation mode:', error);
+        // Revert toggle to previous state
+        this.checked = !this.checked;
+        showError('Failed to update tracking mode. Please try again.');
+    }
+});
+
+// Function to update account status in the database
+async function updateAccountStatus(status) {
+    try {
+        const token = API.getToken();
+        if (!token) throw new Error('No authentication token found');
+
+        const response = await fetch('https://jmqfabgm02.execute-api.us-east-2.amazonaws.com/update-profile', {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                accountStatus: status
+            })
+        });
+        
+        if (!response.ok) throw new Error('Failed to update account status');
+        
+        return await response.json();
+    } catch (error) {
+        console.error('Error updating account status:', error);
+        throw error;
+    }
+}
+
+// Function to toggle visibility of manual controls
+function toggleManualControls(show) {
+    // Get all tab content elements
+    const tabs = ['rent-tab', 'expenses-tab', 'account-tab', 'summary-tab'];
+    const automaticControls = document.getElementById('automatic-controls');
+    
+    if (show) {
+        // Manual mode - hide automatic controls
+        automaticControls.style.display = 'none';
+    } else {
+        // Automatic mode - show both automatic and manual controls
+        automaticControls.style.display = 'block';
+    }
+    
+    // Instead of showing all tabs, call showTab to ensure only the active tab is visible
+    // Find which tab button is currently active
+    const activeTabButton = document.querySelector('.tab-button.active');
+    if (activeTabButton) {
+        // Extract the tab name from the onclick attribute
+        const onclickAttr = activeTabButton.getAttribute('onclick');
+        if (onclickAttr) {
+            const tabNameMatch = onclickAttr.match(/showTab\('(.+?)'\)/);
+            if (tabNameMatch && tabNameMatch[1]) {
+                console.log('Calling showTab with active tab:', tabNameMatch[1]);
+                showTab(tabNameMatch[1]);
+            } else {
+                // Default to rent tab if we can't determine the active tab
+                console.log('Defaulting to rent tab');
+                showTab('rent');
+            }
+        } else {
+            // Default to rent tab if onclick attribute is missing
+            console.log('Defaulting to rent tab (no onclick)');
+            showTab('rent');
+        }
+    } else {
+        // No active tab button found, default to rent tab
+        console.log('No active tab found, defaulting to rent tab');
+        showTab('rent');
+    }
+    
+    // Always enable and show tab buttons
+    document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.disabled = false;
+        btn.style.display = 'block';
+    });
+    
+    // Hide the show manual controls button in automatic mode
+    if (!show) {
+        document.getElementById('show-manual-controls').style.display = 'none';
+    }
+}
+
+// Event listener for "Show Manual Controls" button
+document.getElementById('show-manual-controls').addEventListener('click', function() {
+    console.log('Show manual controls button clicked');
+    
+    // Enable tab buttons
+    document.querySelectorAll('.tab-button').forEach((btn, index) => {
+        btn.disabled = false;
+        if (index === 0) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+    
+    // Use the showTab function to show only the rent tab
+    showTab('rent');
+});
+
+// Function to load Plaid transactions
+async function loadPlaidTransactions() {
+    try {
+        const token = API.getToken();
+        if (!token) throw new Error('No authentication token found');
+
+        // Show loading indicator
+        const tableBody = document.getElementById('transactions-tbody');
+        tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem;">Loading transactions...</td></tr>';
+
+        // Get the selected month/year
+        const monthSelect = document.getElementById('transaction-month');
+        const yearSelect = document.getElementById('transaction-year');
+        const now = new Date();
+        
+        // If no month/year is selected, default to current
+        if (!monthSelect.value) {
+            monthSelect.value = (now.getMonth()).toString().padStart(2, '0');
+        }
+        if (!yearSelect.value) {
+            yearSelect.value = now.getFullYear().toString();
+        }
+        
+        // Add 1 to month to correct the offset
+        const month = parseInt(monthSelect.value);
+        const year = parseInt(yearSelect.value);
+        
+        // Adjust year if month overflows
+        const adjustedMonth = month > 12 ? 1 : month;
+        const adjustedYear = month > 12 ? year + 1 : year;
+
+        // Call the API to get transaction data
+        const response = await fetch('https://fq3oz4hac8.execute-api.us-east-2.amazonaws.com/plaid', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                action: 'getExpenseSummary',
+                userId: await getUserId(token),
+                month: adjustedMonth,
+                year: adjustedYear
+            })
+        });
+
+        if (!response.ok) throw new Error('Failed to fetch transactions');
+        
+        const data = await response.json();
+        
+        // Update last update time
+        const lastUpdateTime = document.getElementById('last-update-time');
+        if (data.lastUpdate) {
+            const updateDate = new Date(data.lastUpdate);
+            lastUpdateTime.textContent = `Last updated: ${updateDate.toLocaleString()}`;
+        }
+
+        // Clear and populate transactions table
+        tableBody.innerHTML = '';
+        
+        // Store all transactions for filtering
+        allTransactions = [];
+        
+        // Populate transactions
+        Object.entries(data.summary).forEach(([category, info]) => {
+            console.log('Category info:', {
+                category,
+                negative: info.negative,
+                net: info.net,
+                transactions: info.transactions.length
+            });
+            info.transactions.forEach(transaction => {
+                console.log('Transaction in', category, ':', {
+                    id: transaction.id,
+                    name: transaction.name,
+                    amount: transaction.amount,
+                    categoryNegative: info.negative
+                });
+                
+                // Add to allTransactions array
+                allTransactions.push({
+                    ...transaction,
+                    category: category,
+                    isNegative: info.negative
+                });
+            });
+        });
+
+        console.log('All transactions with negative flag:', allTransactions);
+        
+        // Update category filter
+        updateCategoryFilter(data.summary);
+        
+        // Apply initial filters
+        applyFiltersAndUpdateDisplay();
+
+    } catch (error) {
+        console.error('Error loading transactions:', error);
+        showError('Failed to load transactions: ' + error.message);
+        
+        // Clear the table and show error message
+        const tableBody = document.getElementById('transactions-tbody');
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="6" style="text-align: center; padding: 2rem; color: #DC2626;">
+                    Failed to load transactions. Please try again.
+                </td>
+            </tr>
+        `;
+    }
+}
+
+// Function to update the category filter dropdown
+function updateCategoryFilter(categorySummary) {
+    const categoryFilter = document.getElementById('category-filter');
+    
+    // Clear existing options (except "All Categories")
+    while (categoryFilter.options.length > 1) {
+        categoryFilter.remove(1);
+    }
+    
+    // Add an option for each category
+    Object.keys(categorySummary).forEach(category => {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category;
+        
+        // Add special styling for qualified categories
+        if (isQualifiedCategory(category)) {
+            option.className = 'qualified-category';
+        }
+        
+        categoryFilter.appendChild(option);
+    });
+}
+
+// Function to check if a category is qualified
+function isQualifiedCategory(category) {
+    const qualifiedCategories = ['Rent', 'Groceries', 'WiFi', 'Required Supplies', 'Utilities'];
+    return qualifiedCategories.includes(category);
+}
+
+// Function to apply filters and update the display
+function applyFiltersAndUpdateDisplay() {
+    // Get filter values
+    const searchText = document.getElementById('transaction-search').value.toLowerCase();
+    const categoryFilter = document.getElementById('category-filter').value;
+    
+    // Filter transactions
+    filteredTransactions = allTransactions.filter(transaction => {
+        // Apply search filter
+        const matchesSearch = !searchText || 
+            transaction.name.toLowerCase().includes(searchText) || 
+            (transaction.description && transaction.description.toLowerCase().includes(searchText));
+        
+        // Apply category filter
+        const matchesCategory = !categoryFilter || transaction.category === categoryFilter;
+        
+        return matchesSearch && matchesCategory;
+    });
+    
+    // Sort transactions by date (newest first)
+    filteredTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+    
+    // Update pagination information
+    const totalPages = Math.ceil(filteredTransactions.length / transactionsPerPage);
+    if (currentPage > totalPages && totalPages > 0) {
+        currentPage = totalPages;
+    }
+    
+    // Enable/disable pagination buttons
+    document.getElementById('prev-page').disabled = currentPage <= 1;
+    document.getElementById('next-page').disabled = currentPage >= totalPages;
+    document.getElementById('page-info').textContent = 
+        `Page ${currentPage} of ${totalPages > 0 ? totalPages : 1}`;
+    
+    // Display the current page of transactions
+    displayTransactionsPage();
+}
+
+// Function to display the current page of transactions
+function displayTransactionsPage() {
+    const tableBody = document.getElementById('transactions-tbody');
+    tableBody.innerHTML = '';
+    
+    const startIndex = (currentPage - 1) * transactionsPerPage;
+    const endIndex = Math.min(startIndex + transactionsPerPage, filteredTransactions.length);
+    
+    if (filteredTransactions.length === 0) {
+        tableBody.innerHTML = 
+            `<tr><td colspan="6" style="text-align: center; padding: 2rem;">
+                No transactions found. Try adjusting your filters.
+            </td></tr>`;
+        return;
+    }
+    
+    for (let i = startIndex; i < endIndex; i++) {
+        const transaction = filteredTransactions[i];
+        console.log('Displaying transaction:', {
+            name: transaction.name,
+            amount: transaction.amount,
+            date: transaction.date,
+            transactionType: transaction.transactionType
+        });
+        
+        const row = document.createElement('tr');
+        row.style.borderBottom = '1px solid #E5E7EB';
+        
+        // Format date while preserving original
+        const dateParts = transaction.date.split('-');
+        const formattedDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0]}`;
+        
+        // Create row cells
+        row.innerHTML = `
+            <td style="padding: 0.75rem 1rem;" title="${transaction.date}">${formattedDate}</td>
+            <td style="padding: 0.75rem 1rem;">
+                ${transaction.name}
+                <div style="font-size: 0.8rem; color: #6B7280;">${transaction.description || ''}</div>
+            </td>
+            <td style="padding: 0.75rem 1rem; text-align: right; ${transaction.transactionType === 'negative' ? 'color: #DC2626;' : 'color: #059669;'}">
+                $${transaction.amount.toFixed(2)}
+            </td>
+            <td style="padding: 0.75rem 1rem;">${transaction.category}</td>
+            <td style="padding: 0.75rem 1rem; text-align: center;">
+                <div class="custom-checkbox" style="justify-content: center;">
+                    <span class="checkmark ${transaction.isQualified ? 'checked' : ''}"></span>
+                </div>
+            </td>
+            <td style="padding: 0.75rem 1rem; text-align: center;">
+                <button class="outline-button" style="padding: 0.3rem 0.5rem; font-size: 0.8rem;"
+                    onclick="editTransaction('${transaction.id}')">Edit</button>
+            </td>
+        `;
+        
+        tableBody.appendChild(row);
+    }
+}
+
+// Function to handle editing a transaction
+function editTransaction(transactionId) {
+    // Find the transaction
+    const transaction = allTransactions.find(t => t.id === transactionId);
+    if (!transaction) return;
+    
+    // Populate the edit modal
+    document.getElementById('edit-transaction-name').value = transaction.name;
+    document.getElementById('edit-transaction-amount').value = `$${transaction.amount.toFixed(2)}`;
+    
+    // Populate category dropdown
+    const categorySelect = document.getElementById('edit-transaction-category');
+    categorySelect.innerHTML = '';
+    
+    // Add default option
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.textContent = 'Select Category';
+    categorySelect.appendChild(defaultOption);
+    
+    // Add all predefined categories
+    const PREDEFINED_CATEGORIES = [
+        'Rent',
+        'Groceries',
+        'WiFi',
+        'Supplies',
+        'Utilities',
+        'Transportation',
+        'Healthcare',
+        'Education',
+        'Entertainment',
+        'Shopping',
+        'Restaurants',
+        'Bars and Cafes',
+        'Other'
+    ];
+    
+    // Add all predefined categories
+    PREDEFINED_CATEGORIES.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category;
+        if (isQualifiedCategory(category)) {
+            option.className = 'qualified-category';
+        }
+        categorySelect.appendChild(option);
+    });
+    
+    // Add custom option
+    const customOption = document.createElement('option');
+    customOption.value = 'custom';
+    customOption.textContent = 'Custom Category';
+    categorySelect.appendChild(customOption);
+    
+    // Set current category
+    if (PREDEFINED_CATEGORIES.includes(transaction.category)) {
+        categorySelect.value = transaction.category;
+    } else {
+        categorySelect.value = 'custom';
+        document.getElementById('custom-category-input').value = transaction.category;
+        document.getElementById('custom-category-group').style.display = 'block';
+    }
+    
+    // Set qualified checkbox
+    document.getElementById('edit-transaction-qualified').checked = transaction.isQualified;
+    
+    // Store transaction ID for later use
+    categorySelect.dataset.transactionId = transactionId;
+    
+    // Show the modal
+    document.getElementById('category-modal').style.display = 'flex';
+}
+
+// Function to handle category dropdown change
+function handleCategoryChange() {
+    const categorySelect = document.getElementById('edit-transaction-category');
+    const customCategoryGroup = document.getElementById('custom-category-group');
+    const customCategoryInput = document.getElementById('custom-category-input');
+    const qualifiedCheckbox = document.getElementById('edit-transaction-qualified');
+    
+    if (categorySelect.value === 'custom') {
+        customCategoryGroup.style.display = 'block';
+        customCategoryInput.focus();
+        qualifiedCheckbox.checked = false;
+    } else {
+        customCategoryGroup.style.display = 'none';
+        customCategoryInput.value = '';
+        // Update qualified checkbox based on selected category
+        qualifiedCheckbox.checked = isQualifiedCategory(categorySelect.value);
+    }
+}
+
+// Function to save transaction changes
+async function saveTransactionChanges(button) {
+    try {
+        const spinner = button.querySelector('.spinner');
+        const textSpan = button.querySelector('span:not(.spinner)');
+        
+        // Show loading state
+        spinner.style.display = 'inline-block';
+        textSpan.textContent = 'Saving...';
+        button.disabled = true;
+
+        const transactionId = document.getElementById('edit-transaction-category').dataset.transactionId;
+        const categorySelect = document.getElementById('edit-transaction-category');
+        const customCategoryInput = document.getElementById('custom-category-input');
+        const isQualified = document.getElementById('edit-transaction-qualified').checked;
+        const createRule = document.getElementById('create-category-rule').checked;
+        
+        // Get the final category value
+        let newCategory = categorySelect.value;
+        if (newCategory === 'custom') {
+            newCategory = customCategoryInput.value.trim();
+            if (!newCategory) {
+                showError('Please enter a custom category');
+                return;
+            }
+        }
+        
+        const token = API.getToken();
+        if (!token) throw new Error('No authentication token found');
+        
+        // Call API to update category
+        const categoryResponse = await fetch('https://fq3oz4hac8.execute-api.us-east-2.amazonaws.com/plaid', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                action: 'updateTransactionCategory',
+                userId: await getUserId(token),
+                transactionId: transactionId,
+                newCategory: newCategory,
+                createRule: createRule
+            })
+        });
+        
+        if (!categoryResponse.ok) throw new Error('Failed to update category');
+        
+        // Call API to update qualified status
+        const qualifiedResponse = await fetch('https://fq3oz4hac8.execute-api.us-east-2.amazonaws.com/plaid', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                action: 'updateTransactionQualified',
+                userId: await getUserId(token),
+                transactionId: transactionId,
+                isQualified: isQualified
+            })
+        });
+        
+        if (!qualifiedResponse.ok) throw new Error('Failed to update qualified status');
+        
+        // Update local transaction data
+        const transaction = allTransactions.find(t => t.id === transactionId);
+        if (transaction) {
+            transaction.category = newCategory;
+            transaction.isQualified = isQualified;
+        }
+        
+        // Hide modal
+        hideCategoryModal();
+        
+        // Show success message
+        showSuccess('Transaction updated successfully!');
+        
+        // Refresh display
+        applyFiltersAndUpdateDisplay();
+        
+    } catch (error) {
+        console.error('Error saving transaction changes:', error);
+        showError('Failed to update transaction: ' + error.message);
+    } finally {
+        // Reset button state
+        const spinner = button.querySelector('.spinner');
+        const textSpan = button.querySelector('span:not(.spinner)');
+        spinner.style.display = 'none';
+        textSpan.textContent = 'Save Changes';
+        button.disabled = false;
+    }
+}
+
+// Event listeners for filter and pagination
+document.getElementById('transaction-search').addEventListener('input', applyFiltersAndUpdateDisplay);
+document.getElementById('category-filter').addEventListener('change', applyFiltersAndUpdateDisplay);
+document.getElementById('transaction-month').addEventListener('change', loadPlaidTransactions);
+document.getElementById('prev-page').addEventListener('click', () => {
+    if (currentPage > 1) {
+        currentPage--;
+        applyFiltersAndUpdateDisplay();
+        // Scroll to top of transaction table
+        document.querySelector('.transaction-table-container').scrollIntoView({ behavior: 'smooth' });
+    }
+});
+document.getElementById('next-page').addEventListener('click', () => {
+    const totalPages = Math.ceil(filteredTransactions.length / transactionsPerPage);
+    if (currentPage < totalPages) {
+        currentPage++;
+        applyFiltersAndUpdateDisplay();
+        // Scroll to top of transaction table
+        document.querySelector('.transaction-table-container').scrollIntoView({ behavior: 'smooth' });
+    }
+});
+
+// Event listener for Update button
+document.getElementById('update-transactions').addEventListener('click', async function() {
+    try {
+        const token = API.getToken();
+        if (!token) throw new Error('No authentication token found');
+        
+        // Check last update time
+        const lastUpdateElement = document.getElementById('last-update-time');
+        const lastUpdateText = lastUpdateElement.textContent;
+        console.log('Last update text:', lastUpdateText);
+        
+        if (lastUpdateText && lastUpdateText !== 'Last updated: Never') {
+            // Extract the date string and parse it
+            const dateStr = lastUpdateText.replace('Last updated: ', '');
+            console.log('Extracted date string:', dateStr);
+            
+            const lastUpdate = new Date(dateStr);
+            const now = new Date();
+            console.log('Last update:', lastUpdate);
+            console.log('Current time:', now);
+            
+            if (lastUpdate.toString() === 'Invalid Date') {
+                console.error('Failed to parse last update date');
+            } else {
+                const hoursSinceLastUpdate = (now - lastUpdate) / (1000 * 60 * 60);
+                console.log('Hours since last update:', hoursSinceLastUpdate);
+                
+                if (hoursSinceLastUpdate < 24) {
+                    const hoursRemaining = Math.ceil(24 - hoursSinceLastUpdate);
+                    const errorMsg = `Please wait. Updates are available once every 24 hours.`;
+                    console.log('Showing error:', errorMsg);
+                    showError(errorMsg);
+                    return;
+                }
+            }
+        }
+        
+        // Show loading state
+        this.disabled = true;
+        this.innerHTML = 'Updating...';
+        
+        // Call API to update transactions
+        const response = await fetch('https://fq3oz4hac8.execute-api.us-east-2.amazonaws.com/plaid', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                action: 'updateExpenses',
+                userId: await getUserId(token)
+            })
+        });
+        
+        if (!response.ok) throw new Error('Failed to update transactions');
+        
+        const data = await response.json();
+        
+        // Show success message
+        showSuccess(data.message || 'Transactions updated successfully!');
+        
+        // Update the last update time immediately
+        const currentTime = new Date().toLocaleString();
+        lastUpdateElement.textContent = `Last updated: ${currentTime}`;
+        
+        // Reload transactions
+        loadPlaidTransactions();
+        
+    } catch (error) {
+        console.error('Error updating transactions:', error);
+        showError('Failed to update transactions: ' + error.message);
+    } finally {
+        // Reset button state
+        this.disabled = false;
+        this.innerHTML = 'Update Transactions';
+    }
+});
+
+// Helper function to get user ID from token
+async function getUserId(token) {
+    try {
+        const response = await fetch('https://g4gri8abii.execute-api.us-east-2.amazonaws.com/prod/profile', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch user profile');
+        }
+
+        const userData = await response.json();
+        return userData.userId || userData.email;
+        
+    } catch (error) {
+        console.error('Error fetching user ID:', error);
+        throw error;
+    }
+}
+
+// Add initialization code to check status on page load
+document.addEventListener('DOMContentLoaded', async () => {
+    console.log('Main DOMContentLoaded event fired');
+    const token = API.getToken();
+    if (!token) {
+        window.location.href = 'signin529.html';
+        return;
+    }
+    
+    try {
+        // Check user's automation status
+        const userProfile = await fetchUserProfile();
+        const isAutomatic = userProfile.accountStatus === 'AUTOMATIC';
+        
+        // Set toggle to match current status
+        document.getElementById('automation-toggle').checked = isAutomatic;
+        
+        // Setup UI based on mode
+        if (isAutomatic) {
+            toggleManualControls(false);
+            plaidConnected = true;
+            
+            // Set up month and year selectors for Plaid transactions
+            const monthSelect = document.getElementById('transaction-month');
+            const yearSelect = document.getElementById('transaction-year');
+            
+            // Set default values to current month/year
+            const now = new Date();
+            monthSelect.value = (now.getMonth() + 1).toString().padStart(2, '0');
+            yearSelect.value = now.getFullYear().toString();
+            
+            // Add event listeners
+            monthSelect.addEventListener('change', loadPlaidTransactions);
+            yearSelect.addEventListener('change', loadPlaidTransactions);
+            
+            // Load initial Plaid transactions
+            loadPlaidTransactions();
+        } else {
+            toggleManualControls(true);
+        }
+        
+        // Load expenses normally
+        loadExpenses();
+        
+        // Ensure rent tab is visible regardless of other initialization
+        console.log('Forcing rent tab visibility after all initialization');
+        showTab('rent');
+        
+    } catch (error) {
+        console.error('Error initializing page:', error);
+        showError('Error loading data. Please try again.');
+        
+        // Even if there's an error, try to show the rent tab
+        showTab('rent');
+    }
+});
+
+// Helper function to fetch user profile
+async function fetchUserProfile() {
+    try {
+        const token = API.getToken();
+        if (!token) throw new Error('No authentication token found');
+
+        const response = await fetch('https://g4gri8abii.execute-api.us-east-2.amazonaws.com/prod/profile', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        if (!response.ok) throw new Error('Failed to fetch profile');
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching profile:', error);
+        throw error;
+    }
+}
+
+// Function to hide the category modal
+function hideCategoryModal() {
+    document.getElementById('category-modal').style.display = 'none';
+    // Clear custom category input when hiding modal
+    document.getElementById('custom-category-input').value = '';
+    document.getElementById('custom-category-group').style.display = 'none';
+}
+    </script>
+    
+<!-- Add this at the end of your HTML before the closing body tag -->
+
+<div id="category-modal" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 500px;">
+        <h2>Edit Transaction</h2>
+        <div class="form-group">
+            <label>Transaction</label>
+            <input type="text" id="edit-transaction-name" class="form-control" readonly>
+        </div>
+        <div class="form-group">
+            <label>Amount</label>
+            <input type="text" id="edit-transaction-amount" class="form-control" readonly>
+        </div>
+        <div class="form-group">
+            <label>Category</label>
+            <div class="select-container">
+                <select id="edit-transaction-category" class="form-control" onchange="handleCategoryChange()">
+                    <!-- Categories will be populated dynamically -->
+                </select>
+            </div>
+        </div>
+        <div class="form-group" id="custom-category-group" style="display: none;">
+            <label>Custom Category</label>
+            <input type="text" id="custom-category-input" class="form-control" placeholder="Enter custom category">
+        </div>
+        <div class="form-group">
+            <label class="custom-checkbox">
+                <input type="checkbox" id="edit-transaction-qualified">
+                <span class="checkmark"></span>
+                Qualified Expense
+            </label>
+        </div>
+        <div class="form-group">
+            <label class="custom-checkbox">
+                <input type="checkbox" id="create-category-rule">
+                <span class="checkmark"></span>
+                Apply to all similar transactions
+            </label>
+        </div>
+        <div class="modal-footer">
+            <button class="outline-button" onclick="hideCategoryModal()">Cancel</button>
+            <button class="submit-button" onclick="saveTransactionChanges(this)">
+                <span class="spinner" style="display: none;"></span>
+                <span>Save Changes</span>
+            </button>
+        </div>
+    </div>
+</div>
+</body>
+</html>
