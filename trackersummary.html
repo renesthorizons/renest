@@ -1062,6 +1062,88 @@ input[type="number"] {
     background-color: var(--primary-dark);
     transform: translateY(-1px);
 }
+
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.close {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+.close:hover {
+    color: var(--text-dark);
+}
+
+.modal h2 {
+    color: var(--primary);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.modal p {
+    margin-bottom: 1rem;
+    color: var(--text-dark);
+}
+
+.modal ul {
+    margin-bottom: 1.5rem;
+    padding-left: 1.5rem;
+}
+
+.modal li {
+    margin-bottom: 0.5rem;
+    color: var(--text-dark);
+}
+
+.learn-more-btn {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.learn-more-btn:hover {
+    background-color: var(--primary-dark);
+}
+
+.max-benefit-badge {
+    background-color: var(--warning);
+    color: white;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 9999px;
+    margin-left: 0.5rem;
+    cursor: pointer;
+    font-weight: 500;
+}
 </style>
 
 
@@ -1173,6 +1255,20 @@ input[type="number"] {
             </div>
         </div>
     </footer>
+
+    <div id="maxBenefitModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Maximum Benefit Reached</h2>
+            <p>You've reached the maximum state benefit for this year. Here's what this means:</p>
+            <ul>
+                <li>You've received the full tax benefit available from your state</li>
+                <li>Additional qualified expenses this month won't increase your benefit</li>
+                <li>You can continue using your 529 for tax-free growth on future expenses</li>
+            </ul>
+            <button id="learnMore529" class="learn-more-btn">Learn More About 529 Benefits</button>
+        </div>
+    </div>
 </body>
 
 <script>
@@ -2803,16 +2899,27 @@ function updateCategoryDisplay(expenses) {
     console.log('Category display update complete');
 }
 
-function updateBenefitDisplay(benefits, state, accountStatus, expenses, userProfile) {  
-    document.getElementById('currentMonthBenefit').textContent = 
-        `$${benefits.currentMonthBenefit.toFixed(2)}`;
-    document.getElementById('totalBenefit').textContent = 
-        `$${benefits.ytdBenefit.toFixed(2)}`;
+function updateBenefitDisplay(benefits, state, accountStatus, expenses, userProfile) {
+    const currentMonthBenefitElement = document.getElementById('currentMonthBenefit');
+    const totalBenefitElement = document.getElementById('totalBenefit');
     
+    // Check if we've hit the maximum benefit
+    const hasReachedMax = hasReachedMaxBenefit(state, benefits.ytdBenefit, benefits.qualifiedAmount, userProfile.income);
+    
+    // Update current month benefit display
+    if (hasReachedMax) {
+        currentMonthBenefitElement.innerHTML = `$0.00 <span class="max-benefit-badge" onclick="document.getElementById('maxBenefitModal').style.display='block'">Max Reached</span>`;
+    } else {
+        currentMonthBenefitElement.textContent = `$${benefits.currentMonthBenefit.toFixed(2)}`;
+    }
+    
+    // Update total benefit
+    totalBenefitElement.textContent = `$${benefits.ytdBenefit.toFixed(2)}`;
+    
+    // Update tracking status
     const trackingStatusText = accountStatus === 'MANUAL' 
         ? 'Manual Tracking'
         : 'Automatic Tracking';
-    
     document.getElementById('trackingStatus').textContent = trackingStatusText;
 
     // Calculate total qualified expenses and deposits for current year only
@@ -2849,36 +2956,32 @@ function updateBenefitDisplay(benefits, state, accountStatus, expenses, userProf
     }
 
     const accountStatusElement = document.getElementById('accountStatus');
-    const actionButtonContainer = document.getElementById('actionButtonContainer');
+    if (accountStatusElement) {
+        accountStatusElement.style.color = statusColor;
+        accountStatusElement.textContent = statusText;
+    }
+}
+
+// Add modal event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('maxBenefitModal');
+    const closeBtn = modal.querySelector('.close');
+    const learnMoreBtn = document.getElementById('learnMore529');
     
-    // Clear previous button
-    actionButtonContainer.innerHTML = '';
-    
-    // Get progress percentage from the passed userProfile parameter
-    const progressPercentage = userProfile?.progressPercentage || 0;
-    
-    // Create button based on conditions
-    if (progressPercentage === 33) {
-        const fixButton = document.createElement('a');
-        fixButton.href = 'openrenest529.html';
-        fixButton.className = 'action-button fix';
-        fixButton.textContent = 'Open 529';
-        actionButtonContainer.appendChild(fixButton);
-    } else if (progressPercentage !== 33 && ratio < 1) { // If ratio is less than 1, it means deposits are less than qualified expenses
-        const depositButton = document.createElement('a');
-        depositButton.href = '529expensetracker.html';
-        depositButton.className = 'action-button deposit';
-        depositButton.textContent = 'Make Deposit';
-        actionButtonContainer.appendChild(depositButton);
+    closeBtn.onclick = function() {
+        modal.style.display = 'none';
     }
     
-    accountStatusElement.innerHTML = `
-        <div class="status-text">
-            <div class="status-indicator" style="background-color: ${statusColor}"></div>
-            <span>${statusText}</span>
-        </div>
-    `;
-}
+    learnMoreBtn.onclick = function() {
+        window.location.href = '/learn-more-529';
+    }
+    
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+});
 
 // Add new function to handle month-specific category display
 function updateCategoryDisplayForMonth(expenses, selectedDate) {
