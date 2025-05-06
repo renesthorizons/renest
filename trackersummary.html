@@ -8,7 +8,7 @@
     <!-- Add Chart.js library -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Add SweetAlert2 library -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
 </head>
 <style>
 :root {
@@ -1062,6 +1062,103 @@ input[type="number"] {
     background-color: var(--primary-dark);
     transform: translateY(-1px);
 }
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+}
+
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: var(--text-muted);
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+}
+
+.modal-body {
+    margin-bottom: 1.5rem;
+}
+
+.modal-body p {
+    margin-bottom: 1rem;
+    color: var(--text-dark);
+}
+
+.benefit-list {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+}
+
+.benefit-list li {
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-dark);
+}
+
+.benefit-list li::before {
+    content: "✓";
+    color: var(--success);
+    font-weight: bold;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.modal-button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.modal-button.primary {
+    background: var(--gold);
+    color: white;
+}
+
+.modal-button.secondary {
+    background: var(--border);
+    color: var(--text-dark);
+}
+
+.modal-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 </style>
 
 
@@ -1173,6 +1270,26 @@ input[type="number"] {
             </div>
         </div>
     </footer>
+    <div id="taxFreeModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeTaxFreeModal()">&times;</span>
+            <h2 class="modal-title">Tax-Free Investing Opportunity</h2>
+            <div class="modal-body">
+                <p>Even though you've reached your maximum tax benefit, you can still use your 529 plan for tax-free investing!</p>
+                <ul class="benefit-list">
+                    <li>Tax-free growth on investments</li>
+                    <li>Tax-free withdrawals for qualified expenses</li>
+                    <li>No federal taxes on earnings</li>
+                    <li>No state taxes on earnings in most states</li>
+                </ul>
+                <p>Would you like to learn more about investment options?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-button secondary" onclick="closeTaxFreeModal()">Close</button>
+                <button class="modal-button primary" onclick="window.location.href='openrenest529.html'">Learn More</button>
+            </div>
+        </div>
+    </div>
 </body>
 
 <script>
@@ -2806,14 +2923,17 @@ function updateCategoryDisplay(expenses) {
 function updateBenefitDisplay(benefits, state, accountStatus, expenses, userProfile) {  
     // Handle monthly benefit display
     const currentMonthBenefitElement = document.getElementById('currentMonthBenefit');
+    const currentMonthLabel = document.getElementById('currentMonthLabel');
     const hasReachedMax = hasReachedMaxBenefit(state, benefits.ytdBenefit, 
         expenses?.filter(e => e.isQualified)?.reduce((sum, e) => sum + e.amount, 0) || 0,
         userProfile?.income || 0);
     
     if (hasReachedMax) {
-        currentMonthBenefitElement.innerHTML = '<div class="action-button max-benefit">Max Benefit Reached</div>';
+        currentMonthBenefitElement.innerHTML = '<div class="action-button max-benefit" onclick="showTaxFreeModal()">Max Benefit Reached</div>';
+        if (currentMonthLabel) currentMonthLabel.style.display = 'none';
     } else {
         currentMonthBenefitElement.textContent = `$${benefits.currentMonthBenefit.toFixed(2)}`;
+        if (currentMonthLabel) currentMonthLabel.style.display = 'block';
     }
     
     document.getElementById('totalBenefit').textContent = 
@@ -4073,5 +4193,24 @@ if (hasReachedMax) {
     currentMonthBenefit = 0;
     console.log('Current month benefit set to 0 as max benefit reached');
 }
+
+// Add these functions at the end of the file, before the closing </script> tag
+function showTaxFreeModal() {
+    const modal = document.getElementById('taxFreeModal');
+    modal.style.display = 'flex';
+}
+
+function closeTaxFreeModal() {
+    const modal = document.getElementById('taxFreeModal');
+    modal.style.display = 'none';
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(event) {
+    const modal = document.getElementById('taxFreeModal');
+    if (event.target === modal) {
+        closeTaxFreeModal();
+    }
+});
 </script>
 </html>
