@@ -2992,6 +2992,15 @@ async function initializePage() {
         // console.log('User profile loaded:', userProfile);
         if (!userProfile) throw new Error('Failed to load user profile');
 
+        // Set tracking status based on progress percentage and account status
+        const progressPercentage = localStorage.getItem('progressPercentage');
+        const accountStatus = localStorage.getItem('accountStatus');
+        if (progressPercentage === '33' || accountStatus === 'ACTIVE') {
+            document.getElementById('trackingStatus').textContent = 'Manual tracking';
+        } else {
+            document.getElementById('trackingStatus').textContent = 'Automatic tracking';
+        }
+
         // 2. Load current budgets
         console.time('Budgets Load');
         const budgets = await loadCurrentBudgets();
