@@ -3010,20 +3010,35 @@ function updateBenefitDisplay(benefits, state, accountStatus, expenses, userProf
 
     let ratio, statusColor, statusText;
 
-    if (totalQualifiedExpenses === 0) {
-        ratio = 1;
-        statusColor = '#10B981'; // green
-        statusText = 'No qualified expenses yet this year';
-    } else {
-        ratio = totalDeposits / totalQualifiedExpenses;
-        const neededDeposit = totalQualifiedExpenses - totalDeposits;
-        
-        if (ratio < 1.0) {
-            statusColor = ratio < 0.8 ? '#EF4444' : '#F59E0B'; // red or yellow
-            statusText = `Please deposit $${neededDeposit.toFixed(2)} into your 529 to cover this year's qualified expenses`;
+    if (hasReachedMax) {
+        statusColor = '#D4AF37'; // gold color
+        if (totalQualifiedExpenses === 0) {
+            statusText = 'No qualified expenses yet this year';
         } else {
+            ratio = totalDeposits / totalQualifiedExpenses;
+            if (ratio < 1) {
+                const remainingSpend = totalQualifiedExpenses - totalDeposits;
+                statusText = `You have $${remainingSpend.toFixed(2)} of qualified spend to use this year`;
+            } else {
+                statusText = 'Good work, you have $${(totalDeposits - totalQualifiedExpenses).toFixed(2)} remaining of qualified spend this year';
+            }
+        }
+    } else {
+        if (totalQualifiedExpenses === 0) {
+            ratio = 1;
             statusColor = '#10B981'; // green
-            statusText = `Good work, you have $${(totalDeposits - totalQualifiedExpenses).toFixed(2)} remaining of qualified spend this year`;
+            statusText = 'No qualified expenses yet this year';
+        } else {
+            ratio = totalDeposits / totalQualifiedExpenses;
+            const neededDeposit = totalQualifiedExpenses - totalDeposits;
+            
+            if (ratio < 1.0) {
+                statusColor = ratio < 0.8 ? '#EF4444' : '#F59E0B'; // red or yellow
+                statusText = `Please deposit $${neededDeposit.toFixed(2)} into your 529 to cover this year's qualified expenses`;
+            } else {
+                statusColor = '#10B981'; // green
+                statusText = `Good work, you have $${(totalDeposits - totalQualifiedExpenses).toFixed(2)} remaining of qualified spend this year`;
+            }
         }
     }
 
