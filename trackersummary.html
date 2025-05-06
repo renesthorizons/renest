@@ -4002,5 +4002,66 @@ async function loadMonthExpenses(month, year) {
         console.error('Error loading month expenses:', error);
     }
 }
+
+function hasReachedMaxBenefit(state, ytdBenefit, totalQualifiedExpenses, income) {
+    console.log('=== Checking Max Benefit ===');
+    console.log('Input parameters:', { state, ytdBenefit, totalQualifiedExpenses, income });
+
+    const stateInfo = state529DB[state];
+    if (!stateInfo) {
+        console.log('No state info found, returning false');
+        return false;
+    }
+
+    // Calculate tax paid amount
+    const stateTaxDeduction = stateInfo.stateTaxDeduction || 0;
+    const taxableStateIncome = Math.max(0, income - stateTaxDeduction);
+    const taxRate = calculateStateTaxRate(taxableStateIncome, state);
+    const taxPaid = taxableStateIncome * taxRate;
+
+    let maxPossibleBenefit;
+    if (state === 'IN') {
+        // Indiana: 20% credit, max $1,500, capped by tax paid
+        const contributionCredit = totalQualifiedExpenses * 0.20;
+        maxPossibleBenefit = Math.min(contributionCredit, 1500, taxPaid);
+    } else if (state === 'OR') {
+        // Oregon: Fixed $180 benefit
+        maxPossibleBenefit = 180;
+    } else if (state === 'MN') {
+        // Minnesota: 50% of expenses if income < $88,810, max $500, capped by tax paid
+        if (income < 88810) {
+            const benefitAmount = totalQualifiedExpenses * 0.50;
+            maxPossibleBenefit = Math.min(benefitAmount, 500, taxPaid);
+        } else {
+            maxPossibleBenefit = 0;
+        }
+    } else {
+        // Standard deduction-based states
+        const stateDeduction = stateInfo.deduction || 0;
+        const deductibleAmount = Math.min(totalQualifiedExpenses, stateDeduction, taxableStateIncome);
+        maxPossibleBenefit = Math.min(deductibleAmount * taxRate, taxPaid);
+    }
+
+    console.log('Max benefit calculation:', {
+        state,
+        taxPaid,
+        maxPossibleBenefit,
+        ytdBenefit,
+        hasReachedMax: Math.abs(ytdBenefit - maxPossibleBenefit) < 0.01 // Using small epsilon for float comparison
+    });
+
+    // Using small epsilon for float comparison to handle potential floating point imprecision
+    return Math.abs(ytdBenefit - maxPossibleBenefit) < 0.01;
+}
+
+// In the calculateBenefits function, after calculating ytdBenefit:
+const hasReachedMax = hasReachedMaxBenefit(state, ytdBenefit, totalQualifiedExpenses, income);
+console.log('Has reached max benefit:', hasReachedMax);
+
+// If we've reached max, set current month benefit to 0
+if (hasReachedMax) {
+    currentMonthBenefit = 0;
+    console.log('Current month benefit set to 0 as max benefit reached');
+}
 </script>
 </html>
