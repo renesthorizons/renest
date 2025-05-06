@@ -4227,7 +4227,7 @@ function hasReachedMaxBenefit(state, ytdBenefit, totalQualifiedExpenses, income)
     } else {
         // Standard deduction-based states
         const stateDeduction = stateInfo.deduction || 0;
-        const deductibleAmount = Math.min(totalQualifiedExpenses, stateDeduction, taxableStateIncome);
+        const deductibleAmount = Math.min(stateDeduction, taxableStateIncome);
         maxPossibleBenefit = Math.min(deductibleAmount * taxRate, taxPaid);
     }
 
