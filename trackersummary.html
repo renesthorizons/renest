@@ -1028,6 +1028,40 @@ input[type="number"] {
     color: var(--primary);
     font-weight: 500;
 }
+
+.action-button {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    min-width: 120px;
+}
+
+.action-button.fix {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+}
+
+.action-button.fix:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-1px);
+}
+
+.action-button.deposit {
+    background-color: var(--accent);
+    color: white;
+    border: none;
+}
+
+.action-button.deposit:hover {
+    background-color: var(--accent-dark);
+    transform: translateY(-1px);
+}
 </style>
 
 
@@ -1067,15 +1101,9 @@ input[type="number"] {
                     <div class="budget-health-status" id="trackingStatus">Loading tracking status...</div>
                 </div>
                 <div style="flex: 1;" id="accountStatusContainer">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div class="budget-health-title">529 Account Status</div>
-                        <label class="ignore-toggle">
-                            <input type="checkbox" id="ignoreStatus">
-                            <span>Ignore</span>
-                        </label>
-                    </div>
                     <div class="budget-health-status" id="accountStatus">Loading account status...</div>
                 </div>
+                <div id="actionButtonContainer"></div>
             </div>
 
             <!-- Modify the budget summary div -->
@@ -2699,8 +2727,8 @@ function updateBenefitDisplay(benefits, state, accountStatus, expenses) {
         `$${benefits.ytdBenefit.toFixed(2)}`;
     
     const trackingStatusText = accountStatus === 'MANUAL' 
-        ? 'Manual'
-        : 'Automatic - Renest is ensuring your maximum benefit';
+        ? 'Manual Tracking'
+        : 'Automatic Tracking';
     
     document.getElementById('trackingStatus').textContent = trackingStatusText;
 
@@ -2738,30 +2766,35 @@ function updateBenefitDisplay(benefits, state, accountStatus, expenses) {
     }
 
     const accountStatusElement = document.getElementById('accountStatus');
+    const actionButtonContainer = document.getElementById('actionButtonContainer');
+    
+    // Clear previous button
+    actionButtonContainer.innerHTML = '';
+    
+    // Get progress percentage from userProfile
+    const progressPercentage = userProfile.progressPercentage || 0;
+    
+    // Create button based on conditions
+    if (progressPercentage === 33) {
+        const fixButton = document.createElement('a');
+        fixButton.href = 'openrenest529.html';
+        fixButton.className = 'action-button fix';
+        fixButton.textContent = 'Fix';
+        actionButtonContainer.appendChild(fixButton);
+    } else if (progressPercentage !== 33 && ratio < 1) { // If ratio is less than 1, it means deposits are less than qualified expenses
+        const depositButton = document.createElement('a');
+        depositButton.href = '529expensetracker.html';
+        depositButton.className = 'action-button deposit';
+        depositButton.textContent = '529 Deposit';
+        actionButtonContainer.appendChild(depositButton);
+    }
+    
     accountStatusElement.innerHTML = `
         <div class="status-text">
             <div class="status-indicator" style="background-color: ${statusColor}"></div>
             <span>${statusText}</span>
         </div>
     `;
-
-    // Handle ignore toggle state
-    const ignoreCheckbox = document.getElementById('ignoreStatus');
-    const statusContainer = document.getElementById('accountStatusContainer');
-    
-    // Remove existing listener to prevent duplicates
-    const newCheckbox = ignoreCheckbox.cloneNode(true);
-    ignoreCheckbox.parentNode.replaceChild(newCheckbox, ignoreCheckbox);
-    
-    newCheckbox.addEventListener('change', (e) => {
-        if (e.target.checked) {
-            statusContainer.style.opacity = '0';
-            e.target.parentElement.style.opacity = '0.2';
-        } else {
-            statusContainer.style.opacity = '1';
-            e.target.parentElement.style.opacity = '1';
-        }
-    });
 }
 
 // Add new function to handle month-specific category display
