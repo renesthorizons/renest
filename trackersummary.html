@@ -4023,8 +4023,8 @@ function hasReachedMaxBenefit(state, ytdBenefit, totalQualifiedExpenses, income)
         return false;
     }
 
-    // Calculate tax paid amount
-    const stateTaxDeduction = stateInfo.stateTaxDeduction || 0;
+    // Calculate tax paid amount using same source as calculateStateBenefit
+    const stateTaxDeduction = statePersonalExemptionDB[state]?.amount || 0;
     const taxableStateIncome = Math.max(0, income - stateTaxDeduction);
     const taxRate = calculateStateTaxRate(taxableStateIncome, state);
     const taxPaid = taxableStateIncome * taxRate;
