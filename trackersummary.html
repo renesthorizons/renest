@@ -2804,14 +2804,8 @@ function updateCategoryDisplay(expenses) {
 }
 
 function updateBenefitDisplay(benefits, state, accountStatus, expenses, userProfile) {  
-    // Only show monthly benefit if max benefit hasn't been reached
-    if (benefits.currentMonthBenefit > 0) {
-        document.getElementById('currentMonthBenefit').textContent = 
-            `$${benefits.currentMonthBenefit.toFixed(2)}`;
-    } else {
-        document.getElementById('currentMonthBenefit').textContent = '';
-    }
-    
+    document.getElementById('currentMonthBenefit').textContent = 
+        `$${benefits.currentMonthBenefit.toFixed(2)}`;
     document.getElementById('totalBenefit').textContent = 
         `$${benefits.ytdBenefit.toFixed(2)}`;
     
@@ -2876,12 +2870,6 @@ function updateBenefitDisplay(benefits, state, accountStatus, expenses, userProf
         depositButton.className = 'action-button deposit';
         depositButton.textContent = 'Make Deposit';
         actionButtonContainer.appendChild(depositButton);
-    } else if (benefits.currentMonthBenefit === 0) {
-        // Show gold max benefit button when monthly benefit is 0
-        const maxBenefitButton = document.createElement('div');
-        maxBenefitButton.className = 'action-button max-benefit';
-        maxBenefitButton.textContent = 'Max Benefit Reached';
-        actionButtonContainer.appendChild(maxBenefitButton);
     }
     
     accountStatusElement.innerHTML = `
