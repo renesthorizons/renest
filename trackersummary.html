@@ -2720,7 +2720,7 @@ function updateCategoryDisplay(expenses) {
     console.log('Category display update complete');
 }
 
-function updateBenefitDisplay(benefits, state, accountStatus, expenses) {  
+function updateBenefitDisplay(benefits, state, accountStatus, expenses, userProfile) {  
     document.getElementById('currentMonthBenefit').textContent = 
         `$${benefits.currentMonthBenefit.toFixed(2)}`;
     document.getElementById('totalBenefit').textContent = 
@@ -2771,8 +2771,8 @@ function updateBenefitDisplay(benefits, state, accountStatus, expenses) {
     // Clear previous button
     actionButtonContainer.innerHTML = '';
     
-    // Get progress percentage from userProfile
-    const progressPercentage = userProfile.progressPercentage || 0;
+    // Get progress percentage from the passed userProfile parameter
+    const progressPercentage = userProfile?.progressPercentage || 0;
     
     // Create button based on conditions
     if (progressPercentage === 33) {
@@ -3025,7 +3025,7 @@ async function initializePage() {
 
         // 6. Update UI with all data
         updateCategoryDisplayForMonth(expenses, currentDisplayMonth);
-        updateBenefitDisplay(benefits, userProfile.state, userProfile.accountStatus, expenses);
+        updateBenefitDisplay(benefits, userProfile.state, userProfile.accountStatus, expenses, userProfile);
         updateMonthDisplay();
 
         initializeViewToggle();
