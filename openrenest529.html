@@ -586,6 +586,35 @@
                 font-size: 1rem;
             }
         }
+
+        /* Add these new styles */
+        .modal-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+
+        .modal-list li {
+            padding: 0.5rem 0;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .modal-list li:before {
+            content: "•";
+            color: var(--primary);
+            position: absolute;
+            left: 0;
+        }
+
+        .modal-step {
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
     </style>
 </head>
 <body>
@@ -648,6 +677,49 @@
                 <h2 class="modal-title">Important Notice</h2>
                 <p class="modal-content">Please look at every page of the walkthrough guide so you know when to reference it as you're making your 529 account.</p>
                 <button class="modal-button" onclick="closeWalkthroughModal()">Got it!</button>
+            </div>
+        </div>
+
+        <!-- Add new multi-step 529 info modal -->
+        <div id="infoModal" class="modal-overlay">
+            <div class="modal">
+                <div id="step1" class="modal-step">
+                    <h2 class="modal-title">529 Plans are State-Run Programs</h2>
+                    <p class="modal-content">You'll be providing your information to a trusted government department that manages your state's 529 program. This ensures your data is secure and protected.</p>
+                    <button class="modal-button" onclick="nextStep(1)">Next</button>
+                </div>
+                <div id="step2" class="modal-step" style="display: none;">
+                    <h2 class="modal-title">Step 1: Basic Information</h2>
+                    <p class="modal-content">You'll need to provide basic information about yourself including:</p>
+                    <ul class="modal-list">
+                        <li>Full Name</li>
+                        <li>Date of Birth</li>
+                        <li>Email Address</li>
+                        <li>Physical Address</li>
+                        <li>Social Security Number</li>
+                    </ul>
+                    <button class="modal-button" onclick="nextStep(2)">Next</button>
+                </div>
+                <div id="step3" class="modal-step" style="display: none;">
+                    <h2 class="modal-title">Step 2: Link Your Bank Account</h2>
+                    <p class="modal-content">To record your qualified expenses, you'll need to:</p>
+                    <ul class="modal-list">
+                        <li>Link your bank account to the 529 plan</li>
+                        <li>Deposit money equal to your qualified expenses (rent, groceries, etc.)</li>
+                        <li>Unlike retirement accounts, you can deposit and withdraw this money at any time during the calendar year</li>
+                    </ul>
+                    <button class="modal-button" onclick="nextStep(3)">Next</button>
+                </div>
+                <div id="step4" class="modal-step" style="display: none;">
+                    <h2 class="modal-title">Step 3: Choose How to Store Your Money</h2>
+                    <p class="modal-content">While your money is in the 529 account, you have two options:</p>
+                    <ul class="modal-list">
+                        <li>Invest the money in various investment options</li>
+                        <li>Save it like a regular savings account</li>
+                    </ul>
+                    <p class="modal-content">The Renest guide will recommend saving it like a savings account for simplicity.</p>
+                    <button class="modal-button" onclick="finishSteps()">Finish</button>
+                </div>
             </div>
         </div>
     </main>
@@ -1108,10 +1180,8 @@
             downloadGuideBtn.addEventListener('click', () => {
                 const stateCode = Object.entries(stateOptions).find(([_, name]) => name === searchInput.value)?.[0];
                 if (stateCode && statePDFMap[stateCode]) {
-                    const pdfUrl = `https://renesthorizons.com/guides/${statePDFMap[stateCode]}`;
-                    window.open(pdfUrl, '_blank');
-                    // Show the modal
-                    document.getElementById('walkthroughModal').style.display = 'flex';
+                    // Show the info modal first
+                    document.getElementById('infoModal').style.display = 'flex';
                 }
             });
 
@@ -1264,6 +1334,23 @@
                     console.error('Could not find state code or URL for:', searchInput.value);
                 }
             });
+
+            // Add these new functions for the multi-step modal
+            window.nextStep = function(currentStep) {
+                document.getElementById(`step${currentStep}`).style.display = 'none';
+                document.getElementById(`step${currentStep + 1}`).style.display = 'block';
+            };
+
+            window.finishSteps = function() {
+                const stateCode = Object.entries(stateOptions).find(([_, name]) => name === searchInput.value)?.[0];
+                if (stateCode && statePDFMap[stateCode]) {
+                    const pdfUrl = `https://renesthorizons.com/guides/${statePDFMap[stateCode]}`;
+                    window.open(pdfUrl, '_blank');
+                    document.getElementById('infoModal').style.display = 'none';
+                    // Show the walkthrough modal
+                    document.getElementById('walkthroughModal').style.display = 'flex';
+                }
+            };
         });
 
         const menuButton = document.querySelector('.menu-button');
