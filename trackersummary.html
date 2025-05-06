@@ -2610,10 +2610,30 @@ function calculateBenefits(expenses, state, income) {
     console.log('Qualified expenses before current month:', qualifiedExpensesBeforeMonth);
 
     // Get current month's qualified expenses (E)
-    const currentMonthQualifiedExpenses = allExpenses
-        .filter(e => e.isQualifiedExpense && 
-                     e.isInYear &&
-                     e.dateObj >= firstDayOfMonth)
+    const currentMonthExpenses = allExpenses
+        .filter(e => {
+            console.log('Checking expense for current month:', {
+                date: e.date,
+                dateObj: e.dateObj,
+                firstDayOfMonth: firstDayOfMonth,
+                isInYear: e.isInYear,
+                isQualifiedExpense: e.isQualifiedExpense,
+                amount: e.amount,
+                category: e.category
+            });
+            return e.isQualifiedExpense && 
+                   e.isInYear &&
+                   e.dateObj >= firstDayOfMonth;
+        });
+    
+    console.log('Current month expenses after filtering:', currentMonthExpenses.map(e => ({
+        date: e.date,
+        category: e.category,
+        amount: e.amount,
+        isQualified: e.isQualifiedExpense
+    })));
+
+    const currentMonthQualifiedExpenses = currentMonthExpenses
         .reduce((sum, e) => sum + e.amount, 0);
     console.log('Current month qualified expenses:', currentMonthQualifiedExpenses);
 
