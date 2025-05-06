@@ -2176,15 +2176,32 @@
 
         // Tab switching functionality
         function showTab(tabName) {
-            const tabs = document.querySelectorAll('.tab-content');
-            const buttons = document.querySelectorAll('.tab-button');
+            // Hide all tab content first
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.style.display = 'none';
+            });
             
-            tabs.forEach(tab => tab.style.display = 'none');
-            buttons.forEach(btn => btn.classList.remove('active'));
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
             
-            document.getElementById(`${tabName}-tab`).style.display = 'block';
+            // Show the selected tab content
+            document.getElementById(tabName + '-tab').style.display = 'block';
+            
+            // Add active class to the clicked button
             document.querySelector(`[onclick="showTab('${tabName}')"]`).classList.add('active');
         }
+
+        // Remove any default active states when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+        });
 
         // File upload handling
         function handleFileUpload(input) {
