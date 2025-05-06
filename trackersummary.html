@@ -1045,7 +1045,7 @@ input[type="number"] {
     background-color: #D4AF37;  /* Classic gold color */
     color: white;
     border: none;
-    padding: 6px 12px;
+    padding: 8px 16px;  /* Increased padding */
     border-radius: 6px;
     font-size: 0.9rem;
     font-weight: 500;
@@ -1056,6 +1056,7 @@ input[type="number"] {
     display: inline-block;
     letter-spacing: 0.3px;
     text-transform: uppercase;
+    min-width: 140px;  /* Increased min-width to accommodate larger text */
 }
 
 .action-button.max-benefit:hover {
@@ -2978,7 +2979,7 @@ function updateBenefitDisplay(benefits, state, accountStatus, expenses, userProf
         userProfile?.income || 0);
     
     if (hasReachedMax) {
-        currentMonthBenefitElement.innerHTML = '<div class="action-button max-benefit" onclick="showTaxFreeModal()">Max Cashback Reached</div>';
+        currentMonthBenefitElement.innerHTML = '<div class="action-button max-benefit" onclick="showTaxFreeModal()">Earn More</div>';
         if (currentMonthLabel) currentMonthLabel.style.display = 'none';
     } else {
         currentMonthBenefitElement.textContent = `$${benefits.currentMonthBenefit.toFixed(2)}`;
