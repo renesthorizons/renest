@@ -1042,24 +1042,26 @@ input[type="number"] {
 }
 
 .action-button.max-benefit {
-    background-color: var(--gold);
+    background-color: #D4AF37;  /* Classic gold color */
     color: white;
     border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
     font-weight: 500;
     text-align: center;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(212, 175, 55, 0.2);
     transition: all 0.2s ease;
     display: inline-block;
-    border: none;
-    margin: 0;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
 }
 
 .action-button.max-benefit:hover {
+    background-color: #C19B2E;  /* Slightly darker gold on hover */
     transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 8px rgba(212, 175, 55, 0.3);
 }
 
 .action-button.fix {
@@ -2976,7 +2978,7 @@ function updateBenefitDisplay(benefits, state, accountStatus, expenses, userProf
         userProfile?.income || 0);
     
     if (hasReachedMax) {
-        currentMonthBenefitElement.innerHTML = '<div class="action-button.max-benefit" onclick="showTaxFreeModal()">Max Cashback Reached</div>';
+        currentMonthBenefitElement.innerHTML = '<div class="action-button max-benefit" onclick="showTaxFreeModal()">Max Cashback Reached</div>';
         if (currentMonthLabel) currentMonthLabel.style.display = 'none';
     } else {
         currentMonthBenefitElement.textContent = `$${benefits.currentMonthBenefit.toFixed(2)}`;
