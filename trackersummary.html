@@ -2565,11 +2565,13 @@ function calculateBenefits(expenses, state, income) {
     const currentDate = new Date();
     const startOfYear = new Date(currentDate.getFullYear(), 0, 1);
     const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
 
     console.log('Date ranges:', {
         currentDate: currentDate.toISOString(),
         startOfYear: startOfYear.toISOString(),
-        firstDayOfMonth: firstDayOfMonth.toISOString()
+        firstDayOfMonth: firstDayOfMonth.toISOString(),
+        lastDayOfMonth: lastDayOfMonth.toISOString()
     });
 
     // Get total deposits year to date (D)
@@ -2616,6 +2618,7 @@ function calculateBenefits(expenses, state, income) {
                 date: e.date,
                 dateObj: e.dateObj,
                 firstDayOfMonth: firstDayOfMonth,
+                lastDayOfMonth: lastDayOfMonth,
                 isInYear: e.isInYear,
                 isQualifiedExpense: e.isQualifiedExpense,
                 amount: e.amount,
@@ -2623,7 +2626,8 @@ function calculateBenefits(expenses, state, income) {
             });
             return e.isQualifiedExpense && 
                    e.isInYear &&
-                   e.dateObj >= firstDayOfMonth;
+                   e.dateObj >= firstDayOfMonth &&
+                   e.dateObj <= lastDayOfMonth;
         });
     
     console.log('Current month expenses after filtering:', currentMonthExpenses.map(e => ({
