@@ -2804,8 +2804,14 @@ function updateCategoryDisplay(expenses) {
 }
 
 function updateBenefitDisplay(benefits, state, accountStatus, expenses, userProfile) {  
-    document.getElementById('currentMonthBenefit').textContent = 
-        `$${benefits.currentMonthBenefit.toFixed(2)}`;
+    // Handle monthly benefit display
+    const currentMonthBenefitElement = document.getElementById('currentMonthBenefit');
+    if (benefits.currentMonthBenefit === 0 && benefits.maxBenefitReached) {
+        currentMonthBenefitElement.innerHTML = '<div class="action-button max-benefit">Max Benefit Reached</div>';
+    } else {
+        currentMonthBenefitElement.textContent = `$${benefits.currentMonthBenefit.toFixed(2)}`;
+    }
+    
     document.getElementById('totalBenefit').textContent = 
         `$${benefits.ytdBenefit.toFixed(2)}`;
     
