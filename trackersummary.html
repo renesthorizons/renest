@@ -2810,7 +2810,7 @@ function updateBenefitDisplay(benefits, state, accountStatus, expenses, userProf
         expenses?.filter(e => e.isQualified)?.reduce((sum, e) => sum + e.amount, 0) || 0,
         userProfile?.income || 0);
     
-    if (benefits.currentMonthBenefit === 0 && hasReachedMax) {
+    if (hasReachedMax) {
         currentMonthBenefitElement.innerHTML = '<div class="action-button max-benefit">Max Benefit Reached</div>';
     } else {
         currentMonthBenefitElement.textContent = `$${benefits.currentMonthBenefit.toFixed(2)}`;
