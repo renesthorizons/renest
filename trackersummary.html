@@ -2972,7 +2972,7 @@ function updateCategoryDisplay(expenses) {
 function updateBenefitDisplay(benefits, state, accountStatus, expenses, userProfile) {  
     // Handle monthly benefit display
     const currentMonthBenefitElement = document.getElementById('currentMonthBenefit');
-    const currentMonthLabel = document.getElementById('currentMonthLabel');
+    const currentMonthLabel = document.querySelector('.insight-trend');  // Changed to use class selector
     const hasReachedMax = hasReachedMaxBenefit(state, benefits.ytdBenefit, 
         expenses?.filter(e => e.isQualified)?.reduce((sum, e) => sum + e.amount, 0) || 0,
         userProfile?.income || 0);
