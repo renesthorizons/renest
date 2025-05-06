@@ -3582,20 +3582,34 @@ const statePersonalExemptionDB = {
 
         // Function to calculate the benefit based on state, income, and monthly rent
         function calculateBenefit(state, income, monthlyRent) {
-            // Implement your logic to calculate the benefit based on the state, income, and monthly rent
-            // This is a placeholder for your actual benefit calculation logic
+            // Get the enrolled months from the form checkboxes
+            const enrolledMonths = Array.from(document.querySelectorAll('input[name="enrolledMonths"]:checked'))
+                .map(checkbox => parseInt(checkbox.value));
+            
+            // Get the number of enrolled months
+            const enrolledMonthsCount = enrolledMonths.length;
+            
+            // Get other expense values
+            const utilities = document.getElementById('utilitiesIncluded').checked ? 0 : 
+                parseFloat(document.getElementById('utilities').value.replace(/[^\d]/g, '') || '0');
+            const wifi = parseFloat(document.getElementById('wifi').value.replace(/[^\d]/g, '') || '0');
             const monthlyGrocery = 325; // Fixed amount for groceries
-            const annualExpenses = (Number(monthlyRent) + monthlyGrocery) * 9;
+            
+            // Calculate total monthly expenses
+            const monthlyExpenses = Number(monthlyRent) + utilities + wifi + monthlyGrocery;
+            
+            // Calculate annual expenses based on enrolled months only
+            const annualExpenses = monthlyExpenses * enrolledMonthsCount;
 
             // Get state-specific deductions and tax info
             const stateTaxDeduction = statePersonalExemptionDB[state]?.amount || 0;
             const stateDeduction = state529DB[state]?.deduction || 0;
             const taxableStateIncome = Number(income) - stateTaxDeduction;
             const taxRate = calculateStateTaxRate(taxableStateIncome, state);
-            // console.log(taxableStateIncome);
+            
             // Calculate deductible amount
             const deductibleAmount = Math.min(
-                annualExpenses,  // Actual expenses
+                annualExpenses,  // Actual expenses during enrolled months
                 stateDeduction,  // State's max deduction
                 taxableStateIncome  // Limit to income if it's less than the deduction
             );
@@ -3664,7 +3678,7 @@ const statePersonalExemptionDB = {
                             <h2 style="margin-bottom: 1.5rem;">How to Track Your Expenses</h2>
                             <p style="margin-bottom: 1.5rem;">In order to benefit from your 529, you need at a minimum 3 easy steps:</p>
                             <ol style="margin-bottom: 2rem; padding-left: 1.5rem;">
-                                <li style="margin-bottom: 1rem;">Track your expenses (min: rent and groceries)</li>
+                                <li style="margin-bottom: 1rem;">Track your expenses (your rent, utilities, wifi are already tracked if you put them in the onboarding form)</li>
                                 <li style="margin-bottom: 1rem;">Deposit matching amount into your 529</li>
                                 <li style="margin-bottom: 1rem;">Withdraw amount from 529</li>
                             </ol>
