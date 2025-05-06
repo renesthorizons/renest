@@ -3267,37 +3267,12 @@ const statePersonalExemptionDB = {
         }
 
         function validateStep3() {
-            const monthlyRent = Number(document.getElementById('monthlyRent').value.replace(/[^\d]/g, ''));
-            const utilities = Number(document.getElementById('utilities').value.replace(/[^\d]/g, ''));
-            const wifi = Number(document.getElementById('wifi').value.replace(/[^\d]/g, ''));
+            const monthlyRent = document.getElementById('monthlyRent').value.replace(/[^\d]/g, '') || '0';
+            const utilities = document.getElementById('utilities').value.replace(/[^\d]/g, '') || '0';
+            const wifi = document.getElementById('wifi').value.replace(/[^\d]/g, '') || '0';
             const utilitiesIncluded = document.getElementById('utilitiesIncluded').checked;
             const enrolledMonths = Array.from(document.querySelectorAll('input[name="enrolledMonths"]:checked'))
                 .map(checkbox => parseInt(checkbox.value));
-
-            if (monthlyRent === 0) {
-                return new Promise((resolve) => {
-                    showConfirmationDialog('You entered $0 for rent. Please confirm this is correct.', () => {
-                        resolve(true);
-                    });
-                });
-            }
-
-            if (!monthlyRent || isNaN(monthlyRent) || monthlyRent < 0) {
-                showError('Please enter a valid monthly rent payment');
-                return false;
-            }
-
-            if (!utilitiesIncluded) {
-                if (!utilities || isNaN(utilities) || utilities < 0) {
-                    showError('Please enter a valid monthly utilities amount');
-                    return false;
-                }
-            }
-
-            if (!wifi || isNaN(wifi) || wifi < 0) {
-                showError('Please enter a valid monthly WiFi amount');
-                return false;
-            }
 
             if (enrolledMonths.length === 0) {
                 showError('Please select at least one enrolled month');
@@ -3311,9 +3286,13 @@ const statePersonalExemptionDB = {
             console.log('===== FORM SUBMISSION STARTED =====');
             const submitBtn = document.getElementById('submitBtn');
             const spinner = document.getElementById('spinner');
+            const modal = document.getElementById('onboardingModal');
             
             try {
-                console.log('1. Disabling submit button and showing spinner');
+                console.log('1. Disabling all buttons and showing spinner');
+                // Disable all buttons in the modal
+                const allButtons = modal.querySelectorAll('button');
+                allButtons.forEach(button => button.disabled = true);
                 submitBtn.disabled = true;
                 spinner.style.display = 'block';
                 
@@ -3324,6 +3303,8 @@ const statePersonalExemptionDB = {
                 
                 if (!step3Valid) {
                     console.log('Step 3 validation failed, returning');
+                    // Re-enable buttons if validation fails
+                    allButtons.forEach(button => button.disabled = false);
                     return;
                 }
                 
@@ -3335,9 +3316,9 @@ const statePersonalExemptionDB = {
                 const school = document.getElementById('school').value;
                 const state = document.getElementById('state').value;
                 const income = document.getElementById('income').value.replace(/[^\d]/g, '');
-                const rent = document.getElementById('monthlyRent').value.replace(/[^\d]/g, '');
-                const utilities = document.getElementById('utilities').value.replace(/[^\d]/g, '');
-                const wifi = document.getElementById('wifi').value.replace(/[^\d]/g, '');
+                const rent = document.getElementById('monthlyRent').value.replace(/[^\d]/g, '') || '0';
+                const utilities = document.getElementById('utilities').value.replace(/[^\d]/g, '') || '0';
+                const wifi = document.getElementById('wifi').value.replace(/[^\d]/g, '') || '0';
                 const utilitiesIncluded = document.getElementById('utilitiesIncluded').checked;
                 const enrolledMonths = Array.from(document.querySelectorAll('input[name="enrolledMonths"]:checked'))
                     .map(checkbox => parseInt(checkbox.value));
