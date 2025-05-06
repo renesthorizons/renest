@@ -2714,24 +2714,68 @@
         });
 
         // Initial load
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log('DOM fully loaded');
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('Main DOMContentLoaded event fired');
             const token = API.getToken();
             if (!token) {
                 window.location.href = 'signin529.html';
                 return;
             }
-            loadExpenses();
             
-            console.log('About to call showTab function to show only rent tab');
-            // Call the showTab function directly to ensure only rent tab is visible
-            showTab('rent');
-            
-            // Add a small delay to ensure the tab visibility is set after any other initialization
-            setTimeout(() => {
-                console.log('Forcing rent tab visibility after delay');
-                showTab('rent');
-            }, 200);
+            try {
+                // Check user's automation status
+                const userProfile = await fetchUserProfile();
+                const isAutomatic = userProfile.accountStatus === 'AUTOMATIC';
+                
+                // Set toggle to match current status
+                document.getElementById('automation-toggle').checked = isAutomatic;
+                
+                // Setup UI based on mode
+                if (isAutomatic) {
+                    toggleManualControls(false);
+                    plaidConnected = true;
+                    
+                    // Set up month and year selectors for Plaid transactions
+                    const monthSelect = document.getElementById('transaction-month');
+                    const yearSelect = document.getElementById('transaction-year');
+                    
+                    // Set default values to current month/year
+                    const now = new Date();
+                    monthSelect.value = (now.getMonth() + 1).toString().padStart(2, '0');
+                    yearSelect.value = now.getFullYear().toString();
+                    
+                    // Add event listeners
+                    monthSelect.addEventListener('change', loadPlaidTransactions);
+                    yearSelect.addEventListener('change', loadPlaidTransactions);
+                    
+                    // Load initial Plaid transactions
+                    loadPlaidTransactions();
+                } else {
+                    toggleManualControls(true);
+                }
+                
+                // Load expenses normally
+                loadExpenses();
+                
+                // Make sure all tab content is hidden
+                document.querySelectorAll('.tab-content').forEach(tab => {
+                    tab.style.display = 'none';
+                });
+                
+                // Remove active class from all buttons
+                document.querySelectorAll('.tab-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+            } catch (error) {
+                console.error('Error initializing page:', error);
+                showError('Error loading data. Please try again.');
+                
+                // Even if there's an error, make sure all tab content is hidden
+                document.querySelectorAll('.tab-content').forEach(tab => {
+                    tab.style.display = 'none';
+                });
+            }
         });
 
         // 529 Account Management Functions
@@ -3752,16 +3796,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Load expenses normally
         loadExpenses();
         
-        // Ensure rent tab is visible regardless of other initialization
-        console.log('Forcing rent tab visibility after all initialization');
-        showTab('rent');
+        // Make sure all tab content is hidden
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.style.display = 'none';
+        });
+        
+        // Remove active class from all buttons
+        document.querySelectorAll('.tab-button').forEach(btn => {
+            btn.classList.remove('active');
+        });
         
     } catch (error) {
         console.error('Error initializing page:', error);
         showError('Error loading data. Please try again.');
         
-        // Even if there's an error, try to show the rent tab
-        showTab('rent');
+        // Even if there's an error, make sure all tab content is hidden
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.style.display = 'none';
+        });
     }
 });
 
