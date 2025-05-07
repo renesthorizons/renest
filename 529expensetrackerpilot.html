@@ -1968,26 +1968,6 @@
                                 <div style="margin-bottom: 1rem;">
                                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
                                         <div style="display: flex; align-items: center;">
-                                            <span style="font-weight: 500; color: var(--text-dark);">Uncovered Qualified Expenses</span>
-                                            <span class="tooltip" data-tooltip="Qualified expenses you've tracked that haven't been matched with 529 deposits yet."></span>
-                                        </div>
-                                        <span id="uncovered-expenses" style="color: var(--primary); font-weight: 600;">$0.00</span>
-                                    </div>
-                                </div>
-                                
-                                <div style="margin-bottom: 1rem;">
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                                        <div style="display: flex; align-items: center;">
-                                            <span style="font-weight: 500; color: var(--text-dark);">Amount Needed for Max Benefit</span>
-                                            <span class="tooltip" data-tooltip="The amount you should deposit to match all your currently tracked qualified expenses."></span>
-                                        </div>
-                                        <span id="recommended-funding" style="color: var(--primary); font-weight: 600;">$0.00</span>
-                                    </div>
-                                </div>
-                                
-                                <div style="margin-bottom: 1rem;">
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                                        <div style="display: flex; align-items: center;">
                                             <span style="font-weight: 500; color: var(--text-dark);">Suggested Deposit</span>
                                             <span class="tooltip" data-tooltip="The deposit needed to match your current qualified expenses. You can deposit this all at once or monthly."></span>
                                         </div>
@@ -2910,16 +2890,6 @@
             document.getElementById('ytd-qualified-expenses').textContent = formatCurrency(projections.ytdQualified);
             document.getElementById('ytd-529-deposits').textContent = formatCurrency(projections.ytdDeposits);
             document.getElementById('current-529-balance').textContent = formatCurrency(projections.currentBalance);
-            
-            // Update "Uncovered Qualified Expenses" value
-            if (document.getElementById('uncovered-expenses')) {
-                document.getElementById('uncovered-expenses').textContent = formatCurrency(projections.uncoveredExpenses);
-            }
-            
-            // Update "Amount Needed for Max Benefit" value
-            if (document.getElementById('recommended-funding')) {
-                document.getElementById('recommended-funding').textContent = formatCurrency(projections.amountNeededForMaxBenefit);
-            }
             
             // Update suggested deposits
             if (document.getElementById('suggested-onetime-deposit')) {
