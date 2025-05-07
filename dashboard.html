@@ -3576,6 +3576,22 @@ const statePersonalExemptionDB = {
                     };
                 }
             }, 100);
+            
+            // Safety timeout: redirect automatically after 10 seconds if user doesn't close modal
+            setTimeout(() => {
+                const submissionComplete = localStorage.getItem('submissionComplete') === 'true';
+                const modalStillExists = !!document.getElementById('congratsModal');
+                
+                console.log('Safety timeout check:', {
+                    submissionComplete,
+                    modalStillExists
+                });
+                
+                if (submissionComplete && modalStillExists) {
+                    console.log('Safety timeout triggered - automatically closing modal and redirecting');
+                    handleCongratsModalClose();
+                }
+            }, 10000);
         }
 
         function handleCongratsModalClose() {
@@ -3588,14 +3604,29 @@ const statePersonalExemptionDB = {
             
             // Check if form submission is complete
             const submitBtn = document.getElementById('submitBtn');
-            console.log('Submit button disabled state:', submitBtn?.disabled);
+            const submissionComplete = localStorage.getItem('submissionComplete') === 'true';
             
-            if (!submitBtn?.disabled) {
-                // If button is enabled, submission is complete, redirect to tracker summary
-                console.log('Form submission complete, redirecting to tracker summary');
-                window.location.href = 'trackersummary.html';
+            console.log('Checking redirect conditions:', {
+                'submitButtonExists': !!submitBtn,
+                'submitButtonDisabled': submitBtn?.disabled,
+                'submissionCompleteFlag': submissionComplete
+            });
+            
+            // Use either the button state or the localStorage flag to determine if redirect should happen
+            if (!submitBtn?.disabled || submissionComplete) {
+                // If button is not disabled OR submissionComplete flag is set, redirect to tracker summary
+                console.log('Form submission complete, redirecting to trackersummary.html now');
+                
+                // Clear the flag
+                localStorage.removeItem('submissionComplete');
+                
+                // Force redirect with delay to ensure this happens after modal close animation completes
+                setTimeout(() => {
+                    console.log('EXECUTING REDIRECT NOW');
+                    window.location.href = 'trackersummary.html';
+                }, 50);
             } else {
-                console.log('Form submission still in progress, not redirecting');
+                console.log('Form submission still in progress, not redirecting yet');
             }
             // Otherwise, let the submission process continue in the background
         }
@@ -3797,10 +3828,20 @@ const statePersonalExemptionDB = {
                 console.log('7. Hiding onboarding modal');
                 hideOnboardingModal();
                 
+                // IMPORTANT: Set submitBtn.disabled to false AFTER all expenses are created
+                // This will signal to the congratulations modal that redirection can happen
+                console.log('8. CRITICAL: Re-enabling submit button to allow redirection');
+                submitBtn.disabled = false;
+                spinner.style.display = 'none';
+                
+                // Set a flag in localStorage to ensure redirection happens
+                localStorage.setItem('submissionComplete', 'true');
+                console.log('Set submissionComplete flag in localStorage');
+                
                 // The redirect will be handled by the congratulations modal close button
-                // If user dismisses the congrats modal and submission is complete
-                // window.location.href = 'trackersummary.html';
-
+                // when user dismisses the congrats modal
+                console.log('Redirect will happen when user closes congratulations modal');
+                
             } catch (error) {
                 console.error('Error in form submission:', error);
                 console.error('Error stack:', error.stack);
@@ -3813,8 +3854,8 @@ const statePersonalExemptionDB = {
                 setTimeout(() => errorMessage.remove(), 3000);
                 
             } finally {
-                console.log('8. Resetting button state');
-                // Reset button state
+                console.log('9. Ensuring button state is reset');
+                // Reset button state in all cases
                 submitBtn.disabled = false;
                 spinner.style.display = 'none';
             }
