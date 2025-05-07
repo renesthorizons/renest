@@ -1022,6 +1022,28 @@
             color: #ff4d4d;
         }
         
+        .housing-entry .edit-entry-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--primary);
+            font-size: 1rem;
+            transition: color 0.2s;
+        }
+        
+        .housing-entry .edit-entry-button:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+        
+        .missing-months-alert {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background-color: rgba(255, 237, 213, 0.5);
+            border-left: 4px solid #F97316;
+            border-radius: 0.25rem;
+        }
+        
         #housingEntriesContainer {
             max-height: 300px;
             overflow-y: auto;
@@ -1122,7 +1144,6 @@
                         <!-- Housing button and list -->
                         <div id="housingEntriesContainer" style="margin-bottom: 1.5rem;">
                             <!-- Housing entries will be listed here -->
-                            <p id="noHousingMessage" style="color: var(--text-dark); font-style: italic;">No housing information added yet.</p>
                         </div>
                         
                         <button type="button" id="addHousingButton" class="button button-primary" style="width: 100%; margin-bottom: 1.5rem;">
@@ -1405,7 +1426,7 @@
         <div class="modal-container">
             <div class="modal-content">
                 <button class="close-button" onclick="closeHousingModal()">×</button>
-                <h2 style="margin-bottom: 1.5rem;">Add Housing Information</h2>
+                <h2 id="housingModalTitle" style="margin-bottom: 1.5rem;">Add Housing Information</h2>
                 
                 <div class="form-group">
                     <label class="form-label">Lease start date:</label>
@@ -1477,7 +1498,7 @@
                 
                 <div class="button-container">
                     <button onclick="closeHousingModal()" class="button button-secondary">Cancel</button>
-                    <button onclick="saveHousingInfo()" class="button button-primary">Save Housing Info</button>
+                    <button onclick="saveHousingInfo()" id="saveHousingBtn" class="button button-primary">Save Housing Info</button>
                 </div>
             </div>
         </div>

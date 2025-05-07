@@ -2,16 +2,47 @@
 let housingEntries = [];
 
 // Housing Information Modal
-function openHousingModal() {
-    // Reset form fields
-    document.getElementById('leaseStartMonth').value = new Date().getMonth() + 1;
-    document.getElementById('leaseStartYear').value = new Date().getFullYear();
-    document.getElementById('leaseEndMonth').value = new Date().getMonth() + 1;
-    document.getElementById('leaseEndYear').value = new Date().getFullYear() + 1;
-    document.getElementById('monthlyRent').value = '';
-    document.getElementById('utilities').value = '';
-    document.getElementById('wifi').value = '';
-    document.getElementById('utilitiesIncluded').checked = false;
+function openHousingModal(entryToEdit = null) {
+    // If entryToEdit is provided, we're in edit mode
+    const isEditMode = entryToEdit !== null;
+    
+    // Set modal title based on mode
+    document.getElementById('housingModalTitle').textContent = isEditMode ? 'Edit Housing Information' : 'Add Housing Information';
+    
+    // Reset or populate form fields based on mode
+    if (isEditMode) {
+        // Populate with existing entry data
+        document.getElementById('leaseStartMonth').value = entryToEdit.startMonth;
+        document.getElementById('leaseStartYear').value = entryToEdit.startYear;
+        document.getElementById('leaseEndMonth').value = entryToEdit.endMonth;
+        document.getElementById('leaseEndYear').value = entryToEdit.endYear;
+        document.getElementById('monthlyRent').value = '$' + entryToEdit.rent.toLocaleString('en-US');
+        document.getElementById('utilities').value = entryToEdit.utilities > 0 ? '$' + entryToEdit.utilities.toLocaleString('en-US') : '';
+        document.getElementById('wifi').value = entryToEdit.wifi > 0 ? '$' + entryToEdit.wifi.toLocaleString('en-US') : '';
+        document.getElementById('utilitiesIncluded').checked = entryToEdit.utilitiesIncluded;
+        
+        // Store the ID of the entry being edited
+        document.getElementById('housingModal').dataset.editEntryId = entryToEdit.id;
+        
+        // Change save button text
+        document.getElementById('saveHousingBtn').textContent = 'Update Housing Info';
+    } else {
+        // Default values for new entry
+        document.getElementById('leaseStartMonth').value = new Date().getMonth() + 1;
+        document.getElementById('leaseStartYear').value = new Date().getFullYear();
+        document.getElementById('leaseEndMonth').value = new Date().getMonth() + 1;
+        document.getElementById('leaseEndYear').value = new Date().getFullYear() + 1;
+        document.getElementById('monthlyRent').value = '';
+        document.getElementById('utilities').value = '';
+        document.getElementById('wifi').value = '';
+        document.getElementById('utilitiesIncluded').checked = false;
+        
+        // Clear any stored entry ID
+        delete document.getElementById('housingModal').dataset.editEntryId;
+        
+        // Reset save button text
+        document.getElementById('saveHousingBtn').textContent = 'Save Housing Info';
+    }
     
     // Show the modal
     document.getElementById('housingModal').classList.remove('hidden');
@@ -46,15 +77,20 @@ function saveHousingInfo() {
         return;
     }
     
-    // Check for overlapping housing periods
-    if (hasOverlappingPeriods(startMonth, startYear, endMonth, endYear)) {
+    // Check if we're in edit mode
+    const modal = document.getElementById('housingModal');
+    const editEntryId = modal.dataset.editEntryId;
+    const isEditMode = editEntryId !== undefined;
+    
+    // If editing, don't check for overlap with the entry being edited
+    if (!isEditMode && hasOverlappingPeriods(startMonth, startYear, endMonth, endYear)) {
         showError('This housing period overlaps with an existing entry');
         return;
     }
     
-    // Create housing entry
+    // Create or update housing entry
     const housingEntry = {
-        id: Date.now(), // Unique identifier
+        id: isEditMode ? parseInt(editEntryId) : Date.now(), // Use existing ID or create new one
         startMonth,
         startYear,
         endMonth,
@@ -65,8 +101,23 @@ function saveHousingInfo() {
         utilitiesIncluded
     };
     
-    // Add to array
-    housingEntries.push(housingEntry);
+    if (isEditMode) {
+        // Find and update the existing entry
+        const entryIndex = housingEntries.findIndex(entry => entry.id === parseInt(editEntryId));
+        if (entryIndex !== -1) {
+            // Check if the updated entry would overlap with others
+            const otherEntries = housingEntries.filter((_, index) => index !== entryIndex);
+            if (hasOverlappingPeriodsWithEntries(startMonth, startYear, endMonth, endYear, otherEntries)) {
+                showError('This edited housing period would overlap with another entry');
+                return;
+            }
+            
+            housingEntries[entryIndex] = housingEntry;
+        }
+    } else {
+        // Add as new entry
+        housingEntries.push(housingEntry);
+    }
     
     // Update UI
     updateHousingEntriesList();
@@ -77,17 +128,21 @@ function saveHousingInfo() {
     // Show success message
     const successMessage = document.createElement('div');
     successMessage.className = 'success-message';
-    successMessage.textContent = 'Housing information added!';
+    successMessage.textContent = isEditMode ? 'Housing information updated!' : 'Housing information added!';
     document.body.appendChild(successMessage);
     setTimeout(() => successMessage.remove(), 3000);
 }
 
 function hasOverlappingPeriods(startMonth, startYear, endMonth, endYear) {
+    return hasOverlappingPeriodsWithEntries(startMonth, startYear, endMonth, endYear, housingEntries);
+}
+
+function hasOverlappingPeriodsWithEntries(startMonth, startYear, endMonth, endYear, entries) {
     // Convert to date objects for easier comparison
     const newStartDate = new Date(startYear, startMonth - 1, 1);
     const newEndDate = new Date(endYear, endMonth - 1, 1);
     
-    return housingEntries.some(entry => {
+    return entries.some(entry => {
         const existingStartDate = new Date(entry.startYear, entry.startMonth - 1, 1);
         const existingEndDate = new Date(entry.endYear, entry.endMonth - 1, 1);
         
@@ -96,17 +151,18 @@ function hasOverlappingPeriods(startMonth, startYear, endMonth, endYear) {
     });
 }
 
+function editHousingEntry(id) {
+    const entry = housingEntries.find(entry => entry.id === id);
+    if (entry) {
+        openHousingModal(entry);
+    }
+}
+
 function updateHousingEntriesList() {
     const container = document.getElementById('housingEntriesContainer');
-    const noHousingMessage = document.getElementById('noHousingMessage');
     
     // Clear existing entries
     container.innerHTML = '';
-    
-    if (housingEntries.length === 0) {
-        container.appendChild(noHousingMessage);
-        return;
-    }
     
     // Sort entries by start date
     housingEntries.sort((a, b) => {
@@ -153,11 +209,62 @@ function updateHousingEntriesList() {
                     <span>${formatCurrencyValue(entry.wifi)}/month</span>
                 </div>
             ` : ''}
-            <button class="remove-entry-button" onclick="removeHousingEntry(${entry.id})" style="position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; cursor: pointer; color: #666; font-size: 1.2rem;">×</button>
+            <div style="position: absolute; top: 0.5rem; right: 0.5rem; display: flex; gap: 0.5rem;">
+                <button class="edit-entry-button" onclick="editHousingEntry(${entry.id})" style="background: none; border: none; cursor: pointer; color: var(--primary); font-size: 1rem;">Edit</button>
+                <button class="remove-entry-button" onclick="removeHousingEntry(${entry.id})" style="background: none; border: none; cursor: pointer; color: #666; font-size: 1.2rem;">×</button>
+            </div>
         `;
         
         container.appendChild(entryElement);
     });
+    
+    // Check if there's coverage for all months in the current year
+    const currentYear = new Date().getFullYear();
+    const uncoveredMonths = getUncoveredMonths(currentYear);
+    
+    if (uncoveredMonths.length > 0) {
+        const missingMonthsElement = document.createElement('div');
+        missingMonthsElement.className = 'missing-months-alert';
+        missingMonthsElement.style.marginTop = '1rem';
+        missingMonthsElement.style.padding = '0.75rem';
+        missingMonthsElement.style.backgroundColor = 'rgba(255, 237, 213, 0.5)';
+        missingMonthsElement.style.borderLeft = '4px solid #F97316';
+        missingMonthsElement.style.borderRadius = '0.25rem';
+        
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        const missingMonthsText = uncoveredMonths.map(month => monthNames[month - 1]).join(', ');
+        
+        missingMonthsElement.innerHTML = `
+            <p style="margin: 0; color: #7C2D12; font-size: 0.9rem;">
+                <strong>Note:</strong> The following months have no housing information: ${missingMonthsText}.
+            </p>
+        `;
+        
+        container.appendChild(missingMonthsElement);
+    }
+}
+
+// Get months that aren't covered by any housing entry for a specific year
+function getUncoveredMonths(year) {
+    const uncoveredMonths = [];
+    
+    // Check each month
+    for (let month = 1; month <= 12; month++) {
+        const thisMonth = new Date(year, month - 1, 1);
+        
+        // Check if this month is covered by any housing entry
+        const isCovered = housingEntries.some(entry => {
+            const startDate = new Date(entry.startYear, entry.startMonth - 1, 1);
+            const endDate = new Date(entry.endYear, entry.endMonth - 1, 1);
+            return thisMonth >= startDate && thisMonth < endDate;
+        });
+        
+        if (!isCovered) {
+            uncoveredMonths.push(month);
+        }
+    }
+    
+    return uncoveredMonths;
 }
 
 function removeHousingEntry(id) {
@@ -376,26 +483,26 @@ function initializeHousingSystem() {
 // Populate the year dropdowns for the housing form
 function populateHousingYearDropdowns() {
     const currentYear = new Date().getFullYear();
-    const nextYear = currentYear + 1;
-    const twoYearsOut = currentYear + 2;
+    const yearRange = 10; // Allow 10 years before and after current year
+    
+    // Create options for a range of years
+    let yearOptions = '';
+    for (let year = currentYear - yearRange; year <= currentYear + yearRange; year++) {
+        yearOptions += `<option value="${year}">${year}</option>`;
+    }
     
     // Populate lease start year dropdown
     const leaseStartYearSelect = document.getElementById('leaseStartYear');
     if (leaseStartYearSelect) {
-        leaseStartYearSelect.innerHTML = `
-            <option value="${currentYear}">${currentYear}</option>
-            <option value="${nextYear}">${nextYear}</option>
-        `;
+        leaseStartYearSelect.innerHTML = yearOptions;
+        leaseStartYearSelect.value = currentYear; // Default to current year
     }
     
     // Populate lease end year dropdown
     const leaseEndYearSelect = document.getElementById('leaseEndYear');
     if (leaseEndYearSelect) {
-        leaseEndYearSelect.innerHTML = `
-            <option value="${currentYear}">${currentYear}</option>
-            <option value="${nextYear}">${nextYear}</option>
-            <option value="${twoYearsOut}">${twoYearsOut}</option>
-        `;
+        leaseEndYearSelect.innerHTML = yearOptions;
+        leaseEndYearSelect.value = currentYear + 1; // Default to next year
     }
 }
 
