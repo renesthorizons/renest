@@ -2999,10 +2999,9 @@ function updateBenefitDisplay(benefits, state, accountStatus, expenses, userProf
     
     // If user has reached max benefit, update their progress percentage to 90
     if (hasReachedMax) {
-        // Only update if not already at 90%
-        const currentProgress = localStorage.getItem('progressPercentage');
-        const userProfileProgress = userProfile?.progressPercentage;
-        
+    const currentProgress = localStorage.getItem('progressPercentage');
+    const userProfileProgress = userProfile?.progressPercentage;
+    
         if (currentProgress !== '90' || userProfileProgress !== 90) {
             // Update localStorage to store 90% progress
             localStorage.setItem('progressPercentage', '90');
@@ -3023,6 +3022,27 @@ function updateBenefitDisplay(benefits, state, accountStatus, expenses, userProf
         currentMonthBenefitElement.innerHTML = '<div class="action-button max-benefit" onclick="showTaxFreeModal()">Earn More</div>';
         if (currentMonthLabel) currentMonthLabel.style.display = 'none';
     } else {
+        // Check if progress is 90% but max not reached, reset to 33%
+        const currentProgress = localStorage.getItem('progressPercentage');
+        const userProfileProgress = userProfile?.progressPercentage;
+        
+        if (currentProgress === '90' || userProfileProgress === 90) {
+            // Update localStorage to 33%
+            localStorage.setItem('progressPercentage', '33');
+            
+            // Update userProfile if it exists
+            if (userProfile) {
+                userProfile.progressPercentage = 33;
+            }
+            
+            // Update progress percentage on server
+            updateProgressPercentage(33).then(result => {
+                if (result) {
+                    console.log('Progress percentage updated successfully to 33%');
+                }
+            });
+        }
+        
         currentMonthBenefitElement.textContent = `$${benefits.currentMonthBenefit.toFixed(2)}`;
         if (currentMonthLabel) currentMonthLabel.style.display = 'block';
     }
