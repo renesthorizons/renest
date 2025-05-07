@@ -2646,21 +2646,37 @@
 
         // Tab switching functionality
         function showTab(tabName) {
+            console.log('showTab called with tab:', tabName);
+            
             // Hide all tab content first
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.style.display = 'none';
+                console.log('Hiding tab:', tab.id);
             });
             
             // Remove active class from all buttons
             document.querySelectorAll('.tab-button').forEach(button => {
                 button.classList.remove('active');
+                console.log('Removing active class from button:', button.textContent.trim());
             });
             
             // Show the selected tab content
-            document.getElementById(tabName + '-tab').style.display = 'block';
+            const selectedTab = document.getElementById(tabName + '-tab');
+            if (selectedTab) {
+                selectedTab.style.display = 'block';
+                console.log('Showing tab:', tabName + '-tab');
+            } else {
+                console.error('Tab not found:', tabName + '-tab');
+            }
             
             // Add active class to the clicked button
-            document.querySelector(`[onclick="showTab('${tabName}')"]`).classList.add('active');
+            const activeButton = document.querySelector(`[onclick="showTab('${tabName}')"]`);
+            if (activeButton) {
+                activeButton.classList.add('active');
+                console.log('Added active class to button:', activeButton.textContent.trim());
+            } else {
+                console.error('Button not found for tab:', tabName);
+            }
             
             // Add mobile scroll functionality - only on mobile devices
             if (window.innerWidth < 768) {
@@ -2671,17 +2687,38 @@
                         // Scroll to tab content with offset for the fixed header
                         const header = document.querySelector('.navbar');
                         const headerHeight = header ? header.offsetHeight : 0;
-                        const targetPosition = tabContent.getBoundingClientRect().top + window.pageYOffset - headerHeight - 400; // Increased from 20 to 60 to scroll less
+                        const targetPosition = tabContent.getBoundingClientRect().top + window.pageYOffset - headerHeight - 200; // Increased from 20 to 60 to scroll less
                         window.scrollTo({
                             top: targetPosition,
                             behavior: 'smooth'
                         });
+                        console.log('Scrolled to tab with offset:', targetPosition);
                     }
                 }, 50);
             }
             
             // No longer auto-expanding any sections
         }
+        
+        // Initialize page state correctly
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOMContentLoaded event fired');
+            // Make sure all tab content is hidden initially
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.style.display = 'none';
+                console.log('Initially hiding tab:', tab.id);
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+                console.log('Initially removing active class from button:', button.textContent.trim());
+            });
+            
+            // Do not auto-select any tab on load
+            // Keep everything closed until user explicitly clicks a tab
+            console.log('Initialization complete - waiting for user to select a tab');
+        });
 
         // Remove any default active states when the page loads
         document.addEventListener('DOMContentLoaded', function() {
@@ -3214,21 +3251,21 @@
                 // Load expenses normally
                 loadExpenses();
                 
-                // Make sure all tab content is hidden
+                // Make sure all tab content is hidden - IMPORTANT: ALL tabs should be hidden initially
                 document.querySelectorAll('.tab-content').forEach(tab => {
                     tab.style.display = 'none';
+                    console.log('[Initial] Hiding tab:', tab.id);
                 });
                 
                 // Remove active class from all buttons
                 document.querySelectorAll('.tab-button').forEach(btn => {
                     btn.classList.remove('active');
+                    console.log('[Initial] Removing active class from button:', btn.textContent.trim());
                 });
                 
-                // Set expenses tab as active by default
-                // document.querySelector('.tab-button[onclick*="expenses"]').classList.add('active');
-                document.getElementById('expenses-tab').style.display = 'block';
-                
-                // No longer auto-expanding the first section
+                // DON'T set any tab as active or visible by default - let user choose
+                // COMMENTED OUT: document.getElementById('expenses-tab').style.display = 'block';
+                console.log('[Initial] No tabs shown by default - waiting for user to click a tab');
                 
             } catch (error) {
                 console.error('Error initializing page:', error);
