@@ -1559,7 +1559,7 @@
             justify-content: space-between;
             align-items: center;
             background: white;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, border-radius 0.3s ease;
             border-radius: 16px;
         }
 
@@ -1578,7 +1578,7 @@
             width: 30px;
             height: 30px;
             position: relative;
-            transition: transform 0.3s ease;
+            transition: transform 0.4s ease, border-color 0.4s ease;
             border: 2px solid var(--primary);
             border-radius: 50%;
             margin-left: 15px;
@@ -1590,7 +1590,7 @@
             content: '';
             position: absolute;
             background-color: var(--primary);
-            transition: transform 0.3s ease;
+            transition: background-color 0.4s ease, transform 0.4s ease, opacity 0.4s ease;
         }
 
         .collapsible-header .collapse-icon::before {
@@ -1610,18 +1610,36 @@
         .collapsible-content {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.5s ease-out;
+            transition: max-height 0.4s cubic-bezier(0, 1, 0, 1), 
+                        padding 0.4s ease,
+                        opacity 0.2s ease;
             padding: 0 2rem;
+            opacity: 0;
+            will-change: max-height, padding, opacity;
         }
 
         .collapsible-section.expanded .collapsible-content {
             max-height: 3000px; /* Large enough to fit any content */
-            padding: 0 2rem 2rem;
+            padding: 1rem 2rem 2rem;
+            opacity: 1;
+            transition: max-height 0.6s ease, 
+                        padding 0.4s ease,
+                        opacity 0.6s ease;
+        }
+
+        .collapsible-section.expanded .collapse-icon {
+            transform: rotate(180deg);
+            border-color: var(--accent);
+        }
+
+        .collapsible-section.expanded .collapse-icon::before {
+            background-color: var(--accent);
         }
 
         .collapsible-section.expanded .collapse-icon::after {
-            transform: rotate(90deg);
             opacity: 0;
+            transform: rotate(90deg);
+            background-color: var(--accent);
         }
 
         .collapsible-section.expanded .collapsible-header {
@@ -3896,7 +3914,33 @@ function hideCategoryModal() {
         // Function to toggle collapsible sections
         function toggleSection(header) {
             const section = header.parentElement;
-            section.classList.toggle('expanded');
+            const content = section.querySelector('.collapsible-content');
+            
+            // If we're expanding this section
+            if (!section.classList.contains('expanded')) {
+                // Set a specific height based on content before expanding
+                // This allows for a smoother animation
+                const sectionHeight = content.scrollHeight;
+                content.style.maxHeight = sectionHeight + 'px';
+                section.classList.add('expanded');
+            } else {
+                // Set max-height to the exact height first for a smooth start to the animation
+                const sectionHeight = content.scrollHeight;
+                content.style.maxHeight = sectionHeight + 'px';
+                
+                // Force a reflow before starting the transition to collapsed state
+                window.getComputedStyle(content).maxHeight;
+                
+                // Now set to 0 to trigger the closing animation
+                content.style.maxHeight = '0px';
+                
+                // Remove the expanded class after animation ends
+                setTimeout(() => {
+                    section.classList.remove('expanded');
+                    // Reset to empty string to let CSS handle it
+                    content.style.maxHeight = '';
+                }, 500); // Match this timing to your transition duration
+            }
         }
     </script>
     
