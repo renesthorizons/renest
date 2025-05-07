@@ -1074,28 +1074,6 @@
                         <input type="text" id="monthlyRent" class="form-input" placeholder="Enter monthly rent payment">
                     </div>
                     <div class="form-group">
-                        <label for="leaseEndDate" class="form-label">My current lease ends:</label>
-                        <div style="display: flex; gap: 0.5rem;">
-                            <select id="leaseEndMonth" class="form-input" style="flex: 1;">
-                                <option value="1">January</option>
-                                <option value="2">February</option>
-                                <option value="3">March</option>
-                                <option value="4">April</option>
-                                <option value="5">May</option>
-                                <option value="6">June</option>
-                                <option value="7">July</option>
-                                <option value="8">August</option>
-                                <option value="9">September</option>
-                                <option value="10">October</option>
-                                <option value="11">November</option>
-                                <option value="12">December</option>
-                            </select>
-                            <select id="leaseEndYear" class="form-input" style="flex: 1;">
-                                <!-- Will be populated via JavaScript -->
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
                         <!-- <label class="form-label">Monthly Expenses</label> -->
                         <div class="expense-input-group">
                             <div class="expense-item">
@@ -1178,103 +1156,6 @@
                                 <div class="spinner" id="spinner"></div>
                             </div>
                         </button>
-                    </div>
-                </div>
-
-                <!-- Upcoming Lease Modal -->
-                <div id="upcomingLeaseModal" class="modal-overlay hidden">
-                    <div class="modal-container">
-                        <div class="modal-content">
-                            <button class="close-button" onclick="closeUpcomingLeaseModal()">×</button>
-                            <h2 style="margin-bottom: 1.5rem;">New Lease Information</h2>
-                            
-                            <div class="form-group">
-                                <label class="form-label">New lease start date:</label>
-                                <div style="display: flex; gap: 0.5rem;">
-                                    <select id="newLeaseStartMonth" class="form-input" style="flex: 1;">
-                                        <option value="1">January</option>
-                                        <option value="2">February</option>
-                                        <option value="3">March</option>
-                                        <option value="4">April</option>
-                                        <option value="5">May</option>
-                                        <option value="6">June</option>
-                                        <option value="7">July</option>
-                                        <option value="8">August</option>
-                                        <option value="9">September</option>
-                                        <option value="10">October</option>
-                                        <option value="11">November</option>
-                                        <option value="12">December</option>
-                                    </select>
-                                    <select id="newLeaseStartYear" class="form-input" style="flex: 1;">
-                                        <!-- Will be populated via JavaScript -->
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label class="form-label">New lease end date:</label>
-                                <div style="display: flex; gap: 0.5rem;">
-                                    <select id="newLeaseEndMonth" class="form-input" style="flex: 1;">
-                                        <option value="1">January</option>
-                                        <option value="2">February</option>
-                                        <option value="3">March</option>
-                                        <option value="4">April</option>
-                                        <option value="5">May</option>
-                                        <option value="6">June</option>
-                                        <option value="7">July</option>
-                                        <option value="8">August</option>
-                                        <option value="9">September</option>
-                                        <option value="10">October</option>
-                                        <option value="11">November</option>
-                                        <option value="12">December</option>
-                                    </select>
-                                    <select id="newLeaseEndYear" class="form-input" style="flex: 1;">
-                                        <!-- Will be populated via JavaScript -->
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="newLeaseRent" class="form-label">Monthly rent for new lease:</label>
-                                <input type="text" id="newLeaseRent" class="form-input" placeholder="Enter new monthly rent">
-                            </div>
-                            
-                            <div class="form-group">
-                                <div class="expense-input-group">
-                                    <div class="expense-item">
-                                        <label for="newLeaseUtilities" class="form-label">Monthly utilities for new lease:</label>
-                                        <input type="text" id="newLeaseUtilities" class="form-input" placeholder="Enter new monthly utilities">
-                                        <div class="checkbox-group">
-                                            <input type="checkbox" id="newLeaseUtilitiesIncluded" name="newLeaseUtilitiesIncluded">
-                                            <label for="newLeaseUtilitiesIncluded">Utilities included in new rent</label>
-                                        </div>
-                                    </div>
-                                    <div class="expense-item">
-                                        <label for="newLeaseWifi" class="form-label">Monthly WiFi for new lease:</label>
-                                        <input type="text" id="newLeaseWifi" class="form-input" placeholder="Enter new monthly WiFi">
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="button-container">
-                                <button onclick="saveNewLeaseInfo()" class="button button-primary">Save New Lease Info</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Confirm Lease Change Modal -->
-                <div id="confirmLeaseModal" class="modal-overlay hidden">
-                    <div class="modal-container">
-                        <div class="modal-content">
-                            <h2 style="margin-bottom: 1.5rem;">New Lease Information</h2>
-                            <p style="margin-bottom: 1.5rem;">Do you know your rent for your upcoming lease?</p>
-                            
-                            <div class="button-container">
-                                <button onclick="handleNoNewLeaseInfo()" class="button button-secondary">No</button>
-                                <button onclick="handleYesNewLeaseInfo()" class="button button-primary">Yes</button>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -3567,10 +3448,6 @@ const statePersonalExemptionDB = {
                 const utilitiesIncluded = document.getElementById('utilitiesIncluded').checked;
                 const enrolledMonths = Array.from(document.querySelectorAll('input[name="enrolledMonths"]:checked'))
                     .map(checkbox => parseInt(checkbox.value));
-                
-                // Get lease information
-                const leaseEndMonth = parseInt(document.getElementById('leaseEndMonth').value);
-                const leaseEndYear = parseInt(document.getElementById('leaseEndYear').value);
 
                 console.log('Form values collected:', {
                     firstName,
@@ -3583,32 +3460,11 @@ const statePersonalExemptionDB = {
                     utilities,
                     wifi,
                     utilitiesIncluded,
-                    enrolledMonths,
-                    leaseEndMonth,
-                    leaseEndYear,
-                    hasNewLease
+                    enrolledMonths
                 });
 
                 // Calculate benefit amount
-                // Include new lease information in benefit calculation
-                let benefit;
-                
-                if (hasNewLease) {
-                    // Consider both lease periods when calculating benefit
-                    benefit = calculateBenefitWithMultipleLeases(
-                        state, 
-                        income, 
-                        rent, 
-                        leaseEndMonth, 
-                        leaseEndYear, 
-                        newLeaseInfo,
-                        enrolledMonths
-                    );
-                } else {
-                    // Use original calculation method
-                    benefit = calculateBenefit(state, income, rent);
-                }
-                
+                const benefit = calculateBenefit(state, income, rent);
                 console.log('Calculated benefit:', benefit);
                 
                 // Show congratulations modal with the calculated benefit
@@ -3664,7 +3520,7 @@ const statePersonalExemptionDB = {
                 }
                 console.log('Profile updated successfully');
 
-                // Then, create the expenses using the updated addOnboardingExpenses function
+                // Then, create the expenses
                 console.log('6. Creating onboarding expenses');
                 const expenseData = {
                     rent,
@@ -3675,7 +3531,6 @@ const statePersonalExemptionDB = {
                 };
                 console.log('Expense data:', expenseData);
 
-                // The updated function now handles multiple lease periods
                 await addOnboardingExpenses(expenseData);
                 console.log('Expenses created successfully');
 
@@ -3710,77 +3565,21 @@ const statePersonalExemptionDB = {
             console.log('===== ADDING ONBOARDING EXPENSES =====');
             const { rent, utilities, wifi, enrolledMonths, utilitiesIncluded } = expenseData;
             const currentYear = new Date().getFullYear();
-            const currentMonth = new Date().getMonth() + 1; // 1-based month
             
             try {
-                // Get lease end information
-                const leaseEndMonth = parseInt(document.getElementById('leaseEndMonth').value);
-                const leaseEndYear = parseInt(document.getElementById('leaseEndYear').value);
-                
-                // Create expenses for all months, considering lease information
+                // Create expenses for all 12 months
                 for (let month = 1; month <= 12; month++) {
                     const isEnrolled = enrolledMonths.includes(month);
                     const isQualified = isEnrolled;
-                    const baseNotes = isEnrolled ? 'Onboarding expense' : 'Not qualified expense because not enrolled as a student';
-                    
-                    // Determine if this month is in the current lease, future lease, or no lease period
-                    let inCurrentLease = false;
-                    let inNewLease = false;
-                    
-                    // Check if month is in current lease period
-                    // Note: if lease ends this year, it's in current lease if month <= leaseEndMonth
-                    // if lease ends next year, it's in current lease for all months this year
-                    if (leaseEndYear > currentYear || (leaseEndYear === currentYear && month <= leaseEndMonth)) {
-                        inCurrentLease = true;
-                    }
-                    
-                    // Check if month is in new lease period (if applicable)
-                    if (hasNewLease) {
-                        const newLeaseStartMonth = newLeaseInfo.startMonth;
-                        const newLeaseStartYear = newLeaseInfo.startYear;
-                        const newLeaseEndMonth = newLeaseInfo.endMonth;
-                        const newLeaseEndYear = newLeaseInfo.endYear;
-                        
-                        // Month is in new lease if:
-                        // 1. It's in the start year and after/equal to the start month, OR
-                        // 2. It's in the end year and before/equal to the end month, OR
-                        // 3. It's in a year between start and end years
-                        if ((newLeaseStartYear === currentYear && month >= newLeaseStartMonth) ||
-                            (newLeaseEndYear === currentYear && month <= newLeaseEndMonth) ||
-                            (currentYear > newLeaseStartYear && currentYear < newLeaseEndYear)) {
-                            inNewLease = true;
-                        }
-                    }
-                    
-                    // Skip months with no lease
-                    if (!inCurrentLease && !inNewLease) {
-                        continue;
-                    }
-                    
-                    // Determine which lease values to use
-                    let monthRent, monthUtilities, monthWifi, monthUtilitiesIncluded, notes;
-                    
-                    if (inNewLease) {
-                        monthRent = newLeaseInfo.rent;
-                        monthUtilities = newLeaseInfo.utilities;
-                        monthWifi = newLeaseInfo.wifi;
-                        monthUtilitiesIncluded = newLeaseInfo.utilitiesIncluded;
-                        notes = baseNotes + ' (new lease)';
-                    } else { // inCurrentLease
-                        monthRent = parseFloat(rent);
-                        monthUtilities = parseFloat(utilities);
-                        monthWifi = parseFloat(wifi);
-                        monthUtilitiesIncluded = utilitiesIncluded;
-                        notes = baseNotes + ' (current lease)';
-                    }
+                    const notes = isEnrolled ? 'Onboarding expense' : 'Not qualified expense because not enrolled as a student';
                     
                     // Create rent expense if amount is not 0
-                    if (monthRent > 0) {
+                    if (parseFloat(rent) > 0) {
                         console.log(`Creating rent expense for month ${month}`);
                         const rentExpenseData = {
                             date: new Date(currentYear, month - 1, 1),
                             category: 'Rent',
-                            amount: monthRent,
+                            amount: parseFloat(rent),
                             notes: notes,
                             isQualified: isQualified
                         };
@@ -3789,12 +3588,12 @@ const statePersonalExemptionDB = {
                     }
 
                     // Create utilities expense if not included in rent and amount is not 0
-                    if (!monthUtilitiesIncluded && monthUtilities > 0) {
+                    if (!utilitiesIncluded && parseFloat(utilities) > 0) {
                         console.log(`Creating utilities expense for month ${month}`);
                         const utilitiesExpenseData = {
                             date: new Date(currentYear, month - 1, 1),
                             category: 'Utilities',
-                            amount: monthUtilities,
+                            amount: parseFloat(utilities),
                             notes: notes,
                             isQualified: isQualified
                         };
@@ -3803,12 +3602,12 @@ const statePersonalExemptionDB = {
                     }
 
                     // Create WiFi expense if amount is not 0
-                    if (monthWifi > 0) {
+                    if (parseFloat(wifi) > 0) {
                         console.log(`Creating WiFi expense for month ${month}`);
                         const wifiExpenseData = {
                             date: new Date(currentYear, month - 1, 1),
                             category: 'WiFi',
-                            amount: monthWifi,
+                            amount: parseFloat(wifi),
                             notes: notes,
                             isQualified: isQualified
                         };
@@ -4080,455 +3879,6 @@ const statePersonalExemptionDB = {
             document.getElementById('getMoneyModal').classList.add('hidden');
         }
 
-        // Function to calculate the benefit based on state, income, and multiple lease periods
-        function calculateBenefitWithMultipleLeases(state, income, initialRent, leaseEndMonth, leaseEndYear, newLeaseInfo, enrolledMonths) {
-            const currentYear = new Date().getFullYear();
-            
-            // Get the number of enrolled months
-            const enrolledMonthsCount = enrolledMonths.length;
-            
-            // Get initial lease values
-            const initialUtilities = document.getElementById('utilitiesIncluded').checked ? 0 : 
-                parseFloat(document.getElementById('utilities').value.replace(/[^\d]/g, '') || '0');
-            const initialWifi = parseFloat(document.getElementById('wifi').value.replace(/[^\d]/g, '') || '0');
-            
-            // Get new lease values
-            const newRent = newLeaseInfo.rent || 0;
-            const newUtilities = newLeaseInfo.utilitiesIncluded ? 0 : (newLeaseInfo.utilities || 0);
-            const newWifi = newLeaseInfo.wifi || 0;
-            
-            // Fixed amount for groceries
-            const monthlyGrocery = 325;
-            
-            // Calculate total expenses for each month, considering different lease periods
-            let totalAnnualExpenses = 0;
-            
-            for (let month = 1; month <= 12; month++) {
-                // Skip if not enrolled this month
-                if (!enrolledMonths.includes(month)) {
-                    continue;
-                }
-                
-                // Determine which lease applies to this month
-                let monthlyExpense = monthlyGrocery; // Groceries are constant
-                
-                // Determine if month falls under initial lease or new lease
-                const isInInitialLease = leaseEndYear > currentYear || (leaseEndYear === currentYear && month <= leaseEndMonth);
-                const isInNewLease = 
-                    (newLeaseInfo.startYear === currentYear && month >= newLeaseInfo.startMonth) ||
-                    (newLeaseInfo.endYear === currentYear && month <= newLeaseInfo.endMonth) ||
-                    (currentYear > newLeaseInfo.startYear && currentYear < newLeaseInfo.endYear);
-                
-                if (isInInitialLease) {
-                    // Use initial lease values
-                    monthlyExpense += Number(initialRent) + initialUtilities + initialWifi;
-                } else if (isInNewLease) {
-                    // Use new lease values
-                    monthlyExpense += newRent + newUtilities + newWifi;
-                } else {
-                    // No lease for this month
-                    continue;
-                }
-                
-                // Add to total annual expenses
-                totalAnnualExpenses += monthlyExpense;
-            }
-            
-            // Get state-specific deductions and tax info
-            const stateTaxDeduction = statePersonalExemptionDB[state]?.amount || 0;
-            const stateDeduction = state529DB[state]?.deduction || 0;
-            const taxableStateIncome = Number(income) - stateTaxDeduction;
-            const taxRate = calculateStateTaxRate(taxableStateIncome, state);
-            
-            // Calculate deductible amount
-            const deductibleAmount = Math.min(
-                totalAnnualExpenses,  // Actual expenses during enrolled months
-                stateDeduction,  // State's max deduction
-                taxableStateIncome  // Limit to income if it's less than the deduction
-            );
-            const taxespaid = taxRate * taxableStateIncome;
-            
-            // Calculate benefit based on state rules
-            let benefit;
-            if (state === 'IN') {
-                const contributionCredit = deductibleAmount * 0.20;
-                benefit = Math.min(contributionCredit, 1500, taxespaid);
-            } else if (state === 'OR') {
-                benefit = 180;
-            } else if (state === 'MN') {
-                if (income < 88810) {
-                    benefit = Math.min(500, taxespaid, .5*totalAnnualExpenses);
-                } else {
-                    benefit = 0;
-                }
-            } else {
-                benefit = Math.min(deductibleAmount * taxRate, taxespaid);
-            }
-            return benefit;
-        }
-
-        function handleNoNewLeaseInfo() {
-            // User doesn't know new lease info, just use current lease until end date
-            hasNewLease = false;
-            newLeaseInfo = {}; // Reset any previously entered info
-            closeConfirmLeaseModal();
-            
-            // Show confirmation message
-            const successMessage = document.createElement('div');
-            successMessage.className = 'success-message';
-            successMessage.textContent = 'Will use current lease information until lease end date.';
-            document.body.appendChild(successMessage);
-            setTimeout(() => successMessage.remove(), 3000);
-        }
-
-        function showConfirmLeaseModal() {
-            document.getElementById('confirmLeaseModal').classList.remove('hidden');
-        }
-        
-        function closeConfirmLeaseModal() {
-            document.getElementById('confirmLeaseModal').classList.add('hidden');
-        }
-    </script>
-    
-    <script>
-        // Lease logic for onboarding
-        document.addEventListener('DOMContentLoaded', function() {
-            // Populate year dropdowns for lease dates
-            populateYearDropdowns();
-            
-            // Set default value for lease end date to current month + 12 months
-            setDefaultLeaseEndDate();
-            
-            // Add event listeners for lease date changes
-            document.getElementById('leaseEndMonth').addEventListener('change', checkLeaseEndDate);
-            document.getElementById('leaseEndYear').addEventListener('change', checkLeaseEndDate);
-            
-            // Add event listeners for currency formatting on new lease inputs
-            const newLeaseRentInput = document.getElementById('newLeaseRent');
-            const newLeaseUtilitiesInput = document.getElementById('newLeaseUtilities');
-            const newLeaseWifiInput = document.getElementById('newLeaseWifi');
-            
-            if (newLeaseRentInput) {
-                newLeaseRentInput.addEventListener('input', function() {
-                    formatCurrency(this);
-                });
-            }
-            
-            if (newLeaseUtilitiesInput) {
-                newLeaseUtilitiesInput.addEventListener('input', function() {
-                    formatCurrency(this);
-                });
-            }
-            
-            if (newLeaseWifiInput) {
-                newLeaseWifiInput.addEventListener('input', function() {
-                    formatCurrency(this);
-                });
-            }
-        });
-        
-        // Variables to store lease information
-        let hasNewLease = false;
-        let newLeaseInfo = {
-            startMonth: null,
-            startYear: null,
-            endMonth: null,
-            endYear: null,
-            rent: 0,
-            utilities: 0,
-            wifi: 0,
-            utilitiesIncluded: false
-        };
-        
-        function populateYearDropdowns() {
-            const currentYear = new Date().getFullYear();
-            const nextYear = currentYear + 1;
-            
-            // Populate lease end year dropdown
-            const leaseEndYearSelect = document.getElementById('leaseEndYear');
-            if (leaseEndYearSelect) {
-                leaseEndYearSelect.innerHTML = `
-                    <option value="${currentYear}">${currentYear}</option>
-                    <option value="${nextYear}">${nextYear}</option>
-                `;
-            }
-            
-            // Populate new lease start year dropdown
-            const newLeaseStartYearSelect = document.getElementById('newLeaseStartYear');
-            if (newLeaseStartYearSelect) {
-                newLeaseStartYearSelect.innerHTML = `
-                    <option value="${currentYear}">${currentYear}</option>
-                    <option value="${nextYear}">${nextYear}</option>
-                `;
-            }
-            
-            // Populate new lease end year dropdown
-            const newLeaseEndYearSelect = document.getElementById('newLeaseEndYear');
-            if (newLeaseEndYearSelect) {
-                newLeaseEndYearSelect.innerHTML = `
-                    <option value="${currentYear}">${currentYear}</option>
-                    <option value="${nextYear}">${nextYear}</option>
-                    <option value="${nextYear + 1}">${nextYear + 1}</option>
-                `;
-            }
-        }
-        
-        function setDefaultLeaseEndDate() {
-            const currentDate = new Date();
-            const defaultEndMonth = currentDate.getMonth() + 1; // 1-based month
-            const defaultEndYear = currentDate.getFullYear() + 1; // Default to 1 year from now
-            
-            const leaseEndMonthSelect = document.getElementById('leaseEndMonth');
-            const leaseEndYearSelect = document.getElementById('leaseEndYear');
-            
-            if (leaseEndMonthSelect && leaseEndYearSelect) {
-                leaseEndMonthSelect.value = defaultEndMonth;
-                leaseEndYearSelect.value = currentDate.getFullYear(); // Current year as default
-                
-                // If default end month is in the past for current year, select next year
-                if (defaultEndMonth < currentDate.getMonth() + 1) {
-                    leaseEndYearSelect.value = defaultEndYear;
-                }
-            }
-        }
-        
-        function checkLeaseEndDate() {
-            const leaseEndMonth = parseInt(document.getElementById('leaseEndMonth').value);
-            const leaseEndYear = parseInt(document.getElementById('leaseEndYear').value);
-            const currentDate = new Date();
-            const currentYear = currentDate.getFullYear();
-            
-            // Only show confirmation modal if lease ends in current year
-            if (leaseEndYear === currentYear && leaseEndMonth > 0) {
-                // Create a date object for the lease end (last day of the month)
-                const leaseEndDate = new Date(leaseEndYear, leaseEndMonth, 0);
-                
-                // If lease end date is in the future of the current year
-                if (leaseEndDate > currentDate) {
-                    showConfirmLeaseModal();
-                }
-            }
-        }
-        
-        function showConfirmLeaseModal() {
-            document.getElementById('confirmLeaseModal').classList.remove('hidden');
-        }
-        
-        function closeConfirmLeaseModal() {
-            document.getElementById('confirmLeaseModal').classList.add('hidden');
-        }
-        
-        function handleNoNewLeaseInfo() {
-            // User doesn't know new lease info, just use current lease until end date
-            hasNewLease = false;
-            newLeaseInfo = {}; // Reset any previously entered info
-            closeConfirmLeaseModal();
-        }
-        
-        function handleYesNewLeaseInfo() {
-            // User knows new lease info, show the new lease form
-            closeConfirmLeaseModal();
-            showUpcomingLeaseModal();
-        }
-        
-        function showUpcomingLeaseModal() {
-            const modal = document.getElementById('upcomingLeaseModal');
-            
-            // Set default values for the new lease
-            const leaseEndMonth = parseInt(document.getElementById('leaseEndMonth').value);
-            const leaseEndYear = parseInt(document.getElementById('leaseEndYear').value);
-            
-            // Set default start date to the month after lease end
-            let newStartMonth = leaseEndMonth + 1;
-            let newStartYear = leaseEndYear;
-            
-            // If next month would be month 13, roll over to January of next year
-            if (newStartMonth > 12) {
-                newStartMonth = 1;
-                newStartYear++;
-            }
-            
-            // Set default end date to 12 months after start
-            let newEndMonth = newStartMonth;
-            let newEndYear = newStartYear + 1;
-            
-            // Set the values in the form
-            document.getElementById('newLeaseStartMonth').value = newStartMonth;
-            document.getElementById('newLeaseStartYear').value = newStartYear;
-            document.getElementById('newLeaseEndMonth').value = newEndMonth;
-            document.getElementById('newLeaseEndYear').value = newEndYear;
-            
-            // Copy current lease values as defaults for new lease
-            const currentRent = document.getElementById('monthlyRent').value;
-            const currentUtilities = document.getElementById('utilities').value;
-            const currentWifi = document.getElementById('wifi').value;
-            const currentUtilitiesIncluded = document.getElementById('utilitiesIncluded').checked;
-            
-            document.getElementById('newLeaseRent').value = currentRent;
-            document.getElementById('newLeaseUtilities').value = currentUtilities;
-            document.getElementById('newLeaseWifi').value = currentWifi;
-            document.getElementById('newLeaseUtilitiesIncluded').checked = currentUtilitiesIncluded;
-            
-            modal.classList.remove('hidden');
-        }
-        
-        function closeUpcomingLeaseModal() {
-            document.getElementById('upcomingLeaseModal').classList.add('hidden');
-        }
-        
-        function saveNewLeaseInfo() {
-            hasNewLease = true;
-            
-            // Get values from the form
-            const startMonth = parseInt(document.getElementById('newLeaseStartMonth').value);
-            const startYear = parseInt(document.getElementById('newLeaseStartYear').value);
-            const endMonth = parseInt(document.getElementById('newLeaseEndMonth').value);
-            const endYear = parseInt(document.getElementById('newLeaseEndYear').value);
-            const rent = document.getElementById('newLeaseRent').value.replace(/[^\d]/g, '');
-            const utilities = document.getElementById('newLeaseUtilities').value.replace(/[^\d]/g, '');
-            const wifi = document.getElementById('newLeaseWifi').value.replace(/[^\d]/g, '');
-            const utilitiesIncluded = document.getElementById('newLeaseUtilitiesIncluded').checked;
-            
-            // Store the new lease info
-            newLeaseInfo = {
-                startMonth,
-                startYear,
-                endMonth,
-                endYear,
-                rent: parseFloat(rent) || 0,
-                utilities: parseFloat(utilities) || 0,
-                wifi: parseFloat(wifi) || 0,
-                utilitiesIncluded
-            };
-            
-            // Close the modal
-            closeUpcomingLeaseModal();
-            
-            // Show confirmation message
-            const successMessage = document.createElement('div');
-            successMessage.className = 'success-message';
-            successMessage.textContent = 'New lease information saved successfully!';
-            document.body.appendChild(successMessage);
-            setTimeout(() => successMessage.remove(), 3000);
-        }
-        
-        // Update the addOnboardingExpenses function to handle multiple lease periods
-        async function addOnboardingExpenses(expenseData) {
-            console.log('===== ADDING ONBOARDING EXPENSES =====');
-            const { rent, utilities, wifi, enrolledMonths, utilitiesIncluded } = expenseData;
-            const currentYear = new Date().getFullYear();
-            const currentMonth = new Date().getMonth() + 1; // 1-based month
-            
-            try {
-                // Get lease end information
-                const leaseEndMonth = parseInt(document.getElementById('leaseEndMonth').value);
-                const leaseEndYear = parseInt(document.getElementById('leaseEndYear').value);
-                
-                // Create expenses for all months, considering lease information
-                for (let month = 1; month <= 12; month++) {
-                    const isEnrolled = enrolledMonths.includes(month);
-                    const isQualified = isEnrolled;
-                    const baseNotes = isEnrolled ? 'Onboarding expense' : 'Not qualified expense because not enrolled as a student';
-                    
-                    // Determine if this month is in the current lease, future lease, or no lease period
-                    let inCurrentLease = false;
-                    let inNewLease = false;
-                    
-                    // Check if month is in current lease period
-                    // Note: if lease ends this year, it's in current lease if month <= leaseEndMonth
-                    // if lease ends next year, it's in current lease for all months this year
-                    if (leaseEndYear > currentYear || (leaseEndYear === currentYear && month <= leaseEndMonth)) {
-                        inCurrentLease = true;
-                    }
-                    
-                    // Check if month is in new lease period (if applicable)
-                    if (hasNewLease) {
-                        const newLeaseStartMonth = newLeaseInfo.startMonth;
-                        const newLeaseStartYear = newLeaseInfo.startYear;
-                        const newLeaseEndMonth = newLeaseInfo.endMonth;
-                        const newLeaseEndYear = newLeaseInfo.endYear;
-                        
-                        // Month is in new lease if:
-                        // 1. It's in the start year and after/equal to the start month, OR
-                        // 2. It's in the end year and before/equal to the end month, OR
-                        // 3. It's in a year between start and end years
-                        if ((newLeaseStartYear === currentYear && month >= newLeaseStartMonth) ||
-                            (newLeaseEndYear === currentYear && month <= newLeaseEndMonth) ||
-                            (currentYear > newLeaseStartYear && currentYear < newLeaseEndYear)) {
-                            inNewLease = true;
-                        }
-                    }
-                    
-                    // Skip months with no lease
-                    if (!inCurrentLease && !inNewLease) {
-                        continue;
-                    }
-                    
-                    // Determine which lease values to use
-                    let monthRent, monthUtilities, monthWifi, monthUtilitiesIncluded, notes;
-                    
-                    if (inNewLease) {
-                        monthRent = newLeaseInfo.rent;
-                        monthUtilities = newLeaseInfo.utilities;
-                        monthWifi = newLeaseInfo.wifi;
-                        monthUtilitiesIncluded = newLeaseInfo.utilitiesIncluded;
-                        notes = baseNotes + ' (new lease)';
-                    } else { // inCurrentLease
-                        monthRent = parseFloat(rent);
-                        monthUtilities = parseFloat(utilities);
-                        monthWifi = parseFloat(wifi);
-                        monthUtilitiesIncluded = utilitiesIncluded;
-                        notes = baseNotes + ' (current lease)';
-                    }
-                    
-                    // Create rent expense if amount is not 0
-                    if (monthRent > 0) {
-                        console.log(`Creating rent expense for month ${month}`);
-                        const rentExpenseData = {
-                            date: new Date(currentYear, month - 1, 1),
-                            category: 'Rent',
-                            amount: monthRent,
-                            notes: notes,
-                            isQualified: isQualified
-                        };
-                        console.log('Rent expense data:', rentExpenseData);
-                        await createExpense(rentExpenseData);
-                    }
-
-                    // Create utilities expense if not included in rent and amount is not 0
-                    if (!monthUtilitiesIncluded && monthUtilities > 0) {
-                        console.log(`Creating utilities expense for month ${month}`);
-                        const utilitiesExpenseData = {
-                            date: new Date(currentYear, month - 1, 1),
-                            category: 'Utilities',
-                            amount: monthUtilities,
-                            notes: notes,
-                            isQualified: isQualified
-                        };
-                        console.log('Utilities expense data:', utilitiesExpenseData);
-                        await createExpense(utilitiesExpenseData);
-                    }
-
-                    // Create WiFi expense if amount is not 0
-                    if (monthWifi > 0) {
-                        console.log(`Creating WiFi expense for month ${month}`);
-                        const wifiExpenseData = {
-                            date: new Date(currentYear, month - 1, 1),
-                            category: 'WiFi',
-                            amount: monthWifi,
-                            notes: notes,
-                            isQualified: isQualified
-                        };
-                        console.log('WiFi expense data:', wifiExpenseData);
-                        await createExpense(wifiExpenseData);
-                    }
-                }
-            } catch (error) {
-                console.error('Error in addOnboardingExpenses:', error);
-                console.error('Error stack:', error.stack);
-                throw error;
-            }
-        }
     </script>
 </body>
 </html>
