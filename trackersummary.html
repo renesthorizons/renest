@@ -1045,14 +1045,14 @@ input[type="number"] {
     background-color: #D4AF37;  /* Classic gold color */
     color: white;
     border: none;
-    padding: 8px 16px;  /* Increased padding */
+    padding: 10px 18px;  /* Increased padding */
     border-radius: 6px;
     font-size: 0.9rem;
-    font-weight: 500;
+    font-weight: 600;
     text-align: center;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(212, 175, 55, 0.2);
-    transition: all 0.2s ease;
+    box-shadow: 0 4px 8px rgba(212, 175, 55, 0.3);  /* Enhanced shadow */
+    transition: all 0.25s ease;
     display: inline-block;
     letter-spacing: 0.3px;
     text-transform: uppercase;
@@ -1062,26 +1062,36 @@ input[type="number"] {
 /* Add this media query to adjust the button styling on mobile */
 @media (max-width: 768px) {
     .action-button.max-benefit {
-        padding: 6px 12px;
-        font-size: 0.8rem;
-        min-width: 110px;
+        padding: 10px 16px;  /* Increased padding from previous fix */
+        font-size: 0.85rem;  /* Slightly larger text */
+        min-width: 120px;
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
+        box-shadow: 0 4px 10px rgba(212, 175, 55, 0.4);  /* Stronger shadow on mobile */
     }
     
     /* Also fix the insight-card on mobile to properly show the button */
     .insight-card {
         overflow: visible !important;
         height: auto !important;
-        min-height: 70px;
+        min-height: 80px;  /* Increased to accommodate larger button */
     }
 }
 
-.action-button.max-benefit:hover {
+.action-button.max-benefit:hover, .action-button.max-benefit:active {
     background-color: #C19B2E;  /* Slightly darker gold on hover */
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(212, 175, 55, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(212, 175, 55, 0.5);  /* Enhanced shadow on hover */
+}
+
+/* Add touch device hover effect */
+@media (hover: none) {
+    .action-button.max-benefit:active {
+        background-color: #C19B2E;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 12px rgba(212, 175, 55, 0.5);
+    }
 }
 
 .action-button.fix {
