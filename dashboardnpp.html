@@ -2943,22 +2943,24 @@ const statePersonalExemptionDB = {
         function showOnboardingModal() {
             const modal = document.getElementById('onboardingModal');
             if (modal) {
-                // console.log('Show Modal - Removing hidden class');
+                console.log('📱 showOnboardingModal: Removing hidden class from modal');
                 modal.classList.remove('hidden');
                 modal.style.display = 'flex';
+                console.log('Modal display state after showing:', modal.style.display);
             } else {
-                console.error('Modal element not found when trying to show');
+                console.error('❌ Modal element not found when trying to show');
             }
         }
 
         function hideOnboardingModal() {
             const modal = document.getElementById('onboardingModal');
             if (modal) {
-                // console.log('Hide Modal - Adding hidden class');
+                console.log('📱 hideOnboardingModal: Adding hidden class to modal');
                 modal.classList.add('hidden');
                 modal.style.display = 'none';
+                console.log('Modal display state after hiding:', modal.style.display);
             } else {
-                console.error('Modal element not found when trying to hide');
+                console.error('❌ Modal element not found when trying to hide');
             }
         }
 
@@ -3038,13 +3040,18 @@ const statePersonalExemptionDB = {
         }
 
         function handleTrackerButtonClick(button) {
+            console.log('🔘 handleTrackerButtonClick:', button.textContent);
             if (button.textContent === 'Get Started') {
+                console.log('Redirecting to expensetracking.html');
                 window.location.href = 'expensetracking.html';
             } else if (button.textContent === 'Open Your State\'s 529') {
+                console.log('Redirecting to openrenest529.html');
                 window.location.href = 'openrenest529.html';
             } else if (button.textContent === 'Track Expenses') {
+                console.log('Opening expense tracking modal');
                 showExpenseTrackingModal();
             } else {
+                console.log('Redirecting to trackersummary.html');
                 window.location.href = 'trackersummary.html';
             }
         }
@@ -3173,6 +3180,7 @@ const statePersonalExemptionDB = {
         }
 
         function alreadyHave529() {
+            console.log('📋 alreadyHave529: User already has 529 account');
             const authToken = localStorage.getItem('authToken');
             
             // Add loading spinner to the button
@@ -3180,7 +3188,9 @@ const statePersonalExemptionDB = {
             const originalText = button.textContent;
             button.innerHTML = '<div class="spinner-small"></div>';
             button.disabled = true;
+            console.log('Button disabled and spinner shown');
             
+            console.log('Updating progress to 75%');
             fetch('https://jmqfabgm02.execute-api.us-east-2.amazonaws.com/update-profile', {
                 method: 'PUT',
                 headers: {
@@ -3192,12 +3202,14 @@ const statePersonalExemptionDB = {
                 })
             })
             .then(response => {
+                console.log('Progress update response:', response.status);
                 if (!response.ok) {
                     throw new Error('Failed to update progress');
                 }
                 return response.json();
             })
             .then(() => {
+                console.log('Progress updated, fetching user profile');
                 // Fetch updated user data
                 return fetch('https://g4gri8abii.execute-api.us-east-2.amazonaws.com/prod/profile', {
                     method: 'GET',
@@ -3208,12 +3220,14 @@ const statePersonalExemptionDB = {
                 });
             })
             .then(response => {
+                console.log('Profile fetch response:', response.status);
                 if (!response.ok) {
                     throw new Error('Failed to fetch updated user data');
                 }
                 return response.json();
             })
             .then(userData => {
+                console.log('User data fetched successfully, redirecting to dashboard');
                 closeState529Modal();
                 // Redirect to dashboard
                 window.location.href = 'dashboard.html';
@@ -3298,11 +3312,17 @@ const statePersonalExemptionDB = {
         function updateProgressBar1() {
             const progress = (currentStep / 3) * 100;
             const progressBar1 = document.getElementById('progressBar1');
+            
+            console.log(`🔄 updateProgressBar1: setting progress to ${progress}%`);
+            
             progressBar1.style.width = `${progress}%`;
             progressBar1.style.transition = 'width 0.3s ease';
+            
+            console.log('Progress bar updated with width:', progressBar1.style.width);
         }
 
         function showStep(stepNumber) {
+            console.log('🔢 showStep: Switching to step', stepNumber);
             // Hide all steps
             document.querySelectorAll('.form-step').forEach(step => {
                 step.classList.remove('active');
@@ -3311,30 +3331,37 @@ const statePersonalExemptionDB = {
             // Show requested step
             document.getElementById(`step${stepNumber}`).classList.add('active');
             document.getElementById('currentStep').textContent = stepNumber;
+            console.log(`Step ${stepNumber} is now active`);
             
             // Update progress
             currentStep = stepNumber;
             updateProgressBar1();
+            console.log('Progress bar updated for step', stepNumber);
         }
 
         // Navigation functions
         function nextStep() {
+            console.log('➡️ nextStep called from step', currentStep);
             if (currentStep === 1 && validateStep1()) {
                 // Save step 1 data
                 formData.firstName = document.getElementById('firstName').value;
                 formData.lastName = document.getElementById('lastName').value;
                 formData.dateOfBirth = document.getElementById('dateOfBirth').value;
+                console.log('Step 1 data saved:', {firstName: formData.firstName, lastName: formData.lastName, dateOfBirth: formData.dateOfBirth});
                 showStep(2);
             } else if (currentStep === 2 && validateStep2()) {
                 // Save step 2 data
                 formData.school = document.getElementById('school').value;
                 formData.state = document.getElementById('state').value;
                 formData.income = document.getElementById('income').value;
+                console.log('Step 2 data saved:', {school: formData.school, state: formData.state, income: formData.income});
                 
                 // When moving to Step 3, hide Submit button and show Done button
+                console.log('Transitioning to step 3, preparing to update button visibility');
                 setTimeout(() => {
                     document.getElementById('leaseInfoBtn').classList.remove('hidden');
                     document.getElementById('submitBtn').classList.add('hidden');
+                    console.log('Button visibility updated: leaseInfoBtn shown, submitBtn hidden');
                 }, 100);
                 
                 showStep(3);
@@ -3342,6 +3369,7 @@ const statePersonalExemptionDB = {
         }
 
         function previousStep() {
+            console.log('⬅️ previousStep called from step', currentStep);
             if (currentStep > 1) {
                 // If going back from Step 3, reset lease information
                 if (currentStep === 3) {
@@ -3358,7 +3386,7 @@ const statePersonalExemptionDB = {
                         utilitiesIncluded: false
                     };
                     
-                    console.log('Lease info reset when going back from Step 3');
+                    console.log('Lease info reset when going back from Step 3', {hasNewLease, newLeaseInfo});
                 }
                 
                 showStep(currentStep - 1);
@@ -3367,20 +3395,24 @@ const statePersonalExemptionDB = {
 
         // Validation functions
         function validateStep1() {
+            console.log('🔍 validateStep1: Validating first name, last name, and date of birth');
             const firstName = document.getElementById('firstName').value.trim();
             const lastName = document.getElementById('lastName').value.trim();
             const dateOfBirth = document.getElementById('dateOfBirth').value;
             const ageError = document.getElementById('ageError');
 
             if (!firstName) {
+                console.log('❌ validateStep1: First name missing');
                 showError('Please enter your first name');
                 return false;
             }
             if (!lastName) {
+                console.log('❌ validateStep1: Last name missing');
                 showError('Please enter your last name');
                 return false;
             }
             if (!dateOfBirth) {
+                console.log('❌ validateStep1: Date of birth missing');
                 showError('Please enter your date of birth');
                 return false;
             }
@@ -3398,13 +3430,18 @@ const statePersonalExemptionDB = {
                 age--;
             }
             
+            console.log('Age calculated:', age);
+            
             if (age < 18) {
+                console.log('❌ validateStep1: User is under 18');
                 ageError.style.display = 'block';
                 return false;
             } else {
+                console.log('✅ validateStep1: Age validation passed');
                 ageError.style.display = 'none';
             }
 
+            console.log('✅ validateStep1: All validations passed');
             return true;
         }
 
@@ -3430,27 +3467,33 @@ const statePersonalExemptionDB = {
         }
 
         function validateStep2() {
+            console.log('🔍 validateStep2: Validating school, state, and income');
             const school = document.getElementById('school').value.trim();
             const state = document.getElementById('state').value;
             const income = Number(document.getElementById('income').value.replace(/[^\d]/g, ''));
 
             if (!school) {
+                console.log('❌ validateStep2: School name missing');
                 showError('Please enter your school name');
                 return false;
             }
             if (!state) {
+                console.log('❌ validateStep2: State not selected');
                 showError('Please select your state');
                 return false;
             }
             if (!income || isNaN(income) || income < 0) {
+                console.log('❌ validateStep2: Invalid income', { income, isNaN: isNaN(income) });
                 showError('Please enter a valid annual income');
                 return false;
             }
 
+            console.log('✅ validateStep2: All validations passed');
             return true;
         }
 
         function validateStep3() {
+            console.log('🔍 validateStep3: Validating expenses and enrolled months');
             const monthlyRent = document.getElementById('monthlyRent').value.replace(/[^\d]/g, '') || '0';
             const utilities = document.getElementById('utilities').value.replace(/[^\d]/g, '') || '0';
             const wifi = document.getElementById('wifi').value.replace(/[^\d]/g, '') || '0';
@@ -3458,16 +3501,40 @@ const statePersonalExemptionDB = {
             const enrolledMonths = Array.from(document.querySelectorAll('input[name="enrolledMonths"]:checked'))
                 .map(checkbox => parseInt(checkbox.value));
 
+            console.log('Step 3 values:', {
+                monthlyRent,
+                utilities,
+                wifi,
+                utilitiesIncluded,
+                enrolledMonthsCount: enrolledMonths.length,
+                enrolledMonths
+            });
+
             if (enrolledMonths.length === 0) {
+                console.log('❌ validateStep3: No enrolled months selected');
                 showError('Please select at least one enrolled month');
                 return false;
             }
 
+            console.log('✅ validateStep3: All validations passed');
             return true;
+        }
+
+        function showError(message) {
+            console.log('⚠️ showError:', message);
+            const errorMessage = document.createElement('div');
+            errorMessage.className = 'error-message';
+            errorMessage.textContent = message;
+            document.body.appendChild(errorMessage);
+            setTimeout(() => {
+                errorMessage.remove();
+                console.log('Error message removed');
+            }, 3000);
         }
 
         // Add this function to show the congratulatory modal
         function showCongratulationsModal(benefitAmount) {
+            console.log('🎉 showCongratulationsModal: Showing congratulations with benefit:', benefitAmount);
             const formattedAmount = '$' + Math.round(benefitAmount).toLocaleString();
             
             const modalHtml = `
@@ -3495,20 +3562,71 @@ const statePersonalExemptionDB = {
 
             // Add modal to body
             document.body.insertAdjacentHTML('beforeend', modalHtml);
+            console.log('Congratulations modal added to DOM');
+            
+            // Add event listener to close button with logging
+            setTimeout(() => {
+                const closeButton = document.querySelector('#congratsModal .close-button');
+                if (closeButton) {
+                    console.log('Adding event listener to congrats modal close button');
+                    const originalClick = closeButton.onclick;
+                    closeButton.onclick = function(e) {
+                        console.log('🖱️ Congratulations modal close button clicked');
+                        if (originalClick) originalClick.call(this, e);
+                    };
+                }
+            }, 100);
+            
+            // Safety timeout: redirect automatically after 10 seconds if user doesn't close modal
+            setTimeout(() => {
+                const submissionComplete = localStorage.getItem('submissionComplete') === 'true';
+                const modalStillExists = !!document.getElementById('congratsModal');
+                
+                console.log('Safety timeout check:', {
+                    submissionComplete,
+                    modalStillExists
+                });
+                
+                if (submissionComplete && modalStillExists) {
+                    console.log('Safety timeout triggered - automatically closing modal and redirecting');
+                    handleCongratsModalClose();
+                }
+            }, 10000);
         }
 
-        // Add this function to handle the modal close button
         function handleCongratsModalClose() {
+            console.log('🔒 handleCongratsModalClose: Closing congratulations modal');
             const modal = document.getElementById('congratsModal');
             if (modal) {
                 modal.remove();
+                console.log('Congratulations modal removed from DOM');
             }
             
             // Check if form submission is complete
             const submitBtn = document.getElementById('submitBtn');
-            if (!submitBtn.disabled) {
-                // If button is enabled, submission is complete, redirect to tracker summary
-                window.location.href = 'trackersummary.html';
+            const submissionComplete = localStorage.getItem('submissionComplete') === 'true';
+            
+            console.log('Checking redirect conditions:', {
+                'submitButtonExists': !!submitBtn,
+                'submitButtonDisabled': submitBtn?.disabled,
+                'submissionCompleteFlag': submissionComplete
+            });
+            
+            // Use either the button state or the localStorage flag to determine if redirect should happen
+            if (!submitBtn?.disabled || submissionComplete) {
+                // If button is not disabled OR submissionComplete flag is set, redirect to tracker summary
+                console.log('Form submission complete, redirecting to trackersummary.html now');
+                
+                // Clear the flag
+                localStorage.removeItem('submissionComplete');
+                
+                // Force redirect with delay to ensure this happens after modal close animation completes
+                setTimeout(() => {
+                    console.log('EXECUTING REDIRECT NOW');
+                    window.location.href = 'trackersummary.html';
+                }, 50);
+            } else {
+                console.log('Form submission still in progress, not redirecting yet');
             }
             // Otherwise, let the submission process continue in the background
         }
@@ -3549,6 +3667,7 @@ const statePersonalExemptionDB = {
                 
                 submitBtn.disabled = true;
                 spinner.style.display = 'block';
+                console.log('All form elements disabled and spinner shown');
                 
                 // Validate step 3
                 console.log('2. Starting step 3 validation');
@@ -3709,10 +3828,20 @@ const statePersonalExemptionDB = {
                 console.log('7. Hiding onboarding modal');
                 hideOnboardingModal();
                 
+                // IMPORTANT: Set submitBtn.disabled to false AFTER all expenses are created
+                // This will signal to the congratulations modal that redirection can happen
+                console.log('8. CRITICAL: Re-enabling submit button to allow redirection');
+                submitBtn.disabled = false;
+                spinner.style.display = 'none';
+                
+                // Set a flag in localStorage to ensure redirection happens
+                localStorage.setItem('submissionComplete', 'true');
+                console.log('Set submissionComplete flag in localStorage');
+                
                 // The redirect will be handled by the congratulations modal close button
-                // If user dismisses the congrats modal and submission is complete
-                // window.location.href = 'trackersummary.html';
-
+                // when user dismisses the congrats modal
+                console.log('Redirect will happen when user closes congratulations modal');
+                
             } catch (error) {
                 console.error('Error in form submission:', error);
                 console.error('Error stack:', error.stack);
@@ -3725,8 +3854,8 @@ const statePersonalExemptionDB = {
                 setTimeout(() => errorMessage.remove(), 3000);
                 
             } finally {
-                console.log('8. Resetting button state');
-                // Reset button state
+                console.log('9. Ensuring button state is reset');
+                // Reset button state in all cases
                 submitBtn.disabled = false;
                 spinner.style.display = 'none';
             }
@@ -4021,16 +4150,19 @@ const statePersonalExemptionDB = {
         }
 
         async function handleGotItClick() {
+            console.log('👍 handleGotItClick: User confirmed expense tracking modal');
             // Show spinner and disable button
             const button = document.querySelector('.expense-tracking-modal .button-primary');
             const spinner = document.getElementById('gotItSpinner');
             const buttonText = button.querySelector('span');
             
+            console.log('Disabling button and showing spinner');
             button.disabled = true;
             spinner.style.display = 'block';
             buttonText.style.opacity = '0.7';
 
             try {
+                console.log('Updating profile with progressPercentage: 80');
                 const authToken = localStorage.getItem('authToken');
                 const response = await fetch('https://jmqfabgm02.execute-api.us-east-2.amazonaws.com/update-profile', {
                     method: 'PUT',
@@ -4044,9 +4176,11 @@ const statePersonalExemptionDB = {
                 });
 
                 if (!response.ok) {
+                    console.error('API response not OK:', response.status);
                     throw new Error('Failed to update progress');
                 }
 
+                console.log('Progress updated successfully, closing modal and redirecting');
                 // Close modal and redirect
                 closeExpenseTrackingModal();
                 window.location.href = 'trackersummary.html';
@@ -4061,6 +4195,7 @@ const statePersonalExemptionDB = {
                 setTimeout(() => errorMessage.remove(), 3000);
                 
                 // Reset button state
+                console.log('Resetting button state due to error');
                 button.disabled = false;
                 spinner.style.display = 'none';
                 buttonText.style.opacity = '1';
@@ -4213,6 +4348,7 @@ const statePersonalExemptionDB = {
             successMessage.textContent = 'Lease information confirmed! You can now proceed with submission.';
             document.body.appendChild(successMessage);
             setTimeout(() => successMessage.remove(), 3000);
+            console.log('Success message displayed and will be removed in 3 seconds');
             
             console.log('🔄 handleNoNewLeaseInfo completed');
         }
@@ -4231,12 +4367,16 @@ const statePersonalExemptionDB = {
         
         function showConfirmLeaseModal() {
             console.log('🔍 showConfirmLeaseModal: showing modal');
-            document.getElementById('confirmLeaseModal').classList.remove('hidden');
+            const modal = document.getElementById('confirmLeaseModal');
+            modal.classList.remove('hidden');
+            console.log('Confirm lease modal visibility:', !modal.classList.contains('hidden'));
         }
         
         function closeConfirmLeaseModal() {
             console.log('🔍 closeConfirmLeaseModal: hiding modal');
-            document.getElementById('confirmLeaseModal').classList.add('hidden');
+            const modal = document.getElementById('confirmLeaseModal');
+            modal.classList.add('hidden');
+            console.log('Confirm lease modal visibility: hidden');
             
             // If we don't have new lease info yet, make sure Done button is still visible
             // This handles the case when user clicks X to close without selecting yes/no
@@ -4325,6 +4465,7 @@ const statePersonalExemptionDB = {
                 successMessage.textContent = 'Lease information confirmed! You can now proceed with submission.';
                 document.body.appendChild(successMessage);
                 setTimeout(() => successMessage.remove(), 3000);
+                console.log('Success message displayed');
             }
             
             console.log('🔵 handleLeaseDone completed');
@@ -4332,7 +4473,9 @@ const statePersonalExemptionDB = {
         
         function closeUpcomingLeaseModal() {
             console.log('🔒 closeUpcomingLeaseModal called');
-            document.getElementById('upcomingLeaseModal').classList.add('hidden');
+            const modal = document.getElementById('upcomingLeaseModal');
+            modal.classList.add('hidden');
+            console.log('Upcoming lease modal now hidden');
             
             // Ensure the correct button is showing if they close without saving
             // If they haven't saved new lease info yet, keep the Done button visible
@@ -4417,6 +4560,16 @@ const statePersonalExemptionDB = {
             const wifi = document.getElementById('newLeaseWifi').value.replace(/[^\d]/g, '');
             const utilitiesIncluded = document.getElementById('newLeaseUtilitiesIncluded').checked;
             
+            console.log('New lease form values:', {
+                dates: { startMonth, startYear, endMonth, endYear },
+                expenses: { 
+                    rent,
+                    utilities,
+                    wifi,
+                    utilitiesIncluded
+                }
+            });
+            
             // Store the new lease info
             newLeaseInfo = {
                 startMonth,
@@ -4446,6 +4599,7 @@ const statePersonalExemptionDB = {
             successMessage.textContent = 'New lease information saved! You can now proceed with submission.';
             document.body.appendChild(successMessage);
             setTimeout(() => successMessage.remove(), 3000);
+            console.log('Success message displayed and will be removed in 3 seconds');
             
             console.log('📝 saveNewLeaseInfo completed');
         }
@@ -4502,6 +4656,7 @@ const statePersonalExemptionDB = {
         };
         
         function populateYearDropdowns() {
+            console.log('🗓️ populateYearDropdowns: Setting up year dropdown options');
             const currentYear = new Date().getFullYear();
             const nextYear = currentYear + 1;
             
@@ -4512,6 +4667,9 @@ const statePersonalExemptionDB = {
                     <option value="${currentYear}">${currentYear}</option>
                     <option value="${nextYear}">${nextYear}</option>
                 `;
+                console.log(`Lease end year dropdown populated with years ${currentYear} and ${nextYear}`);
+            } else {
+                console.warn('⚠️ Lease end year dropdown not found');
             }
             
             // Populate new lease start year dropdown
@@ -4521,6 +4679,9 @@ const statePersonalExemptionDB = {
                     <option value="${currentYear}">${currentYear}</option>
                     <option value="${nextYear}">${nextYear}</option>
                 `;
+                console.log(`New lease start year dropdown populated with years ${currentYear} and ${nextYear}`);
+            } else {
+                console.warn('⚠️ New lease start year dropdown not found');
             }
             
             // Populate new lease end year dropdown
@@ -4531,10 +4692,14 @@ const statePersonalExemptionDB = {
                     <option value="${nextYear}">${nextYear}</option>
                     <option value="${nextYear + 1}">${nextYear + 1}</option>
                 `;
+                console.log(`New lease end year dropdown populated with years ${currentYear}, ${nextYear}, and ${nextYear + 1}`);
+            } else {
+                console.warn('⚠️ New lease end year dropdown not found');
             }
         }
         
         function setDefaultLeaseEndDate() {
+            console.log('🗓️ setDefaultLeaseEndDate: Setting default lease end date');
             const currentDate = new Date();
             const defaultEndMonth = currentDate.getMonth() + 1; // 1-based month
             const defaultEndYear = currentDate.getFullYear() + 1; // Default to 1 year from now
@@ -4543,13 +4708,28 @@ const statePersonalExemptionDB = {
             const leaseEndYearSelect = document.getElementById('leaseEndYear');
             
             if (leaseEndMonthSelect && leaseEndYearSelect) {
+                console.log('Default lease end date:', {
+                    currentMonth: currentDate.getMonth() + 1,
+                    currentYear: currentDate.getFullYear(),
+                    defaultEndMonth,
+                    defaultEndYear
+                });
+                
                 leaseEndMonthSelect.value = defaultEndMonth;
                 leaseEndYearSelect.value = currentDate.getFullYear(); // Current year as default
                 
                 // If default end month is in the past for current year, select next year
                 if (defaultEndMonth < currentDate.getMonth() + 1) {
                     leaseEndYearSelect.value = defaultEndYear;
+                    console.log('Default month is in past, setting to next year');
                 }
+                
+                console.log('Default lease end date set to:', {
+                    month: leaseEndMonthSelect.value,
+                    year: leaseEndYearSelect.value
+                });
+            } else {
+                console.warn('⚠️ Lease end date selects not found');
             }
         }
         
@@ -4594,6 +4774,7 @@ const statePersonalExemptionDB = {
         }
         
         function showUpcomingLeaseModal() {
+            console.log('🏠 showUpcomingLeaseModal: showing upcoming lease form');
             const modal = document.getElementById('upcomingLeaseModal');
             
             // Set default values for the new lease
@@ -4614,6 +4795,16 @@ const statePersonalExemptionDB = {
             let newEndMonth = newStartMonth;
             let newEndYear = newStartYear + 1;
             
+            console.log('Setting default lease dates:', {
+                current: { endMonth: leaseEndMonth, endYear: leaseEndYear },
+                new: { 
+                    startMonth: newStartMonth, 
+                    startYear: newStartYear,
+                    endMonth: newEndMonth,
+                    endYear: newEndYear
+                }
+            });
+            
             // Set the values in the form
             document.getElementById('newLeaseStartMonth').value = newStartMonth;
             document.getElementById('newLeaseStartYear').value = newStartYear;
@@ -4627,52 +4818,57 @@ const statePersonalExemptionDB = {
             const currentWifi = document.getElementById('wifi').value;
             const currentUtilitiesIncluded = document.getElementById('utilitiesIncluded').checked;
             
+            console.log('Copying current lease values to new lease form:', {
+                rent: currentRent,
+                utilities: currentUtilities,
+                wifi: currentWifi,
+                utilitiesIncluded: currentUtilitiesIncluded
+            });
+            
             document.getElementById('newLeaseRent').value = currentRent;
             document.getElementById('newLeaseUtilities').value = currentUtilities;
             document.getElementById('newLeaseWifi').value = currentWifi;
             document.getElementById('newLeaseUtilitiesIncluded').checked = currentUtilitiesIncluded;
             
             modal.classList.remove('hidden');
+            console.log('Upcoming lease modal now visible');
         }
         
         function closeUpcomingLeaseModal() {
-            document.getElementById('upcomingLeaseModal').classList.add('hidden');
-        }
-        
-        function saveNewLeaseInfo() {
-            hasNewLease = true;
+            console.log('🔒 closeUpcomingLeaseModal called');
+            const modal = document.getElementById('upcomingLeaseModal');
+            modal.classList.add('hidden');
+            console.log('Upcoming lease modal now hidden');
             
-            // Get values from the form
-            const startMonth = parseInt(document.getElementById('newLeaseStartMonth').value);
-            const startYear = parseInt(document.getElementById('newLeaseStartYear').value);
-            const endMonth = parseInt(document.getElementById('newLeaseEndMonth').value);
-            const endYear = parseInt(document.getElementById('newLeaseEndYear').value);
-            const rent = document.getElementById('newLeaseRent').value.replace(/[^\d]/g, '');
-            const utilities = document.getElementById('newLeaseUtilities').value.replace(/[^\d]/g, '');
-            const wifi = document.getElementById('newLeaseWifi').value.replace(/[^\d]/g, '');
-            const utilitiesIncluded = document.getElementById('newLeaseUtilitiesIncluded').checked;
+            // Ensure the correct button is showing if they close without saving
+            // If they haven't saved new lease info yet, keep the Done button visible
+            console.log('Current hasNewLease value:', hasNewLease);
+            if (!hasNewLease) {
+                console.log('No new lease saved, ensuring Done button remains visible');
+                const leaseInfoBtn = document.getElementById('leaseInfoBtn');
+                const submitBtn = document.getElementById('submitBtn');
+                
+                if (leaseInfoBtn && submitBtn) {
+                    console.log('Button state before update:', {
+                        leaseInfoHidden: leaseInfoBtn.classList.contains('hidden'),
+                        submitHidden: submitBtn.classList.contains('hidden')
+                    });
+                    
+                    leaseInfoBtn.classList.remove('hidden');
+                    submitBtn.classList.add('hidden');
+                    
+                    console.log('Button state after update:', {
+                        leaseInfoHidden: leaseInfoBtn.classList.contains('hidden'),
+                        submitHidden: submitBtn.classList.contains('hidden')
+                    });
+                } else {
+                    console.warn('⚠️ Could not find buttons in closeUpcomingLeaseModal');
+                }
+            } else {
+                console.log('hasNewLease is true, not modifying button visibility');
+            }
             
-            // Store the new lease info
-            newLeaseInfo = {
-                startMonth,
-                startYear,
-                endMonth,
-                endYear,
-                rent: parseFloat(rent) || 0,
-                utilities: parseFloat(utilities) || 0,
-                wifi: parseFloat(wifi) || 0,
-                utilitiesIncluded
-            };
-            
-            // Close the modal
-            closeUpcomingLeaseModal();
-            
-            // Show confirmation message
-            const successMessage = document.createElement('div');
-            successMessage.className = 'success-message';
-            successMessage.textContent = 'New lease information saved successfully!';
-            document.body.appendChild(successMessage);
-            setTimeout(() => successMessage.remove(), 3000);
+            console.log('🔒 closeUpcomingLeaseModal completed');
         }
         
         // Update the addOnboardingExpenses function to handle multiple lease periods
@@ -4792,6 +4988,64 @@ const statePersonalExemptionDB = {
                 throw error;
             }
         }
+    </script>
+    
+    <script>
+        // Debug initialization - add this script last to ensure it runs after everything else
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔧 DEBUG: DOMContentLoaded event fired');
+            
+            // Log the current state of the modal
+            const modal = document.getElementById('onboardingModal');
+            if (modal) {
+                console.log('Initial onboarding modal state:', {
+                    hidden: modal.classList.contains('hidden'),
+                    display: modal.style.display,
+                    classList: Array.from(modal.classList)
+                });
+            } else {
+                console.warn('⚠️ Onboarding modal element not found in DOM');
+            }
+            
+            // Log the current buttons state
+            const leaseInfoBtn = document.getElementById('leaseInfoBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            if (leaseInfoBtn && submitBtn) {
+                console.log('Initial buttons state:', {
+                    leaseInfoHidden: leaseInfoBtn.classList.contains('hidden'),
+                    leaseInfoDisplay: window.getComputedStyle(leaseInfoBtn).display,
+                    submitHidden: submitBtn.classList.contains('hidden'),
+                    submitDisplay: window.getComputedStyle(submitBtn).display
+                });
+            } else {
+                console.warn('⚠️ Lease info or submit button not found', {
+                    leaseInfoBtn: !!leaseInfoBtn,
+                    submitBtn: !!submitBtn
+                });
+            }
+            
+            // Log all modals in the DOM
+            const allModals = document.querySelectorAll('.modal-overlay');
+            console.log(`Found ${allModals.length} modals in the DOM:`, 
+                Array.from(allModals).map(m => ({
+                    id: m.id,
+                    hidden: m.classList.contains('hidden'),
+                    display: window.getComputedStyle(m).display
+                }))
+            );
+            
+            // Log form steps
+            const formSteps = document.querySelectorAll('.form-step');
+            console.log(`Found ${formSteps.length} form steps:`,
+                Array.from(formSteps).map(step => ({
+                    id: step.id,
+                    active: step.classList.contains('active'),
+                    display: window.getComputedStyle(step).display
+                }))
+            );
+            
+            console.log('🔧 DEBUG: Initialization complete');
+        });
     </script>
 </body>
 </html>
