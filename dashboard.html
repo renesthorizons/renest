@@ -1179,6 +1179,11 @@
                         $0 
                         <span style="font-size: 1.8rem; color: var(--primary); font-weight: 600;">/ $0 </span>
                     </div>
+                    <div id="getMoneyButtonContainer" class="hidden">
+                        <button id="getMoneyButton" class="button button-primary" style="margin-top: 10px; font-size: 0.9rem; padding: 8px 15px;">
+                            Get My Money Now
+                        </button>
+                    </div>
                 </div>
                 <div class="next-steps" style="margin-top: 1rem;">
                     <h3>Next Steps</h3>
@@ -1233,6 +1238,21 @@
             <button class="popup-close" onclick="closePopup()">Close</button>
         </div>
     </div> -->
+
+    <!-- Add this new HTML just before the closing </body> tag -->
+    <div id="getMoneyModal" class="modal-overlay hidden">
+        <div class="modal-container">
+            <div class="modal-content">
+                <button class="close-button" onclick="closeGetMoneyModal()">×</button>
+                <h2 style="margin-bottom: 1.5rem;">Ready to Claim Your Benefit</h2>
+                <p style="margin-bottom: 1.5rem;">To claim your tax benefit, we can guide you through the process. Please choose one of the options below:</p>
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <a href="contactus529.html" class="button button-primary">Email Us</a>
+                    <a href="https://calendly.com/renesthorizons/30min?month=2025-05" target="_blank" class="button button-primary">Schedule a Zoom Meeting</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
     function formatCurrency(input) {
@@ -2846,16 +2866,27 @@ const statePersonalExemptionDB = {
             const benefitSummary = document.getElementById('benefitSummary');
             // const potentialSavings = document.getElementById('potentialSavings');
             const nextStepsList = document.getElementById('nextStepsList');
+            const getMoneyButtonContainer = document.getElementById('getMoneyButtonContainer');
 
             // Populate with user's actual data
             const progressPercentage = userData.progressPercentage || 0; // Use the new progress percentage
             progressBar.style.width = `${progressPercentage}%`;
             progressBar.textContent = `${progressPercentage}%`;
             
+            const currentBenefit = Math.round(userData.currentBenefit || 0);
+            const totalPotentialBenefit = Math.round(userData.totalPotentialBenefit || 0);
+            
             benefitSummary.innerHTML = `
-                $${Math.round(userData.currentBenefit || 0)} 
-                <span style="font-size: 1.8rem; color: var(--primary); font-weight: 600;">/ $${Math.round(userData.totalPotentialBenefit || 0)}</span>
+                $${currentBenefit} 
+                <span style="font-size: 1.8rem; color: var(--primary); font-weight: 600;">/ $${totalPotentialBenefit}</span>
             `;
+            
+            // Show "Get My Money Now" button if currentBenefit > $200
+            if (currentBenefit > 200) {
+                getMoneyButtonContainer.classList.remove('hidden');
+            } else {
+                getMoneyButtonContainer.classList.add('hidden');
+            }
             
             // potentialSavings.textContent = `$${Math.round(userData.potentialTaxSavings || 0)}`;
 
@@ -3821,6 +3852,24 @@ const statePersonalExemptionDB = {
                 formatCurrency(this);
             });
         });
+
+        // Add these functions to handle the "Get My Money Now" button and modal
+        document.addEventListener('DOMContentLoaded', function() {
+            // ... existing code ...
+            
+            // Add event listener for the Get My Money Now button
+            document.getElementById('getMoneyButton').addEventListener('click', function() {
+                showGetMoneyModal();
+            });
+        });
+
+        function showGetMoneyModal() {
+            document.getElementById('getMoneyModal').classList.remove('hidden');
+        }
+
+        function closeGetMoneyModal() {
+            document.getElementById('getMoneyModal').classList.add('hidden');
+        }
 
     </script>
 </body>
