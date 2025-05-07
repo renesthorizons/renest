@@ -1728,6 +1728,71 @@
                 padding: 0 1.5rem 2.5rem;
             }
         }
+
+        /* First, add the CSS for the search controls */
+        .search-controls {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .search-control-item {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .search-control-item label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .search-control-item select,
+        .search-control-item input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .search-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .search-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .search-results-info {
+            margin: 1rem 0;
+            color: #6B7280;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .search-controls {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            
+            .search-control-item {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -2161,6 +2226,45 @@
                         <div class="collapse-icon"></div>
                     </div>
                     <div class="collapsible-content">
+                        <!-- Add search controls -->
+                        <div class="search-controls" id="manual-expense-search-controls">
+                            <div class="search-control-item">
+                                <label>Month</label>
+                                <select id="expense-month-filter">
+                                    <option value="">All Months</option>
+                                    <option value="01">January</option>
+                                    <option value="02">February</option>
+                                    <option value="03">March</option>
+                                    <option value="04">April</option>
+                                    <option value="05">May</option>
+                                    <option value="06">June</option>
+                                    <option value="07">July</option>
+                                    <option value="08">August</option>
+                                    <option value="09">September</option>
+                                    <option value="10">October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>
+                                </select>
+                            </div>
+                            <div class="search-control-item">
+                                <label>Day</label>
+                                <input type="number" id="expense-day-filter" min="1" max="31" placeholder="Day of month">
+                            </div>
+                            <div class="search-control-item">
+                                <label>Category</label>
+                                <select id="expense-category-filter">
+                                    <option value="">All Categories</option>
+                                    <!-- Categories will be populated dynamically -->
+                                </select>
+                            </div>
+                            <div class="search-control-item" style="align-self: flex-end;">
+                                <button id="manual-search-button" class="search-button" onclick="filterManualExpenses()">Search</button>
+                                <button id="manual-reset-button" class="search-button" style="background-color: #6B7280;" onclick="resetManualExpenseFilters()">Reset</button>
+                            </div>
+                        </div>
+                        
+                        <div id="search-results-info" class="search-results-info"></div>
+                        
                         <div id="expense-list" class="expense-list">
                             <!-- Expenses will be added here dynamically -->
                         </div>
@@ -4283,6 +4387,180 @@ function hideCategoryModal() {
                 }, 500); // Match this timing to your transition duration
             }
         }
+
+        // Global variables for expense filtering
+        let allManualExpenses = [];
+
+        // Modified loadExpenses function to store expenses for filtering
+        async function loadExpenses() {
+            try {
+                console.log('=== Starting loadExpenses ===');
+                const data = await getExpenses();
+                console.log('Total expenses received:', data.expenses.length);
+                
+                // Store all non-529 expenses for filtering
+                allManualExpenses = data.expenses.filter(expense => 
+                    expense.category !== 'Deposit529' && 
+                    expense.category !== 'Withdrawal529'
+                );
+                
+                // Update the expense list with all expenses initially
+                updateExpenseList(allManualExpenses);
+                
+                // Update category dropdown with all unique categories
+                updateCategoryDropdown(data.expenses);
+                
+                // Also update the category filter dropdown for the search
+                updateCategoryFilterDropdown(allManualExpenses);
+
+                // Calculate and update 529 projections
+                const projections = calculate529Projections(data.expenses);
+                update529Display(projections);
+                update529TransactionsList(data.expenses);
+                updateSummary(data.expenses);
+                console.log('=== Completed loadExpenses ===');
+            } catch (error) {
+                console.error('Error loading expenses:', error);
+                showError('Error loading expenses: ' + error.message);
+            }
+        }
+
+        // Function to update the expense list display
+        function updateExpenseList(expenses) {
+            const expenseList = document.getElementById('expense-list');
+            
+            if (expenses.length === 0) {
+                expenseList.innerHTML = '<div style="text-align: center; padding: 1rem; color: #6B7280;">No expenses found matching your criteria.</div>';
+                return;
+            }
+            
+            // Sort expenses by date, newest first
+            const sortedExpenses = [...expenses].sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            expenseList.innerHTML = sortedExpenses
+                .map(expense => `
+                    <div class="expense-item" id="expense-${expense.expenseID}">
+                        <div>
+                            <div>${new Date(expense.date).toLocaleDateString()}</div>
+                            <div>${expense.category}</div>
+                            <div style="color: #6B7280; font-size: 0.9rem;">${expense.notes || ''}</div>
+                        </div>
+                        <div>
+                            <span>$${expense.amount.toFixed(2)}</span>
+                            <button onclick="deleteExpenseHandler('${expense.expenseID}')" 
+                                    class="delete-btn">Delete</button>
+                        </div>
+                    </div>
+                `).join('');
+            
+            // Update search results info
+            const searchResultsInfo = document.getElementById('search-results-info');
+            if (searchResultsInfo) {
+                if (expenses.length === allManualExpenses.length) {
+                    searchResultsInfo.textContent = `Showing all ${expenses.length} expenses`;
+                } else {
+                    searchResultsInfo.textContent = `Found ${expenses.length} expenses matching your criteria`;
+                }
+            }
+        }
+
+        // Function to populate category filter dropdown
+        function updateCategoryFilterDropdown(expenses) {
+            const categoryFilter = document.getElementById('expense-category-filter');
+            if (!categoryFilter) return;
+            
+            // Remember the current selection
+            const currentValue = categoryFilter.value;
+            
+            // Clear existing options (except the first "All Categories" option)
+            while (categoryFilter.options.length > 1) {
+                categoryFilter.remove(1);
+            }
+            
+            // Get all unique categories
+            const uniqueCategories = [...new Set(expenses.map(expense => expense.category))].sort();
+            
+            // Add options for each category
+            uniqueCategories.forEach(category => {
+                if (category && category !== 'Deposit529' && category !== 'Withdrawal529') {
+                    const option = document.createElement('option');
+                    option.value = category;
+                    option.textContent = category;
+                    categoryFilter.appendChild(option);
+                }
+            });
+            
+            // Restore the previous selection if it exists
+            if (currentValue && uniqueCategories.includes(currentValue)) {
+                categoryFilter.value = currentValue;
+            }
+        }
+
+        // Function to filter expenses based on search criteria
+        function filterManualExpenses() {
+            const monthFilter = document.getElementById('expense-month-filter').value;
+            const dayFilter = document.getElementById('expense-day-filter').value;
+            const categoryFilter = document.getElementById('expense-category-filter').value;
+            
+            // Filter the expenses
+            const filteredExpenses = allManualExpenses.filter(expense => {
+                const expenseDate = new Date(expense.date);
+                const expenseMonth = (expenseDate.getMonth() + 1).toString().padStart(2, '0');
+                const expenseDay = expenseDate.getDate().toString();
+                
+                // Apply month filter if selected
+                if (monthFilter && expenseMonth !== monthFilter) {
+                    return false;
+                }
+                
+                // Apply day filter if entered
+                if (dayFilter && expenseDay !== dayFilter) {
+                    return false;
+                }
+                
+                // Apply category filter if selected
+                if (categoryFilter && expense.category !== categoryFilter) {
+                    return false;
+                }
+                
+                return true;
+            });
+            
+            // Update the expense list with filtered results
+            updateExpenseList(filteredExpenses);
+        }
+
+        // Function to reset all filters
+        function resetManualExpenseFilters() {
+            document.getElementById('expense-month-filter').value = '';
+            document.getElementById('expense-day-filter').value = '';
+            document.getElementById('expense-category-filter').value = '';
+            
+            // Show all expenses
+            updateExpenseList(allManualExpenses);
+        }
+
+        // Add event listeners for filter inputs to enable searching with Enter key
+        document.addEventListener('DOMContentLoaded', function() {
+            const dayFilterInput = document.getElementById('expense-day-filter');
+            if (dayFilterInput) {
+                dayFilterInput.addEventListener('keyup', function(event) {
+                    if (event.key === 'Enter') {
+                        filterManualExpenses();
+                    }
+                });
+            }
+            
+            const monthFilter = document.getElementById('expense-month-filter');
+            if (monthFilter) {
+                monthFilter.addEventListener('change', filterManualExpenses);
+            }
+            
+            const categoryFilter = document.getElementById('expense-category-filter');
+            if (categoryFilter) {
+                categoryFilter.addEventListener('change', filterManualExpenses);
+            }
+        });
     </script>
     
 <!-- Add this at the end of your HTML before the closing body tag -->
