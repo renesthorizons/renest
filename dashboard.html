@@ -3343,6 +3343,24 @@ const statePersonalExemptionDB = {
 
         function previousStep() {
             if (currentStep > 1) {
+                // If going back from Step 3, reset lease information
+                if (currentStep === 3) {
+                    // Reset lease info status
+                    hasNewLease = false;
+                    newLeaseInfo = {
+                        startMonth: null,
+                        startYear: null,
+                        endMonth: null,
+                        endYear: null,
+                        rent: 0,
+                        utilities: 0,
+                        wifi: 0,
+                        utilitiesIncluded: false
+                    };
+                    
+                    console.log('Lease info reset when going back from Step 3');
+                }
+                
                 showStep(currentStep - 1);
             }
         }
@@ -4181,9 +4199,8 @@ const statePersonalExemptionDB = {
             newLeaseInfo = {}; // Reset any previously entered info
             closeConfirmLeaseModal();
             
-            // Hide Done button and show Submit button
-            document.getElementById('leaseInfoBtn').classList.add('hidden');
-            document.getElementById('submitBtn').classList.remove('hidden');
+            // Show Submit button
+            showSubmitButton();
             
             // Show confirmation message
             const successMessage = document.createElement('div');
@@ -4199,6 +4216,19 @@ const statePersonalExemptionDB = {
         
         function closeConfirmLeaseModal() {
             document.getElementById('confirmLeaseModal').classList.add('hidden');
+            
+            // If we don't have new lease info yet, make sure Done button is still visible
+            // This handles the case when user clicks X to close without selecting yes/no
+            if (!hasNewLease) {
+                console.log('Modal closed without selection, keeping Done button visible');
+                const leaseInfoBtn = document.getElementById('leaseInfoBtn');
+                const submitBtn = document.getElementById('submitBtn');
+                
+                if (leaseInfoBtn && submitBtn) {
+                    leaseInfoBtn.classList.remove('hidden');
+                    submitBtn.classList.add('hidden');
+                }
+            }
         }
 
         function checkLeaseEndDate() {
@@ -4227,9 +4257,8 @@ const statePersonalExemptionDB = {
                 showConfirmLeaseModal();
             } else {
                 // Lease doesn't end this year, so no need for new lease info
-                // Hide Done button and show Submit button
-                document.getElementById('leaseInfoBtn').classList.add('hidden');
-                document.getElementById('submitBtn').classList.remove('hidden');
+                // Show Submit button
+                showSubmitButton();
                 
                 // Just show a success message
                 const successMessage = document.createElement('div');
@@ -4240,6 +4269,31 @@ const statePersonalExemptionDB = {
             }
         }
 
+        // Function to explicitly toggle from Done to Submit button
+        function showSubmitButton() {
+            try {
+                const leaseInfoBtn = document.getElementById('leaseInfoBtn');
+                const submitBtn = document.getElementById('submitBtn');
+                
+                if (leaseInfoBtn && submitBtn) {
+                    console.log('Toggling buttons: hiding Done, showing Submit');
+                    
+                    // Hide Done button
+                    leaseInfoBtn.classList.add('hidden');
+                    // Show Submit button
+                    submitBtn.classList.remove('hidden');
+                    
+                    // Force browser reflow
+                    void leaseInfoBtn.offsetWidth;
+                    void submitBtn.offsetWidth;
+                } else {
+                    console.warn('Could not find buttons to toggle');
+                }
+            } catch (e) {
+                console.error('Error toggling buttons:', e);
+            }
+        }
+        
         function saveNewLeaseInfo() {
             hasNewLease = true;
             
@@ -4266,11 +4320,10 @@ const statePersonalExemptionDB = {
             };
             
             // Close the modal
-            closeUpcomingLeaseModal();
+            document.getElementById('upcomingLeaseModal').classList.add('hidden');
             
-            // Hide Done button and show Submit button
-            document.getElementById('leaseInfoBtn').classList.add('hidden');
-            document.getElementById('submitBtn').classList.remove('hidden');
+            // Show Submit button
+            showSubmitButton();
             
             // Show confirmation message
             const successMessage = document.createElement('div');
@@ -4284,6 +4337,10 @@ const statePersonalExemptionDB = {
             // User knows new lease info, show the new lease form
             closeConfirmLeaseModal();
             showUpcomingLeaseModal();
+        }
+
+        function closeUpcomingLeaseModal() {
+            document.getElementById('upcomingLeaseModal').classList.add('hidden');
         }
     </script>
     
