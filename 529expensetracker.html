@@ -2662,6 +2662,24 @@
             // Add active class to the clicked button
             document.querySelector(`[onclick="showTab('${tabName}')"]`).classList.add('active');
             
+            // Add mobile scroll functionality - only on mobile devices
+            if (window.innerWidth < 768) {
+                // Small delay to ensure content is visible
+                setTimeout(() => {
+                    const tabContent = document.getElementById(tabName + '-tab');
+                    if (tabContent) {
+                        // Scroll to tab content with offset for the fixed header
+                        const header = document.querySelector('.navbar');
+                        const headerHeight = header ? header.offsetHeight : 0;
+                        const targetPosition = tabContent.getBoundingClientRect().top + window.pageYOffset - headerHeight - 20;
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 50);
+            }
+            
             // No longer auto-expanding any sections
         }
 
