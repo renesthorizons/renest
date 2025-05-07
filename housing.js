@@ -1,51 +1,83 @@
 // Array to store housing entries
-let housingEntries = [];
+// Check if housingEntries is already defined to avoid redeclaration
+if (typeof housingEntries === 'undefined') {
+    var housingEntries = [];
+}
 
 // Housing Information Modal
 function openHousingModal(entryToEdit = null) {
+    // Get modal elements
+    const modal = document.getElementById('housingModal');
+    const modalTitle = document.getElementById('housingModalTitle');
+    const saveButton = document.getElementById('saveHousingBtn');
+    
+    // Get form elements
+    const leaseStartMonth = document.getElementById('leaseStartMonth');
+    const leaseStartYear = document.getElementById('leaseStartYear');
+    const leaseEndMonth = document.getElementById('leaseEndMonth');
+    const leaseEndYear = document.getElementById('leaseEndYear');
+    const monthlyRent = document.getElementById('monthlyRent');
+    const utilities = document.getElementById('utilities');
+    const wifi = document.getElementById('wifi');
+    const utilitiesIncluded = document.getElementById('utilitiesIncluded');
+    
+    // Check if all elements exist
+    if (!modal || !modalTitle || !saveButton || !leaseStartMonth || !leaseStartYear || 
+        !leaseEndMonth || !leaseEndYear || !monthlyRent || !utilities || 
+        !wifi || !utilitiesIncluded) {
+        console.error('Modal elements not found', {
+            modal, modalTitle, saveButton, leaseStartMonth, leaseStartYear,
+            leaseEndMonth, leaseEndYear, monthlyRent, utilities,
+            wifi, utilitiesIncluded
+        });
+        return;
+    }
+    
     // If entryToEdit is provided, we're in edit mode
     const isEditMode = entryToEdit !== null;
     
     // Set modal title based on mode
-    document.getElementById('housingModalTitle').textContent = isEditMode ? 'Edit Housing Information' : 'Add Housing Information';
+    modalTitle.textContent = isEditMode ? 'Edit Housing Information' : 'Add Housing Information';
     
     // Reset or populate form fields based on mode
     if (isEditMode) {
         // Populate with existing entry data
-        document.getElementById('leaseStartMonth').value = entryToEdit.startMonth;
-        document.getElementById('leaseStartYear').value = entryToEdit.startYear;
-        document.getElementById('leaseEndMonth').value = entryToEdit.endMonth;
-        document.getElementById('leaseEndYear').value = entryToEdit.endYear;
-        document.getElementById('monthlyRent').value = '$' + entryToEdit.rent.toLocaleString('en-US');
-        document.getElementById('utilities').value = entryToEdit.utilities > 0 ? '$' + entryToEdit.utilities.toLocaleString('en-US') : '';
-        document.getElementById('wifi').value = entryToEdit.wifi > 0 ? '$' + entryToEdit.wifi.toLocaleString('en-US') : '';
-        document.getElementById('utilitiesIncluded').checked = entryToEdit.utilitiesIncluded;
+        leaseStartMonth.value = entryToEdit.startMonth;
+        leaseStartYear.value = entryToEdit.startYear;
+        leaseEndMonth.value = entryToEdit.endMonth;
+        leaseEndYear.value = entryToEdit.endYear;
+        monthlyRent.value = '$' + entryToEdit.rent.toLocaleString('en-US');
+        utilities.value = entryToEdit.utilities > 0 ? '$' + entryToEdit.utilities.toLocaleString('en-US') : '';
+        wifi.value = entryToEdit.wifi > 0 ? '$' + entryToEdit.wifi.toLocaleString('en-US') : '';
+        utilitiesIncluded.checked = entryToEdit.utilitiesIncluded;
         
         // Store the ID of the entry being edited
-        document.getElementById('housingModal').dataset.editEntryId = entryToEdit.id;
+        modal.dataset.editEntryId = entryToEdit.id;
         
         // Change save button text
-        document.getElementById('saveHousingBtn').textContent = 'Update Housing Info';
+        saveButton.textContent = 'Update Housing Info';
     } else {
         // Default values for new entry
-        document.getElementById('leaseStartMonth').value = new Date().getMonth() + 1;
-        document.getElementById('leaseStartYear').value = new Date().getFullYear();
-        document.getElementById('leaseEndMonth').value = new Date().getMonth() + 1;
-        document.getElementById('leaseEndYear').value = new Date().getFullYear() + 1;
-        document.getElementById('monthlyRent').value = '';
-        document.getElementById('utilities').value = '';
-        document.getElementById('wifi').value = '';
-        document.getElementById('utilitiesIncluded').checked = false;
+        leaseStartMonth.value = new Date().getMonth() + 1;
+        
+        // Ensure year dropdowns are populated
+        populateHousingYearDropdowns();
+        
+        // Continue with other defaults
+        monthlyRent.value = '';
+        utilities.value = '';
+        wifi.value = '';
+        utilitiesIncluded.checked = false;
         
         // Clear any stored entry ID
-        delete document.getElementById('housingModal').dataset.editEntryId;
+        delete modal.dataset.editEntryId;
         
         // Reset save button text
-        document.getElementById('saveHousingBtn').textContent = 'Save Housing Info';
+        saveButton.textContent = 'Save Housing Info';
     }
     
     // Show the modal
-    document.getElementById('housingModal').classList.remove('hidden');
+    modal.classList.remove('hidden');
 }
 
 function closeHousingModal() {
@@ -160,6 +192,12 @@ function editHousingEntry(id) {
 
 function updateHousingEntriesList() {
     const container = document.getElementById('housingEntriesContainer');
+    
+    // Exit if container is not found
+    if (!container) {
+        console.error('Housing entries container not found');
+        return;
+    }
     
     // Clear existing entries
     container.innerHTML = '';
@@ -485,25 +523,38 @@ function populateHousingYearDropdowns() {
     const currentYear = new Date().getFullYear();
     const yearRange = 10; // Allow 10 years before and after current year
     
-    // Create options for a range of years
-    let yearOptions = '';
-    for (let year = currentYear - yearRange; year <= currentYear + yearRange; year++) {
-        yearOptions += `<option value="${year}">${year}</option>`;
-    }
-    
-    // Populate lease start year dropdown
+    // Get the select elements
     const leaseStartYearSelect = document.getElementById('leaseStartYear');
-    if (leaseStartYearSelect) {
-        leaseStartYearSelect.innerHTML = yearOptions;
-        leaseStartYearSelect.value = currentYear; // Default to current year
+    const leaseEndYearSelect = document.getElementById('leaseEndYear');
+    
+    // Exit if elements aren't found
+    if (!leaseStartYearSelect || !leaseEndYearSelect) {
+        console.error('Year select elements not found');
+        return;
     }
     
-    // Populate lease end year dropdown
-    const leaseEndYearSelect = document.getElementById('leaseEndYear');
-    if (leaseEndYearSelect) {
-        leaseEndYearSelect.innerHTML = yearOptions;
-        leaseEndYearSelect.value = currentYear + 1; // Default to next year
+    // Clear existing options
+    leaseStartYearSelect.innerHTML = '';
+    leaseEndYearSelect.innerHTML = '';
+    
+    // Create options for a range of years
+    for (let year = currentYear - yearRange; year <= currentYear + yearRange; year++) {
+        // Create option for start year
+        const startOption = document.createElement('option');
+        startOption.value = year;
+        startOption.textContent = year;
+        leaseStartYearSelect.appendChild(startOption);
+        
+        // Create option for end year
+        const endOption = document.createElement('option');
+        endOption.value = year;
+        endOption.textContent = year;
+        leaseEndYearSelect.appendChild(endOption);
     }
+    
+    // Set default values
+    leaseStartYearSelect.value = currentYear;
+    leaseEndYearSelect.value = currentYear + 1;
 }
 
 // Show error message
