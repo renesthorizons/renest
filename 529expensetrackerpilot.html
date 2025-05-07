@@ -1542,6 +1542,92 @@
                 opacity: 1;
             }
         }
+
+        /* Collapsible section styles */
+        .collapsible-section {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .collapsible-header {
+            padding: 1.5rem 2rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            transition: background-color 0.3s ease;
+        }
+
+        .collapsible-header:hover {
+            background-color: #f9fafb;
+        }
+
+        .collapsible-header h2 {
+            margin: 0;
+            color: var(--primary);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .collapsible-header .collapse-icon {
+            width: 24px;
+            height: 24px;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .collapsible-header .collapse-icon::before,
+        .collapsible-header .collapse-icon::after {
+            content: '';
+            position: absolute;
+            background-color: var(--primary);
+            transition: transform 0.3s ease;
+        }
+
+        .collapsible-header .collapse-icon::before {
+            width: 100%;
+            height: 2px;
+            top: 11px;
+        }
+
+        .collapsible-header .collapse-icon::after {
+            width: 2px;
+            height: 100%;
+            left: 11px;
+        }
+
+        .collapsible-content {
+            padding: 0 2rem 2rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .collapsible-section.expanded .collapsible-content {
+            max-height: 3000px; /* Large enough to fit any content */
+        }
+
+        .collapsible-section.expanded .collapse-icon::after {
+            transform: rotate(90deg);
+        }
+
+        @media (max-width: 768px) {
+            .collapsible-header {
+                padding: 1.25rem 1.5rem;
+            }
+            
+            .collapsible-header h2 {
+                font-size: 1.25rem;
+            }
+            
+            .collapsible-content {
+                padding: 0 1.5rem 1.5rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1677,346 +1763,334 @@
             </div>
 
             <div id="expenses-tab" class="tab-content">
-                <div class="tracker-card">
-                    <h2 class="section-title">Add New Expense</h2>
-                    <p style="margin-bottom: 1.5rem; color: #6B7280;">
-                        You can use this tracker to record all your expenses or just the qualified ones. Certain categories like groceries, Wi-Fi, and required supplies are automatically marked as qualified expenses. You can manually mark other expenses as qualified if they meet 529 requirements.
-                    </p>
-                    <form id="expense-form" class="form-grid">
-                        <div class="form-group">
-                            <label>Date</label>
-                            <input type="date" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Category</label>
-                            <div class="select-container">
-                                <select class="form-control" id="expense-category" required onchange="updateQualifiedCheckbox()">
-                                    <option value="">Select category</option>
-                                    <option value="Rent" class="qualified-category">Rent</option>
-                                    <option value="Groceries" class="qualified-category">Groceries</option>
-                                    <option value="WiFi" class="qualified-category">Wi-Fi</option>
-                                    <option value="Required Supplies" class="qualified-category">Required Supplies</option>
-                                    <option value="Utilities" class="qualified-category">Utilities</option>
-                                    <option value="Restaurants">Restaurants</option>
-                                    <option value="Transportation">Transportation</option>
-                                    <option value="Technology">Technology</option>
-                                    <option value="Other">Other</option>
-                                    <option value="Custom">Custom</option>
-                                </select>
-                                <input type="text" id="custom-category" class="form-control" placeholder="Enter custom category" style="display: none;" oninput="updateQualifiedCheckbox();">
+                <div class="collapsible-section">
+                    <div class="collapsible-header" onclick="toggleSection(this)">
+                        <h2 class="section-title">Add New Expense</h2>
+                        <div class="collapse-icon"></div>
+                    </div>
+                    <div class="collapsible-content">
+                        <p style="margin-bottom: 1.5rem; color: #6B7280;">
+                            You can use this tracker to record all your expenses or just the qualified ones. Certain categories like groceries, Wi-Fi, and required supplies are automatically marked as qualified expenses. You can manually mark other expenses as qualified if they meet 529 requirements.
+                        </p>
+                        <form id="expense-form" class="form-grid">
+                            <div class="form-group">
+                                <label>Date</label>
+                                <input type="date" class="form-control" required>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Amount</label>
-                            <input type="number" class="form-control" placeholder="Enter amount" required>
-                        </div>
-                        <div class="form-group" style="grid-column: 1 / -1;">
-                            <label>Notes</label>
-                            <textarea class="form-control" placeholder="e.g., Trader Joe's groceries, laptop for research, rent payment through zelle, etc." rows="3"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label class="custom-checkbox">
-                                <input type="checkbox" id="qualified-expense">
-                                <span class="checkmark"></span>
-                                Qualified Expense
-                            </label>
-                        </div>
-                        <div class="form-group">
-                            <label>Receipt Upload (Recommended for Qualified Expenses)</label>
-                            <div class="file-upload">
-                                <label class="file-upload-label">
-                                    <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload(this)">
-                                    Upload Receipt
+                            <div class="form-group">
+                                <label>Category</label>
+                                <div class="select-container">
+                                    <select class="form-control" id="expense-category" required onchange="updateQualifiedCheckbox()">
+                                        <option value="">Select category</option>
+                                        <option value="Rent" class="qualified-category">Rent</option>
+                                        <option value="Groceries" class="qualified-category">Groceries</option>
+                                        <option value="WiFi" class="qualified-category">Wi-Fi</option>
+                                        <option value="Required Supplies" class="qualified-category">Required Supplies</option>
+                                        <option value="Utilities" class="qualified-category">Utilities</option>
+                                        <option value="Restaurants">Restaurants</option>
+                                        <option value="Transportation">Transportation</option>
+                                        <option value="Technology">Technology</option>
+                                        <option value="Other">Other</option>
+                                        <option value="Custom">Custom</option>
+                                    </select>
+                                    <input type="text" id="custom-category" class="form-control" placeholder="Enter custom category" style="display: none;" oninput="updateQualifiedCheckbox();">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Amount</label>
+                                <input type="number" class="form-control" placeholder="Enter amount" required>
+                            </div>
+                            <div class="form-group" style="grid-column: 1 / -1;">
+                                <label>Notes</label>
+                                <textarea class="form-control" placeholder="e.g., Trader Joe's groceries, laptop, rent payment through zelle, etc." rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" id="qualified-expense">
+                                    <span class="checkmark"></span>
+                                    Qualified Expense
                                 </label>
                             </div>
-                        </div>
-                        <div class="form-group" style="grid-column: span 2;">
-                            <button type="submit" class="submit-button">
-                                <span>Add Expense</span>
-                            </button>
-                        </div>
-                    </form>                    
-                </div>
-                <div class="tracker-card">
-                    <h2 class="section-title">Rent Information</h2>
-                    <p style="margin-bottom: 1.5rem; color: #6B7280;">
-                        Rent is a qualified expense if it is tracked and validated. Make sure to upload your lease and record your transactions to ensure proper documentation for your 529 withdrawals.
-                    </p>
-                    <form id="rent-form" class="form-grid">
-                        <div class="form-group">
-                            <label>Lease Upload</label>
-                            <div class="file-upload">
-                                <label class="file-upload-label">
-                                    <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload(this)">
-                                    Upload Lease Document
-                                </label>
+                            <div class="form-group">
+                                <label>Receipt Upload (Recommended for Qualified Expenses)</label>
+                                <div class="file-upload">
+                                    <label class="file-upload-label">
+                                        <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload(this)">
+                                        Upload Receipt
+                                    </label>
+                                </div>
                             </div>
-                        </div>
-                    </form>
+                            <div class="form-group" style="grid-column: span 2;">
+                                <button type="submit" class="submit-button">
+                                    <span>Add Expense</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-
                 
+                <div class="collapsible-section">
+                    <div class="collapsible-header" onclick="toggleSection(this)">
+                        <h2 class="section-title">Rent Information</h2>
+                        <div class="collapse-icon"></div>
+                    </div>
+                    <div class="collapsible-content">
+                        <p style="margin-bottom: 1.5rem; color: #6B7280;">
+                            Rent is a qualified expense if it is tracked and validated. Make sure to upload your lease and record your transactions to ensure proper documentation for your 529 withdrawals.
+                        </p>
+                        <form id="rent-form" class="form-grid">
+                            <div class="form-group">
+                                <label>Lease Upload</label>
+                                <div class="file-upload">
+                                    <label class="file-upload-label">
+                                        <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload(this)">
+                                        Upload Lease Document
+                                    </label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
 
             <div id="account-tab" class="tab-content" style="display: none;">
-                <div class="tracker-card">
-                    <h2 class="section-title">529 Account Management</h2>
-                    <p style="margin-bottom: 1.5rem; color: #6B7280;">
-                        Track your 529 plan activity and view projected qualified expense needs.
-                    </p>
-                    
-                    <!-- Transaction Form -->
-                    <form id="529-transaction-form" class="form-grid">
-                        <div class="form-group">
-                            <label>Transaction Type</label>
-                            <div class="select-container">
-                                <select class="form-control" required id="529-transaction-type">
-                                    <option value="Deposit529">Deposit</option>
-                                    <option value="Withdrawal529">Withdrawal</option>
-                                </select>
+                <div class="collapsible-section">
+                    <div class="collapsible-header" onclick="toggleSection(this)">
+                        <h2 class="section-title">529 Account Management</h2>
+                        <div class="collapse-icon"></div>
+                    </div>
+                    <div class="collapsible-content">
+                        <p style="margin-bottom: 1.5rem; color: #6B7280;">
+                            Track your 529 plan activity and view projected qualified expense needs.
+                        </p>
+                        
+                        <!-- Transaction Form -->
+                        <form id="529-transaction-form" class="form-grid">
+                            <div class="form-group">
+                                <label>Transaction Type</label>
+                                <div class="select-container">
+                                    <select class="form-control" required id="529-transaction-type">
+                                        <option value="Deposit529">Deposit</option>
+                                        <option value="Withdrawal529">Withdrawal</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Amount</label>
-                            <input type="number" class="form-control" required id="529-transaction-amount">
-                        </div>
-                        <div class="form-group">
-                            <label>Date</label>
-                            <input type="date" class="form-control" required id="529-transaction-date">
-                        </div>
-                        <div class="form-group">
-                            <label>Notes (optional)</label>
-                            <input type="text" class="form-control" id="529-transaction-notes" placeholder="e.g., Initial deposit, Monthly withdrawal">
-                        </div>
-                        <div class="form-group" style="grid-column: span 2;">
-                            <button type="submit" class="submit-button">
-                                <span>Record Transaction</span>
-                            </button>
-                        </div>
-                    </form>
+                            <div class="form-group">
+                                <label>Amount</label>
+                                <input type="number" class="form-control" required id="529-transaction-amount">
+                            </div>
+                            <div class="form-group">
+                                <label>Date</label>
+                                <input type="date" class="form-control" required id="529-transaction-date">
+                            </div>
+                            <div class="form-group">
+                                <label>Notes (optional)</label>
+                                <input type="text" class="form-control" id="529-transaction-notes" placeholder="e.g., Initial deposit, Monthly withdrawal">
+                            </div>
+                            <div class="form-group" style="grid-column: span 2;">
+                                <button type="submit" class="submit-button">
+                                    <span>Record Transaction</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
 
                 <!-- Projections Card -->
-                <div class="tracker-card">
-                    <h2 class="section-title">Projections & Planning</h2>
-                    <p style="margin-bottom: 1.5rem; color: #6B7280;">
-                        Track your qualified expenses and plan your 529 contributions to maximize your tax benefits. These projections are based on your current spending patterns and monthly rent.
-                    </p>
-                    <div class="summary-card" style="margin-top: 0;">
-                        <div class="summary-grid">
-                            <div class="summary-item">
-                                <div class="summary-label">
-                                    Total Qualified Expenses (YTD)
-                                    <span class="tooltip" data-tooltip="How much you've spent on qualified expenses this year."></span>
-                                </div>
-                                <div class="summary-value" id="ytd-qualified-expenses">$0.00</div>
-                            </div>
-                            <div class="summary-item">
-                                <div class="summary-label">
-                                    Total 529 Deposits (YTD)
-                                    <span class="tooltip" data-tooltip="The total amount you've contributed to your 529 plan this year."></span>
-                                </div>
-                                <div class="summary-value" id="ytd-529-deposits">$0.00</div>
-                            </div>
-                            <div class="summary-item">
-                                <div class="summary-label">
-                                    Projected Year-End Total
-                                    <span class="tooltip" data-tooltip="Estimated total qualified expenses for the entire year, based on your current spending and monthly rent."></span>
-                                </div>
-                                <div class="summary-value" id="projected-year-end">$0.00</div>
-                            </div>
-                        </div>
+                <div class="collapsible-section">
+                    <div class="collapsible-header" onclick="toggleSection(this)">
+                        <h2 class="section-title">Projections & Planning</h2>
+                        <div class="collapse-icon"></div>
                     </div>
-
-                    
-
-                    <!-- Funding Progress -->
-                    <div style="margin-top: 2rem;">
-                        <h3 style="color: var(--text-dark); margin-bottom: 1rem;">529 Funding Progress</h3>
+                    <div class="collapsible-content">
                         <p style="margin-bottom: 1.5rem; color: #6B7280;">
-                            To maximize your tax benefits, you should aim to contribute enough to your 529 plan to cover your projected qualified expenses. The recommendations below will help you stay on track.
+                            Track your qualified expenses and plan your 529 contributions to maximize your tax benefits. These projections are based on your current spending patterns and monthly rent.
                         </p>
-                        <div style="background: #f3f4f6; border-radius: 8px; padding: 1.5rem;">
-                            <div style="margin-bottom: 1rem;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                                    <div style="display: flex; align-items: center;">
-                                        <span style="font-weight: 500; color: var(--text-dark);">Recommended Total Remaining 529 Funding</span>
-                                        <span class="tooltip" data-tooltip="The total amount you should contribute to your 529 plan this year to cover your projected qualified expenses."></span>
+                        <div class="summary-card" style="margin-top: 0;">
+                            <div class="summary-grid">
+                                <div class="summary-item">
+                                    <div class="summary-label">
+                                        Total Qualified Expenses (YTD)
+                                        <span class="tooltip" data-tooltip="How much you've spent on qualified expenses this year."></span>
                                     </div>
-                                    <span id="recommended-funding" style="color: var(--primary); font-weight: 600;">$0.00</span>
+                                    <div class="summary-value" id="ytd-qualified-expenses">$0.00</div>
                                 </div>
-                            </div>
-                            <div style="margin-bottom: 1rem;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                                    <div style="display: flex; align-items: center;">
-                                        <span style="font-weight: 500; color: var(--text-dark);">Suggested Monthly Deposit</span>
-                                        <span class="tooltip" data-tooltip="The monthly contribution needed to reach your recommended funding amount by year-end. This adjusts based on your current deposits."></span>
+                                <div class="summary-item">
+                                    <div class="summary-label">
+                                        Total 529 Deposits (YTD)
+                                        <span class="tooltip" data-tooltip="The total amount you've contributed to your 529 plan this year."></span>
                                     </div>
-                                    <span id="suggested-monthly-deposit" style="color: var(--primary); font-weight: 600;">$0.00</span>
+                                    <div class="summary-value" id="ytd-529-deposits">$0.00</div>
                                 </div>
-                            </div>
-                            
-                            <!-- Progress Bar -->
-                            <div>
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                                    <div style="display: flex; align-items: center;">
-                                        <span style="font-weight: 500; color: var(--text-dark);">Current Progress</span>
-                                        <span class="tooltip" data-tooltip="Shows how much you've contributed to your 529 plan compared to your recommended funding amount for the year."></span>
+                                <div class="summary-item">
+                                    <div class="summary-label">
+                                        Projected Year-End Total
+                                        <span class="tooltip" data-tooltip="Estimated total qualified expenses for the entire year, based on your current spending and monthly rent."></span>
                                     </div>
-                                </div>
-                                <div style="background: #e5e7eb; border-radius: 9999px; height: 24px; position: relative; overflow: hidden;">
-                                    <div id="funding-progress-bar" style="background: var(--primary); height: 100%; width: 0%; transition: width 0.5s ease-in-out;"></div>
-                                    <div id="funding-progress-text" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">
-                                        $0/$0
-                                    </div>
+                                    <div class="summary-value" id="projected-year-end">$0.00</div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- 529 Withdrawal Information -->
-                    <div style="margin-top: 2rem;">
-                        <h3 style="color: var(--text-dark); margin-bottom: 1rem;">529 Withdrawal Information</h3>
-                        <p style="margin-bottom: 1.5rem; color: #6B7280;">
-                            Track how much you can withdraw from your 529 account based on your qualified expenses and current balance.
-                        </p>
-                        <div style="background: #f3f4f6; border-radius: 8px; padding: 1.5rem;">
-                            <div style="margin-bottom: 1.5rem;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                                    <div style="display: flex; align-items: center;">
-                                        <span style="font-weight: 500; color: var(--text-dark);">Current 529 Balance</span>
-                                        <span class="tooltip" data-tooltip="Your current 529 account balance (deposits minus withdrawals)."></span>
-                                    </div>
-                                    <span id="current-529-balance" style="color: var(--primary); font-weight: 600;">$0.00</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                                    <div style="display: flex; align-items: center;">
-                                        <span style="font-weight: 500; color: var(--text-dark);">Total Withdrawals (YTD)</span>
-                                        <span class="tooltip" data-tooltip="Total amount withdrawn from your 529 account this year."></span>
-                                    </div>
-                                    <span id="total-withdrawals" style="color: var(--primary); font-weight: 600;">$0.00</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                                    <div style="display: flex; align-items: center;">
-                                        <span style="font-weight: 500; color: var(--text-dark);">Available for Withdrawal</span>
-                                        <span class="tooltip" data-tooltip="Amount you can withdraw based on your qualified expenses minus withdrawals."></span>
-                                    </div>
-                                    <span id="available-for-withdrawal" style="color: var(--primary); font-weight: 600;">$0.00</span>
-                                </div>
-                                <div id="withdrawal-status" style="margin-top: 1rem; padding: 0.75rem; border-radius: 4px; background: #EEF2FF; color: var(--primary);">
-                                    <!-- Status message will be inserted here -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Add after the Funding Progress section -->
-                    <div style="margin-top: 2rem; background: #EEF2FF; border-left: 4px solid var(--primary); padding: 1.5rem; border-radius: 0 8px 8px 0;">
-                        <div style="display: flex; align-items: start; gap: 1rem;">
-                            <div style="color: var(--primary); font-weight: 600;">💡 Tip:</div>
-                            <div>
-                                <p style="margin-bottom: 1rem; line-height: 1.5;">
-                                    You need to deposit money into a 529 in order to qualify for your state's benefit.
-                                     You can deposit at any time and withdraw anytime within a calendar year to cover a qualified expense. This gives you two options:
-                                    <br><br>
-                                    1. Deposit and withdraw immediately
-                                    <br>
-                                    2. Deposit and let the interest accumulate tax-free before withdrawing
-                                </p>
-                                <button onclick="showExampleModal()" class="submit-button" style="margin-top: 0.5rem;">See Examples</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Example Modal -->
-                <div id="example-modal" class="modal" style="display: none;">
-                    <div class="modal-content">
-                        <h2 style="color: var(--text-dark); margin-bottom: 1.5rem;">529 Usage Examples</h2>
                         
-                        <div class="modal-section">
-                            <h3 style="color: var(--primary); margin-bottom: 1rem;">Scenario 1: Lump Sum</h3>
-                            <p style="line-height: 1.6;">
-                                Carla is doing her PhD in Illinois and pays $750/month in rent and has $25,000+ in yearly expenses. She also has $10,000 in savings:
+
+                        <!-- Funding Progress -->
+                        <div style="margin-top: 2rem;">
+                            <h3 style="color: var(--text-dark); margin-bottom: 1rem;">529 Funding Progress</h3>
+                            <p style="margin-bottom: 1.5rem; color: #6B7280;">
+                                To maximize your tax benefits, you should aim to contribute enough to your 529 plan to cover your projected qualified expenses. The recommendations below will help you stay on track.
                             </p>
-                            <ul style="margin: 0.75rem 0; padding-left: 1.25rem;">
-                                <li>Tracks her expenses with Renest</li>
-                                <li>Deposits $10,000 into her 529 in January or as soon as she opens her 529 account</li>
-                                <li>Lets money earn interest tax-free throughout the year</li>
-                                <li>Can withdraw anytime throughout the year</li>
-                                <li>Withdraws the exact amount ($10,543) corresponding to her 529 qualified expenses she tracked with Renest </li>
-                                <li>Maximum tax benefit: $495 from her Illinois 529 deduction + $500 in tax-free interest</li>
-                            </ul>
-                            <p>or</p>
-                            <ul style="margin: 0.75rem 0; padding-left: 1.25rem;">
-                                <li>Tracks her expenses with Renest throughout the year</li>
-                                <li>On December 1st deposits the exact amount ($10,124) corresponding to her 529 qualified expenses she tracked with Renest</li>
-                                <li>On December 20th withdraws the $10,124</li>
-                                <li>Tax benefit: $495 from her illinois 529 deduction</li>
-                            </ul>
+                            <div style="background: #f3f4f6; border-radius: 8px; padding: 1.5rem;">
+                                <div style="margin-bottom: 1rem;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                        <div style="display: flex; align-items: center;">
+                                            <span style="font-weight: 500; color: var(--text-dark);">Recommended Total Remaining 529 Funding</span>
+                                            <span class="tooltip" data-tooltip="The total amount you should contribute to your 529 plan this year to cover your projected qualified expenses."></span>
+                                        </div>
+                                        <span id="recommended-funding" style="color: var(--primary); font-weight: 600;">$0.00</span>
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: 1rem;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                        <div style="display: flex; align-items: center;">
+                                            <span style="font-weight: 500; color: var(--text-dark);">Suggested Monthly Deposit</span>
+                                            <span class="tooltip" data-tooltip="The monthly contribution needed to reach your recommended funding amount by year-end. This adjusts based on your current deposits."></span>
+                                        </div>
+                                        <span id="suggested-monthly-deposit" style="color: var(--primary); font-weight: 600;">$0.00</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Progress Bar -->
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                        <div style="display: flex; align-items: center;">
+                                            <span style="font-weight: 500; color: var(--text-dark);">Current Progress</span>
+                                            <span class="tooltip" data-tooltip="Shows how much you've contributed to your 529 plan compared to your recommended funding amount for the year."></span>
+                                        </div>
+                                    </div>
+                                    <div style="background: #e5e7eb; border-radius: 9999px; height: 24px; position: relative; overflow: hidden;">
+                                        <div id="funding-progress-bar" style="background: var(--primary); height: 100%; width: 0%; transition: width 0.5s ease-in-out;"></div>
+                                        <div id="funding-progress-text" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">
+                                            $0/$0
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="modal-section">
-                            <h3 style="color: var(--primary); margin-bottom: 1rem;">Scenario 2: Monthly Deposits</h3>
-                            <p style="line-height: 1.6;">
-                                Mike is also doing his PhD in Illinois but prefers monthly deposits:
+                        <!-- 529 Withdrawal Information -->
+                        <div style="margin-top: 2rem;">
+                            <h3 style="color: var(--text-dark); margin-bottom: 1rem;">529 Withdrawal Information</h3>
+                            <p style="margin-bottom: 1.5rem; color: #6B7280;">
+                                Track how much you can withdraw from your 529 account based on your qualified expenses and current balance.
                             </p>
-                            <ul style="margin: 0.75rem 0; padding-left: 1.25rem;">
-                                <li>Tracks his expenses with Renest</li>
-                                <li>The first of each month he deposits $1030, the exact amount of qualified spend last month, into his 529</li>
-                                <li>Withdraws how much he deposited a few days later</li>
-                                <li>Tax benefit: $495 (IL)</li>
-                            </ul>
+                            <div style="background: #f3f4f6; border-radius: 8px; padding: 1.5rem;">
+                                <div style="margin-bottom: 1.5rem;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                        <div style="display: flex; align-items: center;">
+                                            <span style="font-weight: 500; color: var(--text-dark);">Current 529 Balance</span>
+                                            <span class="tooltip" data-tooltip="Your current 529 account balance (deposits minus withdrawals)."></span>
+                                        </div>
+                                        <span id="current-529-balance" style="color: var(--primary); font-weight: 600;">$0.00</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                        <div style="display: flex; align-items: center;">
+                                            <span style="font-weight: 500; color: var(--text-dark);">Total Withdrawals (YTD)</span>
+                                            <span class="tooltip" data-tooltip="Total amount withdrawn from your 529 account this year."></span>
+                                        </div>
+                                        <span id="total-withdrawals" style="color: var(--primary); font-weight: 600;">$0.00</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                        <div style="display: flex; align-items: center;">
+                                            <span style="font-weight: 500; color: var(--text-dark);">Available for Withdrawal</span>
+                                            <span class="tooltip" data-tooltip="Amount you can withdraw based on your qualified expenses minus withdrawals."></span>
+                                        </div>
+                                        <span id="available-for-withdrawal" style="color: var(--primary); font-weight: 600;">$0.00</span>
+                                    </div>
+                                    <div id="withdrawal-status" style="margin-top: 1rem; padding: 0.75rem; border-radius: 4px; background: #EEF2FF; color: var(--primary);">
+                                        <!-- Status message will be inserted here -->
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="modal-footer">
-                            <button onclick="hideExampleModal()" class="submit-button">Close</button>
+                        <!-- Add after the Funding Progress section -->
+                        <div style="margin-top: 2rem; background: #EEF2FF; border-left: 4px solid var(--primary); padding: 1.5rem; border-radius: 0 8px 8px 0;">
+                            <div style="display: flex; align-items: start; gap: 1rem;">
+                                <div style="color: var(--primary); font-weight: 600;">💡 Tip:</div>
+                                <div>
+                                    <p style="margin-bottom: 1rem; line-height: 1.5;">
+                                        You need to deposit money into a 529 in order to qualify for your state's benefit.
+                                        You can deposit at any time and withdraw anytime within a calendar year to cover a qualified expense. This gives you two options:
+                                        <br><br>
+                                        1. Deposit and withdraw immediately
+                                        <br>
+                                        2. Deposit and let the interest accumulate tax-free before withdrawing
+                                    </p>
+                                    <button onclick="showExampleModal()" class="submit-button" style="margin-top: 0.5rem;">See Examples</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Recent Transactions -->
-                <div class="tracker-card">
-                    <h2 class="section-title">Recent 529 Transactions</h2>
-                    <div id="529-transactions-list" class="expense-list">
-                        <!-- Transactions will be added here dynamically -->
+                <div class="collapsible-section">
+                    <div class="collapsible-header" onclick="toggleSection(this)">
+                        <h2 class="section-title">Recent 529 Transactions</h2>
+                        <div class="collapse-icon"></div>
+                    </div>
+                    <div class="collapsible-content">
+                        <div id="529-transactions-list" class="expense-list">
+                            <!-- Transactions will be added here dynamically -->
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div id="summary-tab" class="tab-content" style="display: none;">
-                <div class="tracker-card">
-                    <h2 class="section-title">Expense Summary</h2>
-                    <div class="summary-card">
-                        <div class="summary-grid">
-                            <div class="summary-item">
-                                <div class="summary-label">Total Rent Paid</div>
-                                <div class="summary-value" id="total-rent">$0.00</div>
-                            </div>
-                            <div class="summary-item">
-                                <div class="summary-label">Total Other Expenses</div>
-                                <div class="summary-value" id="total-expenses">$0.00</div>
-                            </div>
-                            <div class="summary-item">
-                                <div class="summary-label">Total 529 Deposits</div>
-                                <div class="summary-value" id="deposits-display">$0.00</div>
-                            </div>
-                            <div class="summary-item">
-                                <div class="summary-label">Total 529 Withdrawals</div>
-                                <div class="summary-value" id="withdrawals-display">$0.00</div>
-                            </div>
-                            <div class="summary-item">
-                                <div class="summary-label">Remaining 529 Balance</div>
-                                <div class="summary-value" id="remaining-balance">$0.00</div>
+                <div class="collapsible-section">
+                    <div class="collapsible-header" onclick="toggleSection(this)">
+                        <h2 class="section-title">Expense Summary</h2>
+                        <div class="collapse-icon"></div>
+                    </div>
+                    <div class="collapsible-content">
+                        <div class="summary-card">
+                            <div class="summary-grid">
+                                <div class="summary-item">
+                                    <div class="summary-label">Total Rent Paid</div>
+                                    <div class="summary-value" id="total-rent">$0.00</div>
+                                </div>
+                                <div class="summary-item">
+                                    <div class="summary-label">Total Other Expenses</div>
+                                    <div class="summary-value" id="total-expenses">$0.00</div>
+                                </div>
+                                <div class="summary-item">
+                                    <div class="summary-label">Total 529 Deposits</div>
+                                    <div class="summary-value" id="deposits-display">$0.00</div>
+                                </div>
+                                <div class="summary-item">
+                                    <div class="summary-label">Total 529 Withdrawals</div>
+                                    <div class="summary-value" id="withdrawals-display">$0.00</div>
+                                </div>
+                                <div class="summary-item">
+                                    <div class="summary-label">Remaining 529 Balance</div>
+                                    <div class="summary-value" id="remaining-balance">$0.00</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="tracker-card">
-                    <h2 class="section-title">Recent Expenses</h2>
-                    <div id="expense-list" class="expense-list">
-                        <!-- Expenses will be added here dynamically -->
+                <div class="collapsible-section">
+                    <div class="collapsible-header" onclick="toggleSection(this)">
+                        <h2 class="section-title">Recent Expenses</h2>
+                        <div class="collapse-icon"></div>
+                    </div>
+                    <div class="collapsible-content">
+                        <div id="expense-list" class="expense-list">
+                            <!-- Expenses will be added here dynamically -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2097,26 +2171,35 @@
             <div class="modal-section">
                 <h3 style="color: var(--primary); margin-bottom: 1rem;">Scenario 1: Lump Sum</h3>
                 <p style="line-height: 1.6;">
-                    Sarah has $10,000+ in yearly expenses:
+                    Carla is doing her PhD in Illinois and pays $750/month in rent and has $25,000+ in yearly expenses. She also has $10,000 in savings:
                 </p>
                 <ul style="margin: 0.75rem 0; padding-left: 1.25rem;">
-                    <li>Deposits $10,000 in January</li>
-                    <li>Lets money earn interest tax-free</li>
-                    <li>Withdraws as needed monthly</li>
-                    <li>Maximum tax benefit: $495 (IL)</li>
+                    <li>Tracks her expenses with Renest</li>
+                    <li>Deposits $10,000 into her 529 in January or as soon as she opens her 529 account</li>
+                    <li>Lets money earn interest tax-free throughout the year</li>
+                    <li>Can withdraw anytime throughout the year</li>
+                    <li>Withdraws the exact amount ($10,543) corresponding to her 529 qualified expenses she tracked with Renest </li>
+                    <li>Maximum tax benefit: $495 from her Illinois 529 deduction + $500 in tax-free interest</li>
+                </ul>
+                <p>or</p>
+                <ul style="margin: 0.75rem 0; padding-left: 1.25rem;">
+                    <li>Tracks her expenses with Renest throughout the year</li>
+                    <li>On December 1st deposits the exact amount ($10,124) corresponding to her 529 qualified expenses she tracked with Renest</li>
+                    <li>On December 20th withdraws the $10,124</li>
+                    <li>Tax benefit: $495 from her illinois 529 deduction</li>
                 </ul>
             </div>
 
             <div class="modal-section">
-                <h3 style="color: var(--primary); margin-bottom: 1rem;">Scenario 2: Monthly</h3>
+                <h3 style="color: var(--primary); margin-bottom: 1rem;">Scenario 2: Monthly Deposits</h3>
                 <p style="line-height: 1.6;">
-                    Mike prefers monthly deposits:
+                    Mike is also doing his PhD in Illinois but prefers monthly deposits:
                 </p>
                 <ul style="margin: 0.75rem 0; padding-left: 1.25rem;">
-                    <li>Deposits $830 monthly</li>
-                    <li>Pays expenses next day</li>
-                    <li>Withdraws $830 monthly</li>
-                    <li>Same tax benefit: $495 (IL)</li>
+                    <li>Tracks his expenses with Renest</li>
+                    <li>The first of each month he deposits $1030, the exact amount of qualified spend last month, into his 529</li>
+                    <li>Withdraws how much he deposited a few days later</li>
+                    <li>Tax benefit: $495 (IL)</li>
                 </ul>
             </div>
 
@@ -2162,6 +2245,17 @@
             
             // Add active class to the clicked button
             document.querySelector(`[onclick="showTab('${tabName}')"]`).classList.add('active');
+            
+            // Expand the first section in the active tab
+            const activeSections = document.querySelectorAll(`#${tabName}-tab .collapsible-section`);
+            if (activeSections.length > 0) {
+                // Collapse all sections
+                activeSections.forEach(section => {
+                    section.classList.remove('expanded');
+                });
+                // Expand the first section
+                activeSections[0].classList.add('expanded');
+            }
         }
 
         // Remove any default active states when the page loads
@@ -2709,6 +2803,12 @@
                 // document.querySelector('.tab-button[onclick*="expenses"]').classList.add('active');
                 document.getElementById('expenses-tab').style.display = 'block';
                 
+                // Expand the first section in the active tab
+                const firstSection = document.querySelector('#expenses-tab .collapsible-section');
+                if (firstSection) {
+                    firstSection.classList.add('expanded');
+                }
+                
             } catch (error) {
                 console.error('Error initializing page:', error);
                 showError('Error loading data. Please try again.');
@@ -3144,6 +3244,12 @@ document.getElementById('show-manual-controls').addEventListener('click', functi
     
     // Use the showTab function to show only the expenses tab
     showTab('expenses');
+    
+    // Make sure the first collapsible section is expanded
+    const firstSection = document.querySelector('#expenses-tab .collapsible-section');
+    if (firstSection) {
+        firstSection.classList.add('expanded');
+    }
 });
 
 // Function to load Plaid transactions
@@ -3785,6 +3891,12 @@ function hideCategoryModal() {
     document.getElementById('custom-category-input').value = '';
     document.getElementById('custom-category-group').style.display = 'none';
 }
+
+        // Function to toggle collapsible sections
+        function toggleSection(header) {
+            const section = header.parentElement;
+            section.classList.toggle('expanded');
+        }
     </script>
     
 <!-- Add this at the end of your HTML before the closing body tag -->
