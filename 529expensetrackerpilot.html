@@ -323,10 +323,6 @@
             transform: translateX(100%) rotate(45deg);
         }
 
-        .tab-button[onclick*="rent"] {
-            background: var(--rent-color);
-        }
-
         .tab-button[onclick*="expenses"] {
             background: var(--expenses-color);
         }
@@ -1675,39 +1671,12 @@
 
         <div class="container">
             <div class="tab-container">
-                <button class="tab-button active" onclick="showTab('rent')">Rent Tracking</button>
-                <button class="tab-button" onclick="showTab('expenses')">Groceries & Other Expenses</button>
+                <button class="tab-button active" onclick="showTab('expenses')">Groceries & Other Expenses</button>
                 <button class="tab-button" onclick="showTab('account')">529 Account</button>
                 <button class="tab-button" onclick="showTab('summary')">See All Expenses</button>
             </div>
 
-            <div id="rent-tab" class="tab-content"> 
-                <div class="tracker-card">
-                    <h2 class="section-title">Rent Payment Tracking</h2>
-                    <form id="rent-payment-form" class="form-grid">
-                        <div class="form-group">
-                            <label>Payment Date</label>
-                            <input type="date" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Payment Amount</label>
-                            <input type="number" class="form-control" placeholder="Enter payment amount" required>
-                        </div>
-                        <div class="form-group" style="grid-column: 1 / -1;">
-                            <label>Note</label>
-                            <textarea class="form-control" placeholder="e.g., Zelle to landlord Eddie, venmo to roommate Sam" rows="3"></textarea>
-                        </div>
-                        <div class="form-group" style="grid-column: span 2;">
-                            <button type="submit" class="submit-button">
-                                <span>Record Rent Payment</span>
-                            </button>
-                        </div>
-                    </form>
-                </div>
-                
-            </div>
-
-            <div id="expenses-tab" class="tab-content" style="display: none;">
+            <div id="expenses-tab" class="tab-content">
                 <div class="tracker-card">
                     <h2 class="section-title">Add New Expense</h2>
                     <p style="margin-bottom: 1.5rem; color: #6B7280;">
@@ -1723,6 +1692,7 @@
                             <div class="select-container">
                                 <select class="form-control" id="expense-category" required onchange="updateQualifiedCheckbox()">
                                     <option value="">Select category</option>
+                                    <option value="Rent" class="qualified-category">Rent</option>
                                     <option value="Groceries" class="qualified-category">Groceries</option>
                                     <option value="WiFi" class="qualified-category">Wi-Fi</option>
                                     <option value="Required Supplies" class="qualified-category">Required Supplies</option>
@@ -2631,39 +2601,6 @@
                 submitButton.textContent = originalText;
             }
         });
-        document.getElementById('rent-payment-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const submitButton = this.querySelector('.submit-button');
-            const originalText = submitButton.textContent;
-            
-            const inputDate = new Date(this.querySelector('input[type="date"]').value);
-            inputDate.setDate(inputDate.getDate() + 1);  // Add one day
-            
-            const rentPaymentData = {
-                category: 'Rent',
-                amount: parseFloat(this.querySelector('input[type="number"]').value),
-                date: inputDate.toISOString().split('T')[0],
-                notes: this.querySelector('textarea').value || 'Monthly Rent Payment', // Updated to use textarea
-                isQualified: true,
-                needsReceipt: false
-            };
-
-            try {
-                const result = await createExpense(rentPaymentData);
-                submitButton.textContent = "✓";
-                showSuccess('Rent payment recorded successfully!');
-                loadExpenses();
-                
-                setTimeout(() => {
-                    submitButton.textContent = originalText;
-                    this.reset();
-                }, 1500);
-            } catch (error) {
-                showError(error.message);
-                submitButton.textContent = originalText;
-            }
-        });
-
         
         document.getElementById('signOutLink').addEventListener('click', (e) => {
             e.preventDefault();
@@ -2767,6 +2704,10 @@
                 document.querySelectorAll('.tab-button').forEach(btn => {
                     btn.classList.remove('active');
                 });
+                
+                // Set expenses tab as active by default
+                document.querySelector('.tab-button[onclick*="expenses"]').classList.add('active');
+                document.getElementById('expenses-tab').style.display = 'block';
                 
             } catch (error) {
                 console.error('Error initializing page:', error);
@@ -3137,7 +3078,7 @@ async function updateAccountStatus(status) {
 // Function to toggle visibility of manual controls
 function toggleManualControls(show) {
     // Get all tab content elements
-    const tabs = ['rent-tab', 'expenses-tab', 'account-tab', 'summary-tab'];
+    const tabs = ['expenses-tab', 'account-tab', 'summary-tab'];
     const automaticControls = document.getElementById('automatic-controls');
     
     if (show) {
@@ -3160,19 +3101,19 @@ function toggleManualControls(show) {
                 console.log('Calling showTab with active tab:', tabNameMatch[1]);
                 showTab(tabNameMatch[1]);
             } else {
-                // Default to rent tab if we can't determine the active tab
-                console.log('Defaulting to rent tab');
-                showTab('rent');
+                // Default to expenses tab if we can't determine the active tab
+                console.log('Defaulting to expenses tab');
+                showTab('expenses');
             }
         } else {
-            // Default to rent tab if onclick attribute is missing
-            console.log('Defaulting to rent tab (no onclick)');
-            showTab('rent');
+            // Default to expenses tab if onclick attribute is missing
+            console.log('Defaulting to expenses tab (no onclick)');
+            showTab('expenses');
         }
     } else {
-        // No active tab button found, default to rent tab
-        console.log('No active tab found, defaulting to rent tab');
-        showTab('rent');
+        // No active tab button found, default to expenses tab
+        console.log('No active tab found, defaulting to expenses tab');
+        showTab('expenses');
     }
     
     // Always enable and show tab buttons
@@ -3201,8 +3142,8 @@ document.getElementById('show-manual-controls').addEventListener('click', functi
         }
     });
     
-    // Use the showTab function to show only the rent tab
-    showTab('rent');
+    // Use the showTab function to show only the expenses tab
+    showTab('expenses');
 });
 
 // Function to load Plaid transactions
