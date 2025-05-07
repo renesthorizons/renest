@@ -3219,6 +3219,9 @@
             try {
                 // Check user's automation status
                 const userProfile = await fetchUserProfile();
+                // Store user profile in localStorage for later use
+                localStorage.setItem('userProfile', JSON.stringify(userProfile));
+                
                 const isAutomatic = userProfile.accountStatus === 'AUTOMATIC';
                 
                 // Set toggle to match current status
@@ -3420,9 +3423,20 @@
             const needsDeposit = projections.ytdQualified > projections.ytdDeposits;
             const depositAmount = Math.max(0, projections.ytdQualified - projections.ytdDeposits);
             
+            // Get the user profile from global variable or localStorage if available
+            let userProfile;
+            try {
+                userProfile = JSON.parse(localStorage.getItem('userProfile'));
+            } catch (e) {
+                userProfile = null;
+            }
+            
+            // Check if progressPercentage is 90
+            const isProgressNinety = userProfile && userProfile.progressPercentage === 90;
+            
             // Update notification indicator on account tab
             const notificationIndicator = document.getElementById('account-notification');
-            if (needsDeposit) {
+            if (needsDeposit && !isProgressNinety) {
                 notificationIndicator.classList.add('visible');
             } else {
                 notificationIndicator.classList.remove('visible');
@@ -3436,8 +3450,14 @@
                 // Format the deposit amount
                 const formattedAmount = `$${depositAmount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
                 
-                // Update instructions text
-                depositInstructions.textContent = `Please deposit ${formattedAmount} into your 529 in order to get cashback for your qualified expenses.`;
+                // Change message based on progressPercentage
+                if (isProgressNinety) {
+                    // Alternative message for 90% progress
+                    depositInstructions.textContent = `You have ${formattedAmount} of qualified spend you can use to fund your 529.`;
+                } else {
+                    // Standard message for users who need to deposit more
+                    depositInstructions.textContent = `Please deposit ${formattedAmount} into your 529 in order to get cashback for your qualified expenses.`;
+                }
                 
                 // Show the banner
                 depositBanner.classList.add('visible');
@@ -4331,6 +4351,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         // Check user's automation status
         const userProfile = await fetchUserProfile();
+        // Store user profile in localStorage for later use
+        localStorage.setItem('userProfile', JSON.stringify(userProfile));
+        
         const isAutomatic = userProfile.accountStatus === 'AUTOMATIC';
         
         // Set toggle to match current status
@@ -4363,15 +4386,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Load expenses normally
         loadExpenses();
         
-        // Make sure all tab content is hidden
+        // Make sure all tab content is hidden - IMPORTANT: ALL tabs should be hidden initially
         document.querySelectorAll('.tab-content').forEach(tab => {
             tab.style.display = 'none';
+            console.log('[Initial] Hiding tab:', tab.id);
         });
         
         // Remove active class from all buttons
         document.querySelectorAll('.tab-button').forEach(btn => {
             btn.classList.remove('active');
+            console.log('[Initial] Removing active class from button:', btn.textContent.trim());
         });
+        
+        // DON'T set any tab as active or visible by default - let user choose
+        // COMMENTED OUT: document.getElementById('expenses-tab').style.display = 'block';
+        console.log('[Initial] No tabs shown by default - waiting for user to click a tab');
         
     } catch (error) {
         console.error('Error initializing page:', error);
