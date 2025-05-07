@@ -1620,7 +1620,7 @@
 
         .collapsible-section.expanded .collapsible-content {
             max-height: 3000px; /* Large enough to fit any content */
-            padding: 1rem 2rem 2rem;
+            padding: 1rem 2rem 3rem;
             opacity: 1;
             transition: max-height 0.6s ease, 
                         padding 0.4s ease,
@@ -1661,7 +1661,7 @@
             }
             
             .collapsible-section.expanded .collapsible-content {
-                padding: 0 1.5rem 1.5rem;
+                padding: 0 1.5rem 2.5rem;
             }
         }
     </style>
@@ -1867,7 +1867,7 @@
                 
                 <div class="collapsible-section">
                     <div class="collapsible-header" onclick="toggleSection(this)">
-                        <h2 class="section-title">Rent Information</h2>
+                        <h2 class="section-title">Rent: Add Your Lease</h2>
                         <div class="collapse-icon"></div>
                     </div>
                     <div class="collapsible-content">
@@ -1895,7 +1895,7 @@
                         <h2 class="section-title">Record a 529 Deposit or Withdrawal</h2>
                         <div class="collapse-icon"></div>
                     </div>
-                    <div class="collapsible-content">                        
+                    <div class="collapsible-content">
                         <!-- Transaction Form -->
                         <form id="529-transaction-form" class="form-grid">
                             <div class="form-group">
@@ -1927,17 +1927,13 @@
                         </form>
                     </div>
                 </div>
-
-                <!-- Projections Card -->
+                
                 <div class="collapsible-section">
                     <div class="collapsible-header" onclick="toggleSection(this)">
-                        <h2 class="section-title">Projections & Planning</h2>
+                        <h2 class="section-title">529 Account Overview</h2>
                         <div class="collapse-icon"></div>
                     </div>
                     <div class="collapsible-content">
-                        <!-- <p style="margin-bottom: 1.5rem; color: #6B7280;">
-                            Track your qualified expenses and plan your 529 contributions to maximize your tax benefits. These projections are based on your current spending patterns and monthly rent.
-                        </p> -->
                         <div class="summary-card" style="margin-top: 0;">
                             <div class="summary-grid">
                                 <div class="summary-item">
@@ -1956,39 +1952,51 @@
                                 </div>
                                 <div class="summary-item">
                                     <div class="summary-label">
-                                        Projected Year-End Total
-                                        <span class="tooltip" data-tooltip="Estimated total qualified expenses for the entire year, based on your current spending and monthly rent."></span>
+                                        Current 529 Balance
+                                        <span class="tooltip" data-tooltip="Your current 529 account balance (deposits minus withdrawals)."></span>
                                     </div>
-                                    <div class="summary-value" id="projected-year-end">$0.00</div>
+                                    <div class="summary-value" id="current-529-balance">$0.00</div>
                                 </div>
                             </div>
                         </div>
 
-                        
-
-                        <!-- Funding Progress -->
+                        <!-- 529 Account Status -->
                         <div style="margin-top: 2rem;">
-                            <h3 style="color: var(--text-dark); margin-bottom: 1rem;">529 Funding Progress</h3>
-                            <p style="margin-bottom: 1.5rem; color: #6B7280;">
-                                To maximize your tax benefits, you should aim to contribute enough to your 529 plan to cover your projected qualified expenses. The recommendations below will help you stay on track.
-                            </p>
-                            <div style="background: #f3f4f6; border-radius: 8px; padding: 1.5rem;">
+                            <h3 style="color: var(--text-dark); margin-bottom: 1rem;">529 Account Status</h3>
+                            
+                            <div style="background: #f3f4f6; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
                                 <div style="margin-bottom: 1rem;">
                                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
                                         <div style="display: flex; align-items: center;">
-                                            <span style="font-weight: 500; color: var(--text-dark);">Recommended Total Remaining 529 Funding</span>
-                                            <span class="tooltip" data-tooltip="The total amount you should contribute to your 529 plan this year to cover your projected qualified expenses."></span>
+                                            <span style="font-weight: 500; color: var(--text-dark);">Uncovered Qualified Expenses</span>
+                                            <span class="tooltip" data-tooltip="Qualified expenses you've tracked that haven't been matched with 529 deposits yet."></span>
+                                        </div>
+                                        <span id="uncovered-expenses" style="color: var(--primary); font-weight: 600;">$0.00</span>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 1rem;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                        <div style="display: flex; align-items: center;">
+                                            <span style="font-weight: 500; color: var(--text-dark);">Amount Needed for Max Benefit</span>
+                                            <span class="tooltip" data-tooltip="The amount you should deposit to match all your currently tracked qualified expenses."></span>
                                         </div>
                                         <span id="recommended-funding" style="color: var(--primary); font-weight: 600;">$0.00</span>
                                     </div>
                                 </div>
+                                
                                 <div style="margin-bottom: 1rem;">
                                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
                                         <div style="display: flex; align-items: center;">
-                                            <span style="font-weight: 500; color: var(--text-dark);">Suggested Monthly Deposit</span>
-                                            <span class="tooltip" data-tooltip="The monthly contribution needed to reach your recommended funding amount by year-end. This adjusts based on your current deposits."></span>
+                                            <span style="font-weight: 500; color: var(--text-dark);">Suggested Deposit</span>
+                                            <span class="tooltip" data-tooltip="The deposit needed to match your current qualified expenses. You can deposit this all at once or monthly."></span>
                                         </div>
-                                        <span id="suggested-monthly-deposit" style="color: var(--primary); font-weight: 600;">$0.00</span>
+                                        <div>
+                                            <span id="suggested-onetime-deposit" style="color: var(--primary); font-weight: 600;">$0.00</span>
+                                            <span style="color: var(--text-dark); font-weight: normal;"> or </span>
+                                            <span id="suggested-monthly-deposit" style="color: var(--primary); font-weight: 600;">$0.00</span>
+                                            <span style="color: var(--text-dark); font-weight: normal;">/month</span>
+                                        </div>
                                     </div>
                                 </div>
                                 
@@ -1997,7 +2005,7 @@
                                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
                                         <div style="display: flex; align-items: center;">
                                             <span style="font-weight: 500; color: var(--text-dark);">Current Progress</span>
-                                            <span class="tooltip" data-tooltip="Shows how much you've contributed to your 529 plan compared to your recommended funding amount for the year."></span>
+                                            <span class="tooltip" data-tooltip="Shows how much you've contributed to your 529 plan compared to your total qualified expenses."></span>
                                         </div>
                                     </div>
                                     <div style="background: #e5e7eb; border-radius: 9999px; height: 24px; position: relative; overflow: hidden;">
@@ -2008,23 +2016,9 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <!-- 529 Withdrawal Information -->
-                        <div style="margin-top: 2rem;">
-                            <h3 style="color: var(--text-dark); margin-bottom: 1rem;">529 Withdrawal Information</h3>
-                            <p style="margin-bottom: 1.5rem; color: #6B7280;">
-                                Track how much you can withdraw from your 529 account based on your qualified expenses and current balance.
-                            </p>
+                            
                             <div style="background: #f3f4f6; border-radius: 8px; padding: 1.5rem;">
                                 <div style="margin-bottom: 1.5rem;">
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                                        <div style="display: flex; align-items: center;">
-                                            <span style="font-weight: 500; color: var(--text-dark);">Current 529 Balance</span>
-                                            <span class="tooltip" data-tooltip="Your current 529 account balance (deposits minus withdrawals)."></span>
-                                        </div>
-                                        <span id="current-529-balance" style="color: var(--primary); font-weight: 600;">$0.00</span>
-                                    </div>
                                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
                                         <div style="display: flex; align-items: center;">
                                             <span style="font-weight: 500; color: var(--text-dark);">Total Withdrawals (YTD)</span>
@@ -2046,7 +2040,7 @@
                             </div>
                         </div>
 
-                        <!-- Add after the Funding Progress section -->
+                        <!-- Add tips section -->
                         <div style="margin-top: 2rem; background: #EEF2FF; border-left: 4px solid var(--primary); padding: 1.5rem; border-radius: 0 8px 8px 0;">
                             <div style="display: flex; align-items: start; gap: 1rem;">
                                 <div style="color: var(--primary); font-weight: 600;">💡 Tip:</div>
@@ -2851,10 +2845,6 @@
             const remainingMonths = 12 - currentMonth;
             console.log('Current date info:', { currentYear, currentMonth, remainingMonths });
 
-            // Get monthly rent from localStorage
-            const monthlyRent = parseFloat(localStorage.getItem('monthlyRent')) || 0;
-            console.log('Monthly rent from localStorage:', monthlyRent);
-
             // Filter expenses for current year
             const currentYearExpenses = expenses.filter(expense => {
                 const expenseDate = new Date(expense.date);
@@ -2862,19 +2852,12 @@
             });
             console.log('Current year expenses:', currentYearExpenses.length);
 
-            // Calculate YTD qualified expenses - now properly checking both category and isQualified flag
+            // Calculate YTD qualified expenses
             const qualifiedExpenses = currentYearExpenses
                 .filter(expense => {
                     const isQualified = expense.isQualified && 
                                       expense.category !== 'Deposit529' && 
                                       expense.category !== 'Withdrawal529';
-                    console.log('Expense qualification check:', {
-                        id: expense.expenseID,
-                        category: expense.category,
-                        isQualified: expense.isQualified,
-                        amount: expense.amount,
-                        result: isQualified
-                    });
                     return isQualified;
                 })
                 .reduce((sum, expense) => sum + expense.amount, 0);
@@ -2892,57 +2875,30 @@
                 .reduce((sum, expense) => sum + expense.amount, 0);
             console.log('Total withdrawals:', totalWithdrawals);
 
-            // Calculate average monthly qualified expenses (excluding rent)
-            const nonRentExpenses = currentYearExpenses
-                .filter(expense => {
-                    const isQualified = expense.isQualified && 
-                                      expense.category !== 'Rent' &&
-                                      expense.category !== 'Deposit529' && 
-                                      expense.category !== 'Withdrawal529';
-                    console.log('Non-rent expense qualification check:', {
-                        id: expense.expenseID,
-                        category: expense.category,
-                        isQualified: expense.isQualified,
-                        amount: expense.amount,
-                        result: isQualified
-                    });
-                    return isQualified;
-                })
-                .reduce((sum, expense) => sum + expense.amount, 0);
-            console.log('Total non-rent qualified expenses:', nonRentExpenses);
+            // Calculate current 529 balance
+            const currentBalance = deposits529 - totalWithdrawals;
             
-            const monthsElapsed = currentMonth + 1;
-            const averageMonthlyNonRentExpense = monthsElapsed > 0 ? nonRentExpenses / monthsElapsed : 0;
-            console.log('Average monthly non-rent expense:', averageMonthlyNonRentExpense);
-
-            // Calculate yearly projections using profile rent
-            const yearlyRent = monthlyRent * 9; // Full year of rent from profile
-            const yearlyNonRent = averageMonthlyNonRentExpense * 9; // Project other expenses for full year
-            const projectedYearEnd = yearlyRent + yearlyNonRent;
-            console.log('Yearly projections:', {
-                yearlyRent,
-                yearlyNonRent,
-                projectedYearEnd
-            });
-
-            // Calculate recommended funding
-            const recommendedFunding = Math.max(0, projectedYearEnd - deposits529);
+            // Calculate uncovered qualified expenses
+            const uncoveredExpenses = Math.max(0, qualifiedExpenses - deposits529);
+            
+            // Calculate amount needed for max benefit
+            const amountNeededForMaxBenefit = uncoveredExpenses;
+            
+            // Calculate suggested deposits
+            const suggestedOneTimeDeposit = amountNeededForMaxBenefit;
             const suggestedMonthlyDeposit = remainingMonths > 0 ? 
-                recommendedFunding / remainingMonths : 0;
-            console.log('Funding recommendations:', {
-                recommendedFunding,
-                suggestedMonthlyDeposit
-            });
+                Math.ceil(amountNeededForMaxBenefit / remainingMonths) : 0;
 
             console.log('=== Completed calculate529Projections ===');
             return {
                 ytdQualified: qualifiedExpenses,
                 ytdDeposits: deposits529,
                 totalWithdrawals: totalWithdrawals,
-                monthlyProjection: averageMonthlyNonRentExpense + monthlyRent,
-                yearEndProjection: projectedYearEnd,
-                recommendedTotal: recommendedFunding,
-                suggestedMonthly: suggestedMonthlyDeposit
+                currentBalance: currentBalance,
+                uncoveredExpenses: uncoveredExpenses,
+                amountNeededForMaxBenefit: amountNeededForMaxBenefit,
+                suggestedOneTimeDeposit: suggestedOneTimeDeposit,
+                suggestedMonthlyDeposit: suggestedMonthlyDeposit
             };
         }
 
@@ -2953,45 +2909,72 @@
             // Update summary values
             document.getElementById('ytd-qualified-expenses').textContent = formatCurrency(projections.ytdQualified);
             document.getElementById('ytd-529-deposits').textContent = formatCurrency(projections.ytdDeposits);
-            document.getElementById('projected-year-end').textContent = formatCurrency(projections.yearEndProjection);
-            document.getElementById('recommended-funding').textContent = formatCurrency(projections.recommendedTotal);
-            document.getElementById('suggested-monthly-deposit').textContent = formatCurrency(projections.suggestedMonthly);
+            document.getElementById('current-529-balance').textContent = formatCurrency(projections.currentBalance);
+            
+            // Update "Uncovered Qualified Expenses" value
+            if (document.getElementById('uncovered-expenses')) {
+                document.getElementById('uncovered-expenses').textContent = formatCurrency(projections.uncoveredExpenses);
+            }
+            
+            // Update "Amount Needed for Max Benefit" value
+            if (document.getElementById('recommended-funding')) {
+                document.getElementById('recommended-funding').textContent = formatCurrency(projections.amountNeededForMaxBenefit);
+            }
+            
+            // Update suggested deposits
+            if (document.getElementById('suggested-onetime-deposit')) {
+                document.getElementById('suggested-onetime-deposit').textContent = formatCurrency(projections.suggestedOneTimeDeposit);
+            }
+            
+            if (document.getElementById('suggested-monthly-deposit')) {
+                document.getElementById('suggested-monthly-deposit').textContent = formatCurrency(projections.suggestedMonthlyDeposit);
+            }
 
-            // Update withdrawal information
-            const currentBalance = projections.ytdDeposits - projections.totalWithdrawals;
+            // Calculate available for withdrawal
             const availableForWithdrawal = Math.min(
                 Math.max(0, projections.ytdQualified - projections.totalWithdrawals),
-                currentBalance
+                projections.currentBalance
             );
             
-            document.getElementById('current-529-balance').textContent = formatCurrency(currentBalance);
-            document.getElementById('total-withdrawals').textContent = formatCurrency(projections.totalWithdrawals);
-            document.getElementById('available-for-withdrawal').textContent = formatCurrency(availableForWithdrawal);
+            if (document.getElementById('total-withdrawals')) {
+                document.getElementById('total-withdrawals').textContent = formatCurrency(projections.totalWithdrawals);
+            }
+            
+            if (document.getElementById('available-for-withdrawal')) {
+                document.getElementById('available-for-withdrawal').textContent = formatCurrency(availableForWithdrawal);
+            }
 
             // Update withdrawal status message
             const withdrawalStatus = document.getElementById('withdrawal-status');
-            if (projections.ytdQualified > projections.totalWithdrawals && currentBalance < (projections.ytdQualified - projections.totalWithdrawals)) {
-                withdrawalStatus.style.background = '#FEE2E2';
-                withdrawalStatus.style.color = '#DC2626';
-                withdrawalStatus.innerHTML = `⚠️ You need to deposit ${formatCurrency(projections.ytdQualified - projections.totalWithdrawals - currentBalance)} into your 529 account to cover your qualified expenses.`;
-            } else if (availableForWithdrawal > 0) {
-                withdrawalStatus.style.background = '#EEF2FF';
-                withdrawalStatus.style.color = 'var(--primary)';
-                withdrawalStatus.innerHTML = `You can withdraw up to ${formatCurrency(availableForWithdrawal)} from your 529 account.`;
-            } else {
-                withdrawalStatus.style.background = '#F0FDF4';
-                withdrawalStatus.style.color = '#16A34A';
-                withdrawalStatus.innerHTML = `✓ You have already withdrawn the maximum amount to cover the qualified expenses you have had so far this year.`;
+            if (withdrawalStatus) {
+                if (projections.ytdQualified > projections.totalWithdrawals && projections.currentBalance < (projections.ytdQualified - projections.totalWithdrawals)) {
+                    withdrawalStatus.style.background = '#FEE2E2';
+                    withdrawalStatus.style.color = '#DC2626';
+                    withdrawalStatus.innerHTML = `⚠️ You need to deposit ${formatCurrency(projections.ytdQualified - projections.totalWithdrawals - projections.currentBalance)} into your 529 account to cover your qualified expenses.`;
+                } else if (availableForWithdrawal > 0) {
+                    withdrawalStatus.style.background = '#EEF2FF';
+                    withdrawalStatus.style.color = 'var(--primary)';
+                    withdrawalStatus.innerHTML = `You can withdraw up to ${formatCurrency(availableForWithdrawal)} from your 529 account.`;
+                } else {
+                    withdrawalStatus.style.background = '#F0FDF4';
+                    withdrawalStatus.style.color = '#16A34A';
+                    withdrawalStatus.innerHTML = `✓ You have already withdrawn the maximum amount to cover the qualified expenses you have had so far this year.`;
+                }
             }
 
             // Update progress bar
-            const totalNeeded = projections.yearEndProjection;
+            const totalNeeded = projections.ytdQualified;
             const progressPercent = totalNeeded > 0 ? 
                 (projections.ytdDeposits / totalNeeded) * 100 : 100;
             
-            document.getElementById('funding-progress-bar').style.width = `${Math.min(100, progressPercent)}%`;
-            document.getElementById('funding-progress-text').textContent = 
-                `${formatCurrency(projections.ytdDeposits)}/${formatCurrency(totalNeeded)}`;
+            if (document.getElementById('funding-progress-bar')) {
+                document.getElementById('funding-progress-bar').style.width = `${Math.min(100, progressPercent)}%`;
+            }
+            
+            if (document.getElementById('funding-progress-text')) {
+                document.getElementById('funding-progress-text').textContent = 
+                    `${formatCurrency(projections.ytdDeposits)}/${formatCurrency(totalNeeded)}`;
+            }
         }
 
         function update529TransactionsList(expenses) {
