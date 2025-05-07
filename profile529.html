@@ -299,6 +299,43 @@
             border-radius: 6px;
             font-weight: 500;
             cursor: pointer;
+            position: relative;
+        }
+
+        .save-button.loading {
+            color: transparent;
+            pointer-events: none;
+        }
+
+        .save-button.loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid white;
+            border-radius: 50%;
+            border-right-color: transparent;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        .form-input:disabled {
+            background-color: #F3F4F6;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .button-group button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
         }
 
         .hidden {
@@ -530,6 +567,19 @@
         async function handleSubmit(event) {
             event.preventDefault();
             
+            // Get all form inputs and buttons
+            const form = document.getElementById('editProfileForm');
+            const allInputs = form.querySelectorAll('input, select');
+            const allButtons = form.querySelectorAll('button');
+            const saveButton = form.querySelector('.save-button');
+
+            // Disable all form elements
+            allInputs.forEach(input => input.disabled = true);
+            allButtons.forEach(button => button.disabled = true);
+            
+            // Add loading state to save button
+            saveButton.classList.add('loading');
+
             const formData = {
                 firstName: document.getElementById('editFirstName').value,
                 lastName: document.getElementById('editLastName').value,
@@ -560,6 +610,11 @@
             } catch (error) {
                 console.error('Error updating profile:', error);
                 alert('Failed to update profile. Please try again.');
+            } finally {
+                // Re-enable all form elements and remove loading state
+                allInputs.forEach(input => input.disabled = false);
+                allButtons.forEach(button => button.disabled = false);
+                saveButton.classList.remove('loading');
             }
         }
 
