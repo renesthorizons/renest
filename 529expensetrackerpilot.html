@@ -1560,6 +1560,7 @@
             align-items: center;
             background: white;
             transition: background-color 0.3s ease;
+            border-radius: 16px;
         }
 
         .collapsible-header:hover {
@@ -1574,10 +1575,14 @@
         }
 
         .collapsible-header .collapse-icon {
-            width: 24px;
-            height: 24px;
+            width: 30px;
+            height: 30px;
             position: relative;
             transition: transform 0.3s ease;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            margin-left: 15px;
+            flex-shrink: 0;
         }
 
         .collapsible-header .collapse-icon::before,
@@ -1589,30 +1594,39 @@
         }
 
         .collapsible-header .collapse-icon::before {
-            width: 100%;
+            width: 14px;
             height: 2px;
-            top: 11px;
+            top: 13px;
+            left: 7px;
         }
 
         .collapsible-header .collapse-icon::after {
             width: 2px;
-            height: 100%;
-            left: 11px;
+            height: 14px;
+            left: 13px;
+            top: 7px;
         }
 
         .collapsible-content {
-            padding: 0 2rem 2rem;
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease;
+            transition: max-height 0.5s ease-out;
+            padding: 0 2rem;
         }
 
         .collapsible-section.expanded .collapsible-content {
             max-height: 3000px; /* Large enough to fit any content */
+            padding: 0 2rem 2rem;
         }
 
         .collapsible-section.expanded .collapse-icon::after {
             transform: rotate(90deg);
+            opacity: 0;
+        }
+
+        .collapsible-section.expanded .collapsible-header {
+            border-radius: 16px 16px 0 0;
+            border-bottom: 1px solid #eee;
         }
 
         @media (max-width: 768px) {
@@ -1625,6 +1639,10 @@
             }
             
             .collapsible-content {
+                padding: 0 1.5rem;
+            }
+            
+            .collapsible-section.expanded .collapsible-content {
                 padding: 0 1.5rem 1.5rem;
             }
         }
@@ -2246,16 +2264,7 @@
             // Add active class to the clicked button
             document.querySelector(`[onclick="showTab('${tabName}')"]`).classList.add('active');
             
-            // Expand the first section in the active tab
-            const activeSections = document.querySelectorAll(`#${tabName}-tab .collapsible-section`);
-            if (activeSections.length > 0) {
-                // Collapse all sections
-                activeSections.forEach(section => {
-                    section.classList.remove('expanded');
-                });
-                // Expand the first section
-                activeSections[0].classList.add('expanded');
-            }
+            // No longer auto-expanding any sections
         }
 
         // Remove any default active states when the page loads
@@ -2803,11 +2812,7 @@
                 // document.querySelector('.tab-button[onclick*="expenses"]').classList.add('active');
                 document.getElementById('expenses-tab').style.display = 'block';
                 
-                // Expand the first section in the active tab
-                const firstSection = document.querySelector('#expenses-tab .collapsible-section');
-                if (firstSection) {
-                    firstSection.classList.add('expanded');
-                }
+                // No longer auto-expanding the first section
                 
             } catch (error) {
                 console.error('Error initializing page:', error);
@@ -3245,11 +3250,7 @@ document.getElementById('show-manual-controls').addEventListener('click', functi
     // Use the showTab function to show only the expenses tab
     showTab('expenses');
     
-    // Make sure the first collapsible section is expanded
-    const firstSection = document.querySelector('#expenses-tab .collapsible-section');
-    if (firstSection) {
-        firstSection.classList.add('expanded');
-    }
+    // No longer auto-expanding the first section
 });
 
 // Function to load Plaid transactions
