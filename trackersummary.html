@@ -2512,6 +2512,31 @@ async function updateProfile(profileData) {
         return null;
     }
 }
+
+// Add this new function near the updateProfile function
+async function updateProgressPercentage(percentage) {
+    try {
+        const response = await fetch('https://jmqfabgm02.execute-api.us-east-2.amazonaws.com/update-profile', {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${API.getToken()}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                progressPercentage: percentage
+            })
+        });
+        if (!response.ok) {
+            console.warn('Progress percentage update failed:', await response.text());
+            return null;
+        }
+        return await response.json();
+    } catch (error) {
+        console.warn('Progress percentage update failed:', error);
+        return null;
+    }
+}
+
 async function fetchPlaidTransactions(month, year) {
     try {
         const token = API.getToken();
@@ -2972,7 +2997,29 @@ function updateBenefitDisplay(benefits, state, accountStatus, expenses, userProf
         expenses?.filter(e => e.isQualified)?.reduce((sum, e) => sum + e.amount, 0) || 0,
         userProfile?.income || 0);
     
+    // If user has reached max benefit, update their progress percentage to 90
     if (hasReachedMax) {
+        // Only update if not already at 90%
+        const currentProgress = localStorage.getItem('progressPercentage');
+        const userProfileProgress = userProfile?.progressPercentage;
+        
+        if (currentProgress !== '90' || userProfileProgress !== 90) {
+            // Update localStorage to store 90% progress
+            localStorage.setItem('progressPercentage', '90');
+            
+            // Update userProfile if it exists
+            if (userProfile) {
+                userProfile.progressPercentage = 90;
+            }
+            
+            // Update progress percentage on server
+            updateProgressPercentage(90).then(result => {
+                if (result) {
+                    console.log('Progress percentage updated successfully to 90%');
+                }
+            });
+        }
+        
         currentMonthBenefitElement.innerHTML = '<div class="action-button max-benefit" onclick="showTaxFreeModal()">Earn More</div>';
         if (currentMonthLabel) currentMonthLabel.style.display = 'none';
     } else {
