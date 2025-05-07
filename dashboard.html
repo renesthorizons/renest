@@ -1076,21 +1076,21 @@
                     <div class="form-group">
                         <label for="leaseEndDate" class="form-label">My current lease ends:</label>
                         <div style="display: flex; gap: 0.5rem;">
-                            <select id="leaseEndMonth" class="form-input" style="flex: 1;">
-                                <option value="1">January</option>
-                                <option value="2">February</option>
-                                <option value="3">March</option>
-                                <option value="4">April</option>
+                            <select id="leaseEndMonth" class="form-input" style="flex: 0.6;">
+                                <option value="1">Jan</option>
+                                <option value="2">Feb</option>
+                                <option value="3">Mar</option>
+                                <option value="4">Apr</option>
                                 <option value="5">May</option>
-                                <option value="6">June</option>
-                                <option value="7">July</option>
-                                <option value="8">August</option>
-                                <option value="9">September</option>
-                                <option value="10">October</option>
-                                <option value="11">November</option>
-                                <option value="12">December</option>
+                                <option value="6">Jun</option>
+                                <option value="7">Jul</option>
+                                <option value="8">Aug</option>
+                                <option value="9">Sep</option>
+                                <option value="10">Oct</option>
+                                <option value="11">Nov</option>
+                                <option value="12">Dec</option>
                             </select>
-                            <select id="leaseEndYear" class="form-input" style="flex: 1;">
+                            <select id="leaseEndYear" class="form-input" style="flex: 0.4;">
                                 <!-- Will be populated via JavaScript -->
                             </select>
                         </div>
@@ -1172,7 +1172,8 @@
                     </div>
                     <div class="button-container">
                         <button onclick="previousStep()" class="button button-secondary">Back</button>
-                        <button onclick="submitForm()" class="button button-primary" id="submitBtn">
+                        <button type="button" onclick="handleLeaseDone()" class="button button-primary" id="leaseInfoBtn">Done</button>
+                        <button onclick="submitForm()" class="button button-primary hidden" id="submitBtn">
                             <div class="btn-content">
                                 <span>Submit</span>
                                 <div class="spinner" id="spinner"></div>
@@ -3329,6 +3330,13 @@ const statePersonalExemptionDB = {
                 formData.school = document.getElementById('school').value;
                 formData.state = document.getElementById('state').value;
                 formData.income = document.getElementById('income').value;
+                
+                // When moving to Step 3, hide Submit button and show Done button
+                setTimeout(() => {
+                    document.getElementById('leaseInfoBtn').classList.remove('hidden');
+                    document.getElementById('submitBtn').classList.add('hidden');
+                }, 100);
+                
                 showStep(3);
             }
         }
@@ -4173,10 +4181,14 @@ const statePersonalExemptionDB = {
             newLeaseInfo = {}; // Reset any previously entered info
             closeConfirmLeaseModal();
             
+            // Hide Done button and show Submit button
+            document.getElementById('leaseInfoBtn').classList.add('hidden');
+            document.getElementById('submitBtn').classList.remove('hidden');
+            
             // Show confirmation message
             const successMessage = document.createElement('div');
             successMessage.className = 'success-message';
-            successMessage.textContent = 'Will use current lease information until lease end date.';
+            successMessage.textContent = 'Lease information confirmed! You can now proceed with submission.';
             document.body.appendChild(successMessage);
             setTimeout(() => successMessage.remove(), 3000);
         }
@@ -4187,6 +4199,91 @@ const statePersonalExemptionDB = {
         
         function closeConfirmLeaseModal() {
             document.getElementById('confirmLeaseModal').classList.add('hidden');
+        }
+
+        function checkLeaseEndDate() {
+            const leaseEndMonth = parseInt(document.getElementById('leaseEndMonth').value);
+            const leaseEndYear = parseInt(document.getElementById('leaseEndYear').value);
+            const currentDate = new Date();
+            const currentYear = currentDate.getFullYear();
+            
+            // Only show confirmation modal if lease ends in current year
+            if (leaseEndYear === currentYear && leaseEndMonth > 0) {
+                // Create a date object for the lease end (last day of the month)
+                const leaseEndDate = new Date(leaseEndYear, leaseEndMonth, 0);
+                
+                // If lease end date is in the future of the current year
+                if (leaseEndDate > currentDate) {
+                    return true; // Lease ends this year
+                }
+            }
+            return false; // Lease does not end this year
+        }
+        
+        function handleLeaseDone() {
+            // Check if lease ends this year
+            if (checkLeaseEndDate()) {
+                // Show the confirmation modal
+                showConfirmLeaseModal();
+            } else {
+                // Lease doesn't end this year, so no need for new lease info
+                // Hide Done button and show Submit button
+                document.getElementById('leaseInfoBtn').classList.add('hidden');
+                document.getElementById('submitBtn').classList.remove('hidden');
+                
+                // Just show a success message
+                const successMessage = document.createElement('div');
+                successMessage.className = 'success-message';
+                successMessage.textContent = 'Lease information confirmed! You can now proceed with submission.';
+                document.body.appendChild(successMessage);
+                setTimeout(() => successMessage.remove(), 3000);
+            }
+        }
+
+        function saveNewLeaseInfo() {
+            hasNewLease = true;
+            
+            // Get values from the form
+            const startMonth = parseInt(document.getElementById('newLeaseStartMonth').value);
+            const startYear = parseInt(document.getElementById('newLeaseStartYear').value);
+            const endMonth = parseInt(document.getElementById('newLeaseEndMonth').value);
+            const endYear = parseInt(document.getElementById('newLeaseEndYear').value);
+            const rent = document.getElementById('newLeaseRent').value.replace(/[^\d]/g, '');
+            const utilities = document.getElementById('newLeaseUtilities').value.replace(/[^\d]/g, '');
+            const wifi = document.getElementById('newLeaseWifi').value.replace(/[^\d]/g, '');
+            const utilitiesIncluded = document.getElementById('newLeaseUtilitiesIncluded').checked;
+            
+            // Store the new lease info
+            newLeaseInfo = {
+                startMonth,
+                startYear,
+                endMonth,
+                endYear,
+                rent: parseFloat(rent) || 0,
+                utilities: parseFloat(utilities) || 0,
+                wifi: parseFloat(wifi) || 0,
+                utilitiesIncluded
+            };
+            
+            // Close the modal
+            closeUpcomingLeaseModal();
+            
+            // Hide Done button and show Submit button
+            document.getElementById('leaseInfoBtn').classList.add('hidden');
+            document.getElementById('submitBtn').classList.remove('hidden');
+            
+            // Show confirmation message
+            const successMessage = document.createElement('div');
+            successMessage.className = 'success-message';
+            successMessage.textContent = 'New lease information saved! You can now proceed with submission.';
+            document.body.appendChild(successMessage);
+            setTimeout(() => successMessage.remove(), 3000);
+        }
+
+        function handleYesNewLeaseInfo() {
+            // User knows new lease info, show the new lease form
+            closeConfirmLeaseModal();
+            showUpcomingLeaseModal();
         }
     </script>
     
@@ -4199,9 +4296,9 @@ const statePersonalExemptionDB = {
             // Set default value for lease end date to current month + 12 months
             setDefaultLeaseEndDate();
             
-            // Add event listeners for lease date changes
-            document.getElementById('leaseEndMonth').addEventListener('change', checkLeaseEndDate);
-            document.getElementById('leaseEndYear').addEventListener('change', checkLeaseEndDate);
+            // Remove event listeners for lease date changes since we're using the Done button now
+            // document.getElementById('leaseEndMonth').addEventListener('change', checkLeaseEndDate);
+            // document.getElementById('leaseEndYear').addEventListener('change', checkLeaseEndDate);
             
             // Add event listeners for currency formatting on new lease inputs
             const newLeaseRentInput = document.getElementById('newLeaseRent');
@@ -4305,9 +4402,10 @@ const statePersonalExemptionDB = {
                 
                 // If lease end date is in the future of the current year
                 if (leaseEndDate > currentDate) {
-                    showConfirmLeaseModal();
+                    return true; // Lease ends this year
                 }
             }
+            return false; // Lease does not end this year
         }
         
         function showConfirmLeaseModal() {
@@ -4357,6 +4455,7 @@ const statePersonalExemptionDB = {
             document.getElementById('newLeaseStartYear').value = newStartYear;
             document.getElementById('newLeaseEndMonth').value = newEndMonth;
             document.getElementById('newLeaseEndYear').value = newEndYear;
+            
             
             // Copy current lease values as defaults for new lease
             const currentRent = document.getElementById('monthlyRent').value;
