@@ -990,6 +990,52 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             cursor: pointer;
         }
+
+        /* Housing Entries Styles */
+        .housing-entry {
+            background-color: white;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        
+        .housing-entry:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .housing-entry .remove-entry-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #666;
+            font-size: 1.2rem;
+            transition: color 0.2s;
+        }
+        
+        .housing-entry .remove-entry-button:hover {
+            color: #ff4d4d;
+        }
+        
+        #housingEntriesContainer {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 1.5rem;
+        }
+        
+        #noHousingMessage {
+            color: var(--text-dark);
+            font-style: italic;
+            padding: 1rem;
+            background-color: rgba(240, 240, 240, 0.5);
+            border-radius: 0.5rem;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -1070,48 +1116,21 @@
                 <!-- Step 3: Expenses -->
                 <div id="step3" class="form-step">
                     <div class="form-group">
-                        <label for="monthlyRent" class="form-label">Estimate Your Expenses</label>
-                        <input type="text" id="monthlyRent" class="form-input" placeholder="Enter monthly rent payment">
-                    </div>
-                    <div class="form-group">
-                        <label for="leaseEndDate" class="form-label">My current lease ends:</label>
-                        <div style="display: flex; gap: 0.5rem;">
-                            <select id="leaseEndMonth" class="form-input" style="flex: 0.6;">
-                                <option value="1">Jan</option>
-                                <option value="2">Feb</option>
-                                <option value="3">Mar</option>
-                                <option value="4">Apr</option>
-                                <option value="5">May</option>
-                                <option value="6">Jun</option>
-                                <option value="7">Jul</option>
-                                <option value="8">Aug</option>
-                                <option value="9">Sep</option>
-                                <option value="10">Oct</option>
-                                <option value="11">Nov</option>
-                                <option value="12">Dec</option>
-                            </select>
-                            <select id="leaseEndYear" class="form-input" style="flex: 0.4;">
-                                <!-- Will be populated via JavaScript -->
-                            </select>
+                        <h3 class="form-label">My Housing Information</h3>
+                        <p class="form-description" style="margin-bottom: 1rem;">Add details about where you live (and will live) during the year.</p>
+                        
+                        <!-- Housing button and list -->
+                        <div id="housingEntriesContainer" style="margin-bottom: 1.5rem;">
+                            <!-- Housing entries will be listed here -->
+                            <p id="noHousingMessage" style="color: var(--text-dark); font-style: italic;">No housing information added yet.</p>
                         </div>
+                        
+                        <button type="button" id="addHousingButton" class="button button-primary" style="width: 100%; margin-bottom: 1.5rem;">
+                            + Add Housing Information
+                        </button>
                     </div>
+                    
                     <div class="form-group">
-                        <!-- <label class="form-label">Monthly Expenses</label> -->
-                        <div class="expense-input-group">
-                            <div class="expense-item">
-                                <input type="text" id="utilities" class="form-input" placeholder="Enter monthly utilities">
-                                <div class="checkbox-group">
-                                    <input type="checkbox" id="utilitiesIncluded" name="utilitiesIncluded">
-                                    <label for="utilitiesIncluded">Utilities included in rent</label>
-                                </div>
-                            </div>
-                            <div class="expense-item">
-                                <input type="text" id="wifi" class="form-input" placeholder="Enter monthly WiFi">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <!-- <label class="form-label">Student Enrollment Months</label> -->
                         <p class="form-description" style="color: var(--text-dark);">I am enrolled as a student these months (uncheck if not enrolled)</p>
                         <div class="month-checkboxes">
                             <div class="month-row">
@@ -1172,8 +1191,7 @@
                     </div>
                     <div class="button-container">
                         <button onclick="previousStep()" class="button button-secondary">Back</button>
-                        <button type="button" onclick="handleLeaseDone()" class="button button-primary" id="leaseInfoBtn">Done</button>
-                        <button onclick="submitForm()" class="button button-primary hidden" id="submitBtn">
+                        <button type="button" onclick="submitForm()" class="button button-primary" id="submitBtn">
                             <div class="btn-content">
                                 <span>Submit</span>
                                 <div class="spinner" id="spinner"></div>
@@ -1377,6 +1395,89 @@
                 <div style="display: flex; flex-direction: column; gap: 1rem;">
                     <a href="contactus529.html" class="button button-primary" style="text-decoration: none;">Email Us</a>
                     <a href="https://calendly.com/renesthorizons/30min?month=2025-05" target="_blank" class="button button-primary" style="text-decoration: none;">Zoom Chat</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Housing Information Modal -->
+    <div id="housingModal" class="modal-overlay hidden">
+        <div class="modal-container">
+            <div class="modal-content">
+                <button class="close-button" onclick="closeHousingModal()">×</button>
+                <h2 style="margin-bottom: 1.5rem;">Add Housing Information</h2>
+                
+                <div class="form-group">
+                    <label class="form-label">Lease start date:</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <select id="leaseStartMonth" class="form-input" style="flex: 1;">
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                        <select id="leaseStartYear" class="form-input" style="flex: 1;">
+                            <!-- Will be populated via JavaScript -->
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Lease end date:</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <select id="leaseEndMonth" class="form-input" style="flex: 1;">
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                        <select id="leaseEndYear" class="form-input" style="flex: 1;">
+                            <!-- Will be populated via JavaScript -->
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="monthlyRent" class="form-label">Monthly rent payment:</label>
+                    <input type="text" id="monthlyRent" class="form-input" placeholder="Enter monthly rent">
+                </div>
+                
+                <div class="form-group">
+                    <div class="expense-input-group">
+                        <div class="expense-item">
+                            <label for="utilities" class="form-label">Monthly utilities:</label>
+                            <input type="text" id="utilities" class="form-input" placeholder="Enter monthly utilities">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="utilitiesIncluded" name="utilitiesIncluded">
+                                <label for="utilitiesIncluded">Utilities included in rent</label>
+                            </div>
+                        </div>
+                        <div class="expense-item">
+                            <label for="wifi" class="form-label">Monthly WiFi:</label>
+                            <input type="text" id="wifi" class="form-input" placeholder="Enter monthly WiFi">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="button-container">
+                    <button onclick="closeHousingModal()" class="button button-secondary">Cancel</button>
+                    <button onclick="saveHousingInfo()" class="button button-primary">Save Housing Info</button>
                 </div>
             </div>
         </div>
@@ -3552,7 +3653,8 @@ const statePersonalExemptionDB = {
                 
                 // Validate step 3
                 console.log('2. Starting step 3 validation');
-                const step3Valid = await validateStep3();
+                // Use the validateHousingStep3 function from housing.js
+                const step3Valid = await validateHousingStep3();
                 console.log('Step 3 validation result:', step3Valid);
                 
                 if (!step3Valid) {
@@ -3576,6 +3678,8 @@ const statePersonalExemptionDB = {
                         select.style.cursor = 'pointer';
                     });
                     
+                    submitBtn.disabled = false;
+                    spinner.style.display = 'none';
                     return;
                 }
                 
@@ -3587,16 +3691,12 @@ const statePersonalExemptionDB = {
                 const school = document.getElementById('school').value;
                 const state = document.getElementById('state').value;
                 const income = document.getElementById('income').value.replace(/[^\d]/g, '');
-                const rent = document.getElementById('monthlyRent').value.replace(/[^\d]/g, '') || '0';
-                const utilities = document.getElementById('utilities').value.replace(/[^\d]/g, '') || '0';
-                const wifi = document.getElementById('wifi').value.replace(/[^\d]/g, '') || '0';
-                const utilitiesIncluded = document.getElementById('utilitiesIncluded').checked;
                 const enrolledMonths = Array.from(document.querySelectorAll('input[name="enrolledMonths"]:checked'))
                     .map(checkbox => parseInt(checkbox.value));
                 
-                // Get lease information
-                const leaseEndMonth = parseInt(document.getElementById('leaseEndMonth').value);
-                const leaseEndYear = parseInt(document.getElementById('leaseEndYear').value);
+                // Use the first housing entry's rent for profile data (for backward compatibility)
+                const firstHousing = housingEntries[0] || { rent: 0 };
+                const rent = firstHousing.rent.toString();
 
                 console.log('Form values collected:', {
                     firstName,
@@ -3606,34 +3706,12 @@ const statePersonalExemptionDB = {
                     state,
                     income,
                     rent,
-                    utilities,
-                    wifi,
-                    utilitiesIncluded,
                     enrolledMonths,
-                    leaseEndMonth,
-                    leaseEndYear,
-                    hasNewLease
+                    housingEntries
                 });
 
-                // Calculate benefit amount
-                // Include new lease information in benefit calculation
-                let benefit;
-                
-                if (hasNewLease) {
-                    // Consider both lease periods when calculating benefit
-                    benefit = calculateBenefitWithMultipleLeases(
-                        state, 
-                        income, 
-                        rent, 
-                        leaseEndMonth, 
-                        leaseEndYear, 
-                        newLeaseInfo,
-                        enrolledMonths
-                    );
-                } else {
-                    // Use original calculation method
-                    benefit = calculateBenefit(state, income, rent);
-                }
+                // Calculate benefit amount using housing entries
+                const benefit = calculateBenefitWithMultipleHousing(state, income, enrolledMonths, housingEntries);
                 
                 console.log('Calculated benefit:', benefit);
                 
@@ -3690,19 +3768,9 @@ const statePersonalExemptionDB = {
                 }
                 console.log('Profile updated successfully');
 
-                // Then, create the expenses using the updated addOnboardingExpenses function
-                console.log('6. Creating onboarding expenses');
-                const expenseData = {
-                    rent,
-                    utilities,
-                    wifi,
-                    enrolledMonths,
-                    utilitiesIncluded
-                };
-                console.log('Expense data:', expenseData);
-
-                // The updated function now handles multiple lease periods
-                await addOnboardingExpenses(expenseData);
+                // Then, create the expenses using the housing entries
+                console.log('6. Creating onboarding expenses from housing entries');
+                await addHousingEntryExpenses(housingEntries, enrolledMonths);
                 console.log('Expenses created successfully');
 
                 // Hide the modal
@@ -3710,8 +3778,6 @@ const statePersonalExemptionDB = {
                 hideOnboardingModal();
                 
                 // The redirect will be handled by the congratulations modal close button
-                // If user dismisses the congrats modal and submission is complete
-                // window.location.href = 'trackersummary.html';
 
             } catch (error) {
                 console.error('Error in form submission:', error);
@@ -4449,6 +4515,574 @@ const statePersonalExemptionDB = {
             
             console.log('📝 saveNewLeaseInfo completed');
         }
+
+        // Housing Information Modal
+        function openHousingModal() {
+            // Reset form fields
+            document.getElementById('leaseStartMonth').value = new Date().getMonth() + 1;
+            document.getElementById('leaseStartYear').value = new Date().getFullYear();
+            document.getElementById('leaseEndMonth').value = new Date().getMonth() + 1;
+            document.getElementById('leaseEndYear').value = new Date().getFullYear() + 1;
+            document.getElementById('monthlyRent').value = '';
+            document.getElementById('utilities').value = '';
+            document.getElementById('wifi').value = '';
+            document.getElementById('utilitiesIncluded').checked = false;
+            
+            // Show the modal
+            document.getElementById('housingModal').classList.remove('hidden');
+        }
+
+        function closeHousingModal() {
+            document.getElementById('housingModal').classList.add('hidden');
+        }
+
+        // Array to store housing entries
+        let housingEntries = [];
+
+        function saveHousingInfo() {
+            const startMonth = parseInt(document.getElementById('leaseStartMonth').value);
+            const startYear = parseInt(document.getElementById('leaseStartYear').value);
+            const endMonth = parseInt(document.getElementById('leaseEndMonth').value);
+            const endYear = parseInt(document.getElementById('leaseEndYear').value);
+            const rent = document.getElementById('monthlyRent').value.replace(/[^\d]/g, '') || '0';
+            const utilities = document.getElementById('utilities').value.replace(/[^\d]/g, '') || '0';
+            const wifi = document.getElementById('wifi').value.replace(/[^\d]/g, '') || '0';
+            const utilitiesIncluded = document.getElementById('utilitiesIncluded').checked;
+            
+            // Validate
+            if (parseInt(rent) === 0) {
+                showError('Please enter a valid rent amount');
+                return;
+            }
+            
+            // Validate dates - end date must be after start date
+            const startDate = new Date(startYear, startMonth - 1, 1);
+            const endDate = new Date(endYear, endMonth - 1, 1);
+            
+            if (endDate <= startDate) {
+                showError('Lease end date must be after start date');
+                return;
+            }
+            
+            // Check for overlapping housing periods
+            if (hasOverlappingPeriods(startMonth, startYear, endMonth, endYear)) {
+                showError('This housing period overlaps with an existing entry');
+                return;
+            }
+            
+            // Create housing entry
+            const housingEntry = {
+                id: Date.now(), // Unique identifier
+                startMonth,
+                startYear,
+                endMonth,
+                endYear,
+                rent: parseFloat(rent),
+                utilities: parseFloat(utilities),
+                wifi: parseFloat(wifi),
+                utilitiesIncluded
+            };
+            
+            // Add to array
+            housingEntries.push(housingEntry);
+            
+            // Update UI
+            updateHousingEntriesList();
+            
+            // Close modal
+            closeHousingModal();
+            
+            // Show success message
+            const successMessage = document.createElement('div');
+            successMessage.className = 'success-message';
+            successMessage.textContent = 'Housing information added!';
+            document.body.appendChild(successMessage);
+            setTimeout(() => successMessage.remove(), 3000);
+        }
+
+        function hasOverlappingPeriods(startMonth, startYear, endMonth, endYear) {
+            // Convert to date objects for easier comparison
+            const newStartDate = new Date(startYear, startMonth - 1, 1);
+            const newEndDate = new Date(endYear, endMonth - 1, 1);
+            
+            return housingEntries.some(entry => {
+                const existingStartDate = new Date(entry.startYear, entry.startMonth - 1, 1);
+                const existingEndDate = new Date(entry.endYear, entry.endMonth - 1, 1);
+                
+                // Check if periods overlap
+                return (newStartDate < existingEndDate && newEndDate > existingStartDate);
+            });
+        }
+
+        function updateHousingEntriesList() {
+            const container = document.getElementById('housingEntriesContainer');
+            const noHousingMessage = document.getElementById('noHousingMessage');
+            
+            // Clear existing entries
+            container.innerHTML = '';
+            
+            if (housingEntries.length === 0) {
+                container.appendChild(noHousingMessage);
+                return;
+            }
+            
+            // Sort entries by start date
+            housingEntries.sort((a, b) => {
+                const dateA = new Date(a.startYear, a.startMonth - 1, 1);
+                const dateB = new Date(b.startYear, b.startMonth - 1, 1);
+                return dateA - dateB;
+            });
+            
+            // Create entry elements
+            housingEntries.forEach(entry => {
+                const entryElement = document.createElement('div');
+                entryElement.className = 'housing-entry';
+                entryElement.style.border = '1px solid var(--border)';
+                entryElement.style.borderRadius = '0.5rem';
+                entryElement.style.padding = '1rem';
+                entryElement.style.marginBottom = '1rem';
+                entryElement.style.position = 'relative';
+                
+                // Format months as names
+                const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                const startMonthName = monthNames[entry.startMonth - 1];
+                const endMonthName = monthNames[entry.endMonth - 1];
+                
+                // Format currency
+                const formatCurrencyValue = value => '$' + value.toLocaleString('en-US');
+                
+                entryElement.innerHTML = `
+                    <div style="margin-bottom: 0.5rem; font-weight: 600; color: var(--primary);">
+                        ${startMonthName} ${entry.startYear} - ${endMonthName} ${entry.endYear}
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                        <span>Rent:</span>
+                        <span>${formatCurrencyValue(entry.rent)}/month</span>
+                    </div>
+                    ${!entry.utilitiesIncluded && entry.utilities > 0 ? `
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                            <span>Utilities:</span>
+                            <span>${formatCurrencyValue(entry.utilities)}/month</span>
+                        </div>
+                    ` : ''}
+                    ${entry.wifi > 0 ? `
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                            <span>WiFi:</span>
+                            <span>${formatCurrencyValue(entry.wifi)}/month</span>
+                        </div>
+                    ` : ''}
+                    <button class="remove-entry-button" onclick="removeHousingEntry(${entry.id})" style="position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; cursor: pointer; color: #666; font-size: 1.2rem;">×</button>
+                `;
+                
+                container.appendChild(entryElement);
+            });
+        }
+
+        function removeHousingEntry(id) {
+            housingEntries = housingEntries.filter(entry => entry.id !== id);
+            updateHousingEntriesList();
+            
+            // Show removal message
+            const message = document.createElement('div');
+            message.className = 'success-message';
+            message.textContent = 'Housing entry removed';
+            document.body.appendChild(message);
+            setTimeout(() => message.remove(), 3000);
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorMessage = document.createElement('div');
+            errorMessage.className = 'error-message';
+            errorMessage.textContent = message;
+            document.body.appendChild(errorMessage);
+            setTimeout(() => errorMessage.remove(), 3000);
+        }
+
+        // Modify form validation to check for housing entries
+        function validateStep3() {
+            const enrolledMonths = Array.from(document.querySelectorAll('input[name="enrolledMonths"]:checked'))
+                .map(checkbox => parseInt(checkbox.value));
+
+            if (enrolledMonths.length === 0) {
+                showError('Please select at least one enrolled month');
+                return false;
+            }
+            
+            if (housingEntries.length === 0) {
+                showError('Please add at least one housing entry');
+                return false;
+            }
+
+            return true;
+        }
+
+        // Update submitForm to use the housing entries
+        async function submitForm() {
+            console.log('===== FORM SUBMISSION STARTED =====');
+            const submitBtn = document.getElementById('submitBtn');
+            const spinner = document.getElementById('spinner');
+            const modal = document.getElementById('onboardingModal');
+            
+            try {
+                console.log('1. Disabling all buttons and showing spinner');
+                // Disable all form elements in the modal
+                const allInputs = modal.querySelectorAll('input');
+                const allButtons = modal.querySelectorAll('button');
+                const allSelects = modal.querySelectorAll('.select-selected');
+                
+                // Disable all inputs
+                allInputs.forEach(input => {
+                    input.disabled = true;
+                    input.style.opacity = '0.7';
+                    input.style.cursor = 'not-allowed';
+                });
+                
+                // Disable all buttons
+                allButtons.forEach(button => {
+                    button.disabled = true;
+                    button.style.opacity = '0.7';
+                    button.style.cursor = 'not-allowed';
+                });
+                
+                // Disable all selects
+                allSelects.forEach(select => {
+                    select.style.pointerEvents = 'none';
+                    select.style.opacity = '0.7';
+                    select.style.cursor = 'not-allowed';
+                });
+                
+                submitBtn.disabled = true;
+                spinner.style.display = 'block';
+                
+                // Validate step 3
+                console.log('2. Starting step 3 validation');
+                const step3Valid = await validateStep3();
+                console.log('Step 3 validation result:', step3Valid);
+                
+                if (!step3Valid) {
+                    console.log('Step 3 validation failed, returning');
+                    // Re-enable all elements if validation fails
+                    allInputs.forEach(input => {
+                        input.disabled = false;
+                        input.style.opacity = '1';
+                        input.style.cursor = 'auto';
+                    });
+                    
+                    allButtons.forEach(button => {
+                        button.disabled = false;
+                        button.style.opacity = '1';
+                        button.style.cursor = 'pointer';
+                    });
+                    
+                    allSelects.forEach(select => {
+                        select.style.pointerEvents = 'auto';
+                        select.style.opacity = '1';
+                        select.style.cursor = 'pointer';
+                    });
+                    
+                    submitBtn.disabled = false;
+                    spinner.style.display = 'none';
+                    return;
+                }
+                
+                // Get form values
+                console.log('3. Getting form values');
+                const firstName = document.getElementById('firstName').value;
+                const lastName = document.getElementById('lastName').value;
+                const dateOfBirth = document.getElementById('dateOfBirth').value;
+                const school = document.getElementById('school').value;
+                const state = document.getElementById('state').value;
+                const income = document.getElementById('income').value.replace(/[^\d]/g, '');
+                const enrolledMonths = Array.from(document.querySelectorAll('input[name="enrolledMonths"]:checked'))
+                    .map(checkbox => parseInt(checkbox.value));
+                
+                // Use the first housing entry's rent for profile data (for backward compatibility)
+                const firstHousing = housingEntries[0] || { rent: 0 };
+                const rent = firstHousing.rent.toString();
+
+                console.log('Form values collected:', {
+                    firstName,
+                    lastName,
+                    dateOfBirth,
+                    school,
+                    state,
+                    income,
+                    rent,
+                    enrolledMonths,
+                    housingEntries
+                });
+
+                // Calculate benefit amount using all housing entries
+                const benefit = calculateBenefitWithMultipleHousing(state, income, enrolledMonths, housingEntries);
+                
+                console.log('Calculated benefit:', benefit);
+                
+                // Show congratulations modal with the calculated benefit
+                showCongratulationsModal(benefit);
+
+                // Store data in localStorage first
+                localStorage.setItem('monthlyRent', rent);
+                localStorage.setItem('state', state);
+                localStorage.setItem('income', income);
+                localStorage.setItem('accountStatus', 'ACTIVE');
+                localStorage.setItem('progressPercentage', '33');
+
+                // Get auth token
+                console.log('4. Getting auth token');
+                const authToken = localStorage.getItem('authToken');
+                if (!authToken) {
+                    console.error('No auth token found in localStorage');
+                    throw new Error('No authentication token found');
+                }
+                console.log('Auth token found');
+
+                // First, update the user profile
+                console.log('5. Updating user profile');
+                
+                const profileData = {
+                    firstName,
+                    lastName,
+                    dateOfBirth,
+                    school,
+                    state,
+                    income,
+                    monthlyRent: rent,
+                    progressPercentage: 33,
+                    totalPotentialBenefit: benefit,
+                    accountStatus: 'ACTIVE'  // Update account status from PENDING_INFO to ACTIVE
+                };
+                console.log('Profile update payload:', profileData);
+
+                const profileResponse = await fetch('https://jmqfabgm02.execute-api.us-east-2.amazonaws.com/update-profile', {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(profileData)
+                });
+
+                console.log('Profile update response status:', profileResponse.status);
+                if (!profileResponse.ok) {
+                    const errorText = await profileResponse.text();
+                    console.error('Profile update failed:', errorText);
+                    throw new Error(`Failed to update profile: ${errorText}`);
+                }
+                console.log('Profile updated successfully');
+
+                // Then, create the expenses using the housing entries
+                console.log('6. Creating onboarding expenses from housing entries');
+                await addHousingEntryExpenses(housingEntries, enrolledMonths);
+                console.log('Expenses created successfully');
+
+                // Hide the modal
+                console.log('7. Hiding onboarding modal');
+                hideOnboardingModal();
+                
+                // The redirect will be handled by the congratulations modal close button
+
+            } catch (error) {
+                console.error('Error in form submission:', error);
+                console.error('Error stack:', error.stack);
+                
+                // Show error message
+                const errorMessage = document.createElement('div');
+                errorMessage.className = 'error-message';
+                errorMessage.textContent = 'Error submitting form. Please try again.';
+                document.body.appendChild(errorMessage);
+                setTimeout(() => errorMessage.remove(), 3000);
+                
+            } finally {
+                console.log('8. Resetting button state');
+                // Reset button state
+                submitBtn.disabled = false;
+                spinner.style.display = 'none';
+            }
+        }
+
+        // Function to add expenses from housing entries
+        async function addHousingEntryExpenses(housingEntries, enrolledMonths) {
+            console.log('===== ADDING HOUSING EXPENSES =====');
+            const currentYear = new Date().getFullYear();
+            
+            try {
+                // Create expenses for all months based on housing entries
+                for (let month = 1; month <= 12; month++) {
+                    // Check if this month is enrolled
+                    const isEnrolled = enrolledMonths.includes(month);
+                    const isQualified = isEnrolled;
+                    const baseNotes = isEnrolled ? 'Onboarding expense' : 'Not qualified expense because not enrolled as a student';
+                    
+                    // Find which housing entry covers this month
+                    const applicableEntry = housingEntries.find(entry => {
+                        const startDate = new Date(entry.startYear, entry.startMonth - 1, 1);
+                        const endDate = new Date(entry.endYear, entry.endMonth - 1, 1);
+                        const thisMonth = new Date(currentYear, month - 1, 1);
+                        
+                        return thisMonth >= startDate && thisMonth < endDate;
+                    });
+                    
+                    // Skip if no housing entry covers this month
+                    if (!applicableEntry) {
+                        continue;
+                    }
+                    
+                    // Create expenses based on the applicable housing entry
+                    if (applicableEntry.rent > 0) {
+                        console.log(`Creating rent expense for month ${month}`);
+                        const rentExpenseData = {
+                            date: new Date(currentYear, month - 1, 1),
+                            category: 'Rent',
+                            amount: applicableEntry.rent,
+                            notes: baseNotes,
+                            isQualified: isQualified
+                        };
+                        console.log('Rent expense data:', rentExpenseData);
+                        await createExpense(rentExpenseData);
+                    }
+
+                    // Create utilities expense if not included in rent and amount is not 0
+                    if (!applicableEntry.utilitiesIncluded && applicableEntry.utilities > 0) {
+                        console.log(`Creating utilities expense for month ${month}`);
+                        const utilitiesExpenseData = {
+                            date: new Date(currentYear, month - 1, 1),
+                            category: 'Utilities',
+                            amount: applicableEntry.utilities,
+                            notes: baseNotes,
+                            isQualified: isQualified
+                        };
+                        console.log('Utilities expense data:', utilitiesExpenseData);
+                        await createExpense(utilitiesExpenseData);
+                    }
+
+                    // Create WiFi expense if amount is not 0
+                    if (applicableEntry.wifi > 0) {
+                        console.log(`Creating WiFi expense for month ${month}`);
+                        const wifiExpenseData = {
+                            date: new Date(currentYear, month - 1, 1),
+                            category: 'WiFi',
+                            amount: applicableEntry.wifi,
+                            notes: baseNotes,
+                            isQualified: isQualified
+                        };
+                        console.log('WiFi expense data:', wifiExpenseData);
+                        await createExpense(wifiExpenseData);
+                    }
+                }
+            } catch (error) {
+                console.error('Error in addHousingEntryExpenses:', error);
+                console.error('Error stack:', error.stack);
+                throw error;
+            }
+        }
+
+        // Function to calculate benefit with multiple housing entries
+        function calculateBenefitWithMultipleHousing(state, income, enrolledMonths, housingEntries) {
+            const currentYear = new Date().getFullYear();
+            
+            // Calculate total qualified expenses for the year
+            let totalQualifiedExpenses = 0;
+            const monthlyGrocery = 325; // Fixed amount for groceries
+            
+            // For each month, check if it's enrolled and has housing
+            for (let month = 1; month <= 12; month++) {
+                // Skip if not enrolled this month
+                if (!enrolledMonths.includes(month)) {
+                    continue;
+                }
+                
+                // Add grocery expense for enrolled months
+                totalQualifiedExpenses += monthlyGrocery;
+                
+                // Find applicable housing entry for this month
+                const applicableEntry = housingEntries.find(entry => {
+                    const startDate = new Date(entry.startYear, entry.startMonth - 1, 1);
+                    const endDate = new Date(entry.endYear, entry.endMonth - 1, 1);
+                    const thisMonth = new Date(currentYear, month - 1, 1);
+                    
+                    return thisMonth >= startDate && thisMonth < endDate;
+                });
+                
+                // If housing applies for this month, add those expenses
+                if (applicableEntry) {
+                    totalQualifiedExpenses += applicableEntry.rent;
+                    
+                    if (!applicableEntry.utilitiesIncluded) {
+                        totalQualifiedExpenses += applicableEntry.utilities;
+                    }
+                    
+                    totalQualifiedExpenses += applicableEntry.wifi;
+                }
+            }
+            
+            // Get state-specific deductions and tax info
+            const stateTaxDeduction = statePersonalExemptionDB[state]?.amount || 0;
+            const stateDeduction = state529DB[state]?.deduction || 0;
+            const taxableStateIncome = Number(income) - stateTaxDeduction;
+            const taxRate = calculateStateTaxRate(taxableStateIncome, state);
+            
+            // Calculate deductible amount
+            const deductibleAmount = Math.min(
+                totalQualifiedExpenses,  // Actual expenses during enrolled months
+                stateDeduction,  // State's max deduction
+                taxableStateIncome  // Limit to income if it's less than the deduction
+            );
+            const taxespaid = taxRate * taxableStateIncome;
+            
+            // Calculate benefit based on state rules
+            let benefit;
+            if (state === 'IN') {
+                const contributionCredit = deductibleAmount * 0.20;
+                benefit = Math.min(contributionCredit, 1500, taxespaid);
+            } else if (state === 'OR') {
+                benefit = 180;
+            } else if (state === 'MN') {
+                if (income < 88810) {
+                    benefit = Math.min(500, taxespaid, .5*totalQualifiedExpenses);
+                } else {
+                    benefit = 0;
+                }
+            } else {
+                benefit = Math.min(deductibleAmount * taxRate, taxespaid);
+            }
+            return benefit;
+        }
+
+        // Initialize the step 3 housing button and events
+        document.addEventListener('DOMContentLoaded', function() {
+            // Make sure the year dropdowns for housing info are populated
+            populateYearDropdowns();
+            
+            // Add event listener for the Add Housing Information button
+            document.getElementById('addHousingButton').addEventListener('click', openHousingModal);
+            
+            // Initialize the housing entries list
+            updateHousingEntriesList();
+            
+            // Add currency formatting to housing input fields
+            const housingRentInput = document.getElementById('monthlyRent');
+            const housingUtilitiesInput = document.getElementById('utilities');
+            const housingWifiInput = document.getElementById('wifi');
+            
+            if (housingRentInput) {
+                housingRentInput.addEventListener('input', function() {
+                    formatCurrency(this);
+                });
+            }
+            
+            if (housingUtilitiesInput) {
+                housingUtilitiesInput.addEventListener('input', function() {
+                    formatCurrency(this);
+                });
+            }
+            
+            if (housingWifiInput) {
+                housingWifiInput.addEventListener('input', function() {
+                    formatCurrency(this);
+                });
+            }
+        });
     </script>
     
     <script>
@@ -4793,6 +5427,9 @@ const statePersonalExemptionDB = {
             }
         }
     </script>
+    
+    <!-- Include housing system -->
+    <script src="housing.js"></script>
 </body>
 </html>
 
