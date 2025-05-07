@@ -412,7 +412,6 @@
         .tab-content {
             display: none;
             animation: fadeIn 0.3s ease-in-out;
-            scroll-margin-top: 100px; /* Add space for fixed header when scrolling */
         }
 
         @keyframes fadeIn {
@@ -2647,35 +2646,23 @@
 
         // Tab switching functionality
         function showTab(tabName) {
-            // Hide all tab content
-            const tabContents = document.querySelectorAll('.tab-content');
-            tabContents.forEach(content => {
-                content.style.display = 'none';
+            // Hide all tab content first
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.style.display = 'none';
             });
-
-            // Show selected tab content
-            const selectedTab = document.getElementById(tabName);
-            if (selectedTab) {
-                selectedTab.style.display = 'block';
-                
-                // Only scroll on mobile devices (screen width less than 768px)
-                if (window.innerWidth < 768) {
-                    // Add a small delay to ensure the content is visible before scrolling
-                    setTimeout(() => {
-                        selectedTab.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }, 100);
-                }
-            }
-
-            // Update active state of tab buttons
-            const tabButtons = document.querySelectorAll('.tab-button');
-            tabButtons.forEach(button => {
-                if (button.getAttribute('onclick').includes(tabName)) {
-                    button.classList.add('active');
-                } else {
-                    button.classList.remove('active');
-                }
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
             });
+            
+            // Show the selected tab content
+            document.getElementById(tabName + '-tab').style.display = 'block';
+            
+            // Add active class to the clicked button
+            document.querySelector(`[onclick="showTab('${tabName}')"]`).classList.add('active');
+            
+            // No longer auto-expanding any sections
         }
 
         // Remove any default active states when the page loads
