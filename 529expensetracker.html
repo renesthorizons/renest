@@ -3385,7 +3385,21 @@
             // Update withdrawal status message
             const withdrawalStatus = document.getElementById('withdrawal-status');
             if (withdrawalStatus) {
-                if (projections.ytdQualified > projections.totalWithdrawals && projections.currentBalance < (projections.ytdQualified - projections.totalWithdrawals)) {
+                // Get the user profile from localStorage if available
+                let userProfile;
+                try {
+                    userProfile = JSON.parse(localStorage.getItem('userProfile'));
+                } catch (e) {
+                    userProfile = null;
+                }
+                
+                // Check if progressPercentage is 90
+                const isProgressNinety = userProfile && userProfile.progressPercentage === 90;
+                
+                if (projections.ytdQualified > projections.totalWithdrawals && 
+                    projections.currentBalance < (projections.ytdQualified - projections.totalWithdrawals) && 
+                    !isProgressNinety) {
+                    // Only show deposit message if progressPercentage is not 90
                     withdrawalStatus.style.background = '#FEE2E2';
                     withdrawalStatus.style.color = '#DC2626';
                     withdrawalStatus.innerHTML = `⚠️ You need to deposit ${formatCurrency(projections.ytdQualified - projections.totalWithdrawals - projections.currentBalance)} into your 529 account to cover your qualified expenses.`;
