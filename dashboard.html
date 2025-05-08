@@ -5384,8 +5384,6 @@ const statePersonalExemptionDB = {
                     buttonContainer.style.right = '0.75rem';
                     buttonContainer.style.display = 'flex';
                     buttonContainer.style.gap = '0.5rem'; // Ensure there's space between buttons
-                    buttonContainer.style.flexDirection = 'row'; // Explicitly set to row
-                    buttonContainer.style.width = 'auto'; // Allow container to size based on content
                     
                     // Add edit button
                     const editButton = document.createElement('button');
@@ -5400,29 +5398,12 @@ const statePersonalExemptionDB = {
                     editButton.style.fontSize = '0.8rem';
                     editButton.style.width = 'auto'; // Ensure width is based on content
                     editButton.style.minWidth = '50px'; // Minimum width
-                    editButton.style.display = 'block'; // Ensure button is block-level
-                    editButton.style.marginRight = '0.5rem'; // Add right margin
                     editButton.textContent = 'Edit';
                     
-                    // Add delete button
-                    const deleteButton = document.createElement('button');
-                    deleteButton.className = 'remove-entry-button';
-                    deleteButton.onclick = function() { removeHousingEntryDirect(entry.id); };
-                    deleteButton.style.backgroundColor = '#f44336';
-                    deleteButton.style.color = 'white';
-                    deleteButton.style.border = 'none';
-                    deleteButton.style.borderRadius = '0.25rem';
-                    deleteButton.style.padding = '0.25rem 0.5rem';
-                    deleteButton.style.cursor = 'pointer';
-                    deleteButton.style.fontSize = '0.8rem';
-                    deleteButton.style.width = 'auto'; // Ensure width is based on content
-                    deleteButton.style.minWidth = '50px'; // Minimum width
-                    deleteButton.style.display = 'block'; // Ensure button is block-level
-                    deleteButton.textContent = 'Delete';
-                    
-                    // Add buttons to container
+                    // Add button to container
                     buttonContainer.appendChild(editButton);
-                    buttonContainer.appendChild(deleteButton);
+                    
+                    // Remove the delete button - we'll add it to the edit modal instead
                     
                     // Assemble the housing entry element
                     entryElement.appendChild(dateHeader);
@@ -5435,6 +5416,7 @@ const statePersonalExemptionDB = {
             
             console.log('Loaded', window.housingEntries.length, 'housing entries');
         }
+        
         // Fix the Save button
         function fixSaveHousingButton() {
             console.log('Fixing Save Housing Button');
@@ -5798,6 +5780,35 @@ const statePersonalExemptionDB = {
                         saveButton.onclick = null;
                     }
                 };
+            }
+            
+            // Add delete button to the button container when in edit mode
+            const buttonContainer = modal.querySelector('.button-container');
+            if (buttonContainer) {
+                // Remove any existing delete button first to avoid duplicates
+                const existingDeleteBtn = buttonContainer.querySelector('.delete-housing-btn');
+                if (existingDeleteBtn) {
+                    existingDeleteBtn.remove();
+                }
+                
+                // Create delete button
+                const deleteButton = document.createElement('button');
+                deleteButton.className = 'button button-secondary delete-housing-btn';
+                deleteButton.style.backgroundColor = '#f44336';
+                deleteButton.style.color = 'white';
+                deleteButton.style.marginRight = 'auto'; // Push it to the left
+                deleteButton.textContent = 'Delete Lease';
+                
+                // Add click handler
+                deleteButton.onclick = function() {
+                    if (confirm('Are you sure you want to delete this housing entry?')) {
+                        removeHousingEntryDirect(id);
+                        modal.classList.add('hidden');
+                    }
+                };
+                
+                // Insert the delete button at the beginning of the container
+                buttonContainer.insertBefore(deleteButton, buttonContainer.firstChild);
             }
             
             // Show the modal
