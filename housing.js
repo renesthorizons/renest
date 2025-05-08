@@ -1,7 +1,7 @@
 // Array to store housing entries
 // Check if housingEntries is already defined to avoid redeclaration
-if (typeof housingEntries === 'undefined') {
-    var housingEntries = [];
+if (typeof window.housingEntries === 'undefined') {
+    window.housingEntries = [];
 }
 
 // Debug function to help diagnose housing modal issues
@@ -246,20 +246,20 @@ function saveHousingInfo() {
     
     if (isEditMode) {
         // Find and update the existing entry
-        const entryIndex = housingEntries.findIndex(entry => entry.id === parseInt(editEntryId));
+        const entryIndex = window.housingEntries.findIndex(entry => entry.id === parseInt(editEntryId));
         if (entryIndex !== -1) {
             // Check if the updated entry would overlap with others
-            const otherEntries = housingEntries.filter((_, index) => index !== entryIndex);
+            const otherEntries = window.housingEntries.filter((_, index) => index !== entryIndex);
             if (hasOverlappingPeriodsWithEntries(startMonth, startYear, endMonth, endYear, otherEntries)) {
                 showError('This edited housing period would overlap with another entry');
                 return;
             }
             
-            housingEntries[entryIndex] = housingEntry;
+            window.housingEntries[entryIndex] = housingEntry;
         }
     } else {
         // Add as new entry
-        housingEntries.push(housingEntry);
+        window.housingEntries.push(housingEntry);
     }
     
     // Update UI
@@ -277,7 +277,7 @@ function saveHousingInfo() {
 }
 
 function hasOverlappingPeriods(startMonth, startYear, endMonth, endYear) {
-    return hasOverlappingPeriodsWithEntries(startMonth, startYear, endMonth, endYear, housingEntries);
+    return hasOverlappingPeriodsWithEntries(startMonth, startYear, endMonth, endYear, window.housingEntries);
 }
 
 function hasOverlappingPeriodsWithEntries(startMonth, startYear, endMonth, endYear, entries) {
@@ -295,7 +295,7 @@ function hasOverlappingPeriodsWithEntries(startMonth, startYear, endMonth, endYe
 }
 
 function editHousingEntry(id) {
-    const entry = housingEntries.find(entry => entry.id === id);
+    const entry = window.housingEntries.find(entry => entry.id === id);
     if (entry) {
         openHousingModal(entry);
     }
@@ -314,14 +314,14 @@ function updateHousingEntriesList() {
     container.innerHTML = '';
     
     // Sort entries by start date
-    housingEntries.sort((a, b) => {
+    window.housingEntries.sort((a, b) => {
         const dateA = new Date(a.startYear, a.startMonth - 1, 1);
         const dateB = new Date(b.startYear, b.startMonth - 1, 1);
         return dateA - dateB;
     });
     
     // Create entry elements
-    housingEntries.forEach(entry => {
+    window.housingEntries.forEach(entry => {
         const entryElement = document.createElement('div');
         entryElement.className = 'housing-entry';
         entryElement.style.border = '1px solid var(--border)';
@@ -402,7 +402,7 @@ function getUncoveredMonths(year) {
         const thisMonth = new Date(year, month - 1, 1);
         
         // Check if this month is covered by any housing entry
-        const isCovered = housingEntries.some(entry => {
+        const isCovered = window.housingEntries.some(entry => {
             const startDate = new Date(entry.startYear, entry.startMonth - 1, 1);
             const endDate = new Date(entry.endYear, entry.endMonth - 1, 1);
             return thisMonth >= startDate && thisMonth < endDate;
@@ -417,7 +417,7 @@ function getUncoveredMonths(year) {
 }
 
 function removeHousingEntry(id) {
-    housingEntries = housingEntries.filter(entry => entry.id !== id);
+    window.housingEntries = window.housingEntries.filter(entry => entry.id !== id);
     updateHousingEntriesList();
     
     // Show removal message
@@ -438,7 +438,7 @@ function validateHousingStep3() {
         return false;
     }
     
-    if (housingEntries.length === 0) {
+    if (window.housingEntries.length === 0) {
         showError('Please add at least one housing entry');
         return false;
     }

@@ -3705,7 +3705,7 @@ const statePersonalExemptionDB = {
                     .map(checkbox => parseInt(checkbox.value));
                 
                 // Use the first housing entry's rent for profile data (for backward compatibility)
-                const firstHousing = housingEntries[0] || { rent: 0 };
+                const firstHousing = window.housingEntries[0] || { rent: 0 };
                 const rent = firstHousing.rent.toString();
 
                 console.log('Form values collected:', {
@@ -3717,11 +3717,11 @@ const statePersonalExemptionDB = {
                     income,
                     rent,
                     enrolledMonths,
-                    housingEntries
+                    housingEntries: window.housingEntries
                 });
 
-                // Calculate benefit amount using housing entries
-                const benefit = calculateBenefitWithMultipleHousing(state, income, enrolledMonths, housingEntries);
+                // Calculate benefit amount using all housing entries
+                const benefit = calculateBenefitWithMultipleHousing(state, income, enrolledMonths, window.housingEntries);
                 
                 console.log('Calculated benefit:', benefit);
                 
@@ -3780,7 +3780,7 @@ const statePersonalExemptionDB = {
 
                 // Then, create the expenses using the housing entries
                 console.log('6. Creating onboarding expenses from housing entries');
-                await addHousingEntryExpenses(housingEntries, enrolledMonths);
+                await addHousingEntryExpenses(window.housingEntries, enrolledMonths);
                 console.log('Expenses created successfully');
 
                 // Hide the modal
@@ -3816,7 +3816,7 @@ const statePersonalExemptionDB = {
             try {
                 // Use the housing.js function to add housing expenses
                 // This expects housingEntries to be available from housing.js
-                await addHousingEntryExpenses(housingEntries, enrolledMonths);
+                await addHousingEntryExpenses(window.housingEntries, enrolledMonths);
                 
             } catch (error) {
                 console.error('Error in addOnboardingExpenses:', error);
@@ -4557,7 +4557,10 @@ const statePersonalExemptionDB = {
                             <span>${formatCurrencyValue(entry.wifi)}/month</span>
                         </div>
                     ` : ''}
-                    <button class="remove-entry-button" onclick="removeHousingEntry(${entry.id})" style="position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; cursor: pointer; color: #666; font-size: 1.2rem;">×</button>
+                    <div style="position: absolute; top: 0.5rem; right: 0.5rem; display: flex; gap: 0.5rem;">
+                        <button class="edit-entry-button" onclick="editHousingEntryDirect(${entry.id})" style="background: none; border: none; cursor: pointer; color: var(--primary); font-size: 0.9rem;">Edit</button>
+                        <button class="remove-entry-button" onclick="removeHousingEntryDirect(${entry.id})" style="background: none; border: none; cursor: pointer; color: #666; font-size: 1.2rem;">×</button>
+                    </div>
                 `;
                 
                 container.appendChild(entryElement);
@@ -4672,7 +4675,7 @@ const statePersonalExemptionDB = {
                     .map(checkbox => parseInt(checkbox.value));
                 
                 // Use the first housing entry's rent for profile data (for backward compatibility)
-                const firstHousing = housingEntries[0] || { rent: 0 };
+                const firstHousing = window.housingEntries[0] || { rent: 0 };
                 const rent = firstHousing.rent.toString();
 
                 console.log('Form values collected:', {
@@ -4684,11 +4687,11 @@ const statePersonalExemptionDB = {
                     income,
                     rent,
                     enrolledMonths,
-                    housingEntries
+                    housingEntries: window.housingEntries
                 });
 
                 // Calculate benefit amount using all housing entries
-                const benefit = calculateBenefitWithMultipleHousing(state, income, enrolledMonths, housingEntries);
+                const benefit = calculateBenefitWithMultipleHousing(state, income, enrolledMonths, window.housingEntries);
                 
                 console.log('Calculated benefit:', benefit);
                 
@@ -4747,7 +4750,7 @@ const statePersonalExemptionDB = {
 
                 // Then, create the expenses using the housing entries
                 console.log('6. Creating onboarding expenses from housing entries');
-                await addHousingEntryExpenses(housingEntries, enrolledMonths);
+                await addHousingEntryExpenses(window.housingEntries, enrolledMonths);
                 console.log('Expenses created successfully');
 
                 // Hide the modal
@@ -5436,7 +5439,10 @@ const statePersonalExemptionDB = {
                                 <span>${formatCurrency(entry.wifi)}/month</span>
                             </div>
                         ` : ''}
-                        <button class="remove-entry-button" onclick="removeHousingEntryDirect(${entry.id})" style="position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; cursor: pointer; color: #666; font-size: 1.2rem;">×</button>
+                        <div style="position: absolute; top: 0.5rem; right: 0.5rem; display: flex; gap: 0.5rem;">
+                            <button class="edit-entry-button" onclick="editHousingEntryDirect(${entry.id})" style="background: none; border: none; cursor: pointer; color: var(--primary); font-size: 0.9rem;">Edit</button>
+                            <button class="remove-entry-button" onclick="removeHousingEntryDirect(${entry.id})" style="background: none; border: none; cursor: pointer; color: #666; font-size: 1.2rem;">×</button>
+                        </div>
                     `;
                     
                     container.appendChild(entryElement);
@@ -5605,6 +5611,148 @@ const statePersonalExemptionDB = {
             fixAddHousingButton();
             fixSaveHousingButton();
             fixCloseButton();
+        }
+    </script>
+
+    <script>
+        // Use window.housingEntries to avoid redeclaration with housing.js
+        if (typeof window.housingEntries === 'undefined') {
+            window.housingEntries = [];
+        }
+        
+        // Function to directly validate housing in step 3
+        function validateHousingStep3() {
+            const enrolledMonths = Array.from(document.querySelectorAll('input[name="enrolledMonths"]:checked'))
+                .map(checkbox => parseInt(checkbox.value));
+
+            if (enrolledMonths.length === 0) {
+                const errorMessage = document.createElement('div');
+                errorMessage.className = 'error-message';
+                errorMessage.textContent = 'Please select at least one enrolled month';
+                document.body.appendChild(errorMessage);
+                setTimeout(() => errorMessage.remove(), 3000);
+                return false;
+            }
+            
+            if (window.housingEntries.length === 0) {
+                const errorMessage = document.createElement('div');
+                errorMessage.className = 'error-message';
+                errorMessage.textContent = 'Please add at least one housing entry';
+                document.body.appendChild(errorMessage);
+                setTimeout(() => errorMessage.remove(), 3000);
+                return false;
+            }
+
+            return true;
+        }
+        
+        // Function to edit a housing entry
+        window.editHousingEntryDirect = function(id) {
+            console.log('Editing housing entry with ID:', id);
+            
+            if (!window.housingEntries) {
+                console.error('No housing entries array found');
+                return;
+            }
+            
+            const entry = window.housingEntries.find(entry => entry.id === id);
+            if (!entry) {
+                console.error('Housing entry not found with ID:', id);
+                return;
+            }
+            
+            // Get the modal and form elements
+            const modal = document.getElementById('housingModal');
+            const modalTitle = document.getElementById('housingModalTitle');
+            
+            // Set modal title to indicate editing
+            if (modalTitle) {
+                modalTitle.textContent = 'Edit Housing Information';
+            }
+            
+            // Populate form fields with entry data
+            document.getElementById('leaseStartMonth').value = entry.startMonth;
+            document.getElementById('leaseStartYear').value = entry.startYear;
+            document.getElementById('leaseEndMonth').value = entry.endMonth;
+            document.getElementById('leaseEndYear').value = entry.endYear;
+            document.getElementById('monthlyRent').value = entry.rent;
+            document.getElementById('utilities').value = entry.utilities;
+            document.getElementById('wifi').value = entry.wifi;
+            document.getElementById('utilitiesIncluded').checked = entry.utilitiesIncluded;
+            
+            // Store the ID of the entry being edited
+            modal.dataset.editEntryId = id;
+            
+            // Change save button text if it exists
+            const saveButton = document.getElementById('saveHousingBtn');
+            if (saveButton) {
+                saveButton.textContent = 'Update Housing Info';
+                
+                // Modify the save button to update instead of add
+                saveButton.onclick = function() {
+                    // Get all form values
+                    const startMonth = parseInt(document.getElementById('leaseStartMonth').value);
+                    const startYear = parseInt(document.getElementById('leaseStartYear').value);
+                    const endMonth = parseInt(document.getElementById('leaseEndMonth').value);
+                    const endYear = parseInt(document.getElementById('leaseEndYear').value);
+                    const rent = document.getElementById('monthlyRent').value.replace(/[^\d]/g, '') || '0';
+                    const utilities = document.getElementById('utilities').value.replace(/[^\d]/g, '') || '0';
+                    const wifi = document.getElementById('wifi').value.replace(/[^\d]/g, '') || '0';
+                    const utilitiesIncluded = document.getElementById('utilitiesIncluded').checked;
+                    
+                    // Validate inputs
+                    if (parseInt(rent) === 0) {
+                        alert('Please enter a valid rent amount');
+                        return;
+                    }
+                    
+                    // Validate dates
+                    const startDate = new Date(startYear, startMonth - 1, 1);
+                    const endDate = new Date(endYear, endMonth - 1, 1);
+                    
+                    if (endDate <= startDate) {
+                        alert('Lease end date must be after start date');
+                        return;
+                    }
+                    
+                    // Update the entry
+                    const entryIndex = window.housingEntries.findIndex(entry => entry.id === id);
+                    if (entryIndex !== -1) {
+                        window.housingEntries[entryIndex] = {
+                            id: id,
+                            startMonth,
+                            startYear,
+                            endMonth,
+                            endYear,
+                            rent: parseFloat(rent),
+                            utilities: parseFloat(utilities),
+                            wifi: parseFloat(wifi),
+                            utilitiesIncluded
+                        };
+                        
+                        // Close modal
+                        modal.classList.add('hidden');
+                        
+                        // Show success message
+                        alert('Housing information updated successfully!');
+                        
+                        // Update the UI
+                        loadExistingHousingEntries();
+                        
+                        // Reset the save button to normal
+                        saveButton.textContent = 'Save Housing Info';
+                        saveButton.onclick = null;
+                    }
+                };
+            }
+            
+            // Show the modal
+            modal.classList.remove('hidden');
+        };
+        
+        // Modify the validateStep3 function to use our local implementation
+        function validateStep3() {
+            return validateHousingStep3();
         }
     </script>
 </body>
