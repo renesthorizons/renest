@@ -5325,96 +5325,112 @@ const statePersonalExemptionDB = {
             
             // Update the UI to display the entries
             const container = document.getElementById('housingEntriesContainer');
-            if (container && window.housingEntries.length > 0) {
-                // Clear container
-                container.innerHTML = '';
-                
-                // Sort entries by start date
-                window.housingEntries.sort((a, b) => {
-                    const dateA = new Date(a.startYear, a.startMonth - 1, 1);
-                    const dateB = new Date(b.startYear, b.startMonth - 1, 1);
-                    return dateA - dateB;
-                });
-                
-                // Create entry elements for all entries
-                const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-                
-                window.housingEntries.forEach(entry => {
-                    const entryElement = document.createElement('div');
-                    entryElement.className = 'housing-entry';
-                    entryElement.style.border = '1px solid var(--border)';
-                    entryElement.style.borderRadius = '0.5rem';
-                    entryElement.style.padding = '1rem';
-                    entryElement.style.marginBottom = '1rem';
-                    entryElement.style.position = 'relative';
-                    
-                    // Format currency
-                    const formatCurrency = value => '$' + value.toLocaleString('en-US');
-                    
-                    // Create a date range header
-                    const dateHeader = document.createElement('div');
-                    dateHeader.style.marginBottom = '0.5rem';
-                    dateHeader.style.fontWeight = '600';
-                    dateHeader.style.color = 'var(--primary)';
-                    dateHeader.textContent = `${monthNames[entry.startMonth - 1]} ${entry.startYear} - ${monthNames[entry.endMonth - 1]} ${entry.endYear}`;
-                    
-                    // Create a single line for all expenses with small grey text
-                    const expenseSummary = document.createElement('div');
-                    expenseSummary.style.fontSize = '0.85rem';
-                    expenseSummary.style.color = '#666';
-                    expenseSummary.style.marginBottom = '0.5rem';
-                    
-                    // Build the expense summary text
-                    let summaryText = `Rent: ${formatCurrency(entry.rent)}/month`;
-                    
-                    if (!entry.utilitiesIncluded && entry.utilities > 0) {
-                        summaryText += ` • Utilities: ${formatCurrency(entry.utilities)}/month`;
-                    }
-                    
-                    if (entry.wifi > 0) {
-                        summaryText += ` • WiFi: ${formatCurrency(entry.wifi)}/month`;
-                    }
-                    
-                    expenseSummary.textContent = summaryText;
-                    
-                    // Create the button container with better positioning
-                    const buttonContainer = document.createElement('div');
-                    buttonContainer.style.position = 'absolute';
-                    buttonContainer.style.top = '0.75rem';
-                    buttonContainer.style.right = '0.75rem';
-                    buttonContainer.style.display = 'flex';
-                    buttonContainer.style.gap = '0.5rem'; // Ensure there's space between buttons
-                    
-                    // Add edit button
-                    const editButton = document.createElement('button');
-                    editButton.className = 'edit-entry-button';
-                    editButton.onclick = function() { editHousingEntryDirect(entry.id); };
-                    editButton.style.backgroundColor = 'var(--primary)';
-                    editButton.style.color = 'white';
-                    editButton.style.border = 'none';
-                    editButton.style.borderRadius = '0.25rem';
-                    editButton.style.padding = '0.25rem 0.5rem';
-                    editButton.style.cursor = 'pointer';
-                    editButton.style.fontSize = '0.8rem';
-                    editButton.style.width = 'auto'; // Ensure width is based on content
-                    editButton.style.minWidth = '50px'; // Minimum width
-                    editButton.textContent = 'Edit';
-                    
-                    // Add button to container
-                    buttonContainer.appendChild(editButton);
-                    
-                    // Remove the delete button - we'll add it to the edit modal instead
-                    
-                    // Assemble the housing entry element
-                    entryElement.appendChild(dateHeader);
-                    entryElement.appendChild(expenseSummary);
-                    entryElement.appendChild(buttonContainer);
-                    
-                    container.appendChild(entryElement);
-                });
+            if (!container) {
+                console.error('Housing entries container not found');
+                return;
             }
             
-            console.log('Loaded', window.housingEntries.length, 'housing entries');
+            // Always clear the container first
+            container.innerHTML = '';
+            
+            // Create and add the "no housing" message if needed
+            if (window.housingEntries.length === 0) {
+                const noHousingMessage = document.createElement('div');
+                noHousingMessage.id = 'noHousingMessage';
+                noHousingMessage.style.color = 'var(--text-dark)';
+                noHousingMessage.style.fontStyle = 'italic';
+                noHousingMessage.style.padding = '1rem';
+                noHousingMessage.style.backgroundColor = 'rgba(240, 240, 240, 0.5)';
+                noHousingMessage.style.borderRadius = '0.5rem';
+                noHousingMessage.style.textAlign = 'center';
+                noHousingMessage.textContent = ' ';
+                container.appendChild(noHousingMessage);
+                return;
+            }
+                
+            // Sort entries by start date
+            window.housingEntries.sort((a, b) => {
+                const dateA = new Date(a.startYear, a.startMonth - 1, 1);
+                const dateB = new Date(b.startYear, b.startMonth - 1, 1);
+                return dateA - dateB;
+            });
+            
+            // Create entry elements for all entries
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            
+            window.housingEntries.forEach(entry => {
+                const entryElement = document.createElement('div');
+                entryElement.className = 'housing-entry';
+                entryElement.style.border = '1px solid var(--border)';
+                entryElement.style.borderRadius = '0.5rem';
+                entryElement.style.padding = '1rem';
+                entryElement.style.marginBottom = '1rem';
+                entryElement.style.position = 'relative';
+                
+                // Format currency
+                const formatCurrency = value => '$' + value.toLocaleString('en-US');
+                
+                // Create a date range header
+                const dateHeader = document.createElement('div');
+                dateHeader.style.marginBottom = '0.5rem';
+                dateHeader.style.fontWeight = '600';
+                dateHeader.style.color = 'var(--primary)';
+                dateHeader.textContent = `${monthNames[entry.startMonth - 1]} ${entry.startYear} - ${monthNames[entry.endMonth - 1]} ${entry.endYear}`;
+                
+                // Create a single line for all expenses with small grey text
+                const expenseSummary = document.createElement('div');
+                expenseSummary.style.fontSize = '0.85rem';
+                expenseSummary.style.color = '#666';
+                expenseSummary.style.marginBottom = '0.5rem';
+                
+                // Build the expense summary text
+                let summaryText = `Rent: ${formatCurrency(entry.rent)}/month`;
+                
+                if (!entry.utilitiesIncluded && entry.utilities > 0) {
+                    summaryText += ` • Utilities: ${formatCurrency(entry.utilities)}/month`;
+                }
+                
+                if (entry.wifi > 0) {
+                    summaryText += ` • WiFi: ${formatCurrency(entry.wifi)}/month`;
+                }
+                
+                expenseSummary.textContent = summaryText;
+                
+                // Create the button container with better positioning
+                const buttonContainer = document.createElement('div');
+                buttonContainer.style.position = 'absolute';
+                buttonContainer.style.top = '0.75rem';
+                buttonContainer.style.right = '0.75rem';
+                buttonContainer.style.display = 'flex';
+                buttonContainer.style.gap = '0.5rem'; // Ensure there's space between buttons
+                
+                // Add edit button
+                const editButton = document.createElement('button');
+                editButton.className = 'edit-entry-button';
+                editButton.onclick = function() { editHousingEntryDirect(entry.id); };
+                editButton.style.backgroundColor = 'var(--primary)';
+                editButton.style.color = 'white';
+                editButton.style.border = 'none';
+                editButton.style.borderRadius = '0.25rem';
+                editButton.style.padding = '0.25rem 0.5rem';
+                editButton.style.cursor = 'pointer';
+                editButton.style.fontSize = '0.8rem';
+                editButton.style.width = 'auto'; // Ensure width is based on content
+                editButton.style.minWidth = '50px'; // Minimum width
+                editButton.textContent = 'Edit';
+                
+                // Add button to container
+                buttonContainer.appendChild(editButton);
+                
+                // Remove the delete button - we'll add it to the edit modal instead
+                
+                // Assemble the housing entry element
+                entryElement.appendChild(dateHeader);
+                entryElement.appendChild(expenseSummary);
+                entryElement.appendChild(buttonContainer);
+                
+                container.appendChild(entryElement);
+            });
         }
         
         // Fix the Save button
