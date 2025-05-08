@@ -5365,6 +5365,87 @@ const statePersonalExemptionDB = {
             console.log('Add Housing Button fixed');
         }
         
+        // Function to load and display existing housing entries
+        function loadExistingHousingEntries() {
+            console.log('Loading existing housing entries');
+            
+            // Initialize housing entries array if it doesn't exist
+            if (!window.housingEntries) {
+                window.housingEntries = [];
+            }
+            
+            // Clear any duplicate entries that might have the same date range
+            const uniqueEntries = [];
+            const dateRanges = new Set();
+            
+            window.housingEntries.forEach(entry => {
+                const dateKey = `${entry.startMonth}-${entry.startYear}-${entry.endMonth}-${entry.endYear}`;
+                if (!dateRanges.has(dateKey)) {
+                    dateRanges.add(dateKey);
+                    uniqueEntries.push(entry);
+                }
+            });
+            
+            window.housingEntries = uniqueEntries;
+            
+            // Update the UI to display the entries
+            const container = document.getElementById('housingEntriesContainer');
+            if (container && window.housingEntries.length > 0) {
+                // Clear container
+                container.innerHTML = '';
+                
+                // Sort entries by start date
+                window.housingEntries.sort((a, b) => {
+                    const dateA = new Date(a.startYear, a.startMonth - 1, 1);
+                    const dateB = new Date(b.startYear, b.startMonth - 1, 1);
+                    return dateA - dateB;
+                });
+                
+                // Create entry elements for all entries
+                const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                
+                window.housingEntries.forEach(entry => {
+                    const entryElement = document.createElement('div');
+                    entryElement.className = 'housing-entry';
+                    entryElement.style.border = '1px solid var(--border)';
+                    entryElement.style.borderRadius = '0.5rem';
+                    entryElement.style.padding = '1rem';
+                    entryElement.style.marginBottom = '1rem';
+                    entryElement.style.position = 'relative';
+                    
+                    // Format currency
+                    const formatCurrency = value => '$' + value.toLocaleString('en-US');
+                    
+                    entryElement.innerHTML = `
+                        <div style="margin-bottom: 0.5rem; font-weight: 600; color: var(--primary);">
+                            ${monthNames[entry.startMonth - 1]} ${entry.startYear} - ${monthNames[entry.endMonth - 1]} ${entry.endYear}
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                            <span>Rent:</span>
+                            <span>${formatCurrency(entry.rent)}/month</span>
+                        </div>
+                        ${!entry.utilitiesIncluded && entry.utilities > 0 ? `
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                <span>Utilities:</span>
+                                <span>${formatCurrency(entry.utilities)}/month</span>
+                            </div>
+                        ` : ''}
+                        ${entry.wifi > 0 ? `
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                <span>WiFi:</span>
+                                <span>${formatCurrency(entry.wifi)}/month</span>
+                            </div>
+                        ` : ''}
+                        <button class="remove-entry-button" onclick="removeHousingEntryDirect(${entry.id})" style="position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; cursor: pointer; color: #666; font-size: 1.2rem;">×</button>
+                    `;
+                    
+                    container.appendChild(entryElement);
+                });
+            }
+            
+            console.log('Loaded', window.housingEntries.length, 'housing entries');
+        }
+        
         // Fix the Save button
         function fixSaveHousingButton() {
             console.log('Fixing Save Housing Button');
@@ -5433,28 +5514,8 @@ const statePersonalExemptionDB = {
                 // Show success message
                 alert('Housing information added successfully!');
                 
-                // Update UI (simplified version)
-                const container = document.getElementById('housingEntriesContainer');
-                if (container) {
-                    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-                    
-                    const entryElement = document.createElement('div');
-                    entryElement.style.border = '1px solid #ccc';
-                    entryElement.style.borderRadius = '0.5rem';
-                    entryElement.style.padding = '1rem';
-                    entryElement.style.marginBottom = '1rem';
-                    
-                    entryElement.innerHTML = `
-                        <div style="font-weight: bold; margin-bottom: 0.5rem;">
-                            ${monthNames[startMonth-1]} ${startYear} - ${monthNames[endMonth-1]} ${endYear}
-                        </div>
-                        <div>Rent: $${parseFloat(rent).toLocaleString()}/month</div>
-                        ${utilities > 0 ? `<div>Utilities: $${parseFloat(utilities).toLocaleString()}/month</div>` : ''}
-                        ${wifi > 0 ? `<div>WiFi: $${parseFloat(wifi).toLocaleString()}/month</div>` : ''}
-                    `;
-                    
-                    container.appendChild(entryElement);
-                }
+                // Update the UI with the new entry list
+                loadExistingHousingEntries();
             });
             
             console.log('Save Housing Button fixed');
@@ -5480,12 +5541,49 @@ const statePersonalExemptionDB = {
             console.log('Close buttons fixed');
         }
         
+        // Function to remove a housing entry
+        window.removeHousingEntryDirect = function(id) {
+            console.log('Removing housing entry with ID:', id);
+            
+            if (!window.housingEntries) {
+                console.error('No housing entries array found');
+                return;
+            }
+            
+            // Remove the entry from the array
+            window.housingEntries = window.housingEntries.filter(entry => entry.id !== id);
+            console.log('Remaining entries:', window.housingEntries.length);
+            
+            // Update the UI with the updated entry list
+            loadExistingHousingEntries();
+            
+            // Show removal message
+            const message = document.createElement('div');
+            message.className = 'success-message';
+            message.textContent = 'Housing entry removed';
+            message.style.position = 'fixed';
+            message.style.top = '20px';
+            message.style.left = '50%';
+            message.style.transform = 'translateX(-50%)';
+            message.style.padding = '10px 20px';
+            message.style.backgroundColor = '#4CAF50';
+            message.style.color = 'white';
+            message.style.borderRadius = '4px';
+            message.style.zIndex = '1000';
+            
+            document.body.appendChild(message);
+            setTimeout(() => message.remove(), 3000);
+        };
+        
         // Run all fixes when the page is fully loaded
         window.addEventListener('load', function() {
             console.log('Window loaded - running all fixes');
             
             // Always populate year dropdowns directly
             populateYearDropdownsDirectly();
+            
+            // Load and display any existing housing entries
+            loadExistingHousingEntries();
             
             // Fix the Add Housing Button
             fixAddHousingButton();
@@ -5503,6 +5601,7 @@ const statePersonalExemptionDB = {
         if (document.readyState === 'complete' || document.readyState === 'interactive') {
             console.log('Document already ready - running fixes immediately');
             populateYearDropdownsDirectly();
+            loadExistingHousingEntries();
             fixAddHousingButton();
             fixSaveHousingButton();
             fixCloseButton();
