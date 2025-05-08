@@ -5271,54 +5271,242 @@ const statePersonalExemptionDB = {
     <!-- Include housing system -->
     <script src="housing.js"></script>
     
-    <!-- Debug script to check housing.js loading -->
+    <!-- Fix script for housing functionality -->
     <script>
         console.log('Dashboard.html loaded');
-        console.log('Checking housing.js functions:');
-        console.log('- openHousingModal exists:', typeof openHousingModal === 'function');
-        console.log('- initializeHousingSystem exists:', typeof initializeHousingSystem === 'function');
         
-        // Add a convenient global function to run housing debug
-        window.fixHousing = function() {
-            console.log('Running housing fix');
+        // Function to directly populate the year dropdowns
+        function populateYearDropdownsDirectly() {
+            console.log('Directly populating year dropdowns');
             
-            // First try the debug function if it exists
-            if (typeof debugHousingSystem === 'function') {
-                console.log('Running debug from housing.js');
-                debugHousingSystem();
-            } else {
-                console.log('Debug function not found, adding direct click handler');
-                
-                // Get the button and add a direct handler
-                const button = document.getElementById('addHousingButton');
-                if (button) {
-                    button.addEventListener('click', function() {
-                        console.log('Button clicked via fixHousing handler');
-                        
-                        // Get the modal and show it directly
-                        const modal = document.getElementById('housingModal');
-                        if (modal) {
-                            console.log('Showing modal directly');
-                            modal.classList.remove('hidden');
-                        } else {
-                            console.error('Modal not found');
-                        }
-                    });
-                    
-                    console.log('Direct handler added to button');
-                } else {
-                    console.error('Add Housing Button not found');
-                }
+            const currentYear = new Date().getFullYear();
+            const yearRange = 5; // 5 years before and after current year
+            
+            // Get the select elements
+            const leaseStartYearSelect = document.getElementById('leaseStartYear');
+            const leaseEndYearSelect = document.getElementById('leaseEndYear');
+            
+            if (!leaseStartYearSelect || !leaseEndYearSelect) {
+                console.error('Year dropdowns not found', { 
+                    startYear: !!leaseStartYearSelect, 
+                    endYear: !!leaseEndYearSelect 
+                });
+                return;
             }
             
-            return "Fix attempt complete - check console logs";
-        };
+            console.log('Found year dropdowns, populating with range:', currentYear - yearRange, 'to', currentYear + yearRange);
+            
+            // Clear existing options
+            leaseStartYearSelect.innerHTML = '';
+            leaseEndYearSelect.innerHTML = '';
+            
+            // Create options for a range of years
+            for (let year = currentYear - yearRange; year <= currentYear + yearRange; year++) {
+                // Create option for start year
+                const startOption = document.createElement('option');
+                startOption.value = year;
+                startOption.textContent = year;
+                leaseStartYearSelect.appendChild(startOption);
+                
+                // Create option for end year
+                const endOption = document.createElement('option');
+                endOption.value = year;
+                endOption.textContent = year;
+                leaseEndYearSelect.appendChild(endOption);
+            }
+            
+            // Set default values
+            leaseStartYearSelect.value = currentYear;
+            leaseEndYearSelect.value = currentYear + 1;
+            
+            console.log('Year dropdowns populated:', {
+                startYear: leaseStartYearSelect.options.length + ' options',
+                endYear: leaseEndYearSelect.options.length + ' options'
+            });
+        }
         
-        // Automatically run the fix function when the page loads
+        // Function to fix the Add Housing Button
+        function fixAddHousingButton() {
+            console.log('Fixing Add Housing Button');
+            
+            const addHousingButton = document.getElementById('addHousingButton');
+            if (!addHousingButton) {
+                console.error('Add Housing Button not found');
+                return;
+            }
+            
+            // Add a click handler that ensures the modal opens and dropdowns are populated
+            addHousingButton.addEventListener('click', function() {
+                console.log('Add Housing Button clicked');
+                
+                // Get the housing modal
+                const modal = document.getElementById('housingModal');
+                if (!modal) {
+                    console.error('Housing modal not found');
+                    return;
+                }
+                
+                // Show the modal
+                modal.classList.remove('hidden');
+                
+                // Reset form fields
+                const today = new Date();
+                document.getElementById('leaseStartMonth').value = today.getMonth() + 1;
+                document.getElementById('leaseEndMonth').value = today.getMonth() + 1;
+                document.getElementById('monthlyRent').value = '';
+                document.getElementById('utilities').value = '';
+                document.getElementById('wifi').value = '';
+                document.getElementById('utilitiesIncluded').checked = false;
+                
+                // Ensure dropdowns are populated
+                populateYearDropdownsDirectly();
+            });
+            
+            console.log('Add Housing Button fixed');
+        }
+        
+        // Fix the Save button
+        function fixSaveHousingButton() {
+            console.log('Fixing Save Housing Button');
+            
+            const saveButton = document.getElementById('saveHousingBtn');
+            if (!saveButton) {
+                console.error('Save Housing Button not found');
+                return;
+            }
+            
+            // Add a custom click handler that saves the housing information
+            saveButton.addEventListener('click', function() {
+                console.log('Save Housing Button clicked');
+                
+                // Get form values
+                const startMonth = parseInt(document.getElementById('leaseStartMonth').value);
+                const startYear = parseInt(document.getElementById('leaseStartYear').value);
+                const endMonth = parseInt(document.getElementById('leaseEndMonth').value);
+                const endYear = parseInt(document.getElementById('leaseEndYear').value);
+                const rent = document.getElementById('monthlyRent').value.replace(/[^\d]/g, '') || '0';
+                const utilities = document.getElementById('utilities').value.replace(/[^\d]/g, '') || '0';
+                const wifi = document.getElementById('wifi').value.replace(/[^\d]/g, '') || '0';
+                const utilitiesIncluded = document.getElementById('utilitiesIncluded').checked;
+                
+                console.log('Form values:', { startMonth, startYear, endMonth, endYear, rent, utilities, wifi, utilitiesIncluded });
+                
+                // Validate inputs
+                if (parseInt(rent) === 0) {
+                    alert('Please enter a valid rent amount');
+                    return;
+                }
+                
+                // Validate dates
+                const startDate = new Date(startYear, startMonth - 1, 1);
+                const endDate = new Date(endYear, endMonth - 1, 1);
+                
+                if (endDate <= startDate) {
+                    alert('Lease end date must be after start date');
+                    return;
+                }
+                
+                // Create housing entry
+                const housingEntry = {
+                    id: Date.now(),
+                    startMonth,
+                    startYear,
+                    endMonth,
+                    endYear,
+                    rent: parseFloat(rent),
+                    utilities: parseFloat(utilities),
+                    wifi: parseFloat(wifi),
+                    utilitiesIncluded
+                };
+                
+                // Add to array (create if doesn't exist)
+                if (typeof window.housingEntries === 'undefined') {
+                    window.housingEntries = [];
+                }
+                window.housingEntries.push(housingEntry);
+                
+                console.log('Added housing entry:', housingEntry);
+                
+                // Close modal
+                document.getElementById('housingModal').classList.add('hidden');
+                
+                // Show success message
+                alert('Housing information added successfully!');
+                
+                // Update UI (simplified version)
+                const container = document.getElementById('housingEntriesContainer');
+                if (container) {
+                    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                    
+                    const entryElement = document.createElement('div');
+                    entryElement.style.border = '1px solid #ccc';
+                    entryElement.style.borderRadius = '0.5rem';
+                    entryElement.style.padding = '1rem';
+                    entryElement.style.marginBottom = '1rem';
+                    
+                    entryElement.innerHTML = `
+                        <div style="font-weight: bold; margin-bottom: 0.5rem;">
+                            ${monthNames[startMonth-1]} ${startYear} - ${monthNames[endMonth-1]} ${endYear}
+                        </div>
+                        <div>Rent: $${parseFloat(rent).toLocaleString()}/month</div>
+                        ${utilities > 0 ? `<div>Utilities: $${parseFloat(utilities).toLocaleString()}/month</div>` : ''}
+                        ${wifi > 0 ? `<div>WiFi: $${parseFloat(wifi).toLocaleString()}/month</div>` : ''}
+                    `;
+                    
+                    container.appendChild(entryElement);
+                }
+            });
+            
+            console.log('Save Housing Button fixed');
+        }
+        
+        // Function to fix the close button
+        function fixCloseButton() {
+            console.log('Fixing Close Button');
+            
+            const closeButtons = document.querySelectorAll('button.close-button, button.button-secondary');
+            closeButtons.forEach(button => {
+                if (button.onclick === null || button.onclick === undefined) {
+                    button.addEventListener('click', function() {
+                        console.log('Close button clicked');
+                        const modal = document.getElementById('housingModal');
+                        if (modal) {
+                            modal.classList.add('hidden');
+                        }
+                    });
+                }
+            });
+            
+            console.log('Close buttons fixed');
+        }
+        
+        // Run all fixes when the page is fully loaded
         window.addEventListener('load', function() {
-            console.log('Window load event - running housing fix');
-            fixHousing();
+            console.log('Window loaded - running all fixes');
+            
+            // Always populate year dropdowns directly
+            populateYearDropdownsDirectly();
+            
+            // Fix the Add Housing Button
+            fixAddHousingButton();
+            
+            // Fix the Save button
+            fixSaveHousingButton();
+            
+            // Fix close buttons
+            fixCloseButton();
+            
+            console.log('All fixes applied');
         });
+        
+        // Also run fixes now in case DOM is already loaded
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            console.log('Document already ready - running fixes immediately');
+            populateYearDropdownsDirectly();
+            fixAddHousingButton();
+            fixSaveHousingButton();
+            fixCloseButton();
+        }
     </script>
 </body>
 </html>
