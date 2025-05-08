@@ -3441,29 +3441,25 @@ const statePersonalExemptionDB = {
 
         // Navigation functions
         function nextStep() {
-            // Try-catch to prevent errors if elements don't exist
-            try {
-                const currentStepElement = document.querySelector('.step.active');
-                if (!currentStepElement) return; // Exit if there's no active step
+            if (currentStep === 1 && validateStep1()) {
+                // Save step 1 data
+                formData.firstName = document.getElementById('firstName').value;
+                formData.lastName = document.getElementById('lastName').value;
+                formData.dateOfBirth = document.getElementById('dateOfBirth').value;
+                showStep(2);
+            } else if (currentStep === 2 && validateStep2()) {
+                // Save step 2 data
+                formData.school = document.getElementById('school').value;
+                formData.state = document.getElementById('state').value;
+                formData.income = document.getElementById('income').value;
                 
-                const currentStep = parseInt(currentStepElement.dataset.step);
-                const nextStepNumber = currentStep + 1;
+                // When moving to Step 3, hide Submit button and show Done button
+                setTimeout(() => {
+                    document.getElementById('leaseInfoBtn').classList.remove('hidden');
+                    document.getElementById('submitBtn').classList.add('hidden');
+                }, 100);
                 
-                const nextStepElement = document.querySelector(`.step[data-step="${nextStepNumber}"]`);
-                if (!nextStepElement) return; // Exit if there's no next step
-                
-                // Hide current step
-                currentStepElement.classList.remove('active');
-                currentStepElement.classList.add('hidden');
-                
-                // Show next step
-                nextStepElement.classList.remove('hidden');
-                nextStepElement.classList.add('active');
-                
-                // Update progress
-                updateProgress(nextStepNumber);
-            } catch (error) {
-                console.error('Error in nextStep function:', error);
+                showStep(3);
             }
         }
 
