@@ -4430,18 +4430,18 @@ const statePersonalExemptionDB = {
             const startYear = parseInt(document.getElementById('leaseStartYear').value);
             const endMonth = parseInt(document.getElementById('leaseEndMonth').value);
             const endYear = parseInt(document.getElementById('leaseEndYear').value);
-            const rent = document.getElementById('monthlyRent').value.replace(/[^\d]/g, '') || '0';
-            const utilities = document.getElementById('utilities').value.replace(/[^\d]/g, '') || '0';
-            const wifi = document.getElementById('wifi').value.replace(/[^\d]/g, '') || '0';
+            const rent = document.getElementById('monthlyRent').value.replace(/[^\d.]/g, '');
+            const utilities = document.getElementById('utilities').value.replace(/[^\d.]/g, '') || '0';
+            const wifi = document.getElementById('wifi').value.replace(/[^\d.]/g, '') || '0';
             const utilitiesIncluded = document.getElementById('utilitiesIncluded').checked;
             
-            // Validate
-            if (parseInt(rent) === 0) {
+            // Validate inputs
+            if (!rent || parseFloat(rent) <= 0) {
                 showError('Please enter a valid rent amount');
                 return;
             }
             
-            // Validate dates - end date must be after start date
+            // Validate date range
             const startDate = new Date(startYear, startMonth - 1, 1);
             const endDate = new Date(endYear, endMonth - 1, 1);
             
@@ -4450,13 +4450,12 @@ const statePersonalExemptionDB = {
                 return;
             }
             
-            // Check for overlapping housing periods
+            // Check for overlapping periods
             if (hasOverlappingPeriods(startMonth, startYear, endMonth, endYear)) {
-                showError('This housing period overlaps with an existing entry');
+                showError('This housing period overlaps with another entry. Please adjust the dates.');
                 return;
             }
             
-            // Create housing entry
             const housingEntry = {
                 id: Date.now(), // Unique identifier
                 startMonth,
@@ -4473,7 +4472,7 @@ const statePersonalExemptionDB = {
             housingEntries.push(housingEntry);
             
             // Update UI
-            updateHousingEntriesList();
+            loadExistingHousingEntries();
             
             // Close modal
             closeHousingModal();
@@ -4500,106 +4499,9 @@ const statePersonalExemptionDB = {
             });
         }
 
-        function updateHousingEntriesList() {
-            const container = document.getElementById('housingEntriesContainer');
-            const noHousingMessage = document.getElementById('noHousingMessage');
-            
-            // Clear existing entries
-            container.innerHTML = '';
-            
-            if (housingEntries.length === 0) {
-                container.appendChild(noHousingMessage);
-                return;
-            }
-            
-            // Sort entries by start date
-            housingEntries.sort((a, b) => {
-                const dateA = new Date(a.startYear, a.startMonth - 1, 1);
-                const dateB = new Date(b.startYear, b.startMonth - 1, 1);
-                return dateA - dateB;
-            });
-            
-            // Create entry elements
-            housingEntries.forEach(entry => {
-                const entryElement = document.createElement('div');
-                entryElement.className = 'housing-entry';
-                entryElement.style.border = '1px solid var(--border)';
-                entryElement.style.borderRadius = '0.5rem';
-                entryElement.style.padding = '1rem';
-                entryElement.style.marginBottom = '1rem';
-                entryElement.style.position = 'relative';
-                
-                // Format currency
-                const formatCurrency = value => '$' + value.toLocaleString('en-US');
-                
-                // Create header with date range
-                const dateHeader = document.createElement('div');
-                dateHeader.style.fontWeight = '600';
-                dateHeader.style.color = 'var(--primary)';
-                dateHeader.style.marginBottom = '0.4rem';
-                dateHeader.textContent = `${monthNames[entry.startMonth - 1]} ${entry.startYear} - ${monthNames[entry.endMonth - 1]} ${entry.endYear}`;
-                entryElement.appendChild(dateHeader);
-                
-                // Create expense info as small text below date
-                const expenseInfo = document.createElement('div');
-                expenseInfo.style.fontSize = '0.8rem';
-                expenseInfo.style.color = '#666';
-                
-                let expenseText = `Rent: ${formatCurrency(entry.rent)}/month`;
-                
-                if (!entry.utilitiesIncluded && entry.utilities > 0) {
-                    expenseText += ` • Utilities: ${formatCurrency(entry.utilities)}/month`;
-                }
-                
-                if (entry.wifi > 0) {
-                    expenseText += ` • WiFi: ${formatCurrency(entry.wifi)}/month`;
-                }
-                
-                expenseInfo.textContent = expenseText;
-                entryElement.appendChild(expenseInfo);
-                
-                // Create button container with proper horizontal layout
-                const buttonContainer = document.createElement('div');
-                buttonContainer.style.position = 'absolute';
-                buttonContainer.style.top = '1rem';
-                buttonContainer.style.right = '1rem';
-                buttonContainer.style.display = 'flex';  // Keep buttons in row
-                buttonContainer.style.gap = '0.5rem';    // Space between buttons
-                
-                // Create edit button
-                const editButton = document.createElement('button');
-                editButton.onclick = function() { editHousingEntryDirect(entry.id); };
-                editButton.style.backgroundColor = 'var(--primary)';
-                editButton.style.color = 'white';
-                editButton.style.border = 'none';
-                editButton.style.borderRadius = '0.25rem';
-                editButton.style.padding = '0.25rem 0.5rem';
-                editButton.style.cursor = 'pointer';
-                editButton.style.fontSize = '0.8rem';
-                editButton.textContent = 'Edit';
-                buttonContainer.appendChild(editButton);
-                
-                // Create delete button
-                const deleteButton = document.createElement('button');
-                deleteButton.onclick = function() { removeHousingEntryDirect(entry.id); };
-                deleteButton.style.backgroundColor = '#f44336';
-                deleteButton.style.color = 'white';
-                deleteButton.style.border = 'none';
-                deleteButton.style.borderRadius = '0.25rem';
-                deleteButton.style.padding = '0.25rem 0.5rem';
-                deleteButton.style.cursor = 'pointer';
-                deleteButton.style.fontSize = '0.8rem';
-                deleteButton.textContent = 'Delete';
-                buttonContainer.appendChild(deleteButton);
-                
-                entryElement.appendChild(buttonContainer);
-                container.appendChild(entryElement);
-            });
-        }
-
         function removeHousingEntry(id) {
             housingEntries = housingEntries.filter(entry => entry.id !== id);
-            updateHousingEntriesList();
+            loadExistingHousingEntries();
             
             // Show removal message
             const message = document.createElement('div');
