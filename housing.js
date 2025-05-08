@@ -6,6 +6,8 @@ if (typeof housingEntries === 'undefined') {
 
 // Housing Information Modal
 function openHousingModal(entryToEdit = null) {
+    console.log('Opening housing modal with entryToEdit:', entryToEdit);
+    
     // Get modal elements
     const modal = document.getElementById('housingModal');
     const modalTitle = document.getElementById('housingModalTitle');
@@ -33,6 +35,19 @@ function openHousingModal(entryToEdit = null) {
         return;
     }
     
+    console.log('Form elements before setting values:', {
+        leaseStartMonth: leaseStartMonth.value,
+        leaseStartYear: leaseStartYear.value,
+        leaseEndMonth: leaseEndMonth.value,
+        leaseEndYear: leaseEndYear.value
+    });
+    
+    // Always populate year dropdowns first, regardless of edit mode
+    populateHousingYearDropdowns();
+    
+    console.log('Start year options after populating:', leaseStartYear.options.length);
+    console.log('End year options after populating:', leaseEndYear.options.length);
+    
     // If entryToEdit is provided, we're in edit mode
     const isEditMode = entryToEdit !== null;
     
@@ -41,11 +56,38 @@ function openHousingModal(entryToEdit = null) {
     
     // Reset or populate form fields based on mode
     if (isEditMode) {
+        console.log('Populating edit form with entry:', entryToEdit);
         // Populate with existing entry data
         leaseStartMonth.value = entryToEdit.startMonth;
-        leaseStartYear.value = entryToEdit.startYear;
+        
+        // Ensure the value exists in the options
+        if (Array.from(leaseStartYear.options).some(option => parseInt(option.value) === entryToEdit.startYear)) {
+            leaseStartYear.value = entryToEdit.startYear;
+        } else {
+            console.warn('Start year value not found in options:', entryToEdit.startYear);
+            // Add the option if it doesn't exist
+            const option = document.createElement('option');
+            option.value = entryToEdit.startYear;
+            option.textContent = entryToEdit.startYear;
+            leaseStartYear.appendChild(option);
+            leaseStartYear.value = entryToEdit.startYear;
+        }
+        
         leaseEndMonth.value = entryToEdit.endMonth;
-        leaseEndYear.value = entryToEdit.endYear;
+        
+        // Ensure the value exists in the options
+        if (Array.from(leaseEndYear.options).some(option => parseInt(option.value) === entryToEdit.endYear)) {
+            leaseEndYear.value = entryToEdit.endYear;
+        } else {
+            console.warn('End year value not found in options:', entryToEdit.endYear);
+            // Add the option if it doesn't exist
+            const option = document.createElement('option');
+            option.value = entryToEdit.endYear;
+            option.textContent = entryToEdit.endYear;
+            leaseEndYear.appendChild(option);
+            leaseEndYear.value = entryToEdit.endYear;
+        }
+        
         monthlyRent.value = '$' + entryToEdit.rent.toLocaleString('en-US');
         utilities.value = entryToEdit.utilities > 0 ? '$' + entryToEdit.utilities.toLocaleString('en-US') : '';
         wifi.value = entryToEdit.wifi > 0 ? '$' + entryToEdit.wifi.toLocaleString('en-US') : '';
@@ -60,8 +102,10 @@ function openHousingModal(entryToEdit = null) {
         // Default values for new entry
         leaseStartMonth.value = new Date().getMonth() + 1;
         
-        // Ensure year dropdowns are populated
-        populateHousingYearDropdowns();
+        // Set default years - current year for start and next year for end
+        const currentYear = new Date().getFullYear();
+        leaseStartYear.value = currentYear;
+        leaseEndYear.value = currentYear + 1;
         
         // Continue with other defaults
         monthlyRent.value = '';
@@ -76,6 +120,13 @@ function openHousingModal(entryToEdit = null) {
         saveButton.textContent = 'Save Housing Info';
     }
     
+    console.log('Form elements after setting values:', {
+        leaseStartMonth: leaseStartMonth.value,
+        leaseStartYear: leaseStartYear.value,
+        leaseEndMonth: leaseEndMonth.value,
+        leaseEndYear: leaseEndYear.value
+    });
+    
     // Show the modal
     modal.classList.remove('hidden');
 }
@@ -85,10 +136,19 @@ function closeHousingModal() {
 }
 
 function saveHousingInfo() {
+    console.log('Saving housing info...');
     const startMonth = parseInt(document.getElementById('leaseStartMonth').value);
     const startYear = parseInt(document.getElementById('leaseStartYear').value);
     const endMonth = parseInt(document.getElementById('leaseEndMonth').value);
     const endYear = parseInt(document.getElementById('leaseEndYear').value);
+    
+    console.log('Housing dates before validation:', {
+        startMonth,
+        startYear,
+        endMonth,
+        endYear
+    });
+    
     const rent = document.getElementById('monthlyRent').value.replace(/[^\d]/g, '') || '0';
     const utilities = document.getElementById('utilities').value.replace(/[^\d]/g, '') || '0';
     const wifi = document.getElementById('wifi').value.replace(/[^\d]/g, '') || '0';
@@ -132,6 +192,8 @@ function saveHousingInfo() {
         wifi: parseFloat(wifi),
         utilitiesIncluded
     };
+    
+    console.log('Saving housing entry:', housingEntry);
     
     if (isEditMode) {
         // Find and update the existing entry
@@ -483,13 +545,85 @@ function calculateBenefitWithMultipleHousing(state, income, enrolledMonths, hous
     return benefit;
 }
 
-// Initialize the housing functionality when DOM is ready
+// Function to set up mutation observer for monitoring dropdowns
+function monitorHousingDropdowns() {
+    console.log('Setting up dropdown monitors');
+    
+    // Get the select elements
+    const leaseStartYear = document.getElementById('leaseStartYear');
+    const leaseEndYear = document.getElementById('leaseEndYear');
+    
+    if (!leaseStartYear || !leaseEndYear) {
+        console.error('Cannot monitor dropdowns - elements not found');
+        return;
+    }
+    
+    // Create a direct change event handler for leaseStartYear to debug
+    leaseStartYear.onchange = function() {
+        console.log('START YEAR CHANGED via onchange to:', this.value);
+    };
+    
+    leaseStartYear.addEventListener('change', function() {
+        console.log('START YEAR CHANGED via addEventListener to:', this.value);
+    }, true);
+    
+    // Also monitor for click events on the options
+    leaseStartYear.addEventListener('click', function() {
+        console.log('Lease start year clicked');
+        
+        // Force refresh options after a slight delay
+        setTimeout(() => {
+            console.log('Current value:', this.value);
+        }, 100);
+    });
+    
+    // Try mousedown event
+    leaseStartYear.addEventListener('mousedown', function() {
+        console.log('Lease start year mousedown');
+    });
+    
+    // Monitor for any attribute changes
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            console.log('Dropdown mutation detected:', mutation.type, mutation.target.id);
+            
+            // Check if it's a value change
+            if (mutation.type === 'attributes' && mutation.attributeName === 'value') {
+                console.log('Value changed to:', mutation.target.value);
+            }
+        });
+    });
+    
+    // Start observing the dropdowns
+    observer.observe(leaseStartYear, { attributes: true, childList: true });
+    observer.observe(leaseEndYear, { attributes: true, childList: true });
+    
+    console.log('Dropdown monitors set up');
+    
+    // Return observer to stop it later if needed
+    return observer;
+}
+
+// Update the initializeHousingSystem function
 function initializeHousingSystem() {
+    console.log('Initializing housing system');
+    
     // Make sure the year dropdowns for housing info are populated
     populateHousingYearDropdowns();
     
+    // Set up dropdown monitors
+    monitorHousingDropdowns();
+    
     // Add event listener for the Add Housing Information button
-    document.getElementById('addHousingButton').addEventListener('click', openHousingModal);
+    const addHousingButton = document.getElementById('addHousingButton');
+    if (addHousingButton) {
+        console.log('Setting up add housing button event listener');
+        addHousingButton.addEventListener('click', function() { 
+            openHousingModal();
+        });
+    } else {
+        console.error('Add housing button not found');
+    }
     
     // Initialize the housing entries list
     updateHousingEntriesList();
@@ -516,6 +650,25 @@ function initializeHousingSystem() {
             formatCurrency(this);
         });
     }
+    
+    // Manually initialize lease date dropdowns in case they were already rendered
+    const leaseStartYear = document.getElementById('leaseStartYear');
+    const leaseEndYear = document.getElementById('leaseEndYear');
+    
+    if (leaseStartYear && leaseEndYear) {
+        console.log('Checking dropdown initialization status');
+        
+        // If the dropdowns don't have enough options, repopulate them
+        if (leaseStartYear.options.length < 5 || leaseEndYear.options.length < 5) {
+            console.log('Dropdowns not properly initialized, repopulating');
+            populateHousingYearDropdowns();
+        } else {
+            console.log('Dropdowns already have options:', { 
+                startYearOptions: leaseStartYear.options.length,
+                endYearOptions: leaseEndYear.options.length
+            });
+        }
+    }
 }
 
 // Populate the year dropdowns for the housing form
@@ -523,15 +676,19 @@ function populateHousingYearDropdowns() {
     const currentYear = new Date().getFullYear();
     const yearRange = 10; // Allow 10 years before and after current year
     
+    console.log('Populating year dropdowns with range:', currentYear - yearRange, 'to', currentYear + yearRange);
+    
     // Get the select elements
     const leaseStartYearSelect = document.getElementById('leaseStartYear');
     const leaseEndYearSelect = document.getElementById('leaseEndYear');
     
     // Exit if elements aren't found
     if (!leaseStartYearSelect || !leaseEndYearSelect) {
-        console.error('Year select elements not found');
+        console.error('Year select elements not found', { leaseStartYearSelect, leaseEndYearSelect });
         return;
     }
+    
+    console.log('Before clearing: startYear options:', leaseStartYearSelect.options.length, 'endYear options:', leaseEndYearSelect.options.length);
     
     // Clear existing options
     leaseStartYearSelect.innerHTML = '';
@@ -552,9 +709,93 @@ function populateHousingYearDropdowns() {
         leaseEndYearSelect.appendChild(endOption);
     }
     
+    console.log('After populating: startYear options:', leaseStartYearSelect.options.length, 'endYear options:', leaseEndYearSelect.options.length);
+    
     // Set default values
     leaseStartYearSelect.value = currentYear;
     leaseEndYearSelect.value = currentYear + 1;
+    
+    console.log('Default values set - startYear:', leaseStartYearSelect.value, 'endYear:', leaseEndYearSelect.value);
+    
+    // Add event listeners to detect changes
+    leaseStartYearSelect.addEventListener('change', function() {
+        console.log('Start year changed to:', this.value);
+        
+        // Ensure end date is not before start date
+        const startYear = parseInt(this.value);
+        const endYear = parseInt(leaseEndYearSelect.value);
+        const startMonth = parseInt(document.getElementById('leaseStartMonth').value);
+        const endMonth = parseInt(document.getElementById('leaseEndMonth').value);
+        
+        if (endYear < startYear || (endYear === startYear && endMonth < startMonth)) {
+            // Set end date to be at least a month after start date
+            if (startMonth === 12) {
+                leaseEndMonth.value = 1;
+                leaseEndYearSelect.value = startYear + 1;
+            } else {
+                leaseEndMonth.value = startMonth + 1;
+                leaseEndYearSelect.value = startYear;
+            }
+            console.log('Adjusted end date to prevent invalid date range');
+        }
+    });
+    
+    leaseEndYearSelect.addEventListener('change', function() {
+        console.log('End year changed to:', this.value);
+        
+        // Ensure end date is not before start date
+        const startYear = parseInt(leaseStartYearSelect.value);
+        const endYear = parseInt(this.value);
+        const startMonth = parseInt(document.getElementById('leaseStartMonth').value);
+        const endMonth = parseInt(document.getElementById('leaseEndMonth').value);
+        
+        if (endYear < startYear || (endYear === startYear && endMonth < startMonth)) {
+            // Either adjust end month or fallback to previous value
+            if (endYear === startYear) {
+                document.getElementById('leaseEndMonth').value = startMonth + 1 > 12 ? 12 : startMonth + 1;
+                console.log('Adjusted end month to prevent invalid date range');
+            } else {
+                this.value = startYear;
+                console.log('Reset end year to prevent invalid date range');
+            }
+        }
+    });
+    
+    // Also add event listeners to the month selects
+    const leaseStartMonth = document.getElementById('leaseStartMonth');
+    const leaseEndMonth = document.getElementById('leaseEndMonth');
+    
+    if (leaseStartMonth && leaseEndMonth) {
+        leaseStartMonth.addEventListener('change', function() {
+            console.log('Start month changed to:', this.value);
+            
+            // Ensure end date is not before start date
+            const startYear = parseInt(leaseStartYearSelect.value);
+            const endYear = parseInt(leaseEndYearSelect.value);
+            const startMonth = parseInt(this.value);
+            const endMonth = parseInt(leaseEndMonth.value);
+            
+            if (endYear === startYear && endMonth < startMonth) {
+                leaseEndMonth.value = startMonth;
+                console.log('Adjusted end month to prevent invalid date range');
+            }
+        });
+        
+        leaseEndMonth.addEventListener('change', function() {
+            console.log('End month changed to:', this.value);
+            
+            // Ensure end date is not before start date
+            const startYear = parseInt(leaseStartYearSelect.value);
+            const endYear = parseInt(leaseEndYearSelect.value);
+            const startMonth = parseInt(leaseStartMonth.value);
+            const endMonth = parseInt(this.value);
+            
+            if (endYear === startYear && endMonth < startMonth) {
+                this.value = startMonth;
+                console.log('Reset end month to prevent invalid date range');
+            }
+        });
+    }
 }
 
 // Show error message
@@ -567,4 +808,11 @@ function showError(message) {
 }
 
 // Initialize on DOM ready
-document.addEventListener('DOMContentLoaded', initializeHousingSystem); 
+document.addEventListener('DOMContentLoaded', initializeHousingSystem);
+
+// Also call initialization now in case the DOM is already loaded
+// This helps ensure everything works even if the script loads late
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    console.log('DOM already loaded, initializing housing system immediately');
+    initializeHousingSystem();
+} 
