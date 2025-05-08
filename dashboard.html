@@ -5648,7 +5648,39 @@ const statePersonalExemptionDB = {
                     utilitiesIncluded
                 };
                 
-                // Rest of the function remains the same...
+                // Add to array (create if doesn't exist) or update existing
+                if (typeof window.housingEntries === 'undefined') {
+                    window.housingEntries = [];
+                }
+                
+                if (editEntryId) {
+                    // Update existing entry
+                    const entryIndex = window.housingEntries.findIndex(entry => entry.id == editEntryId);
+                    if (entryIndex !== -1) {
+                        window.housingEntries[entryIndex] = housingEntry;
+                        console.log('Updated housing entry:', housingEntry);
+                        
+                        // Clear the edit ID
+                        delete document.getElementById('housingModal').dataset.editEntryId;
+                        
+                        // Reset save button text
+                        saveButton.textContent = 'Save Housing Info';
+                    }
+                } else {
+                    // Add new entry
+                    window.housingEntries.push(housingEntry);
+                    console.log('Added housing entry:', housingEntry);
+                }
+                
+                // Close modal
+                document.getElementById('housingModal').classList.add('hidden');
+                
+                // Show success message
+                const action = editEntryId ? 'updated' : 'added';
+                alert(`Housing information ${action} successfully!`);
+                
+                // Update the UI with the new entry list
+                loadExistingHousingEntries();
             });
             
             console.log('Save Housing Button fixed');
