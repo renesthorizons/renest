@@ -5291,27 +5291,50 @@ const statePersonalExemptionDB = {
             addHousingButton.addEventListener('click', function() {
                 console.log('Add Housing Button clicked');
                 
-                // Get the housing modal
+                // Get the housing modal and related elements
                 const modal = document.getElementById('housingModal');
-                if (!modal) {
-                    console.error('Housing modal not found');
+                const modalTitle = document.getElementById('housingModalTitle');
+                const saveButton = document.getElementById('saveHousingBtn');
+
+                if (!modal || !modalTitle || !saveButton) {
+                    console.error('Housing modal or its components not found');
                     return;
                 }
-                
-                // Show the modal
-                modal.classList.remove('hidden');
+
+                // --- START RESET TO ADD MODE ---
+                // Clear any existing edit ID
+                delete modal.dataset.editEntryId;
+
+                // Reset modal title
+                modalTitle.textContent = 'Add Housing Information';
+
+                // Reset save button text and action
+                saveButton.textContent = 'Save Housing Info';
+                saveButton.onclick = saveHousingInfo; // Ensure it calls the general save function
+
+                // Remove delete button if it exists from a previous edit mode
+                const existingDeleteBtn = modal.querySelector('.delete-housing-btn');
+                if (existingDeleteBtn) {
+                    existingDeleteBtn.remove();
+                }
+                // --- END RESET TO ADD MODE ---
                 
                 // Reset form fields
                 const today = new Date();
                 document.getElementById('leaseStartMonth').value = today.getMonth() + 1;
+                document.getElementById('leaseStartYear').value = today.getFullYear(); // Set to current year
                 document.getElementById('leaseEndMonth').value = today.getMonth() + 1;
+                document.getElementById('leaseEndYear').value = today.getFullYear() + 1; // Set to next year
                 document.getElementById('monthlyRent').value = '';
                 document.getElementById('utilities').value = '';
                 document.getElementById('wifi').value = '';
                 document.getElementById('utilitiesIncluded').checked = false;
                 
-                // Ensure dropdowns are populated
+                // Ensure dropdowns are populated (this should happen before setting default year values)
                 populateYearDropdownsDirectly();
+                
+                // Show the modal
+                modal.classList.remove('hidden');
             });
             
             console.log('Add Housing Button fixed');
