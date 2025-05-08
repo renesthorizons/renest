@@ -5353,44 +5353,29 @@ const statePersonalExemptionDB = {
                     
                     // Create a date range header
                     const dateHeader = document.createElement('div');
-                    dateHeader.style.marginBottom = '0.75rem';
+                    dateHeader.style.marginBottom = '0.5rem';
                     dateHeader.style.fontWeight = '600';
                     dateHeader.style.color = 'var(--primary)';
                     dateHeader.textContent = `${monthNames[entry.startMonth - 1]} ${entry.startYear} - ${monthNames[entry.endMonth - 1]} ${entry.endYear}`;
                     
-                    // Create a container for the expense info that uses flexbox
-                    const expenseContainer = document.createElement('div');
-                    expenseContainer.style.display = 'flex';
-                    expenseContainer.style.flexWrap = 'wrap';
-                    expenseContainer.style.gap = '0.75rem';
+                    // Create a single line for all expenses with small grey text
+                    const expenseSummary = document.createElement('div');
+                    expenseSummary.style.fontSize = '0.85rem';
+                    expenseSummary.style.color = '#666';
+                    expenseSummary.style.marginBottom = '0.5rem';
                     
-                    // Add rent info
-                    const rentInfo = document.createElement('div');
-                    rentInfo.style.padding = '0.25rem 0.5rem';
-                    rentInfo.style.backgroundColor = 'rgba(0,0,0,0.03)';
-                    rentInfo.style.borderRadius = '0.25rem';
-                    rentInfo.innerHTML = `<strong>Rent:</strong> ${formatCurrency(entry.rent)}/month`;
-                    expenseContainer.appendChild(rentInfo);
+                    // Build the expense summary text
+                    let summaryText = `Rent: ${formatCurrency(entry.rent)}/month`;
                     
-                    // Add utilities info if applicable
                     if (!entry.utilitiesIncluded && entry.utilities > 0) {
-                        const utilitiesInfo = document.createElement('div');
-                        utilitiesInfo.style.padding = '0.25rem 0.5rem';
-                        utilitiesInfo.style.backgroundColor = 'rgba(0,0,0,0.03)';
-                        utilitiesInfo.style.borderRadius = '0.25rem';
-                        utilitiesInfo.innerHTML = `<strong>Utilities:</strong> ${formatCurrency(entry.utilities)}/month`;
-                        expenseContainer.appendChild(utilitiesInfo);
+                        summaryText += ` • Utilities: ${formatCurrency(entry.utilities)}/month`;
                     }
                     
-                    // Add wifi info if applicable
                     if (entry.wifi > 0) {
-                        const wifiInfo = document.createElement('div');
-                        wifiInfo.style.padding = '0.25rem 0.5rem';
-                        wifiInfo.style.backgroundColor = 'rgba(0,0,0,0.03)';
-                        wifiInfo.style.borderRadius = '0.25rem';
-                        wifiInfo.innerHTML = `<strong>WiFi:</strong> ${formatCurrency(entry.wifi)}/month`;
-                        expenseContainer.appendChild(wifiInfo);
+                        summaryText += ` • WiFi: ${formatCurrency(entry.wifi)}/month`;
                     }
+                    
+                    expenseSummary.textContent = summaryText;
                     
                     // Create the button container with better positioning
                     const buttonContainer = document.createElement('div');
@@ -5398,7 +5383,7 @@ const statePersonalExemptionDB = {
                     buttonContainer.style.top = '0.75rem';
                     buttonContainer.style.right = '0.75rem';
                     buttonContainer.style.display = 'flex';
-                    buttonContainer.style.gap = '0.5rem';
+                    buttonContainer.style.gap = '0.5rem'; // Ensure there's space between buttons
                     
                     // Add edit button
                     const editButton = document.createElement('button');
@@ -5411,6 +5396,8 @@ const statePersonalExemptionDB = {
                     editButton.style.padding = '0.25rem 0.5rem';
                     editButton.style.cursor = 'pointer';
                     editButton.style.fontSize = '0.8rem';
+                    editButton.style.width = 'auto'; // Ensure width is based on content
+                    editButton.style.minWidth = '50px'; // Minimum width
                     editButton.textContent = 'Edit';
                     
                     // Add delete button
@@ -5424,6 +5411,8 @@ const statePersonalExemptionDB = {
                     deleteButton.style.padding = '0.25rem 0.5rem';
                     deleteButton.style.cursor = 'pointer';
                     deleteButton.style.fontSize = '0.8rem';
+                    deleteButton.style.width = 'auto'; // Ensure width is based on content
+                    deleteButton.style.minWidth = '50px'; // Minimum width
                     deleteButton.textContent = 'Delete';
                     
                     // Add buttons to container
@@ -5432,7 +5421,7 @@ const statePersonalExemptionDB = {
                     
                     // Assemble the housing entry element
                     entryElement.appendChild(dateHeader);
-                    entryElement.appendChild(expenseContainer);
+                    entryElement.appendChild(expenseSummary);
                     entryElement.appendChild(buttonContainer);
                     
                     container.appendChild(entryElement);
