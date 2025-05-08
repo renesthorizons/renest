@@ -1146,7 +1146,7 @@
                             <!-- Housing entries will be listed here -->
                         </div>
                         
-                        <button type="button" id="addHousingButton" class="button button-primary" style="width: 100%; margin-bottom: 1.5rem;">
+                        <button type="button" id="addHousingButton" onclick="openHousingModal()" class="button button-primary" style="width: 100%; margin-bottom: 1.5rem;">
                             + Add Housing Information
                         </button>
                     </div>
@@ -5270,6 +5270,56 @@ const statePersonalExemptionDB = {
     
     <!-- Include housing system -->
     <script src="housing.js"></script>
+    
+    <!-- Debug script to check housing.js loading -->
+    <script>
+        console.log('Dashboard.html loaded');
+        console.log('Checking housing.js functions:');
+        console.log('- openHousingModal exists:', typeof openHousingModal === 'function');
+        console.log('- initializeHousingSystem exists:', typeof initializeHousingSystem === 'function');
+        
+        // Add a convenient global function to run housing debug
+        window.fixHousing = function() {
+            console.log('Running housing fix');
+            
+            // First try the debug function if it exists
+            if (typeof debugHousingSystem === 'function') {
+                console.log('Running debug from housing.js');
+                debugHousingSystem();
+            } else {
+                console.log('Debug function not found, adding direct click handler');
+                
+                // Get the button and add a direct handler
+                const button = document.getElementById('addHousingButton');
+                if (button) {
+                    button.addEventListener('click', function() {
+                        console.log('Button clicked via fixHousing handler');
+                        
+                        // Get the modal and show it directly
+                        const modal = document.getElementById('housingModal');
+                        if (modal) {
+                            console.log('Showing modal directly');
+                            modal.classList.remove('hidden');
+                        } else {
+                            console.error('Modal not found');
+                        }
+                    });
+                    
+                    console.log('Direct handler added to button');
+                } else {
+                    console.error('Add Housing Button not found');
+                }
+            }
+            
+            return "Fix attempt complete - check console logs";
+        };
+        
+        // Automatically run the fix function when the page loads
+        window.addEventListener('load', function() {
+            console.log('Window load event - running housing fix');
+            fixHousing();
+        });
+    </script>
 </body>
 </html>
 

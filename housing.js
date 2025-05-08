@@ -4,6 +4,55 @@ if (typeof housingEntries === 'undefined') {
     var housingEntries = [];
 }
 
+// Debug function to help diagnose housing modal issues
+window.debugHousingSystem = function() {
+    console.log('==== HOUSING SYSTEM DEBUG ====');
+    
+    // Check if housing.js functions are accessible
+    console.log('Function check:');
+    console.log('- openHousingModal exists:', typeof openHousingModal === 'function');
+    console.log('- closeHousingModal exists:', typeof closeHousingModal === 'function');
+    console.log('- initializeHousingSystem exists:', typeof initializeHousingSystem === 'function');
+    
+    // Check Add Housing Information button
+    const addHousingButton = document.getElementById('addHousingButton');
+    console.log('Add Housing Button:', addHousingButton ? 'Found' : 'Not found');
+    
+    if (addHousingButton) {
+        // Check if it has event listeners
+        console.log('Button has onclick attribute:', addHousingButton.hasAttribute('onclick'));
+        console.log('Button onclick value:', addHousingButton.getAttribute('onclick'));
+        
+        // Try attaching a debug listener
+        console.log('Attaching debug click handler to button');
+        addHousingButton.addEventListener('click', function() {
+            console.log('Button clicked (debug handler)');
+            
+            // Try manually opening the modal
+            if (typeof openHousingModal === 'function') {
+                console.log('Calling openHousingModal directly');
+                openHousingModal();
+            } else {
+                console.error('openHousingModal function not found');
+            }
+        });
+    }
+    
+    // Check housing modal
+    const housingModal = document.getElementById('housingModal');
+    console.log('Housing Modal:', housingModal ? 'Found' : 'Not found');
+    
+    if (housingModal) {
+        console.log('Modal visible:', !housingModal.classList.contains('hidden'));
+    }
+    
+    // Manually try to initialize system
+    console.log('Manually calling initializeHousingSystem');
+    initializeHousingSystem();
+    
+    return "Debug complete - check console for results";
+};
+
 // Housing Information Modal
 function openHousingModal(entryToEdit = null) {
     console.log('Opening housing modal with entryToEdit:', entryToEdit);
