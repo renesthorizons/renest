@@ -3615,18 +3615,13 @@ const statePersonalExemptionDB = {
                 modal.remove();
             }
             
-            // Check if form submission is complete using localStorage flag
-            const submissionComplete = localStorage.getItem('submissionComplete') === 'true';
-
-            if (submissionComplete) {
-                // If submission is complete, redirect
-                console.log('Congrats modal closed, submission complete, redirecting...');
-                localStorage.removeItem('submissionComplete'); // Clean up flag
+            // Check if form submission is complete
+            const submitBtn = document.getElementById('submitBtn');
+            if (!submitBtn.disabled) {
+                // If button is enabled, submission is complete, redirect to tracker summary
                 window.location.href = 'trackersummary.html';
-            } else {
-                console.log('Congrats modal closed, submission might still be running...');
-                // If submission isn't complete yet, the redirect will happen in submitForm
             }
+            // Otherwise, let the submission process continue in the background
         }
 
         async function submitForm() {
@@ -3634,8 +3629,6 @@ const statePersonalExemptionDB = {
             const submitBtn = document.getElementById('submitBtn');
             const spinner = document.getElementById('spinner');
             const modal = document.getElementById('onboardingModal');
-            let submissionSuccess = false; // Flag to track success
-            localStorage.removeItem('submissionComplete'); // Clear flag at start
             
             try {
                 console.log('1. Disabling all buttons and showing spinner');
@@ -3670,11 +3663,12 @@ const statePersonalExemptionDB = {
                 
                 // Validate step 3
                 console.log('2. Starting step 3 validation');
-                const step3Valid = await validateStep3(); // Uses validateHousingStep3
+                // Use the validateHousingStep3 function from housing.js
+                const step3Valid = await validateHousingStep3();
                 console.log('Step 3 validation result:', step3Valid);
                 
                 if (!step3Valid) {
-                   console.log('Step 3 validation failed, returning');
+                    console.log('Step 3 validation failed, returning');
                     // Re-enable all elements if validation fails
                     allInputs.forEach(input => {
                         input.disabled = false;
@@ -3696,7 +3690,7 @@ const statePersonalExemptionDB = {
                     
                     submitBtn.disabled = false;
                     spinner.style.display = 'none';
-                   return;
+                    return;
                 }
                 
                 // Get form values
@@ -3710,12 +3704,25 @@ const statePersonalExemptionDB = {
                 const enrolledMonths = Array.from(document.querySelectorAll('input[name="enrolledMonths"]:checked'))
                     .map(checkbox => parseInt(checkbox.value));
                 
+                // Use the first housing entry's rent for profile data (for backward compatibility)
                 const firstHousing = window.housingEntries[0] || { rent: 0 };
                 const rent = firstHousing.rent.toString();
-                console.log('Form values collected:', { firstName, lastName, dateOfBirth, school, state, income, rent, enrolledMonths, housingEntries: window.housingEntries });
+
+                console.log('Form values collected:', {
+                    firstName,
+                    lastName,
+                    dateOfBirth,
+                    school,
+                    state,
+                    income,
+                    rent,
+                    enrolledMonths,
+                    housingEntries: window.housingEntries
+                });
 
                 // Calculate benefit amount using all housing entries
                 const benefit = calculateBenefitWithMultipleHousing(state, income, enrolledMonths, window.housingEntries);
+                
                 console.log('Calculated benefit:', benefit);
                 
                 // Show congratulations modal with the calculated benefit
@@ -3739,17 +3746,30 @@ const statePersonalExemptionDB = {
 
                 // First, update the user profile
                 console.log('5. Updating user profile');
+                
                 const profileData = {
-                    firstName, lastName, dateOfBirth, school, state, income,
-                    monthlyRent: rent, progressPercentage: 33, totalPotentialBenefit: benefit,
-                    accountStatus: 'ACTIVE'
+                    firstName,
+                    lastName,
+                    dateOfBirth,
+                    school,
+                    state,
+                    income,
+                    monthlyRent: rent,
+                    progressPercentage: 33,
+                    totalPotentialBenefit: benefit,
+                    accountStatus: 'ACTIVE'  // Update account status from PENDING_INFO to ACTIVE
                 };
                 console.log('Profile update payload:', profileData);
+
                 const profileResponse = await fetch('https://jmqfabgm02.execute-api.us-east-2.amazonaws.com/update-profile', {
                     method: 'PUT',
-                    headers: { 'Authorization': `Bearer ${authToken}`, 'Content-Type': 'application/json' },
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify(profileData)
                 });
+
                 console.log('Profile update response status:', profileResponse.status);
                 if (!profileResponse.ok) {
                     const errorText = await profileResponse.text();
@@ -3762,42 +3782,948 @@ const statePersonalExemptionDB = {
                 console.log('6. Creating onboarding expenses from housing entries');
                 await addHousingEntryExpenses(window.housingEntries, enrolledMonths);
                 console.log('Expenses created successfully');
-                
-                submissionSuccess = true; // Mark submission as successful
-                localStorage.setItem('submissionComplete', 'true'); // Set flag for modal close handler
-                
-                console.log('7. Submission successful, hiding onboarding modal and checking redirect.');
-                hideOnboardingModal();
 
-                // Explicitly redirect AFTER successful submission if congrats modal is already closed
-                if (!document.getElementById('congratsModal')) {
-                    console.log('Congrats modal already closed, redirecting now.');
-                    window.location.href = 'trackersummary.html'; 
-                } else {
-                    console.log('Congrats modal still open, redirection will happen when closed.');
-                }
+                // Hide the modal
+                console.log('7. Hiding onboarding modal');
+                hideOnboardingModal();
+                
+                // The redirect will be handled by the congratulations modal close button
 
             } catch (error) {
-                 console.error('Error in form submission:', error);
-                 console.error('Error stack:', error.stack);
-                 localStorage.removeItem('submissionComplete'); // Clear flag on error
-                 
-                 // Show error message
-                 const errorMessage = document.createElement('div');
-                 errorMessage.className = 'error-message';
-                 errorMessage.textContent = 'Error submitting form. Please try again.';
-                 document.body.appendChild(errorMessage);
-                 setTimeout(() => errorMessage.remove(), 3000);
+                console.error('Error in form submission:', error);
+                console.error('Error stack:', error.stack);
+                
+                // Show error message
+                const errorMessage = document.createElement('div');
+                errorMessage.className = 'error-message';
+                errorMessage.textContent = 'Error submitting form. Please try again.';
+                document.body.appendChild(errorMessage);
+                setTimeout(() => errorMessage.remove(), 3000);
+                
             } finally {
                 console.log('8. Resetting button state');
                 // Reset button state
                 submitBtn.disabled = false;
                 spinner.style.display = 'none';
+            }
+        }
+
+        // Update the addOnboardingExpenses function to use housing.js functionality
+        async function addOnboardingExpenses(expenseData) {
+            console.log('===== ADDING ONBOARDING EXPENSES =====');
+            const { enrolledMonths } = expenseData;
+            
+            try {
+                // Use the housing.js function to add housing expenses
+                // This expects housingEntries to be available from housing.js
+                await addHousingEntryExpenses(window.housingEntries, enrolledMonths);
                 
-                // If submission failed, do not redirect here
-                if (!submissionSuccess) {
-                    console.log('Submission failed or was interrupted, will not redirect from finally block.');
+            } catch (error) {
+                console.error('Error in addOnboardingExpenses:', error);
+                console.error('Error stack:', error.stack);
+                throw error;
+            }
+        }
+
+        const API = {
+            baseUrl: 'https://wb2pd4d6gg.execute-api.us-east-2.amazonaws.com',
+            getToken: () => localStorage.getItem('authToken')
+        };
+
+        async function createExpense(expenseData) {
+            console.log('===== CREATING EXPENSE =====');
+            console.log('Expense data:', expenseData);
+            
+            try {
+                const token = API.getToken();
+                if (!token) {
+                    throw new Error('No authentication token found');
                 }
+
+                // Format the expense data to match Lambda expectations
+                const formattedExpense = {
+                    category: expenseData.category,
+                    amount: expenseData.amount,
+                    date: expenseData.date,
+                    notes: expenseData.notes || 'Onboarding expense',
+                    isQualified: expenseData.isQualified  // Remove the || true default
+                };
+
+                console.log('Formatted expense data:', formattedExpense);
+
+                const response = await fetch(`${API.baseUrl}/expenses`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formattedExpense)
+                });
+
+                console.log('Create expense response status:', response.status);
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    console.error('Create expense failed:', data);
+                    throw new Error(data.error || 'Failed to create expense');
+                }
+
+                console.log('Expense created successfully:', data);
+                return data;
+            } catch (error) {
+                console.error('Error in createExpense:', error);
+                console.error('Error stack:', error.stack);
+                throw error;
+            }
+        }
+
+        // Function to calculate the benefit based on state, income, and monthly rent
+        function calculateBenefit(state, income, monthlyRent) {
+            // Get the enrolled months from the form checkboxes
+            const enrolledMonths = Array.from(document.querySelectorAll('input[name="enrolledMonths"]:checked'))
+                .map(checkbox => parseInt(checkbox.value));
+            
+            // Get the number of enrolled months
+            const enrolledMonthsCount = enrolledMonths.length;
+            
+            // Get other expense values
+            const utilities = document.getElementById('utilitiesIncluded').checked ? 0 : 
+                parseFloat(document.getElementById('utilities').value.replace(/[^\d]/g, '') || '0');
+            const wifi = parseFloat(document.getElementById('wifi').value.replace(/[^\d]/g, '') || '0');
+            const monthlyGrocery = 325; // Fixed amount for groceries
+            
+            // Calculate total monthly expenses
+            const monthlyExpenses = Number(monthlyRent) + utilities + wifi + monthlyGrocery;
+            
+            // Calculate annual expenses based on enrolled months only
+            const annualExpenses = monthlyExpenses * enrolledMonthsCount;
+
+            // Get state-specific deductions and tax info
+            const stateTaxDeduction = statePersonalExemptionDB[state]?.amount || 0;
+            const stateDeduction = state529DB[state]?.deduction || 0;
+            const taxableStateIncome = Number(income) - stateTaxDeduction;
+            const taxRate = calculateStateTaxRate(taxableStateIncome, state);
+            
+            // Calculate deductible amount
+            const deductibleAmount = Math.min(
+                annualExpenses,  // Actual expenses during enrolled months
+                stateDeduction,  // State's max deduction
+                taxableStateIncome  // Limit to income if it's less than the deduction
+            );
+            const taxespaid = taxRate * taxableStateIncome;
+            
+            // Calculate benefit based on state rules
+            let benefit;
+            if (state === 'IN') {
+                const contributionCredit = deductibleAmount * 0.20;
+                benefit = Math.min(contributionCredit, 1500, taxespaid);
+            } else if (state === 'OR') {
+                benefit = 180;
+            } else if (state === 'MN') {
+                if (income < 88810) {
+                    benefit = Math.min(500, taxespaid, .5*annualExpenses);
+                } else {
+                    benefit = 0;
+                }
+            } else {
+                benefit = Math.min(deductibleAmount * taxRate, taxespaid);
+            }
+            return benefit;
+        }
+
+        // Add this CSS if not already present
+        const style = document.createElement('style');
+        style.textContent = `
+            .spinner-small {
+                width: 20px;
+                height: 20px;
+                border: 3px solid #f3f3f3;
+                border-top: 3px solid #3498db;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+                margin: 0 auto;
+            }
+            
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Add these new functions
+        // function showComingSoonPopup() {
+        //     document.getElementById('comingSoonPopup').classList.remove('hidden');
+        // }
+
+        // function closePopup() {
+        //     document.getElementById('comingSoonPopup').classList.add('hidden');
+        // }
+
+        // Update the optimizer link to show popup instead of navigating
+        // document.querySelector('a[href="savings-retirement.html"]').addEventListener('click', function(e) {
+        //     e.preventDefault();
+        //     showComingSoonPopup();
+        // });
+
+        function showExpenseTrackingModal() {
+            const modalHtml = `
+                <div class="modal-overlay expense-tracking-modal" style="display: flex;">
+                    <div class="modal-container">
+                        <div class="modal-content">
+                            <button class="close-button" onclick="closeExpenseTrackingModal()" aria-label="Close">×</button>
+                            <h2 style="margin-bottom: 1.5rem;">How to Track Your Expenses</h2>
+                            <p style="margin-bottom: 1.5rem;">Enter qualified expenses like:</p>
+                            <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem;">
+                                <li>Groceries</li>
+                                <li>Required class supplies</li>
+                                <li>One laptop every four years</li>
+                            </ul>
+                            <p style="margin-bottom: 1.5rem;">Renest will tell you how much to deposit into your 529.</p>
+                            <p style="margin-bottom: 2rem; color: var(--accent);">Important: If you are on leave or otherwise not enrolled as a student, any expenses during those months don't qualify for the benefit.</p>
+                            <button class="button button-primary" onclick="handleGotItClick()">
+                                <div class="btn-content">
+                                    <span>Got it!</span>
+                                    <div class="spinner" id="gotItSpinner" style="display: none;"></div>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Add modal to body
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        }
+
+        async function handleGotItClick() {
+            // Show spinner and disable button
+            const button = document.querySelector('.expense-tracking-modal .button-primary');
+            const spinner = document.getElementById('gotItSpinner');
+            const buttonText = button.querySelector('span');
+            
+            button.disabled = true;
+            spinner.style.display = 'block';
+            buttonText.style.opacity = '0.7';
+
+            try {
+                const authToken = localStorage.getItem('authToken');
+                const response = await fetch('https://jmqfabgm02.execute-api.us-east-2.amazonaws.com/update-profile', {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        progressPercentage: 80
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to update progress');
+                }
+
+                // Close modal and redirect
+                closeExpenseTrackingModal();
+                window.location.href = 'trackersummary.html';
+            } catch (error) {
+                console.error('Error updating progress:', error);
+                
+                // Show error message
+                const errorMessage = document.createElement('div');
+                errorMessage.className = 'error-message';
+                errorMessage.textContent = 'Failed to update progress. Please try again.';
+                document.body.appendChild(errorMessage);
+                setTimeout(() => errorMessage.remove(), 3000);
+                
+                // Reset button state
+                button.disabled = false;
+                spinner.style.display = 'none';
+                buttonText.style.opacity = '1';
+            }
+        }
+
+        function closeExpenseTrackingModal() {
+            const modal = document.querySelector('.modal-overlay');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // Add event listeners for new expense inputs
+        document.addEventListener('DOMContentLoaded', function() {
+            const utilitiesInput = document.getElementById('utilities');
+            const wifiInput = document.getElementById('wifi');
+            
+            utilitiesInput.addEventListener('input', function() {
+                formatCurrency(this);
+            });
+            
+            wifiInput.addEventListener('input', function() {
+                formatCurrency(this);
+            });
+        });
+
+        // Add these functions to handle the "Get My Money Now" button and modal
+        document.addEventListener('DOMContentLoaded', function() {
+            // ... existing code ...
+            
+            // Add event listener for the Get My Money Now button
+            document.getElementById('getMoneyButton').addEventListener('click', function() {
+                showGetMoneyModal();
+            });
+        });
+
+        function showGetMoneyModal() {
+            document.getElementById('getMoneyModal').classList.remove('hidden');
+        }
+
+        function closeGetMoneyModal() {
+            document.getElementById('getMoneyModal').classList.add('hidden');
+        }
+
+        // Function to calculate the benefit based on state, income, and multiple lease periods
+        function calculateBenefitWithMultipleLeases(state, income, initialRent, leaseEndMonth, leaseEndYear, newLeaseInfo, enrolledMonths) {
+            const currentYear = new Date().getFullYear();
+            
+            // Get the number of enrolled months
+            const enrolledMonthsCount = enrolledMonths.length;
+            
+            // Get initial lease values
+            const initialUtilities = document.getElementById('utilitiesIncluded').checked ? 0 : 
+                parseFloat(document.getElementById('utilities').value.replace(/[^\d]/g, '') || '0');
+            const initialWifi = parseFloat(document.getElementById('wifi').value.replace(/[^\d]/g, '') || '0');
+            
+            // Get new lease values
+            const newRent = newLeaseInfo.rent || 0;
+            const newUtilities = newLeaseInfo.utilitiesIncluded ? 0 : (newLeaseInfo.utilities || 0);
+            const newWifi = newLeaseInfo.wifi || 0;
+            
+            // Fixed amount for groceries
+            const monthlyGrocery = 325;
+            
+            // Calculate total expenses for each month, considering different lease periods
+            let totalAnnualExpenses = 0;
+            
+            for (let month = 1; month <= 12; month++) {
+                // Skip if not enrolled this month
+                if (!enrolledMonths.includes(month)) {
+                    continue;
+                }
+                
+                // Determine which lease applies to this month
+                let monthlyExpense = monthlyGrocery; // Groceries are constant
+                
+                // Determine if month falls under initial lease or new lease
+                const isInInitialLease = leaseEndYear > currentYear || (leaseEndYear === currentYear && month <= leaseEndMonth);
+                const isInNewLease = 
+                    (newLeaseInfo.startYear === currentYear && month >= newLeaseInfo.startMonth) ||
+                    (newLeaseInfo.endYear === currentYear && month <= newLeaseInfo.endMonth) ||
+                    (currentYear > newLeaseInfo.startYear && currentYear < newLeaseInfo.endYear);
+                
+                if (isInInitialLease) {
+                    // Use initial lease values
+                    monthlyExpense += Number(initialRent) + initialUtilities + initialWifi;
+                } else if (isInNewLease) {
+                    // Use new lease values
+                    monthlyExpense += newRent + newUtilities + newWifi;
+                } else {
+                    // No lease for this month
+                    continue;
+                }
+                
+                // Add to total annual expenses
+                totalAnnualExpenses += monthlyExpense;
+            }
+            
+            // Get state-specific deductions and tax info
+            const stateTaxDeduction = statePersonalExemptionDB[state]?.amount || 0;
+            const stateDeduction = state529DB[state]?.deduction || 0;
+            const taxableStateIncome = Number(income) - stateTaxDeduction;
+            const taxRate = calculateStateTaxRate(taxableStateIncome, state);
+            
+            // Calculate deductible amount
+            const deductibleAmount = Math.min(
+                totalAnnualExpenses,  // Actual expenses during enrolled months
+                stateDeduction,  // State's max deduction
+                taxableStateIncome  // Limit to income if it's less than the deduction
+            );
+            const taxespaid = taxRate * taxableStateIncome;
+            
+            // Calculate benefit based on state rules
+            let benefit;
+            if (state === 'IN') {
+                const contributionCredit = deductibleAmount * 0.20;
+                benefit = Math.min(contributionCredit, 1500, taxespaid);
+            } else if (state === 'OR') {
+                benefit = 180;
+            } else if (state === 'MN') {
+                if (income < 88810) {
+                    benefit = Math.min(500, taxespaid, .5*totalAnnualExpenses);
+                } else {
+                    benefit = 0;
+                }
+            } else {
+                benefit = Math.min(deductibleAmount * taxRate, taxespaid);
+            }
+            return benefit;
+        }
+
+        function handleNoNewLeaseInfo() {
+            console.log('🔄 handleNoNewLeaseInfo called');
+            // User doesn't know new lease info, just use current lease until end date
+            hasNewLease = false;
+            newLeaseInfo = {}; // Reset any previously entered info
+            console.log('hasNewLease set to:', hasNewLease);
+            
+            console.log('Closing confirm lease modal');
+            closeConfirmLeaseModal();
+            
+            // Show Submit button
+            console.log('Calling showSubmitButton from handleNoNewLeaseInfo');
+            showSubmitButton();
+            
+            // Show confirmation message
+            const successMessage = document.createElement('div');
+            successMessage.className = 'success-message';
+            successMessage.textContent = 'Lease information confirmed! You can now proceed with submission.';
+            document.body.appendChild(successMessage);
+            setTimeout(() => successMessage.remove(), 3000);
+            
+            console.log('🔄 handleNoNewLeaseInfo completed');
+        }
+        
+        function handleYesNewLeaseInfo() {
+            console.log('✅ handleYesNewLeaseInfo called');
+            // User knows new lease info, show the new lease form
+            console.log('Closing confirm lease modal');
+            closeConfirmLeaseModal();
+            
+            console.log('Showing upcoming lease modal');
+            showUpcomingLeaseModal();
+            
+            console.log('✅ handleYesNewLeaseInfo completed');
+        }
+        
+        function showConfirmLeaseModal() {
+            console.log('🔍 showConfirmLeaseModal: showing modal');
+            document.getElementById('confirmLeaseModal').classList.remove('hidden');
+        }
+        
+        function closeConfirmLeaseModal() {
+            console.log('🔍 closeConfirmLeaseModal: hiding modal');
+            document.getElementById('confirmLeaseModal').classList.add('hidden');
+            
+            // If we don't have new lease info yet, make sure Done button is still visible
+            // This handles the case when user clicks X to close without selecting yes/no
+            if (!hasNewLease) {
+                console.log('No new lease info set yet, ensuring Done button is visible');
+                const leaseInfoBtn = document.getElementById('leaseInfoBtn');
+                const submitBtn = document.getElementById('submitBtn');
+                
+                if (leaseInfoBtn && submitBtn) {
+                    console.log('Button state before update:', {
+                        leaseInfoHidden: leaseInfoBtn.classList.contains('hidden'),
+                        submitHidden: submitBtn.classList.contains('hidden')
+                    });
+                    
+                    leaseInfoBtn.classList.remove('hidden');
+                    submitBtn.classList.add('hidden');
+                    
+                    console.log('Button state after update:', {
+                        leaseInfoHidden: leaseInfoBtn.classList.contains('hidden'),
+                        submitHidden: submitBtn.classList.contains('hidden')
+                    });
+                } else {
+                    console.warn('⚠️ Could not find buttons in closeConfirmLeaseModal');
+                }
+            } else {
+                console.log('hasNewLease is true, not modifying button visibility');
+            }
+        }
+        
+        function checkLeaseEndDate() {
+            // This function is used for lease-specific logic, not housing modal
+            // We'll now use a simpler approach with a fixed end date
+            const currentDate = new Date();
+            const currentYear = currentDate.getFullYear();
+            
+            // For simplicity, assume lease ends at the end of current year
+            // This could be enhanced later if needed
+            return true;
+        }
+        
+        function handleLeaseDone() {
+            console.log('🔵 handleLeaseDone called');
+            // Check if lease ends this year
+            const leaseEndsThisYear = checkLeaseEndDate();
+            console.log('Lease ends this year:', leaseEndsThisYear);
+            
+            if (leaseEndsThisYear) {
+                // Show the confirmation modal
+                console.log('Showing confirm lease modal');
+                showConfirmLeaseModal();
+            } else {
+                // Lease doesn't end this year, so no need for new lease info
+                console.log('Lease does not end this year, proceeding directly');
+                
+                // Show Submit button
+                console.log('Calling showSubmitButton from handleLeaseDone (no end this year)');
+                showSubmitButton();
+                
+                // Just show a success message
+                const successMessage = document.createElement('div');
+                successMessage.className = 'success-message';
+                successMessage.textContent = 'Lease information confirmed! You can now proceed with submission.';
+                document.body.appendChild(successMessage);
+                setTimeout(() => successMessage.remove(), 3000);
+            }
+            
+            console.log('🔵 handleLeaseDone completed');
+        }
+        
+        function closeUpcomingLeaseModal() {
+            console.log('🔒 closeUpcomingLeaseModal called');
+            document.getElementById('upcomingLeaseModal').classList.add('hidden');
+            
+            // Ensure the correct button is showing if they close without saving
+            // If they haven't saved new lease info yet, keep the Done button visible
+            console.log('Current hasNewLease value:', hasNewLease);
+            if (!hasNewLease) {
+                console.log('No new lease saved, ensuring Done button remains visible');
+                const leaseInfoBtn = document.getElementById('leaseInfoBtn');
+                const submitBtn = document.getElementById('submitBtn');
+                
+                if (leaseInfoBtn && submitBtn) {
+                    console.log('Button state before update:', {
+                        leaseInfoHidden: leaseInfoBtn.classList.contains('hidden'),
+                        submitHidden: submitBtn.classList.contains('hidden')
+                    });
+                    
+                    leaseInfoBtn.classList.remove('hidden');
+                    submitBtn.classList.add('hidden');
+                    
+                    console.log('Button state after update:', {
+                        leaseInfoHidden: leaseInfoBtn.classList.contains('hidden'),
+                        submitHidden: submitBtn.classList.contains('hidden')
+                    });
+                } else {
+                    console.warn('⚠️ Could not find buttons in closeUpcomingLeaseModal');
+                }
+            } else {
+                console.log('hasNewLease is true, not modifying button visibility');
+            }
+            
+            console.log('🔒 closeUpcomingLeaseModal completed');
+        }
+
+        function showSubmitButton() {
+            try {
+                console.log('⭐ showSubmitButton called');
+                const leaseInfoBtn = document.getElementById('leaseInfoBtn');
+                const submitBtn = document.getElementById('submitBtn');
+                
+                console.log('Button elements found:', {
+                    leaseInfoBtn: leaseInfoBtn ? 'found' : 'null',
+                    submitBtn: submitBtn ? 'found' : 'null'
+                });
+                
+                if (leaseInfoBtn && submitBtn) {
+                    console.log('Button initial state:', {
+                        leaseInfoHidden: leaseInfoBtn.classList.contains('hidden'),
+                        submitHidden: submitBtn.classList.contains('hidden')
+                    });
+                    
+                    // Hide Done button
+                    leaseInfoBtn.classList.add('hidden');
+                    // Show Submit button
+                    submitBtn.classList.remove('hidden');
+                    
+                    // Force browser reflow
+                    void leaseInfoBtn.offsetWidth;
+                    void submitBtn.offsetWidth;
+                    
+                    console.log('Button final state:', {
+                        leaseInfoHidden: leaseInfoBtn.classList.contains('hidden'),
+                        submitHidden: submitBtn.classList.contains('hidden')
+                    });
+                } else {
+                    console.warn('⚠️ Could not find buttons to toggle');
+                }
+            } catch (e) {
+                console.error('❌ Error toggling buttons:', e);
+            }
+        }
+        
+        function saveNewLeaseInfo() {
+            console.log('📝 saveNewLeaseInfo called');
+            hasNewLease = true;
+            
+            // Get values from the form
+            const startMonth = parseInt(document.getElementById('newLeaseStartMonth').value);
+            const startYear = parseInt(document.getElementById('newLeaseStartYear').value);
+            const endMonth = parseInt(document.getElementById('newLeaseEndMonth').value);
+            const endYear = parseInt(document.getElementById('newLeaseEndYear').value);
+            const rent = document.getElementById('newLeaseRent').value.replace(/[^\d]/g, '');
+            const utilities = document.getElementById('newLeaseUtilities').value.replace(/[^\d]/g, '');
+            const wifi = document.getElementById('newLeaseWifi').value.replace(/[^\d]/g, '');
+            const utilitiesIncluded = document.getElementById('newLeaseUtilitiesIncluded').checked;
+            
+            // Store the new lease info
+            newLeaseInfo = {
+                startMonth,
+                startYear,
+                endMonth,
+                endYear,
+                rent: parseFloat(rent) || 0,
+                utilities: parseFloat(utilities) || 0,
+                wifi: parseFloat(wifi) || 0,
+                utilitiesIncluded
+            };
+            
+            console.log('New lease info stored:', newLeaseInfo);
+            console.log('Current hasNewLease value:', hasNewLease);
+            
+            // Close the modal
+            console.log('Closing upcoming lease modal');
+            document.getElementById('upcomingLeaseModal').classList.add('hidden');
+            
+            // Show Submit button
+            console.log('Calling showSubmitButton from saveNewLeaseInfo');
+            showSubmitButton();
+            
+            // Show confirmation message
+            const successMessage = document.createElement('div');
+            successMessage.className = 'success-message';
+            successMessage.textContent = 'New lease information saved! You can now proceed with submission.';
+            document.body.appendChild(successMessage);
+            setTimeout(() => successMessage.remove(), 3000);
+            
+            console.log('📝 saveNewLeaseInfo completed');
+        }
+
+        // Housing Information Modal
+        function openHousingModal() {
+            // Reset form fields
+            document.getElementById('leaseStartMonth').value = new Date().getMonth() + 1;
+            document.getElementById('leaseStartYear').value = new Date().getFullYear();
+            document.getElementById('leaseEndMonth').value = new Date().getMonth() + 1;
+            document.getElementById('leaseEndYear').value = new Date().getFullYear() + 1;
+            document.getElementById('monthlyRent').value = '';
+            document.getElementById('utilities').value = '';
+            document.getElementById('wifi').value = '';
+            document.getElementById('utilitiesIncluded').checked = false;
+            
+            // Show the modal
+            document.getElementById('housingModal').classList.remove('hidden');
+        }
+
+        function closeHousingModal() {
+            document.getElementById('housingModal').classList.add('hidden');
+        }
+
+        // Array to store housing entries
+        let housingEntries = [];
+
+        function saveHousingInfo() {
+            const startMonth = parseInt(document.getElementById('leaseStartMonth').value);
+            const startYear = parseInt(document.getElementById('leaseStartYear').value);
+            const endMonth = parseInt(document.getElementById('leaseEndMonth').value);
+            const endYear = parseInt(document.getElementById('leaseEndYear').value);
+            const rent = document.getElementById('monthlyRent').value.replace(/[^\d.]/g, '');
+            const utilities = document.getElementById('utilities').value.replace(/[^\d.]/g, '') || '0';
+            const wifi = document.getElementById('wifi').value.replace(/[^\d.]/g, '') || '0';
+            const utilitiesIncluded = document.getElementById('utilitiesIncluded').checked;
+            
+            // Validate inputs
+            if (!rent || parseFloat(rent) <= 0) {
+                showError('Please enter a valid rent amount');
+                return;
+            }
+            
+            // Validate date range
+            const startDate = new Date(startYear, startMonth - 1, 1);
+            const endDate = new Date(endYear, endMonth - 1, 1);
+            
+            if (endDate <= startDate) {
+                showError('Lease end date must be after start date');
+                return;
+            }
+            
+            // Check for overlapping periods
+            if (hasOverlappingPeriods(startMonth, startYear, endMonth, endYear)) {
+                showError('This housing period overlaps with another entry. Please adjust the dates.');
+                return;
+            }
+            
+            const housingEntry = {
+                id: Date.now(), // Unique identifier
+                startMonth,
+                startYear,
+                endMonth,
+                endYear,
+                rent: parseFloat(rent),
+                utilities: parseFloat(utilities),
+                wifi: parseFloat(wifi),
+                utilitiesIncluded
+            };
+            
+            // Add to array
+            housingEntries.push(housingEntry);
+            
+            // Update UI
+            loadExistingHousingEntries();
+            
+            // Close modal
+            closeHousingModal();
+            
+            // Show success message
+            const successMessage = document.createElement('div');
+            successMessage.className = 'success-message';
+            successMessage.textContent = 'Housing information added!';
+            document.body.appendChild(successMessage);
+            setTimeout(() => successMessage.remove(), 3000);
+        }
+
+        function hasOverlappingPeriods(startMonth, startYear, endMonth, endYear) {
+            // Generate all month-year pairs for the new entry
+            const newEntryMonths = [];
+            let currentDate = new Date(startYear, startMonth - 1, 1);
+            
+            // Make sure to include the end month in our check
+            const newEndDate = new Date(endYear, endMonth - 1, 1);
+            
+            while (currentDate <= newEndDate) {
+                newEntryMonths.push(`${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`);
+                currentDate.setMonth(currentDate.getMonth() + 1);
+            }
+            
+            // Check if any of these months are already covered by an existing entry
+            return housingEntries.some(entry => {
+                const existingEntryMonths = [];
+                let currentExistingDate = new Date(entry.startYear, entry.startMonth - 1, 1);
+                
+                // Include the end month in our check
+                const existingEndDate = new Date(entry.endYear, entry.endMonth - 1, 1);
+                
+                while (currentExistingDate <= existingEndDate) {
+                    existingEntryMonths.push(`${currentExistingDate.getMonth() + 1}-${currentExistingDate.getFullYear()}`);
+                    currentExistingDate.setMonth(currentExistingDate.getMonth() + 1);
+                }
+                
+                // Check for any overlapping months
+                return newEntryMonths.some(monthYear => existingEntryMonths.includes(monthYear));
+            });
+        }
+
+        function removeHousingEntry(id) {
+            housingEntries = housingEntries.filter(entry => entry.id !== id);
+            loadExistingHousingEntries();
+            
+            // Show removal message
+            const message = document.createElement('div');
+            message.className = 'success-message';
+            message.textContent = 'Housing entry removed';
+            document.body.appendChild(message);
+            setTimeout(() => message.remove(), 3000);
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorMessage = document.createElement('div');
+            errorMessage.className = 'error-message';
+            errorMessage.textContent = message;
+            document.body.appendChild(errorMessage);
+            setTimeout(() => errorMessage.remove(), 3000);
+        }
+
+        // Modify form validation to check for housing entries
+        function validateStep3() {
+            // Use the validateHousingStep3 function from housing.js
+            return validateHousingStep3();
+        }
+
+        // Update submitForm to use the housing entries
+        async function submitForm() {
+            console.log('===== FORM SUBMISSION STARTED =====');
+            const submitBtn = document.getElementById('submitBtn');
+            const spinner = document.getElementById('spinner');
+            const modal = document.getElementById('onboardingModal');
+            
+            try {
+                console.log('1. Disabling all buttons and showing spinner');
+                // Disable all form elements in the modal
+                const allInputs = modal.querySelectorAll('input');
+                const allButtons = modal.querySelectorAll('button');
+                const allSelects = modal.querySelectorAll('.select-selected');
+                
+                // Disable all inputs
+                allInputs.forEach(input => {
+                    input.disabled = true;
+                    input.style.opacity = '0.7';
+                    input.style.cursor = 'not-allowed';
+                });
+                
+                // Disable all buttons
+                allButtons.forEach(button => {
+                    button.disabled = true;
+                    button.style.opacity = '0.7';
+                    button.style.cursor = 'not-allowed';
+                });
+                
+                // Disable all selects
+                allSelects.forEach(select => {
+                    select.style.pointerEvents = 'none';
+                    select.style.opacity = '0.7';
+                    select.style.cursor = 'not-allowed';
+                });
+                
+                submitBtn.disabled = true;
+                spinner.style.display = 'block';
+                
+                // Validate step 3
+                console.log('2. Starting step 3 validation');
+                const step3Valid = await validateStep3();
+                console.log('Step 3 validation result:', step3Valid);
+                
+                if (!step3Valid) {
+                    console.log('Step 3 validation failed, returning');
+                    // Re-enable all elements if validation fails
+                    allInputs.forEach(input => {
+                        input.disabled = false;
+                        input.style.opacity = '1';
+                        input.style.cursor = 'auto';
+                    });
+                    
+                    allButtons.forEach(button => {
+                        button.disabled = false;
+                        button.style.opacity = '1';
+                        button.style.cursor = 'pointer';
+                    });
+                    
+                    allSelects.forEach(select => {
+                        select.style.pointerEvents = 'auto';
+                        select.style.opacity = '1';
+                        select.style.cursor = 'pointer';
+                    });
+                    
+                    submitBtn.disabled = false;
+                    spinner.style.display = 'none';
+                    return;
+                }
+                
+                // Get form values
+                console.log('3. Getting form values');
+                const firstName = document.getElementById('firstName').value;
+                const lastName = document.getElementById('lastName').value;
+                const dateOfBirth = document.getElementById('dateOfBirth').value;
+                const school = document.getElementById('school').value;
+                const state = document.getElementById('state').value;
+                const income = document.getElementById('income').value.replace(/[^\d]/g, '');
+                const enrolledMonths = Array.from(document.querySelectorAll('input[name="enrolledMonths"]:checked'))
+                    .map(checkbox => parseInt(checkbox.value));
+                
+                // Use the first housing entry's rent for profile data (for backward compatibility)
+                const firstHousing = window.housingEntries[0] || { rent: 0 };
+                const rent = firstHousing.rent.toString();
+
+                console.log('Form values collected:', {
+                    firstName,
+                    lastName,
+                    dateOfBirth,
+                    school,
+                    state,
+                    income,
+                    rent,
+                    enrolledMonths,
+                    housingEntries: window.housingEntries
+                });
+
+                // Calculate benefit amount using all housing entries
+                const benefit = calculateBenefitWithMultipleHousing(state, income, enrolledMonths, window.housingEntries);
+                
+                console.log('Calculated benefit:', benefit);
+                
+                // Show congratulations modal with the calculated benefit
+                showCongratulationsModal(benefit);
+
+                // Store data in localStorage first
+                localStorage.setItem('monthlyRent', rent);
+                localStorage.setItem('state', state);
+                localStorage.setItem('income', income);
+                localStorage.setItem('accountStatus', 'ACTIVE');
+                localStorage.setItem('progressPercentage', '33');
+
+                // Get auth token
+                console.log('4. Getting auth token');
+                const authToken = localStorage.getItem('authToken');
+                if (!authToken) {
+                    console.error('No auth token found in localStorage');
+                    throw new Error('No authentication token found');
+                }
+                console.log('Auth token found');
+
+                // First, update the user profile
+                console.log('5. Updating user profile');
+                
+                const profileData = {
+                    firstName,
+                    lastName,
+                    dateOfBirth,
+                    school,
+                    state,
+                    income,
+                    monthlyRent: rent,
+                    progressPercentage: 33,
+                    totalPotentialBenefit: benefit,
+                    accountStatus: 'ACTIVE'  // Update account status from PENDING_INFO to ACTIVE
+                };
+                console.log('Profile update payload:', profileData);
+
+                const profileResponse = await fetch('https://jmqfabgm02.execute-api.us-east-2.amazonaws.com/update-profile', {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(profileData)
+                });
+
+                console.log('Profile update response status:', profileResponse.status);
+                if (!profileResponse.ok) {
+                    const errorText = await profileResponse.text();
+                    console.error('Profile update failed:', errorText);
+                    throw new Error(`Failed to update profile: ${errorText}`);
+                }
+                console.log('Profile updated successfully');
+
+                // Then, create the expenses using the housing entries
+                console.log('6. Creating onboarding expenses from housing entries');
+                await addHousingEntryExpenses(window.housingEntries, enrolledMonths);
+                console.log('Expenses created successfully');
+
+                // Hide the modal
+                console.log('7. Hiding onboarding modal');
+                hideOnboardingModal();
+                
+                // The redirect will be handled by the congratulations modal close button
+
+            } catch (error) {
+                console.error('Error in form submission:', error);
+                console.error('Error stack:', error.stack);
+                
+                // Show error message
+                const errorMessage = document.createElement('div');
+                errorMessage.className = 'error-message';
+                errorMessage.textContent = 'Error submitting form. Please try again.';
+                document.body.appendChild(errorMessage);
+                setTimeout(() => errorMessage.remove(), 3000);
+                
+            } finally {
+                console.log('8. Resetting button state');
+                // Reset button state
+                submitBtn.disabled = false;
+                spinner.style.display = 'none';
             }
         }
 
@@ -4306,7 +5232,7 @@ const statePersonalExemptionDB = {
             console.log('Directly populating year dropdowns');
             
             const currentYear = new Date().getFullYear();
-            const yearRange = 3; // 5 years before and after current year
+            const yearRange = 5; // 5 years before and after current year
             
             // Get the select elements
             const leaseStartYearSelect = document.getElementById('leaseStartYear');
