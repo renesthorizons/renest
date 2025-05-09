@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-TGZL6PTS');</script>
+    <link rel="icon" href="blogo2.png" type="image/png">
+    <!-- End Google Tag Manager -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Renest Waitlist - Your Perks!</title>
+    <style>
+        :root {
+            --primary: #4B227A;
+            --accent: #FF69B4;
+            --text-dark: #1E0A3C;
+            --background: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            background-image: linear-gradient(to bottom, rgba(200, 220, 255, 0.07), rgba(200, 220, 255, 0));
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .nav-links a {
+            color: var(--text-dark);
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            display: block;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(75, 34, 122, 0.05);
+            transform: translateX(5px);
+        }
+
+        .nav-links .talk-button {
+            background-color: var(--primary);
+            color: white !important;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+        .nav-links .talk-button:hover {
+            background-image: linear-gradient(45deg, #4B227A, #FF69B4);
+            transform: translateY(-2px);
+        }
+
+        .menu-button {
+            background: none;
+            border: 2px solid var(--primary);
+            border-radius: 4px;
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.5rem 0.75rem;
+            color: var(--primary);
+            display: block;
+        }
+
+        @media (min-width: 768px) {
+            .menu-button {
+                display: none;
+            }
+            .nav-links {
+                position: static;
+                display: flex !important;
+                flex-direction: row;
+                padding: 0;
+                box-shadow: none;
+                gap: 0;
+                align-items: center;
+            }
+            .nav-links a {
+                margin-left: 2rem;
+                padding: 0.5rem 1rem;
+            }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        .page-header {
+            margin-top: 6rem; /* Account for fixed navbar */
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .page-header p {
+            font-size: 1.1rem;
+            text-align: center;
+            color: var(--text-dark);
+            opacity: 0.9;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            border-radius: 12px;
+            background: rgba(75, 34, 122, 0.03);
+        }
+        
+        .section.plain-background {
+            background: transparent;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .section h2 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .section p, .section li {
+            font-size: 1.05rem;
+            margin-bottom: 1rem;
+        }
+        .section ul {
+            list-style-position: inside;
+            padding-left: 0;
+        }
+
+        .mockup-container { /* Copied from future-benefit.html for consistency */
+            margin: 1.5rem auto;
+            max-width: 330px; /* Max width from future-benefit.html */
+            text-align: center;
+            position: relative;
+        }
+
+        .mockup-image { /* Copied from future-benefit.html for consistency */
+            width: 100%;
+            height: auto;
+            border-radius: 30px; /* Rounded corners from future-benefit.html */
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+        
+        /* Shadow effect for mockup from future-benefit.html */
+        .mockup-container::after {
+            content: '';
+            position: absolute;
+            width: 80%;
+            height: 20px;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: radial-gradient(ellipse at center, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 80%);
+            z-index: 1;
+        }
+
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-right: 1rem;
+            margin-bottom: 1rem;
+            border: none; /* Ensure no default border */
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(75, 34, 122, 0.2);
+        }
+         .cta-button.secondary {
+            background: none;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+         .cta-button.secondary:hover {
+            background: rgba(75, 34, 122, 0.05);
+             box-shadow: none;
+        }
+
+        .reviews-container-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            min-height: 200px; 
+            height: auto;
+        }
+        .review-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: absolute; 
+            width: 100%;
+            opacity: 0; 
+            transition: opacity 0.7s ease-in-out;
+            display: none; 
+        }
+        .review-card.active {
+            opacity: 1;
+            display: block; 
+            z-index: 2;
+        }
+        .review-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .review-card-author {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .review-card-author-img-placeholder {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+        .review-card-author img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .review-card-author-name {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        .trustpilot-link {
+            font-size: 0.8rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            opacity: 0.7;
+        }
+        .trustpilot-link:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+        .review-card-text {
+            font-style: italic;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .footer {
+             background-color: rgb(235, 232, 252,.5);
+            padding: 3rem 1rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .footer-links h3 {
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            display: block;
+            color: var(--text-dark);
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+        }
+        
+        .copyright {
+            color: var(--text-dark);
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        @media (min-width: 768px) {
+            .footer-content {
+                grid-template-columns: 2fr 1fr 1fr;
+            }
+            .how-it-works-flex { /* Added for desktop layout */
+                display: flex;
+                gap: 2rem;
+                align-items: center;
+            }
+            .how-it-works-text {
+                flex: 1;
+            }
+            .how-it-works-image {
+                flex-basis: 300px; /* Adjust as needed */
+            }
+        }
+
+        /* Founder card styles - adapted from aboutus529.html */
+        .founder-section-perks {
+            display: flex;
+            flex-direction: column; /* Stack cards on mobile */
+            gap: 3rem; /* Increased gap for better separation */
+            margin-top: 2rem; /* Space above founder cards */
+            margin-bottom: 1rem; /* Space below founder cards */
+        }
+
+        .founder-card-perks {
+            background: rgba(255, 255, 255, 0.7); /* Lighter background for subtlety */
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center content on mobile */
+            text-align: center; /* Center text on mobile */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .founder-image-perks {
+            width: 100px; /* Slightly smaller for this page */
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover; /* Changed from contain for better fill */
+            object-position: center;
+            border: 3px solid var(--primary); /* Thinner border */
+            margin-bottom: 1rem;
+        }
+
+        .founder-name-perks {
+            color: var(--primary);
+            font-size: 1.3rem; /* Slightly smaller */
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .founder-title-perks {
+            color: var(--text-dark);
+            font-size: 0.9rem; /* Slightly smaller */
+            margin-bottom: 0.75rem;
+            opacity: 0.8;
+        }
+
+        .founder-text-perks {
+            color: var(--text-dark);
+            line-height: 1.5;
+            font-size: 0.95rem; /* Slightly smaller */
+            margin-bottom: 1rem;
+        }
+        .founder-link-perks {
+            font-size: 0.9rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .founder-link-perks:hover {
+            text-decoration: underline;
+        }
+
+        /* Photo Gallery Styles */
+        .photo-gallery-section {
+            text-align: center;
+        }
+        .photo-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .photo-item {
+            background: #f9f9f9;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .photo-item img {
+            width: 100%;
+            height: 200px; /* Fixed height for uniform look */
+            object-fit: cover;
+            display: block;
+        }
+        .photo-caption {
+            padding: 0.75rem;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            background-color: #fff;
+        }
+
+        /* Adjustments for founder cards on desktop */
+        .founder-section-perks {
+            flex-direction: row; /* Side-by-side on desktop */
+            align-items: flex-start; /* Align items to top */
+        }
+        .founder-card-perks {
+            flex: 1; /* Allow cards to take equal space */
+            text-align: left; /* Align text to left on desktop */
+            align-items: flex-start; /* Align items to left */
+        }
+         .founder-image-perks {
+            margin-bottom: 0; /* Remove bottom margin if image is side-by-side */
+            margin-right: 1rem; /* Add right margin for side-by-side layout */
+        }
+        /* If you want image above text even on desktop, remove margin-right and keep margin-bottom */
+        /* Desktop layout for founder card content: image above text */
+        .founder-card-perks {
+            flex-direction: column; /* Image above text */
+            align-items: center; /* Center content within the card */
+            text-align: center; /* Center text within the card, like mobile */
+        }
+        .founder-image-perks {
+            margin-bottom: 1rem; /* Space below image */
+            margin-right: 0; /* No side margin needed */
+        }
+        .founder-content-perks { /* Add a wrapper for text if needed */
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TGZL6PTS"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <div class="container page-header">
+        <h1>Hey, Thanks for Your Interest!</h1>
+        <!-- <p>Here's a quick update on how we're turning your student-worker hustle into a unique financial advantage.</p> -->
+    </div>
+
+    <div class="container">
+        <section class="section">
+            <h2>Financial Confidence & Real Savings for Students</h2>
+            <div class="how-it-works-flex">
+                <div class="how-it-works-text">
+                    <!-- <p>We help students who work and study turn that balance into a financial advantage that will last a lifetime. 
+                    Your unique position offers financial advantages that are only available now.
+                    Our goal is to help you understand your finances, build confidence,
+                     and turn your hard work into tangible longterm benefits for yourself and those around you.
+                    You study and work and have a bunch of other things to do. So things need to have a purpose, be clear and not a gimmick.
+                    That is what Renest is all about. we dont rely on points, discounts, credit or partner merchants we provide a place 
+                    for you to grow your financial confidence and literacy. What is financial literacy? 
+                    Financial literacy is calmness and confidence when it comes to your money.
+                     its not knowing everything, its knowing how to start. 
+                     With financial literacy not only comes confidence but over your lifetime $100,000.
+                     Renest gives you the tools and the direction to get there and our first step is to show you 
+                     how your unique position of being a student but also having an income is an advantage available now 
+                     that will let you save hundreds of dollars each year on your expenses.</p> -->
+
+
+                    <p>You're juggling studies, work, and everything else – you need solutions that are clear, purposeful and not a gimmick. 
+                        That's Renest. We don't do points or discounts or bonuses; we think long term. 
+                        We transform your unique position as a working student into a financial advantage that builds real confidence and lasts a lifetime. 
+
+
+                        What's financial literacy? It's not about knowing everything; it's the calmness and confidence to 
+                        know how to start (It's also $100,000 according to 
+                        <a href="https://www.cnbc.com/2024/02/17/taking-a-personal-finance-class-has-a-lifetime-benefit-of-100000.html">research</a>).
+                        Where to start?
+                        Renest. Our first step? Showing you how to save hundreds each year.</p>
+                </div>
+                <div class="how-it-works-image">
+                    <div class="mockup-container">
+                        <img src="529iphoneimage3style.png" alt="Renest 529 App Interface" class="mockup-image">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>A Glimpse Into Our Story</h2>
+            <!-- Founder cards will remain visible -->
+            <div class="founder-section-perks">
+                <div class="founder-card-perks">
+                    <img src="thomasheadshot.png" alt="Thomas Lloyd" class="founder-image-perks" onerror="this.style.display='none'; this.parentElement.insertAdjacentHTML('afterbegin', '<div class=\'review-card-author-img-placeholder\'>T</div>')">
+                    <div class="founder-content-perks">
+                        <h3 class="founder-name-perks">Thomas Lloyd</h3>
+                        <p class="founder-title-perks">Co-Founder</p>
+                        <p class="founder-text-perks">"As a working undergraduate and during my PhD, I saw firsthand the financial stress students face. I wanted to find real solutions."</p>
+                        <a href="https://orcid.org/0000-0002-4271-8809" target="_blank" rel="noopener" class="founder-link-perks">Thomas's Research</a>
+                    </div>
+                </div>
+                <div class="founder-card-perks">
+                    <img src="moheadshot.png" alt="Mo Zheng" class="founder-image-perks" onerror="this.style.display='none'; this.parentElement.insertAdjacentHTML('afterbegin', '<div class=\'review-card-author-img-placeholder\'>M</div>')">
+                    <div class="founder-content-perks">
+                        <h3 class="founder-name-perks">Mo Zheng</h3>
+                        <p class="founder-title-perks">Co-Founder</p>
+                        <p class="founder-text-perks">"My finance background and passion for accessibility made me want to help Thomas build something impactful."</p>
+                        <a href="https://www.linkedin.com/in/thomas-mo-zheng-b22830124" target="_blank" rel="noopener" class="founder-link-perks">Mo's Career</a>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 1.5rem; margin-bottom: 1rem;">
+                <button id="readMoreStoryBtn" class="cta-button secondary" style="margin-right: 0;">Read More</button>
+            </div>
+
+            <div id="moreStoryText" style="display: none;">
+                <p>Renest was born from a simple need. Co-founder Thomas Lloyd, during his PhD, felt the financial squeeze many students face. He teamed up with his long-time friend, Mo Zheng, who has a background in finance and a passion for financial literacy. Together, they figured out how to optimize a student's finances.</p>
+                <p>What started as helping a few friends quickly showed a wider need: students with income need financial solutions built for *them*. That's why we're building Renest – to automate these strategies and bring these benefits to students everywhere.</p>
+            </div>
+        </section>
+
+        <section class="section">
+            <div id="howRenestMakesMoneyHeader" style="cursor: pointer; margin-bottom: 1rem; padding: 0.75rem; background: rgba(75, 34, 122, 0.03); border-radius: 8px;">
+                <h3 style="margin: 0; display: flex; justify-content: space-between; align-items: center; color: var(--primary); font-size: 1.2rem;">
+                    Ok, so how does Renest make money?
+                    <span id="moneyFAQToggleIcon" style="font-size: 1.5rem; font-weight: bold;">+</span>
+                </h3>
+            </div>
+            <div id="howRenestMakesMoneyText" style="display: none; padding-top: 1rem;">
+                <p>Our goal is that every time you Renest, you ask us, "Can I pay you more?" That's because we don't offer anything that doesn't help you save more money than what we cost.</p>
+                <p><em>"Uh huh, what's an example?"</em></p>
+                <p>Budgeting. Everyone has heard of budgeting apps. Those apps charge you $9-14/month to track your expenses and link accounts—but then that's it. The rest is up to you. Renest is different. We offer the same budgeting and tracking tools, but we don't stop there. We know the intricacies of the financial landscape and the benefits available. So, for working students, we get you cashback on those tracked expenses like rent, groceries, and utilities, all without having to change your spending. This leads to an average of $500 back each year and that's just the one advantage
+                    there's also longterm tax-advantages for yourself and your family, retirement benefits and overall increase in financial literacy and confidence. All of this more than outweight which more than outweighs the $8/month we charge (even better as we are building everything is currently free, you pay us back in feedback and hopefully if we do our job then positive reviews!).</p>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Budgeting With A Purpose: Your Student "401k"</h2>
+            <div class="how-it-works-flex">
+                <div class="how-it-works-text">
+                    <p>Renest offers the first budgeting tool that gets working students cashback. Think of Renest 529r as a 401k for students with income. 
+                        </p>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li style="margin-bottom: 1em;"><strong>Step 1</strong> Link your accounts, monitor spending, and create a clear budget with our all-in-one tool.</li>
+                        <li style="margin-bottom: 1em;"><strong>Step 2</strong> Get an average of $500/year back on tracked essentials like rent and groceries</li>
+                        <li style="margin-bottom: 1em;"><strong>Step 3</strong> Longterm retirement tax benefits that is flexiblefor students</li>
+                    </ul>
+                </div>
+                <div class="how-it-works-image">
+                    <div class="mockup-container">
+                        <img src="529iphoneimage3style.png" alt="Renest 529 App Interface" class="mockup-image">
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="section">
+            <h2>Budgeting With A Purpose</h2>
+            <div class="how-it-works-flex">
+                <div class="how-it-works-text">
+                    <p>Renest offers the first budgeting tool that gets working students cashback and long term benefits.
+                         
+                    </p>
+                </div>
+                <div class="how-it-works-image">
+                    <div class="mockup-container">
+                        <img src="529iphoneimage3style.png" alt="Renest 529 App Interface" class="mockup-image">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+
+        <section class="section plain-background">
+            <h2>Feedback from Working Students We've Helped</h2>
+            <div class="reviews-container-wrapper">
+                <div class="review-card">
+                    <div class="review-card-header">
+                        <div class="review-card-author">
+                             <img src="JavierP.png" alt="Javier P." onerror="this.outerHTML='<div class=\'review-card-author-img-placeholder\'>J</div>'">
+                            <span class="review-card-author-name">Javier P.</span>
+                        </div>
+                        <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener" class="trustpilot-link">read on Trustpilot</a>
+                    </div>
+                    <p class="review-card-text">"The Renest team was extremely responsive and answered all my questions in great detail. Learned a lot and definitely recommend them if you are a student or recent graduate!"</p>
+                </div>
+                <div class="review-card">
+                    <div class="review-card-header">
+                        <div class="review-card-author">
+                            <img src="AlfonsoA.png" alt="Alfonso A." onerror="this.outerHTML='<div class=\'review-card-author-img-placeholder\'>A</div>'">
+                            <span class="review-card-author-name">Alfonso A.</span>
+                        </div>
+                        <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener" class="trustpilot-link">read on Trustpilot</a>
+                    </div>
+                    <p class="review-card-text">"Taxes in the US can be incredibly complex, especially if you've worked in multiple states like I did last year. The team at Renest has been incredibly helpful at every step, always ready to help whenever I had specific questions!"</p>
+                </div>
+                <div class="review-card">
+                    <div class="review-card-header">
+                        <div class="review-card-author">
+                            <img src="NirvaanK.png" alt="Nirvaan K." onerror="this.outerHTML='<div class=\'review-card-author-img-placeholder\'>N</div>'">
+                            <span class="review-card-author-name">Nirvaan K.</span>
+                        </div>
+                        <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener" class="trustpilot-link">read on Trustpilot</a>
+                    </div>
+                    <p class="review-card-text">"Pretty wild that something like this exists and actually works. Especially since im an international student. Lol this makes taxes much less frustrating. Renest actually just got me like 500$ out of nothing"</p>
+                </div>
+                 <div class="review-card">
+                    <div class="review-card-header">
+                        <div class="review-card-author">
+                           <img src="OjasP.png" alt="Ojas P." onerror="this.outerHTML='<div class=\'review-card-author-img-placeholder\'>O</div>'">
+                            <span class="review-card-author-name">Ojas P.</span>
+                        </div>
+                        <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener" class="trustpilot-link">read on Trustpilot</a>
+                    </div>
+                    <p class="review-card-text">"I came across Renest when looking for ways to help me save money ahead of my MBA and construct a budget. Renest made it super easy to set up a 529. Absolutely recommended for anyone going to school or thinking about paying for someone else to go to school!"</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section photo-gallery-section">
+            <h2>Our Journey: Sharing Renest</h2>
+            <p>We've been on the road (and on Zoom!) talking to students just like you. Here are a few moments from our recent trips explaining how Renest can help.</p>
+            <div class="photo-gallery-grid">
+                <div class="photo-item">
+                    <img src="placeholder-trip-photo1.jpg" alt="Renest team presenting">
+                    <div class="photo-caption">Placeholder: Talking to students at University X.</div>
+                </div>
+                <div class="photo-item">
+                    <img src="placeholder-trip-photo2.jpg" alt="Renest workshop">
+                    <div class="photo-caption">Placeholder: Workshop on financial wellness for grads.</div>
+                </div>
+                <div class="photo-item">
+                    <img src="placeholder-trip-photo3.jpg" alt="Student discussion with Renest">
+                    <div class="photo-caption">Placeholder: Great discussions and feedback!</div>
+                </div>
+                <!-- Add more .photo-item divs as needed -->
+            </div>
+        </section>
+
+        <section class="section" style="text-align: center;">
+            <h2>Ready to Get Your $500 & Help Us Build?</h2>
+            <p>Your feedback is crucial as we grow. Let's chat about how Renest can work for you today!</p>
+            <a href="mailto:thomas@renesthorizons.com?subject=Renest Waitlist - Early Interest Chat" class="cta-button">Schedule a Quick Chat</a>
+            <a href="future-benefit.html" class="cta-button secondary">Explore Renest 529 Details</a>
+        </section>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const reviewCards = document.querySelectorAll('.review-card');
+            let currentReviewIndex = 0;
+
+            function showReview(index) {
+                reviewCards.forEach((card, i) => {
+                    card.classList.remove('active'); // Make sure only one is active
+                });
+                if (reviewCards[index]) {
+                    reviewCards[index].classList.add('active');
+                }
+            }
+
+            function nextReview() {
+                currentReviewIndex = (currentReviewIndex + 1) % reviewCards.length;
+                showReview(currentReviewIndex);
+            }
+
+            if (reviewCards.length > 0) {
+                showReview(currentReviewIndex); 
+                setInterval(nextReview, 8000);
+            }
+
+            // Script for "Read More" button in Story section
+            const readMoreBtn = document.getElementById('readMoreStoryBtn');
+            const moreStoryText = document.getElementById('moreStoryText');
+
+            if (readMoreBtn && moreStoryText) {
+                readMoreBtn.addEventListener('click', function() {
+                    if (moreStoryText.style.display === 'none' || moreStoryText.style.display === '') {
+                        moreStoryText.style.display = 'block';
+                        readMoreBtn.textContent = 'Read Less';
+                    } else {
+                        moreStoryText.style.display = 'none';
+                        readMoreBtn.textContent = 'Read More';
+                    }
+                });
+            }
+
+            // Script for "How Renest Makes Money" toggle
+            const moneyHeader = document.getElementById('howRenestMakesMoneyHeader');
+            const moneyText = document.getElementById('howRenestMakesMoneyText');
+            const moneyIcon = document.getElementById('moneyFAQToggleIcon');
+
+            if (moneyHeader && moneyText && moneyIcon) {
+                moneyHeader.addEventListener('click', function() {
+                    const isHidden = moneyText.style.display === 'none' || moneyText.style.display === '';
+                    moneyText.style.display = isHidden ? 'block' : 'none';
+                    moneyIcon.textContent = isHidden ? '−' : '+'; // Using a proper minus sign
+                });
+            }
+        });
+    </script>
+</body>
+</html>
