@@ -371,32 +371,34 @@
         /* Founder card styles - adapted from aboutus529.html */
         .founder-section-perks {
             display: flex;
-            flex-direction: column; /* Stack cards on mobile */
-            gap: 3rem; /* Increased gap for better separation */
-            margin-top: 2rem; /* Space above founder cards */
-            margin-bottom: 1rem; /* Space below founder cards */
+            flex-direction: column; 
+            gap: 3rem; 
+            margin-top: 2rem; 
+            margin-bottom: 1rem; 
         }
 
         .founder-card-perks {
-            background: rgba(255, 255, 255, 0.7); /* Lighter background for subtlety */
+            background: rgba(255, 255, 255, 0.7); 
             border-radius: 12px;
             padding: 1.5rem;
             position: relative;
             display: flex;
-            flex-direction: column;
-            align-items: center; /* Center content on mobile */
-            text-align: center; /* Center text on mobile */
+            flex-direction: column; /* Image above text, stacks content vertically */
+            align-items: center;   /* Centers content horizontally */
+            text-align: center;    /* Centers text within content */
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            width: 100%; /* Ensures card takes full width when section is column (mobile) */
+            /* flex: 1; This should only be on desktop when cards are in a row */
         }
 
         .founder-image-perks {
-            width: 100px; /* Slightly smaller for this page */
+            width: 100px; 
             height: 100px;
             border-radius: 50%;
-            object-fit: cover; /* Changed from contain for better fill */
+            object-fit: cover; 
             object-position: center;
-            border: 3px solid var(--primary); /* Thinner border */
-            margin-bottom: 1rem;
+            border: 3px solid var(--primary); 
+            margin-bottom: 1rem; /* Space below image */
         }
 
         .founder-name-perks {
@@ -429,62 +431,202 @@
             text-decoration: underline;
         }
 
+        /* Adjustments for founder cards on desktop */
+        @media (min-width: 768px) {
+            .footer-content {
+                grid-template-columns: 2fr 1fr 1fr;
+            }
+            .how-it-works-flex { /* Added for desktop layout */
+                display: flex;
+                gap: 2rem;
+                align-items: center;
+            }
+            .how-it-works-text {
+                flex: 1;
+            }
+            .how-it-works-image {
+                flex-basis: 300px; /* Adjust as needed */
+            }
+            .founder-section-perks {
+                flex-direction: row; /* Side-by-side cards on desktop */
+                align-items: flex-start;
+            }
+            .founder-card-perks {
+                flex: 1; /* Allows cards to share space equally in a row */
+                /* Other properties are inherited from the base style, ensuring image stays above text */
+            }
+            /* No specific .founder-image-perks overrides needed here if image is above text */
+        }
+
         /* Photo Gallery Styles */
         .photo-gallery-section {
             text-align: center;
         }
-        .photo-gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
-        .photo-item {
-            background: #f9f9f9;
+        /* NEW Slideshow styles for Journey Section */
+        .journey-slideshow-container {
+            position: relative;
+            max-width: 700px; 
+            margin: 2rem auto;
+            overflow: hidden; 
             border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background-color: #222; /* Dark background for letterboxing */
         }
-        .photo-item img {
+        .journey-slide {
+            display: none; 
             width: 100%;
-            height: 200px; /* Fixed height for uniform look */
-            object-fit: cover;
-            display: block;
+            /* transition: opacity 0.5s ease-in-out; /* For fade effect if added later */
+            text-align: center; /* Center image if it's narrower than container */
+            position: relative; /* For caption positioning */
         }
-        .photo-caption {
-            padding: 0.75rem;
-            font-size: 0.9rem;
-            color: var(--text-dark);
-            background-color: #fff;
+        .journey-slide.active {
+            display: block; 
+        }
+        .journey-slide img {
+            width: 100%; /* Make image responsive within its container */
+            max-width: 100%; /* Ensure it doesn't overflow */
+            height: 450px; 
+            object-fit: contain; /* Show full image, letterbox if needed */
+            display: block; 
+            margin: 0 auto; /* Center if aspect ratio makes it narrower */
+        }
+        .journey-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 10px;
+            font-size: 0.9em;
+            text-align: center;
+            box-sizing: border-box;
+        }
+        .journey-nav-btn {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: auto;
+            padding: 12px 16px;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            background-color: rgba(0,0,0,0.4);
+            border: none;
+            border-radius: 0 3px 3px 0; /* Rounded on one side */
+            user-select: none;
+            transition: background-color 0.3s ease;
+        }
+        .journey-nav-btn:hover {
+            background-color: rgba(0,0,0,0.7);
+        }
+        .journey-prev {
+            left: 0;
+            border-radius: 3px 0 0 3px;
+        }
+        .journey-next {
+            right: 0;
+            border-radius: 0 3px 3px 0;
         }
 
-        /* Adjustments for founder cards on desktop */
-        .founder-section-perks {
-            flex-direction: row; /* Side-by-side on desktop */
-            align-items: flex-start; /* Align items to top */
+        .intro-text-block {
+            background-color: rgba(75, 34, 122, 0.03);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(75, 34, 122, 0.08);
         }
-        .founder-card-perks {
-            flex: 1; /* Allow cards to take equal space */
-            text-align: left; /* Align text to left on desktop */
-            align-items: flex-start; /* Align items to left */
+
+        .intro-text-block p {
+            margin-bottom: 1.25rem; /* Slightly more space between paragraphs */
+            line-height: 1.7; /* Improve readability */
         }
-         .founder-image-perks {
-            margin-bottom: 0; /* Remove bottom margin if image is side-by-side */
-            margin-right: 1rem; /* Add right margin for side-by-side layout */
+        .intro-text-block p:last-child {
+            margin-bottom: 0;
         }
-        /* If you want image above text even on desktop, remove margin-right and keep margin-bottom */
-        /* Desktop layout for founder card content: image above text */
-        .founder-card-perks {
-            flex-direction: column; /* Image above text */
-            align-items: center; /* Center content within the card */
-            text-align: center; /* Center text within the card, like mobile */
+
+        .final-pitch {
+            font-size: 1.4em; 
+            font-weight: 700; 
+            color: var(--primary);
+            text-align: center; 
+            margin-top: 1rem; 
         }
-        .founder-image-perks {
-            margin-bottom: 1rem; /* Space below image */
-            margin-right: 0; /* No side margin needed */
+
+        #moreStoryText {
+            display: none; /* Stays for toggle functionality */
+            background-color: #f8f7fc; /* A very light, neutral-ish lavender */
+            padding: 1.5rem 2rem; /* More horizontal padding */
+            border-radius: 8px;
+            margin-top: 1rem; /* Space below the 'Read More' button */
+            border: 1px solid rgba(75, 34, 122, 0.1);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.04);
+            text-align: justify; /* Justify text for a story feel */
         }
-        .founder-content-perks { /* Add a wrapper for text if needed */
-            flex: 1;
+
+        #moreStoryText p {
+            margin-bottom: 1.25rem;
+            line-height: 1.75; /* Slightly more line height for justified text */
+        }
+
+        #moreStoryText p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Styles for How Renest Makes Money Section */
+        #howRenestMakesMoneyHeader {
+            cursor: pointer;
+            margin-bottom: 0; 
+            padding: 1rem; 
+            background: rgba(75, 34, 122, 0.03);
+            border-radius: 8px;
+            border-bottom-left-radius: 0; 
+            border-bottom-right-radius: 0; 
+            transition: background-color 0.3s ease;
+        }
+
+        #howRenestMakesMoneyHeader.active { 
+            background-color: rgba(75, 34, 122, 0.06); 
+        }
+        
+        #howRenestMakesMoneyHeader h3 { 
+            margin: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        #howRenestMakesMoneyHeader #moneyFAQToggleIcon { 
+            font-size: 1.5rem;
+            font-weight: bold;
+            transition: transform 0.3s ease; 
+        }
+        #howRenestMakesMoneyHeader.active #moneyFAQToggleIcon {
+             transform: rotate(45deg); 
+        }
+
+        #howRenestMakesMoneyText {
+            display: none; 
+            padding: 1.5rem; 
+            background-color: #fdfcff; 
+            border-top: 1px solid rgba(75, 34, 122, 0.1);
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+            border-left: 1px solid rgba(75, 34, 122, 0.05); 
+            border-right: 1px solid rgba(75, 34, 122, 0.05);
+            border-bottom: 1px solid rgba(75, 34, 122, 0.05);
+        }
+        #howRenestMakesMoneyText p {
+            margin-bottom: 1rem;
+            line-height: 1.65;
+        }
+        #howRenestMakesMoneyText p:last-child {
+            margin-bottom: 0;
+        }
+        #howRenestMakesMoneyText em {
+            font-style: italic;
         }
     </style>
 </head>
@@ -501,38 +643,19 @@
 
     <div class="container">
         <section class="section">
-            <h2>Financial Confidence & Real Savings for Students</h2>
+            <h2>Financial Confidence & Real Savings, That's Renest.</h2>
             <div class="how-it-works-flex">
                 <div class="how-it-works-text">
-                    <!-- <p>We help students who work and study turn that balance into a financial advantage that will last a lifetime. 
-                    Your unique position offers financial advantages that are only available now.
-                    Our goal is to help you understand your finances, build confidence,
-                     and turn your hard work into tangible longterm benefits for yourself and those around you.
-                    You study and work and have a bunch of other things to do. So things need to have a purpose, be clear and not a gimmick.
-                    That is what Renest is all about. we dont rely on points, discounts, credit or partner merchants we provide a place 
-                    for you to grow your financial confidence and literacy. What is financial literacy? 
-                    Financial literacy is calmness and confidence when it comes to your money.
-                     its not knowing everything, its knowing how to start. 
-                     With financial literacy not only comes confidence but over your lifetime $100,000.
-                     Renest gives you the tools and the direction to get there and our first step is to show you 
-                     how your unique position of being a student but also having an income is an advantage available now 
-                     that will let you save hundreds of dollars each year on your expenses.</p> -->
-
-
-                    <p>You're juggling studies, work, and everything else – you need solutions that are clear, purposeful and not a gimmick. 
-                        That's Renest. We don't do points or discounts or bonuses; we think long term. 
-                        We transform your unique position as a working student into a financial advantage that builds real confidence and lasts a lifetime. 
-
-
-                        What's financial literacy? It's not about knowing everything; it's the calmness and confidence to 
-                        know how to start (It's also $100,000 according to 
-                        <a href="https://www.cnbc.com/2024/02/17/taking-a-personal-finance-class-has-a-lifetime-benefit-of-100000.html">research</a>).
-                        Where to start?
-                        Renest. Our first step? Showing you how to save hundreds each year.</p>
+                    <div class="intro-text-block">
+                        <!-- <p>You're juggling studies, work, and everything else – you need solutions that are clear, purposeful, and not a gimmick.</p> -->
+                        <p> More than just a one time bonus; we think long term. We transform your unique position as a working student into a <strong>financial advantage that lasts a lifetime</strong>.</p>
+                        <p>What's financial literacy? It's not about knowing everything; it's the calmness and confidence to know how to start (it's also $100,000 according to <a href="https://www.cnbc.com/2024/02/17/taking-a-personal-finance-class-has-a-lifetime-benefit-of-100000.html">research</a>).</p>
+                        <p class="final-pitch">Where to start? Renest. Our first step? Saving you hundreds each year.</p>
+                    </div>
                 </div>
                 <div class="how-it-works-image">
                     <div class="mockup-container">
-                        <img src="529iphoneimage3style.png" alt="Renest 529 App Interface" class="mockup-image">
+                        <img src="images/waitlist/renest_uiuc_bc.jpg" alt="Renest at UIUC event" class="mockup-image">
                     </div>
                 </div>
             </div>
@@ -547,7 +670,7 @@
                     <div class="founder-content-perks">
                         <h3 class="founder-name-perks">Thomas Lloyd</h3>
                         <p class="founder-title-perks">Co-Founder</p>
-                        <p class="founder-text-perks">"As a working undergraduate and during my PhD, I saw firsthand the financial stress students face. I wanted to find real solutions."</p>
+                        <p class="founder-text-perks" style="text-align: justify;">"As a working student during my undergrad and PhD, I experienced firsthand the financial stress students face. I wanted real solutions, not bs."</p>
                         <a href="https://orcid.org/0000-0002-4271-8809" target="_blank" rel="noopener" class="founder-link-perks">Thomas's Research</a>
                     </div>
                 </div>
@@ -556,7 +679,7 @@
                     <div class="founder-content-perks">
                         <h3 class="founder-name-perks">Mo Zheng</h3>
                         <p class="founder-title-perks">Co-Founder</p>
-                        <p class="founder-text-perks">"My finance background and passion for accessibility made me want to help Thomas build something impactful."</p>
+                        <p class="founder-text-perks" style="text-align: justify;">"My finance background and passion for accessibility made me want to help Thomas build something impactful."</p>
                         <a href="https://www.linkedin.com/in/thomas-mo-zheng-b22830124" target="_blank" rel="noopener" class="founder-link-perks">Mo's Career</a>
                     </div>
                 </div>
@@ -566,37 +689,27 @@
                 <button id="readMoreStoryBtn" class="cta-button secondary" style="margin-right: 0;">Read More</button>
             </div>
 
-            <div id="moreStoryText" style="display: none;">
-                <p>Renest was born from a simple need. Co-founder Thomas Lloyd, during his PhD, felt the financial squeeze many students face. He teamed up with his long-time friend, Mo Zheng, who has a background in finance and a passion for financial literacy. Together, they figured out how to optimize a student's finances.</p>
-                <p>What started as helping a few friends quickly showed a wider need: students with income need financial solutions built for *them*. That's why we're building Renest – to automate these strategies and bring these benefits to students everywhere.</p>
+            <div id="moreStoryText" style="display: none; text-align: left;">
+                <!-- <p>In most cases, nobody thinks working students have an advantage. It often doesn't feel that way. <em>But it can be.</em></p> -->
+                <p></p>
+                <p>We were frustrated. Being a working student is a unique position, but the world often views "student" and "worker" as separate, with real financial tools and tax benefits always seeming unapproachable and for "later," or "after you graduate."</p>
+                <p>So, we combined our years of experience in work, research, academia, and finance to build something different. We didn't want to create just another app trying to grab attention while offering minimal value at a high cost.</p>
+                <p>Our vision? To build something aligned with <strong>our story, and hopefully, yours too</strong>. A platform where our success is tied to yours: only when you benefit, do we benefit.</p>
+                <p>What began as helping a few friends quickly revealed a much wider need. That's why we're building Renest: to automate these smart financial strategies and bring these unique advantages to students everywhere.</p>
+                <p>Our first major step? The Renest 529 – think of it as a "401(k)" specifically for working students. Because being a working student <strong>is an advantage</strong>. You have access to immediate and long-term benefits others don't, and we're here to help you seize them, for now and for your future.</p>
             </div>
         </section>
 
         <section class="section">
-            <div id="howRenestMakesMoneyHeader" style="cursor: pointer; margin-bottom: 1rem; padding: 0.75rem; background: rgba(75, 34, 122, 0.03); border-radius: 8px;">
-                <h3 style="margin: 0; display: flex; justify-content: space-between; align-items: center; color: var(--primary); font-size: 1.2rem;">
-                    Ok, so how does Renest make money?
-                    <span id="moneyFAQToggleIcon" style="font-size: 1.5rem; font-weight: bold;">+</span>
-                </h3>
-            </div>
-            <div id="howRenestMakesMoneyText" style="display: none; padding-top: 1rem;">
-                <p>Our goal is that every time you Renest, you ask us, "Can I pay you more?" That's because we don't offer anything that doesn't help you save more money than what we cost.</p>
-                <p><em>"Uh huh, what's an example?"</em></p>
-                <p>Budgeting. Everyone has heard of budgeting apps. Those apps charge you $9-14/month to track your expenses and link accounts—but then that's it. The rest is up to you. Renest is different. We offer the same budgeting and tracking tools, but we don't stop there. We know the intricacies of the financial landscape and the benefits available. So, for working students, we get you cashback on those tracked expenses like rent, groceries, and utilities, all without having to change your spending. This leads to an average of $500 back each year and that's just the one advantage
-                    there's also longterm tax-advantages for yourself and your family, retirement benefits and overall increase in financial literacy and confidence. All of this more than outweight which more than outweighs the $8/month we charge (even better as we are building everything is currently free, you pay us back in feedback and hopefully if we do our job then positive reviews!).</p>
-            </div>
-        </section>
-
-        <section class="section">
-            <h2>Budgeting With A Purpose: Your Student "401k"</h2>
+            <h2>Budgeting With A Purpose: Your Student "401(k)"</h2>
             <div class="how-it-works-flex">
                 <div class="how-it-works-text">
-                    <p>Renest offers the first budgeting tool that gets working students cashback. Think of Renest 529r as a 401k for students with income. 
+                    <p>Renest offers the first budgeting tool that gets working students cashback. Think of Renest 529 as a 401(k) for students with income. 
                         </p>
                     <ul style="list-style: none; padding-left: 0;">
-                        <li style="margin-bottom: 1em;"><strong>Step 1</strong> Link your accounts, monitor spending, and create a clear budget with our all-in-one tool.</li>
+                        <li style="margin-bottom: 1em;"><strong>Step 1</strong> Link all your accounts, monitor spending, and create a clear budget</li>
                         <li style="margin-bottom: 1em;"><strong>Step 2</strong> Get an average of $500/year back on tracked essentials like rent and groceries</li>
-                        <li style="margin-bottom: 1em;"><strong>Step 3</strong> Longterm retirement tax benefits that serve students</li>
+                        <li style="margin-bottom: 1em;"><strong>Step 3</strong> Set up long-term savings and retirement benefits that serve students</li>
                     </ul>
                 </div>
                 <div class="how-it-works-image">
@@ -604,6 +717,31 @@
                         <img src="529iphoneimage3style.png" alt="Renest 529 App Interface" class="mockup-image">
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div id="howRenestMakesMoneyHeader">
+                <h3>
+                    Ok, so how does Renest make money?
+                    <span id="moneyFAQToggleIcon">+</span>
+                </h3>
+            </div>
+            <div id="howRenestMakesMoneyText">
+                <p>Our goal is every time you Renest, you ask us, "Can I pay you more?" 
+                    That's because we aim to increase your knowledge and, importantly, always save you more money than what we cost.</p>
+                <p><em>"Uh huh, what's an example?"</em></p>
+                <p>Budgeting.
+                   Other apps charge you $9-14/month to track your expenses and link accounts—but then that's it. 
+                    The rest is up to you. 
+                    Renest is different. 
+                    We provide budgeting and tracking tools, but we don't stop there. 
+                    We know the intricacies of the financial landscape. 
+                    Which, for working students, equals an average of $500/year in cashback on those tracked expenses.
+                    That's just the start. 
+                    There's also long-term retirement benefits, benefits for your family and 
+                    overall increase in financial literacy and confidence. 
+                    All of this more than outweighs the $8/month we charge.</p>
             </div>
         </section>
        
@@ -658,20 +796,35 @@
         <section class="section photo-gallery-section">
             <h2>Our Journey: Sharing Renest</h2>
             <p>We've been on the road (and on Zoom!) talking to students just like you. Here are a few moments from our recent trips explaining how Renest can help.</p>
-            <div class="photo-gallery-grid">
-                <div class="photo-item">
-                    <img src="placeholder-trip-photo1.jpg" alt="Renest team presenting">
-                    <div class="photo-caption">Placeholder: Talking to students at University X.</div>
+            
+            <div class="journey-slideshow-container">
+                <!-- <div class="journey-slide active">
+                    <img src="images/waitlist/nest_nevada_talking.png" alt="Renest presentation in Nevada">
+                    <div class="journey-caption"></div>
+                </div> -->
+                <div class="journey-slide">
+                    <img src="images/waitlist/nest_nevada_sitting.png" alt="Renest team discussion in Nevada">
+                    <div class="journey-caption">Working with Nevada's Treasury Department</div>
                 </div>
-                <div class="photo-item">
-                    <img src="placeholder-trip-photo2.jpg" alt="Renest workshop">
-                    <div class="photo-caption">Placeholder: Workshop on financial wellness for grads.</div>
+                <div class="journey-slide">
+                    <img src="images/waitlist/hospital_meeting.jpg" alt="Renest meeting">
+                    <div class="journey-caption">Probably didn't have to go to this meeting</div>
                 </div>
-                <div class="photo-item">
-                    <img src="placeholder-trip-photo3.jpg" alt="Student discussion with Renest">
-                    <div class="photo-caption">Placeholder: Great discussions and feedback!</div>
+                <div class="journey-slide">
+                    <img src="images/waitlist/cricket_uiuc.jpg" alt="Renest at UIUC cricket event">
+                    <div class="journey-caption">Learning cricket at UIUC</div>
                 </div>
-                <!-- Add more .photo-item divs as needed -->
+                <div class="journey-slide">
+                    <img src="images/waitlist/topofuchicago.jpg" alt="View from UChicago">
+                    <div class="journey-caption">On the top of Ryerson at UChicago</div>
+                </div>
+                <div class="journey-slide">
+                    <img src="images/waitlist/minnesota_state_gov.jpg" alt="Renest at Minnesota State Capitol">
+                    <div class="journey-caption">Selfie at the Minnesota State Capitol after a meeting with their treasure department</div>
+                </div>
+                <!-- Navigation Buttons -->
+                <button class="journey-nav-btn journey-prev">&#10094;</button>
+                <button class="journey-nav-btn journey-next">&#10095;</button>
             </div>
         </section>
 
@@ -732,8 +885,56 @@
                 moneyHeader.addEventListener('click', function() {
                     const isHidden = moneyText.style.display === 'none' || moneyText.style.display === '';
                     moneyText.style.display = isHidden ? 'block' : 'none';
-                    moneyIcon.textContent = isHidden ? '−' : '+'; // Using a proper minus sign
+                    if (isHidden) {
+                        moneyHeader.classList.add('active');
+                    } else {
+                        moneyHeader.classList.remove('active');
+                    }
                 });
+            }
+
+            // Script for Journey Slideshow
+            let journeySlideIndex = 0;
+            let journeySlideshowTimeout;
+            const journeySlides = document.querySelectorAll(".journey-slide");
+            const prevJourneyBtn = document.querySelector(".journey-prev");
+            const nextJourneyBtn = document.querySelector(".journey-next");
+
+            function showJourneySlides(n) {
+                journeySlideIndex = n;
+                if (journeySlideIndex >= journeySlides.length) { journeySlideIndex = 0; }
+                if (journeySlideIndex < 0) { journeySlideIndex = journeySlides.length - 1; }
+                
+                journeySlides.forEach(slide => slide.classList.remove('active'));
+                if (journeySlides[journeySlideIndex]) {
+                    journeySlides[journeySlideIndex].classList.add('active');
+                }
+                
+                clearTimeout(journeySlideshowTimeout);
+                journeySlideshowTimeout = setTimeout(function() {
+                    plusJourneySlides(1);
+                }, 5000); // Change image every 5 seconds
+            }
+
+            function plusJourneySlides(n) {
+                showJourneySlides(journeySlideIndex + n);
+            }
+
+            if (journeySlides.length > 0) {
+                showJourneySlides(journeySlideIndex); // Show initial slide
+
+                if (prevJourneyBtn && nextJourneyBtn) {
+                    prevJourneyBtn.addEventListener('click', function() {
+                        plusJourneySlides(-1);
+                    });
+                    nextJourneyBtn.addEventListener('click', function() {
+                        plusJourneySlides(1);
+                    });
+                }
+            } else {
+                // Handle case where no slides are found, maybe hide controls
+                if (prevJourneyBtn) prevJourneyBtn.style.display = 'none';
+                if (nextJourneyBtn) nextJourneyBtn.style.display = 'none';
             }
         });
     </script>
