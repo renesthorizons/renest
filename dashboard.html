@@ -3646,7 +3646,8 @@ const statePersonalExemptionDB = {
             }
             congratsModalClosed = true;
             console.log('congratsModalClosed flag set to true.');
-            tryRedirectToTrackerSummary();
+            // We still attempt redirect here in case submission finished *before* modal was closed
+            tryRedirectToTrackerSummary(); 
         }
 
         async function submitForm() {
@@ -3658,6 +3659,8 @@ const statePersonalExemptionDB = {
             congratsModalClosed = false; 
             formSubmissionFinished = false;
             console.log('Redirect flags reset for new submission.');
+
+            let success = false; // Track if try block completed successfully
 
             try {
                 console.log('1. Disabling all buttons and showing spinner');
@@ -3692,33 +3695,13 @@ const statePersonalExemptionDB = {
                 
                 // Validate step 3
                 console.log('2. Starting step 3 validation');
-                const step3Valid = await validateStep3();
+                // Use the validateHousingStep3 function from housing.js
+                const step3Valid = await validateHousingStep3();
                 console.log('Step 3 validation result:', step3Valid);
                 
                 if (!step3Valid) {
-                    console.log('Step 3 validation failed, returning');
-                    // Re-enable all elements if validation fails
-                    allInputs.forEach(input => {
-                        input.disabled = false;
-                        input.style.opacity = '1';
-                        input.style.cursor = 'auto';
-                    });
-                    
-                    allButtons.forEach(button => {
-                        button.disabled = false;
-                        button.style.opacity = '1';
-                        button.style.cursor = 'pointer';
-                    });
-                    
-                    allSelects.forEach(select => {
-                        select.style.pointerEvents = 'auto';
-                        select.style.opacity = '1';
-                        select.style.cursor = 'pointer';
-                    });
-                    
-                    submitBtn.disabled = false;
-                    spinner.style.display = 'none';
-                    return; // Exit here, finally will still run but formSubmissionFinished won't be set by successful path
+                    console.log('Step 3 validation failed, exiting try block.');
+                    return; // Exit here, finally will still run
                 }
                 
                 // Get form values
@@ -3750,10 +3733,11 @@ const statePersonalExemptionDB = {
 
                 // Calculate benefit amount using all housing entries
                 const benefit = calculateBenefitWithMultipleHousing(state, income, enrolledMonths, window.housingEntries);
+                
                 console.log('Calculated benefit:', benefit);
-
-                // Show congratulations modal
-                showCongratulationsModal(benefit); // This shows the modal, user interacts separately
+                
+                // Show congratulations modal with the calculated benefit
+                showCongratulationsModal(benefit);
 
                 // Store data in localStorage first
                 localStorage.setItem('monthlyRent', rent);
@@ -3772,7 +3756,8 @@ const statePersonalExemptionDB = {
                 console.log('Auth token found');
 
                 // First, update the user profile
-                console.log('5. Updating user profile...');
+                console.log('5. Updating user profile');
+                
                 const profileData = {
                     firstName,
                     lastName,
@@ -3795,41 +3780,50 @@ const statePersonalExemptionDB = {
                     },
                     body: JSON.stringify(profileData)
                 });
-                console.log('Profile update fetch completed. Status:', profileResponse.status);
+
+                console.log('Profile update response status:', profileResponse.status);
                 if (!profileResponse.ok) {
                     const errorText = await profileResponse.text();
                     console.error('Profile update failed:', errorText);
                     throw new Error(`Failed to update profile: ${errorText}`);
                 }
-                console.log('Profile updated successfully.');
+                console.log('Profile updated successfully');
 
                 // Then, create the expenses using the housing entries
-                console.log('6. Creating onboarding expenses from housing entries...');
+                console.log('6. Creating onboarding expenses from housing entries');
                 await addHousingEntryExpenses(window.housingEntries, enrolledMonths);
-                console.log('Expenses creation completed successfully.');
+                console.log('Expenses created successfully');
 
                 // Hide the modal
-                console.log('7. Hiding onboarding modal.');
+                console.log('7. Hiding onboarding modal');
                 hideOnboardingModal();
+                
+                // Mark as successful *before* setting flag and attempting redirect
+                success = true; 
                 console.log('submitForm: Try block finished successfully.');
+
+                // Set flag and attempt redirect *at the end* of successful try block
+                formSubmissionFinished = true;
+                console.log('[Success Path] formSubmissionFinished flag set to true.');
+                tryRedirectToTrackerSummary();
 
             } catch (error) {
                 console.error('Error in form submission:', error);
                 console.error('Error stack:', error.stack);
-                // ... (show error message) ...
-                // NOTE: finally block will still execute after this catch block finishes
-                 console.log('submitForm: Catch block finished.');
+                // ... (show error message to user) ...
+                console.log('submitForm: Catch block finished.');
+                
+                // Also set flag and attempt redirect in case of error
+                formSubmissionFinished = true;
+                console.log('[Error Path] formSubmissionFinished flag set to true.');
+                tryRedirectToTrackerSummary();
+
             } finally {
                 console.log('submitForm: Finally block started.');
-                // Reset button state
+                // Finally block *only* resets UI state, does NOT handle redirect logic anymore
                 submitBtn.disabled = false;
                 spinner.style.display = 'none';
-                // Mark submission as finished *regardless* of success or failure
-                formSubmissionFinished = true;
-                console.log('formSubmissionFinished flag set to true.');
-                // Attempt redirect check
-                tryRedirectToTrackerSummary();
-                console.log('submitForm: Finally block finished.');
+                console.log('submitForm: Finally block finished (UI reset).');
             }
         }
 
@@ -4612,29 +4606,8 @@ const statePersonalExemptionDB = {
                 console.log('Step 3 validation result:', step3Valid);
                 
                 if (!step3Valid) {
-                    console.log('Step 3 validation failed, returning');
-                    // Re-enable all elements if validation fails
-                    allInputs.forEach(input => {
-                        input.disabled = false;
-                        input.style.opacity = '1';
-                        input.style.cursor = 'auto';
-                    });
-                    
-                    allButtons.forEach(button => {
-                        button.disabled = false;
-                        button.style.opacity = '1';
-                        button.style.cursor = 'pointer';
-                    });
-                    
-                    allSelects.forEach(select => {
-                        select.style.pointerEvents = 'auto';
-                        select.style.opacity = '1';
-                        select.style.cursor = 'pointer';
-                    });
-                    
-                    submitBtn.disabled = false;
-                    spinner.style.display = 'none';
-                    return; // Exit here, finally will still run but formSubmissionFinished won't be set by successful path
+                    console.log('Step 3 validation failed, exiting try block.');
+                    return; // Exit here, finally will still run
                 }
                 
                 // Get form values
@@ -4731,7 +4704,14 @@ const statePersonalExemptionDB = {
                 console.log('7. Hiding onboarding modal');
                 hideOnboardingModal();
                 
-                // The redirect will be handled by the congratulations modal close button
+                // Mark as successful *before* setting flag and attempting redirect
+                success = true; 
+                console.log('submitForm: Try block finished successfully.');
+
+                // Set flag and attempt redirect *at the end* of successful try block
+                formSubmissionFinished = true;
+                console.log('[Success Path] formSubmissionFinished flag set to true.');
+                tryRedirectToTrackerSummary();
 
             } catch (error) {
                 console.error('Error in form submission:', error);
@@ -4744,11 +4724,17 @@ const statePersonalExemptionDB = {
                 document.body.appendChild(errorMessage);
                 setTimeout(() => errorMessage.remove(), 3000);
                 
+                // Also set flag and attempt redirect in case of error
+                formSubmissionFinished = true;
+                console.log('[Error Path] formSubmissionFinished flag set to true.');
+                tryRedirectToTrackerSummary();
+
             } finally {
-                console.log('8. Resetting button state');
-                // Reset button state
+                console.log('submitForm: Finally block started.');
+                // Finally block *only* resets UI state, does NOT handle redirect logic anymore
                 submitBtn.disabled = false;
                 spinner.style.display = 'none';
+                console.log('submitForm: Finally block finished (UI reset).');
             }
         }
 
@@ -4928,22 +4914,6 @@ const statePersonalExemptionDB = {
                 });
             }
         });
-
-        // ++ Robust Redirect Logic ++
-        console.log('Initializing redirect flags');
-        let congratsModalClosed = false;
-        let formSubmissionFinished = false;
-
-        function tryRedirectToTrackerSummary() {
-            console.log('tryRedirectToTrackerSummary called. Flags:', { congratsModalClosed, formSubmissionFinished });
-            if (congratsModalClosed && formSubmissionFinished) {
-                console.log('Both flags true. Redirecting to trackersummary.html...');
-                window.location.href = 'trackersummary.html';
-            } else {
-                console.log('Redirect condition not met yet.');
-            }
-        }
-        // ++ End Robust Redirect Logic ++
     </script>
     
     <script>
