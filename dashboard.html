@@ -3481,12 +3481,6 @@ const statePersonalExemptionDB = {
                 formData.state = document.getElementById('state').value;
                 formData.income = document.getElementById('income').value;
                 
-                // When moving to Step 3, hide Submit button and show Done button
-                setTimeout(() => {
-                    document.getElementById('leaseInfoBtn').classList.remove('hidden');
-                    document.getElementById('submitBtn').classList.add('hidden');
-                }, 100);
-                
                 showStep(3);
             }
         }
@@ -3646,21 +3640,33 @@ const statePersonalExemptionDB = {
             }
             congratsModalClosed = true;
             console.log('congratsModalClosed flag set to true.');
-            // We still attempt redirect here in case submission finished *before* modal was closed
-            tryRedirectToTrackerSummary(); 
+            tryRedirectToTrackerSummary(); // Check if submission finished *before* modal close
         }
+
+        // ++ Robust Redirect Logic ++ (Ensure this is at the top level)
+        console.log('Initializing redirect flags');
+        let congratsModalClosed = false;
+        let formSubmissionFinished = false;
+
+        function tryRedirectToTrackerSummary() {
+            console.log('tryRedirectToTrackerSummary called. Flags:', { congratsModalClosed, formSubmissionFinished });
+            if (congratsModalClosed && formSubmissionFinished) {
+                console.log('Both flags true. Redirecting to trackersummary.html...');
+                window.location.href = 'trackersummary.html';
+            } else {
+                console.log('Redirect condition not met yet.');
+            }
+        }
+        // ++ End Robust Redirect Logic ++
 
         async function submitForm() {
             console.log('===== FORM SUBMISSION STARTED =====');
             const submitBtn = document.getElementById('submitBtn');
             const spinner = document.getElementById('spinner');
-            const modal = document.getElementById('onboardingModal');
             // Reset flags for this submission attempt
             congratsModalClosed = false; 
             formSubmissionFinished = false;
             console.log('Redirect flags reset for new submission.');
-
-            let success = false; // Track if try block completed successfully
 
             try {
                 console.log('1. Disabling all buttons and showing spinner');
@@ -3695,14 +3701,10 @@ const statePersonalExemptionDB = {
                 
                 // Validate step 3
                 console.log('2. Starting step 3 validation');
-                // Use the validateHousingStep3 function from housing.js
-                const step3Valid = await validateHousingStep3();
+                const step3Valid = await validateStep3();
                 console.log('Step 3 validation result:', step3Valid);
                 
-                if (!step3Valid) {
-                    console.log('Step 3 validation failed, exiting try block.');
-                    return; // Exit here, finally will still run
-                }
+                if (!step3Valid) { return; } // Finally will still run
                 
                 // Get form values
                 console.log('3. Getting form values');
@@ -3798,32 +3800,29 @@ const statePersonalExemptionDB = {
                 console.log('7. Hiding onboarding modal');
                 hideOnboardingModal();
                 
-                // Mark as successful *before* setting flag and attempting redirect
-                success = true; 
+                // The redirect will be handled by the congratulations modal close button
                 console.log('submitForm: Try block finished successfully.');
-
-                // Set flag and attempt redirect *at the end* of successful try block
-                formSubmissionFinished = true;
-                console.log('[Success Path] formSubmissionFinished flag set to true.');
-                tryRedirectToTrackerSummary();
+                
+                // --- REMOVED flag set and redirect check from here --- 
 
             } catch (error) {
                 console.error('Error in form submission:', error);
-                console.error('Error stack:', error.stack);
                 // ... (show error message to user) ...
                 console.log('submitForm: Catch block finished.');
-                
-                // Also set flag and attempt redirect in case of error
-                formSubmissionFinished = true;
-                console.log('[Error Path] formSubmissionFinished flag set to true.');
-                tryRedirectToTrackerSummary();
+                // --- REMOVED flag set and redirect check from here --- 
 
             } finally {
                 console.log('submitForm: Finally block started.');
-                // Finally block *only* resets UI state, does NOT handle redirect logic anymore
+                // Reset UI state
                 submitBtn.disabled = false;
                 spinner.style.display = 'none';
-                console.log('submitForm: Finally block finished (UI reset).');
+                
+                // Mark submission as finished and check for redirect
+                formSubmissionFinished = true;
+                console.log('[Finally] formSubmissionFinished flag set to true.');
+                tryRedirectToTrackerSummary(); // This is the crucial check after submitForm finishes
+                
+                console.log('submitForm: Finally block finished.');
             }
         }
 
@@ -4605,10 +4604,7 @@ const statePersonalExemptionDB = {
                 const step3Valid = await validateStep3();
                 console.log('Step 3 validation result:', step3Valid);
                 
-                if (!step3Valid) {
-                    console.log('Step 3 validation failed, exiting try block.');
-                    return; // Exit here, finally will still run
-                }
+                if (!step3Valid) { return; } // Finally will still run
                 
                 // Get form values
                 console.log('3. Getting form values');
@@ -4704,37 +4700,29 @@ const statePersonalExemptionDB = {
                 console.log('7. Hiding onboarding modal');
                 hideOnboardingModal();
                 
-                // Mark as successful *before* setting flag and attempting redirect
-                success = true; 
+                // The redirect will be handled by the congratulations modal close button
                 console.log('submitForm: Try block finished successfully.');
-
-                // Set flag and attempt redirect *at the end* of successful try block
-                formSubmissionFinished = true;
-                console.log('[Success Path] formSubmissionFinished flag set to true.');
-                tryRedirectToTrackerSummary();
+                
+                // --- REMOVED flag set and redirect check from here --- 
 
             } catch (error) {
                 console.error('Error in form submission:', error);
-                console.error('Error stack:', error.stack);
-                
-                // Show error message
-                const errorMessage = document.createElement('div');
-                errorMessage.className = 'error-message';
-                errorMessage.textContent = 'Error submitting form. Please try again.';
-                document.body.appendChild(errorMessage);
-                setTimeout(() => errorMessage.remove(), 3000);
-                
-                // Also set flag and attempt redirect in case of error
-                formSubmissionFinished = true;
-                console.log('[Error Path] formSubmissionFinished flag set to true.');
-                tryRedirectToTrackerSummary();
+                // ... (show error message to user) ...
+                console.log('submitForm: Catch block finished.');
+                // --- REMOVED flag set and redirect check from here --- 
 
             } finally {
                 console.log('submitForm: Finally block started.');
-                // Finally block *only* resets UI state, does NOT handle redirect logic anymore
+                // Reset UI state
                 submitBtn.disabled = false;
                 spinner.style.display = 'none';
-                console.log('submitForm: Finally block finished (UI reset).');
+                
+                // Mark submission as finished and check for redirect
+                formSubmissionFinished = true;
+                console.log('[Finally] formSubmissionFinished flag set to true.');
+                tryRedirectToTrackerSummary(); // This is the crucial check after submitForm finishes
+                
+                console.log('submitForm: Finally block finished.');
             }
         }
 
