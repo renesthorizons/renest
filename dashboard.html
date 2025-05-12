@@ -1108,6 +1108,21 @@
                         <input type="date" id="dateOfBirth" class="form-input">
                         <div id="ageError" class="error-text" style="display: none; color: red; font-size: 0.875rem; margin-top: 0.25rem;">You must be at least 18 years old to sign up</div>
                     </div>
+                    <div class="form-group">
+                        <label class="form-label">Are you a US citizen, resident alien, or permanent resident?</label>
+                        <div>
+                            <input type="radio" id="usCitizenYes" name="usCitizenStatus" value="yes" checked>
+                            <label for="usCitizenYes">Yes</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="usCitizenNo" name="usCitizenStatus" value="no">
+                            <label for="usCitizenNo">No</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="usCitizenUnknown" name="usCitizenStatus" value="unknown">
+                            <label for="usCitizenUnknown">I don't know</label>
+                        </div>
+                    </div>
                     <div class="button-container">
                         <button onclick="nextStep()" class="button button-primary">Next</button>
                     </div>
@@ -1143,7 +1158,7 @@
                 <div id="step3" class="form-step">
                     <div class="form-group">
                         <h3 class="form-label">My Housing Information</h3>
-                        <p class="form-description" style="margin-bottom: 1rem;">Averages and estimates are okay</p>
+                        <p class="form-description" style="margin-bottom: 1rem;">Include leases relevant to this calendar year. Averages and estimates are okay</p>
                         
                         <!-- Housing button and list -->
                         <div id="housingEntriesContainer" style="margin-bottom: 1.5rem;">
@@ -3445,12 +3460,19 @@ const statePersonalExemptionDB = {
 
         // Navigation functions
         function nextStep() {
-            if (currentStep === 1 && validateStep1()) {
-                // Save step 1 data
-                formData.firstName = document.getElementById('firstName').value;
-                formData.lastName = document.getElementById('lastName').value;
-                formData.dateOfBirth = document.getElementById('dateOfBirth').value;
-                showStep(2);
+            if (currentStep === 1) {
+                const usCitizenStatus = document.querySelector('input[name="usCitizenStatus"]:checked').value;
+                if (usCitizenStatus === 'no' || usCitizenStatus === 'unknown') {
+                    showContactUsPopup();
+                    return; // Stop progression
+                }
+                if (validateStep1()) {
+                    // Save step 1 data
+                    formData.firstName = document.getElementById('firstName').value;
+                    formData.lastName = document.getElementById('lastName').value;
+                    formData.dateOfBirth = document.getElementById('dateOfBirth').value;
+                    showStep(2);
+                }
             } else if (currentStep === 2 && validateStep2()) {
                 // Save step 2 data
                 formData.school = document.getElementById('school').value;
@@ -5878,6 +5900,26 @@ const statePersonalExemptionDB = {
         // Modify the validateStep3 function to use our local implementation
         function validateStep3() {
             return validateHousingStep3();
+        }
+    </script>
+
+    <div id="contactUsPopup" class="modal-overlay hidden">
+        <div class="modal-container">
+            <div class="modal-content" style="text-align: center;">
+                <h2 style="margin-bottom: 1.5rem;">Eligibility Question</h2>
+                <p style="margin-bottom: 1.5rem;">Please contact us to learn more about your eligibility.</p>
+                <button class="button button-primary" onclick="closeContactUsPopup()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showContactUsPopup() {
+            document.getElementById('contactUsPopup').classList.remove('hidden');
+        }
+
+        function closeContactUsPopup() {
+            document.getElementById('contactUsPopup').classList.add('hidden');
         }
     </script>
 </body>
