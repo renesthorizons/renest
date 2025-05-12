@@ -3642,8 +3642,14 @@ const statePersonalExemptionDB = {
             if (modal) {
                 modal.remove();
             }
-            congratsModalClosed = true;
-            tryRedirectToTrackerSummary();
+            
+            // Check if form submission is complete
+            const submitBtn = document.getElementById('submitBtn');
+            if (!submitBtn.disabled) {
+                // If button is enabled, submission is complete, redirect to tracker summary
+                window.location.href = 'trackersummary.html';
+            }
+            // Otherwise, let the submission process continue in the background
         }
 
         async function submitForm() {
