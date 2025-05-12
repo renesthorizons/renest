@@ -3636,13 +3636,15 @@ const statePersonalExemptionDB = {
             document.body.insertAdjacentHTML('beforeend', modalHtml);
         }
 
-        // Add this function to handle the modal close button
+        // Track if the congratulations modal was closed before submission finished
+        let congratsModalClosed = false;
+
         function handleCongratsModalClose() {
             const modal = document.getElementById('congratsModal');
             if (modal) {
                 modal.remove();
             }
-            
+            congratsModalClosed = true;
             // Check if form submission is complete
             const submitBtn = document.getElementById('submitBtn');
             if (!submitBtn.disabled) {
@@ -3833,6 +3835,10 @@ const statePersonalExemptionDB = {
                 // Reset button state
                 submitBtn.disabled = false;
                 spinner.style.display = 'none';
+                // If the congratulations modal was already closed, redirect now
+                if (congratsModalClosed) {
+                    window.location.href = 'trackersummary.html';
+                }
             }
         }
 
@@ -4752,6 +4758,10 @@ const statePersonalExemptionDB = {
                 // Reset button state
                 submitBtn.disabled = false;
                 spinner.style.display = 'none';
+                // If the congratulations modal was already closed, redirect now
+                if (congratsModalClosed) {
+                    window.location.href = 'trackersummary.html';
+                }
             }
         }
 
@@ -5910,7 +5920,7 @@ const statePersonalExemptionDB = {
             <div class="modal-content" style="text-align: center;">
                 <h2 style="margin-bottom: 1.5rem;">Eligibility Question</h2>
                 <p style="margin-bottom: 1.5rem;">Please contact us to learn more about your eligibility.</p>
-                <a class="button button-primary" href="contactus529.html">OK</a>
+                <a class="button button-primary" style="text-decoration: none;" href="contactus529.html">OK</a>
             </div>
         </div>
     </div>
