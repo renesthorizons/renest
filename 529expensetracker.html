@@ -4647,7 +4647,7 @@ const statePersonalExemptionDB = {
                 const formatCurrency = num => `$${num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
                 let popupMessage = '';
 
-                if (amountOfDepositCoveringQualifiedSpend > 0) {
+                if (transactionData.category === 'Deposit529' && amountOfDepositCoveringQualifiedSpend > 0) {
                     let cashbackEarnedThisDeposit = 0;
                     try {
                         const userProfile = await fetchUserProfile(); // Fetch user profile
