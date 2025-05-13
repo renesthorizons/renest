@@ -3033,6 +3033,7 @@
             const exampleModal = document.getElementById('example-modal');
             const howToModal = document.getElementById('how-to-modal');
             const deleteModal = document.getElementById('delete-confirmation-modal');
+            const depositSuccessModal = document.getElementById('deposit-success-modal');
             
             if (event.target == exampleModal) {
                 hideExampleModal();
@@ -3042,6 +3043,9 @@
             }
             if (event.target == deleteModal) {
                 hideDeleteModal();
+            }
+            if (event.target == depositSuccessModal) {
+                hideDepositSuccessModal();
             }
         }
 
@@ -3574,12 +3578,26 @@
             inputDate.setDate(inputDate.getDate() + 1);  // Add one day
             
             const amountInput = document.getElementById('529-transaction-amount');
+            const newDepositAmount = parseFloat(amountInput.value);
             console.log('529 Amount input value:', amountInput.value);
             console.log('529 Amount input type:', typeof amountInput.value);
+
+            // --- Calculate state BEFORE the deposit ---
+            let uncoveredBefore = 0;
+            try {
+                const currentExpenses = JSON.parse(sessionStorage.getItem('cachedExpenses') || '[]');
+                const projectionsBefore = calculate529Projections(currentExpenses);
+                uncoveredBefore = Math.max(0, projectionsBefore.ytdQualified - projectionsBefore.ytdDeposits);
+                console.log('State before deposit:', { qualified: projectionsBefore.ytdQualified, deposits: projectionsBefore.ytdDeposits, uncovered: uncoveredBefore });
+            } catch (error) {
+                console.error('Error calculating state before deposit:', error);
+                // Continue even if this fails, the popup just won't show
+            }
+            // --- End calculation before deposit ---
             
             const transactionData = {
                 category: document.getElementById('529-transaction-type').value,
-                amount: parseFloat(amountInput.value),
+                amount: newDepositAmount,
                 date: inputDate.toISOString().split('T')[0],
                 notes: document.getElementById('529-transaction-notes').value || '',
                 isQualified: false,  // 529 transactions aren't qualified expenses
@@ -3591,8 +3609,21 @@
             try {
                 await createExpense(transactionData);
                 submitButton.textContent = "✓";
-                showSuccess('529 transaction recorded successfully!');
-                loadExpenses();
+                
+                // --- Check for unlocked amount AFTER successful deposit ---
+                const unlockedAmount = Math.min(newDepositAmount, uncoveredBefore);
+                console.log('New deposit:', newDepositAmount, 'Previously uncovered:', uncoveredBefore, 'Unlocked amount:', unlockedAmount);
+                
+                if (unlockedAmount > 0) {
+                    const formatCurrency = num => `$${num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+                    const message = `Nice! Your deposit covers <strong>${formatCurrency(unlockedAmount)}</strong> of qualified expenses, unlocking potential cashback.`;
+                    showDepositSuccessModal(message);
+                } else {
+                    showSuccess('529 transaction recorded successfully!');
+                }
+                // --- End check ---
+
+                await loadExpenses(); // Refresh everything AFTER showing potential popup
                 
                 setTimeout(() => {
                     submitButton.textContent = originalText;
@@ -3617,6 +3648,7 @@
             const exampleModal = document.getElementById('example-modal');
             const howToModal = document.getElementById('how-to-modal');
             const deleteModal = document.getElementById('delete-confirmation-modal');
+            const depositSuccessModal = document.getElementById('deposit-success-modal');
             
             if (event.target == exampleModal) {
                 hideExampleModal();
@@ -3626,6 +3658,9 @@
             }
             if (event.target == deleteModal) {
                 hideDeleteModal();
+            }
+            if (event.target == depositSuccessModal) {
+                hideDepositSuccessModal();
             }
         }
 
@@ -4662,6 +4697,15 @@ function hideCategoryModal() {
                 categoryFilter.addEventListener('change', filterManualExpenses);
             }
         });
+
+        function showDepositSuccessModal(message) {
+            document.getElementById('deposit-success-message').innerHTML = message;
+            document.getElementById('deposit-success-modal').style.display = 'flex';
+        }
+
+        function hideDepositSuccessModal() {
+            document.getElementById('deposit-success-modal').style.display = 'none';
+        }
     </script>
     
 <!-- Add this at the end of your HTML before the closing body tag -->
@@ -4712,6 +4756,18 @@ function hideCategoryModal() {
         </div>
     </div>
 </div>
+
+<!-- Add this new modal structure -->
+<div id="deposit-success-modal" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 450px; text-align: center;">
+        <h2 style="color: green; margin-bottom: 1rem;">Deposit Recorded!</h2>
+        <p id="deposit-success-message" style="margin-bottom: 1.5rem; line-height: 1.6; color: var(--text-dark); font-size: 1.1rem;">
+            <!-- Message will be populated dynamically -->
+        </p>
+        <button onclick="hideDepositSuccessModal()" class="submit-button" style="width: auto; min-width: 120px;">Close</button>
+    </div>
+</div>
+
 </body>
 </html>
 </html>
