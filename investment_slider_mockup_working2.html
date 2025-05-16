@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Value Visualizer</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+            color: #1c1e21;
+            box-sizing: border-box;
+        }
+        .screen {
+            background-color: #ffffff;
+            padding: 25px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 380px;
+            min-height: 500px;
+            text-align: center;
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+        }
+        .hidden {
+            display: none;
+        }
+        input[type="number"].amount-input {
+            width: 60%;
+            padding: 12px 15px;
+            margin-top: 20px;
+            margin-bottom: 25px;
+            border: 1px solid #ccd0d5;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 20px;
+            text-align: center;
+            color: #1c1e21;
+            font-weight: 500;
+            appearance: textfield;
+        }
+        input[type="number"].amount-input::-webkit-outer-spin-button,
+        input[type="number"].amount-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"].amount-input::placeholder {
+            color: #8a8d91;
+            font-weight: 400;
+        }
+        .circles-container {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            margin-bottom: 25px;
+        }
+        .circle {
+            position: absolute;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            transition: width 0.3s ease, height 0.3s ease, border-width 0.3s ease;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        #innerCircle {
+            /* width: 50px; JS controls this */
+            /* height: 50px; JS controls this */
+            background-color: #e9ecef; /* A more distinct light gray base */
+            /* Subtle 3D effect for white egg */
+            background: linear-gradient(145deg, rgba(255,255,255,1) 0%, rgba(220,220,220,0.5) 100%), #e9ecef; /* Gradient on new base, darker end of gradient adjusted */
+            box-shadow: inset 4px 4px 6px rgba(0,0,0,0.07), /* Slightly stronger shadow */
+                        inset -3px -3px 6px rgba(255,255,255,1), 
+                        2px 2px 3px rgba(0,0,0,0.05);
+            z-index: 2; /* Higher z-index */
+        }
+        #outerCircle {
+            /* width: 70px; JS controls this */
+            /* height: 70px; JS controls this */
+            background-color: #007bff; /* Blue fill - This will be overridden by gradient if we want full effect */
+            background: linear-gradient(145deg, rgba(106, 183, 226, 0.7) 0%, transparent 50%, rgba(74, 140, 178, 0.3) 100%), #007bff;
+            border: 3px solid #79bbff; /* Light blue border */
+            box-shadow: inset -8px -8px 12px rgba(0,0,0,0.1), 
+                        inset 8px 8px 12px rgba(255,255,255,0.6), 
+                        10px 10px 15px rgba(0,0,0,0.15), 
+                        -2px -2px 8px rgba(255,255,255,0.7);
+            z-index: 1; /* Lower z-index */
+        }
+        .slider-container {
+            width: 80%;
+            margin-bottom: 25px;
+            padding-top: 10px;
+        }
+        .slider-track {
+            width: 100%;
+            height: 28px;
+            background-color: #e4e6eb;
+            border-radius: 14px;
+            position: relative;
+            cursor: pointer;
+        }
+        .slider-fill {
+            height: 100%;
+            background-color: #007bff;
+            border-radius: 14px 0 0 14px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 0;
+        }
+        .slider-thumb {
+            width: 36px;
+            height: 36px;
+            background-color: #ffffff;
+            border: 2px solid #007bff;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            cursor: grab;
+            z-index: 2;
+        }
+        .slider-thumb:active {
+            cursor: grabbing;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+        .button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 17px;
+            font-weight: 600;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background-color: #0069d9;
+        }
+        .button:active {
+            transform: scale(0.98);
+        }
+        .summary-value {
+            font-size: 20px;
+            color: #1c1e21;
+            margin: 12px 0;
+            font-weight: 500;
+        }
+        .summary-value strong {
+            font-weight: 600;
+            color: #007bff;
+        }
+        /* Styles for Summary Screen Egg */
+        .summary-egg-container {
+            width: 300px; /* Larger egg */
+            height: 390px; /* Maintain 1.3 aspect ratio approx */
+            position: relative;
+            margin: 20px auto; /* Center it */
+        }
+
+        .summary-egg-shape {
+            width: 100%;
+            height: 100%;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; /* Egg shape */
+            background: linear-gradient(145deg, rgba(106, 183, 226, 0.7) 0%, transparent 50%, rgba(74, 140, 178, 0.3) 100%), #007bff; /* Blue egg style */
+            border: 3px solid #79bbff; 
+            box-shadow: inset -8px -8px 12px rgba(0,0,0,0.1), 
+                        inset 8px 8px 12px rgba(255,255,255,0.6), 
+                        10px 10px 15px rgba(0,0,0,0.15), 
+                        -2px -2px 8px rgba(255,255,255,0.7);
+            position: relative; /* For positioning fill level */
+            overflow: hidden; /* To contain the fill nicely */
+            transform-origin: bottom center; /* Important for breathe/wobble */
+            animation: breathe 4s ease-in-out infinite; /* Apply breathe animation */
+        }
+
+        .summary-egg-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0%; /* JS will set this */
+            background-color: #93D7AF; /* A contrasting green for available now */
+            transition: height 0.5s ease-out;
+            z-index: 1; /* Below text, above egg background parts if any */
+        }
+
+        .summary-egg-text-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            z-index: 2;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        .summary-egg-total-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .summary-egg-available-now {
+            font-size: 18px;
+        }
+
+        .summary-legend {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #aaaaaa;
+        }
+        .legend-color-key {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #93D7AF;
+            margin-right: 6px;
+            border: 1px solid #8BC34A;
+        }
+
+        /* Keyframes for egg animations (from nevadaxrenest.html) */
+        @keyframes breathe {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+            }
+            50% {
+                transform: scale(1.01) rotate(0.3deg); /* Kept subtle as in original */
+            }
+        }
+
+        @keyframes wobbleSmall {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.01) rotate(1deg); }
+            50% { transform: scale(1) rotate(-0.5deg); }
+            75% { transform: scale(1.01) rotate(0.8deg); }
+        }
+
+        @keyframes wobbleMedium {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.01) rotate(2deg); }
+            50% { transform: scale(1) rotate(-1.5deg); }
+            75% { transform: scale(1.01) rotate(1.8deg); }
+        }
+
+        @keyframes wobbleLarge {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.01) rotate(3deg); }
+            50% { transform: scale(1) rotate(-2.5deg); }
+            75% { transform: scale(1.01) rotate(2.8deg); }
+        }
+
+        /* Combined animation classes for summary egg */
+        .summary-egg-shape.wobble-small {
+            animation: breathe 4s ease-in-out infinite, wobbleSmall 0.5s ease-in-out;
+        }
+        .summary-egg-shape.wobble-medium {
+            animation: breathe 4s ease-in-out infinite, wobbleMedium 0.7s ease-in-out;
+        }
+        .summary-egg-shape.wobble-large {
+            animation: breathe 4s ease-in-out infinite, wobbleLarge 1s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="entryScreen" class="screen">
+        <input type="number" id="amountInput" class="amount-input" placeholder="Enter Amount">
+        
+        <div class="circles-container">
+            <div id="outerCircle" class="circle"></div>
+            <div id="innerCircle" class="circle"></div>
+        </div>
+
+        <div class="slider-container">
+            <div id="sliderTrack" class="slider-track">
+                <div id="sliderFill" class="slider-fill"></div>
+                <div id="sliderThumb" class="slider-thumb"></div>
+            </div>
+        </div>
+        <input type="range" id="hiddenYearsSlider" min="1" max="30" value="1" style="display: none;">
+        <button id="setButton" class="button">Set</button>
+    </div>
+
+    <div id="summaryScreen" class="screen hidden">
+        <div class="summary-egg-container">
+            <div class="summary-egg-shape" id="accountSummaryEgg">
+                <div class="summary-egg-fill" id="accountSummaryEggFill"></div>
+                <div class="summary-egg-text-overlay">
+                    <div class="summary-egg-total-value" id="summaryEggTotalValueText"></div>
+                </div>
+            </div>
+        </div>
+        <div class="summary-legend">
+            <div class="legend-color-key"></div>
+            <span>Available Now</span>
+        </div>
+
+        <button id="newButton" class="button">New</button>
+    </div>
+
+    <script>
+        const entryScreen = document.getElementById('entryScreen');
+        const summaryScreen = document.getElementById('summaryScreen');
+        const amountInput = document.getElementById('amountInput');
+        const sliderTrack = document.getElementById('sliderTrack');
+        const sliderThumb = document.getElementById('sliderThumb');
+        const sliderFill = document.getElementById('sliderFill');
+        const hiddenYearsSlider = document.getElementById('hiddenYearsSlider');
+        const setButton = document.getElementById('setButton');
+        const newButton = document.getElementById('newButton');
+
+        // Summary Screen Egg elements
+        const accountSummaryEgg = document.getElementById('accountSummaryEgg');
+        const accountSummaryEggFill = document.getElementById('accountSummaryEggFill');
+        const summaryEggTotalValueText = document.getElementById('summaryEggTotalValueText');
+
+        // New circle elements
+        const innerCircle = document.getElementById('innerCircle');
+        const outerCircle = document.getElementById('outerCircle');
+
+        // Wobble animation state
+        let summaryWobbleTimeoutId = null;
+        const wobbleTypes = [
+            { class: 'wobble-small', duration: 500 },  // duration in ms
+            { class: 'wobble-medium', duration: 700 },
+            { class: 'wobble-large', duration: 1000 }
+        ];
+
+        let rawAmount = 0;
+        let currentSliderYears = parseInt(hiddenYearsSlider.value);
+        let committedEntries = [];
+        let isSliderActive = false;
+
+        const ANNUAL_RETURN_RATE = 0.10;
+        const GLOBAL_PROJECTION_YEARS = 35;
+        const MIN_SLIDER_YEARS = parseInt(hiddenYearsSlider.min);
+        const MAX_SLIDER_YEARS = parseInt(hiddenYearsSlider.max);
+
+        // --- Circle Sizing Logic (replaces updateCalculatedValueDisplay) ---
+        const MIN_CIRCLE_RADIUS = 15; // px, (was MIN_CIRCLE_DIAMETER / 2)
+        const CIRCLE_CONTAINER_MAX_RADIUS = 125; // px, (was CIRCLE_CONTAINER_DIM / 2)
+        const BASE_PRINCIPAL_FOR_SCALING = 1000; 
+        const MAX_INNER_CIRCLE_RADIUS_FACTOR = 0.5; // Inner circle max radius relative to container's max radius (e.g., 0.5 = 50%)
+
+        function formatAsCurrency(value) {
+            const num = parseFloat(value);
+            if (isNaN(num)) {
+                return "$0.00";
+            }
+            return '$' + num.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        }
+
+        function calculateFutureValue(principal, rate, years) {
+            if (principal <= 0 || years < 0) return principal > 0 ? principal : 0;
+            return principal * Math.pow(1 + rate, years);
+        }
+
+        function updateCircleSizes() {
+            const principal = typeof rawAmount === 'number' ? rawAmount : 0;
+            const rate = ANNUAL_RETURN_RATE;
+            const years = currentSliderYears;
+
+            // Inner circle radius based on principal
+            let innerRadiusMax = CIRCLE_CONTAINER_MAX_RADIUS * MAX_INNER_CIRCLE_RADIUS_FACTOR;
+            let innerRadius = MIN_CIRCLE_RADIUS;
+            if (principal > 0) {
+                // Scale between min radius and a target max inner radius
+                innerRadius = MIN_CIRCLE_RADIUS + (principal / BASE_PRINCIPAL_FOR_SCALING) * (innerRadiusMax - MIN_CIRCLE_RADIUS);
+                innerRadius = Math.min(innerRadius, innerRadiusMax); 
+                innerRadius = Math.max(innerRadius, MIN_CIRCLE_RADIUS);
+            }
+            const innerDiameter = innerRadius * 2;
+            innerCircle.style.width = innerDiameter + 'px';
+            innerCircle.style.height = (innerDiameter * 1.2) + 'px';
+
+            // Outer circle radius based on future value
+            const futureValue = calculateFutureValue(principal, rate, years);
+            // Start with outer radius being slightly larger than inner radius (for border visibility)
+            // The value '3' here is effectively half the border width difference wanted for diameter
+            let outerRadius = innerRadius + (isSliderActive ? 3 : 1.5); 
+
+            if (principal > 0 && futureValue > principal && isSliderActive) {
+                const growthRatio = futureValue / principal;
+                // Calculate target outer radius based on growth from inner radius
+                outerRadius = innerRadius * Math.sqrt(growthRatio); 
+            }
+            
+            // Ensure outer is always at least slightly larger than inner to show its border
+            // The increment should be based on desired visual separation for radius (e.g. half border thickness)
+            outerRadius = Math.max(outerRadius, innerRadius + (isSliderActive ? 3 : 1.5)); 
+
+            const outerDiameter = outerRadius * 2;
+            outerCircle.style.width = outerDiameter + 'px';
+            outerCircle.style.height = (outerDiameter * 1.3) + 'px';
+        }
+        
+        amountInput.addEventListener('focus', () => {
+            isSliderActive = false;
+            if (String(amountInput.value).includes('$') || rawAmount === 0) {
+                 amountInput.value = rawAmount > 0 ? String(rawAmount) : '';
+            } else {
+                amountInput.value = String(rawAmount);
+            }
+            updateCircleSizes();
+        });
+
+        amountInput.addEventListener('input', () => {
+            const typedValue = amountInput.value.replace(/[$,]/g, '');
+            if (typedValue.trim() === '' || typedValue === '.') {
+                rawAmount = 0;
+            } else {
+                const parsed = parseFloat(typedValue);
+                rawAmount = !isNaN(parsed) ? parsed : 0;
+            }
+            updateCircleSizes();
+        });
+
+        amountInput.addEventListener('blur', () => {
+            const typedValue = amountInput.value.replace(/[$,]/g, '');
+            if (typedValue.trim() === '' || typedValue === '.' || isNaN(parseFloat(typedValue))) {
+                 rawAmount = 0;
+            } else {
+                 rawAmount = parseFloat(typedValue);
+            }
+            amountInput.value = formatAsCurrency(rawAmount);
+            updateCircleSizes();
+        });
+
+        amountInput.addEventListener('keydown', (event) => {
+            if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+                event.preventDefault();
+            }
+        });
+
+        function updateSliderUI(years) {
+            currentSliderYears = Math.max(MIN_SLIDER_YEARS, Math.min(MAX_SLIDER_YEARS, parseInt(years)));
+            hiddenYearsSlider.value = currentSliderYears;
+
+            const trackWidth = sliderTrack.offsetWidth;
+            const thumbWidth = sliderThumb.offsetWidth;
+            const effectiveTrackWidth = trackWidth - thumbWidth;
+            
+            const percentage = (MAX_SLIDER_YEARS === MIN_SLIDER_YEARS) ? 0 : 
+                               (currentSliderYears - MIN_SLIDER_YEARS) / (MAX_SLIDER_YEARS - MIN_SLIDER_YEARS);
+            
+            let thumbLeft = percentage * effectiveTrackWidth;
+            sliderThumb.style.left = thumbLeft + 'px';
+
+            let fillWidth = thumbLeft + (thumbWidth / 2);
+            sliderFill.style.width = Math.min(fillWidth, trackWidth) + 'px';
+            sliderFill.style.borderRadius = (percentage >= 0.995) ? '14px' : '14px 0 0 14px';
+
+            updateCircleSizes();
+        }
+
+        function handleSliderDrag(event) {
+            const trackRect = sliderTrack.getBoundingClientRect();
+            const thumbWidth = sliderThumb.offsetWidth;
+            const clientX = event.clientX || (event.targetTouches && event.targetTouches[0].clientX);
+            if (clientX === undefined) return;
+
+            let newX = clientX - trackRect.left; 
+            const effectiveTrackWidth = trackRect.width - thumbWidth;
+            
+            let percentage = 0;
+            if (effectiveTrackWidth > 0) {
+                percentage = (newX - (thumbWidth / 2)) / effectiveTrackWidth;
+            }
+            percentage = Math.max(0, Math.min(percentage, 1));
+            
+            let calculatedYears = MIN_SLIDER_YEARS + percentage * (MAX_SLIDER_YEARS - MIN_SLIDER_YEARS);
+            updateSliderUI(Math.round(calculatedYears));
+        }
+
+        function startSliderInteraction(event) {
+            event.preventDefault();
+            isSliderActive = true;
+
+            if (document.activeElement === amountInput) {
+                amountInput.blur();
+            }
+            sliderThumb.style.cursor = 'grabbing';
+            document.addEventListener('mousemove', handleSliderDrag);
+            document.addEventListener('touchmove', handleSliderDrag, { passive: false });
+            document.addEventListener('mouseup', endSliderInteraction);
+            document.addEventListener('touchend', endSliderInteraction);
+            
+            if (event.target === sliderTrack || event.target === sliderFill) {
+                handleSliderDrag(event); 
+            }
+        }
+
+        function endSliderInteraction() {
+            isSliderActive = false;
+            sliderThumb.style.cursor = 'grab';
+            document.removeEventListener('mousemove', handleSliderDrag);
+            document.removeEventListener('touchmove', handleSliderDrag);
+            document.removeEventListener('mouseup', endSliderInteraction);
+            document.removeEventListener('touchend', endSliderInteraction);
+        }
+
+        sliderTrack.addEventListener('mousedown', startSliderInteraction);
+        sliderThumb.addEventListener('mousedown', startSliderInteraction);
+        sliderTrack.addEventListener('touchstart', startSliderInteraction, { passive: false });
+        sliderThumb.addEventListener('touchstart', startSliderInteraction, { passive: false });
+
+        function updateSummaryScreen(){
+            let totalCommittedPrincipal = 0;
+            let totalProjectedValue = 0;
+
+            committedEntries.forEach(entry => {
+                totalCommittedPrincipal += entry.principal;
+                // Each principal is projected GLOBAL_PROJECTION_YEARS (35 years) into the future
+                totalProjectedValue += calculateFutureValue(entry.principal, ANNUAL_RETURN_RATE, GLOBAL_PROJECTION_YEARS);
+            });
+
+            // Update new egg display
+            if (accountSummaryEgg && accountSummaryEggFill && summaryEggTotalValueText) {
+                summaryEggTotalValueText.textContent = formatAsCurrency(totalProjectedValue);
+
+                let fillPercentage = 0;
+                if (totalProjectedValue > 0) {
+                    fillPercentage = (totalCommittedPrincipal / totalProjectedValue) * 100;
+                }
+                fillPercentage = Math.min(Math.max(fillPercentage, 0), 100); // Clamp between 0 and 100
+                
+                accountSummaryEggFill.style.height = fillPercentage + '%';
+            }
+        }
+
+        function initializeApp() {
+            amountInput.value = '';
+            rawAmount = 0;
+            currentSliderYears = MIN_SLIDER_YEARS;
+            isSliderActive = false;
+            committedEntries = [];
+            
+            updateSliderUI(MIN_SLIDER_YEARS);
+            updateSummaryScreen();
+            
+            entryScreen.classList.remove('hidden');
+            summaryScreen.classList.add('hidden');
+            amountInput.focus();
+            if (summaryWobbleTimeoutId) clearTimeout(summaryWobbleTimeoutId); // Clear any pending wobble
+            setTimeout(triggerSummaryEggWobble, 50); // Start wobbling shortly after screen is shown 
+        }
+
+        initializeApp();
+
+        setButton.addEventListener('click', () => {
+            if (document.activeElement === amountInput) {
+                amountInput.blur();
+            }
+            if (amountInput.value.trim() !== '' && !amountInput.value.includes('$')) {
+                const typedValue = amountInput.value.replace(/[$,]/g, '');
+                const parsed = parseFloat(typedValue);
+                rawAmount = !isNaN(parsed) ? parsed : 0;
+            }
+
+            if (rawAmount <= 0) {
+                alert("Please enter a valid amount.");
+                amountInput.value = '';
+                amountInput.focus();
+                return;
+            }
+
+            committedEntries.push({ principal: rawAmount });
+            updateSummaryScreen();
+
+            entryScreen.classList.add('hidden');
+            summaryScreen.classList.remove('hidden');
+            if (summaryWobbleTimeoutId) clearTimeout(summaryWobbleTimeoutId); // Clear any pending wobble
+            setTimeout(triggerSummaryEggWobble, 50); // Start wobbling shortly after screen is shown 
+        });
+
+        newButton.addEventListener('click', () => {
+            summaryScreen.classList.add('hidden');
+            entryScreen.classList.remove('hidden');
+            if (summaryWobbleTimeoutId) clearTimeout(summaryWobbleTimeoutId); // Stop wobbling
+            
+            // Reset for a new entry
+            rawAmount = 0;
+            currentSliderYears = MIN_SLIDER_YEARS;
+            updateSliderUI(MIN_SLIDER_YEARS);
+            amountInput.value = '';
+            amountInput.focus();
+        });
+
+        // --- Wobble Animation for Summary Egg ---
+        function triggerSummaryEggWobble() {
+            if (!accountSummaryEgg || summaryScreen.classList.contains('hidden')) {
+                // Don't wobble if egg isn't visible or doesn't exist
+                if (summaryWobbleTimeoutId) clearTimeout(summaryWobbleTimeoutId);
+                return;
+            }
+
+            // Remove any existing wobble classes first to reset
+            wobbleTypes.forEach(w => accountSummaryEgg.classList.remove(w.class));
+
+            // Select a random wobble
+            const randomIndex = Math.floor(Math.random() * wobbleTypes.length);
+            const selectedWobble = wobbleTypes[randomIndex];
+
+            accountSummaryEgg.classList.add(selectedWobble.class);
+
+            // Remove the class after the animation duration
+            setTimeout(() => {
+                accountSummaryEgg.classList.remove(selectedWobble.class);
+            }, selectedWobble.duration);
+
+            // Schedule the next wobble
+            const nextWobbleDelay = Math.random() * 10000 + 5000; // 5-15 seconds
+            summaryWobbleTimeoutId = setTimeout(triggerSummaryEggWobble, nextWobbleDelay);
+        }
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Value Visualizer</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+            color: #1c1e21;
+            box-sizing: border-box;
+        }
+        .screen {
+            background-color: #ffffff;
+            padding: 25px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+        }
+        .hidden {
+            display: none; /* Will toggle with JS, opacity/transform for animations if desired */
+        }
+        .input-value-container { /* New wrapper */
+            position: relative;
+            margin-bottom: 20px; /* Matches original amountInput margin */
+        }
+        input[type="number"].amount-input {
+            width: calc(100% - 24px); /* padding considered */
+            padding: 14px 12px;
+            /* margin-bottom: 20px; */ /* Moved to container */
+            border: 1px solid #ccd0d5;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 22px;
+            text-align: center;
+            color: #1c1e21;
+            font-weight: 500;
+            appearance: textfield; /* Firefox */
+        }
+        input[type="number"].amount-input::-webkit-outer-spin-button,
+        input[type="number"].amount-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"].amount-input::placeholder {
+            color: #8a8d91;
+            font-weight: 400;
+        }
+        .slider-container {
+            margin-bottom: 10px; /* Reduced margin */
+            padding-top: 10px;
+        }
+        .slider-track {
+            width: 100%;
+            height: 28px;
+            background-color: #e4e6eb;
+            border-radius: 14px;
+            position: relative;
+            cursor: pointer;
+        }
+        .slider-fill {
+            height: 100%;
+            background-color: #007bff; /* Primary blue */
+            border-radius: 14px 0 0 14px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 0;
+        }
+        .slider-thumb {
+            width: 36px;
+            height: 36px;
+            background-color: #ffffff;
+            border: 2px solid #007bff;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%); /* X is set by JS */
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            cursor: grab;
+            z-index: 2;
+        }
+        .slider-thumb:active {
+            cursor: grabbing;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+        .calculated-value-display-overlay { /* Renamed and modified for overlay */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%; /* Match container, adjust with padding as input */
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            padding: 14px 12px; /* Match amountInput padding */
+            box-sizing: border-box; /* Match amountInput */
+
+            font-size: 22px; /* Match amountInput */
+            font-weight: 600; /* Slightly bolder or match input for seamlessness */
+            color: #007bff; /* Keep distinct color or match input's active text */
+            background-color: #ffffff; /* To hide the input text underneath */
+            
+            border-radius: 8px; /* Match amountInput */
+            /* border: 1px solid transparent; Ensure alignment with border, or match input's border */
+
+            opacity: 0;
+            pointer-events: none; /* So it doesn't block interaction with amountInput */
+            transition: opacity 0.2s ease-in-out;
+            z-index: 3; /* To be above slider fill/thumb if they overlap due to layout changes */
+        }
+        .button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 17px;
+            font-weight: 600;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background-color: #0069d9;
+        }
+        .button:active {
+            transform: scale(0.98);
+        }
+        .summary-value {
+            font-size: 20px;
+            color: #1c1e21;
+            margin: 12px 0;
+            font-weight: 500;
+        }
+        .summary-value strong {
+            font-weight: 600;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="entryScreen" class="screen">
+        <div class="input-value-container"> 
+            <input type="number" id="amountInput" class="amount-input" placeholder="Enter Amount">
+            <div id="calculatedValueDisplay" class="calculated-value-display-overlay">$0.00</div> 
+        </div>
+        <div class="slider-container">
+            <div id="sliderTrack" class="slider-track">
+                <div id="sliderFill" class="slider-fill"></div>
+                <div id="sliderThumb" class="slider-thumb"></div>
+            </div>
+        </div>
+        <input type="range" id="hiddenYearsSlider" min="1" max="30" value="1" style="display: none;">
+        <button id="setButton" class="button">Set</button>
+    </div>
+
+    <div id="summaryScreen" class="screen hidden">
+        <p class="summary-value">Base: <strong id="summaryPrincipal">$0.00</strong></p>
+        <p class="summary-value">Projected: <strong id="summaryProjected">$0.00</strong></p>
+        <button id="newButton" class="button">New</button>
+    </div>
+
+    <script>
+        const entryScreen = document.getElementById('entryScreen');
+        const summaryScreen = document.getElementById('summaryScreen');
+        const amountInput = document.getElementById('amountInput');
+        const sliderTrack = document.getElementById('sliderTrack');
+        const sliderThumb = document.getElementById('sliderThumb');
+        const sliderFill = document.getElementById('sliderFill');
+        const hiddenYearsSlider = document.getElementById('hiddenYearsSlider'); // For min/max/value logic
+        const calculatedValueDisplay = document.getElementById('calculatedValueDisplay'); // New display element
+        const setButton = document.getElementById('setButton');
+        const summaryPrincipalDisplay = document.getElementById('summaryPrincipal');
+        const summaryProjectedDisplay = document.getElementById('summaryProjected');
+        const newButton = document.getElementById('newButton');
+
+        // --- State Variables ---
+        let rawAmount = 0; // Stores the numeric value typed by the user
+        let currentSliderYears = parseInt(hiddenYearsSlider.value); // Years from the slider
+        let committedEntries = []; // Array of { principal: number } objects
+        let isSliderActive = false; // Is the user currently dragging the slider?
+
+        // --- Constants ---
+        const ANNUAL_RETURN_RATE = 0.10;
+        const GLOBAL_PROJECTION_YEARS = 35; // For summary screen
+        const MIN_SLIDER_YEARS = parseInt(hiddenYearsSlider.min);
+        const MAX_SLIDER_YEARS = parseInt(hiddenYearsSlider.max);
+
+        // --- Utility Functions ---
+        function formatAsCurrency(value) {
+            const num = parseFloat(value);
+            if (isNaN(num)) {
+                return "$0.00"; // Default to $0.00 if not a number
+            }
+            return '$' + num.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        }
+
+        function calculateFutureValue(principal, rate, years) {
+            if (principal <= 0 || years < 0) return principal > 0 ? principal : 0;
+            return principal * Math.pow(1 + rate, years);
+        }
+
+        // Simplified: Updates the separate calculated value display
+        function updateCalculatedValueDisplay() {
+            const principal = typeof rawAmount === 'number' ? rawAmount : 0;
+            const rate = 0.10; // 10% YoY return
+
+            // Determine the number of years for calculation:
+            // If the slider is active (being dragged or has been set), use its current year value.
+            // Otherwise (e.g., on initial load, while typing in amount field), use 0 years.
+            // This ensures the calculated display shows the principal itself if no time commitment via slider is active.
+            const yearsToCalculate = isSliderActive ? currentSliderYears : 0;
+
+            // console.log(`updateCalculatedValueDisplay: principal=${principal}, isSliderActive=${isSliderActive}, currentSliderYears=${currentSliderYears}, yearsToCalculate=${yearsToCalculate}`);
+
+            const futureValue = calculateFutureValue(principal, rate, yearsToCalculate);
+            
+            if (calculatedValueDisplay) {
+                calculatedValueDisplay.textContent = formatAsCurrency(futureValue);
+            } else {
+                // This console.error can be helpful if the element is ever missing
+                // console.error('calculatedValueDisplay element not found during update');
+            }
+        }
+        
+        amountInput.addEventListener('focus', () => {
+            isSliderActive = false; // Typing takes precedence, slider isn't active from just focusing
+            if (calculatedValueDisplay) calculatedValueDisplay.style.opacity = '0'; // Hide overlay
+            if (String(amountInput.value).includes('$') || rawAmount === 0) {
+                 amountInput.value = rawAmount > 0 ? String(rawAmount) : '';
+            } else {
+                amountInput.value = String(rawAmount);
+            }
+        });
+
+        amountInput.addEventListener('input', () => {
+            const typedValue = amountInput.value.replace(/[$,]/g, '');
+            if (typedValue.trim() === '' || typedValue === '.') {
+                rawAmount = 0;
+            } else {
+                const parsed = parseFloat(typedValue);
+                rawAmount = !isNaN(parsed) ? parsed : 0;
+            }
+            // As user types, calculatedValueDisplay should reflect the typed amount (yearsForCalc=0)
+            // isSliderActive is false here, so updateCalculatedValueDisplay will use yearsForCalc = 0.
+            updateCalculatedValueDisplay();
+        });
+
+        amountInput.addEventListener('blur', () => {
+            // isSliderActive remains false if just blurring input
+            const typedValue = amountInput.value.replace(/[$,]/g, '');
+            if (typedValue.trim() === '' || typedValue === '.' || isNaN(parseFloat(typedValue))) {
+                 rawAmount = 0;
+            } else {
+                 rawAmount = parseFloat(typedValue);
+            }
+            amountInput.value = formatAsCurrency(rawAmount); // Format the input field itself
+            // Update calculated display to also reflect the formatted rawAmount (yearsForCalc=0)
+            // as isSliderActive is false.
+            updateCalculatedValueDisplay(); 
+        });
+
+        amountInput.addEventListener('keydown', (event) => {
+            if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+                event.preventDefault();
+            }
+        });
+
+        // --- Slider UI and Logic ---
+        function updateSliderUI(years) {
+            currentSliderYears = Math.max(MIN_SLIDER_YEARS, Math.min(MAX_SLIDER_YEARS, parseInt(years)));
+            hiddenYearsSlider.value = currentSliderYears;
+
+            const trackWidth = sliderTrack.offsetWidth;
+            const thumbWidth = sliderThumb.offsetWidth;
+            const effectiveTrackWidth = trackWidth - thumbWidth;
+            
+            const percentage = (MAX_SLIDER_YEARS === MIN_SLIDER_YEARS) ? 0 : 
+                               (currentSliderYears - MIN_SLIDER_YEARS) / (MAX_SLIDER_YEARS - MIN_SLIDER_YEARS);
+            
+            let thumbLeft = percentage * effectiveTrackWidth;
+            sliderThumb.style.left = thumbLeft + 'px';
+
+            let fillWidth = thumbLeft + (thumbWidth / 2); // Fill up to center of thumb
+            sliderFill.style.width = Math.min(fillWidth, trackWidth) + 'px';
+            sliderFill.style.borderRadius = (percentage >= 0.995) ? '14px' : '14px 0 0 14px';
+
+            updateCalculatedValueDisplay(); // Update the separate display element
+        }
+
+        function handleSliderDrag(event) {
+            const trackRect = sliderTrack.getBoundingClientRect();
+            const thumbWidth = sliderThumb.offsetWidth;
+            // Use clientX for mouse, and targetTouches[0].clientX for touch
+            const clientX = event.clientX || (event.targetTouches && event.targetTouches[0].clientX);
+            if (clientX === undefined) return; // Exit if no X coordinate
+
+            let newX = clientX - trackRect.left; 
+            const effectiveTrackWidth = trackRect.width - thumbWidth;
+            
+            let percentage = 0;
+            if (effectiveTrackWidth > 0) {
+                // Calculate based on the center of the thumb being dragged
+                percentage = (newX - (thumbWidth / 2)) / effectiveTrackWidth;
+            }
+            percentage = Math.max(0, Math.min(percentage, 1));
+            
+            let calculatedYears = MIN_SLIDER_YEARS + percentage * (MAX_SLIDER_YEARS - MIN_SLIDER_YEARS);
+            updateSliderUI(Math.round(calculatedYears));
+        }
+
+        function startSliderInteraction(event) {
+            event.preventDefault(); // Prevent text selection, etc.
+            isSliderActive = true;
+            if (calculatedValueDisplay) calculatedValueDisplay.style.opacity = '1'; // Show overlay
+
+            if (document.activeElement === amountInput) {
+                amountInput.blur(); // Finalizes rawAmount and formats amountInput
+            }
+            sliderThumb.style.cursor = 'grabbing';
+            document.addEventListener('mousemove', handleSliderDrag);
+            document.addEventListener('touchmove', handleSliderDrag, { passive: false });
+            document.addEventListener('mouseup', endSliderInteraction);
+            document.addEventListener('touchend', endSliderInteraction);
+            
+            // Handle initial positioning if click is on track not thumb
+            if (event.target === sliderTrack || event.target === sliderFill) {
+                handleSliderDrag(event); 
+            }
+        }
+
+        function endSliderInteraction() {
+            isSliderActive = false;
+            sliderThumb.style.cursor = 'grab';
+            document.removeEventListener('mousemove', handleSliderDrag);
+            document.removeEventListener('touchmove', handleSliderDrag);
+            document.removeEventListener('mouseup', endSliderInteraction);
+            document.removeEventListener('touchend', endSliderInteraction);
+        }
+
+        sliderTrack.addEventListener('mousedown', startSliderInteraction);
+        sliderThumb.addEventListener('mousedown', startSliderInteraction);
+        // Add touch support
+        sliderTrack.addEventListener('touchstart', startSliderInteraction, { passive: false });
+        sliderThumb.addEventListener('touchstart', startSliderInteraction, { passive: false });
+
+
+        // --- Screen Switching and Summary Logic (to be added next) ---
+        function updateSummaryScreen(){
+            let totalCommittedPrincipal = 0;
+            let totalProjectedValue = 0;
+
+            committedEntries.forEach(entry => {
+                totalCommittedPrincipal += entry.principal;
+                totalProjectedValue += calculateFutureValue(entry.principal, ANNUAL_RETURN_RATE, GLOBAL_PROJECTION_YEARS);
+            });
+
+            summaryPrincipalDisplay.textContent = formatAsCurrency(totalCommittedPrincipal);
+            summaryProjectedDisplay.textContent = formatAsCurrency(totalProjectedValue);
+        }
+
+
+        // --- Initialization ---
+        function initializeApp() {
+            amountInput.value = ''; // Start with placeholder
+            rawAmount = 0;
+            currentSliderYears = MIN_SLIDER_YEARS;
+            isSliderActive = false;
+            if (calculatedValueDisplay) calculatedValueDisplay.style.opacity = '0'; // Hide overlay
+            committedEntries = [];
+            
+            updateSliderUI(MIN_SLIDER_YEARS); // This will call updateCalculatedValueDisplay
+            updateSummaryScreen(); // Initialize summary to $0
+            
+            entryScreen.classList.remove('hidden');
+            summaryScreen.classList.add('hidden');
+            amountInput.focus();
+        }
+
+        initializeApp(); // Call on script load
+
+        // --- Button Event Listeners and Screen Switching ---
+        setButton.addEventListener('click', () => {
+            if (document.activeElement === amountInput) {
+                amountInput.blur(); // Ensure rawAmount is finalized if input was focused
+            }
+            // Re-confirm rawAmount after a potential blur, in case user typed and directly hit Set
+            if (amountInput.value.trim() !== '' && !amountInput.value.includes('$')) {
+                const typedValue = amountInput.value.replace(/[$,]/g, '');
+                const parsed = parseFloat(typedValue);
+                rawAmount = !isNaN(parsed) ? parsed : 0;
+            }
+
+            if (rawAmount <= 0) {
+                alert("Please enter a valid amount.");
+                amountInput.value = ''; // Clear for placeholder
+                calculatedValueDisplay.textContent = formatAsCurrency(0); // Reset calculated display too
+                amountInput.focus();
+                return;
+            }
+
+            committedEntries.push({ principal: rawAmount }); // Store the committed principal
+            updateSummaryScreen();
+
+            entryScreen.classList.add('hidden');
+            summaryScreen.classList.remove('hidden');
+        });
+
+        newButton.addEventListener('click', () => {
+            summaryScreen.classList.add('hidden');
+            entryScreen.classList.remove('hidden');
+            
+            // Reset for a new entry
+            rawAmount = 0;
+            currentSliderYears = MIN_SLIDER_YEARS;
+            if (calculatedValueDisplay) calculatedValueDisplay.style.opacity = '0'; // Hide overlay
+            updateSliderUI(MIN_SLIDER_YEARS); // This calls updateCalculatedValueDisplay, which should show $0.00 or empty
+            amountInput.value = ''; // Ensure placeholder is ready
+            amountInput.focus(); // This will also hide overlay due to focus listener
+        });
+
+    </script>
+
+</body>
+</html>
