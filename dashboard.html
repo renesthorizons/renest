@@ -1626,12 +1626,12 @@
                     </div>
                 </div>
                 
-                <div class="next-steps" style="margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 1rem;">
+                <!-- <div class="next-steps" style="margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 1rem;">
                     <h3 style="text-align: center; margin-bottom: 0.75rem;">Quick Tip:</h3>
                     <ul id="nextStepsList" style="list-style: none; padding-left:0; text-align: center;">
-                        <!-- Dynamic next steps will be added here -->
+                        
                     </ul>
-                </div>
+                </div> -->
                 <!-- Removed old tracker button -->
             </div>
 
@@ -3388,16 +3388,16 @@ const statePersonalExemptionDB = {
             // DOM Element Getters - Grouped at the top
             const benefitSummary = document.getElementById('benefitSummary');
             const benefitDifferenceEl = document.getElementById('benefitDifference');
-            const nextStepsList = document.getElementById('nextStepsList');
+            // const nextStepsList = document.getElementById('nextStepsList');
             // const getMoneyButtonContainer = document.getElementById('getMoneyButtonContainer'); // This button is effectively replaced by the gold step
 
             // Ensure elements exist before proceeding
-            if (!benefitSummary || !benefitDifferenceEl || !nextStepsList) {
+            if (!benefitSummary || !benefitDifferenceEl) {
                 console.error('Dashboard UI elements not found! Aborting updateDashboard.');
                 console.error('Missing elements:', {
                     benefitSummaryFound: !!benefitSummary,
                     benefitDifferenceElFound: !!benefitDifferenceEl,
-                    nextStepsListFound: !!nextStepsList
+                    // nextStepsListFound: !!nextStepsList
                 });
                 return; // Critical elements missing, cannot update dashboard
             }
@@ -3544,14 +3544,14 @@ const statePersonalExemptionDB = {
 
 
             // Populate next steps list with the determined tip
-            if (steps[3].completed && currentBenefit > 200) { // If last "normal" step is done and benefit eligible
-                nextStepsList.innerHTML = `<li>You're ready to claim your benefit! Click "Get My Money Now".</li>`;
-            } else if (steps[3].completed && currentBenefit <= 200) {
-                 nextStepsList.innerHTML = `<li>Continue logging expenses to increase your benefit and unlock "Get My Money Now".</li>`;
-            }
-            else {
-                nextStepsList.innerHTML = `<li>${nextTip}</li>`;
-            }
+            // if (steps[3].completed && currentBenefit > 200) { // If last "normal" step is done and benefit eligible
+            //     nextStepsList.innerHTML = `<li>You're ready to claim your benefit! Click "Get My Money Now".</li>`;
+            // } else if (steps[3].completed && currentBenefit <= 200) {
+            //      nextStepsList.innerHTML = `<li>Continue logging expenses to increase your benefit and unlock "Get My Money Now".</li>`;
+            // }
+            // else {
+            //     nextStepsList.innerHTML = `<li>${nextTip}</li>`;
+            // }
 
 
         }
