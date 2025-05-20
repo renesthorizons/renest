@@ -3774,6 +3774,7 @@ const statePersonalExemptionDB = {
             utilitiesIncluded: false,
             enrolledMonths: [],
             residency_status: 'citizen', // Default to citizen
+            visa_type: '', // Added for clarity
             country_of_origin: ''      // Reset country
         };
 
@@ -3794,6 +3795,7 @@ const statePersonalExemptionDB = {
                 utilitiesIncluded: false,
                 enrolledMonths: [],
                 residency_status: 'citizen', // Default to citizen
+                visa_type: '',
                 country_of_origin: ''      // Reset country
             };
             
@@ -3858,6 +3860,31 @@ const statePersonalExemptionDB = {
             currentStep = stepNumber;
             updateProgressBar1();
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const residencyStatusInputEl = document.getElementById('residencyStatusInput');
+            const visaTypeGroupEl = document.getElementById('visaTypeGroup');
+            const visaTypeInputEl = document.getElementById('visaTypeInput');
+            const countryOfOriginGroupEl = document.getElementById('countryOfOriginGroup');
+            const countryOfOriginInputEl = document.getElementById('countryOfOriginInput');
+
+            if (residencyStatusInputEl) {
+                residencyStatusInputEl.addEventListener('change', function() {
+                    const selectedStatus = this.value;
+                    if (selectedStatus === 'resident_alien' || selectedStatus === 'non_resident_alien' || selectedStatus === 'unknown_residency') {
+                        if (visaTypeGroupEl) visaTypeGroupEl.classList.remove('hidden');
+                        if (countryOfOriginGroupEl) countryOfOriginGroupEl.classList.remove('hidden');
+                    } else {
+                        if (visaTypeGroupEl) visaTypeGroupEl.classList.add('hidden');
+                        if (visaTypeInputEl) visaTypeInputEl.value = ''; // Clear visa type
+                        if (countryOfOriginGroupEl) countryOfOriginGroupEl.classList.add('hidden');
+                        if (countryOfOriginInputEl) countryOfOriginInputEl.value = ''; // Clear country
+                    }
+                });
+                // Trigger change event on load to set initial state based on default value
+                residencyStatusInputEl.dispatchEvent(new Event('change'));
+            }
+        });
 
         // Navigation functions
         function nextStep() {
