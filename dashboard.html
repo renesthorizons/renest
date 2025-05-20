@@ -1312,29 +1312,165 @@
                         <input type="text" id="school" class="form-input" placeholder="Enter school name">
                     </div>
                     <div class="form-group">
-                        <label for="degreeLevelInput" class="form-label">I am a...</label>
-                        <select id="degreeLevelInput" name="degreeLevelInput" class="form-input">
-                            <option value="">Select Degree Level</option>
-                            <option value="Undergraduate">Undergraduate</option>
-                            <option value="Masters">Masters</option>
-                            <option value="PhD">PhD</option>
-                        </select>
-                    </div>
-                    <div class="form-group hidden" id="yearOfStudyGroup">
-                        <label for="yearOfStudyInput" class="form-label">I am in my...</label>
-                        <select id="yearOfStudyInput" name="yearOfStudyInput" class="form-input">
-                            <option value="">Select Year</option>
-                            <option value="0th (will attend)">0th (will attend)</option>                            
-                            <option value="1st year (Freshman)">1st year (Freshman)</option>
-                            <option value="2nd year">2nd year</option>
-                            <option value="3rd year">3rd year</option>
-                            <option value="4th year">4th year</option>
-                            <option value="5th year">5th year</option>
-                            <option value="6th year+">6th year+</option>                            
-                        </select>
+                        <label for="state" class="form-label">Select Where You Attend School</label>
+                        <div class="custom-select">
+                            <div class="select-selected" tabindex="0">State</div>
+                            <div class="select-items hidden">
+                                <!-- The options will be populated by JavaScript -->
+                            </div>
+                        </div>
+                        <input type="hidden" id="state" name="state" value="">
                     </div>
                     <div class="form-group">
-                        <label for="state" class="form-label">Select Where You Attend School</label>
+                        <label for="income" class="form-label">Projected Total Income from all Sources this Year</label>
+                        <input type="text" id="income" class="form-input" placeholder="Enter annual income">
+                    </div>
+                    <div class="button-container">
+                        <button onclick="previousStep()" class="button button-secondary">Back</button>
+                        <button onclick="nextStep()" class="button button-primary">Next</button>
+                    </div>
+                </div>
+    
+                <!-- Step 3: Expenses -->
+                <div id="step3" class="form-step">
+                    <div class="form-group">
+                        <h3 class="form-label">My Housing Information</h3>
+                        <p class="form-description" style="margin-bottom: 1rem;">Include leases relevant to this calendar year. Averages and estimates are okay</p>
+                        
+                        <!-- Housing button and list -->
+                        <div id="housingEntriesContainer" style="margin-bottom: 1.5rem;">
+                            <!-- Housing entries will be listed here -->
+                        </div>
+                        
+                        <button type="button" id="addHousingButton" onclick="openHousingModal()" class="button button-primary" style="width: 100%; margin-bottom: 1.5rem;">
+                            + Add Housing Information
+                        </button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <p class="form-description" style="color: var(--text-dark);">I am enrolled as a student these months (uncheck if not enrolled)</p>
+                        <div class="month-checkboxes">
+                            <div class="month-row">
+                                <div class="month-item">
+                                    <input type="checkbox" id="month1" name="enrolledMonths" value="1" checked>
+                                    <label for="month1">January</label>
+                                </div>
+                                <div class="month-item">
+                                    <input type="checkbox" id="month2" name="enrolledMonths" value="2" checked>
+                                    <label for="month2">February</label>
+                                </div>
+                                <div class="month-item">
+                                    <input type="checkbox" id="month3" name="enrolledMonths" value="3" checked>
+                                    <label for="month3">March</label>
+                                </div>
+                                <div class="month-item">
+                                    <input type="checkbox" id="month4" name="enrolledMonths" value="4" checked>
+                                    <label for="month4">April</label>
+                                </div>
+                            </div>
+                            <div class="month-row">
+                                <div class="month-item">
+                                    <input type="checkbox" id="month5" name="enrolledMonths" value="5" checked>
+                                    <label for="month5">May</label>
+                                </div>
+                                <div class="month-item">
+                                    <input type="checkbox" id="month6" name="enrolledMonths" value="6" checked>
+                                    <label for="month6">June</label>
+                                </div>
+                                <div class="month-item">
+                                    <input type="checkbox" id="month7" name="enrolledMonths" value="7" checked>
+                                    <label for="month7">July</label>
+                                </div>
+                                <div class="month-item">
+                                    <input type="checkbox" id="month8" name="enrolledMonths" value="8" checked>
+                                    <label for="month8">August</label>
+                                </div>
+                            </div>
+                            <div class="month-row">
+                                <div class="month-item">
+                                    <input type="checkbox" id="month9" name="enrolledMonths" value="9" checked>
+                                    <label for="month9">September</label>
+                                </div>
+                                <div class="month-item">
+                                    <input type="checkbox" id="month10" name="enrolledMonths" value="10" checked>
+                                    <label for="month10">October</label>
+                                </div>
+                                <div class="month-item">
+                                    <input type="checkbox" id="month11" name="enrolledMonths" value="11" checked>
+                                    <label for="month11">November</label>
+                                </div>
+                                <div class="month-item">
+                                    <input type="checkbox" id="month12" name="enrolledMonths" value="12" checked>
+                                    <label for="month12">December</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="button-container">
+                        <button onclick="previousStep()" class="button button-secondary">Back</button>
+                        <button type="button" onclick="submitForm()" class="button button-primary" id="submitBtn">
+                            <div class="btn-content">
+                                <span>Submit</span>
+                                <div class="spinner" id="spinner"></div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Upcoming Lease Modal -->
+                <div id="upcomingLeaseModal" class="modal-overlay hidden">
+                    <div class="modal-container">
+                        <div class="modal-content">
+                            <button class="close-button" onclick="closeUpcomingLeaseModal()">×</button>
+                            <h2 style="margin-bottom: 1.5rem;">New Lease Information</h2>
+                            
+                            <div class="form-group">
+                                <label class="form-label">New lease start date:</label>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <select id="newLeaseStartMonth" class="form-input" style="flex: 1;">
+                                        <option value="1">January</option>
+                                        <option value="2">February</option>
+                                        <option value="3">March</option>
+                                        <option value="4">April</option>
+                                        <option value="5">May</option>
+                                        <option value="6">June</option>
+                                        <option value="7">July</option>
+                                        <option value="8">August</option>
+                                        <option value="9">September</option>
+                                        <option value="10">October</option>
+                                        <option value="11">November</option>
+                                        <option value="12">December</option>
+                                    </select>
+                                    <select id="newLeaseStartYear" class="form-input" style="flex: 1;">
+                                        <!-- Will be populated via JavaScript -->
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">New lease end date:</label>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <select id="newLeaseEndMonth" class="form-input" style="flex: 1;">
+                                        <option value="1">January</option>
+                                        <option value="2">February</option>
+                                        <option value="3">March</option>
+                                        <option value="4">April</option>
+                                        <option value="5">May</option>
+                                        <option value="6">June</option>
+                                        <option value="7">July</option>
+                                        <option value="8">August</option>
+                                        <option value="9">September</option>
+                                        <option value="10">October</option>
+                                        <option value="11">November</option>
+                                        <option value="12">December</option>
+                                    </select>
+                                    <select id="newLeaseEndYear" class="form-input" style="flex: 1;">
+                                        <!-- Will be populated via JavaScript -->
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
                                 <label for="newLeaseRent" class="form-label">Monthly rent for new lease:</label>
                                 <input type="text" id="newLeaseRent" class="form-input" placeholder="Enter new monthly rent">
                             </div>
@@ -3731,17 +3867,6 @@ const statePersonalExemptionDB = {
             const visaTypeInputEl = document.getElementById('visaTypeInput');
             const countryOfOriginGroupEl = document.getElementById('countryOfOriginGroup');
             const countryOfOriginInputEl = document.getElementById('countryOfOriginInput');
-            const countryDatalist = document.getElementById('countryListData');
-
-            // Populate country datalist
-            if (countryDatalist && typeof countryList !== 'undefined') {
-                countryList.forEach(country => {
-                    const option = document.createElement('option');
-                    option.value = country;
-                    countryDatalist.appendChild(option);
-                });
-            }
-
 
             if (residencyStatusInputEl) {
                 residencyStatusInputEl.addEventListener('change', function() {
@@ -3759,27 +3884,6 @@ const statePersonalExemptionDB = {
                 // Trigger change event on load to set initial state based on default value
                 residencyStatusInputEl.dispatchEvent(new Event('change'));
             }
-
-            // --- New logic for Degree Level and Year of Study dropdowns ---
-            const degreeLevelInputEl = document.getElementById('degreeLevelInput');
-            const yearOfStudyGroupEl = document.getElementById('yearOfStudyGroup');
-            const yearOfStudyInputEl = document.getElementById('yearOfStudyInput');
-
-            if (degreeLevelInputEl && yearOfStudyGroupEl) {
-                degreeLevelInputEl.addEventListener('change', function() {
-                    if (this.value) { // If any degree level is selected
-                        yearOfStudyGroupEl.classList.remove('hidden');
-                    } else {
-                        yearOfStudyGroupEl.classList.add('hidden');
-                        if (yearOfStudyInputEl) yearOfStudyInputEl.value = ''; // Reset year if degree is deselected
-                    }
-                });
-                 // Initialize: year of study is hidden if no degree level is selected initially
-                if (!degreeLevelInputEl.value) {
-                    yearOfStudyGroupEl.classList.add('hidden');
-                }
-            }
-            // --- End of new logic ---
         });
 
         // Navigation functions
@@ -3800,20 +3904,16 @@ const statePersonalExemptionDB = {
                     const visaTypeValue = document.getElementById('visaTypeInput').value;
                     const countryOfOriginValue = document.getElementById('countryOfOriginInput').value;
 
-                    // Combine residency, visa, and country information
                     if (residencyStatusValue === 'citizen' || residencyStatusValue === 'permanent_resident') {
                         formData.residency_status = residencyStatusValue;
-                        formData.country_of_origin = ''; // Not applicable or set to a default like 'USA' if needed
-                        formData.visa_type = ''; // Clear visa type
+                        formData.country_of_origin = ''; // Not applicable
                     } else if (['resident_alien', 'non_resident_alien', 'unknown_residency'].includes(residencyStatusValue)) {
-                        formData.residency_status = residencyStatusValue; // Store base status
-                        formData.visa_type = visaTypeValue || ''; // Store visa type, empty if not provided
-                        formData.country_of_origin = countryOfOriginValue || ''; // Store country, empty if not provided
-                    } else {
-                        // Handle any other cases or set defaults
-                        formData.residency_status = residencyStatusValue;
-                        formData.visa_type = '';
-                        formData.country_of_origin = '';
+                        if (visaTypeValue && visaTypeValue !== 'unknown_visa_type' && visaTypeValue !== '') {
+                            formData.residency_status = `${residencyStatusValue}_visa:${visaTypeValue}`;
+                        } else {
+                           formData.residency_status = residencyStatusValue; // Visa unknown or not applicable
+                        }
+                        formData.country_of_origin = countryOfOriginValue;
                     }
                     
                     if (residencyStatusValue === 'non_resident_alien' && 
@@ -3839,21 +3939,7 @@ const statePersonalExemptionDB = {
                 // Save step 2 data
                 formData.school = document.getElementById('school').value;
                 formData.state = document.getElementById('state').value;
-                formData.income = document.getElementById('income').value.replace(/[^\d]/g, ''); // Ensure income is just numbers
-                
-                // --- New: Save degree level and year of study ---
-                const degreeLevel = document.getElementById('degreeLevelInput').value;
-                const yearOfStudy = document.getElementById('yearOfStudyInput').value;
-
-                if (degreeLevel) {
-                    formData.student_status = degreeLevel;
-                    if (yearOfStudy) { // Append year if selected
-                        formData.student_status += ` - ${yearOfStudy}`;
-                    }
-                } else {
-                    formData.student_status = ''; // Clear if no degree level
-                }
-                // --- End new ---
+                formData.income = document.getElementById('income').value;
                 
                 showStep(3);
             }
@@ -3971,9 +4057,6 @@ const statePersonalExemptionDB = {
             const school = document.getElementById('school').value.trim();
             const state = document.getElementById('state').value;
             const income = Number(document.getElementById('income').value.replace(/[^\d]/g, ''));
-            const degreeLevel = document.getElementById('degreeLevelInput').value;
-            const yearOfStudyGroup = document.getElementById('yearOfStudyGroup');
-            const yearOfStudy = document.getElementById('yearOfStudyInput').value;
 
             if (!school) {
                 showError('Please enter your school name');
@@ -3983,16 +4066,7 @@ const statePersonalExemptionDB = {
                 showError('Please select your state');
                 return false;
             }
-            if (!degreeLevel) {
-                showError('Please select your degree level');
-                return false;
-            }
-            // Validate year of study only if the group is visible (i.e., a degree level is selected)
-            if (!yearOfStudyGroup.classList.contains('hidden') && !yearOfStudy) {
-                showError('Please select your year of study');
-                return false;
-            }
-            if (isNaN(income) || income < 0) { // Check for NaN and negative, allow 0
+            if (!income || isNaN(income) || income < 0) {
                 showError('Please enter a valid annual income');
                 return false;
             }
@@ -4124,8 +4198,6 @@ const statePersonalExemptionDB = {
                     .map(checkbox => parseInt(checkbox.value));
                 const residencyStatusValue = formData.residency_status; // Use already processed value
                 const countryOfOriginValue = formData.country_of_origin;
-                const visaTypeValue = formData.visa_type; // Use already processed value
-                const studentStatusValue = formData.student_status; // Use already processed value
                 
                 // Use the first housing entry's rent for profile data (for backward compatibility)
                 const firstHousing = window.housingEntries[0] || { rent: 0 };
@@ -4142,9 +4214,7 @@ const statePersonalExemptionDB = {
                     enrolledMonths,
                     housingEntries: window.housingEntries,
                     residency_status: residencyStatusValue,
-                    country_of_origin: countryOfOriginValue,
-                    visa_type: visaTypeValue,
-                    student_status: studentStatusValue
+                    country_of_origin: countryOfOriginValue
                 });
 
                 // Calculate benefit amount using all housing entries
@@ -4186,9 +4256,7 @@ const statePersonalExemptionDB = {
                     totalPotentialBenefit: benefit,
                     accountStatus: 'ACTIVE',  // Update account status from PENDING_INFO to ACTIVE
                     residency_status: residencyStatusValue,
-                    country_of_origin: countryOfOriginValue,
-                    visa_type: visaTypeValue, // Pass visa_type
-                    student_status: studentStatusValue // Pass student_status
+                    country_of_origin: countryOfOriginValue
                 };
                 console.log('Profile update payload:', profileData);
 
@@ -5036,8 +5104,6 @@ const statePersonalExemptionDB = {
                     .map(checkbox => parseInt(checkbox.value));
                 const residencyStatusValue = formData.residency_status; // Use already processed value
                 const countryOfOriginValue = formData.country_of_origin;
-                const visaTypeValue = formData.visa_type; // Use already processed value
-                const studentStatusValue = formData.student_status; // Use already processed value
                 
                 // Use the first housing entry's rent for profile data (for backward compatibility)
                 const firstHousing = window.housingEntries[0] || { rent: 0 };
@@ -5054,9 +5120,7 @@ const statePersonalExemptionDB = {
                     enrolledMonths,
                     housingEntries: window.housingEntries,
                     residency_status: residencyStatusValue,
-                    country_of_origin: countryOfOriginValue,
-                    visa_type: visaTypeValue,
-                    student_status: studentStatusValue
+                    country_of_origin: countryOfOriginValue
                 });
 
                 // Calculate benefit amount using all housing entries
@@ -5098,9 +5162,7 @@ const statePersonalExemptionDB = {
                     totalPotentialBenefit: benefit,
                     accountStatus: 'ACTIVE',  // Update account status from PENDING_INFO to ACTIVE
                     residency_status: residencyStatusValue,
-                    country_of_origin: countryOfOriginValue,
-                    visa_type: visaTypeValue, // Pass visa_type
-                    student_status: studentStatusValue // Pass student_status
+                    country_of_origin: countryOfOriginValue
                 };
                 console.log('Profile update payload:', profileData);
 
