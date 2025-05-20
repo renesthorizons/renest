@@ -3867,6 +3867,17 @@ const statePersonalExemptionDB = {
             const visaTypeInputEl = document.getElementById('visaTypeInput');
             const countryOfOriginGroupEl = document.getElementById('countryOfOriginGroup');
             const countryOfOriginInputEl = document.getElementById('countryOfOriginInput');
+            const countryDatalist = document.getElementById('countryListData');
+
+            // Populate country datalist
+            if (countryDatalist && typeof countryList !== 'undefined') {
+                countryList.forEach(country => {
+                    const option = document.createElement('option');
+                    option.value = country;
+                    countryDatalist.appendChild(option);
+                });
+            }
+
 
             if (residencyStatusInputEl) {
                 residencyStatusInputEl.addEventListener('change', function() {
