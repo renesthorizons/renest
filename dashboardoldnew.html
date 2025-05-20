@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link rel="icon" href="blogo2.png" type="image/png">
+    <link rel="apple-touch-icon" href="blogo2.png">
+    
     <title>Renest - Dashboard</title>
     <style>
         /* [Rest of the CSS remains the same] */
@@ -1104,6 +1108,23 @@
                         <input type="date" id="dateOfBirth" class="form-input">
                         <div id="ageError" class="error-text" style="display: none; color: red; font-size: 0.875rem; margin-top: 0.25rem;">You must be at least 18 years old to sign up</div>
                     </div>
+                    <div class="form-group">
+                        <label class="form-label">Are you a US citizen, resident alien, or permanent resident?</label>
+                        <div style="display: flex; gap: 2rem; align-items: center;">
+                            <div style="display: flex; align-items: center;">
+                                <input type="radio" id="usCitizenYes" name="usCitizenStatus" value="yes" checked>
+                                <label for="usCitizenYes" style="margin-left: 0.4em;">Yes</label>
+                            </div>
+                            <div style="display: flex; align-items: center;">
+                                <input type="radio" id="usCitizenNo" name="usCitizenStatus" value="no">
+                                <label for="usCitizenNo" style="margin-left: 0.4em;">No</label>
+                            </div>
+                            <div style="display: flex; align-items: center;">
+                                <input type="radio" id="usCitizenUnknown" name="usCitizenStatus" value="unknown">
+                                <label for="usCitizenUnknown" style="margin-left: 0.4em;">I don't know</label>
+                            </div>
+                        </div>
+                    </div>
                     <div class="button-container">
                         <button onclick="nextStep()" class="button button-primary">Next</button>
                     </div>
@@ -1139,7 +1160,7 @@
                 <div id="step3" class="form-step">
                     <div class="form-group">
                         <h3 class="form-label">My Housing Information</h3>
-                        <p class="form-description" style="margin-bottom: 1rem;">Add details about where you live (and will live) during the year.</p>
+                        <p class="form-description" style="margin-bottom: 1rem;">Include leases relevant to this calendar year. Averages and estimates are okay</p>
                         
                         <!-- Housing button and list -->
                         <div id="housingEntriesContainer" style="margin-bottom: 1.5rem;">
@@ -3441,23 +3462,24 @@ const statePersonalExemptionDB = {
 
         // Navigation functions
         function nextStep() {
-            if (currentStep === 1 && validateStep1()) {
-                // Save step 1 data
-                formData.firstName = document.getElementById('firstName').value;
-                formData.lastName = document.getElementById('lastName').value;
-                formData.dateOfBirth = document.getElementById('dateOfBirth').value;
-                showStep(2);
+            if (currentStep === 1) {
+                const usCitizenStatus = document.querySelector('input[name="usCitizenStatus"]:checked').value;
+                if (usCitizenStatus === 'no' || usCitizenStatus === 'unknown') {
+                    showContactUsPopup();
+                    return; // Stop progression
+                }
+                if (validateStep1()) {
+                    // Save step 1 data
+                    formData.firstName = document.getElementById('firstName').value;
+                    formData.lastName = document.getElementById('lastName').value;
+                    formData.dateOfBirth = document.getElementById('dateOfBirth').value;
+                    showStep(2);
+                }
             } else if (currentStep === 2 && validateStep2()) {
                 // Save step 2 data
                 formData.school = document.getElementById('school').value;
                 formData.state = document.getElementById('state').value;
                 formData.income = document.getElementById('income').value;
-                
-                // When moving to Step 3, hide Submit button and show Done button
-                setTimeout(() => {
-                    document.getElementById('leaseInfoBtn').classList.remove('hidden');
-                    document.getElementById('submitBtn').classList.add('hidden');
-                }, 100);
                 
                 showStep(3);
             }
@@ -3610,26 +3632,42 @@ const statePersonalExemptionDB = {
 
         // Add this function to handle the modal close button
         function handleCongratsModalClose() {
+            console.log('handleCongratsModalClose called.');
             const modal = document.getElementById('congratsModal');
             if (modal) {
                 modal.remove();
+                console.log('Congratulations modal removed.');
             }
-            
-            // Check if form submission is complete
-            const submitBtn = document.getElementById('submitBtn');
-            if (!submitBtn.disabled) {
-                // If button is enabled, submission is complete, redirect to tracker summary
-                window.location.href = 'trackersummary.html';
-            }
-            // Otherwise, let the submission process continue in the background
+            congratsModalClosed = true;
+            console.log('congratsModalClosed flag set to true.');
+            tryRedirectToTrackerSummary(); // Check if submission finished *before* modal close
         }
+
+        // ++ Robust Redirect Logic ++ (Ensure this is at the top level)
+        console.log('Initializing redirect flags');
+        let congratsModalClosed = false;
+        let formSubmissionFinished = false;
+
+        function tryRedirectToTrackerSummary() {
+            console.log('tryRedirectToTrackerSummary called. Flags:', { congratsModalClosed, formSubmissionFinished });
+            if (congratsModalClosed && formSubmissionFinished) {
+                console.log('Both flags true. Redirecting to trackersummary.html...');
+                window.location.href = 'trackersummary.html';
+            } else {
+                console.log('Redirect condition not met yet.');
+            }
+        }
+        // ++ End Robust Redirect Logic ++
 
         async function submitForm() {
             console.log('===== FORM SUBMISSION STARTED =====');
             const submitBtn = document.getElementById('submitBtn');
             const spinner = document.getElementById('spinner');
-            const modal = document.getElementById('onboardingModal');
-            
+            // Reset flags for this submission attempt
+            congratsModalClosed = false; 
+            formSubmissionFinished = false;
+            console.log('Redirect flags reset for new submission.');
+
             try {
                 console.log('1. Disabling all buttons and showing spinner');
                 // Disable all form elements in the modal
@@ -3663,35 +3701,10 @@ const statePersonalExemptionDB = {
                 
                 // Validate step 3
                 console.log('2. Starting step 3 validation');
-                // Use the validateHousingStep3 function from housing.js
-                const step3Valid = await validateHousingStep3();
+                const step3Valid = await validateStep3();
                 console.log('Step 3 validation result:', step3Valid);
                 
-                if (!step3Valid) {
-                    console.log('Step 3 validation failed, returning');
-                    // Re-enable all elements if validation fails
-                    allInputs.forEach(input => {
-                        input.disabled = false;
-                        input.style.opacity = '1';
-                        input.style.cursor = 'auto';
-                    });
-                    
-                    allButtons.forEach(button => {
-                        button.disabled = false;
-                        button.style.opacity = '1';
-                        button.style.cursor = 'pointer';
-                    });
-                    
-                    allSelects.forEach(select => {
-                        select.style.pointerEvents = 'auto';
-                        select.style.opacity = '1';
-                        select.style.cursor = 'pointer';
-                    });
-                    
-                    submitBtn.disabled = false;
-                    spinner.style.display = 'none';
-                    return;
-                }
+                if (!step3Valid) { return; } // Finally will still run
                 
                 // Get form values
                 console.log('3. Getting form values');
@@ -3788,23 +3801,28 @@ const statePersonalExemptionDB = {
                 hideOnboardingModal();
                 
                 // The redirect will be handled by the congratulations modal close button
+                console.log('submitForm: Try block finished successfully.');
+                
+                // --- REMOVED flag set and redirect check from here --- 
 
             } catch (error) {
                 console.error('Error in form submission:', error);
-                console.error('Error stack:', error.stack);
-                
-                // Show error message
-                const errorMessage = document.createElement('div');
-                errorMessage.className = 'error-message';
-                errorMessage.textContent = 'Error submitting form. Please try again.';
-                document.body.appendChild(errorMessage);
-                setTimeout(() => errorMessage.remove(), 3000);
-                
+                // ... (show error message to user) ...
+                console.log('submitForm: Catch block finished.');
+                // --- REMOVED flag set and redirect check from here --- 
+
             } finally {
-                console.log('8. Resetting button state');
-                // Reset button state
+                console.log('submitForm: Finally block started.');
+                // Reset UI state
                 submitBtn.disabled = false;
                 spinner.style.display = 'none';
+                
+                // Mark submission as finished and check for redirect
+                formSubmissionFinished = true;
+                console.log('[Finally] formSubmissionFinished flag set to true.');
+                tryRedirectToTrackerSummary(); // This is the crucial check after submitForm finishes
+                
+                console.log('submitForm: Finally block finished.');
             }
         }
 
@@ -4586,31 +4604,7 @@ const statePersonalExemptionDB = {
                 const step3Valid = await validateStep3();
                 console.log('Step 3 validation result:', step3Valid);
                 
-                if (!step3Valid) {
-                    console.log('Step 3 validation failed, returning');
-                    // Re-enable all elements if validation fails
-                    allInputs.forEach(input => {
-                        input.disabled = false;
-                        input.style.opacity = '1';
-                        input.style.cursor = 'auto';
-                    });
-                    
-                    allButtons.forEach(button => {
-                        button.disabled = false;
-                        button.style.opacity = '1';
-                        button.style.cursor = 'pointer';
-                    });
-                    
-                    allSelects.forEach(select => {
-                        select.style.pointerEvents = 'auto';
-                        select.style.opacity = '1';
-                        select.style.cursor = 'pointer';
-                    });
-                    
-                    submitBtn.disabled = false;
-                    spinner.style.display = 'none';
-                    return;
-                }
+                if (!step3Valid) { return; } // Finally will still run
                 
                 // Get form values
                 console.log('3. Getting form values');
@@ -4707,23 +4701,28 @@ const statePersonalExemptionDB = {
                 hideOnboardingModal();
                 
                 // The redirect will be handled by the congratulations modal close button
+                console.log('submitForm: Try block finished successfully.');
+                
+                // --- REMOVED flag set and redirect check from here --- 
 
             } catch (error) {
                 console.error('Error in form submission:', error);
-                console.error('Error stack:', error.stack);
-                
-                // Show error message
-                const errorMessage = document.createElement('div');
-                errorMessage.className = 'error-message';
-                errorMessage.textContent = 'Error submitting form. Please try again.';
-                document.body.appendChild(errorMessage);
-                setTimeout(() => errorMessage.remove(), 3000);
-                
+                // ... (show error message to user) ...
+                console.log('submitForm: Catch block finished.');
+                // --- REMOVED flag set and redirect check from here --- 
+
             } finally {
-                console.log('8. Resetting button state');
-                // Reset button state
+                console.log('submitForm: Finally block started.');
+                // Reset UI state
                 submitBtn.disabled = false;
                 spinner.style.display = 'none';
+                
+                // Mark submission as finished and check for redirect
+                formSubmissionFinished = true;
+                console.log('[Finally] formSubmissionFinished flag set to true.');
+                tryRedirectToTrackerSummary(); // This is the crucial check after submitForm finishes
+                
+                console.log('submitForm: Finally block finished.');
             }
         }
 
@@ -5874,6 +5873,26 @@ const statePersonalExemptionDB = {
         // Modify the validateStep3 function to use our local implementation
         function validateStep3() {
             return validateHousingStep3();
+        }
+    </script>
+
+    <div id="contactUsPopup" class="modal-overlay hidden">
+        <div class="modal-container">
+            <div class="modal-content" style="text-align: center;">
+                <h2 style="margin-bottom: 1.5rem;">Eligibility Question</h2>
+                <p style="margin-bottom: 1.5rem;">Please contact us to learn more about your eligibility.</p>
+                <a class="button button-primary" style="text-decoration: none;" href="contactus529.html">OK</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showContactUsPopup() {
+            document.getElementById('contactUsPopup').classList.remove('hidden');
+        }
+
+        function closeContactUsPopup() {
+            document.getElementById('contactUsPopup').classList.add('hidden');
         }
     </script>
 </body>

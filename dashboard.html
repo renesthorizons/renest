@@ -1109,21 +1109,36 @@
                         <div id="ageError" class="error-text" style="display: none; color: red; font-size: 0.875rem; margin-top: 0.25rem;">You must be at least 18 years old to sign up</div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Are you a US citizen, resident alien, or permanent resident?</label>
-                        <div style="display: flex; gap: 2rem; align-items: center;">
-                            <div style="display: flex; align-items: center;">
-                                <input type="radio" id="usCitizenYes" name="usCitizenStatus" value="yes" checked>
-                                <label for="usCitizenYes" style="margin-left: 0.4em;">Yes</label>
-                            </div>
-                            <div style="display: flex; align-items: center;">
-                                <input type="radio" id="usCitizenNo" name="usCitizenStatus" value="no">
-                                <label for="usCitizenNo" style="margin-left: 0.4em;">No</label>
-                            </div>
-                            <div style="display: flex; align-items: center;">
-                                <input type="radio" id="usCitizenUnknown" name="usCitizenStatus" value="unknown">
-                                <label for="usCitizenUnknown" style="margin-left: 0.4em;">I don't know</label>
+                        <label for="residencyStatus" class="form-label">I am...</label>
+                        <div class="custom-select">
+                            <div class="select-selected" tabindex="0" id="residencyStatusSelected">Select Status</div>
+                            <div class="select-items hidden" id="residencyStatusItems">
+                                <div data-value="citizen">US Citizen</div>
+                                <div data-value="permanent_resident">Permanent Resident</div>
+                                <div data-value="resident_alien">Resident Alien</div>
+                                <div data-value="non_resident_alien">Non-Resident Alien</div>
+                                <div data-value="unknown_residency">I don't know</div>
                             </div>
                         </div>
+                        <input type="hidden" id="residencyStatus" name="residencyStatus" value="">
+                    </div>
+                    <div class="form-group hidden" id="visaTypeGroup">
+                        <label for="visaType" class="form-label">Visa Type</label>
+                        <div class="custom-select">
+                            <div class="select-selected" tabindex="0" id="visaTypeSelected">Select Visa Type</div>
+                            <div class="select-items hidden" id="visaTypeItems">
+                                <div data-value="F1">F1 (Student)</div>
+                                <div data-value="J1">J1 (Exchange Visitor)</div>
+                                <div data-value="H1B">H1B (Specialty Occupation)</div>
+                                <div data-value="L1">L1 (Intracompany Transferee)</div>
+                                <div data-value="O1">O1 (Extraordinary Ability)</div>
+                                <div data-value="E2">E2 (Treaty Investor)</div>
+                                <div data-value="TN">TN (NAFTA Professional)</div>
+                                <div data-value="other_visa">Other</div>
+                                <div data-value="unknown_visa_type">I don't know my visa type</div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="visaType" name="visaType" value="">
                     </div>
                     <div class="button-container">
                         <button onclick="nextStep()" class="button button-primary">Next</button>
@@ -3400,7 +3415,8 @@ const statePersonalExemptionDB = {
             utilities: '',
             wifi: '',
             utilitiesIncluded: false,
-            enrolledMonths: []
+            enrolledMonths: [],
+            residency_status: '' // Added for new field
         };
 
         // Modal display function
@@ -3418,7 +3434,8 @@ const statePersonalExemptionDB = {
                 utilities: '',
                 wifi: '',
                 utilitiesIncluded: false,
-                enrolledMonths: []
+                enrolledMonths: [],
+                residency_status: '' // Reset new field
             };
             
             // Reset all form inputs
@@ -3434,6 +3451,13 @@ const statePersonalExemptionDB = {
             document.getElementById('utilitiesIncluded').checked = false;
             document.querySelectorAll('input[name="enrolledMonths"]:checked').forEach(checkbox => checkbox.checked = false);
             
+            // Reset new dropdowns
+            document.getElementById('residencyStatusSelected').textContent = 'Select Status';
+            document.getElementById('residencyStatus').value = '';
+            document.getElementById('visaTypeGroup').classList.add('hidden');
+            document.getElementById('visaTypeSelected').textContent = 'Select Visa Type';
+            document.getElementById('visaType').value = '';
+
             // Show first step
             showStep(1);
         }
@@ -3463,16 +3487,45 @@ const statePersonalExemptionDB = {
         // Navigation functions
         function nextStep() {
             if (currentStep === 1) {
-                const usCitizenStatus = document.querySelector('input[name="usCitizenStatus"]:checked').value;
-                if (usCitizenStatus === 'no' || usCitizenStatus === 'unknown') {
-                    showContactUsPopup();
-                    return; // Stop progression
-                }
+                // const usCitizenStatus = document.querySelector('input[name="usCitizenStatus"]:checked').value;
+                // if (usCitizenStatus === 'no' || usCitizenStatus === 'unknown') {
+                //     showContactUsPopup();
+                //     return; // Stop progression
+                // }
                 if (validateStep1()) {
                     // Save step 1 data
                     formData.firstName = document.getElementById('firstName').value;
                     formData.lastName = document.getElementById('lastName').value;
                     formData.dateOfBirth = document.getElementById('dateOfBirth').value;
+                    
+                    const residencyStatusValue = document.getElementById('residencyStatus').value;
+                    const visaTypeValue = document.getElementById('visaType').value;
+
+                    if (residencyStatusValue === 'citizen' || residencyStatusValue === 'permanent_resident') {
+                        formData.residency_status = residencyStatusValue;
+                    } else if (['resident_alien', 'non_resident_alien', 'unknown_residency'].includes(residencyStatusValue)) {
+                        if (visaTypeValue) {
+                            formData.residency_status = `${residencyStatusValue}_visa:${visaTypeValue}`;
+                        } else {
+                           // This case should be handled by validation, but as a fallback:
+                           formData.residency_status = residencyStatusValue;
+                        }
+                    }
+                    
+                    // Handle specific cases for contact us popup if still needed.
+                    // For now, allowing progression if visa is selected.
+                    if (residencyStatusValue === 'non_resident_alien' && !visaTypeValue) {
+                        // Potentially show contact us or specific error if visa is mandatory for non-resident aliens to proceed
+                         showError('Please select a visa type if you are a Non-Resident Alien.');
+                         return;
+                    }
+                     if (residencyStatusValue === 'unknown_residency' && !visaTypeValue) {
+                        // If they don't know residency and don't know visa, this might be a contact us case.
+                        // For now, allowing progression, status will be 'unknown_residency'
+                        formData.residency_status = 'unknown_residency_visa:unknown_visa_type'; // Or simply 'unknown_residency'
+                    }
+
+
                     showStep(2);
                 }
             } else if (currentStep === 2 && validateStep2()) {
@@ -3515,6 +3568,9 @@ const statePersonalExemptionDB = {
             const lastName = document.getElementById('lastName').value.trim();
             const dateOfBirth = document.getElementById('dateOfBirth').value;
             const ageError = document.getElementById('ageError');
+            const residencyStatus = document.getElementById('residencyStatus').value;
+            const visaTypeGroup = document.getElementById('visaTypeGroup');
+            const visaType = document.getElementById('visaType').value;
 
             if (!firstName) {
                 showError('Please enter your first name');
@@ -3529,6 +3585,16 @@ const statePersonalExemptionDB = {
                 return false;
             }
 
+            if (!residencyStatus) {
+                showError('Please select your residency status');
+                return false;
+            }
+
+            if (!visaTypeGroup.classList.contains('hidden') && !visaType) {
+                showError('Please select your visa type');
+                return false;
+            }
+            
             // Validate age
             const birthDate = new Date(dateOfBirth);
             const today = new Date();
@@ -3716,7 +3782,8 @@ const statePersonalExemptionDB = {
                 const income = document.getElementById('income').value.replace(/[^\d]/g, '');
                 const enrolledMonths = Array.from(document.querySelectorAll('input[name="enrolledMonths"]:checked'))
                     .map(checkbox => parseInt(checkbox.value));
-                
+                const residencyStatusValue = formData.residency_status; // Use already processed value
+
                 // Use the first housing entry's rent for profile data (for backward compatibility)
                 const firstHousing = window.housingEntries[0] || { rent: 0 };
                 const rent = firstHousing.rent.toString();
@@ -3730,7 +3797,8 @@ const statePersonalExemptionDB = {
                     income,
                     rent,
                     enrolledMonths,
-                    housingEntries: window.housingEntries
+                    housingEntries: window.housingEntries,
+                    residency_status: residencyStatusValue
                 });
 
                 // Calculate benefit amount using all housing entries
@@ -3770,7 +3838,8 @@ const statePersonalExemptionDB = {
                     monthlyRent: rent,
                     progressPercentage: 33,
                     totalPotentialBenefit: benefit,
-                    accountStatus: 'ACTIVE'  // Update account status from PENDING_INFO to ACTIVE
+                    accountStatus: 'ACTIVE',  // Update account status from PENDING_INFO to ACTIVE
+                    residency_status: residencyStatusValue
                 };
                 console.log('Profile update payload:', profileData);
 
@@ -4616,7 +4685,8 @@ const statePersonalExemptionDB = {
                 const income = document.getElementById('income').value.replace(/[^\d]/g, '');
                 const enrolledMonths = Array.from(document.querySelectorAll('input[name="enrolledMonths"]:checked'))
                     .map(checkbox => parseInt(checkbox.value));
-                
+                const residencyStatusValue = formData.residency_status; // Use already processed value
+
                 // Use the first housing entry's rent for profile data (for backward compatibility)
                 const firstHousing = window.housingEntries[0] || { rent: 0 };
                 const rent = firstHousing.rent.toString();
@@ -4630,7 +4700,8 @@ const statePersonalExemptionDB = {
                     income,
                     rent,
                     enrolledMonths,
-                    housingEntries: window.housingEntries
+                    housingEntries: window.housingEntries,
+                    residency_status: residencyStatusValue
                 });
 
                 // Calculate benefit amount using all housing entries
@@ -4670,7 +4741,8 @@ const statePersonalExemptionDB = {
                     monthlyRent: rent,
                     progressPercentage: 33,
                     totalPotentialBenefit: benefit,
-                    accountStatus: 'ACTIVE'  // Update account status from PENDING_INFO to ACTIVE
+                    accountStatus: 'ACTIVE',  // Update account status from PENDING_INFO to ACTIVE
+                    residency_status: residencyStatusValue
                 };
                 console.log('Profile update payload:', profileData);
 
