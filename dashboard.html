@@ -3331,21 +3331,25 @@ const statePersonalExemptionDB = {
         
         
         function updateDashboard(userData) {
-            // Update welcome message
-            document.getElementById('welcomeMessage').textContent = `Welcome Back ${userData.firstName || ''}`;
-
-            // Update 529 progress
-            const progressBar = document.getElementById('progressBar');
+            // DOM Element Getters - Grouped at the top
             const benefitSummary = document.getElementById('benefitSummary');
-            // const potentialSavings = document.getElementById('potentialSavings');
+            const benefitDifferenceEl = document.getElementById('benefitDifference');
             const nextStepsList = document.getElementById('nextStepsList');
-            const getMoneyButtonContainer = document.getElementById('getMoneyButtonContainer');
+            // const getMoneyButtonContainer = document.getElementById('getMoneyButtonContainer'); // This button is effectively replaced by the gold step
+
+            // Ensure elements exist before proceeding
+            if (!benefitSummary || !benefitDifferenceEl || !nextStepsList) {
+                console.error('Dashboard UI elements not found! Aborting updateDashboard.');
+                console.error('Missing elements:', {
+                    benefitSummaryFound: !!benefitSummary,
+                    benefitDifferenceElFound: !!benefitDifferenceEl,
+                    nextStepsListFound: !!nextStepsList
+                });
+                return; // Critical elements missing, cannot update dashboard
+            }
 
             // Populate with user's actual data
-            const progressPercentage = userData.progressPercentage || 0; // Use the new progress percentage
-            // progressBar.style.width = `${progressPercentage}%`; // Old progress bar removed
-            // progressBar.textContent = `${progressPercentage}%`; // Old progress bar removed
-            
+            const progressPercentage = userData.progressPercentage || 0;
             const currentBenefit = Math.round(userData.currentBenefit || 0);
             const totalPotentialBenefit = Math.round(userData.totalPotentialBenefit || 0);
             const benefitDifference = totalPotentialBenefit - currentBenefit;
