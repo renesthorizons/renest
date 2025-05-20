@@ -421,29 +421,32 @@
 
             /* Milestone Stepper Mobile Optimizations */
             .milestone-stepper {
+                width: 100%; /* Ensure the stepper container takes full width of the card */
+                display: flex; /* Explicitly set, though it might inherit */
                 flex-direction: column;
-                align-items: center; /* This will center the .milestone-step blocks */
-                gap: 1rem; /* Increased gap between steps */
+                align-items: center; /* This centers the .milestone-step children */
+                gap: 1.5rem; /* Spacing between vertical steps */
             }
 
             .milestone-step {
-                width: 100%; /* Allows the step to take available width for centering */
-                max-width: 350px; /* Limits step width, this block gets centered */
-                padding: 0.5rem; /* Padding around the step content */
-                flex-direction: row; 
-                align-items: center;
+                /* width: 100%; Removed: Let align-items on parent + max-width handle centering */
+                max-width: 380px; /* Max width of the step block, it will be centered */
+                display: flex; /* To arrange marker and label */
+                flex-direction: row;
+                align-items: center; /* Vertically align marker and label within the step */
                 gap: 1rem; 
+                padding: 0.5rem; /* Padding within the step */
                 text-align: left; 
             }
 
             .step-marker {
-                width: 60px; /* Made marker bigger */
-                height: 60px; /* Made marker bigger */
+                width: 60px; 
+                height: 60px; 
                 margin-bottom: 0; 
             }
             
             .milestone-step .step-marker-inner .icon {
-                font-size: 2.2rem; /* Made icon bigger */
+                font-size: 2.2rem; 
             }
 
             .step-label {
