@@ -13,7 +13,10 @@
         :root {
             --primary: #6366F1;
             --primary-dark: #4F46E5;
+            --primary-rgb: 99, 102, 241; /* Added for RGBA usage */
             --accent: #EC4899;
+            --accent-dark: #D93A86; /* Added for hover/active states */
+            --accent-rgb: 236, 72, 153; /* Added for RGBA usage */
             --text-dark: #1F2937;
             --background: #F9FAFB;
             --border: #E5E7EB;
@@ -1062,6 +1065,160 @@
             border-radius: 0.5rem;
             text-align: center;
         }
+
+        /* Milestone Stepper Styles */
+        .milestone-stepper {
+            display: flex;
+            justify-content: space-around; /* Adjusted for better spacing with fewer items */
+            align-items: flex-start;
+            padding: 1rem 0;
+            margin-bottom: 1.5rem;
+            position: relative; /* For absolute positioning of connectors if needed */
+        }
+
+        .milestone-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            flex: 1; /* Allow steps to grow */
+            max-width: 100px; /* Max width for each step content */
+            position: relative; /* For connector positioning */
+            cursor: pointer; /* Indicate clickability */
+            padding: 0 5px; /* Add some horizontal padding */
+        }
+        
+        .milestone-step.disabled {
+            cursor: not-allowed;
+        }
+
+        .step-marker {
+            width: 48px; /* Increased size */
+            height: 48px; /* Increased size */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: white;
+            font-size: 1.25rem; /* Slightly larger font for icons/numbers */
+            border: 2px solid transparent; /* Base transparent border */
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 0.5rem; /* Space between marker and label */
+            position: relative; /* For 3D effect and icon centering */
+            background-color: #E0E0E0; /* Base for 3D effect */
+            box-shadow: inset 0 -3px 5px rgba(0,0,0,0.15), 0 3px 4px rgba(0,0,0,0.1); /* 3D shadow */
+        }
+
+        .step-marker-inner { /* New element for the colored "top" surface */
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: background-color 0.3s ease;
+        }
+        
+        /* Pending State */
+        .milestone-step.pending .step-marker-inner {
+            background-color: #BDBDBD; /* Darker grey for top surface */
+        }
+        .milestone-step.pending .step-marker .icon {
+            color: #757575;
+        }
+        .milestone-step.pending .step-label {
+            color: #A0AEC0;
+        }
+
+        /* Active State (Purple) */
+        .milestone-step.active .step-marker-inner {
+            background-color: var(--primary); /* Purple */
+        }
+        .milestone-step.active .step-marker .icon {
+            color: white;
+        }
+        .milestone-step.active .step-label {
+            color: var(--primary);
+            font-weight: 700;
+        }
+        .milestone-step.active .step-marker { /* Optional: slightly more pronounced shadow for active */
+            box-shadow: inset 0 -3px 5px rgba(0,0,0,0.2), 0 4px 6px rgba(var(--primary-rgb),0.3), 0 0 0 3px rgba(var(--primary-rgb),0.2);
+        }
+
+        /* Completed State (Green) */
+        .milestone-step.completed .step-marker-inner {
+            background-color: #4CAF50; /* Green */
+        }
+        .milestone-step.completed .step-marker .icon {
+            color: white;
+            font-size: 1.5rem; /* Larger checkmark */
+        }
+        .milestone-step.completed .step-label {
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+        
+        /* Gold Step (Get My Money Now) */
+        .milestone-step.gold-step .step-marker-inner {
+            background-color: #D4AF37; /* Gold */
+        }
+        .milestone-step.gold-step .step-marker .icon {
+            color: white;
+        }
+        .milestone-step.gold-step .step-label {
+            color: #B8860B; /* Darker gold for label */
+            font-weight: 700;
+        }
+        .milestone-step.gold-step.disabled .step-marker-inner {
+            background-color: #EACD76; /* Lighter, less saturated gold for disabled */
+        }
+        .milestone-step.gold-step.disabled .step-marker .icon {
+            color: #A1883A; /* Muted gold icon */
+        }
+         .milestone-step.gold-step.disabled .step-label {
+            color: #A1883A;
+        }
+        .milestone-step.gold-step.disabled .step-marker {
+            box-shadow: inset 0 -3px 5px rgba(0,0,0,0.1), 0 3px 4px rgba(0,0,0,0.05); /* Less prominent shadow when disabled */
+        }
+
+
+        .step-label {
+            font-size: 0.75rem; /* Smaller labels to fit */
+            font-weight: 500;
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+            line-height: 1.2;
+        }
+
+        .step-marker .icon { /* Class for icon characters */
+            transition: color 0.3s ease;
+        }
+
+        .step-connector {
+            flex-grow: 1;
+            height: 4px; /* Thicker line */
+            margin-top: calc(48px / 2 - 4px / 2); /* Vertically center with 48px markers */
+            min-width: 20px;
+            background-color: var(--border); /* Default pending connector */
+            transition: background-color 0.4s ease;
+            border-radius: 2px;
+        }
+
+        .step-connector.completed {
+            background-color: var(--primary); /* Purple for completed connector line */
+        }
+        .step-connector.active { /* Connector leading to an active step or from a completed to active */
+             background-color: var(--primary); /* Purple, to show path up to active step */
+        }
+         .step-connector.gold-path { /* Connector leading to an enabled gold step */
+            background-color: #D4AF37;
+        }
+
     </style>
 </head>
 <body>
@@ -1372,31 +1529,56 @@
         <div class="dashboard-grid">
             <!-- Primary Card: 529 Progress -->
             <div class="dashboard-card">
-                <h2>Your 529 Progress</h2>
-                <div class="progress-bar">
-                    <div id="progressBar" class="progress" style="width: 0%;">0%</div>
-                </div>
-                <div class="next-steps">
-                    <h3>Total Benefit Unlocked</h3>
-                    <div id="benefitSummary" style="font-size: 1.8rem; margin: 1rem 0; color: var(--primary); font-weight: 600;">
-                        $0 
-                        <span style="font-size: 1.8rem; color: var(--primary); font-weight: 600;">/ $0 </span>
+                <h2>Your Optimization Journey</h2>
+
+                <div class="milestone-stepper" id="milestoneStepper">
+                    <div class="milestone-step" id="stepProfile" data-nav="profile529.html">
+                        <div class="step-marker"><div class="step-marker-inner"><span class="icon">👤</span></div></div>
+                        <div class="step-label">Profile</div>
                     </div>
+                    <div class="step-connector" id="connectorToExpenses"></div>
+                    <div class="milestone-step" id="stepRecordExpenses" data-nav="529expensetracker.html">
+                        <div class="step-marker"><div class="step-marker-inner"><span class="icon">📝</span></div></div>
+                        <div class="step-label">Record Expenses</div>
+                    </div>
+                    <div class="step-connector" id="connectorToOpen529"></div>
+                    <div class="milestone-step" id="stepOpen529" data-nav="openrenest529.html">
+                        <div class="step-marker"><div class="step-marker-inner"><span class="icon">🏦</span></div></div>
+                        <div class="step-label">Open 529</div>
+                    </div>
+                    <div class="step-connector" id="connectorToDeposit"></div>
+                    <div class="milestone-step" id="stepDeposit529" data-nav="expensetracker529.html"> <!-- Or trackersummary.html -->
+                        <div class="step-marker"><div class="step-marker-inner"><span class="icon">💰</span></div></div>
+                        <div class="step-label">Deposit to 529</div>
+                    </div>
+                    <div class="step-connector" id="connectorToGetMoney"></div>
+                    <div class="milestone-step gold-step" id="stepGetMoney" data-action="getMoneyModal">
+                        <div class="step-marker"><div class="step-marker-inner"><span class="icon">⭐</span></div></div>
+                        <div class="step-label">Get My Money Now</div>
+                    </div>
+                </div>
+
+                <div class="next-steps" style="text-align: center; margin-bottom: 1.5rem;"> <!-- Centered benefit summary -->
+                    <h3 style="font-size: 1rem; color: var(--text-dark); margin-bottom: 0.25rem;">Benefit Unlocked</h3>
+                    <div id="benefitSummary" style="font-size: 2rem; margin-bottom:0.5rem; color: var(--primary); font-weight: 700;">
+                        $0 <span style="font-size: 1.25rem; color: var(--text-dark); font-weight: 500;">/ $0</span>
+                    </div>
+                    <div id="benefitDifference" style="font-size: 0.9rem; color: #718096;"></div>
+                    <!-- Original "Get My Money Now" button container - can be removed or kept hidden if gold step replaces it -->
                     <div id="getMoneyButtonContainer" class="hidden">
-                        <button id="getMoneyButton" class="button button-primary" style="margin-top: 10px; font-size: 0.9rem; padding: 8px 15px; background:#D4AF37; transition: all 0.3s ease;">
+                         <button id="getMoneyButton" class="button button-primary" style="margin-top: 10px; font-size: 0.9rem; padding: 8px 15px; background:#D4AF37; transition: all 0.3s ease;">
                             Get My Money Now
                         </button>
                     </div>
                 </div>
-                <div class="next-steps" style="margin-top: 1rem;">
-                    <h3>Next Steps</h3>
-                    <ul id="nextStepsList">
+                
+                <div class="next-steps" style="margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 1rem;">
+                    <h3 style="text-align: center; margin-bottom: 0.75rem;">Quick Tip:</h3>
+                    <ul id="nextStepsList" style="list-style: none; padding-left:0; text-align: center;">
                         <!-- Dynamic next steps will be added here -->
                     </ul>
                 </div>
-                <a class="learn-more tracker-button" onclick="handleTrackerButtonClick(this)">
-                    <!-- Button text will be set by updateDashboard() -->
-                </a>
+                <!-- Removed old tracker button -->
             </div>
 
             <!-- Future Planning Card -->
@@ -3156,56 +3338,219 @@ const statePersonalExemptionDB = {
 
             // Populate with user's actual data
             const progressPercentage = userData.progressPercentage || 0; // Use the new progress percentage
-            progressBar.style.width = `${progressPercentage}%`;
-            progressBar.textContent = `${progressPercentage}%`;
+            // progressBar.style.width = `${progressPercentage}%`; // Old progress bar removed
+            // progressBar.textContent = `${progressPercentage}%`; // Old progress bar removed
             
             const currentBenefit = Math.round(userData.currentBenefit || 0);
             const totalPotentialBenefit = Math.round(userData.totalPotentialBenefit || 0);
-            
+            const benefitDifference = totalPotentialBenefit - currentBenefit;
+
             benefitSummary.innerHTML = `
-                $${currentBenefit} 
-                <span style="font-size: 1.8rem; color: var(--primary); font-weight: 600;">/ $${totalPotentialBenefit}</span>
+                $${currentBenefit.toLocaleString()} 
+                <span style="font-size: 1.25rem; color: var(--text-dark); font-weight: 500;">/ $${totalPotentialBenefit.toLocaleString()}</span>
             `;
-            
-            // Show "Get My Money Now" button if currentBenefit > $200
-            if (currentBenefit > 200) {
-                getMoneyButtonContainer.classList.remove('hidden');
-            } else {
-                getMoneyButtonContainer.classList.add('hidden');
-            }
-            
-            // potentialSavings.textContent = `$${Math.round(userData.potentialTaxSavings || 0)}`;
 
-            // Populate next steps
-            if (userData.nextSteps && userData.nextSteps.length) {
-                const stepsHtml = userData.nextSteps.map(step => `<li>${step}</li>`).join('');
-                nextStepsList.innerHTML = stepsHtml;
+            if (benefitDifference > 0 && currentBenefit < totalPotentialBenefit) {
+                benefitDifferenceEl.textContent = `You're $${benefitDifference.toLocaleString()} away from your max!`;
+            } else if (currentBenefit > 0 && currentBenefit >= totalPotentialBenefit) {
+                benefitDifferenceEl.textContent = `You've unlocked your maximum potential benefit!`;
+            } else {
+                 benefitDifferenceEl.textContent = 'Complete the steps to unlock your benefit.';
+            }
+            
+            // Show "Get My Money Now" button if currentBenefit > $200 // This logic moves to the gold step
+            // if (currentBenefit > 200) {
+            //     getMoneyButtonContainer.classList.remove('hidden');
+            // } else {
+            //     getMoneyButtonContainer.classList.add('hidden');
+            // }
+            
+            // Milestone Step Logic
+            const steps = [
+                { id: 'stepProfile', element: document.getElementById('stepProfile'), connector: null, completed: false, icon: '👤', checkIcon: '✓' },
+                { id: 'stepRecordExpenses', element: document.getElementById('stepRecordExpenses'), connector: document.getElementById('connectorToExpenses'), completed: false, icon: '📝', checkIcon: '✓' },
+                { id: 'stepOpen529', element: document.getElementById('stepOpen529'), connector: document.getElementById('connectorToOpen529'), completed: false, icon: '🏦', checkIcon: '✓' },
+                { id: 'stepDeposit529', element: document.getElementById('stepDeposit529'), connector: document.getElementById('connectorToDeposit'), completed: false, icon: '💰', checkIcon: '✓' },
+                { id: 'stepGetMoney', element: document.getElementById('stepGetMoney'), connector: document.getElementById('connectorToGetMoney'), completed: false, icon: '⭐', checkIcon: '⭐' } // Gold step uses its own icon logic
+            ];
+
+            let activeStepFound = false;
+            let nextTip = "Welcome! Complete your profile to get started.";
+
+            // Determine completion status for each step
+            steps[0].completed = progressPercentage >= 33; // Profile
+            steps[1].completed = (progressPercentage >= 33 && userData.totalPotentialBenefit > 0) || progressPercentage >= 75; // Record Expenses
+            steps[2].completed = progressPercentage >= 75; // Open 529
+            steps[3].completed = progressPercentage >= 80; // Deposit into 529
+            steps[4].completed = progressPercentage >= 80 && currentBenefit > 200; // Get Money Now (defines clickability, not green status)
+
+            // Update step visuals
+            for (let i = 0; i < steps.length; i++) {
+                const step = steps[i];
+                const markerInner = step.element.querySelector('.step-marker-inner .icon');
+                step.element.classList.remove('pending', 'active', 'completed', 'disabled');
+
+                if (step.id === 'stepGetMoney') {
+                    step.element.classList.add('gold-step'); // Always has gold-step base class
+                    if (steps[3].completed && currentBenefit > 200) { // Check if previous step is done AND benefit > 200
+                        step.element.classList.remove('disabled');
+                        markerInner.textContent = step.icon; // Gold star
+                         if (step.connector) step.connector.classList.add('gold-path'); else console.warn("Connector for gold step not found");
+                    } else {
+                        step.element.classList.add('disabled');
+                        markerInner.textContent = '🔒'; // Lock icon when disabled
+                         if (step.connector) step.connector.classList.remove('gold-path');
+                    }
+                     // Connector logic for leading to gold step (if it's enabled)
+                    if (steps[3].completed && step.connector) { // if previous step is done
+                        if (currentBenefit > 200) {
+                            step.connector.classList.add('gold-path');
+                            step.connector.classList.remove('completed'); // remove purple if it was there
+                        } else {
+                             step.connector.classList.add('completed'); // purple if previous is done but gold not ready
+                             step.connector.classList.remove('gold-path');
+                        }
+                    } else if (step.connector) {
+                        step.connector.classList.remove('gold-path', 'completed'); // default grey
+                    }
+
+
+                } else { // For non-gold steps
+                    if (step.completed) {
+                        step.element.classList.add('completed');
+                        markerInner.textContent = step.checkIcon;
+                        if (step.connector) step.connector.classList.add('completed');
+                    } else if (!activeStepFound && (i === 0 || steps[i-1].completed)) {
+                        step.element.classList.add('active');
+                        markerInner.textContent = step.icon; // Original icon or number
+                        activeStepFound = true;
+                        if (step.connector) step.connector.classList.add('active'); // Connector leading from active
+                        // Set next tip based on this active step
+                        if (i === 0) nextTip = "Complete your profile to get started.";
+                        else if (i === 1) nextTip = "Log your housing and other school expenses.";
+                        else if (i === 2) nextTip = "Open or link your state's 529 plan.";
+                        else if (i === 3) nextTip = "Track deposits into your 529 plan.";
+
+                    } else {
+                        step.element.classList.add('pending');
+                        markerInner.textContent = step.icon; // Original icon or number
+                         if (step.connector) step.connector.classList.remove('completed', 'active', 'gold-path'); // Default for pending
+                    }
+                }
+                 // Ensure previous connector is completed if current step is active or completed (but not gold path)
+                if (i > 0 && !steps[i].element.classList.contains('gold-step')) { // For non-gold steps
+                    const prevConnector = steps[i].connector; // this is actually current step's connector in my loop logic
+                     if (prevConnector && (steps[i].element.classList.contains('active') || steps[i].element.classList.contains('completed'))) {
+                        if(steps[i-1].completed){ // if previous step is completed
+                           prevConnector.classList.add('completed');
+                           prevConnector.classList.remove('active'); // an active connector would be between completed and active
+                        }
+                    }
+                }
+            }
+            
+            // Final pass for connectors: if a step is completed, its preceding connector should be completed.
+            // If a step is active, its preceding connector should be completed (not active style for line).
+            // The "active" style for a connector can mean the path TO an active step, if we want.
+            // My current logic makes connector before active step also "completed".
+            // Let's simplify: connector is 'completed' if step BEFORE it is completed.
+            // Connector before gold step is 'gold-path' if gold step is enabled.
+
+            for (let i = 1; i < steps.length; i++) { // Start from the first connector
+                const currentStepIsGoldAndEnabled = steps[i].id === 'stepGetMoney' && !steps[i].element.classList.contains('disabled');
+                const prevStepIsCompleted = steps[i-1].completed;
+                const connectorToCurrentStep = steps[i].connector;
+
+                if (!connectorToCurrentStep) continue;
+
+                connectorToCurrentStep.classList.remove('completed', 'active', 'gold-path'); // Reset
+
+                if (currentStepIsGoldAndEnabled && prevStepIsCompleted) {
+                    connectorToCurrentStep.classList.add('gold-path');
+                } else if (prevStepIsCompleted) {
+                     // if the current step is the gold step but it's disabled, the connector should be purple
+                    if(steps[i].id === 'stepGetMoney' && steps[i].element.classList.contains('disabled')){
+                         connectorToCurrentStep.classList.add('completed'); // purple
+                    } else if (steps[i].id !== 'stepGetMoney'){ // for non-gold steps
+                         connectorToCurrentStep.classList.add('completed'); // purple
+                    } else {
+                        // default grey if prev is not completed and current is gold disabled
+                    }
+                }
             }
 
-            // Update button text and functionality based on progress
-            const trackerButton = document.querySelector('.tracker-button');
-            if (userData.progressPercentage === 66) {
-                trackerButton.textContent = 'Get Started';
-            } else if (userData.progressPercentage === 33) {
-                trackerButton.textContent = 'Open Your State\'s 529';
-            } else if (userData.progressPercentage === 75) {
-                trackerButton.textContent = 'Track Expenses';
-            } else {
-                trackerButton.textContent = 'Tracker Summary';
+
+            // Populate next steps list with the determined tip
+            if (steps[3].completed && currentBenefit > 200) { // If last "normal" step is done and benefit eligible
+                nextStepsList.innerHTML = `<li>You're ready to claim your benefit! Click "Get My Money Now".</li>`;
+            } else if (steps[3].completed && currentBenefit <= 200) {
+                 nextStepsList.innerHTML = `<li>Continue logging expenses to increase your benefit and unlock "Get My Money Now".</li>`;
             }
+            else {
+                nextStepsList.innerHTML = `<li>${nextTip}</li>`;
+            }
+
+
         }
 
-        function handleTrackerButtonClick(button) {
-            if (button.textContent === 'Get Started') {
-                window.location.href = 'expensetracking.html';
-            } else if (button.textContent === 'Open Your State\'s 529') {
-                window.location.href = 'openrenest529.html';
-            } else if (button.textContent === 'Track Expenses') {
-                showExpenseTrackingModal();
-            } else {
-                window.location.href = 'trackersummary.html';
+        // Remove this function as the button is gone
+        // function handleTrackerButtonClick(button) {
+        //     if (button.textContent === 'Get Started') {
+        //         window.location.href = 'expensetracking.html';
+        //     } else if (button.textContent === 'Open Your State's 529') {
+        //         window.location.href = 'openrenest529.html';
+        //     } else if (button.textContent === 'Track Expenses') {
+        //         showExpenseTrackingModal();
+        //     } else {
+        //         window.location.href = 'trackersummary.html';
+        //     }
+        // }
+
+        // Add click listeners for milestone steps
+        document.addEventListener('DOMContentLoaded', function() {
+            const stepper = document.getElementById('milestoneStepper');
+            if (stepper) {
+                stepper.querySelectorAll('.milestone-step').forEach(stepEl => {
+                    stepEl.addEventListener('click', function() {
+                        const stepId = this.id;
+                        const isDisabled = this.classList.contains('disabled');
+
+                        if (isDisabled && stepId !== 'stepGetMoney') { // Allow clicking disabled gold step for potential info
+                            console.log(`${stepId} is disabled.`);
+                            // Optionally show a message like "Complete previous steps first."
+                            const tempMsg = document.createElement('div');
+                            tempMsg.className = 'error-message'; // Use existing error style
+                            tempMsg.textContent = 'Please complete previous steps first.';
+                            document.body.appendChild(tempMsg);
+                            setTimeout(() => tempMsg.remove(), 2000);
+                            return;
+                        }
+                        
+                        // Specific handling for "Get My Money Now" disabled state
+                        if (stepId === 'stepGetMoney' && isDisabled) {
+                             console.log('Get Money Now is disabled. Current benefit or previous steps not met.');
+                             const tempMsg = document.createElement('div');
+                             tempMsg.className = 'error-message';
+                             tempMsg.textContent = 'Complete all steps and ensure your benefit is over $200.';
+                             document.body.appendChild(tempMsg);
+                             setTimeout(() => tempMsg.remove(), 3000);
+                             return;
+                        }
+
+
+                        const navTarget = this.dataset.nav;
+                        const action = this.dataset.action;
+
+                        if (action === 'getMoneyModal') {
+                            showGetMoneyModal();
+                        } else if (navTarget) {
+                            window.location.href = navTarget;
+                        }
+                    });
+                });
             }
-        }
+        });
+
 
         function showState529Modal() {
             const userState = localStorage.getItem('state');
