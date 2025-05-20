@@ -3805,12 +3805,25 @@ const statePersonalExemptionDB = {
             document.getElementById('utilitiesIncluded').checked = false;
             document.querySelectorAll('input[name="enrolledMonths"]:checked').forEach(checkbox => checkbox.checked = false);
             
-            // Reset new dropdowns
-            document.getElementById('residencyStatusSelected').textContent = 'Select Status';
-            document.getElementById('residencyStatus').value = '';
-            document.getElementById('visaTypeGroup').classList.add('hidden');
-            document.getElementById('visaTypeSelected').textContent = 'Select Visa Type';
-            document.getElementById('visaType').value = '';
+            // Reset new dropdowns and set default for residency status
+            const residencyStatusSelected = document.getElementById('residencyStatusSelected');
+            const residencyStatusInput = document.getElementById('residencyStatus');
+            const visaTypeGroup = document.getElementById('visaTypeGroup');
+            const visaTypeSelected = document.getElementById('visaTypeSelected');
+            const visaTypeInput = document.getElementById('visaType');
+
+            if (residencyStatusSelected && residencyStatusInput) {
+                residencyStatusSelected.textContent = 'US Citizen'; // Default display text
+                residencyStatusInput.value = 'citizen';          // Default hidden input value
+                formData.residency_status = 'citizen';           // Update formData as well
+            }
+            if (visaTypeGroup) {
+                visaTypeGroup.classList.add('hidden'); // Ensure visa group is hidden for default
+            }
+            if (visaTypeSelected && visaTypeInput) {
+                visaTypeSelected.textContent = 'Select Visa Type';
+                visaTypeInput.value = '';
+            }
 
             // Show first step
             showStep(1);
