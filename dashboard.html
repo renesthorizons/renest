@@ -1062,7 +1062,7 @@
             font-style: italic;
             padding: 1rem;
             background-color: rgba(240, 240, 240, 0.5);
-            border-radius: 0.5rem;
+            border-radius: 0.5rem; /* Ensured semicolon */
             text-align: center;
         }
 
@@ -3212,8 +3212,8 @@ const statePersonalExemptionDB = {
                 const userData = await response.json();
                 // Store the state in localStorage
                 localStorage.setItem('state', userData.state);
-                localStorage.setItem('monthlyRent', userData.monthlyRent);
-                localStorage.setItem('income', userData.income);
+                // localStorage.setItem('monthlyRent', userData.monthlyRent); // This might be better set after onboarding
+                // localStorage.setItem('income', userData.income); // This might be better set after onboarding
                 
                 // Extremely detailed logging
                 // console.log('===== DETAILED USER DATA =====');
@@ -3249,14 +3249,19 @@ const statePersonalExemptionDB = {
 
                 // Only show onboarding modal if account status is PENDING_INFO
                 if (userData.accountStatus === 'PENDING_INFO') {
-                    // console.log('Debug: Showing Onboarding Modal - Account Status is PENDING_INFO');
+                    console.log('Debug: Account status is PENDING_INFO. Showing Onboarding Modal.');
+                    // If there are any absolutely essential parts of updateDashboard that affect even the pre-modal page (e.g. a navbar name display)
+                    // they could be called here, or a separate lightweight function. For now, just show modal.
+                    // Example: updateNavbarName(userData.firstName);
                     showOnboardingModal();
                 } else {
-                    // console.log('Debug: Hiding Onboarding Modal - Account Status is not PENDING_INFO');
+                    console.log('Debug: Account status is NOT PENDING_INFO. Updating dashboard and hiding modal.');
+                    // Update dashboard with user data only if not in PENDING_INFO state
+                    updateDashboard(userData);
                     hideOnboardingModal();
                 }
 
-                // Sign Out functionality
+                // Sign Out functionality - this should be fine here as it's independent of modal/dashboard display
                 document.getElementById('signOutLink').addEventListener('click', (e) => {
                     e.preventDefault();
                     localStorage.removeItem('authToken');
