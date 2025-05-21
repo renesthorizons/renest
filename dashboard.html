@@ -3406,20 +3406,19 @@ const statePersonalExemptionDB = {
             const progressPercentage = userData.progressPercentage || 0;
             const currentBenefit = Math.round(userData.currentBenefit || 0);
             const totalPotentialBenefit = Math.round(userData.totalPotentialBenefit || 0);
-            const benefitDifference = totalPotentialBenefit - currentBenefit;
+            // const benefitDifference = totalPotentialBenefit - currentBenefit; // No longer needed
             
             benefitSummary.innerHTML = `
-                $${currentBenefit.toLocaleString()} 
-                <span style="font-size: 1.25rem; color: var(--text-dark); font-weight: 500;">/ $${totalPotentialBenefit.toLocaleString()}</span>
+                <span style="font-size: 2rem; color: var(--primary); font-weight: 700;">$${totalPotentialBenefit.toLocaleString()}</span>
             `;
 
-            if (benefitDifference > 0 && currentBenefit < totalPotentialBenefit) {
-                benefitDifferenceEl.textContent = `You're $${benefitDifference.toLocaleString()} away from your max!`;
-            } else if (currentBenefit > 0 && currentBenefit >= totalPotentialBenefit) {
-                benefitDifferenceEl.textContent = `You've unlocked your maximum potential benefit!`;
-            } else {
-                 benefitDifferenceEl.textContent = 'Complete the steps to unlock your benefit.';
-            }
+            // if (benefitDifference > 0 && currentBenefit < totalPotentialBenefit) {
+            //     benefitDifferenceEl.textContent = `You're $${benefitDifference.toLocaleString()} away from your max!`;
+            // } else if (currentBenefit > 0 && currentBenefit >= totalPotentialBenefit) {
+            //     benefitDifferenceEl.textContent = `You've unlocked your maximum potential benefit!`;
+            // } else {
+            //      benefitDifferenceEl.textContent = 'Complete the steps to unlock your benefit.';
+            // }
             
             // Show "Get My Money Now" button if currentBenefit > $200 // This logic moves to the gold step
             // if (currentBenefit > 200) {
