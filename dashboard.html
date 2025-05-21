@@ -1270,6 +1270,38 @@
             background-color: #D4AF37;
         }
 
+        /* New Accelerate Benefit Modal Styles */
+        #accelerateBenefitModal .modal-container {
+            max-width: 450px; /* Slightly wider for the content */
+            text-align: center;
+        }
+
+        #accelerateBenefitModal .modal-content h2 {
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+            font-size: 1.75rem;
+        }
+        
+        #accelerateBenefitModal .modal-content p {
+            color: var(--text-dark);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        #accelerateBenefitModal .button-container {
+            display: flex;
+            flex-direction: column; /* Stack buttons vertically */
+            gap: 0.75rem; /* Space between buttons */
+            margin-top: 1rem;
+        }
+
+        #accelerateBenefitModal .button { /* General button styling if needed */
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 1rem;
+        }
+        /* End New Accelerate Benefit Modal Styles */
     </style>
 </head>
 <body>
@@ -1285,6 +1317,20 @@
         <button class="menu-button" aria-label="Toggle menu" aria-expanded="false">☰</button>
     </nav>
     
+    <!-- Add this new modal BEFORE the onboardingModal -->
+    <div id="accelerateBenefitModal" class="modal-overlay hidden" style="z-index: 1010;">
+        <div class="modal-container">
+            <div class="modal-content">
+                <h2>Accelerate your benefit</h2>
+                <p>and let Renest handle the steps</p>
+                <div class="button-container">
+                    <button id="accelerateStartButton" class="button button-primary">Start</button>
+                    <button id="doItMyselfButton" class="button button-secondary" onclick="closeAccelerateBenefitModal()">I'll do the steps</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Add this right after your navbar in dashboard.html -->
     <div id="onboardingModal" class="modal-overlay hidden">
         <div class="modal-container">
@@ -3296,23 +3342,21 @@ const statePersonalExemptionDB = {
                 updateDashboard(userData);
 
                 // Modal logic with extensive logging
-                const modal = document.getElementById('onboardingModal');
+                const onboardingModalEl = document.getElementById('onboardingModal');
                 
-                // console.log('Modal Element:', modal);
-                // console.log('Modal Initial Classes:', modal ? modal.classList.toString() : 'No modal found');
+                // console.log('Modal Element:', onboardingModalEl);
+                // console.log('Modal Initial Classes:', onboardingModalEl ? onboardingModalEl.classList.toString() : 'No modal found');
 
                 // Only show onboarding modal if account status is PENDING_INFO
                 if (userData.accountStatus === 'PENDING_INFO') {
-                    console.log('Debug: Account status is PENDING_INFO. Showing Onboarding Modal.');
-                    // If there are any absolutely essential parts of updateDashboard that affect even the pre-modal page (e.g. a navbar name display)
-                    // they could be called here, or a separate lightweight function. For now, just show modal.
-                    // Example: updateNavbarName(userData.firstName);
-                    showOnboardingModal();
+                    console.log('Debug: Account status is PENDING_INFO. Showing Accelerate Benefit Modal.');
+                    showAccelerateBenefitModal(); 
+                    // The onboardingModal will be shown if the user clicks "I'll do the steps"
                 } else {
-                    console.log('Debug: Account status is NOT PENDING_INFO. Updating dashboard and hiding modal.');
-                    // Update dashboard with user data only if not in PENDING_INFO state
-                    updateDashboard(userData);
+                    console.log('Debug: Account status is NOT PENDING_INFO. Updating dashboard and hiding modals.');
+                    updateDashboard(userData); // Update dashboard first
                     hideOnboardingModal();
+                    hideAccelerateBenefitModal(); // Also hide the new one if it was somehow visible
                 }
 
                 // Sign Out functionality - this should be fine here as it's independent of modal/dashboard display
@@ -3337,6 +3381,47 @@ const statePersonalExemptionDB = {
             e.stopPropagation();
             navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
             menuButton.setAttribute('aria-expanded', navLinks.style.display === 'flex');
+        });
+
+        function showAccelerateBenefitModal() {
+            const modal = document.getElementById('accelerateBenefitModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.style.display = 'flex';
+            } else {
+                console.error('Accelerate Benefit Modal element not found when trying to show');
+            }
+        }
+
+        function hideAccelerateBenefitModal() {
+            const modal = document.getElementById('accelerateBenefitModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.style.display = 'none';
+            } else {
+                console.error('Accelerate Benefit Modal element not found when trying to hide');
+            }
+        }
+        
+        function closeAccelerateBenefitModal() {
+            hideAccelerateBenefitModal();
+            showOnboardingModal(); // Proceed to normal onboarding
+        }
+
+        function handleAccelerateStart() {
+            // Placeholder for future functionality
+            console.log('Start button on Accelerate Benefit modal clicked.');
+            alert('This feature is coming soon!');
+            // Potentially, you might want to close this modal and do something else,
+            // or redirect to a different page once the feature is ready.
+            // For now, it just shows an alert. You could also hideAccelerateBenefitModal();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const accelerateStartBtn = document.getElementById('accelerateStartButton');
+            if(accelerateStartBtn) {
+                accelerateStartBtn.addEventListener('click', handleAccelerateStart);
+            }
         });
 
         function showOnboardingModal() {
