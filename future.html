@@ -7,7 +7,6 @@
     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-TGZL6PTS');</script>
-    <link rel="icon" href="blogo2.png" type="image/png">
     <!-- End Google Tag Manager -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -152,11 +151,6 @@
             text-decoration: underline;
         }
 
-        .submit-button:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-        }
-
         .share-button {
             margin-top: 1rem;
             padding: 0.75rem 1.5rem;
@@ -190,6 +184,57 @@
             background: #4CAF50;
         }
 
+        .checkmark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .centered-checkmark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 80px;
+            height: 80px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(75, 34, 122, 0.2);
+        }
+
+        .centered-checkmark svg {
+            width: 40px;
+            height: 40px;
+            stroke: white;
+            stroke-width: 2;
+        }
+
+        .centered-checkmark.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .submit-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
         @media (max-width: 768px) {
             .title {
                 font-size: 2rem;
@@ -216,31 +261,77 @@
     </div>
 
     <div class="content">
-        <p class="subtitle" style="text-align: justify;">We're a startup dedicated to helping students (undergrad and grad) who both study and earn income 
-            (part-time, full-time, internships, tutoring, teaching, research, etc...). 
-            You can get $500 in cash back on rent and groceries - no points, no credit cards, no partner merchants. 
-            Schedule a brief meeting with one of our founders to unlock these benefits and help shape a program that serves your needs.</p>
+        <p class="subtitle" style="text-align: justify;">We're a startup dedicated to helping students (undergrad and grad) who both study and earn income (part-time, full-time, internships, tutoring, teaching, research, etc...). You can get $500 in cash back on rent and groceries - no points, no credit cards, no partner merchants. Enter your email to join our pilot program and unlock these benefits and help shape a program that serves your needs.</p>
         
-        <div class="call-to-action-container" style="width: 100%; max-width: 400px; margin: 2rem auto;">
-            <button type="button" class="submit-button" id="scheduleChatButton" onclick="window.location.href='https://calendly.com/renesthorizons/30min'">
-                Schedule a chat here
+        <form class="email-form" id="emailForm">
+            <input type="email" id="emailInput" class="email-input" placeholder="Enter your email" required>
+            <button type="submit" class="submit-button" id="submitButton">
+                submit
+                <div class="checkmark">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </div>
             </button>
-            <p style="margin-top: 1.5rem; color: #555555; font-size: 0.9rem; text-align: center;">
-                Learn more about our story <a href="waitlist-perks.html" style="color: var(--primary); text-decoration: none; font-weight: 500;">here</a>
-            </p>
-            <button class="share-button" id="shareButton">
-                <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
-                    <polyline points="16 6 12 2 8 6"></polyline>
-                    <line x1="12" y1="2" x2="12" y2="15"></line>
-                </svg>
-                Share Page
-            </button>
+        </form>
+        <div class="contact-email">
+            Questions? Contact us at <a href="mailto:thomas@renesthorizons.com">thomas@renesthorizons.com</a>
         </div>
+        <button class="share-button" id="shareButton">
+            <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                <polyline points="16 6 12 2 8 6"></polyline>
+                <line x1="12" y1="2" x2="12" y2="15"></line>
+            </svg>
+            Share Page
+        </button>
+    </div>
+
+    <div class="centered-checkmark">
+        <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
     </div>
 
     <script>
-        // Removed email form submission script
+        document.getElementById('emailForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = encodeURIComponent(document.getElementById('emailInput').value);
+            const baseUrl = 'https://docs.google.com/forms/d/e/1FAIpQLScZ04ro2nS9fPEclOjblV8kv-rTFxQNH1pMN_xy8H1gbGKQtQ/formResponse?usp=pp_url&entry.1358827248=';
+            const submitButton = document.getElementById('submitButton');
+            const centeredCheckmark = document.querySelector('.centered-checkmark');
+            
+            // Disable the submit button
+            submitButton.disabled = true;
+            submitButton.classList.add('submitted');
+            
+            // Using a hidden iframe to submit the form without redirecting
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.setAttribute('src', baseUrl + email);
+            document.body.appendChild(iframe);
+            
+            // Show centered checkmark
+            centeredCheckmark.classList.add('show');
+            
+            // Hide centered checkmark after 1.5 seconds
+            setTimeout(() => {
+                centeredCheckmark.classList.remove('show');
+            }, 1500);
+            
+            // Reset form and enable button after 2 seconds
+            setTimeout(() => {
+                this.reset();
+                submitButton.disabled = false;
+                submitButton.classList.remove('submitted');
+            }, 2000);
+            
+            // Remove iframe after submission
+            setTimeout(() => {
+                document.body.removeChild(iframe);
+            }, 1000);
+        });
 
         // Share button functionality
         document.getElementById('shareButton').addEventListener('click', function() {
