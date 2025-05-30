@@ -1317,6 +1317,20 @@
         <button class="menu-button" aria-label="Toggle menu" aria-expanded="false">☰</button>
     </nav>
     
+    <!-- Add this new modal BEFORE the onboardingModal -->
+    <div id="accelerateBenefitModal" class="modal-overlay hidden" style="z-index: 1010;">
+        <div class="modal-container">
+            <div class="modal-content">
+                <h2>Accelerate your benefit</h2>
+                <p>and let Renest handle the steps</p>
+                <div class="button-container">
+                    <button id="accelerateStartButton" class="button button-primary">Start</button>
+                    <button id="doItMyselfButton" class="button button-secondary" onclick="closeAccelerateBenefitModal()">I'll do the steps</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Add this right after your navbar in dashboard.html -->
     <div id="onboardingModal" class="modal-overlay hidden">
         <div class="modal-container">
@@ -3373,9 +3387,46 @@ const statePersonalExemptionDB = {
             menuButton.setAttribute('aria-expanded', navLinks.style.display === 'flex');
         });
 
+        function showAccelerateBenefitModal() {
+            const modal = document.getElementById('accelerateBenefitModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.style.display = 'flex';
+            } else {
+                console.error('Accelerate Benefit Modal element not found when trying to show');
+            }
+        }
+
+        function hideAccelerateBenefitModal() {
+            const modal = document.getElementById('accelerateBenefitModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.style.display = 'none';
+            } else {
+                console.error('Accelerate Benefit Modal element not found when trying to hide');
+            }
+        }
         
+        function closeAccelerateBenefitModal() {
+            hideAccelerateBenefitModal();
+            showOnboardingModal(); // Proceed to normal onboarding
+        }
+
+        function handleAccelerateStart() {
+            // Placeholder for future functionality
+            console.log('Start button on Accelerate Benefit modal clicked.');
+            alert('This feature is coming soon!');
+            // Potentially, you might want to close this modal and do something else,
+            // or redirect to a different page once the feature is ready.
+            // For now, it just shows an alert. You could also hideAccelerateBenefitModal();
+        }
 
         document.addEventListener('DOMContentLoaded', function() {
+            const accelerateStartBtn = document.getElementById('accelerateStartButton');
+            if(accelerateStartBtn) {
+                accelerateStartBtn.addEventListener('click', handleAccelerateStart);
+            }
+
             const skipHereBtn = document.getElementById('skipHereButton');
             if(skipHereBtn) {
                 skipHereBtn.addEventListener('click', handleSkipHereClick);
