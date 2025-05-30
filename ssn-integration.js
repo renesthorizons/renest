@@ -44,7 +44,6 @@ if (typeof window.submitSensitiveData === 'undefined') {
         console.log('[submitSensitiveData] Retrieved authToken:', authToken ? authToken.substring(0, 10) + '...' : null);
         if (!authToken) {
             console.error('[submitSensitiveData] Authentication token not found.');
-            // This error should ideally be caught and result in guiding the user to log in again.
             throw new Error('Authentication token not found. Please sign in.');
         }
 
@@ -52,18 +51,17 @@ if (typeof window.submitSensitiveData === 'undefined') {
         console.log('[submitSensitiveData] Encrypted Client SSN (first 10 chars):', encryptedClientSSN ? encryptedClientSSN.substring(0, 10) + '...' : null);
         if (!encryptedClientSSN) {
             console.error('[submitSensitiveData] Failed to encrypt sensitive information.');
-            // The user should be informed about this failure.
             throw new Error('Failed to encrypt sensitive information. Please try again or contact support.');
         }
 
-        // Construct the address string carefully
-        let addressParts = [formDataBundle.streetAddress];
-        if (formDataBundle.address2 && formDataBundle.address2.trim() !== '') {
-            addressParts.push(formDataBundle.address2.trim());
-        }
-        addressParts.push(formDataBundle.city, `${formDataBundle.state} ${formDataBundle.zipCode}`);
-        const fullAddress = addressParts.join(', ').trim();
-        console.log('[submitSensitiveData] Constructed fullAddress:', fullAddress);
+        // Replicate address construction from testssnintegration.html
+        let streetPart = formDataBundle.streetAddress;
+        let address2Part = formDataBundle.address2 && formDataBundle.address2.trim() !== '' ? ' ' + formDataBundle.address2.trim() : '';
+        let cityPart = formDataBundle.city;
+        let stateZipPart = `${formDataBundle.state} ${formDataBundle.zipCode}`;
+
+        const fullAddress = `${streetPart}${address2Part}, ${cityPart}, ${stateZipPart}`.trim();
+        console.log('[submitSensitiveData] Constructed fullAddress (test-style):', fullAddress);
 
         const payload = {
             encryptedSSN: encryptedClientSSN,
