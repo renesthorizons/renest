@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test 529 SSN Collection API</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/3.3.2/jsencrypt.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        input[type="text"], input[type="password"], input[type="date"], input[type="tel"], textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 60px;
+            resize: vertical;
+        }
+        .btn {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .info {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        .warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Test 529 SSN Collection API</h1>
+        
+        <div class="warning">
+            <strong>⚠️ Security Notice:</strong> This is a test page. In production, SSN would be encrypted client-side before transmission.
+        </div>
+
+        <form id="testForm">
+            <div class="form-group">
+                <label for="apiUrl">API URL:</label>
+                <input type="text" id="apiUrl" 
+                       placeholder="https://your-api-id.execute-api.us-east-2.amazonaws.com/prod/submit-sensitive-data"
+                       value="https://rxfl727df9.execute-api.us-east-2.amazonaws.com/">
+            </div>
+
+            <div class="form-group">
+                <label for="ssn">SSN (for testing - will be fake encrypted):</label>
+                <input type="text" id="ssn" placeholder="123-45-6789" value="123-45-6789">
+            </div>
+
+            <div class="form-group">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" placeholder="John" value="John">
+            </div>
+
+            <div class="form-group">
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" placeholder="Doe" value="Doe">
+            </div>
+
+            <div class="form-group">
+                <label for="dateOfBirth">Date of Birth:</label>
+                <input type="date" id="dateOfBirth" value="1990-01-15">
+            </div>
+
+            <div class="form-group">
+                <label for="phoneNumber">Phone Number:</label>
+                <input type="tel" id="phoneNumber" placeholder="555-123-4567" value="555-123-4567">
+            </div>
+
+            <div class="form-group">
+                <label for="streetAddress">Street Address:</label>
+                <input type="text" id="streetAddress" placeholder="123 Main St" value="123 Main St">
+            </div>
+
+            <div class="form-group">
+                <label for="address2">Apt/Suite/Unit (Optional):</label>
+                <input type="text" id="address2" placeholder="Apt 4B" value="">
+            </div>
+
+            <div class="form-group">
+                <label for="city">City:</label>
+                <input type="text" id="city" placeholder="Anytown" value="Anytown">
+            </div>
+
+            <div class="form-group">
+                <label for="state">State:</label>
+                <input type="text" id="state" placeholder="CA" value="CA">
+            </div>
+            
+            <div class="form-group">
+                <label for="zipCode">ZIP Code:</label>
+                <input type="text" id="zipCode" placeholder="90210" value="90210">
+            </div>
+
+            <div class="form-group">
+                <label for="school">School:</label>
+                <input type="text" id="school" placeholder="University of California" value="University of California, Los Angeles">
+            </div>
+
+            <button type="button" class="btn" onclick="testAPI()">Test API Call</button>
+            <button type="button" class="btn" onclick="clearResults()">Clear Results</button>
+        </form>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const PUBLIC_KEY="MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0TIl1XiMA/ZwQT1Op/D2c3loXCkiOU7qRl0WvnRx1YTzdZr12hNAVh7lIxaRqSNstGIIrmkNjtMJ8U3z+Kcuceq0QBIRRSrvXM9wkD3EbKdqUIQk9CXxxuJLGYGrlo/Xvb+cQJjRn5tLWztK16rhEFAwIcfaKlQyImQz42yQq+QPR7tBwnrM7ijxY9GL3ZnnGTBXbvH68yZKm99Ydy8gJ0vxhWKDhFlb0ze6FyrNZJHpFIH5/AuwZ+BoJhN2vJx/gdW4sU2kBg8EAqdUrdmNANriax2I+mb3WtmNNCI2DohS+8t0JDgGUrakKNF/lp6F0o+2WZfG+UKt4RJGnZn3dwIDAQAB";
+        
+        function encryptSSNWithPublicKey(ssn) {
+            // Create a JSEncrypt object
+            const encrypt = new JSEncrypt();
+            // Set the public key
+            encrypt.setPublicKey(PUBLIC_KEY);
+            // Encrypt the SSN
+            const dataToEncrypt = JSON.stringify({
+                ssn: ssn,
+                timestamp: new Date().toISOString()
+            });
+            const encrypted = encrypt.encrypt(dataToEncrypt);
+            if (encrypted === false) {
+                console.error("Encryption failed. Check the public key and JSEncrypt library.");
+                return null; // Or throw an error
+            }
+            return encrypted;
+        }
+
+        async function testAPI() {
+            const resultDiv = document.getElementById('result');
+            const apiUrl = document.getElementById('apiUrl').value.trim();
+            
+            // Retrieve JWT token from localStorage
+            const jwtToken = localStorage.getItem('jwtToken'); 
+
+            // Validation
+            if (!apiUrl) {
+                resultDiv.innerHTML = '<div class="error">Please enter the API URL</div>';
+                return;
+            }
+            
+            if (!jwtToken) {
+                resultDiv.innerHTML = '<div class="error">JWT token not found in localStorage. Please sign in again.</div>';
+                return;
+            }
+
+            // Collect form data
+            const ssnValue = document.getElementById('ssn').value;
+            const encryptedClientSSN = encryptSSNWithPublicKey(ssnValue);
+
+            if (!encryptedClientSSN) {
+                 resultDiv.innerHTML = '<div class="error">Client-side SSN encryption failed. Check console.</div>';
+                return;
+            }
+            
+            const formData = {
+                encryptedSSN: encryptedClientSSN,
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                dateOfBirth: document.getElementById('dateOfBirth').value,
+                phoneNumber: document.getElementById('phoneNumber').value,
+                address: (
+                    document.getElementById('streetAddress').value +
+                    (document.getElementById('address2').value ? ' ' + document.getElementById('address2').value : '') + ', ' +
+                    document.getElementById('city').value + ', ' +
+                    document.getElementById('state').value + ' ' +
+                    document.getElementById('zipCode').value
+                ).trim(),
+                state: document.getElementById('state').value,
+                school: document.getElementById('school').value
+            };
+
+            resultDiv.innerHTML = '<div class="info">Making API call...</div>';
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwtToken}`
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                // Check if response is JSON before trying to parse
+                const contentType = response.headers.get("content-type");
+                let responseData;
+                if (contentType && contentType.indexOf("application/json") !== -1) {
+                    responseData = await response.json();
+                } else {
+                    responseData = await response.text(); 
+                }
+                
+                let resultClass = response.ok ? 'success' : 'error';
+                let resultText = `Status: ${response.status}\n\nResponse:\n${typeof responseData === 'string' ? responseData : JSON.stringify(responseData, null, 2)}`;
+
+                resultDiv.innerHTML = `<div class="${resultClass}">${resultText}</div>`;
+
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">Network Error:\n${error.message}</div>`;
+            }
+        }
+
+        function clearResults() {
+            document.getElementById('result').innerHTML = '';
+        }
+
+        // Auto-focus the API URL field
+        document.getElementById('apiUrl').focus();
+    </script>
+</body>
+</html>
