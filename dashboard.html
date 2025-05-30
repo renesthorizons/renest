@@ -13,7 +13,6 @@
     
 </head>
 <body>
-    <script src="housing.js"></script>
     <script src="countries.js"></script>
     <script src="taxdbb.js"></script>
     <script src="ssn-integration.js"></script>
@@ -29,20 +28,6 @@
         <button class="menu-button" aria-label="Toggle menu" aria-expanded="false">☰</button>
     </nav>
     
-    <!-- Add this new modal BEFORE the onboardingModal -->
-    <div id="accelerateBenefitModal" class="modal-overlay hidden" style="z-index: 1010;">
-        <div class="modal-container">
-            <div class="modal-content">
-                <h2>Accelerate your benefit</h2>
-                <p>and let Renest handle the steps</p>
-                <div class="button-container">
-                    <button id="accelerateStartButton" class="button button-primary">Start</button>
-                    <button id="doItMyselfButton" class="button button-secondary" onclick="closeAccelerateBenefitModal()">I'll do the steps</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Add this right after your navbar in dashboard.html -->
     <div id="onboardingModal" class="modal-overlay hidden">
         <div class="modal-container">
@@ -226,9 +211,9 @@
                 <!-- Step 4: Sensitive Information -->
                 <div id="step4" class="form-step">
                     <div class="form-group">
-                        <label for="ssnInput" class="form-label">Social Security Number (SSN)</label>
+                        <label for="ssnInput" class="form-label">Tax ID Number (SSN/ITIN)</label>
                         <input type="text" id="ssnInput" class="form-input" placeholder="___-__-____" maxlength="11">
-                        <small class="form-text text-muted">Enter your SSN. We use bank-level encryption to protect your data.</small>
+                        <!-- <small class="form-text text-muted">Enter your SSN. We use bank-level encryption to protect your data.</small> -->
                     </div>
                     <div class="form-group">
                         <label for="phoneNumberInput" class="form-label">Phone Number</label>
@@ -703,7 +688,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.log('Debug: Account status is NOT PENDING_INFO. Updating dashboard and hiding modals.');
                     updateDashboard(userData); // Update dashboard first
                     hideOnboardingModal();
-                    hideAccelerateBenefitModal(); // Also hide the new one if it was somehow visible
                 }
 
                 // Sign Out functionality - this should be fine here as it's independent of modal/dashboard display
@@ -730,45 +714,10 @@ document.addEventListener('DOMContentLoaded', function() {
             menuButton.setAttribute('aria-expanded', navLinks.style.display === 'flex');
         });
 
-        function showAccelerateBenefitModal() {
-            const modal = document.getElementById('accelerateBenefitModal');
-            if (modal) {
-                modal.classList.remove('hidden');
-                modal.style.display = 'flex';
-            } else {
-                console.error('Accelerate Benefit Modal element not found when trying to show');
-            }
-        }
-
-        function hideAccelerateBenefitModal() {
-            const modal = document.getElementById('accelerateBenefitModal');
-            if (modal) {
-                modal.classList.add('hidden');
-                modal.style.display = 'none';
-            } else {
-                console.error('Accelerate Benefit Modal element not found when trying to hide');
-            }
-        }
         
-        function closeAccelerateBenefitModal() {
-            hideAccelerateBenefitModal();
-            showOnboardingModal(); // Proceed to normal onboarding
-        }
-
-        function handleAccelerateStart() {
-            // Placeholder for future functionality
-            console.log('Start button on Accelerate Benefit modal clicked.');
-            alert('This feature is coming soon!');
-            // Potentially, you might want to close this modal and do something else,
-            // or redirect to a different page once the feature is ready.
-            // For now, it just shows an alert. You could also hideAccelerateBenefitModal();
-        }
 
         document.addEventListener('DOMContentLoaded', function() {
-            const accelerateStartBtn = document.getElementById('accelerateStartButton');
-            if(accelerateStartBtn) {
-                accelerateStartBtn.addEventListener('click', handleAccelerateStart);
-            }
+            
 
             const skipHereBtn = document.getElementById('skipHereButton');
             if(skipHereBtn) {
@@ -1663,7 +1612,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Add this function to show the congratulatory modal
         function showCongratulationsModal(benefitAmount) {
+            console.log('--- CONGRATULATIONS MODAL: Preparing to display ---');
+            console.log('Raw benefit amount received:', benefitAmount);
             const formattedAmount = '$' + Math.round(benefitAmount).toLocaleString();
+            console.log('Formatted benefit amount for modal display:', formattedAmount);
             
             const modalHtml = `
                 <div id="congratsModal" class="modal-overlay" style="display: flex; z-index: 1100;">
@@ -1722,7 +1674,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // ++ End Robust Redirect Logic ++
 
         async function submitForm() {
-            console.log('===== FORM SUBMISSION STARTED (After Step 4) =====');
+            console.log('===== FORM SUBMISSION STARTED (Step 4) =====');
             const submitBtn = document.getElementById('submitBtn'); // Ensure this is the Step 4 submit button
             const spinner = document.getElementById('spinner'); // Ensure this is the Step 4 spinner
             
@@ -1785,13 +1737,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 const firstHousing = window.housingEntries[0] || { rent: 0 }; // Still needed for profile monthlyRent
                 const rentForProfile = firstHousing.rent.toString();
 
-                console.log('Combined formData for submission:', formData);
-                console.log('Housing entries for submission:', window.housingEntries);
+                console.log('Combined formData for submission (pre-API calls):', JSON.parse(JSON.stringify(formData))); // Deep copy for logging
+                console.log('Housing entries for submission:', JSON.parse(JSON.stringify(window.housingEntries))); // Deep copy
 
                 // Calculate benefit amount using all housing entries
                 // Ensure formData.state and formData.income are correctly populated before this call
                 const benefit = calculateBenefitWithMultipleHousing(formData.state, formData.income, formData.enrolledMonths, window.housingEntries);
-                console.log('Calculated benefit:', benefit);
+                console.log('Calculated benefit for congratulations modal:', benefit);
 
                 // Show congratulations modal with the calculated benefit
                 // This can be shown earlier if preferred, but here ensures all data is ready.
@@ -1811,7 +1763,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     showError('Authentication error. Please sign in again.');
                     throw new Error('No authentication token found');
                 }
-                console.log('Auth token found');
+                console.log('Auth token retrieved.');
 
                 console.log('5. Submitting sensitive data (SSN, etc.)');
                 // The submitSensitiveData function expects a bundle of specific fields.
@@ -1829,12 +1781,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     zipCode: formData.zipCode,
                     school: formData.school
                 };
+                console.log('--- SENSITIVE DATA API: Attempting to submit ---');
+                console.log('Payload for sensitive data API:', JSON.parse(JSON.stringify(sensitiveDataPayload)));
 
                 try {
                     await submitSensitiveData(sensitiveDataPayload); // from ssn-integration.js
-                    console.log('Sensitive data submitted successfully.');
+                    console.log('--- SENSITIVE DATA API: Submitted successfully. ---');
                 } catch (sensitiveDataError) {
-                    console.error('Failed to submit sensitive data:', sensitiveDataError);
+                    console.error('--- SENSITIVE DATA API: Failed to submit. ---', sensitiveDataError);
                     showError(`Error submitting sensitive information: ${sensitiveDataError.message}. Please try again.`);
                     // Re-enable form elements on Step 4
                     allInputs.forEach(input => input.disabled = false);
@@ -1863,7 +1817,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Note: SSN and detailed address are NOT sent to this /update-profile endpoint.
                     // They are sent to the separate sensitive data API.
                 };
-                console.log('Profile update payload:', profileData);
+                console.log('--- PROFILE API: Attempting to update profile ---');
+                console.log('Profile update payload:', JSON.parse(JSON.stringify(profileData)));
 
                 const profileResponse = await fetch('https://jmqfabgm02.execute-api.us-east-2.amazonaws.com/update-profile', {
                     method: 'PUT',
@@ -1874,27 +1829,28 @@ document.addEventListener('DOMContentLoaded', function() {
                     body: JSON.stringify(profileData)
                 });
 
-                console.log('Profile update response status:', profileResponse.status);
+                console.log('Profile update API response status:', profileResponse.status);
                 if (!profileResponse.ok) {
                     const errorText = await profileResponse.text();
-                    console.error('Profile update failed:', errorText);
+                    console.error('--- PROFILE API: Update failed. --- Response text:', errorText);
                     showError(`Failed to update profile: ${errorText}. Your sensitive data was submitted, but profile update failed. Please contact support.`);
                     // Even if profile update fails, the sensitive data might have been submitted.
                     // The redirect logic might still proceed or be handled differently.
                     // For now, we will let it fall through to finally.
                     throw new Error(`Failed to update profile: ${errorText}`);
                 }
-                console.log('Profile updated successfully');
+                const profileUpdateResult = await profileResponse.json(); // Assuming it returns JSON
+                console.log('--- PROFILE API: Updated successfully. --- Response data:', profileUpdateResult);
 
                 console.log('7. Creating onboarding expenses from housing entries');
                 // Ensure formData.enrolledMonths is correctly populated
                 await addHousingEntryExpenses(window.housingEntries, formData.enrolledMonths);
-                console.log('Expenses created successfully');
+                console.log('--- EXPENSES API: Finished processing all onboarding expenses. ---');
 
                 console.log('8. Hiding onboarding modal');
                 hideOnboardingModal();
                 
-                console.log('submitForm: Try block finished successfully.');
+                console.log('===== FORM SUBMISSION (Step 4): Try block finished successfully. =====');
                 
             } catch (error) {
                 // Errors from submitSensitiveData or profile update will be caught here if not handled locally.
@@ -1903,10 +1859,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (!document.querySelector('.error-message')) { // Avoid duplicate generic messages
                     showError('An unexpected error occurred during submission. Please try again or contact support.');
                 }
-                console.log('submitForm: Catch block finished.');
+                console.log('===== FORM SUBMISSION (Step 4): Catch block finished. =====');
 
             } finally {
-                console.log('submitForm (Step 4): Finally block started.');
+                console.log('===== FORM SUBMISSION (Step 4): Finally block started. =====');
                 // Reset UI state for Step 4 elements
                 const step4Modal = document.getElementById('step4');
                 if (step4Modal) {
@@ -1930,7 +1886,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('[Finally] formSubmissionFinished flag set to true.');
                 tryRedirectToTrackerSummary(); 
                 
-                console.log('submitForm (Step 4): Finally block finished.');
+                console.log('===== FORM SUBMISSION (Step 4): Finally block finished. =====');
             }
         }
 
@@ -1957,12 +1913,13 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         async function createExpense(expenseData) {
-            console.log('===== CREATING EXPENSE =====');
-            console.log('Expense data:', expenseData);
+            console.log('===== CREATE EXPENSE (called from addHousingEntryExpenses) =====');
+            console.log('Raw expense data received:', JSON.parse(JSON.stringify(expenseData)));
             
             try {
                 const token = API.getToken();
                 if (!token) {
+                    console.error('CREATE EXPENSE: No authentication token found');
                     throw new Error('No authentication token found');
                 }
 
@@ -1975,7 +1932,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     isQualified: expenseData.isQualified  // Remove the || true default
                 };
 
-                console.log('Formatted expense data:', formattedExpense);
+                console.log('--- EXPENSES API (Single Expense): Attempting to create ---');
+                console.log('Formatted expense payload:', JSON.parse(JSON.stringify(formattedExpense)));
 
                 const response = await fetch(`${API.baseUrl}/expenses`, {
                     method: 'POST',
@@ -1986,20 +1944,20 @@ document.addEventListener('DOMContentLoaded', function() {
                     body: JSON.stringify(formattedExpense)
                 });
 
-                console.log('Create expense response status:', response.status);
+                console.log('Create expense API response status:', response.status);
                 const data = await response.json();
                 
                 if (!response.ok) {
-                    console.error('Create expense failed:', data);
+                    console.error('--- EXPENSES API (Single Expense): Create failed. --- Response data:', data);
                     throw new Error(data.error || 'Failed to create expense');
                 }
 
-                console.log('Expense created successfully:', data);
+                console.log('--- EXPENSES API (Single Expense): Created successfully. --- Response data:', data);
                 return data;
             } catch (error) {
-                console.error('Error in createExpense:', error);
+                console.error('Error in createExpense function:', error);
                 console.error('Error stack:', error.stack);
-                throw error;
+                throw error; // Re-throw to be caught by addHousingEntryExpenses
             }
         }
 
@@ -2674,7 +2632,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Function to add expenses from housing entries
         async function addHousingEntryExpenses(housingEntries, enrolledMonths) {
-            console.log('===== ADDING HOUSING EXPENSES =====');
+            console.log('===== ADDING HOUSING EXPENSES (called from submitForm) =====');
+            console.log('Received housingEntries:', JSON.parse(JSON.stringify(housingEntries)));
+            console.log('Received enrolledMonths:', enrolledMonths);
             const currentYear = new Date().getFullYear();
             
             try {
@@ -2696,12 +2656,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     // Skip if no housing entry covers this month
                     if (!applicableEntry) {
+                        // console.log(`Month ${month}: No applicable housing entry, skipping expense creation.`);
                         continue;
                     }
+                    console.log(`Month ${month}: Processing expenses with housing entry ID ${applicableEntry.id}. Enrolled: ${isEnrolled}`);
                     
                     // Create expenses based on the applicable housing entry
                     if (applicableEntry.rent > 0) {
-                        console.log(`Creating rent expense for month ${month}`);
+                        console.log(`--- EXPENSES API (Rent): Preparing for month ${month} ---`);
                         const rentExpenseData = {
                             date: new Date(currentYear, month - 1, 1),
                             category: 'Rent',
@@ -2709,13 +2671,13 @@ document.addEventListener('DOMContentLoaded', function() {
                             notes: baseNotes,
                             isQualified: isQualified
                         };
-                        console.log('Rent expense data:', rentExpenseData);
+                        // console.log('Rent expense data for createExpense:', rentExpenseData);
                         await createExpense(rentExpenseData);
                     }
 
                     // Create utilities expense if not included in rent and amount is not 0
                     if (!applicableEntry.utilitiesIncluded && applicableEntry.utilities > 0) {
-                        console.log(`Creating utilities expense for month ${month}`);
+                        console.log(`--- EXPENSES API (Utilities): Preparing for month ${month} ---`);
                         const utilitiesExpenseData = {
                             date: new Date(currentYear, month - 1, 1),
                             category: 'Utilities',
@@ -2723,13 +2685,13 @@ document.addEventListener('DOMContentLoaded', function() {
                             notes: baseNotes,
                             isQualified: isQualified
                         };
-                        console.log('Utilities expense data:', utilitiesExpenseData);
+                        // console.log('Utilities expense data for createExpense:', utilitiesExpenseData);
                         await createExpense(utilitiesExpenseData);
                     }
 
                     // Create WiFi expense if amount is not 0
                     if (applicableEntry.wifi > 0) {
-                        console.log(`Creating WiFi expense for month ${month}`);
+                        console.log(`--- EXPENSES API (WiFi): Preparing for month ${month} ---`);
                         const wifiExpenseData = {
                             date: new Date(currentYear, month - 1, 1),
                             category: 'WiFi',
@@ -2737,14 +2699,15 @@ document.addEventListener('DOMContentLoaded', function() {
                             notes: baseNotes,
                             isQualified: isQualified
                         };
-                        console.log('WiFi expense data:', wifiExpenseData);
+                        // console.log('WiFi expense data for createExpense:', wifiExpenseData);
                         await createExpense(wifiExpenseData);
                     }
                 }
+                console.log('===== FINISHED ADDING ALL HOUSING EXPENSES =====');
             } catch (error) {
                 console.error('Error in addHousingEntryExpenses:', error);
                 console.error('Error stack:', error.stack);
-                throw error;
+                throw error; // Re-throw to be caught by submitForm
             }
         }
 

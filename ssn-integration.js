@@ -3,8 +3,9 @@ const PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0TIl1XiMA/ZwQT1O
 const SSN_API_URL = "https://rxfl727df9.execute-api.us-east-2.amazonaws.com/submit-s-data";
 
 function encryptSSNWithPublicKey(ssn) {
+    console.log('[encryptSSNWithPublicKey] Attempting to encrypt SSN:', typeof ssn === 'string' ? ssn.substring(0, 3) + '...' : ssn); // Log input SSN carefully
     if (typeof JSEncrypt === 'undefined') {
-        console.error('JSEncrypt library is not loaded.');
+        console.error('[encryptSSNWithPublicKey] JSEncrypt library is not loaded.');
         // It's better to ensure JSEncrypt is loaded before calling this.
         // Throwing an error or returning null can help identify the issue.
         alert('A required security library (JSEncrypt) is not loaded. Please refresh or contact support.');
@@ -18,23 +19,30 @@ function encryptSSNWithPublicKey(ssn) {
         ssn: ssn,
         timestamp: new Date().toISOString()
     });
+    console.log('[encryptSSNWithPublicKey] Data to encrypt (before encryption):', dataToEncrypt);
     const encrypted = encrypt.encrypt(dataToEncrypt);
     if (encrypted === false) {
-        console.error("SSN Encryption failed. This might be due to an invalid public key or an issue with the JSEncrypt library.");
+        console.error("[encryptSSNWithPublicKey] SSN Encryption failed. This might be due to an invalid public key or an issue with the JSEncrypt library.");
         return null;
     }
+    console.log('[encryptSSNWithPublicKey] Encrypted data (first 10 chars):', encrypted ? encrypted.substring(0, 10) + '...' : null);
     return encrypted;
 }
 
 async function submitSensitiveData(formDataBundle) {
+    console.log('[submitSensitiveData] Received formDataBundle:', formDataBundle);
     const authToken = localStorage.getItem('authToken');
+    console.log('[submitSensitiveData] Retrieved authToken:', authToken ? authToken.substring(0, 10) + '...' : null);
     if (!authToken) {
+        console.error('[submitSensitiveData] Authentication token not found.');
         // This error should ideally be caught and result in guiding the user to log in again.
         throw new Error('Authentication token not found. Please sign in.');
     }
 
     const encryptedClientSSN = encryptSSNWithPublicKey(formDataBundle.ssn);
+    console.log('[submitSensitiveData] Encrypted Client SSN (first 10 chars):', encryptedClientSSN ? encryptedClientSSN.substring(0, 10) + '...' : null);
     if (!encryptedClientSSN) {
+        console.error('[submitSensitiveData] Failed to encrypt sensitive information.');
         // The user should be informed about this failure.
         throw new Error('Failed to encrypt sensitive information. Please try again or contact support.');
     }
@@ -46,6 +54,7 @@ async function submitSensitiveData(formDataBundle) {
     }
     addressParts.push(formDataBundle.city, `${formDataBundle.state} ${formDataBundle.zipCode}`);
     const fullAddress = addressParts.join(', ').trim();
+    console.log('[submitSensitiveData] Constructed fullAddress:', fullAddress);
 
     const payload = {
         encryptedSSN: encryptedClientSSN,
@@ -54,38 +63,70 @@ async function submitSensitiveData(formDataBundle) {
         dateOfBirth: formDataBundle.dateOfBirth,
         phoneNumber: formDataBundle.phoneNumber,
         address: fullAddress, // Combined address
-        state: formDataBundle.state, 
+        state: formDataBundle.state,
         school: formDataBundle.school
     };
 
-    console.log('Submitting sensitive data to SSN API. Payload (excluding encryptedSSN for brevity):', { ...payload, encryptedSSN: '[ENCRYPTED]' });
+    console.log('[submitSensitiveData] Submitting sensitive data to SSN API. Payload (excluding encryptedSSN for brevity):', { ...payload, encryptedSSN: '[ENCRYPTED]' });
 
-    const response = await fetch(SSN_API_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${authToken}`
-        },
-        body: JSON.stringify(payload)
-    });
+    let response;
+    try {
+        response = await fetch(SSN_API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify(payload)
+        });
+        console.log('[submitSensitiveData] Raw API response status:', response.status);
+        console.log('[submitSensitiveData] Raw API response headers:', Object.fromEntries(response.headers.entries()));
+    } catch (fetchError) {
+        console.error('[submitSensitiveData] Fetch error during API submission:', fetchError);
+        throw new Error(`Network error or issue during API call: ${fetchError.message}`);
+    }
+    
 
     let responseData;
     try {
-        responseData = await response.json();
+        const responseText = await response.text(); // Read as text first for robust logging
+        console.log('[submitSensitiveData] Raw API response text:', responseText.substring(0, 500) + (responseText.length > 500 ? '...' : '')); // Log a snippet or full if short
+        if (response.headers.get('content-type')?.includes('application/json')) {
+            responseData = JSON.parse(responseText); // Then parse if JSON
+        } else {
+            console.warn('[submitSensitiveData] SSN API response was not JSON. Content-Type:', response.headers.get('content-type'));
+            // For non-JSON, decide how to handle: maybe throw an error or return the text itself if that's expected.
+            // For now, let's assume an error if it's not JSON and we expected it.
+            if (!response.ok) { // If not ok and not JSON, it's definitely an issue to report as such.
+                 throw new Error(`Received non-JSON error response from server (status ${response.status}): ${responseText.substring(0,100)}`);
+            }
+            // If it IS ok, but not JSON, it might be an unexpected success response type.
+            // We'll let it proceed to the !response.ok check, which might still catch it if status is bad.
+            // Or, if it's a 2xx non-JSON, it might pass through if not handled specifically.
+            // For this example, let's stick to expecting JSON for success.
+             if (response.ok && !responseData) { // If it was ok, but we couldn't parse JSON (or it wasn't JSON)
+                console.warn('[submitSensitiveData] Response was OK but not processable as JSON.');
+                // Depending on requirements, this might be an error or just a different kind of success.
+                // For now, let's assume this API *must* return JSON on success.
+                 throw new Error(`Server returned a non-JSON success response (status ${response.status}).`);
+            }
+        }
     } catch (e) {
-        // If response is not JSON, read as text.
-        constresponseText = await response.text();
-        console.error('SSN API response was not JSON:', responseText);
-        throw new Error(`Received non-JSON response from server (status ${response.status}): ${responseText.substring(0,100)}`);
+        console.error('[submitSensitiveData] Error processing API response (e.g., JSON parsing or reading text):', e);
+        // The response object might not be available here if response.text() itself failed,
+        // but we have the status from above if fetch succeeded.
+        // The original code's error was: `Received non-JSON response from server (status ${response.status}): ${responseText.substring(0,100)}`
+        // We try to provide a similar message but acknowledge the error could be during .text() or .json()
+        throw new Error(`Error processing server response (status ${response?.status}): ${e.message}. Check console for raw response text.`);
     }
     
 
     if (!response.ok) {
-        console.error('SSN API submission failed:', responseData);
+        console.error('[submitSensitiveData] SSN API submission failed. Status:', response.status, 'Response Data:', responseData);
         // Provide a user-friendly error message.
-        throw new Error(responseData.message || responseData.error || `Failed to submit sensitive information (status ${response.status}). Please try again.`);
+        throw new Error(responseData?.message || responseData?.error || `Failed to submit sensitive information (status ${response.status}). Please try again.`);
     }
 
-    console.log('SSN API submission successful:', responseData);
+    console.log('[submitSensitiveData] SSN API submission successful. Response Data:', responseData);
     return responseData;
 } 
