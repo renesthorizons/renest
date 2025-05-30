@@ -27,7 +27,7 @@ if (typeof window.encryptSSNWithPublicKey === 'undefined') {
             timestamp: new Date().toISOString()
         });
         console.log('[encryptSSNWithPublicKey] Data to encrypt (before encryption):', dataToEncrypt);
-        const encrypted = encrypt.encrypt(dataToEncrypt);
+        const encrypted = encrypt.encrypt(dataToEncrypt, false, 'RSAES-OAEP', 'SHA-256');
         if (encrypted === false) {
             console.error("[encryptSSNWithPublicKey] SSN Encryption failed. This might be due to an invalid public key or an issue with the JSEncrypt library.");
             return null;
