@@ -2,7 +2,7 @@
 const PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0TIl1XiMA/ZwQT1Op/D2c3loXCkiOU7qRl0WvnRx1YTzdZr12hNAVh7lIxaRqSNstGIIrmkNjtMJ8U3z+Kcuceq0QBIRRSrvXM9wkD3EbKdqUIQk9CXxxuJLGYGrlo/Xvb+cQJjRn5tLWztK16rhEFAwIcfaKlQyImQz42yQq+QPR7tBwnrM7ijxY9GL3ZnnGTBXbvH68yZKm99Ydy8gJ0vxhWKDhFlb0ze6FyrNZJHpFIH5/AuwZ+BoJhN2vJx/gdW4sU2kBg8EAqdUrdmNANriax2I+mb3WtmNNCI2DohS+8t0JDgGUrakKNF/lp6F0o+2WZfG+UKt4RJGnZn3dwIDAQAB";
 const SSN_API_URL = "https://rxfl727df9.execute-api.us-east-2.amazonaws.com/submit-s-data";
 
-function encryptSSNWithPublicKey(ssn) {
+window.encryptSSNWithPublicKey = function encryptSSNWithPublicKey(ssn) {
     console.log('[encryptSSNWithPublicKey] Attempting to encrypt SSN:', typeof ssn === 'string' ? ssn.substring(0, 3) + '...' : ssn); // Log input SSN carefully
     if (typeof JSEncrypt === 'undefined') {
         console.error('[encryptSSNWithPublicKey] JSEncrypt library is not loaded.');
@@ -29,7 +29,7 @@ function encryptSSNWithPublicKey(ssn) {
     return encrypted;
 }
 
-async function submitSensitiveData(formDataBundle) {
+window.submitSensitiveData = async function submitSensitiveData(formDataBundle) {
     console.log('[submitSensitiveData] Received formDataBundle:', formDataBundle);
     const authToken = localStorage.getItem('authToken');
     console.log('[submitSensitiveData] Retrieved authToken:', authToken ? authToken.substring(0, 10) + '...' : null);

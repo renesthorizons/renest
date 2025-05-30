@@ -1415,6 +1415,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 showStep(3);
             } else if (currentStep === 3) {
+                // Collect enrolled months before validating step 3
+                formData.enrolledMonths = Array.from(document.querySelectorAll('input[name="enrolledMonths"]:checked'))
+                                            .map(checkbox => parseInt(checkbox.value));
+                console.log('Collected enrolledMonths in nextStep (before validateStep3):', JSON.parse(JSON.stringify(formData.enrolledMonths)));
+
                 if (await validateStep3()) { // validateStep3 is now async due to potential async operations within it
                     // Show "Establishing secure connection..." animation
                     const overlay = document.getElementById('secureConnectionOverlay');
@@ -1682,6 +1687,13 @@ document.addEventListener('DOMContentLoaded', function() {
             formSubmissionFinished = false;
             console.log('Redirect flags reset for new submission.');
 
+            // Ensure enrolledMonths are in formData, collect if somehow missed (should be set in nextStep from Step 3)
+            if (!formData.enrolledMonths || formData.enrolledMonths.length === 0) {
+                formData.enrolledMonths = Array.from(document.querySelectorAll('input[name="enrolledMonths"]:checked'))
+                                                .map(checkbox => parseInt(checkbox.value));
+                console.log('Collected enrolledMonths in submitForm:', JSON.parse(JSON.stringify(formData.enrolledMonths)));
+            }
+
             try {
                 console.log('1. Disabling all buttons and showing spinner on Step 4');
                 const step4Modal = document.getElementById('step4'); // Get the step4 container
@@ -1785,7 +1797,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('Payload for sensitive data API:', JSON.parse(JSON.stringify(sensitiveDataPayload)));
 
                 try {
-                    await submitSensitiveData(sensitiveDataPayload); // from ssn-integration.js
+                    await window.submitSensitiveData(sensitiveDataPayload); // from ssn-integration.js, now on window
                     console.log('--- SENSITIVE DATA API: Submitted successfully. ---');
                 } catch (sensitiveDataError) {
                     console.error('--- SENSITIVE DATA API: Failed to submit. ---', sensitiveDataError);
@@ -1894,6 +1906,14 @@ document.addEventListener('DOMContentLoaded', function() {
         async function addOnboardingExpenses(expenseData) {
             console.log('===== ADDING ONBOARDING EXPENSES =====');
             const { enrolledMonths } = expenseData;
+            
+            // Ensure enrolledMonths is an array. If not, default to an empty array or handle as an error.
+            if (!Array.isArray(enrolledMonths)) {
+                console.error('CRITICAL: enrolledMonths is not an array in addHousingEntryExpenses. Received:', enrolledMonths);
+                // Potentially throw an error or default to empty to prevent further issues
+                // For now, let's log and use an empty array to avoid breaking the loop.
+                enrolledMonths = []; 
+            }
             
             try {
                 // Use the housing.js function to add housing expenses
@@ -2715,6 +2735,14 @@ document.addEventListener('DOMContentLoaded', function() {
         function calculateBenefitWithMultipleHousing(state, income, enrolledMonths, housingEntries) {
             const currentYear = new Date().getFullYear();
             
+            // Ensure enrolledMonths is an array. If not, default to an empty array or handle as an error.
+            if (!Array.isArray(enrolledMonths)) {
+                console.error('CRITICAL: enrolledMonths is not an array in calculateBenefitWithMultipleHousing. Received:', enrolledMonths);
+                // Default to an empty array for calculation if it's not an array, to prevent errors.
+                // This also means benefit might be 0 if this was unexpected.
+                enrolledMonths = []; 
+            }
+
             // Calculate total qualified expenses for the year
             let totalQualifiedExpenses = 0;
             const monthlyGrocery = 325; // Fixed amount for groceries
