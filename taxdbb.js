@@ -808,7 +808,6 @@ const state529linkDB = {
                 benefit:"$0"
             }
         };
-        const PUBLIC_KEY="MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0TIl1XiMA/ZwQT1Op/D2c3loXCkiOU7qRl0WvnRx1YTzdZr12hNAVh7lIxaRqSNstGIIrmkNjtMJ8U3z+Kcuceq0QBIRRSrvXM9wkD3EbKdqUIQk9CXxxuJLGYGrlo/Xvb+cQJjRn5tLWztK16rhEFAwIcfaKlQyImQz42yQq+QPR7tBwnrM7ijxY9GL3ZnnGTBXbvH68yZKm99Ydy8gJ0vxhWKDhFlb0ze6FyrNZJHpFIH5/AuwZ+BoJhN2vJx/gdW4sU2kBg8EAqdUrdmNANriax2I+mb3WtmNNCI2DohS+8t0JDgGUrakKNF/lp6F0o+2WZfG+UKt4RJGnZn3dwIDAQAB";
         
 const statePersonalExemptionDB = {
     'NY': {
