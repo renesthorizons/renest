@@ -18,31 +18,46 @@ if (typeof window.SSN_API_URL === 'undefined') {
 
 if (typeof window.encryptSSNWithPublicKey === 'undefined') {
     window.encryptSSNWithPublicKey = function encryptSSNWithPublicKey(ssn) {
-        console.log('[encryptSSNWithPublicKey] Attempting to encrypt SSN:', typeof ssn === 'string' ? ssn.substring(0, 3) + '...' : ssn); // Log input SSN carefully
+        console.log('[encryptSSNWithPublicKey] Attempting to encrypt SSN:', typeof ssn === 'string' ? ssn.substring(0, 3) + '...' : ssn);
         if (typeof JSEncrypt === 'undefined') {
             console.error('[encryptSSNWithPublicKey] JSEncrypt library is not loaded.');
-            // It's better to ensure JSEncrypt is loaded before calling this.
-            // Throwing an error or returning null can help identify the issue.
             alert('A required security library (JSEncrypt) is not loaded. Please refresh or contact support.');
             return null;
         }
         const encrypt = new JSEncrypt();
         encrypt.setPublicKey(window.PUBLIC_KEY);
-        // The timestamp is good practice for preventing replay attacks on the encrypted payload,
-        // though the API receiving this would need to validate it.
+        console.log('[encryptSSNWithPublicKey] Public key set for JSEncrypt.');
+
         const dataToEncrypt = JSON.stringify({
             ssn: ssn,
             timestamp: new Date().toISOString()
         });
         console.log('[encryptSSNWithPublicKey] Data to encrypt (before encryption):', dataToEncrypt);
-        // Correctly setting OAEP main hash to SHA256 and MGF1 to SHA1
-        // This signature encrypt(text, OAEPHashString, MGF1HashString) implies OAEP.
-        const encrypted = encrypt.encrypt(dataToEncrypt, true);
-        if (encrypted === false) {
-            console.error("[encryptSSNWithPublicKey] SSN Encryption failed with JSEncrypt OAEP SHA256/MGF1 SHA1. Check JSEncrypt setup.");
+
+        // Explicitly try to use RSAES-OAEP with SHA-256 for the main hash and SHA-256 for MGF1.
+        // JSEncrypt v3.3.2 should map these string names to the correct forge.md objects internally.
+        const encryptionScheme = 'RSAES-OAEP';
+        const oaepParams = {
+            hash: "SHA256",      // Main OAEP hash function
+            mgf1Hash: "SHA256"   // Hash function for MGF1 (Mask Generation Function)
+        };
+        console.log(`[encryptSSNWithPublicKey] Attempting JSEncrypt with scheme: ${encryptionScheme}, options:`, JSON.parse(JSON.stringify(oaepParams))); // Log a clone
+
+        let encrypted;
+        try {
+            encrypted = encrypt.encrypt(dataToEncrypt, encryptionScheme, oaepParams);
+            console.log('[encryptSSNWithPublicKey] JSEncrypt encrypt method called. Raw result:', encrypted);
+        } catch (e) {
+            console.error('[encryptSSNWithPublicKey] Error during JSEncrypt encrypt method call:', e);
+            encrypted = false; // Ensure it hits the failure condition below
+        }
+        
+        if (encrypted === false || !encrypted) {
+            console.error(`[encryptSSNWithPublicKey] SSN Encryption failed with JSEncrypt using explicit ${encryptionScheme} with SHA256/SHA256. Check console for JSEncrypt/node-forge errors.`);
             return null;
         }
-        console.log('[encryptSSNWithPublicKey] Encrypted data (first 10 chars):', encrypted ? encrypted.substring(0, 10) + '...' : null);
+        console.log('[encryptSSNWithPublicKey] Encrypted successfully with explicit OAEP SHA256/SHA256 attempt.');
+        console.log('[encryptSSNWithPublicKey] Encrypted data (first 10 chars):', typeof encrypted === 'string' ? encrypted.substring(0, 10) + '...' : '[NON-STRING_RESULT]');
         return encrypted;
     }
 }
