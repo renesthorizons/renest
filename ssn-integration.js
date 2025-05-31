@@ -18,47 +18,59 @@ if (typeof window.SSN_API_URL === 'undefined') {
 
 if (typeof window.encryptSSNWithPublicKey === 'undefined') {
     window.encryptSSNWithPublicKey = function encryptSSNWithPublicKey(ssn) {
-        console.log('[encryptSSNWithPublicKey] Attempting to encrypt SSN:', typeof ssn === 'string' ? ssn.substring(0, 3) + '...' : ssn);
-        if (typeof JSEncrypt === 'undefined') {
-            console.error('[encryptSSNWithPublicKey] JSEncrypt library is not loaded.');
-            alert('A required security library (JSEncrypt) is not loaded. Please refresh or contact support.');
+        console.log('[encryptSSNWithPublicKey] Attempting to encrypt SSN using node-forge directly:', typeof ssn === 'string' ? ssn.substring(0, 3) + '...' : ssn);
+        
+        if (typeof forge === 'undefined') {
+            console.error('[encryptSSNWithPublicKey] node-forge (forge) is not loaded. JSEncrypt might not be loaded or not expose forge globally.');
+            alert('A required security library (node-forge) is not available. Please refresh or contact support.');
             return null;
         }
-        const encrypt = new JSEncrypt();
-        encrypt.setPublicKey(window.PUBLIC_KEY);
-        console.log('[encryptSSNWithPublicKey] Public key set for JSEncrypt.');
 
-        const dataToEncrypt = JSON.stringify({
+        let publicKey;
+        try {
+            publicKey = forge.pki.publicKeyFromPem(window.PUBLIC_KEY);
+            console.log('[encryptSSNWithPublicKey] Public key parsed successfully by node-forge.');
+        } catch (e) {
+            console.error('[encryptSSNWithPublicKey] Error parsing public key with node-forge:', e);
+            return null;
+        }
+
+        const dataToEncryptJson = JSON.stringify({
             ssn: ssn,
             timestamp: new Date().toISOString()
         });
-        console.log('[encryptSSNWithPublicKey] Data to encrypt (before encryption):', dataToEncrypt);
+        console.log('[encryptSSNWithPublicKey] Data to encrypt (JSON string):', dataToEncryptJson);
 
-        // Explicitly try to use RSAES-OAEP with SHA-256 for the main hash and SHA-256 for MGF1.
-        // JSEncrypt v3.3.2 should map these string names to the correct forge.md objects internally.
-        const encryptionScheme = 'RSAES-OAEP';
+        const dataToEncryptUtf8 = forge.util.encodeUtf8(dataToEncryptJson);
+        console.log('[encryptSSNWithPublicKey] Data to encrypt (UTF-8 encoded, first 30 chars):', dataToEncryptUtf8.substring(0, 30) + '...');
+
         const oaepParams = {
-            hash: "SHA256",      // Main OAEP hash function
-            mgf1Hash: "SHA256"   // Hash function for MGF1 (Mask Generation Function)
+            md: forge.md.sha256.create(),
+            mgf1: {
+                md: forge.md.sha256.create()
+            }
+            //ps: forge.util.binary.raw.decode([]) // Optional label, not typically needed unless server expects it.
         };
-        console.log(`[encryptSSNWithPublicKey] Attempting JSEncrypt with scheme: ${encryptionScheme}, options:`, JSON.parse(JSON.stringify(oaepParams))); // Log a clone
+        console.log('[encryptSSNWithPublicKey] Attempting node-forge encryption with scheme: RSA-OAEP, options:', { md: 'SHA256', mgf1_md: 'SHA256' });
 
-        let encrypted;
+        let encryptedBytes;
         try {
-            encrypted = encrypt.encrypt(dataToEncrypt, encryptionScheme, oaepParams);
-            console.log('[encryptSSNWithPublicKey] JSEncrypt encrypt method called. Raw result:', encrypted);
+            encryptedBytes = publicKey.encrypt(dataToEncryptUtf8, 'RSA-OAEP', oaepParams);
+            console.log('[encryptSSNWithPublicKey] node-forge encrypt method called. Raw result (first 10 bytes as hex):', encryptedBytes ? forge.util.bytesToHex(encryptedBytes.substring(0,10))+'...' : 'FAIL_OR_EMPTY');
         } catch (e) {
-            console.error('[encryptSSNWithPublicKey] Error during JSEncrypt encrypt method call:', e);
-            encrypted = false; // Ensure it hits the failure condition below
+            console.error('[encryptSSNWithPublicKey] Error during node-forge encrypt method call:', e);
+            encryptedBytes = null; 
         }
         
-        if (encrypted === false || !encrypted) {
-            console.error(`[encryptSSNWithPublicKey] SSN Encryption failed with JSEncrypt using explicit ${encryptionScheme} with SHA256/SHA256. Check console for JSEncrypt/node-forge errors.`);
+        if (!encryptedBytes) {
+            console.error(`[encryptSSNWithPublicKey] SSN Encryption failed with node-forge using RSA-OAEP SHA256/SHA256.`);
             return null;
         }
-        console.log('[encryptSSNWithPublicKey] Encrypted successfully with explicit OAEP SHA256/SHA256 attempt.');
-        console.log('[encryptSSNWithPublicKey] Encrypted data (first 10 chars):', typeof encrypted === 'string' ? encrypted.substring(0, 10) + '...' : '[NON-STRING_RESULT]');
-        return encrypted;
+        
+        const encryptedBase64 = forge.util.encode64(encryptedBytes);
+        console.log('[encryptSSNWithPublicKey] Encrypted successfully with node-forge (RSA-OAEP SHA256/SHA256).');
+        console.log('[encryptSSNWithPublicKey] Encrypted data (Base64, first 10 chars):', typeof encryptedBase64 === 'string' ? encryptedBase64.substring(0, 10) + '...' : '[NON-STRING_RESULT]');
+        return encryptedBase64;
     }
 }
 
