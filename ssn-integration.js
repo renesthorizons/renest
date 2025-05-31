@@ -1,7 +1,7 @@
 // ssn-integration.js
 // Only define if not already defined, to prevent redeclaration errors if script is loaded multiple times.
 if (typeof window.PUBLIC_KEY === 'undefined') {
-    window.PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0TIl1XiMA/ZwQT1Op/D2c3loXCkiOU7qRl0WvnRx1YTzdZr12hNAVh7lIxaRqSNstGIIrmkNjtMJ8U3z+Kcuceq0QBIRRSrvXM9wkD3EbKdqUIQk9CXxxuJLGYGrlo/Xvb+cQJjRn5tLWztK16rhEFAwIcfaKlQyImQz42yQq+QPR7tBwnrM7ijxY9GL3ZnnGTBXbvH68yZKm99Ydy8gJ0vxhWKDhFlb0ze6FyrNZJHpFIH5/AuwZ+BoJhN2vJx/gdW4sU2kBg8EAqdUrdmNANriax2I+mb3WtmNNCI2DohS+8t0JDgGUrakKNF/lp6F0o+2WZfG+UKt4RJGnZn3dwIDAQAB";
+    window.PUBLIC_KEY = "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0PXib41WQcdo3k5L+1Uk\n0CTGcqnGkjZopJhGbwl/LeDHShE7MMwG/0LJmVfF11rF3wnyGlP2/Pimow14ss08\nCovJ3XXUhdNjAbJZ1JY95fUZ/2TTu3PreXePXKnYDmA5+q3nhR3NjJqdypUdf481\nG64w89kxPr6oEk9891PO5I2qYM4SFAPHKpGpMfrMckvcEx/CjZBg962X8qC1zAY6\nSgaQGzx6lQ2w08WHLlwrRRkoXHkqACkT3TeeBexkxTTO+0bx9EIY7cpAU9ImVAJ1\nVeZb4YpwAqzbdpm1SrcWDlVhvsaI73n7PNbOU+LAJiQJe6+Se5HvCZkFJ+ii6iFw\newIDAQAB\n-----END PUBLIC KEY-----";
 }
 
 if (typeof window.SSN_API_URL === 'undefined') {
