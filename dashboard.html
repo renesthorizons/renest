@@ -981,7 +981,7 @@ document.addEventListener('DOMContentLoaded', function() {
                              console.log('Get Money Now is disabled. Current benefit or previous steps not met.');
                              const tempMsg = document.createElement('div');
                              tempMsg.className = 'error-message';
-                             tempMsg.textContent = 'Complete all steps and ensure your benefit is over $200.';
+                             tempMsg.textContent = 'Complete all steps';
                              document.body.appendChild(tempMsg);
                              setTimeout(() => tempMsg.remove(), 3000);
                              return;
@@ -1672,8 +1672,8 @@ document.addEventListener('DOMContentLoaded', function() {
         function tryRedirectToTrackerSummary() {
             console.log('tryRedirectToTrackerSummary called. Flags:', { congratsModalClosed, formSubmissionFinished });
             if (congratsModalClosed && formSubmissionFinished) {
-                console.log('Both flags true. Redirecting to trackersummary.html...');
-                window.location.href = 'trackersummary.html';
+                console.log('Both flags true. Redirecting to dashboard.html...');
+                window.location.href = 'dashboard.html';
             } else {
                 console.log('Redirect condition not met yet.');
             }
@@ -1768,7 +1768,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 localStorage.setItem('state', formData.state);
                 localStorage.setItem('income', formData.income);
                 localStorage.setItem('accountStatus', 'ACTIVE'); // This will be set by profile update
-                localStorage.setItem('progressPercentage', '100'); // Assuming full completion
+                localStorage.setItem('progressPercentage', '75'); // Assuming completion up to "Open 529"
 
                 console.log('4. Getting auth token');
                 const authToken = localStorage.getItem('authToken');
@@ -1823,7 +1823,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     state: formData.state, // Student's school state
                     income: formData.income,
                     monthlyRent: rentForProfile, // From first housing entry
-                    progressPercentage: 100, // Full completion
+                    progressPercentage: 75, // Completion up to "Open 529"
                     totalPotentialBenefit: benefit,
                     accountStatus: 'ACTIVE',  
                     residency_status: formData.residency_status,
