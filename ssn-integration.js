@@ -2,13 +2,13 @@
 // Only define if not already defined, to prevent redeclaration errors if script is loaded multiple times.
 if (typeof window.PUBLIC_KEY === 'undefined') {
     window.PUBLIC_KEY = "-----BEGIN PUBLIC KEY-----\n"
-        + "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0PXib41WQcdo3k5L+1Uk\n"
-        + "0CTGcqnGkjZopJhGbwl/LeDHShE7MMwG/0LJmVfF11rF3wnyGlP2/Pimow14ss08\n"
-        + "CovJ3XXUhdNjAbJZ1JY95fUZ/2TTu3PreXePXKnYDmA5+q3nhR3NjJqdypUdf481\n"
-        + "G64w89kxPr6oEk9891PO5I2qYM4SFAPHKpGpMfrMckvcEx/CjZBg962X8qC1zAY6\n"
-        + "SgaQGzx6lQ2w08WHLlwrRRkoXHkqACkT3TeeBexkxTTO+0bx9EIY7cpAU9ImVAJ1\n"
-        + "VeZb4YpwAqzbdpm1SrcWDlVhvsaI73n7PNbOU+LAJiQJe6+Se5HvCZkFJ+ii6iFw\n"
-        + "ewIDAQAB\n"
+        + "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzfRQ7jRR5l8Dc0Wi5jEc\n"
+        + "xMB08UG/Rgi/r9CcRM3I7AnCuWHG+I1cEpDQWt+rHDamZ/k7serlCNAwzjprmBfU\n"
+        + "RlK/VJMGjgKE/JScIMqCrKWSNwlPck1XS0dUSFGZxNSAuMG7kFN5eXKgYnz7df6M\n"
+        + "3cTK0SkpshuJgBkEENQzDKasNJsLnAeRDdQn1ng0g4qXYTfEeWEf0826fC77if5N\n"
+        + "ItAeFesOrQs0Mg4JZaqt+UO/tgdOnFZ53SPV/cjwlkp6X4EhwY4lExQG4nqyCFDS\n"
+        + "b9MxcB5tGbjmCdULjx5RdEePr6dZKV5O4JUZ2w2NEoFiVoWbUeThAnWT4x281Ge2\n"
+        + "kwIDAQAB\n"
         + "-----END PUBLIC KEY-----";
 }
 
