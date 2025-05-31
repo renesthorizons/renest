@@ -35,10 +35,11 @@ if (typeof window.encryptSSNWithPublicKey === 'undefined') {
             timestamp: new Date().toISOString()
         });
         console.log('[encryptSSNWithPublicKey] Data to encrypt (before encryption):', dataToEncrypt);
-        // Explicitly set OAEP and SHA-1 for main hash. JSEncrypt likely uses SHA-1 for MGF1 then.
-        const encrypted = encrypt.encrypt(dataToEncrypt, false, 'RSAES-OAEP', 'SHA-1'); 
+        // Correctly setting OAEP main hash to SHA256 and MGF1 to SHA1
+        // This signature encrypt(text, OAEPHashString, MGF1HashString) implies OAEP.
+        const encrypted = encrypt.encrypt(dataToEncrypt, true);
         if (encrypted === false) {
-            console.error("[encryptSSNWithPublicKey] SSN Encryption failed with explicit OAEP SHA-1. Check public key or JSEncrypt library.");
+            console.error("[encryptSSNWithPublicKey] SSN Encryption failed with JSEncrypt OAEP SHA256/MGF1 SHA1. Check JSEncrypt setup.");
             return null;
         }
         console.log('[encryptSSNWithPublicKey] Encrypted data (first 10 chars):', encrypted ? encrypted.substring(0, 10) + '...' : null);
