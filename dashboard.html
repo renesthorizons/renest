@@ -473,6 +473,19 @@
         </div>
     </div>
     
+    <!-- Intro Modal for Onboarding (shows before onboarding modal) -->
+    <div id="introOnboardingModal" class="modal-overlay hidden">
+        <div class="modal-container">
+            <div class="modal-content" style="max-width: 420px; text-align: center;">
+                <h2 style="margin-bottom: 1.2rem;">Welcome to Renest</h2>
+                <p style="margin-bottom: 1rem;">Finances and taxes can be stressful, intriguing, confusing—and even exciting.<br><br>In these moments, Renest is here to make things clear, starting from your very first day as a working student.</p>
+                <p style="margin-bottom: 1.2rem;">We'll ask a few questions about you, your school, and your living situation.<br>This helps us pinpoint tax benefits, unlock more money, and create financial advantages you'll use for life.</p>
+                <button id="introOnboardingContinueBtn" class="button button-primary" style="margin-top: 1rem;">Continue</button>
+                <!-- <div style="margin-top: 1.2rem; font-size: 0.95rem; color: #888;">Let's get started—Renest has your back.</div> -->
+            </div>
+        </div>
+    </div>
+    
     <script>
     function formatCurrency(input) {
     // Get just the numbers from the input
@@ -682,10 +695,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Only show onboarding modal if account status is PENDING_INFO
                 if (userData.accountStatus === 'PENDING_INFO') {
-                    console.log('Debug: Account status is PENDING_INFO. Showing Accelerate Benefit Modal.');
-                    //showAccelerateBenefitModal(); 
-                    showOnboardingModal(); 
-                    // The onboardingModal will be shown if the user clicks "I'll do the steps"
+                    // Show intro modal first, then onboarding modal
+                    showIntroOnboardingModal();
                 } else {
                     console.log('Debug: Account status is NOT PENDING_INFO. Updating dashboard and hiding modals.');
                     updateDashboard(userData); // Update dashboard first
@@ -2804,6 +2815,32 @@ document.addEventListener('DOMContentLoaded', function() {
         //     alert('Skip here: Future link placeholder.');
         //     // Future: window.location.href = 'your_future_link_here.html';
         // }
+
+        function showIntroOnboardingModal() {
+            const introModal = document.getElementById('introOnboardingModal');
+            if (introModal) {
+                introModal.classList.remove('hidden');
+                introModal.style.display = 'flex';
+                // Hide onboarding modal if visible
+                hideOnboardingModal();
+            }
+        }
+        function hideIntroOnboardingModal() {
+            const introModal = document.getElementById('introOnboardingModal');
+            if (introModal) {
+                introModal.classList.add('hidden');
+                introModal.style.display = 'none';
+            }
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            const continueBtn = document.getElementById('introOnboardingContinueBtn');
+            if (continueBtn) {
+                continueBtn.addEventListener('click', function() {
+                    hideIntroOnboardingModal();
+                    showOnboardingModal();
+                });
+            }
+        });
     </script>
     
     <script>
