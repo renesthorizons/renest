@@ -899,12 +899,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
             
-            // Final pass for connectors: if a step is completed, its preceding connector should be completed.
-            // If a step is active, its preceding connector should be completed (not active style for line).
-            // The "active" style for a connector can mean the path TO an active step, if we want.
-            // My current logic makes connector before active step also "completed".
-            // Let's simplify: connector is 'completed' if step BEFORE it is completed.
-            // Connector before gold step is 'gold-path' if gold step is enabled.
+            
 
             for (let i = 1; i < steps.length; i++) { // Start from the first connector
                 const currentStepIsGoldAndEnabled = steps[i].id === 'stepGetMoney' && !steps[i].element.classList.contains('disabled');
@@ -930,31 +925,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
 
-            // Populate next steps list with the determined tip
-            // if (steps[3].completed && currentBenefit > 200) { // If last "normal" step is done and benefit eligible
-            //     nextStepsList.innerHTML = `<li>You're ready to claim your benefit! Click "Get My Money Now".</li>`;
-            // } else if (steps[3].completed && currentBenefit <= 200) {
-            //      nextStepsList.innerHTML = `<li>Continue logging expenses to increase your benefit and unlock "Get My Money Now".</li>`;
-            // }
-            // else {
-            //     nextStepsList.innerHTML = `<li>${nextTip}</li>`;
-            // }
+            
 
 
         }
-
-        // Remove this function as the button is gone
-        // function handleTrackerButtonClick(button) {
-        //     if (button.textContent === 'Get Started') {
-        //         window.location.href = 'expensetracking.html';
-        //     } else if (button.textContent === 'Open Your State's 529') {
-        //         window.location.href = 'openrenest529.html';
-        //     } else if (button.textContent === 'Track Expenses') {
-        //         showExpenseTrackingModal();
-        //     } else {
-        //         window.location.href = 'trackersummary.html';
-        //     }
-        // }
 
         // Add click listeners for milestone steps
         document.addEventListener('DOMContentLoaded', function() {
@@ -1618,12 +1592,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Add this function to show the congratulatory modal
-        function showCongratulationsModal(benefitAmount) {
+        function showCongratulationsModal(benefitAmount, qualifiedSpend) {
             console.log('--- CONGRATULATIONS MODAL: Preparing to display ---');
             console.log('Raw benefit amount received:', benefitAmount);
             const formattedAmount = '$' + Math.round(benefitAmount).toLocaleString();
-            console.log('Formatted benefit amount for modal display:', formattedAmount);
-            
+            // Calculate interest: qualifiedSpend * (0.03 * 350/365)
+            const interest = qualifiedSpend * (0.03 * 350 / 365);
+            const formattedQualifiedSpend = '$' + Math.round(qualifiedSpend).toLocaleString();
+            const formattedInterest = '$' + Math.round(interest).toLocaleString();
+            const totalBenefit = benefitAmount + interest;
+            const formattedTotalBenefit = '$' + Math.round(totalBenefit).toLocaleString();
+            console.log('Qualified spend:', qualifiedSpend, 'Interest:', interest, 'Total benefit:', totalBenefit);
             const modalHtml = `
                 <div id="congratsModal" class="modal-overlay" style="display: flex; z-index: 1100;">
                     <div class="modal-container" style="max-width: 500px;">
@@ -1631,10 +1610,16 @@ document.addEventListener('DOMContentLoaded', function() {
                             <button class="close-button" onclick="handleCongratsModalClose()" aria-label="Close">×</button>
                             <h2 style="margin-bottom: 1.5rem; color: var(--primary);">Congratulations!</h2>
                             <p style="margin-bottom: 1rem; font-size: 1.1rem;">
-                                Based on your indicated spending, you qualify for a benefit this year of:
+                                Based on your indicated spending, your <b>qualified spend</b> this year is:
+                            </p>
+                            <p style="margin-bottom: 0.5rem; text-align: center;">
+                                <strong style="color: var(--primary); font-size: 1.5rem; display: block; margin: 0.5rem 0;">${formattedQualifiedSpend}</strong>
+                            </p>
+                             <p style="margin-bottom: 1.5rem; font-size: 1.1rem;">
+                                <b>Your current year total estimated benefit:</b>
                             </p>
                             <p style="margin-bottom: 1.5rem; text-align: center;">
-                                <strong style="color: var(--primary); font-size: 2rem; display: block; margin: 1rem 0;">${formattedAmount}</strong>
+                                <strong style="color: var(--primary); font-size: 2rem; display: block; margin: 1rem 0;">${formattedTotalBenefit}</strong>
                             </p>
                             <p style="margin-bottom: 1.5rem;">
                                 Track your groceries and required class supplies (such as books or a laptop) to unlock even more savings.
@@ -1646,8 +1631,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 </div>
             `;
-
-            // Add modal to body
             document.body.insertAdjacentHTML('beforeend', modalHtml);
         }
 
@@ -1756,12 +1739,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Calculate benefit amount using all housing entries
                 // Ensure formData.state and formData.income are correctly populated before this call
-                const benefit = calculateBenefitWithMultipleHousing(formData.state, formData.income, formData.enrolledMonths, window.housingEntries);
-                console.log('Calculated benefit for congratulations modal:', benefit);
-
-                // Show congratulations modal with the calculated benefit
-                // This can be shown earlier if preferred, but here ensures all data is ready.
-                showCongratulationsModal(benefit);
+                const benefitDetails = calculateBenefitWithMultipleHousing(formData.state, formData.income, formData.enrolledMonths, window.housingEntries, true);
+                console.log('Calculated benefit for congratulations modal:', benefitDetails.benefit, 'Qualified spend:', benefitDetails.qualifiedSpend);
+                showCongratulationsModal(benefitDetails.benefit, benefitDetails.qualifiedSpend);
 
                 // Store some key items in localStorage (consider if all are still needed here)
                 localStorage.setItem('monthlyRent', rentForProfile); // For backward compatibility or other uses
@@ -1824,7 +1804,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     income: formData.income,
                     monthlyRent: rentForProfile, // From first housing entry
                     progressPercentage: 75, // Completion up to "Open 529"
-                    totalPotentialBenefit: benefit,
+                    totalPotentialBenefit: benefitDetails.benefit,
                     accountStatus: 'ACTIVE',  
                     residency_status: formData.residency_status,
                     country_of_origin: formData.country_of_origin,
@@ -2734,67 +2714,41 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Function to calculate benefit with multiple housing entries
-        function calculateBenefitWithMultipleHousing(state, income, enrolledMonths, housingEntries) {
+        function calculateBenefitWithMultipleHousing(state, income, enrolledMonths, housingEntries, returnDetails = false) {
             const currentYear = new Date().getFullYear();
-            
-            // Ensure enrolledMonths is an array. If not, default to an empty array or handle as an error.
             if (!Array.isArray(enrolledMonths)) {
                 console.error('CRITICAL: enrolledMonths is not an array in calculateBenefitWithMultipleHousing. Received:', enrolledMonths);
-                // Default to an empty array for calculation if it's not an array, to prevent errors.
-                // This also means benefit might be 0 if this was unexpected.
-                enrolledMonths = []; 
+                enrolledMonths = [];
             }
-
-            // Calculate total qualified expenses for the year
             let totalQualifiedExpenses = 0;
             const monthlyGrocery = 325; // Fixed amount for groceries
-            
-            // For each month, check if it's enrolled and has housing
             for (let month = 1; month <= 12; month++) {
-                // Skip if not enrolled this month
-                if (!enrolledMonths.includes(month)) {
-                    continue;
-                }
-                
-                // Add grocery expense for enrolled months
+                if (!enrolledMonths.includes(month)) continue;
                 totalQualifiedExpenses += monthlyGrocery;
-                
-                // Find applicable housing entry for this month
                 const applicableEntry = housingEntries.find(entry => {
                     const startDate = new Date(entry.startYear, entry.startMonth - 1, 1);
                     const endDate = new Date(entry.endYear, entry.endMonth - 1, 1);
                     const thisMonth = new Date(currentYear, month - 1, 1);
-                    
                     return thisMonth >= startDate && thisMonth <= endDate;
                 });
-                
-                // If housing applies for this month, add those expenses
                 if (applicableEntry) {
                     totalQualifiedExpenses += applicableEntry.rent;
-                    
                     if (!applicableEntry.utilitiesIncluded) {
                         totalQualifiedExpenses += applicableEntry.utilities;
                     }
-                    
                     totalQualifiedExpenses += applicableEntry.wifi;
                 }
             }
-            
-            // Get state-specific deductions and tax info
             const stateTaxDeduction = statePersonalExemptionDB[state]?.amount || 0;
             const stateDeduction = state529DB[state]?.deduction || 0;
             const taxableStateIncome = Number(income) - stateTaxDeduction;
             const taxRate = calculateStateTaxRate(taxableStateIncome, state);
-            
-            // Calculate deductible amount
             const deductibleAmount = Math.min(
-                totalQualifiedExpenses,  // Actual expenses during enrolled months
-                stateDeduction,  // State's max deduction
-                taxableStateIncome  // Limit to income if it's less than the deduction
+                totalQualifiedExpenses,
+                stateDeduction,
+                taxableStateIncome
             );
             const taxespaid = taxRate * taxableStateIncome;
-            
-            // Calculate benefit based on state rules
             let benefit;
             if (state === 'IN') {
                 const contributionCredit = deductibleAmount * 0.20;
@@ -2809,6 +2763,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             } else {
                 benefit = Math.min(deductibleAmount * taxRate, taxespaid);
+            }
+            if (returnDetails) {
+                return { benefit, qualifiedSpend: totalQualifiedExpenses };
             }
             return benefit;
         }
