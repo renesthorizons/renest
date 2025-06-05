@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-TGZL6PTS');</script>
+    <!-- End Google Tag Manager -->
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - RENEST</title>
+    <link rel="icon" href="blogo2.png" type="image/png">
+    <!-- Add Google Sign-In Script -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    
+    <style>
+        :root {
+            --primary: #4B227A;
+            --accent: #31053c;
+            --text-dark: #1E0A3C;
+            --background: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .left-side {
+            flex: 1;
+            background: #111;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            min-height: 100vh;
+            font-family: 'Merriweather', 'Georgia', 'Times New Roman', serif;
+            padding: 0;
+        }
+
+        #motivationSection {
+            width: 100%;
+            background: #181818;
+            border-radius: 20px;
+            box-shadow: 0 4px 32px rgba(0,0,0,0.22);
+            padding: 3.5rem 2.5rem 3rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+            border: 1.5px solid #d4af37; /* gold accent */
+        }
+
+        #dateDisplay {
+            font-size: 1.15rem;
+            color: #bbb;
+            margin-bottom: 1.2rem;
+            letter-spacing: 0.5px;
+            font-family: 'Merriweather', 'Georgia', 'Times New Roman', serif !important;
+            text-align: left;
+            width: 100%;
+            font-weight: 500;
+        }
+
+        .motivation-counter {
+            font-size: 2.3rem;
+            font-weight: 700;
+            margin-bottom: 1.3rem;
+            letter-spacing: 0.5px;
+            font-family: 'Merriweather', 'Georgia', 'Times New Roman', serif !important;
+            text-align: left;
+            width: 100%;
+        }
+
+        #missedAmount {
+            color: #d4af37;
+            font-weight: 700;
+        }
+
+        #availableAmount {
+            color: #bfc7ce;
+            font-weight: 700;
+        }
+
+        .motivation-message {
+            font-size: 1.25rem;
+            color: #eee;
+            text-align: left;
+            margin-bottom: 0.5rem;
+            line-height: 1.7;
+            font-family: 'Merriweather', 'Georgia', 'Times New Roman', serif !important;
+            width: 100%;
+            font-weight: 400;
+            letter-spacing: 0.01em;
+        }
+
+        .right-side {
+            flex: 1;
+            padding: 3.5rem 2.5rem 3rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 2rem;
+        }
+
+        .auth-title {
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 1rem 0;
+            color: #666;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .divider span {
+            padding: 0 0.5rem;
+        }
+
+        .toggle-auth {
+            text-align: center;
+            margin-top: 1rem;
+            color: #666;
+        }
+
+        .toggle-auth a, .forgot-password {
+            color: var(--primary);
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .forgot-password {
+            display: block;
+            text-align: right;
+            font-size: 0.875rem;
+            margin: -0.5rem 0 1rem;
+        }
+
+        .brand-logo {
+            width: 400px;
+            height: 600px;
+            object-fit: contain;
+            margin-bottom: 0rem;
+        }
+
+        @media (max-width: 1100px) {
+            #motivationSection {
+                max-width: 100%;
+                margin: 0 0.5rem;
+                padding: 2rem 1rem 2rem 1rem;
+            }
+            .right-side {
+                padding: 2rem 1rem 2rem 1rem;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+            .left-side, .right-side {
+                width: 100%;
+                min-height: 220px;
+                padding: 1.2rem 0.5rem;
+                max-width: 100%;
+            }
+            #motivationSection {
+                max-width: 100%;
+                padding: 1.5rem 1rem 1rem 1rem;
+            }
+            .motivation-counter {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .left-side {
+                min-height: 200px;
+            }
+
+            .brand-logo {
+                width: 250px;
+                height: 200px;
+            }
+
+            .auth-container {
+                padding: 0.5rem;
+            }
+        }
+
+        /* Add these new styles */
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+            margin-left: 8px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .btn-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TGZL6PTS"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <div class="container">
+        <div class="left-side" id="motivationSection">
+            <div id="dateDisplay"></div>
+            <div class="motivation-counter">
+                <span id="missedAmount"></span>
+                <span style="color: #888;"> missed so far · </span>
+                <span id="availableAmount"></span>
+                <span style="color: #888;"> still available</span>
+            </div>
+            <div class="motivation-message">
+                We're sorry, but now you can't say you didn't know.<br>
+                Well-funded, successful labs and careers don't happen by accident.<br>
+                Treat your finances like your professor treats grant funding—don't let your own benefits go to waste.
+            </div>
+        </div>
+        <div class="right-side">
+            <div class="auth-container">
+                <!-- Google One Tap Sign In -->
+                <div id="g_id_onload"
+                     data-client_id="1032310890772-gr5i4m4t9fr7m2sgdbta8c5rumh49jlh.apps.googleusercontent.com"
+                     data-context="signin"
+                     data-callback="handleCredentialResponse">
+                </div>
+                <div class="g_id_signin"
+                     data-type="standard"
+                     data-size="large"
+                     data-theme="outline"
+                     data-text="sign_in_with"
+                     data-shape="rectangular"
+                     data-logo_alignment="left">
+                </div>
+
+                <div class="divider">
+                    <span>or</span>
+                </div>
+
+                <form class="auth-form" id="authForm">
+                    <div class="input-group">
+                        <input type="email" class="input-field" placeholder="Email" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" class="input-field" placeholder="Password" required>
+                    </div>
+                    <!-- <a href="#" class="forgot-password">Forgot Password?</a> -->
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <div class="btn-content">
+                            <span>Sign In</span>
+                            <div class="spinner" id="spinner"></div>
+                        </div>
+                    </button>
+                </form>
+                <div class="toggle-auth">
+                    <span id="toggleText">Don't have an account?</span>
+                    <a href="signup529.html">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <script>
+    // API URLs
+    const GOOGLE_AUTH_URL = 'https://i3tylsqn7i.execute-api.us-east-2.amazonaws.com';
+    const EMAIL_AUTH_URL = 'https://ff0u1oofme.execute-api.us-east-2.amazonaws.com/';
+
+    // Handle Google Sign-In response
+    async function handleCredentialResponse(response) {
+        try {
+            const result = await fetch(`${GOOGLE_AUTH_URL}/auth/google`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    credential: response.credential
+                })
+            });
+
+            const data = await result.json();
+            if (data.token) {
+                localStorage.setItem('authToken', data.token);
+                window.location.href = '/dashboard.html';
+            }
+        } catch (error) {
+            console.error('Google authentication error:', error);
+            alert('Google authentication failed. Please try again.');
+        }
+    }
+
+    // Handle email/password form submission
+    document.getElementById('authForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        // console.log('Sign In form submitted.');
+
+        // Show spinner
+        const spinner = document.getElementById('spinner');
+        const submitBtn = document.getElementById('submitBtn');
+        spinner.style.display = 'block';
+        submitBtn.disabled = true;
+
+        let email = document.querySelector('input[type="email"]').value;
+        let password = document.querySelector('input[type="password"]').value;
+
+        // Clean inputs
+        email = email.trim().toLowerCase();
+        password = password.trim();
+
+        // console.log('Signing in with email:', email);
+
+        try {
+            const response = await fetch(`${EMAIL_AUTH_URL}/renestsignin`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+
+            // console.log('Sign-in response status:', response.status);
+
+            const data = await response.json();
+            // console.log('Sign-in response data:', data);
+
+            if (response.ok && data.token) {
+                localStorage.setItem('authToken', data.token);
+                // console.log('Sign in successful. Redirecting to dashboard...');
+                window.location.href = '/dashboard.html';
+            } else {
+                // console.log('Sign in failed:', data.error || 'Invalid credentials');
+                alert(data.error || 'Invalid credentials');
+            }
+        } catch (error) {
+            console.error('Email/password sign-in error:', error);
+            alert('Sign in failed. Please try again.');
+        } finally {
+            // Hide spinner and re-enable button
+            spinner.style.display = 'none';
+            submitBtn.disabled = false;
+        }
+    });
+
+    // Motivation section calculations
+    (function() {
+        const totalAmount = 18000; // $1,500 x 12
+        const apy = 0.04;
+        const ilTaxDeduction = 495;
+        const now = new Date();
+        const startOfYear = new Date(now.getFullYear(), 0, 1);
+        const endOfYear = new Date(now.getFullYear(), 11, 31);
+        const daysElapsed = Math.floor((now - startOfYear) / (1000 * 60 * 60 * 24));
+        const daysInYear = Math.floor((endOfYear - startOfYear) / (1000 * 60 * 60 * 24)) + 1;
+        const daysRemaining = daysInYear - daysElapsed;
+
+        // Calculate missed and available
+        const missed = totalAmount * apy * (daysElapsed / daysInYear);
+        const available = ilTaxDeduction + (totalAmount * apy * (daysRemaining / daysInYear));
+
+        // Format as currency
+        function formatMoney(num) {
+            return '$' + num.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0});
+        }
+
+        // Display date
+        const dateDisplay = document.getElementById('dateDisplay');
+        dateDisplay.textContent = now.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+
+        // Display missed and available
+        document.getElementById('missedAmount').textContent = formatMoney(missed);
+        document.getElementById('availableAmount').textContent = formatMoney(available);
+    })();
+</script>
+</body>
+</html>
