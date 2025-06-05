@@ -70,7 +70,7 @@
         #dateDisplay {
             font-size: 1.15rem;
             color: #bbb;
-            margin-bottom: 1.2rem;
+            margin-bottom: 1.5rem;
             letter-spacing: 0.5px;
             font-family: 'Merriweather', 'Georgia', 'Times New Roman', serif !important;
             text-align: left;
@@ -81,7 +81,7 @@
         .motivation-counter {
             font-size: 2.3rem;
             font-weight: 700;
-            margin-bottom: 1.3rem;
+            margin-bottom: 1.5rem;
             letter-spacing: 0.5px;
             font-family: 'Merriweather', 'Georgia', 'Times New Roman', serif !important;
             text-align: left;
@@ -99,15 +99,12 @@
         }
 
         .motivation-message {
+            font-family: 'Merriweather', 'Georgia', 'Times New Roman', serif !important;
             font-size: 1.25rem;
             color: #eee;
+            margin-bottom: 1.1rem;
+            line-height: 2.1;
             text-align: left;
-            margin-bottom: 0.5rem;
-            line-height: 1.7;
-            font-family: 'Merriweather', 'Georgia', 'Times New Roman', serif !important;
-            width: 100%;
-            font-weight: 400;
-            letter-spacing: 0.01em;
         }
 
         .right-side {
@@ -171,7 +168,7 @@
         }
 
         .btn-primary {
-            background-color: var(--primary);
+            background-color: #3A5AFF;
             color: white;
         }
 
@@ -288,6 +285,37 @@
             align-items: center;
             justify-content: center;
         }
+
+        .pie-chart-container {
+            overflow: visible !important;
+        }
+
+        .pie-title {
+            font-family: 'Inter', 'Segoe UI', 'Roboto', 'Lato', Arial, sans-serif;
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: #eaeaea;
+            text-align: center;
+            margin-bottom: 0.7rem;
+            letter-spacing: 0.01em;
+        }
+        .pie-available {
+            color: #3A5AFF;
+            font-weight: 700;
+        }
+        .pie-missed {
+            color: #888;
+            font-weight: 700;
+        }
+        .funding-date {
+            font-family: 'Merriweather', 'Georgia', 'Times New Roman', serif !important;
+            font-style: italic;
+            color: #bbb;
+            font-size: 1rem;
+            text-align: left;
+            margin-top: -0.3rem;
+            margin-bottom: 0.7rem;
+        }
     </style>
 </head>
 <body>
@@ -298,17 +326,28 @@
 
     <div class="container">
         <div class="left-side" id="motivationSection">
-            <div id="dateDisplay"></div>
-            <div class="motivation-counter">
-                <span id="missedAmount"></span>
-                <span style="color: #888;"> missed so far · </span>
-                <span id="availableAmount"></span>
-                <span style="color: #888;"> still available</span>
+            <div class="motivation-message">
+                <!-- We're sorry, but now you can't say you didn't know.<br> -->
+                Well-funded, successful labs and careers don't happen by accident.<br>
+                Treat your finances like your professor treats grant funding—don't let your own benefits go to waste. <br>
+                <!-- In about 7 minutes, Renest helps you unlock available money and make smarter financial moves—so you can lead your field, not just your finances. -->
+                
+            </div>
+            <div class="motivation-counter" style="display:none;"></div>
+            <div class="pie-title">
+                Example 1: Tax Benefit <span class="pie-available">Available</span> and <span class="pie-missed">Missed</span>
+            </div>
+            <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+                <canvas id="fundingPieChart" width="400" height="400" style="margin-bottom: 0.5rem; width: 280px; height: 280px;"></canvas>
+                <div id="fundingDate" class="funding-date"></div>
             </div>
             <div class="motivation-message">
-                We're sorry, but now you can't say you didn't know.<br>
-                Well-funded, successful labs and careers don't happen by accident.<br>
-                Treat your finances like your professor treats grant funding—don't let your own benefits go to waste.
+                <!-- We're sorry, but now you can't say you didn't know.<br> -->
+                <!-- Well-funded, successful labs and careers don't happen by accident.<br>
+                Treat your finances like your professor treats grant funding—don't let your own benefits go to waste. <br> -->
+                In about 7 minutes, Renest unlocks smarter financial moves—so you can lead your field, not just your finances.
+                In about 7 minutes, Renest unlocks smarter financial moves—so you can focus on your research and graduation.
+                
             </div>
         </div>
         <div class="right-side">
@@ -451,19 +490,86 @@
         // Calculate missed and available
         const missed = totalAmount * apy * (daysElapsed / daysInYear);
         const available = ilTaxDeduction + (totalAmount * apy * (daysRemaining / daysInYear));
+        const totalPossible = ilTaxDeduction + totalAmount * apy;
 
         // Format as currency
         function formatMoney(num) {
             return '$' + num.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0});
         }
 
-        // Display date
-        const dateDisplay = document.getElementById('dateDisplay');
-        dateDisplay.textContent = now.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+        // Set the date below the chart
+        const fundingDate = document.getElementById('fundingDate');
+        const dateStr = now.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+        fundingDate.textContent = `As of ${dateStr}—available benefit decreases daily`;
 
-        // Display missed and available
-        document.getElementById('missedAmount').textContent = formatMoney(missed);
-        document.getElementById('availableAmount').textContent = formatMoney(available);
+        // Draw pie chart (modern, with shadow, gradient, no border)
+        const canvas = document.getElementById('fundingPieChart');
+        if (canvas && canvas.getContext) {
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = 170;
+            const missedAngle = (missed / totalPossible) * 2 * Math.PI;
+            const availableAngle = (available / totalPossible) * 2 * Math.PI;
+
+            // Draw drop shadow
+            ctx.save();
+            ctx.shadowColor = 'rgba(0,0,0,0.18)';
+            ctx.shadowBlur = 24;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            ctx.closePath();
+            ctx.fillStyle = '#222';
+            ctx.fill();
+            ctx.restore();
+
+            // Draw available (main arc) with gradient
+            const gradAvailable = ctx.createRadialGradient(centerX, centerY, radius * 0.5, centerX, centerY, radius);
+            gradAvailable.addColorStop(0, '#388be0');
+            gradAvailable.addColorStop(1, '#3A5AFF');
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.arc(centerX, centerY, radius, -0.5 * Math.PI, -0.5 * Math.PI + availableAngle, false);
+            ctx.closePath();
+            ctx.fillStyle = gradAvailable;
+            ctx.fill();
+
+            // Draw missed (secondary arc) with gradient
+            const gradMissed = ctx.createRadialGradient(centerX, centerY, radius * 0.5, centerX, centerY, radius);
+            gradMissed.addColorStop(0, '#ccc');
+            gradMissed.addColorStop(1, '#888');
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.arc(centerX, centerY, radius, -0.5 * Math.PI + availableAngle, -0.5 * Math.PI + availableAngle + missedAngle, false);
+            ctx.closePath();
+            ctx.fillStyle = gradMissed;
+            ctx.fill();
+
+            // Add available label
+            const availableMidAngle = -0.5 * Math.PI + availableAngle / 2;
+            const availableLabelX = centerX + Math.cos(availableMidAngle) * (radius * 0.6);
+            const availableLabelY = centerY + Math.sin(availableMidAngle) * (radius * 0.6);
+            ctx.font = 'bold 2.2rem Segoe UI, Roboto, Arial, system-ui, sans-serif';
+            ctx.fillStyle = '#fff';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.shadowColor = 'rgba(0,0,0,0.18)';
+            ctx.shadowBlur = 6;
+            ctx.fillText(formatMoney(available), availableLabelX, availableLabelY);
+            ctx.shadowBlur = 0;
+
+            // Add missed label
+            const missedMidAngle = -0.5 * Math.PI + availableAngle + missedAngle / 2;
+            const missedLabelX = centerX + Math.cos(missedMidAngle) * (radius * 0.6);
+            const missedLabelY = centerY + Math.sin(missedMidAngle) * (radius * 0.6);
+            ctx.font = 'bold 2.2rem Segoe UI, Roboto, Arial, system-ui, sans-serif';
+            ctx.fillStyle = '#fff';
+            ctx.shadowColor = 'rgba(0,0,0,0.18)';
+            ctx.shadowBlur = 6;
+            ctx.fillText(formatMoney(missed), missedLabelX, missedLabelY);
+            ctx.shadowBlur = 0;
+        }
     })();
 </script>
 </body>
