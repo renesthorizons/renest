@@ -47,7 +47,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: flex-start;
+            align-items: center;
             color: #fff;
             min-height: 100vh;
             font-family: 'Merriweather', 'Georgia', 'Times New Roman', serif;
@@ -57,17 +57,15 @@
         #motivationSection {
             width: 100%;
             background: #181818;
-            /* border-radius: 20px; */
             box-shadow: 0 4px 32px rgba(0,0,0,0.22);
             padding: 3.5rem 2.5rem 3rem 2.5rem;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
             text-align: left;
-            /* border: 1.5px solid #d4af37; gold accent */
             border: none !important;
             border-radius: 0 !important;
-            padding-left: 0 !important;
+            margin: 0;
         }
 
         #dateDisplay {
@@ -227,7 +225,6 @@
                 padding: 2rem 1rem 2rem 1rem;
                 border: none !important;
                 border-radius: 0 !important;
-                padding-left: 0 !important;
             }
             .right-side {
                 padding: 2rem 1rem 2rem 1rem;
@@ -238,7 +235,14 @@
             .container {
                 flex-direction: column;
             }
-            .left-side, .right-side {
+            .left-side {
+                width: 100%;
+                min-height: 220px;
+                padding: 0 !important;
+                max-width: 100%;
+                align-items: flex-start;
+            }
+            .right-side {
                 width: 100%;
                 min-height: 220px;
                 padding: 1.2rem 0.5rem;
@@ -250,7 +254,7 @@
                 padding: 1.5rem 1rem 1rem 1rem;
                 border: none !important;
                 border-radius: 0 !important;
-                padding-left: 0 !important;
+                margin: 0;
             }
             .motivation-counter {
                 font-size: 1.2rem;
@@ -335,29 +339,24 @@
     <!-- End Google Tag Manager (noscript) -->
 
     <div class="container">
-        <div class="left-side" id="motivationSection">
-            <div class="motivation-message">
-                <!-- We're sorry, but now you can't say you didn't know.<br> -->
-                Well-funded, successful labs and careers don't happen by accident.<br>
-                Treat your finances like your professor treats grant funding—don't let your own benefits go to waste. <br>
-                <!-- In about 7 minutes, Renest helps you unlock available money and make smarter financial moves—so you can lead your field, not just your finances. -->
-                
-            </div>
-            <div class="motivation-counter" style="display:none;"></div>
-            <div class="pie-title">
-                Example 1: Tax Benefit <span class="pie-available">Available</span> and <span class="pie-missed">Missed</span>
-            </div>
-            <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-                <canvas id="fundingPieChart" width="400" height="400" style="margin-bottom: 0.5rem; width: 280px; height: 280px;"></canvas>
-                <div id="fundingDate" class="funding-date"></div>
-            </div>
-            <div class="motivation-message">
-                <!-- We're sorry, but now you can't say you didn't know.<br> -->
-                <!-- Well-funded, successful labs and careers don't happen by accident.<br>
-                Treat your finances like your professor treats grant funding—don't let your own benefits go to waste. <br> -->
-                In about 7 minutes, Renest unlocks smarter financial moves—so you can lead your field, not just your finances.
-                In about 7 minutes, Renest unlocks smarter financial moves—so you can focus on your research and graduation.
-                
+        <div class="left-side">
+            <div id="motivationSection">
+                <div class="motivation-message">
+                    Well-funded, successful labs and careers don't happen by accident.<br>
+                    Treat your finances like your professor treats grant funding—don't let your own benefits go to waste. <br>
+                </div>
+                <div class="motivation-counter" style="display:none;"></div>
+                <div class="pie-title">
+                    Example 1: Tax Benefit <span class="pie-available">Available</span> and <span class="pie-missed">Missed</span>
+                </div>
+                <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+                    <canvas id="fundingPieChart" width="400" height="400" style="margin-bottom: 0.5rem; width: 280px; height: 280px;"></canvas>
+                    <div id="fundingDate" class="funding-date"></div>
+                </div>
+                <div class="motivation-message">
+                    In about 7 minutes, Renest unlocks smarter financial moves—so you can lead your field, not just your finances.
+                    In about 7 minutes, Renest unlocks smarter financial moves—so you can focus on your research and graduation.
+                </div>
             </div>
         </div>
         <div class="right-side">
