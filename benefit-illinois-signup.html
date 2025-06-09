@@ -1,21 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-TGZL6PTS');</script>
-    <!-- End Google Tag Manager -->
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In - RENEST</title>
+    <title>Sign Up - RENEST</title>
     <link rel="icon" href="blogo2.png" type="image/png">
-    <!-- Add Google Sign-In Script -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-    
     <style>
         :root {
             --primary: #4B227A;
@@ -433,6 +422,7 @@
             max-height: none;
             overflow: visible;
         }
+
         .mobile-only-break {
     display: none;
 }
@@ -443,15 +433,14 @@
         height: 0;
     }
 }
+
     </style>
 </head>
 <body>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TGZL6PTS"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-
     <div class="container">
+        
+
+
         <div class="left-side">
             <div id="motivationSection">
                 <div class="motivation-message" style="font-size: 2rem; font-weight: 800; margin-bottom: 1.2rem; font-family: 'Times New Roman', serif !important; color: #3A5AFF;">
@@ -595,131 +584,34 @@
         </div>
         <div class="right-side">
             <div class="auth-container">
-                <!-- Google One Tap Sign In -->
-                <div id="g_id_onload"
-                     data-client_id="1032310890772-gr5i4m4t9fr7m2sgdbta8c5rumh49jlh.apps.googleusercontent.com"
-                     data-context="signin"
-                     data-callback="handleCredentialResponse">
-                </div>
-                <div class="g_id_signin"
-                     data-type="standard"
-                     data-size="large"
-                     data-theme="outline"
-                     data-text="sign_in_with"
-                     data-shape="rectangular"
-                     data-logo_alignment="left">
-                </div>
-
-                <div class="divider">
-                    <span>or</span>
-                </div>
-
-                <form class="auth-form" id="authForm">
+                <h2 class="auth-title">Sign Up</h2>
+                <form class="auth-form" id="signupForm">
                     <div class="input-group">
                         <input type="email" class="input-field" placeholder="Email" required>
                     </div>
                     <div class="input-group">
-                        <input type="password" class="input-field" placeholder="Password" required>
+                        <input type="password" class="input-field" placeholder="Password" id="password" required>
                     </div>
-                    <!-- <a href="#" class="forgot-password">Forgot Password?</a> -->
+                    <div class="input-group">
+                        <input type="password" class="input-field" placeholder="Confirm Password" id="confirmPassword" required>
+                    </div>
                     <button type="submit" class="btn btn-primary" id="submitBtn">
                         <div class="btn-content">
-                            <span>Sign In</span>
+                            <span>Sign Up</span>
                             <div class="spinner" id="spinner"></div>
                         </div>
                     </button>
                 </form>
                 <div class="toggle-auth">
-                    <span id="toggleText">Don't have an account?</span>
-                    <a href="benefit-illinois-signup.html">Sign Up</a>
+                    <span>Already have an account?</span>
+                    <a href="benefit-illinois.html">Sign In</a>
                 </div>
             </div>
         </div>
     </div>
 
-   <script>
-    // API URLs
-    const GOOGLE_AUTH_URL = 'https://i3tylsqn7i.execute-api.us-east-2.amazonaws.com';
-    const EMAIL_AUTH_URL = 'https://ff0u1oofme.execute-api.us-east-2.amazonaws.com/';
-
-    // Handle Google Sign-In response
-    async function handleCredentialResponse(response) {
-        try {
-            const result = await fetch(`${GOOGLE_AUTH_URL}/auth/google`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    credential: response.credential
-                })
-            });
-
-            const data = await result.json();
-            if (data.token) {
-                localStorage.setItem('authToken', data.token);
-                window.location.href = '/dashboard.html';
-            }
-        } catch (error) {
-            console.error('Google authentication error:', error);
-            alert('Google authentication failed. Please try again.');
-        }
-    }
-
-    // Handle email/password form submission
-    document.getElementById('authForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        // console.log('Sign In form submitted.');
-
-        // Show spinner
-        const spinner = document.getElementById('spinner');
-        const submitBtn = document.getElementById('submitBtn');
-        spinner.style.display = 'block';
-        submitBtn.disabled = true;
-
-        let email = document.querySelector('input[type="email"]').value;
-        let password = document.querySelector('input[type="password"]').value;
-
-        // Clean inputs
-        email = email.trim().toLowerCase();
-        password = password.trim();
-
-        // console.log('Signing in with email:', email);
-
-        try {
-            const response = await fetch(`${EMAIL_AUTH_URL}/renestsignin`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email, password })
-            });
-
-            // console.log('Sign-in response status:', response.status);
-
-            const data = await response.json();
-            // console.log('Sign-in response data:', data);
-
-            if (response.ok && data.token) {
-                localStorage.setItem('authToken', data.token);
-                // console.log('Sign in successful. Redirecting to dashboard...');
-                window.location.href = '/dashboard.html';
-            } else {
-                // console.log('Sign in failed:', data.error || 'Invalid credentials');
-                alert(data.error || 'Invalid credentials');
-            }
-        } catch (error) {
-            console.error('Email/password sign-in error:', error);
-            alert('Sign in failed. Please try again.');
-        } finally {
-            // Hide spinner and re-enable button
-            spinner.style.display = 'none';
-            submitBtn.disabled = false;
-        }
-    });
-
-    // Motivation section calculations
-    (function() {
+    <script>
+        (function() {
         const totalAmount = 18000; // $1,500 x 12
         const apy = 0.04;
         const ilTaxDeduction = 495;
@@ -867,6 +759,75 @@
             }, 4000);
         }
     });
-</script>
+        const API_URL = 'https://l3p0kf0zgd.execute-api.us-east-2.amazonaws.com';
+
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Show spinner and disable button
+            const spinner = document.getElementById('spinner');
+            const submitBtn = document.getElementById('submitBtn');
+            spinner.style.display = 'block';
+            submitBtn.disabled = true;
+
+            let email = document.querySelector('input[type="email"]').value;
+            let password = document.getElementById('password').value;
+            let confirmPassword = document.getElementById('confirmPassword').value;
+
+            // Clean the inputs on the client side
+            email = email.trim().toLowerCase();
+            password = password.trim();
+            confirmPassword = confirmPassword.trim();
+
+            // Basic email format validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address.');
+                spinner.style.display = 'none';
+                submitBtn.disabled = false;
+                return;
+            }
+
+            // Password validation
+            const passwordRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{5,}$/;
+            if (!passwordRegex.test(password)) {
+                alert('Password must be at least 5 characters long and contain at least one capital letter, one number, and one special character.');
+                spinner.style.display = 'none';
+                submitBtn.disabled = false;
+                return;
+            }
+
+            // Check if passwords match
+            if (password !== confirmPassword) {
+                alert('Passwords do not match.');
+                spinner.style.display = 'none';
+                submitBtn.disabled = false;
+                return;
+            }
+
+            // Send the signup request to your AWS Lambda function
+            try {
+                const response = await fetch(`${API_URL}/renest-signup`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await response.json();
+                if (data.token) {
+                    localStorage.setItem('authToken', data.token);
+                    window.location.href = '/dashboard.html';
+                } else {
+                    alert(data.error || 'Signup failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Signup error:', error);
+                alert('Signup failed. Please try again.');
+            } finally {
+                // Hide spinner and re-enable button
+                spinner.style.display = 'none';
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
 </body>
 </html>
