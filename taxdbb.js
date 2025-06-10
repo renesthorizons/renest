@@ -1263,6 +1263,19 @@ const statePersonalExemptionDB = {
             }
 
         };
+        const federaltaxratedb = {
+            standardDeduction: 15000,
+            brackets: [
+                { threshold: 11600, rate: 10 },
+                { threshold: 47150, rate: 12 },
+                { threshold: 100525, rate: 22 },
+                { threshold: 191950, rate: 24 },
+                { threshold: 243725, rate: 32 },
+                { threshold: 609350, rate: 35 },
+                { threshold: Infinity, rate: 37 }
+            ],
+            notes: '2024 Federal tax brackets for single filers. Standard deduction is $15,000.'
+        };
         const stateOptions = {
             'AL': 'Alabama',
             'AK': 'Alaska',
