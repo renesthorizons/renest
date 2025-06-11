@@ -18,31 +18,22 @@
     
     <style>
         :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --accent: #f8fafc;
-            --text-primary: #0f172a;
-            --text-secondary: #64748b;
-            --text-muted: #94a3b8;
-            --background: #ffffff;
-            --border: #e2e8f0;
-            --border-light: #f1f5f9;
-            --success: #10b981;
-            --warning: #f59e0b;
+            --primary: #4B227A;
+            --accent: #31053c;
+            --text-dark: #1E0A3C;
+            --background: #FFFFFF;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
         body {
             background-color: var(--background);
             min-height: 100vh;
-            color: var(--text-primary);
-            line-height: 1.6;
         }
 
         .container {
@@ -52,8 +43,9 @@
 
         .left-side {
             flex: 1;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            color: var(--text-primary);
+            background: linear-gradient(135deg, #dbe3ee 0%, #b7c3d8 100%); /* subtle professional blue-gray gradient */
+            color: #23213a;
+            font-family: 'Inter', 'Segoe UI', 'Roboto', Arial, sans-serif;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -65,63 +57,73 @@
         #motivationSection {
             width: 100%;
             background: none;
-            padding: 4rem 3rem;
+            box-shadow: none;
+            padding: 3.5rem 2.5rem 3rem 2.5rem;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
             text-align: left;
+            border: none !important;
+            border-radius: 0 !important;
             margin: 0;
-            max-width: 900px;
         }
 
         #dateDisplay {
-            font-size: 1rem;
-            color: var(--text-muted);
+            font-size: 1.15rem;
+            color: #bbb;
             margin-bottom: 1.5rem;
-            letter-spacing: 0.025em;
+            letter-spacing: 0.5px;
+            font-family: 'Merriweather', 'Georgia', 'Times New Roman', serif !important;
+            text-align: left;
+            width: 100%;
             font-weight: 500;
         }
 
         .motivation-counter {
-            font-size: 2.25rem;
+            font-size: 2.3rem;
             font-weight: 700;
             margin-bottom: 1.5rem;
-            letter-spacing: -0.025em;
-            color: var(--text-primary);
+            letter-spacing: 0.5px;
+            font-family: 'Merriweather', 'Georgia', 'Times New Roman', serif !important;
+            text-align: left;
+            width: 100%;
         }
 
+        /* #missedAmount {
+            color: #d4af37;
+            font-weight: 700;
+        } */
+
         #availableAmount {
-            color: var(--text-secondary);
+            color: #bfc7ce;
             font-weight: 700;
         }
 
         .motivation-message {
-            font-size: 1.125rem;
-            color: var(--text-secondary);
-            margin-bottom: 1.25rem;
+            font-family: 'Inter', 'Segoe UI', 'Roboto', Arial, sans-serif !important;
+            font-size: 1.18rem;
+            color: #2d2346;
+            margin-bottom: 1.1rem;
             line-height: 1.7;
             text-align: left;
         }
 
         .motivation-message.headline, .motivation-message[style*='font-size: 1.5rem'] {
-            font-size: 1.875rem !important;
-            font-weight: 700 !important;
-            color: var(--text-primary) !important;
-            margin-bottom: 2rem !important;
-            line-height: 1.2 !important;
+            font-size: 1.6rem !important;
+            font-weight: 700;
+            color: #4B227A;
+            margin-bottom: 1.2rem;
+            font-family: 'Inter', 'Segoe UI', 'Roboto', Arial, sans-serif !important;
         }
 
         .right-side {
             flex: 1;
-            padding: 4rem 3rem;
+            padding: 3.5rem 2.5rem 3rem 2.5rem;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: var(--background);
-            border-left: 1px solid var(--border-light);
         }
-
         @media (min-width: 900px) {
             .right-side {
                 position: relative;
@@ -137,26 +139,20 @@
         .auth-container {
             width: 100%;
             max-width: 400px;
-            padding: 2.5rem;
-            background: var(--background);
-            border-radius: 16px;
-            border: 1px solid var(--border-light);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 2rem;
         }
 
         .auth-title {
-            font-size: 1.875rem;
-            font-weight: 700;
-            color: var(--text-primary);
+            font-size: 2rem;
+            color: var(--text-dark);
             margin-bottom: 2rem;
             text-align: center;
-            letter-spacing: -0.025em;
         }
 
         .auth-form {
             display: flex;
             flex-direction: column;
-            gap: 1.25rem;
+            gap: 1rem;
         }
 
         .input-group {
@@ -165,83 +161,66 @@
 
         .input-field {
             width: 100%;
-            padding: 0.875rem 1rem;
-            border: 1px solid var(--border);
+            padding: 0.75rem 1rem;
+            border: 1px solid #ddd;
             border-radius: 8px;
             font-size: 1rem;
-            transition: all 0.2s ease;
-            background: var(--background);
-            color: var(--text-primary);
+            transition: border-color 0.3s;
         }
 
         .input-field:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
         .btn {
             width: 100%;
-            padding: 0.875rem 1rem;
+            padding: 0.75rem;
             border: none;
             border-radius: 8px;
             font-size: 1rem;
-            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
-            letter-spacing: 0.025em;
+            transition: opacity 0.3s;
         }
 
         .btn:hover {
-            transform: translateY(-1px);
+            opacity: 0.9;
         }
 
         .btn-primary {
-            background-color: var(--primary);
+            background-color: #3A5AFF;
             color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-dark);
         }
 
         .divider {
             display: flex;
             align-items: center;
             text-align: center;
-            margin: 1.5rem 0;
-            color: var(--text-muted);
-            font-size: 0.875rem;
+            margin: 1rem 0;
+            color: #666;
         }
 
         .divider::before,
         .divider::after {
             content: '';
             flex: 1;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid #ddd;
         }
 
         .divider span {
-            padding: 0 1rem;
-            background: var(--background);
+            padding: 0 0.5rem;
         }
 
         .toggle-auth {
             text-align: center;
-            margin-top: 1.5rem;
-            color: var(--text-secondary);
-            font-size: 0.875rem;
+            margin-top: 1rem;
+            color: #666;
         }
 
         .toggle-auth a, .forgot-password {
             color: var(--primary);
             text-decoration: none;
             cursor: pointer;
-            font-weight: 500;
-        }
-
-        .toggle-auth a:hover, .forgot-password:hover {
-            text-decoration: underline;
         }
         
         .forgot-password {
@@ -260,10 +239,14 @@
 
         @media (max-width: 1100px) {
             #motivationSection {
-                padding: 2rem 1.5rem;
+                max-width: 100%;
+                margin: 0 0.5rem;
+                padding: 2rem 1rem 2rem 1rem;
+                border: none !important;
+                border-radius: 0 !important;
             }
             .right-side {
-                padding: 2rem 1.5rem;
+                padding: 2rem 1rem 2rem 1rem;
             }
         }
 
@@ -272,48 +255,65 @@
                 flex-direction: column;
             }
             .left-side {
-                min-height: auto;
-                padding: 0;
+                width: 100%;
+                min-height: 220px;
+                padding: 0 !important;
+                max-width: 100%;
+                align-items: flex-start;
             }
             .right-side {
-                min-height: auto;
-                padding: 2rem 1rem;
-                border-left: none;
-                border-top: 1px solid var(--border-light);
+                width: 100%;
+                min-height: 220px;
+                padding: 1.2rem 0.5rem;
+                max-width: 100%;
+                align-items: flex-start;
             }
             #motivationSection {
-                padding: 2rem 1rem;
+                max-width: 100%;
+                padding: 1.5rem 1rem 1rem 1rem;
+                border: none !important;
+                border-radius: 0 !important;
+                margin: 0;
             }
             .motivation-counter {
-                font-size: 1.5rem;
-            }
-            .auth-container {
-                padding: 1.5rem;
-                border: none;
-                box-shadow: none;
-                background: transparent;
+                font-size: 1.2rem;
             }
             .expand-section,
             .expand-header {
-                border-radius: 8px;
-                background: var(--background);
-                padding: 0.75rem;
+                border-radius: 12px;
+                background: #f8f9fa;
+                padding: 0.4rem 0.7rem;
                 font-size: 1rem;
             }
             .expand-section.active .expand-content {
-                padding: 1rem 0.5rem;
+                padding: 0.7rem 0.2rem 0.7rem 0.2rem;
             }
             #emailForm input[type="email"], #emailForm .submit-button {
-                font-size: 0.875rem !important;
-                padding: 0.75rem !important;
+                font-size: 0.75rem !important;
+                padding: 0.4rem 0.6rem !important;
                 border-radius: 6px !important;
             }
             .submit-button span, .submit-button .centered-checkmark {
-                font-size: 0.875rem !important;
+                font-size: 0.75rem !important;
             }
+            /* Legend text boxes narrower */
             .pie-legend-box, .pie-legend-box span {
-                font-size: 0.875rem !important;
-                padding: 0 0.5rem !important;
+                font-size: 0.85rem !important;
+                width: max-content !important;
+                min-width: 0 !important;
+                padding: 0 0.2rem !important;
+            }
+            .right-side, .right-center, .right-fixed-center {
+                width: 100% !important;
+                display: flex !important;
+                justify-content: center !important;
+            }
+            .auth-container {
+                margin-left: auto !important;
+                margin-right: auto !important;
+                display: block !important;
+                width: 100% !important;
+                max-width: 400px !important;
             }
             .mobile-only-break {
                 display: block;
@@ -324,24 +324,27 @@
 
         @media (max-width: 380px) {
             .left-side {
-                min-height: auto;
+                min-height: 200px;
             }
+
             .brand-logo {
                 width: 250px;
                 height: 200px;
             }
+
             .auth-container {
-                padding: 1rem;
+                padding: 0.5rem;
             }
         }
 
+        /* Add these new styles */
         .spinner {
             display: none;
             width: 20px;
             height: 20px;
-            border: 2px solid transparent;
+            border: 3px solid #ffffff;
             border-radius: 50%;
-            border-top-color: currentColor;
+            border-top-color: transparent;
             animation: spin 1s linear infinite;
             margin-left: 8px;
         }
@@ -363,118 +366,108 @@
         }
 
         .pie-title {
+            font-family: 'Inter', 'Segoe UI', 'Roboto', 'Lato', Arial, sans-serif !important;
             font-size: 1.25rem;
             font-weight: 600;
-            color: var(--primary);
+            color: #3A5AFF;
             text-align: center;
-            margin-bottom: 1rem;
-            letter-spacing: -0.025em;
+            margin-bottom: 0.7rem;
+            letter-spacing: 0.01em;
         }
-
         .pie-available {
-            color: var(--primary);
+            color: #3A5AFF;
             font-weight: 700;
         }
-
         .pie-missed {
-            color: var(--text-muted);
+            color: #888;
             font-weight: 700;
         }
-
         .funding-date {
+            font-family: 'Merriweather', 'Georgia', 'Times New Roman', serif !important;
             font-style: italic;
-            color: var(--text-secondary);
+            color: black;
             font-size: 1rem;
             text-align: left;
-            margin-top: 0.5rem;
-            margin-bottom: 1rem;
+            margin-top: .4rem;
+            margin-bottom: 0.7rem;
         }
 
         /* Numbered bullets styling */
         #motivationSection > div[style*='margin-bottom: 1.2rem;'] > div {
-            color: var(--text-primary) !important;
-            background: var(--background) !important;
-            border: 1px solid var(--border-light) !important;
-            border-radius: 8px !important;
-            padding: 1rem !important;
-            margin-bottom: 0.75rem !important;
-            font-size: 1rem !important;
-            font-weight: 500 !important;
-            display: flex !important;
-            align-items: flex-start !important;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1) !important;
+            font-family: 'Inter', 'Segoe UI', 'Roboto', Arial, sans-serif !important;
+            color: #4B227A;
+            background: #f0edfa;
+            border-radius: 8px;
+            padding: 0.4rem 1rem;
+            margin-bottom: 0.5rem;
+            font-size: 1.08rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
         }
-
         #motivationSection > div[style*='margin-bottom: 1.2rem;'] > div > span {
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            width: 28px !important;
-            height: 28px !important;
-            border-radius: 50% !important;
-            background: var(--primary) !important;
-            color: white !important;
-            margin-right: 1rem !important;
-            font-size: 0.875rem !important;
-            flex-shrink: 0 !important;
-            font-weight: 600 !important;
+            font-family: 'Inter', 'Segoe UI', 'Roboto', Arial, sans-serif !important;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #4B227A;
+            color: white;
+            margin-right: 8px;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            min-width: 24px;
+            min-height: 24px;
         }
 
         .expand-section {
-            border: 1px solid var(--border-light);
+            border: 1px solid rgba(75, 34, 122, 0.1);
             border-radius: 12px;
             overflow: hidden;
-            margin-bottom: 1.5rem;
-            background: var(--background);
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.2rem;
+            background: #f8f9fa;
+            padding: 0.2rem 0.2rem;
         }
-
         .expand-header {
-            background: var(--background);
-            padding: 1rem 1.25rem;
+            background: #f8f9fa;
+            padding: 0.7rem 1rem;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-weight: 600;
-            color: var(--primary);
-            font-size: 1.125rem;
-            transition: background 0.2s;
-            border: none;
-        }
-
-        .expand-header:hover {
-            background: var(--accent);
-        }
-
-        .expand-toggle {
+            font-weight: 700;
+            color: #3A5AFF;
             font-size: 1.25rem;
-            transition: transform 0.3s;
-            color: var(--text-muted);
+            transition: background 0.3s;
+            border-radius: 12px;
         }
-
+        .expand-header:hover {
+            background: #e6e9f3;
+        }
+        .expand-toggle {
+            font-size: 1.5rem;
+            transition: transform 0.3s;
+        }
         .expand-section.active .expand-toggle {
             transform: rotate(45deg);
         }
-
         .expand-content {
             padding: 0;
             max-height: 0;
             overflow: hidden;
             transition: all 0.3s ease;
-            background: var(--background);
+            background: white;
         }
-
         .expand-section.active .expand-content {
-            padding: 1rem 1.25rem;
+            padding: 1rem 0.5rem 1rem 0.5rem;
             max-height: none;
             overflow: visible;
         }
-
         .mobile-only-break {
             display: none;
         }
-
         @media (min-width: 900px) {
             .right-side {
                 display: block;
@@ -489,7 +482,6 @@
                 justify-content: center;
                 height: 100vh;
                 width: 100%;
-                padding: 2rem;
             }
             .auth-container {
                 position: static !important;
@@ -499,7 +491,6 @@
                 margin: 0 auto;
             }
         }
-
         .founder-modal {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -507,392 +498,111 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(4px);
         }
-
         .founder-modal-overlay {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(15, 23, 42, 0.75);
+            background: rgba(44, 34, 66, 0.45);
             z-index: 1;
         }
-
         .founder-modal-content {
             position: relative;
             z-index: 2;
-            background: var(--background);
+            background: #fff;
             border-radius: 16px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            padding: 2rem 2.5rem;
-            max-width: 450px;
+            box-shadow: 0 8px 32px rgba(44,34,66,0.18);
+            padding: 2rem 2.5rem 1.5rem 2.5rem;
+            max-width: 350px;
             width: 90vw;
             text-align: center;
-            animation: founderModalIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid var(--border-light);
+            animation: founderModalIn 0.2s cubic-bezier(.4,1.6,.6,1) 1;
         }
-
         .founder-modal-close {
             position: absolute;
-            top: 1rem;
-            right: 1rem;
+            top: 0.7rem;
+            right: 1.1rem;
             background: none;
             border: none;
-            font-size: 1.5rem;
-            color: var(--text-muted);
+            font-size: 2rem;
+            color: #4B227A;
             cursor: pointer;
             z-index: 3;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: all 0.2s;
         }
-
-        .founder-modal-close:hover {
-            background: var(--border-light);
-            color: var(--text-primary);
-        }
-
         @keyframes founderModalIn {
-            from { 
-                transform: translateY(20px) scale(0.95); 
-                opacity: 0; 
-            }
-            to { 
-                transform: none; 
-                opacity: 1; 
-            }
+            from { transform: translateY(40px) scale(0.98); opacity: 0; }
+            to { transform: none; opacity: 1; }
         }
-
-        /* Email form styling */
+        /* Remind Me Email Form - Compact Desktop Style */
         #emailForm {
             display: flex;
-            gap: 0.75rem;
+            gap: 0.5rem;
             width: 100%;
             align-items: center;
         }
-
         #emailInput {
             flex: 1;
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 1rem;
+            padding: 0.45rem 0.7rem;
+            border: 1px solid #ddd;
+            border-radius: 7px;
+            font-size: 0.98rem;
             min-width: 0;
-            transition: all 0.2s;
         }
-
-        #emailInput:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
         .submit-button {
-            padding: 0.75rem 1.5rem;
-            background: var(--primary);
+            padding: 0.45rem 1.1rem;
+            background: #4B227A;
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 1rem;
+            border-radius: 7px;
+            font-size: 0.98rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: background 0.2s;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            white-space: nowrap;
         }
-
-        .submit-button:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
+        .submit-button span, .submit-button .centered-checkmark {
+            font-size: 0.98rem;
         }
-
+        @media (max-width: 900px) {
+            #emailInput, .submit-button {
+                font-size: 0.85rem !important;
+                padding: 0.4rem 0.6rem !important;
+                border-radius: 6px !important;
+            }
+            .submit-button span, .submit-button .centered-checkmark {
+                font-size: 0.85rem !important;
+            }
+        }
         .review-card {
-            background: var(--background);
-            border: 1px solid var(--border-light);
+            background: linear-gradient(145deg, #ffffff, #f0f2f5);
             border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
             position: relative;
             width: 100%;
             display: block;
             opacity: 1;
             transition: opacity 0.7s ease-in-out;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-            min-height: 120px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            min-height: 150px;
             box-sizing: border-box;
         }
-
         @media (max-width: 900px) {
             .review-card {
-                min-height: 100px;
-                padding: 1rem;
+                min-height: 120px;
             }
         }
-
-        /* Hide number input spinners */
+        /* Hide number input spinners for Chrome, Safari, Edge, Opera */
         input[type="number"]::-webkit-outer-spin-button,
         input[type="number"]::-webkit-inner-spin-button {
             -webkit-appearance: none;
             margin: 0;
         }
 
+        /* Hide number input spinners for Firefox */
         input[type="number"] {
             -moz-appearance: textfield;
-        }
-
-        /* Improved contact section */
-        .contact-us-box {
-            background: var(--background) !important;
-            border: 1px solid var(--border-light) !important;
-            border-radius: 12px !important;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1) !important;
-            padding: 1.5rem !important;
-            margin-top: 2rem !important;
-        }
-
-        .contact-us-box strong {
-            color: var(--text-primary);
-            font-weight: 600;
-        }
-
-        .contact-us-box a {
-            color: var(--primary) !important;
-            text-decoration: none !important;
-            font-weight: 500;
-        }
-
-        .contact-us-box a:hover {
-            text-decoration: underline !important;
-        }
-
-        /* Improved refund chart */
-        #refundChartContainer {
-            background: var(--background) !important;
-            border: 1px solid var(--border-light) !important;
-            border-radius: 12px !important;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1) !important;
-            padding: 1.5rem !important;
-            margin: 1rem auto !important;
-        }
-
-        /* Improved inline editing elements */
-        #inlineState, #inlineIncome {
-            background: var(--accent) !important;
-            color: var(--primary) !important;
-            border: 1px solid var(--border) !important;
-            padding: 0.25rem 0.75rem !important;
-            border-radius: 6px !important;
-            font-weight: 600 !important;
-            transition: all 0.2s !important;
-        }
-
-        #inlineState:hover, #inlineIncome:hover {
-            background: var(--border-light) !important;
-        }
-
-        /* Google Sign-In button styling */
-        .g_id_signin {
-            margin-bottom: 1rem;
-        }
-
-        /* Improved headline styling */
-        .motivation-message[style*="font-size: 2rem"] {
-            color: var(--text-primary) !important;
-            font-weight: 800 !important;
-            margin-bottom: 2rem !important;
-        }
-
-        .motivation-message[style*="font-size: 2rem"] hr {
-            background: var(--primary) !important;
-            border: none !important;
-            height: 3px !important;
-            margin-top: 1rem !important;
-            border-radius: 2px !important;
-        }
-
-        /* Improved feature boxes */
-        div[style*="background: #f0f2f5"] {
-            background: var(--background) !important;
-            border: 1px solid var(--border-light) !important;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1) !important;
-        }
-
-        .pie-title {
-            color: var(--primary) !important;
-        }
-
-        /* Hero section styling */
-        .hero-headline {
-            margin-bottom: 2rem;
-        }
-
-        .hero-headline h1 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--text-primary);
-            line-height: 1.2;
-            margin: 0;
-            position: relative;
-            padding-bottom: 1rem;
-        }
-
-        .hero-headline h1::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: var(--primary);
-            border-radius: 2px;
-        }
-
-        .hero-subtitle {
-            font-size: 1.25rem;
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            font-weight: 500;
-            line-height: 1.6;
-        }
-
-        @media (max-width: 900px) {
-            .hero-headline h1 {
-                font-size: 1.875rem;
-            }
-            
-            .hero-subtitle {
-                font-size: 1.125rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero-headline h1 {
-                font-size: 1.5rem;
-            }
-        }
-
-        /* Benefits list styling */
-        .benefits-list {
-            margin-bottom: 2rem;
-        }
-
-        .benefit-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            padding: 1rem;
-            background: var(--background);
-            border: 1px solid var(--border-light);
-            border-radius: 8px;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-            font-size: 1rem;
-            font-weight: 500;
-            color: var(--text-primary);
-            line-height: 1.6;
-        }
-
-        .benefit-number {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: var(--primary);
-            color: white;
-            font-size: 0.875rem;
-            font-weight: 600;
-            flex-shrink: 0;
-        }
-
-        /* Student calculator header */
-        .student-calculator-header {
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            color: var(--text-primary);
-            text-align: center;
-            width: 100%;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            font-size: 1.25rem;
-            line-height: 1.6;
-        }
-
-        @media (max-width: 900px) {
-            .student-calculator-header {
-                font-size: 1.125rem;
-            }
-        }
-
-        /* Founder introduction section */
-        .founder-intro {
-            font-size: 1.125rem;
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-
-        .founder-link {
-            color: var(--primary);
-            text-decoration: underline;
-            cursor: pointer;
-            font-weight: 600;
-            transition: color 0.2s ease;
-        }
-
-        .founder-link:hover {
-            color: var(--primary-dark);
-        }
-
-        /* CTA box styling */
-        .cta-box {
-            background: var(--background);
-            border: 1px solid var(--border-light);
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
-            margin: 2rem auto;
-            max-width: 800px;
-        }
-
-        .cta-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--primary);
-            text-align: center;
-            margin-bottom: 1.5rem;
-            line-height: 1.4;
-        }
-
-        .cta-content {
-            font-size: 1.125rem;
-            color: var(--text-secondary);
-            line-height: 1.6;
-            margin-bottom: 0;
-        }
-
-        .link-underline {
-            color: var(--primary);
-            text-decoration: underline;
-            cursor: pointer;
-            font-weight: 600;
-            transition: color 0.2s ease;
-        }
-
-        .link-underline:hover {
-            color: var(--primary-dark);
-        }
-
-        .highlight-text {
-            color: var(--primary);
-            font-weight: 700;
         }
     </style>
 </head>
@@ -905,10 +615,11 @@
     <div class="container">
         <div class="left-side">
             <div id="motivationSection">
-                <div class="hero-headline">
-                    <h1>Taxes for Students,<span class="mobile-only-break"></span> Done Better</h1>
+                <div class="motivation-message" style="font-size: 2rem; font-weight: 800; margin-bottom: 1.2rem; font-family: 'Times New Roman', serif !important; color: #000071;">
+                    Taxes for Students,<span class="mobile-only-break"></span> Done Better
+                    <hr style="border: none; height: 2px; background: #000071; margin-top: 0rem; width: 100%;">
                 </div>
-                <div class="hero-subtitle">
+                <div style="font-size: 1.2rem; margin-bottom: 1.2rem; color: #4B227A; font-weight: 500;">
                     Renest is a tax preparation service that focuses on saving students money on taxes year-round, not just during tax season.
                 </div>
                 <!-- Reviews Section (now under headline) -->
@@ -951,24 +662,16 @@
                     </div>
                 </div>
                 
-                <div class="benefits-list">
-                    <div class="benefit-item">
-                        <span class="benefit-number">1</span>
-                        As a student you qualify for specific tax benefits related to your education
-                    </div>
-                    <div class="benefit-item">
-                        <span class="benefit-number">2</span>
-                        Mass-market tax services are focused on tax season only, but by then it's too late for students to qualify for these benefits
-                    </div>
-                    <div class="benefit-item">
-                        <span class="benefit-number">3</span>
-                        Renest is solely focused on students' taxes all year long. Invest 6 minutes now and we can unlock hundreds of dollars more back on your taxes!
-                    </div>
+                <div style="margin-bottom: 1.2rem;">
+                    <!-- <div style="font-size: 1.1rem; margin-bottom: 0.6rem; font-weight: 500;"><span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: #4B227A; color: white; margin-right: 8px; font-size: 0.9rem;">1</span>You are a student and you file taxes</div> -->
+                    <div style="font-size: 1.1rem; margin-bottom: 0.6rem; font-weight: 500;"><span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: #4B227A; color: white; margin-right: 8px; font-size: 0.9rem;">1</span>As a student you qualify for specific tax benefits related to your education</div>
+                    <div style="font-size: 1.1rem; margin-bottom: 0.6rem; font-weight: 500;"><span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: #4B227A; color: white; margin-right: 8px; font-size: 0.9rem;">2</span>Mass-market tax services are focused on tax season only, but by then it's too late for students to qualify for these benefits</div>
+                    <div style="font-size: 1.1rem; margin-bottom: 0.6rem; font-weight: 500;"><span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: #4B227A; color: white; margin-right: 8px; font-size: 0.9rem;">3</span>Renest is solely focused on students' taxes all year long. Invest 6 minutes now and we can unlock hundreds of dollars more back on your taxes!</div>
                 </div>
 
                 
-                <div class="student-calculator-header">
-                  Student in <span id="inlineState">Illinois <span id="stateArrow">▼</span></span> making $<span id="inlineIncome">25</span>k per year
+                <div id="studentHeader" style="font-weight: 600; margin-bottom: 1.2rem; color: #333; text-align: center; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; font-size: 1.4rem; line-height: 1.8;">
+                  Student in <span id="inlineState" style="text-decoration: none; cursor: pointer; color: #3A5AFF; background: #F0F4FF; padding: 0.1rem 0.4rem; border-radius: 6px; transition: all 0.2s ease; display: inline-flex; align-items: center;">Illinois <span id="stateArrow" style="font-size: 0.45rem; margin-left: 0.3em; color: #3A5AFF;">▼</span></span> making $<span id="inlineIncome" style="text-decoration: none; cursor: pointer; color: #3A5AFF; background: #F0F4FF; padding: 0.1rem 0.4rem; border-radius: 6px; transition: all 0.2s ease;">25</span>k per year
                 </div>
                 <div id="refundChartContainer" style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin: 0 auto; max-width: 600px;">
                     <!-- Chart will be rendered here by JS -->
@@ -978,16 +681,16 @@
                 </div>
 
 
-                <div class="founder-intro">
-                    Founded by <span class="founder-link" data-founder="thomas">Thomas</span>, a former PhD student, and <span class="founder-link" data-founder="mo">Mo</span>, a former Wall Street professional, Renest's goal is to bring tax sophistication from boardrooms to classrooms, so students can do more with more.
+                <div class="motivation-message" style="margin-bottom: 1.2rem;">
+                    Founded by <span class="founder-link" data-founder="thomas" style="text-decoration: underline; color: #4B227A; cursor: pointer;">Thomas</span>, a former PhD student, and <span class="founder-link" data-founder="mo" style="text-decoration: underline; color: #4B227A; cursor: pointer;">Mo</span>, a former Wall Street professional, Renest's goal is to bring tax sophistication from boardrooms to classrooms, so students can do more with more.
                 </div>
                 
-                <div class="cta-box">
-                    <div class="cta-title">
+                    <div style="background: #f0f2f5; border-radius: 14px; box-shadow: 0 4px 20px rgba(60,60,100,0.25); padding: 1.2rem 1.2rem 0.7rem 1.2rem; margin: 1.2rem auto 1.2rem auto; max-width: 800px;">
+                    <div class="pie-title" style="margin-bottom: 0.7rem;color: #3A5AFF; font-weight: 700;">
                         The earlier you start, the more you get back on your taxes
                     </div>
-                    <div class="cta-content">
-                       To qualify for these benefits the <span id="howItWorksLink" class="link-underline">IRS requires</span> you to prepare documentation during the year—<span class="highlight-text">not just when you file</span>. We've made this simple: sign up and our intake form helps us identify and secure your maximum tax benefit. Most people take less than 6 minutes, and there is no cost unless you decide to use our service!
+                    <div class="motivation-message" style="margin-bottom: 1.2rem;">
+                       To qualify for these benefits the <span id="howItWorksLink" style="text-decoration: underline; color: #4B227A; cursor: pointer;"> IRS requires</span> you to prepare documentation during the year—<span style="color: #3A5AFF; font-weight: 700;">not just when you file</span>. We've made this simple: sign up and our intake form helps us identify and secure your maximum tax benefit. Most people take less than 6 minutes, and there is no cost unless you decide to use our service!
                     </div>
                 </div>
             
