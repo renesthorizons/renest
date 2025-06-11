@@ -1017,6 +1017,7 @@
         const statePersonalExemption = statePersonalExemptionDB[state]?.amount || 0;
         const stateTaxable = Math.max(0, income - statePersonalExemption);
         console.log('State Deduction:', stateDeduction, 'State Personal Exemption:', statePersonalExemption, 'State Taxable:', stateTaxable);
+        
         function calcStateTaxOwed(income, state) {
             if (income <= 0) return 0;
             const stateTaxInfo = stateTaxDB[state];
@@ -1038,14 +1039,40 @@
             }
             return totalTax;
         }
-        let renestStateTaxable = Math.max(0, stateTaxable - Math.min(qualifiedExpenses, stateDeduction, stateTaxable));
-        let renestStateTaxOwed = calcStateTaxOwed(renestStateTaxable, state);
-        let otherStateTaxOwed = calcStateTaxOwed(stateTaxable, state);
+
+        const otherStateTaxOwed = calcStateTaxOwed(stateTaxable, state);
         // State withholding is always based on the non-Renest (no 529 deduction) tax owed
         const stateWithheld = otherStateTaxOwed * 1.10;
-        const renestStateRefund = stateWithheld - renestStateTaxOwed;
         const otherStateRefund = stateWithheld - otherStateTaxOwed;
-        console.log('Renest State: Taxable:', renestStateTaxable, 'Tax Owed:', renestStateTaxOwed, 'Withheld:', stateWithheld, 'Refund:', renestStateRefund);
+
+        let renestStateRefund;
+        const deductibleAmount = Math.min(qualifiedExpenses, stateDeduction, stateTaxable);
+
+        // Special handling for credit states (IN, OR, MN) vs. deduction states
+        if (state === 'IN') {
+            const contributionCredit = deductibleAmount * 0.20;
+            const benefit = Math.min(contributionCredit, 1500, otherStateTaxOwed);
+            const renestStateTaxOwed = otherStateTaxOwed - benefit;
+            renestStateRefund = stateWithheld - renestStateTaxOwed;
+        } else if (state === 'OR') {
+            const benefit = Math.min(180, otherStateTaxOwed);
+            const renestStateTaxOwed = otherStateTaxOwed - benefit;
+            renestStateRefund = stateWithheld - renestStateTaxOwed;
+        } else if (state === 'MN') {
+            let benefit = 0;
+            if (income < 88810) {
+                benefit = Math.min(500, otherStateTaxOwed, 0.5 * qualifiedExpenses);
+            }
+            const renestStateTaxOwed = otherStateTaxOwed - benefit;
+            renestStateRefund = stateWithheld - renestStateTaxOwed;
+        } else {
+            // Standard deduction logic for all other states
+            const renestStateTaxable = Math.max(0, stateTaxable - deductibleAmount);
+            const renestStateTaxOwed = calcStateTaxOwed(renestStateTaxable, state);
+            renestStateRefund = stateWithheld - renestStateTaxOwed;
+            console.log('Renest State (Deduction): Taxable:', renestStateTaxable, 'Tax Owed:', renestStateTaxOwed, 'Refund:', renestStateRefund);
+        }
+
         console.log('Other State: Taxable:', stateTaxable, 'Tax Owed:', otherStateTaxOwed, 'Withheld:', stateWithheld, 'Refund:', otherStateRefund);
         let renestTotal = renestStateRefund + fedRefund + interestBenefit;
         let otherTotal = otherStateRefund + fedRefund;
