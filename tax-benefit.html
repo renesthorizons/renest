@@ -46,13 +46,15 @@
         }
 
         .container {
-            display: flex;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
         }
 
-        .left-side {
-            flex: 1;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        .main-content {
+            width: 100%;
             color: var(--text-primary);
             display: flex;
             flex-direction: column;
@@ -111,27 +113,78 @@
             line-height: 1.2 !important;
         }
 
-        .right-side {
-            flex: 1;
-            padding: 4rem 3rem;
+        .get-started-section {
+            width: 100%;
+            padding: 2rem 3rem 4rem 3rem;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: var(--background);
-            border-left: 1px solid var(--border-light);
         }
 
-        @media (min-width: 900px) {
-            .right-side {
-                position: relative;
-            }
-            .auth-container {
-                position: sticky;
-                top: 50%;
-                transform: translateY(-50%);
-                z-index: 2;
-            }
+        .get-started-btn {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .get-started-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 12px -1px rgba(0, 0, 0, 0.15);
+        }
+
+        .auth-section {
+            width: 100%;
+            padding: 4rem 3rem;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+        }
+
+        .auth-section.active {
+            display: flex;
+        }
+
+        .content-section {
+            transition: all 0.3s ease;
+        }
+
+        .content-section.hidden {
+            display: none;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-button:hover {
+            background: var(--accent);
+            color: var(--text-primary);
         }
 
         .auth-container {
@@ -262,24 +315,22 @@
             #motivationSection {
                 padding: 2rem 1.5rem;
             }
-            .right-side {
+            .get-started-section {
+                padding: 2rem 1.5rem 4rem 1.5rem;
+            }
+            .auth-section {
                 padding: 2rem 1.5rem;
+            }
+            .back-button {
+                top: 1rem;
+                left: 1rem;
             }
         }
 
         @media (max-width: 900px) {
-            .container {
-                flex-direction: column;
-            }
-            .left-side {
+            .main-content {
                 min-height: auto;
                 padding: 0;
-            }
-            .right-side {
-                min-height: auto;
-                padding: 2rem 1rem;
-                border-left: none;
-                border-top: 1px solid var(--border-light);
             }
             #motivationSection {
                 padding: 2rem 1rem;
@@ -287,11 +338,23 @@
             .motivation-counter {
                 font-size: 1.5rem;
             }
+            .get-started-section {
+                padding: 2rem 1rem 4rem 1rem;
+            }
+            .auth-section {
+                padding: 2rem 1rem;
+            }
             .auth-container {
                 padding: 1.5rem;
                 border: none;
                 box-shadow: none;
                 background: transparent;
+            }
+            .back-button {
+                top: 0.5rem;
+                left: 0.5rem;
+                padding: 0.375rem 0.75rem;
+                font-size: 0.8rem;
             }
             .expand-section,
             .expand-header {
@@ -323,12 +386,18 @@
         }
 
         @media (max-width: 380px) {
-            .left-side {
+            .main-content {
                 min-height: auto;
             }
             .brand-logo {
                 width: 250px;
                 height: 200px;
+            }
+            .get-started-section {
+                padding: 1rem 1rem 3rem 1rem;
+            }
+            .auth-section {
+                padding: 1rem;
             }
             .auth-container {
                 padding: 1rem;
@@ -475,30 +544,7 @@
             display: none;
         }
 
-        @media (min-width: 900px) {
-            .right-side {
-                display: block;
-                height: 100vh;
-                position: relative;
-                padding: 0;
-            }
-            .right-center {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                height: 100vh;
-                width: 100%;
-                padding: 2rem;
-            }
-            .auth-container {
-                position: static !important;
-                top: auto !important;
-                transform: none !important;
-                z-index: auto !important;
-                margin: 0 auto;
-            }
-        }
+
 
         .founder-modal {
             position: fixed;
@@ -623,14 +669,57 @@
             opacity: 1;
             transition: opacity 0.7s ease-in-out;
             box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-            min-height: 120px;
+            height: 180px;
             box-sizing: border-box;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .review-card .review-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .review-card .review-header {
+            flex-shrink: 0;
+            margin-bottom: 0.5rem;
+        }
+
+        .review-card .review-text {
+            flex: 1;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            line-height: 1.4;
+            font-style: italic;
+            color: #2c3e50;
         }
 
         @media (max-width: 900px) {
             .review-card {
-                min-height: 100px;
+                height: 160px;
                 padding: 1rem;
+            }
+            
+            .review-card .review-text {
+                -webkit-line-clamp: 3;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .review-card {
+                height: 140px;
+                padding: 0.75rem;
+            }
+            
+            .review-card .review-text {
+                -webkit-line-clamp: 3;
+                font-size: 0.85rem;
             }
         }
 
@@ -903,8 +992,9 @@
     <!-- End Google Tag Manager (noscript) -->
 
     <div class="container">
-        <div class="left-side">
-            <div id="motivationSection">
+        <div class="main-content">
+            <div class="content-section" id="contentSection">
+                <div id="motivationSection">
                 <div class="hero-headline">
                     <h1>Taxes for Students,<span class="mobile-only-break"></span> Done Better</h1>
                 </div>
@@ -913,41 +1003,49 @@
                 </div>
                 <!-- Reviews Section (now under headline) -->
                 <div class="reviews-container-wrapper" style="width: 100%; max-width: 800px; margin: 0.5rem 0 2rem 0; position: relative; min-height: 0;">
-                    <div class="review-card" style="background: linear-gradient(145deg, #ffffff, #f0f2f5); border-radius: 12px; padding: 1rem; margin-bottom: 0.75rem; position: relative; width: 100%; opacity: 0; transition: opacity 0.7s ease-in-out; display: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
-                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
-                            <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener">
-                                <img src="AlfonsoA.png" alt="Alfonso A." style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" onerror="this.outerHTML='<div style=\'width: 40px; height: 40px; border-radius: 50%; background-color: #4B227A; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 500;\'>A</div>'">
-                            </a>
-                            <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener" style="color: #0000EE; text-decoration: underline; font-weight: 600;">- Alfonso A.</a>
+                    <div class="review-card" style="background: linear-gradient(145deg, #ffffff, #f0f2f5); border-radius: 12px; margin-bottom: 0.75rem; position: relative; width: 100%; opacity: 0; transition: opacity 0.7s ease-in-out; display: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+                        <div class="review-content">
+                            <div class="review-header" style="display: flex; align-items: center; gap: 0.75rem;">
+                                <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener">
+                                    <img src="AlfonsoA.png" alt="Alfonso A." style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" onerror="this.outerHTML='<div style=\'width: 40px; height: 40px; border-radius: 50%; background-color: #4B227A; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 500;\'>A</div>'">
+                                </a>
+                                <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener" style="color: #0000EE; text-decoration: underline; font-weight: 600;">- Alfonso A.</a>
+                            </div>
+                            <div class="review-text">"Taxes in the US can be incredibly complex, especially if you've worked in multiple states like I did last year. The team at Renest has been incredibly helpful at every step, always ready to help whenever I had specific questions!"</div>
                         </div>
-                        <div style="font-style: italic; margin-bottom: 0; color: #2c3e50; line-height: 1.4;">"Taxes in the US can be incredibly complex, especially if you've worked in multiple states like I did last year. The team at Renest has been incredibly helpful at every step, always ready to help whenever I had specific questions!"</div>
                     </div>
-                    <div class="review-card" style="background: linear-gradient(145deg, #ffffff, #f0f2f5); border-radius: 12px; padding: 1rem; margin-bottom: 0.75rem; position: relative; width: 100%; opacity: 0; transition: opacity 0.7s ease-in-out; display: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
-                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
-                            <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener">
-                                <img src="NirvaanK.png" alt="Nirvaan K." style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" onerror="this.outerHTML='<div style=\'width: 40px; height: 40px; border-radius: 50%; background-color: #4B227A; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 500;\'>N</div>'">
-                            </a>
-                            <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener" style="color: #0000EE; text-decoration: underline; font-weight: 600;">- Nirvaan K.</a>
+                    <div class="review-card" style="background: linear-gradient(145deg, #ffffff, #f0f2f5); border-radius: 12px; margin-bottom: 0.75rem; position: relative; width: 100%; opacity: 0; transition: opacity 0.7s ease-in-out; display: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+                        <div class="review-content">
+                            <div class="review-header" style="display: flex; align-items: center; gap: 0.75rem;">
+                                <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener">
+                                    <img src="NirvaanK.png" alt="Nirvaan K." style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" onerror="this.outerHTML='<div style=\'width: 40px; height: 40px; border-radius: 50%; background-color: #4B227A; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 500;\'>N</div>'">
+                                </a>
+                                <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener" style="color: #0000EE; text-decoration: underline; font-weight: 600;">- Nirvaan K.</a>
+                            </div>
+                            <div class="review-text">"Pretty wild that something like this exists and actually works. Especially since im an international student. Lol this makes taxes much less frustrating. Renest actually just got me like 500$ out of nothing"</div>
                         </div>
-                        <div style="font-style: italic; margin-bottom: 0; color: #2c3e50; line-height: 1.4;">"Pretty wild that something like this exists and actually works. Especially since im an international student. Lol this makes taxes much less frustrating. Renest actually just got me like 500$ out of nothing"</div>
                     </div>
-                    <div class="review-card" style="background: linear-gradient(145deg, #ffffff, #f0f2f5); border-radius: 12px; padding: 1rem; margin-bottom: 0.75rem; position: relative; width: 100%; display: block; opacity: 1; transition: opacity 0.7s ease-in-out; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
-                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
-                            <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener">
-                                <img src="JavierP.png" alt="Javier P." style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" onerror="this.outerHTML='<div style=\'width: 40px; height: 40px; border-radius: 50%; background-color: #4B227A; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 500;\'>J</div>'">
-                            </a>
-                            <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener" style="color: #0000EE; text-decoration: underline; font-weight: 600;">- Javier P.</a>
+                    <div class="review-card" style="background: linear-gradient(145deg, #ffffff, #f0f2f5); border-radius: 12px; margin-bottom: 0.75rem; position: relative; width: 100%; display: block; opacity: 1; transition: opacity 0.7s ease-in-out; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+                        <div class="review-content">
+                            <div class="review-header" style="display: flex; align-items: center; gap: 0.75rem;">
+                                <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener">
+                                    <img src="JavierP.png" alt="Javier P." style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" onerror="this.outerHTML='<div style=\'width: 40px; height: 40px; border-radius: 50%; background-color: #4B227A; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 500;\'>J</div>'">
+                                </a>
+                                <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener" style="color: #0000EE; text-decoration: underline; font-weight: 600;">- Javier P.</a>
+                            </div>
+                            <div class="review-text">"The Renest team was extremely responsive and answered all my questions in great detail. Learned a lot and definitely recommend them if you are a student or recent graduate!"</div>
                         </div>
-                        <div style="font-style: italic; margin-bottom: 0; color: #2c3e50; line-height: 1.4;">"The Renest team was extremely responsive and answered all my questions in great detail. Learned a lot and definitely recommend them if you are a student or recent graduate!"</div>
                     </div>
-                    <div class="review-card" style="background: linear-gradient(145deg, #ffffff, #f0f2f5); border-radius: 12px; padding: 1rem; margin-bottom: 0.75rem; position: relative; width: 100%; opacity: 0; transition: opacity 0.7s ease-in-out; display: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
-                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
-                            <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener">
-                                <img src="OjasP.png" alt="Ojas P." style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" onerror="this.outerHTML='<div style=\'width: 40px; height: 40px; border-radius: 50%; background-color: #4B227A; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 500;\'>O</div>'">
-                            </a>
-                            <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener" style="color: #0000EE; text-decoration: underline; font-weight: 600;">- Ojas P.</a>
+                    <div class="review-card" style="background: linear-gradient(145deg, #ffffff, #f0f2f5); border-radius: 12px; margin-bottom: 0.75rem; position: relative; width: 100%; opacity: 0; transition: opacity 0.7s ease-in-out; display: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+                        <div class="review-content">
+                            <div class="review-header" style="display: flex; align-items: center; gap: 0.75rem;">
+                                <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener">
+                                    <img src="OjasP.png" alt="Ojas P." style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" onerror="this.outerHTML='<div style=\'width: 40px; height: 40px; border-radius: 50%; background-color: #4B227A; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 500;\'>O</div>'">
+                                </a>
+                                <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener" style="color: #0000EE; text-decoration: underline; font-weight: 600;">- Ojas P.</a>
+                            </div>
+                            <div class="review-text">"I came across Renest when looking for ways to help me save money ahead of my MBA and construct a budget. Renest made it super easy to set up a 529. Absolutely recommended for anyone going to school or thinking about paying for someone else to go to school!"</div>
                         </div>
-                        <div style="font-style: italic; margin-bottom: 0; color: #2c3e50; line-height: 1.4;">"I came across Renest when looking for ways to help me save money ahead of my MBA and construct a budget. Renest made it super easy to set up a 529. Absolutely recommended for anyone going to school or thinking about paying for someone else to go to school!"</div>
                     </div>
                 </div>
                 
@@ -987,79 +1085,138 @@
                         The earlier you start, the more you get back on your taxes
                     </div>
                     <div class="cta-content">
-                       To qualify for these benefits the <span id="howItWorksLink" class="link-underline">IRS requires</span> you to prepare documentation during the year—<span class="highlight-text">not just when you file</span>. We've made this simple: sign up and our intake form helps us identify and secure your maximum tax benefit. Most people take less than 6 minutes, and there is no cost unless you decide to use our service!
+                       <span id="howItWorksLink" class="link-underline">To qualify for these benefits</span> the IRS requires you to prepare documentation during the year—<span class="highlight-text">not just when you file</span>. We've made this simple: sign up and our intake form helps us identify and secure your maximum tax benefit. Most people take less than 6 minutes, and there is no cost unless you decide to use our service!
                     </div>
                 </div>
             
             </div>
             
-           
-            <!-- Contact Us Section -->
-            
-            <!-- Remind Me Section -->
-            
-        </div>
-        <div class="right-side">
-            <!-- Reviews Section (moved from left) -->
-            
-            <div class="right-center"><div class="auth-container">
-                <!-- Google One Tap Sign In -->
-                <div id="g_id_onload"
-                     data-client_id="1032310890772-gr5i4m4t9fr7m2sgdbta8c5rumh49jlh.apps.googleusercontent.com"
-                     data-context="signin"
-                     data-callback="handleCredentialResponse">
-                </div>
-                <div class="g_id_signin"
-                     data-type="standard"
-                     data-size="large"
-                     data-theme="outline"
-                     data-text="sign_in_with"
-                     data-shape="rectangular"
-                     data-logo_alignment="left">
+                <!-- Get Started Button -->
+                <div class="get-started-section" id="getStartedSection">
+                    <button class="get-started-btn" id="getStartedBtn">Get Started</button>
                 </div>
 
-                <div class="divider">
-                    <span>or</span>
-                </div>
-
-                <form class="auth-form" id="authForm">
-                    <div class="input-group">
-                        <input type="email" class="input-field" placeholder="Email" required>
-                    </div>
-                    <div class="input-group">
-                        <input type="password" class="input-field" placeholder="Password" required>
-                    </div>
-                    <!-- <a href="#" class="forgot-password">Forgot Password?</a> -->
-                    <button type="submit" class="btn btn-primary" id="submitBtn">
-                        <div class="btn-content">
-                            <span>Sign In</span>
-                            <div class="spinner" id="spinner"></div>
+                <!-- Remind Me Section -->
+                <div style="width: 100%; max-width: 400px; margin: 0 auto 2rem auto; padding: 0 2rem;">
+                    
+                    <div class="contact-us-box" style="background: linear-gradient(145deg, #ffffff, #f8f9fa); border-radius: 12px; box-shadow: 0 2px 8px rgba(60,60,100,0.06); padding: 1.2rem 1rem; display: flex; flex-direction: column; gap: 1.2rem;">
+                        <div>
+                            <strong>Email Us:</strong> <a href="mailto:thomas@renesthorizons.com" style="color: #3A5AFF; text-decoration: underline;">thomas@renesthorizons.com</a>
                         </div>
-                    </button>
-                </form>
-                <div class="toggle-auth">
-                    <span id="toggleText">Don't have an account?</span>
-                    <a href="tax-benefit-signup.html">Sign Up</a>
+                        <div>
+                            <strong>Let's Chat:</strong> <a href="https://calendly.com/renesthorizons/30min" target="_blank" rel="noopener" style="color: #3A5AFF; text-decoration: underline;">Schedule via Calendly</a>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 1.5rem;margin-top: 1rem;">
+                        <form id="emailForm" style="display: flex; gap: 0.5rem; width: 100%; align-items: center;">
+                            <input type="email" id="emailInput" placeholder="Enter email" required style="flex: 1; padding: 0.7rem 1rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem;">
+                            <button type="submit" class="submit-button" style="padding: 0.7rem 1.5rem; background: #4B227A; color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 0.5rem;">
+                                <span>Remind Me</span>
+                                <span class="centered-checkmark" style="display: none; font-size: 1.3rem; color: white;">✓</span>
+                            </button>
+                        </form>
+                    </div>
                 </div>
-         
-                <div style="width: 90%; margin: 0 auto 1.2rem auto; display: flex; gap: 0.5rem; align-items: center; margin-top: 1rem; margin-bottom: -.5rem;">
-                    <form id="emailForm" style="display: flex; gap: 0.5rem; width: 100%; align-items: center;">
-                        <input type="email" id="emailInput" placeholder="Enter email" required style="flex: 1; padding: 0.7rem 1rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem;">
-                        <button type="submit" class="submit-button" style="padding: 0.7rem 1.5rem; background: #4B227A; color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 0.5rem;">
-                            <span>Remind Me</span>
-                            <span class="centered-checkmark" style="display: none; font-size: 1.3rem; color: white;">✓</span>
+            </div>
+
+            <!-- Sign Up Form Section -->
+            <div class="auth-section" id="signupSection">
+                <a href="#" class="back-button" id="backFromSignup">
+                    ← Back
+                </a>
+                <div class="auth-container">
+                    <h2 class="auth-title">Create Your Account</h2>
+                    
+                    <!-- Google One Tap Sign In for Sign Up -->
+                    <div id="g_id_onload_signup"
+                         data-client_id="1032310890772-gr5i4m4t9fr7m2sgdbta8c5rumh49jlh.apps.googleusercontent.com"
+                         data-context="signup"
+                         data-callback="handleCredentialResponse">
+                    </div>
+                    <div class="g_id_signin"
+                         data-type="standard"
+                         data-size="large"
+                         data-theme="outline"
+                         data-text="signup_with"
+                         data-shape="rectangular"
+                         data-logo_alignment="left">
+                    </div>
+
+                    <div class="divider">
+                        <span>or</span>
+                    </div>
+
+                    <form class="auth-form" id="signupForm">
+                        <div class="input-group">
+                            <input type="text" class="input-field" placeholder="Full Name" required>
+                        </div>
+                        <div class="input-group">
+                            <input type="email" class="input-field" placeholder="Email" required>
+                        </div>
+                        <div class="input-group">
+                            <input type="password" class="input-field" placeholder="Password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="signupSubmitBtn">
+                            <div class="btn-content">
+                                <span>Sign Up</span>
+                                <div class="spinner" id="signupSpinner"></div>
+                            </div>
                         </button>
                     </form>
-                </div>
-                <div class="contact-us-box" style="margin-top: 2rem; background: linear-gradient(145deg, #ffffff, #f8f9fa); border-radius: 12px; box-shadow: 0 2px 8px rgba(60,60,100,0.06); padding: 1.2rem 1rem; display: flex; flex-direction: column; gap: 1.2rem;">
-                    <div>
-                        <strong>Email Us:</strong> <a href="mailto:thomas@renesthorizons.com" style="color: #3A5AFF; text-decoration: underline;">thomas@renesthorizons.com</a>
-                    </div>
-                    <div>
-                        <strong>Let's Chat:</strong> <a href="https://calendly.com/renesthorizons/30min" target="_blank" rel="noopener" style="color: #3A5AFF; text-decoration: underline;">Schedule via Calendly</a>
+                    <div class="toggle-auth">
+                        <span>Already have an account?</span>
+                        <a href="#" id="showSigninBtn">Sign In</a>
                     </div>
                 </div>
-            </div></div>
+            </div>
+
+            <!-- Sign In Form Section -->
+            <div class="auth-section" id="signinSection">
+                <a href="#" class="back-button" id="backFromSignin">
+                    ← Back
+                </a>
+                <div class="auth-container">
+                    <h2 class="auth-title">Sign In</h2>
+                    
+                    <!-- Google One Tap Sign In -->
+                    <div id="g_id_onload"
+                         data-client_id="1032310890772-gr5i4m4t9fr7m2sgdbta8c5rumh49jlh.apps.googleusercontent.com"
+                         data-context="signin"
+                         data-callback="handleCredentialResponse">
+                    </div>
+                    <div class="g_id_signin"
+                         data-type="standard"
+                         data-size="large"
+                         data-theme="outline"
+                         data-text="sign_in_with"
+                         data-shape="rectangular"
+                         data-logo_alignment="left">
+                    </div>
+
+                    <div class="divider">
+                        <span>or</span>
+                    </div>
+
+                    <form class="auth-form" id="authForm">
+                        <div class="input-group">
+                            <input type="email" class="input-field" placeholder="Email" required>
+                        </div>
+                        <div class="input-group">
+                            <input type="password" class="input-field" placeholder="Password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            <div class="btn-content">
+                                <span>Sign In</span>
+                                <div class="spinner" id="spinner"></div>
+                            </div>
+                        </button>
+                    </form>
+                    <div class="toggle-auth">
+                        <span>Don't have an account?</span>
+                        <a href="#" id="showSignupBtn">Sign Up</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1093,10 +1250,9 @@
         }
     }
 
-    // Handle email/password form submission
+    // Handle email/password form submission (Sign In)
     document.getElementById('authForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        // console.log('Sign In form submitted.');
 
         // Show spinner
         const spinner = document.getElementById('spinner');
@@ -1104,14 +1260,13 @@
         spinner.style.display = 'block';
         submitBtn.disabled = true;
 
-        let email = document.querySelector('input[type="email"]').value;
-        let password = document.querySelector('input[type="password"]').value;
+        const form = document.getElementById('authForm');
+        let email = form.querySelector('input[type="email"]').value;
+        let password = form.querySelector('input[type="password"]').value;
 
         // Clean inputs
         email = email.trim().toLowerCase();
         password = password.trim();
-
-        // console.log('Signing in with email:', email);
 
         try {
             const response = await fetch(`${EMAIL_AUTH_URL}/renestsignin`, {
@@ -1122,22 +1277,60 @@
                 body: JSON.stringify({ email, password })
             });
 
-            // console.log('Sign-in response status:', response.status);
-
             const data = await response.json();
-            // console.log('Sign-in response data:', data);
 
             if (response.ok && data.token) {
                 localStorage.setItem('authToken', data.token);
-                // console.log('Sign in successful. Redirecting to dashboard...');
                 window.location.href = '/dashboard.html';
             } else {
-                // console.log('Sign in failed:', data.error || 'Invalid credentials');
                 alert(data.error || 'Invalid credentials');
             }
         } catch (error) {
             console.error('Email/password sign-in error:', error);
             alert('Sign in failed. Please try again.');
+        } finally {
+            // Hide spinner and re-enable button
+            spinner.style.display = 'none';
+            submitBtn.disabled = false;
+        }
+    });
+
+    // Handle sign up form submission
+    document.getElementById('signupForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Show spinner
+        const spinner = document.getElementById('signupSpinner');
+        const submitBtn = document.getElementById('signupSubmitBtn');
+        spinner.style.display = 'block';
+        submitBtn.disabled = true;
+
+        const form = document.getElementById('signupForm');
+        const inputs = form.querySelectorAll('input');
+        let name = inputs[0].value.trim();
+        let email = inputs[1].value.trim().toLowerCase();
+        let password = inputs[2].value.trim();
+
+        try {
+            const response = await fetch(`${EMAIL_AUTH_URL}/renest-signup`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, email, password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.token) {
+                localStorage.setItem('authToken', data.token);
+                window.location.href = '/dashboard.html';
+            } else {
+                alert(data.error || 'Sign up failed. Please try again.');
+            }
+        } catch (error) {
+            console.error('Sign up error:', error);
+            alert('Sign up failed. Please try again.');
         } finally {
             // Hide spinner and re-enable button
             spinner.style.display = 'none';
@@ -1161,6 +1354,52 @@
                 // Toggle current
                 section.classList.toggle('active');
             });
+        });
+
+        // Form toggle functionality
+        const getStartedBtn = document.getElementById('getStartedBtn');
+        const contentSection = document.getElementById('contentSection');
+        const signupSection = document.getElementById('signupSection');
+        const signinSection = document.getElementById('signinSection');
+        const showSigninBtn = document.getElementById('showSigninBtn');
+        const showSignupBtn = document.getElementById('showSignupBtn');
+        const backFromSignup = document.getElementById('backFromSignup');
+        const backFromSignin = document.getElementById('backFromSignin');
+
+        // Show signup form when Get Started is clicked
+        getStartedBtn.addEventListener('click', function() {
+            contentSection.classList.add('hidden');
+            signupSection.classList.add('active');
+            signinSection.classList.remove('active');
+        });
+
+        // Show signin form when "Sign In" link is clicked
+        showSigninBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            signupSection.classList.remove('active');
+            signinSection.classList.add('active');
+        });
+
+        // Show signup form when "Sign Up" link is clicked
+        showSignupBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            signinSection.classList.remove('active');
+            signupSection.classList.add('active');
+        });
+
+        // Back button functionality
+        backFromSignup.addEventListener('click', function(e) {
+            e.preventDefault();
+            signupSection.classList.remove('active');
+            signinSection.classList.remove('active');
+            contentSection.classList.remove('hidden');
+        });
+
+        backFromSignin.addEventListener('click', function(e) {
+            e.preventDefault();
+            signupSection.classList.remove('active');
+            signinSection.classList.remove('active');
+            contentSection.classList.remove('hidden');
         });
 
         // Review carousel logic (always start on page load)
@@ -1486,44 +1725,7 @@
     // Initial render
     updateRefundChart();
 </script>
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // Run only on desktop
-        if (window.innerWidth <= 900) {
-            return;
-        }
 
-        const rightSide = document.querySelector('.right-side');
-        const rightCenter = document.querySelector('.right-center');
-
-        if (!rightSide || !rightCenter) {
-            return; // Elements not found, exit gracefully
-        }
-
-        const rightSideRect = rightSide.getBoundingClientRect();
-        // Use pageYOffset for broad browser support, relative to the document, not window
-        const rightSideTopOffset = rightSide.offsetTop;
-
-        window.addEventListener('scroll', () => {
-            // Check if the user has scrolled past the top of the right column
-            if (window.scrollY >= rightSideTopOffset) {
-                // Apply fixed positioning to make it "sticky"
-                rightCenter.style.position = 'fixed';
-                rightCenter.style.top = '0px';
-                // Set width explicitly to prevent it from collapsing
-                rightCenter.style.width = `${rightSideRect.width}px`;
-                // Ensure it has height to allow vertical centering
-                rightCenter.style.height = '100vh'; 
-            } else {
-                // Revert to original styles when scrolling back up
-                rightCenter.style.position = ''; // Reverts to CSS defined position
-                rightCenter.style.top = '';
-                rightCenter.style.width = '';
-                rightCenter.style.height = '';
-            }
-        }, { passive: true }); // Use passive listener for better scroll performance
-    });
-</script>
 <!-- How It Works Modal -->
 <div id="howItWorksModal" class="founder-modal" style="display:none;">
   <div class="founder-modal-overlay"></div>
