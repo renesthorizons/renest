@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-TGZL6PTS');</script>
+    <!-- End Google Tag Manager -->
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - RENEST</title>
+    <link rel="icon" href="blogo2.png" type="image/png">
+    <!-- Add Google Sign-In Script -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    
+    <style>
+        :root {
+            --primary: #4B227A;
+            --accent: #31053c;
+            --text-dark: #1E0A3C;
+            --background: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .left-side {
+            flex: 1;
+            background: linear-gradient(135deg, #dbe3ee 0%, #b7c3d8 100%); /* subtle professional blue-gray gradient */
+            color: #23213a;
+            font-family: 'Inter', 'Segoe UI', 'Roboto', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        #motivationSection {
+            width: 100%;
+            background: none;
+            box-shadow: none;
+            padding: 3.5rem 2.5rem 3rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+            border: none !important;
+            border-radius: 0 !important;
+            margin: 0;
+        }
+
+        #dateDisplay {
+            font-size: 1.15rem;
+            color: #bbb;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.5px;
+            font-family: 'Merriweather', 'Georgia', 'Times New Roman', serif !important;
+            text-align: left;
+            width: 100%;
+            font-weight: 500;
+        }
+
+        .motivation-counter {
+            font-size: 2.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.5px;
+            font-family: 'Merriweather', 'Georgia', 'Times New Roman', serif !important;
+            text-align: left;
+            width: 100%;
+        }
+
+        /* #missedAmount {
+            color: #d4af37;
+            font-weight: 700;
+        } */
+
+        #availableAmount {
+            color: #bfc7ce;
+            font-weight: 700;
+        }
+
+        .motivation-message {
+            font-family: 'Inter', 'Segoe UI', 'Roboto', Arial, sans-serif !important;
+            font-size: 1.18rem;
+            color: #2d2346;
+            margin-bottom: 1.1rem;
+            line-height: 1.7;
+            text-align: left;
+        }
+
+        .motivation-message.headline, .motivation-message[style*='font-size: 1.5rem'] {
+            font-size: 1.6rem !important;
+            font-weight: 700;
+            color: #4B227A;
+            margin-bottom: 1.2rem;
+            font-family: 'Inter', 'Segoe UI', 'Roboto', Arial, sans-serif !important;
+        }
+
+        .right-side {
+            flex: 1;
+            padding: 3.5rem 2.5rem 3rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        @media (min-width: 900px) {
+            .right-side {
+                position: relative;
+            }
+            .auth-container {
+                position: sticky;
+                top: 50%;
+                transform: translateY(-50%);
+                z-index: 2;
+            }
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 2rem;
+        }
+
+        .auth-title {
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn-primary {
+            background-color: #3A5AFF;
+            color: white;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 1rem 0;
+            color: #666;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .divider span {
+            padding: 0 0.5rem;
+        }
+
+        .toggle-auth {
+            text-align: center;
+            margin-top: 1rem;
+            color: #666;
+        }
+
+        .toggle-auth a, .forgot-password {
+            color: var(--primary);
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .forgot-password {
+            display: block;
+            text-align: right;
+            font-size: 0.875rem;
+            margin: -0.5rem 0 1rem;
+        }
+
+        .brand-logo {
+            width: 400px;
+            height: 600px;
+            object-fit: contain;
+            margin-bottom: 0rem;
+        }
+
+        @media (max-width: 1100px) {
+            #motivationSection {
+                max-width: 100%;
+                margin: 0 0.5rem;
+                padding: 2rem 1rem 2rem 1rem;
+                border: none !important;
+                border-radius: 0 !important;
+            }
+            .right-side {
+                padding: 2rem 1rem 2rem 1rem;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+            .left-side {
+                width: 100%;
+                min-height: 220px;
+                padding: 0 !important;
+                max-width: 100%;
+                align-items: flex-start;
+            }
+            .right-side {
+                width: 100%;
+                min-height: 220px;
+                padding: 1.2rem 0.5rem;
+                max-width: 100%;
+                align-items: flex-start;
+            }
+            #motivationSection {
+                max-width: 100%;
+                padding: 1.5rem 1rem 1rem 1rem;
+                border: none !important;
+                border-radius: 0 !important;
+                margin: 0;
+            }
+            .motivation-counter {
+                font-size: 1.2rem;
+            }
+            .expand-section,
+            .expand-header {
+                border-radius: 12px;
+                background: #f8f9fa;
+                padding: 0.4rem 0.7rem;
+                font-size: 1rem;
+            }
+            .expand-section.active .expand-content {
+                padding: 0.7rem 0.2rem 0.7rem 0.2rem;
+            }
+            #emailForm input[type="email"], #emailForm .submit-button {
+                font-size: 0.75rem !important;
+                padding: 0.4rem 0.6rem !important;
+                border-radius: 6px !important;
+            }
+            .submit-button span, .submit-button .centered-checkmark {
+                font-size: 0.75rem !important;
+            }
+            /* Legend text boxes narrower */
+            .pie-legend-box, .pie-legend-box span {
+                font-size: 0.85rem !important;
+                width: max-content !important;
+                min-width: 0 !important;
+                padding: 0 0.2rem !important;
+            }
+            .right-side, .right-center, .right-fixed-center {
+                width: 100% !important;
+                display: flex !important;
+                justify-content: center !important;
+            }
+            .auth-container {
+                margin-left: auto !important;
+                margin-right: auto !important;
+                display: block !important;
+                width: 100% !important;
+                max-width: 400px !important;
+            }
+            .mobile-only-break {
+                display: block;
+                width: 100%;
+                height: 0;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .left-side {
+                min-height: 200px;
+            }
+
+            .brand-logo {
+                width: 250px;
+                height: 200px;
+            }
+
+            .auth-container {
+                padding: 0.5rem;
+            }
+        }
+
+        /* Add these new styles */
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+            margin-left: 8px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .btn-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pie-chart-container {
+            overflow: visible !important;
+        }
+
+        .pie-title {
+            font-family: 'Inter', 'Segoe UI', 'Roboto', 'Lato', Arial, sans-serif !important;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #3A5AFF;
+            text-align: center;
+            margin-bottom: 0.7rem;
+            letter-spacing: 0.01em;
+        }
+        .pie-available {
+            color: #3A5AFF;
+            font-weight: 700;
+        }
+        .pie-missed {
+            color: #888;
+            font-weight: 700;
+        }
+        .funding-date {
+            font-family: 'Merriweather', 'Georgia', 'Times New Roman', serif !important;
+            font-style: italic;
+            color: black;
+            font-size: 1rem;
+            text-align: left;
+            margin-top: .4rem;
+            margin-bottom: 0.7rem;
+        }
+
+        /* Numbered bullets styling */
+        #motivationSection > div[style*='margin-bottom: 1.2rem;'] > div {
+            font-family: 'Inter', 'Segoe UI', 'Roboto', Arial, sans-serif !important;
+            color: #4B227A;
+            background: #f0edfa;
+            border-radius: 8px;
+            padding: 0.4rem 1rem;
+            margin-bottom: 0.5rem;
+            font-size: 1.08rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+        #motivationSection > div[style*='margin-bottom: 1.2rem;'] > div > span {
+            font-family: 'Inter', 'Segoe UI', 'Roboto', Arial, sans-serif !important;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #4B227A;
+            color: white;
+            margin-right: 8px;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            min-width: 24px;
+            min-height: 24px;
+        }
+
+        .expand-section {
+            border: 1px solid rgba(75, 34, 122, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 1.2rem;
+            background: #f8f9fa;
+            padding: 0.2rem 0.2rem;
+        }
+        .expand-header {
+            background: #f8f9fa;
+            padding: 0.7rem 1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            color: #3A5AFF;
+            font-size: 1.25rem;
+            transition: background 0.3s;
+            border-radius: 12px;
+        }
+        .expand-header:hover {
+            background: #e6e9f3;
+        }
+        .expand-toggle {
+            font-size: 1.5rem;
+            transition: transform 0.3s;
+        }
+        .expand-section.active .expand-toggle {
+            transform: rotate(45deg);
+        }
+        .expand-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        .expand-section.active .expand-content {
+            padding: 1rem 0.5rem 1rem 0.5rem;
+            max-height: none;
+            overflow: visible;
+        }
+        .mobile-only-break {
+            display: none;
+        }
+        @media (min-width: 900px) {
+            .right-side {
+                display: block;
+                height: 100vh;
+                position: relative;
+                padding: 0;
+            }
+            .right-center {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                width: 100%;
+            }
+            .auth-container {
+                position: static !important;
+                top: auto !important;
+                transform: none !important;
+                z-index: auto !important;
+                margin: 0 auto;
+            }
+        }
+        .founder-modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .founder-modal-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(44, 34, 66, 0.45);
+            z-index: 1;
+        }
+        .founder-modal-content {
+            position: relative;
+            z-index: 2;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(44,34,66,0.18);
+            padding: 2rem 2.5rem 1.5rem 2.5rem;
+            max-width: 350px;
+            width: 90vw;
+            text-align: center;
+            animation: founderModalIn 0.2s cubic-bezier(.4,1.6,.6,1) 1;
+        }
+        .founder-modal-close {
+            position: absolute;
+            top: 0.7rem;
+            right: 1.1rem;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: #4B227A;
+            cursor: pointer;
+            z-index: 3;
+        }
+        @keyframes founderModalIn {
+            from { transform: translateY(40px) scale(0.98); opacity: 0; }
+            to { transform: none; opacity: 1; }
+        }
+        /* Remind Me Email Form - Compact Desktop Style */
+        #emailForm {
+            display: flex;
+            gap: 0.5rem;
+            width: 100%;
+            align-items: center;
+        }
+        #emailInput {
+            flex: 1;
+            padding: 0.45rem 0.7rem;
+            border: 1px solid #ddd;
+            border-radius: 7px;
+            font-size: 0.98rem;
+            min-width: 0;
+        }
+        .submit-button {
+            padding: 0.45rem 1.1rem;
+            background: #4B227A;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            font-size: 0.98rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .submit-button span, .submit-button .centered-checkmark {
+            font-size: 0.98rem;
+        }
+        @media (max-width: 900px) {
+            #emailInput, .submit-button {
+                font-size: 0.85rem !important;
+                padding: 0.4rem 0.6rem !important;
+                border-radius: 6px !important;
+            }
+            .submit-button span, .submit-button .centered-checkmark {
+                font-size: 0.85rem !important;
+            }
+        }
+        .review-card {
+            background: linear-gradient(145deg, #ffffff, #f0f2f5);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            position: relative;
+            width: 100%;
+            display: block;
+            opacity: 1;
+            transition: opacity 0.7s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            min-height: 150px;
+            box-sizing: border-box;
+        }
+        @media (max-width: 900px) {
+            .review-card {
+                min-height: 120px;
+            }
+        }
+        /* Hide number input spinners for Chrome, Safari, Edge, Opera */
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Hide number input spinners for Firefox */
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TGZL6PTS"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <div class="container">
+        <div class="left-side">
+            <div id="motivationSection">
+                <div class="motivation-message" style="font-size: 2rem; font-weight: 800; margin-bottom: 1.2rem; font-family: 'Times New Roman', serif !important; color: #000071;">
+                    Taxes for Students,<span class="mobile-only-break"></span> Done Better
+                    <hr style="border: none; height: 2px; background: #000071; margin-top: 0rem; width: 100%;">
+                </div>
+                <div style="font-size: 1.2rem; margin-bottom: 1.2rem; color: #4B227A; font-weight: 500;">
+                    Renest is a tax preparation service that focuses on saving students money on taxes year-round, not just during tax season.
+                </div>
+                <!-- Reviews Section (now under headline) -->
+                <div class="reviews-container-wrapper" style="width: 100%; max-width: 800px; margin: 0.5rem 0 2rem 0; position: relative; min-height: 0;">
+                    <div class="review-card" style="background: linear-gradient(145deg, #ffffff, #f0f2f5); border-radius: 12px; padding: 1rem; margin-bottom: 0.75rem; position: relative; width: 100%; opacity: 0; transition: opacity 0.7s ease-in-out; display: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                            <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener">
+                                <img src="AlfonsoA.png" alt="Alfonso A." style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" onerror="this.outerHTML='<div style=\'width: 40px; height: 40px; border-radius: 50%; background-color: #4B227A; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 500;\'>A</div>'">
+                            </a>
+                            <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener" style="color: #0000EE; text-decoration: underline; font-weight: 600;">- Alfonso A.</a>
+                        </div>
+                        <div style="font-style: italic; margin-bottom: 0; color: #2c3e50; line-height: 1.4;">"Taxes in the US can be incredibly complex, especially if you've worked in multiple states like I did last year. The team at Renest has been incredibly helpful at every step, always ready to help whenever I had specific questions!"</div>
+                    </div>
+                    <div class="review-card" style="background: linear-gradient(145deg, #ffffff, #f0f2f5); border-radius: 12px; padding: 1rem; margin-bottom: 0.75rem; position: relative; width: 100%; opacity: 0; transition: opacity 0.7s ease-in-out; display: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                            <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener">
+                                <img src="NirvaanK.png" alt="Nirvaan K." style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" onerror="this.outerHTML='<div style=\'width: 40px; height: 40px; border-radius: 50%; background-color: #4B227A; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 500;\'>N</div>'">
+                            </a>
+                            <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener" style="color: #0000EE; text-decoration: underline; font-weight: 600;">- Nirvaan K.</a>
+                        </div>
+                        <div style="font-style: italic; margin-bottom: 0; color: #2c3e50; line-height: 1.4;">"Pretty wild that something like this exists and actually works. Especially since im an international student. Lol this makes taxes much less frustrating. Renest actually just got me like 500$ out of nothing"</div>
+                    </div>
+                    <div class="review-card" style="background: linear-gradient(145deg, #ffffff, #f0f2f5); border-radius: 12px; padding: 1rem; margin-bottom: 0.75rem; position: relative; width: 100%; display: block; opacity: 1; transition: opacity 0.7s ease-in-out; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                            <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener">
+                                <img src="JavierP.png" alt="Javier P." style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" onerror="this.outerHTML='<div style=\'width: 40px; height: 40px; border-radius: 50%; background-color: #4B227A; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 500;\'>J</div>'">
+                            </a>
+                            <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener" style="color: #0000EE; text-decoration: underline; font-weight: 600;">- Javier P.</a>
+                        </div>
+                        <div style="font-style: italic; margin-bottom: 0; color: #2c3e50; line-height: 1.4;">"The Renest team was extremely responsive and answered all my questions in great detail. Learned a lot and definitely recommend them if you are a student or recent graduate!"</div>
+                    </div>
+                    <div class="review-card" style="background: linear-gradient(145deg, #ffffff, #f0f2f5); border-radius: 12px; padding: 1rem; margin-bottom: 0.75rem; position: relative; width: 100%; opacity: 0; transition: opacity 0.7s ease-in-out; display: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                            <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener">
+                                <img src="OjasP.png" alt="Ojas P." style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" onerror="this.outerHTML='<div style=\'width: 40px; height: 40px; border-radius: 50%; background-color: #4B227A; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 500;\'>O</div>'">
+                            </a>
+                            <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener" style="color: #0000EE; text-decoration: underline; font-weight: 600;">- Ojas P.</a>
+                        </div>
+                        <div style="font-style: italic; margin-bottom: 0; color: #2c3e50; line-height: 1.4;">"I came across Renest when looking for ways to help me save money ahead of my MBA and construct a budget. Renest made it super easy to set up a 529. Absolutely recommended for anyone going to school or thinking about paying for someone else to go to school!"</div>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 1.2rem;">
+                    <!-- <div style="font-size: 1.1rem; margin-bottom: 0.6rem; font-weight: 500;"><span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: #4B227A; color: white; margin-right: 8px; font-size: 0.9rem;">1</span>You are a student and you file taxes</div> -->
+                    <div style="font-size: 1.1rem; margin-bottom: 0.6rem; font-weight: 500;"><span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: #4B227A; color: white; margin-right: 8px; font-size: 0.9rem;">1</span>As a student you qualify for specific tax benefits related to your education</div>
+                    <div style="font-size: 1.1rem; margin-bottom: 0.6rem; font-weight: 500;"><span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: #4B227A; color: white; margin-right: 8px; font-size: 0.9rem;">2</span>Mass-market tax services are focused on tax season only, but by then it's too late for students to qualify for these benefits</div>
+                    <div style="font-size: 1.1rem; margin-bottom: 0.6rem; font-weight: 500;"><span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: #4B227A; color: white; margin-right: 8px; font-size: 0.9rem;">3</span>Renest is solely focused on students' taxes all year long. Invest 6 minutes now and we can unlock hundreds of dollars more back on your taxes!</div>
+                </div>
+
+                
+                <div id="studentHeader" style="font-weight: 600; margin-bottom: 1.2rem; color: #333; text-align: center; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; font-size: 1.4rem; line-height: 1.8;">
+                  Student in <span id="inlineState" style="text-decoration: none; cursor: pointer; color: #3A5AFF; background: #F0F4FF; padding: 0.1rem 0.4rem; border-radius: 6px; transition: all 0.2s ease; display: inline-flex; align-items: center;">Illinois <span id="stateArrow" style="font-size: 0.45rem; margin-left: 0.3em; color: #3A5AFF;">▼</span></span> making $<span id="inlineIncome" style="text-decoration: none; cursor: pointer; color: #3A5AFF; background: #F0F4FF; padding: 0.1rem 0.4rem; border-radius: 6px; transition: all 0.2s ease;">25</span>k per year
+                </div>
+                <div id="refundChartContainer" style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin: 0 auto; max-width: 600px;">
+                    <!-- Chart will be rendered here by JS -->
+                </div>
+                <div style="margin-top: 1rem; font-size: 0.9rem; color: #666; font-style: italic; text-align: center; margin-bottom: 1rem;">
+                    Want to file your taxes the same way as last year? That's okay too! We can still help you unlock all your benefits by guiding you through a few steps.
+                </div>
+
+
+                <div class="motivation-message" style="margin-bottom: 1.2rem;">
+                    Founded by <span class="founder-link" data-founder="thomas" style="text-decoration: underline; color: #4B227A; cursor: pointer;">Thomas</span>, a former PhD student, and <span class="founder-link" data-founder="mo" style="text-decoration: underline; color: #4B227A; cursor: pointer;">Mo</span>, a former Wall Street professional, Renest's goal is to bring tax sophistication from boardrooms to classrooms, so students can do more with more.
+                </div>
+                
+                    <div style="background: #f0f2f5; border-radius: 14px; box-shadow: 0 4px 20px rgba(60,60,100,0.25); padding: 1.2rem 1.2rem 0.7rem 1.2rem; margin: 1.2rem auto 1.2rem auto; max-width: 800px;">
+                    <div class="pie-title" style="margin-bottom: 0.7rem;color: #3A5AFF; font-weight: 700;">
+                        The earlier you start, the more you get back on your taxes
+                    </div>
+                    <div class="motivation-message" style="margin-bottom: 1.2rem;">
+                       To qualify for these benefits the <span id="howItWorksLink" style="text-decoration: underline; color: #4B227A; cursor: pointer;"> IRS requires</span> you to prepare documentation during the year—<span style="color: #3A5AFF; font-weight: 700;">not just when you file</span>. We've made this simple: sign up and our intake form helps us identify and secure your maximum tax benefit. Most people take less than 6 minutes, and there is no cost unless you choose to move forward!
+                    </div>
+                </div>
+            
+            </div>
+            
+           
+            <!-- Contact Us Section -->
+            
+            <!-- Remind Me Section -->
+            
+        </div>
+        <div class="right-side">
+            <div class="right-center">
+                <div class="auth-container">
+                    <h2 class="auth-title">Sign Up</h2>
+                    <form class="auth-form" id="signupForm">
+                        <div class="input-group">
+                            <input type="email" class="input-field" placeholder="Email" required>
+                        </div>
+                        <div class="input-group">
+                            <input type="password" class="input-field" placeholder="Password" id="password" required>
+                        </div>
+                        <div class="input-group">
+                            <input type="password" class="input-field" placeholder="Confirm Password" id="confirmPassword" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            <div class="btn-content">
+                                <span>Sign Up</span>
+                                <div class="spinner" id="spinner"></div>
+                            </div>
+                        </button>
+                    </form>
+                    <div class="toggle-auth">
+                        <span>Already have an account?</span>
+                        <a href="benefit-illinois.html">Sign In</a>
+                    </div>
+                
+            
+         
+                    <div style="width: 90%; margin: 0 auto 1.2rem auto; display: flex; gap: 0.5rem; align-items: center; margin-top: 1rem; margin-bottom: -.5rem;">
+                        <form id="emailForm" style="display: flex; gap: 0.5rem; width: 100%; align-items: center;">
+                            <input type="email" id="emailInput" placeholder="Enter email" required style="flex: 1; padding: 0.7rem 1rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem;">
+                            <button type="submit" class="submit-button" style="padding: 0.7rem 1.5rem; background: #4B227A; color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 0.5rem;">
+                                <span>Remind Me</span>
+                                <span class="centered-checkmark" style="display: none; font-size: 1.3rem; color: white;">✓</span>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="contact-us-box" style="margin-top: 2rem; background: linear-gradient(145deg, #ffffff, #f8f9fa); border-radius: 12px; box-shadow: 0 2px 8px rgba(60,60,100,0.06); padding: 1.2rem 1rem; display: flex; flex-direction: column; gap: 1.2rem;">
+                        <div>
+                            <strong>Email Us:</strong> <a href="mailto:thomas@renesthorizons.com" style="color: #3A5AFF; text-decoration: underline;">thomas@renesthorizons.com</a>
+                        </div>
+                        <div>
+                            <strong>Let's Chat:</strong> <a href="https://calendly.com/renesthorizons/30min" target="_blank" rel="noopener" style="color: #3A5AFF; text-decoration: underline;">Schedule via Calendly</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+   <script src="taxdbb.js"></script>
+   <script>
+     document.addEventListener('DOMContentLoaded', () => {
+        // Run only on desktop
+        if (window.innerWidth <= 900) {
+            return;
+        }
+
+        const rightSide = document.querySelector('.right-side');
+        const rightCenter = document.querySelector('.right-center');
+
+        if (!rightSide || !rightCenter) {
+            return; // Elements not found, exit gracefully
+        }
+
+        const rightSideRect = rightSide.getBoundingClientRect();
+        // Use pageYOffset for broad browser support, relative to the document, not window
+        const rightSideTopOffset = rightSide.offsetTop;
+
+        window.addEventListener('scroll', () => {
+            // Check if the user has scrolled past the top of the right column
+            if (window.scrollY >= rightSideTopOffset) {
+                // Apply fixed positioning to make it "sticky"
+                rightCenter.style.position = 'fixed';
+                rightCenter.style.top = '0px';
+                // Set width explicitly to prevent it from collapsing
+                rightCenter.style.width = `${rightSideRect.width}px`;
+                // Ensure it has height to allow vertical centering
+                rightCenter.style.height = '100vh'; 
+            } else {
+                // Revert to original styles when scrolling back up
+                rightCenter.style.position = ''; // Reverts to CSS defined position
+                rightCenter.style.top = '';
+                rightCenter.style.width = '';
+                rightCenter.style.height = '';
+            }
+        }, { passive: true }); // Use passive listener for better scroll performance
+    });
+    // API URLs
+    const API_URL = 'https://l3p0kf0zgd.execute-api.us-east-2.amazonaws.com';
+
+document.getElementById('signupForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // Show spinner and disable button
+    const spinner = document.getElementById('spinner');
+    const submitBtn = document.getElementById('submitBtn');
+    spinner.style.display = 'block';
+    submitBtn.disabled = true;
+
+    let email = document.querySelector('input[type="email"]').value;
+    let password = document.getElementById('password').value;
+    let confirmPassword = document.getElementById('confirmPassword').value;
+
+    // Clean the inputs on the client side
+    email = email.trim().toLowerCase();
+    password = password.trim();
+    confirmPassword = confirmPassword.trim();
+
+    // Basic email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        alert('Please enter a valid email address.');
+        spinner.style.display = 'none';
+        submitBtn.disabled = false;
+        return;
+    }
+
+    // Password validation
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{5,}$/;
+    if (!passwordRegex.test(password)) {
+        alert('Password must be at least 5 characters long and contain at least one capital letter, one number, and one special character.');
+        spinner.style.display = 'none';
+        submitBtn.disabled = false;
+        return;
+    }
+
+    // Check if passwords match
+    if (password !== confirmPassword) {
+        alert('Passwords do not match.');
+        spinner.style.display = 'none';
+        submitBtn.disabled = false;
+        return;
+    }
+
+    // Send the signup request to your AWS Lambda function
+    try {
+        const response = await fetch(`${API_URL}/renest-signup`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+        const data = await response.json();
+        if (data.token) {
+            localStorage.setItem('authToken', data.token);
+            window.location.href = '/dashboard.html';
+        } else {
+            alert(data.error || 'Signup failed. Please try again.');
+        }
+    } catch (error) {
+        console.error('Signup error:', error);
+        alert('Signup failed. Please try again.');
+    } finally {
+        // Hide spinner and re-enable button
+        spinner.style.display = 'none';
+        submitBtn.disabled = false;
+    }
+});
+   
+
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Carousel script running');
+        const expandSections = document.querySelectorAll('.expand-section');
+        expandSections.forEach(section => {
+            const header = section.querySelector('.expand-header');
+            header.addEventListener('click', function() {
+                // Close other sections
+                expandSections.forEach(other => {
+                    if (other !== section) other.classList.remove('active');
+                });
+                // Toggle current
+                section.classList.toggle('active');
+            });
+        });
+
+        // Review carousel logic (always start on page load)
+        let reviewInterval = null;
+        function startReviewCarousel() {
+            // Only target the left-side reviews under #motivationSection
+            const reviewCards = document.querySelectorAll('#motivationSection .reviews-container-wrapper .review-card');
+            let currentReviewIndex = 0;
+            // Hide all reviews first
+            reviewCards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.display = 'none';
+            });
+            // Show the first review (or all if only one)
+            if (reviewCards[0]) {
+                reviewCards[0].style.display = 'block';
+                setTimeout(() => {
+                    reviewCards[0].style.opacity = '1';
+                }, 10);
+            } else {
+                // Fallback: if no review cards found, try to show any .review-card for debugging
+                const fallback = document.querySelector('.review-card');
+                if (fallback) {
+                    fallback.style.display = 'block';
+                    fallback.style.opacity = '1';
+                }
+                return;
+            }
+            // Clear any previous interval
+            if (reviewInterval) clearInterval(reviewInterval);
+            // Start interval
+            reviewInterval = setInterval(() => {
+                reviewCards[currentReviewIndex].style.opacity = '0';
+                setTimeout(() => {
+                    reviewCards[currentReviewIndex].style.display = 'none';
+                    currentReviewIndex = (currentReviewIndex + 1) % reviewCards.length;
+                    reviewCards[currentReviewIndex].style.display = 'block';
+                    setTimeout(() => {
+                        reviewCards[currentReviewIndex].style.opacity = '1';
+                    }, 10);
+                }, 700);
+            }, 7000);
+        }
+        // Start the carousel immediately
+        startReviewCarousel();
+        function showFounderModal(which) {
+            document.getElementById('founderModalThomas').style.display = (which === 'thomas') ? 'flex' : 'none';
+            document.getElementById('founderModalMo').style.display = (which === 'mo') ? 'flex' : 'none';
+        }
+        document.querySelectorAll('.founder-link').forEach(function(el) {
+            el.addEventListener('click', function() {
+                showFounderModal(this.dataset.founder);
+            });
+        });
+        document.querySelectorAll('.founder-modal-close, .founder-modal-overlay').forEach(function(el) {
+            el.addEventListener('click', function() {
+                document.getElementById('founderModalThomas').style.display = 'none';
+                document.getElementById('founderModalMo').style.display = 'none';
+            });
+        });
+
+        // "How It Works" modal trigger
+        document.getElementById('howItWorksLink').addEventListener('click', function() {
+            document.getElementById('howItWorksModal').style.display = 'flex';
+        });
+
+        // Generic modal close logic for all modals with .founder-modal class
+        document.querySelectorAll('.founder-modal-close, .founder-modal-overlay').forEach(function(el) {
+            el.addEventListener('click', function(e) {
+                e.preventDefault();
+                el.closest('.founder-modal').style.display = 'none';
+            });
+        });
+    });
+
+    document.getElementById('emailForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = encodeURIComponent(document.getElementById('emailInput').value);
+        const baseUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSenipPEWBn8kayp5WTkKRAdbblVH-yhofMHFYfaAVVaH9FFuA/formResponse?usp=pp_url&entry.1160800181=';
+        const submitButton = document.querySelector('.submit-button');
+        const checkmark = submitButton.querySelector('.centered-checkmark');
+        const emailInput = document.getElementById('emailInput');
+        // Hide input and button, show checkmark
+        emailInput.style.display = 'none';
+        submitButton.querySelector('span').style.display = 'none';
+        checkmark.style.display = 'inline';
+        // Disable the submit button
+        submitButton.disabled = true;
+        // Using a hidden iframe to submit the form without redirecting
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.setAttribute('src', baseUrl + email);
+        document.body.appendChild(iframe);
+        // Hide checkmark and reset form after 1.5s
+        setTimeout(() => {
+            checkmark.style.display = 'none';
+            emailInput.style.display = '';
+            submitButton.querySelector('span').style.display = '';
+            document.getElementById('emailForm').reset();
+            submitButton.disabled = false;
+        }, 1500);
+        // Remove iframe after submission
+        setTimeout(() => {
+            document.body.removeChild(iframe);
+        }, 1000);
+    });
+
+    // --- Refund Chart Logic ---
+
+    // Helper: Format as currency
+    function formatCurrency(amount) {
+        return '$' + amount.toLocaleString(undefined, {maximumFractionDigits: 0});
+    }
+
+    let currentState = 'IL';
+    let currentIncomeK = 25;
+
+    function updateHeader(state, incomeK) {
+        const stateName = stateOptions[state] || 'Unknown';
+        document.getElementById('inlineState').innerHTML = `${stateName} <span id="stateArrow" style="font-size: 0.85em; margin-left: 0.3em; color: #3A5AFF;">▼</span>`;
+        document.getElementById('inlineIncome').textContent = incomeK;
+    }
+
+    function calculateRefunds(state, incomeK) {
+        // Constants
+        const qualifiedExpenses = 1500 * 12; // $18,000
+        const interestBenefit = 1500 * 12 * 0.04 * 0.2; // $144
+        const income = incomeK * 1000;
+        console.log('--- REFUND CALCULATION START ---');
+        console.log('State:', state, 'Income:', income);
+        // --- Federal Tax Calculation ---
+        const fedDeduction = federaltaxratedb.standardDeduction || 0;
+        const fedTaxable = Math.max(0, income - fedDeduction);
+        let fedTaxOwed = 0;
+        let prev = 0;
+        for (const bracket of federaltaxratedb.brackets) {
+            if (fedTaxable > prev) {
+                const amt = Math.min(fedTaxable, bracket.threshold) - prev;
+                fedTaxOwed += amt * (bracket.rate / 100);
+                console.log(`Federal bracket: 0-${bracket.threshold} @${bracket.rate}%: Taxed ${amt}, Tax so far: ${fedTaxOwed}`);
+                prev = bracket.threshold;
+            } else {
+                break;
+            }
+        }
+        const fedWithheld = fedTaxOwed * 1.20;
+        const fedRefund = fedWithheld - fedTaxOwed;
+        console.log('Federal: Deduction:', fedDeduction, 'Taxable:', fedTaxable, 'Tax Owed:', fedTaxOwed, 'Withheld:', fedWithheld, 'Refund:', fedRefund);
+        // --- State Tax Calculation ---
+        const stateDeduction = state529DB[state]?.deduction || 0;
+        const statePersonalExemption = statePersonalExemptionDB[state]?.amount || 0;
+        const stateTaxable = Math.max(0, income - statePersonalExemption);
+        console.log('State Deduction:', stateDeduction, 'State Personal Exemption:', statePersonalExemption, 'State Taxable:', stateTaxable);
+        
+        function calcStateTaxOwed(income, state) {
+            if (income <= 0) return 0;
+            const stateTaxInfo = stateTaxDB[state];
+            if (!stateTaxInfo || !stateTaxInfo.brackets || stateTaxInfo.brackets.length === 0) return 0;
+            let totalTax = 0;
+            let remainingIncome = income;
+            let previousThreshold = 0;
+            const sortedBrackets = [...stateTaxInfo.brackets].sort((a, b) => a.threshold - b.threshold);
+            for (let i = 0; i < sortedBrackets.length; i++) {
+                const bracket = sortedBrackets[i];
+                const nextThreshold = bracket.threshold;
+                const taxableInThisBracket = Math.min(remainingIncome, nextThreshold - previousThreshold);
+                if (taxableInThisBracket <= 0) break;
+                totalTax += (taxableInThisBracket * (bracket.rate / 100));
+                console.log(`State bracket: ${previousThreshold}-${nextThreshold} @${bracket.rate}%: Taxed ${taxableInThisBracket}, Tax so far: ${totalTax}`);
+                remainingIncome -= taxableInThisBracket;
+                previousThreshold = nextThreshold;
+                if (remainingIncome <= 0) break;
+            }
+            return totalTax;
+        }
+
+        const otherStateTaxOwed = calcStateTaxOwed(stateTaxable, state);
+        // State withholding is always based on the non-Renest (no 529 deduction) tax owed
+        const stateWithheld = otherStateTaxOwed * 1.10;
+        const otherStateRefund = stateWithheld - otherStateTaxOwed;
+
+        let renestStateRefund;
+        const deductibleAmount = Math.min(qualifiedExpenses, stateDeduction, stateTaxable);
+
+        // Special handling for credit states (IN, OR, MN) vs. deduction states
+        if (state === 'IN') {
+            const contributionCredit = deductibleAmount * 0.20;
+            const benefit = Math.min(contributionCredit, 1500, otherStateTaxOwed);
+            const renestStateTaxOwed = otherStateTaxOwed - benefit;
+            renestStateRefund = stateWithheld - renestStateTaxOwed;
+        } else if (state === 'OR') {
+            const benefit = Math.min(180, otherStateTaxOwed);
+            const renestStateTaxOwed = otherStateTaxOwed - benefit;
+            renestStateRefund = stateWithheld - renestStateTaxOwed;
+        } else if (state === 'MN') {
+            let benefit = 0;
+            if (income < 88810) {
+                benefit = Math.min(500, otherStateTaxOwed, 0.5 * qualifiedExpenses);
+            }
+            const renestStateTaxOwed = otherStateTaxOwed - benefit;
+            renestStateRefund = stateWithheld - renestStateTaxOwed;
+        } else {
+            // Standard deduction logic for all other states
+            const renestStateTaxable = Math.max(0, stateTaxable - deductibleAmount);
+            const renestStateTaxOwed = calcStateTaxOwed(renestStateTaxable, state);
+            renestStateRefund = stateWithheld - renestStateTaxOwed;
+            console.log('Renest State (Deduction): Taxable:', renestStateTaxable, 'Tax Owed:', renestStateTaxOwed, 'Refund:', renestStateRefund);
+        }
+
+        console.log('Other State: Taxable:', stateTaxable, 'Tax Owed:', otherStateTaxOwed, 'Withheld:', stateWithheld, 'Refund:', otherStateRefund);
+        let renestTotal = renestStateRefund + fedRefund + interestBenefit;
+        let otherTotal = otherStateRefund + fedRefund;
+        console.log('Renest Total Refund:', renestTotal, 'Other Total Refund:', otherTotal, 'Interest Benefit:', interestBenefit);
+        console.log('--- REFUND CALCULATION END ---');
+        return {
+            renest: Math.max(0, Math.round(renestTotal)),
+            turbotax: Math.max(0, Math.round(otherTotal)),
+            hrblock: Math.max(0, Math.round(otherTotal)),
+            sprinttax: Math.max(0, Math.round(otherTotal-125))
+        };
+    }
+
+    function renderRefundChart(refunds) {
+        const container = document.getElementById('refundChartContainer');
+        container.innerHTML = `
+            <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 0.5rem; font-size: 0.9rem;">
+                <div style="font-weight: 500;">Company</div>
+                <div style="font-weight: 500; text-align: right;">Average Refund</div>
+                <div style="color: #3A5AFF; font-weight: 600;">Renest</div>
+                <div style="text-align: right; color: #3A5AFF; font-weight: 600;">${formatCurrency(refunds.renest)}</div>
+                <div>TurboTax</div>
+                <div style="text-align: right;">${formatCurrency(refunds.turbotax)}</div>
+                <div>H&R Block</div>
+                <div style="text-align: right;">${formatCurrency(refunds.hrblock)}</div>
+                <div>SprintTax</div>
+                <div style="text-align: right;">${formatCurrency(refunds.sprinttax)}</div>
+            </div>
+            <div style='font-size: 0.82rem; color: #888; margin-top: 0.7rem; text-align: left; max-width: 500px; margin-left: auto; margin-right: auto;'>
+                 
+            </div>
+        `;
+    }
+
+    function updateRefundChart() {
+        updateHeader(currentState, currentIncomeK);
+        const refunds = calculateRefunds(currentState, currentIncomeK);
+        renderRefundChart(refunds);
+    }
+
+    // Inline state editing
+    function showStateDropdown() {
+        const span = document.getElementById('inlineState');
+        const select = document.createElement('select');
+        select.style.fontSize = '1rem';
+        select.style.padding = '0.1rem 0.3rem';
+        for (const [abbr, name] of Object.entries(stateOptions)) {
+            const option = document.createElement('option');
+            option.value = abbr;
+            option.textContent = name;
+            if (abbr === currentState) option.selected = true;
+            select.appendChild(option);
+        }
+        span.replaceWith(select);
+        select.focus();
+        if (typeof select.showPicker === 'function') {
+            select.showPicker();
+        }
+        select.addEventListener('change', function() {
+            currentState = this.value;
+            // Restore the span with the arrow
+            const newSpan = document.createElement('span');
+            newSpan.id = 'inlineState';
+            newSpan.style.cssText = 'text-decoration: none; cursor: pointer; color: #3A5AFF; background: #F0F4FF; padding: 0.1rem 0.4rem; border-radius: 6px; transition: all 0.2s ease; display: inline-flex; align-items: center;';
+            newSpan.innerHTML = `${stateOptions[currentState]} <span id=\"stateArrow\" style=\"font-size: 0.85em; margin-left: 0.3em; color: #3A5AFF;\">▼</span>`;
+            newSpan.addEventListener('click', showStateDropdown);
+            select.replaceWith(newSpan);
+            updateRefundChart();
+        });
+        select.addEventListener('blur', function() {
+            // Restore the span with the arrow
+            const newSpan = document.createElement('span');
+            newSpan.id = 'inlineState';
+            newSpan.style.cssText = 'text-decoration: none; cursor: pointer; color: #3A5AFF; background: #F0F4FF; padding: 0.1rem 0.4rem; border-radius: 6px; transition: all 0.2s ease; display: inline-flex; align-items: center;';
+            newSpan.innerHTML = `${stateOptions[currentState]} <span id=\"stateArrow\" style=\"font-size: 0.85em; margin-left: 0.3em; color: #3A5AFF;\">▼</span>`;
+            newSpan.addEventListener('click', showStateDropdown);
+            select.replaceWith(newSpan);
+            updateRefundChart();
+        });
+    }
+    document.getElementById('inlineState').addEventListener('click', showStateDropdown);
+
+    // Inline income editing
+    function showIncomeInput() {
+        const span = document.getElementById('inlineIncome');
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.min = 1;
+        input.max = 99;
+        input.value = currentIncomeK;
+        input.style.width = '40px';
+        input.style.fontSize = '1rem';
+        input.style.padding = '0.1rem 0.3rem';
+        span.replaceWith(input);
+        input.focus();
+        input.select();
+        function finish() {
+            let val = parseInt(input.value, 10);
+            if (isNaN(val) || val < 1) val = 1;
+            if (val > 99) val = 99;
+            currentIncomeK = val;
+            input.replaceWith(span);
+            updateRefundChart();
+        }
+        input.addEventListener('blur', finish);
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                finish();
+            }
+        });
+    }
+    document.getElementById('inlineIncome').addEventListener('click', showIncomeInput);
+
+    // Initial render
+    updateRefundChart();
+</script>
+
+<!-- How It Works Modal -->
+<div id="howItWorksModal" class="founder-modal" style="display:none;">
+  <div class="founder-modal-overlay"></div>
+  <div class="founder-modal-content" style="max-width: 650px; text-align: left; padding: 0;">
+    <button class="founder-modal-close" aria-label="Close">&times;</button>
+    <div class="modal-scroll-content" style="max-height: 85vh; overflow-y: auto; padding: 1.5rem 2rem;">
+        <div style="font-size: 1.5rem; font-weight: 700; color: #4B227A; margin-bottom: 1rem; text-align: center;">How It Works</div>
+        <div style="font-size: 1.05rem; color: #2d2346; line-height: 1.6;">
+            <div style="margin-bottom: 1rem; font-weight: 500; color: #4B227A;">We help students with their finances and taxes. This is what we'll ask for and do for you:</div>
+            <ol style="padding-left: 1rem; margin-bottom: 1rem; list-style-type: none;">
+                <li style="margin-bottom: 1rem; position: relative; padding-left: 2.2rem;">
+                    <span style="position: absolute; left: 0; color: #3A5AFF; font-weight: 700; font-size: 1.1rem;">1.</span>
+                    Based on your basic information and your state, we start to narrow down the tax benefits available to you.
+                </li>
+                <li style="margin-bottom: 1rem; position: relative; padding-left: 2.2rem;">
+                    <span style="position: absolute; left: 0; color: #3A5AFF; font-weight: 700; font-size: 1.1rem;">2.</span>
+                    Next, we ask for your income and education related expenses you've had this year (e.g., rent). These expenses qualify for a tax deduction in your state while you are a student. <br><span style="color: #666; font-size: 0.9rem;">(The state and federal law that creates this education benefit is based on section 529, just like how retirement benefits are described in section 401).</span>
+                </li>
+                <li style="margin-bottom: 1rem; position: relative; padding-left: 2.2rem;">
+                    <span style="position: absolute; left: 0; color: #3A5AFF; font-weight: 700; font-size: 1.1rem;">3.</span>
+                    We record this information so that it is ready to be submitted on your taxes. The records need to be made in the same calendar year that the expenses happen, so if you wait till next tax season (which is in the next calendar year) then you have lost the opportunity to qualify for your benefit.
+                </li>
+                <li style="margin-bottom: 1rem; position: relative; padding-left: 2.2rem;">
+                    <span style="position: absolute; left: 0; color: #3A5AFF; font-weight: 700; font-size: 1.1rem;">✓</span>
+                    In April, we file your taxes and include the paperwork to mark the extra benefits you qualify for based on the information you provided and the setup we did.
+                </li>
+                <li style="margin-bottom: 1rem; position: relative; padding-left: 2.2rem;">
+                    <span style="position: absolute; left: 0; color: #3A5AFF; font-weight: 700; font-size: 1.1rem;">👌</span>
+                    If you don't want us to submit your taxes, that's fine too! We'll go through the same steps and prepare all the paperwork for you to hand over to any other tax filing company or person you choose.
+                </li>
+                <li style="margin-bottom: 1rem; position: relative; padding-left: 2.2rem;">
+                    <span style="position: absolute; left: 0; color: #3A5AFF; font-weight: 700; font-size: 1.1rem;">💰</span>
+                    You only pay when you file your taxes and get your maximum benefit. We gaurantee a higher benefit with Renest than you would have received without us.
+                </li>
+            </ol>
+            <div style="font-size: 1.1rem; color: #4B227A; font-weight: 600; text-align: center; padding: 1rem; background: linear-gradient(145deg, #f0f2ff, #ffffff); border-radius: 8px; margin-top: 0.8rem;">Our goal is to make sure you get every benefit you're eligible for—simply and with confidence.</div>
+        </div>
+    </div>
+  </div>
+</div>
+<!-- Founder Modals -->
+<div id="founderModalThomas" class="founder-modal" style="display:none;">
+  <div class="founder-modal-overlay"></div>
+  <div class="founder-modal-content">
+    <button class="founder-modal-close" aria-label="Close">&times;</button>
+    <img src="thomasheadshot2.png" alt="Thomas Lloyd" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; margin-bottom: 1rem; background-color: white;">
+    <div style="font-weight: 700; color: #4B227A; font-size: 1.1rem; margin-bottom: 0.5rem;">Thomas Lloyd</div>
+    <div style="font-size: 0.98rem; color: #222; text-align: center; margin-bottom: 0.7rem;">"As a working student during my undergrad and PhD, I experienced firsthand the financial stress students face. I wanted real solutions, not bs. So I put my analytical skills towards building something meaningful."</div>
+    <a href="https://orcid.org/0000-0002-4271-8809" target="_blank" rel="noopener" style="color: #3A5AFF; font-size: 0.95rem; text-decoration: underline;">Thomas's Research</a>
+  </div>
+</div>
+<div id="founderModalMo" class="founder-modal" style="display:none;">
+  <div class="founder-modal-overlay"></div>
+  <div class="founder-modal-content">
+    <button class="founder-modal-close" aria-label="Close">&times;</button>
+    <img src="moheadshot.png" alt="Mo Zheng" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; margin-bottom: 1rem; background-color: white;">
+    <div style="font-weight: 700; color: #4B227A; font-size: 1.1rem; margin-bottom: 0.5rem;">Thomas "Mo" Zheng</div>
+    <div style="font-size: 0.98rem; color: #222; text-align: center; margin-bottom: 0.7rem;">"While paying for my education I made the most out of every dollar. After learning the ins-and-outs of finance on Wall Street, I was driven to make those powerful strategies accessible and impactful for all."</div>
+    <a href="https://www.linkedin.com/in/thomas-mo-zheng-b22830124" target="_blank" rel="noopener" style="color: #3A5AFF; font-size: 0.95rem; text-decoration: underline;">Mo's Career</a>
+  </div>
+</div>
+</body>
+</html>
