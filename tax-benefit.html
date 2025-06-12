@@ -1394,13 +1394,13 @@
 
                     <form class="auth-form" id="signupForm">
                         <div class="input-group">
-                            <input type="text" class="input-field" placeholder="Full Name" required>
-                        </div>
-                        <div class="input-group">
                             <input type="email" class="input-field" placeholder="Email" required>
                         </div>
                         <div class="input-group">
-                            <input type="password" class="input-field" placeholder="Password" required>
+                            <input type="password" class="input-field" placeholder="Password" id="password" required>
+                        </div>
+                        <div class="input-group">
+                            <input type="password" class="input-field" placeholder="Confirm Password" id="confirmPassword" required>
                         </div>
                         <button type="submit" class="btn btn-primary" id="signupSubmitBtn">
                             <div class="btn-content">
@@ -1551,11 +1551,40 @@
         spinner.style.display = 'block';
         submitBtn.disabled = true;
 
-        const form = document.getElementById('signupForm');
-        const inputs = form.querySelectorAll('input');
-        let name = inputs[0].value.trim();
-        let email = inputs[1].value.trim().toLowerCase();
-        let password = inputs[2].value.trim();
+        let email = document.querySelector('#signupForm input[type="email"]').value;
+        let password = document.getElementById('password').value;
+        let confirmPassword = document.getElementById('confirmPassword').value;
+
+        // Clean the inputs on the client side
+        email = email.trim().toLowerCase();
+        password = password.trim();
+        confirmPassword = confirmPassword.trim();
+
+        // Basic email format validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            alert('Please enter a valid email address.');
+            spinner.style.display = 'none';
+            submitBtn.disabled = false;
+            return;
+        }
+
+        // Password validation
+        const passwordRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{5,}$/;
+        if (!passwordRegex.test(password)) {
+            alert('Password must be at least 5 characters long and contain at least one capital letter, one number, and one special character.');
+            spinner.style.display = 'none';
+            submitBtn.disabled = false;
+            return;
+        }
+
+        // Check if passwords match
+        if (password !== confirmPassword) {
+            alert('Passwords do not match.');
+            spinner.style.display = 'none';
+            submitBtn.disabled = false;
+            return;
+        }
 
         try {
             const response = await fetch(`${EMAIL_AUTH_URL}/renest-signup`, {
@@ -1563,7 +1592,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ name, email, password })
+                body: JSON.stringify({ email, password })
             });
 
             const data = await response.json();
