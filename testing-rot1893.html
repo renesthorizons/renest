@@ -1,0 +1,2239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-TGZL6PTS');</script>
+    <!-- End Google Tag Manager -->
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - RENEST</title>
+    <link rel="icon" href="blogo2.png" type="image/png">
+    <!-- Add Google Sign-In Script -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --accent: #f8fafc;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --background: #ffffff;
+            --border: #e2e8f0;
+            --border-light: #f1f5f9;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+        }
+
+        html, body {
+            overflow-x: hidden;
+            max-width: 100%;
+        }
+
+        body {
+            background-color: var(--background);
+            min-height: 100vh;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            width: 100%;
+            max-width: 100vw;
+            overflow-x: hidden;
+        }
+
+        .main-content {
+            width: 100%;
+            max-width: 100%;
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        #motivationSection {
+            width: 100%;
+            max-width: 900px;
+            background: none;
+            padding: 4rem 3rem;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        #dateDisplay {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.025em;
+            font-weight: 500;
+        }
+
+        .motivation-counter {
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.025em;
+            color: var(--text-primary);
+        }
+
+        #availableAmount {
+            color: var(--text-secondary);
+            font-weight: 700;
+        }
+
+        .motivation-message {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.25rem;
+            line-height: 1.7;
+            text-align: left;
+        }
+
+        .motivation-message.headline, .motivation-message[style*='font-size: 1.5rem'] {
+            font-size: 1.875rem !important;
+            font-weight: 700 !important;
+            color: var(--text-primary) !important;
+            margin-bottom: 2rem !important;
+            line-height: 1.2 !important;
+        }
+
+        .get-started-section {
+            width: 100%;
+            padding: 2rem 3rem 4rem 3rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .get-started-section .content-wrapper {
+            max-width: 900px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .get-started-btn {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .get-started-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 12px -1px rgba(0, 0, 0, 0.15);
+        }
+
+        .auth-section {
+            width: 100%;
+            padding: 4rem 3rem;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .auth-section.active {
+            display: flex;
+        }
+
+        .content-section {
+            transition: all 0.3s ease;
+        }
+
+        .content-section.hidden {
+            display: none;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-button:hover {
+            background: var(--accent);
+            color: var(--text-primary);
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 2.5rem;
+            background: var(--background);
+            border-radius: 16px;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .auth-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+            text-align: center;
+            letter-spacing: -0.025em;
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background: var(--background);
+            color: var(--text-primary);
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            letter-spacing: 0.025em;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 1.5rem 0;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .divider span {
+            padding: 0 1rem;
+            background: var(--background);
+        }
+
+        .toggle-auth {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .toggle-auth a, .forgot-password {
+            color: var(--primary);
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .toggle-auth a:hover, .forgot-password:hover {
+            text-decoration: underline;
+        }
+        
+        .forgot-password {
+            display: block;
+            text-align: right;
+            font-size: 0.875rem;
+            margin: -0.5rem 0 1rem;
+        }
+
+        .brand-logo {
+            width: 400px;
+            height: 600px;
+            object-fit: contain;
+            margin-bottom: 0rem;
+        }
+
+        @media (max-width: 1100px) {
+            #motivationSection {
+                padding: 2rem 1.5rem;
+            }
+            .get-started-section {
+                padding: 2rem 1.5rem 4rem 1.5rem;
+            }
+            .auth-section {
+                padding: 2rem 1.5rem;
+            }
+            .back-button {
+                top: 1rem;
+                left: 1rem;
+            }
+        }
+
+        @media (max-width: 900px) {
+            html, body {
+                overflow-x: hidden !important;
+            }
+            
+            .main-content {
+                min-height: auto;
+                padding: 0;
+                width: 100%;
+                max-width: 100vw;
+                overflow-x: hidden;
+            }
+            
+            #motivationSection {
+                padding: 2rem 1rem;
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+            
+            .motivation-counter {
+                font-size: 1.5rem;
+            }
+            
+            .get-started-section {
+                padding: 2rem 1rem 4rem 1rem;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            
+            .auth-section {
+                padding: 2rem 1rem;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            
+            .auth-container {
+                padding: 1.5rem;
+                border: none;
+                box-shadow: none;
+                background: transparent;
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+            
+            .back-button {
+                top: 0.5rem;
+                left: 0.5rem;
+                padding: 0.375rem 0.75rem;
+                font-size: 0.8rem;
+            }
+            
+            .expand-section,
+            .expand-header {
+                border-radius: 8px;
+                background: var(--background);
+                padding: 0.75rem;
+                font-size: 1rem;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            
+            .expand-section.active .expand-content {
+                padding: 1rem 0.5rem;
+            }
+            
+            #emailForm {
+                width: 100% !important;
+                flex-direction: column !important;
+                gap: 1rem !important;
+            }
+            
+            #emailForm input[type="email"] {
+                font-size: 0.875rem !important;
+                padding: 0.75rem !important;
+                border-radius: 6px !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            
+            #emailForm .submit-button {
+                font-size: 0.875rem !important;
+                padding: 0.75rem !important;
+                border-radius: 6px !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            
+            .submit-button span, .submit-button .centered-checkmark {
+                font-size: 0.875rem !important;
+            }
+            
+            .pie-legend-box, .pie-legend-box span {
+                font-size: 0.875rem !important;
+                padding: 0 0.5rem !important;
+            }
+            
+            .mobile-only-break {
+                display: block;
+                width: 100%;
+                height: 0;
+            }
+            
+            /* Fix review cards on mobile */
+            .reviews-container-wrapper {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 0 !important;
+                margin: 0.5rem 0 2rem 0 !important;
+                box-sizing: border-box !important;
+            }
+            
+            .review-card {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                box-sizing: border-box !important;
+            }
+            
+            /* Fix CTA and contact boxes */
+            .cta-box {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 2rem 0 !important;
+                padding: 1.5rem !important;
+                box-sizing: border-box !important;
+            }
+            
+            .contact-us-box {
+                width: 100% !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            
+            /* Fix refund chart container */
+            #refundChartContainer {
+                width: 100% !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+                overflow-x: auto !important;
+            }
+            
+            /* Ensure all containers fit properly */
+            .hero-headline, .hero-subtitle, .benefits-list, .founder-intro {
+                width: 100% !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            
+            /* Fix modal positioning on mobile */
+            .founder-modal-content {
+                width: 95vw !important;
+                max-width: 95vw !important;
+                margin: 1rem !important;
+                box-sizing: border-box !important;
+            }
+            
+            /* Fix remind section on mobile */
+            .remind-section {
+                padding: 0 0.5rem !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+            
+            .email-form-container {
+                flex-direction: column !important;
+                gap: 1rem !important;
+                width: 100% !important;
+            }
+            
+            .email-form-container form {
+                flex-direction: column !important;
+                gap: 1rem !important;
+                width: 100% !important;
+            }
+            
+            /* Ensure everything stays within viewport */
+            * {
+                max-width: 100vw !important;
+                box-sizing: border-box !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            html, body {
+                overflow-x: hidden !important;
+            }
+            
+            .main-content {
+                min-height: auto;
+                width: 100%;
+                max-width: 100vw;
+                overflow-x: hidden;
+                padding: 0;
+            }
+            
+            #motivationSection {
+                padding: 1.5rem 0.75rem;
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+            
+            .brand-logo {
+                width: 250px;
+                height: 200px;
+            }
+            
+            .get-started-section {
+                padding: 1rem 0.75rem 3rem 0.75rem;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            
+            .auth-section {
+                padding: 1rem 0.75rem;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            
+            .auth-container {
+                padding: 1rem 0.75rem;
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+            
+            .hero-headline h1 {
+                font-size: 1.5rem !important;
+                line-height: 1.2 !important;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem !important;
+            }
+            
+            .benefit-item {
+                padding: 0.75rem !important;
+                font-size: 0.9rem !important;
+            }
+            
+            .cta-box {
+                padding: 1.25rem 0.75rem !important;
+                margin: 1.5rem 0 !important;
+            }
+            
+            .cta-title {
+                font-size: 1.125rem !important;
+            }
+            
+            .cta-content {
+                font-size: 1rem !important;
+            }
+            
+            .student-calculator-header {
+                font-size: 1rem !important;
+                padding: 0 0.75rem;
+            }
+            
+            #refundChartContainer {
+                padding: 1rem 0.75rem !important;
+                font-size: 0.85rem;
+            }
+            
+            .contact-us-box {
+                padding: 1rem 0.75rem !important;
+            }
+            
+            .founder-modal-content {
+                width: 98vw !important;
+                max-width: 98vw !important;
+                padding: 1.5rem 1rem !important;
+                margin: 0.5rem !important;
+            }
+        }
+
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-radius: 50%;
+            border-top-color: currentColor;
+            animation: spin 1s linear infinite;
+            margin-left: 8px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .btn-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pie-chart-container {
+            overflow: visible !important;
+        }
+
+        .pie-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 1rem;
+            letter-spacing: -0.025em;
+        }
+
+        .pie-available {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .pie-missed {
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .funding-date {
+            font-style: italic;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            text-align: left;
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Numbered bullets styling */
+        #motivationSection > div[style*='margin-bottom: 1.2rem;'] > div {
+            color: var(--text-primary) !important;
+            background: var(--background) !important;
+            border: 1px solid var(--border-light) !important;
+            border-radius: 8px !important;
+            padding: 1rem !important;
+            margin-bottom: 0.75rem !important;
+            font-size: 1rem !important;
+            font-weight: 500 !important;
+            display: flex !important;
+            align-items: flex-start !important;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1) !important;
+        }
+
+        #motivationSection > div[style*='margin-bottom: 1.2rem;'] > div > span {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 28px !important;
+            height: 28px !important;
+            border-radius: 50% !important;
+            background: var(--primary) !important;
+            color: white !important;
+            margin-right: 1rem !important;
+            font-size: 0.875rem !important;
+            flex-shrink: 0 !important;
+            font-weight: 600 !important;
+        }
+
+        .expand-section {
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            background: var(--background);
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .expand-header {
+            background: var(--background);
+            padding: 1rem 1.25rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1.125rem;
+            transition: background 0.2s;
+            border: none;
+        }
+
+        .expand-header:hover {
+            background: var(--accent);
+        }
+
+        .expand-toggle {
+            font-size: 1.25rem;
+            transition: transform 0.3s;
+            color: var(--text-muted);
+        }
+
+        .expand-section.active .expand-toggle {
+            transform: rotate(45deg);
+        }
+
+        .expand-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background: var(--background);
+        }
+
+        .expand-section.active .expand-content {
+            padding: 1rem 1.25rem;
+            max-height: none;
+            overflow: visible;
+        }
+
+        .mobile-only-break {
+            display: none;
+        }
+
+
+
+        .founder-modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .founder-modal-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.75);
+            z-index: 1;
+        }
+
+        .founder-modal-content {
+            position: relative;
+            z-index: 2;
+            background: var(--background);
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            padding: 2rem 2.5rem;
+            max-width: 450px;
+            width: 90vw;
+            text-align: center;
+            animation: founderModalIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--border-light);
+        }
+
+        .founder-modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            z-index: 3;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .founder-modal-close:hover {
+            background: var(--border-light);
+            color: var(--text-primary);
+        }
+
+        @keyframes founderModalIn {
+            from { 
+                transform: translateY(20px) scale(0.95); 
+                opacity: 0; 
+            }
+            to { 
+                transform: none; 
+                opacity: 1; 
+            }
+        }
+
+        /* Email form styling */
+        #emailForm {
+            display: flex;
+            gap: 0.75rem;
+            width: 100%;
+            align-items: center;
+        }
+
+        #emailInput {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            min-width: 0;
+            transition: all 0.2s;
+        }
+
+        #emailInput:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .submit-button {
+            padding: 0.75rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .submit-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .review-card {
+            background: var(--background);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            width: 100%;
+            display: block;
+            opacity: 1;
+            transition: opacity 0.7s ease-in-out;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            height: 180px;
+            box-sizing: border-box;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .review-card .review-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .review-card .review-header {
+            flex-shrink: 0;
+            margin-bottom: 0.5rem;
+        }
+
+        .review-card .review-text {
+            flex: 1;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            line-height: 1.4;
+            font-style: italic;
+            color: #2c3e50;
+        }
+
+        @media (max-width: 900px) {
+            .review-card {
+                height: 160px;
+                padding: 1rem;
+            }
+            
+            .review-card .review-text {
+                -webkit-line-clamp: 3;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .review-card {
+                height: 140px;
+                padding: 0.75rem;
+            }
+            
+            .review-card .review-text {
+                -webkit-line-clamp: 3;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Hide number input spinners */
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        /* Improved contact section */
+        .contact-us-box {
+            background: var(--background) !important;
+            border: 1px solid var(--border-light) !important;
+            border-radius: 12px !important;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1) !important;
+            padding: 1.5rem !important;
+            margin-top: 2rem !important;
+        }
+
+        .contact-us-box strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .contact-us-box a {
+            color: var(--primary) !important;
+            text-decoration: none !important;
+            font-weight: 500;
+        }
+
+        .contact-us-box a:hover {
+            text-decoration: underline !important;
+        }
+
+        /* Improved refund chart */
+        #refundChartContainer {
+            background: var(--background) !important;
+            border: 1px solid var(--border-light) !important;
+            border-radius: 12px !important;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1) !important;
+            padding: 1.5rem !important;
+            margin: 1rem auto !important;
+        }
+
+        /* Improved inline editing elements */
+        #inlineState, #inlineIncome {
+            background: var(--accent) !important;
+            color: var(--primary) !important;
+            border: 1px solid var(--border) !important;
+            padding: 0.25rem 0.75rem !important;
+            border-radius: 6px !important;
+            font-weight: 600 !important;
+            transition: all 0.2s !important;
+        }
+
+        #inlineState:hover, #inlineIncome:hover {
+            background: var(--border-light) !important;
+        }
+
+        /* Google Sign-In button styling */
+        .g_id_signin {
+            margin-bottom: 1rem;
+        }
+
+        /* Improved headline styling */
+        .motivation-message[style*="font-size: 2rem"] {
+            color: var(--text-primary) !important;
+            font-weight: 800 !important;
+            margin-bottom: 2rem !important;
+        }
+
+        .motivation-message[style*="font-size: 2rem"] hr {
+            background: var(--primary) !important;
+            border: none !important;
+            height: 3px !important;
+            margin-top: 1rem !important;
+            border-radius: 2px !important;
+        }
+
+        /* Improved feature boxes */
+        div[style*="background: #f0f2f5"] {
+            background: var(--background) !important;
+            border: 1px solid var(--border-light) !important;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .pie-title {
+            color: var(--primary) !important;
+        }
+
+        /* Hero section styling */
+        .hero-headline {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .hero-headline h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.2;
+            margin: 0;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .hero-headline h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 900px) {
+            .hero-headline h1 {
+                font-size: 1.875rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.125rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-headline h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Benefits list styling */
+        .benefits-list {
+            margin-bottom: 2rem;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: var(--background);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .benefit-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        /* Student calculator header */
+        .student-calculator-header {
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 1.25rem;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 900px) {
+            .student-calculator-header {
+                font-size: 1.125rem;
+            }
+        }
+
+        /* Founder introduction section */
+        .founder-intro {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .founder-link {
+            color: var(--primary);
+            text-decoration: underline;
+            cursor: pointer;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .founder-link:hover {
+            color: var(--primary-dark);
+        }
+
+        /* CTA box styling */
+        .cta-box {
+            background: var(--background);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 800px;
+        }
+
+        .cta-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
+        }
+
+        .cta-content {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+
+        .link-underline {
+            color: var(--primary);
+            text-decoration: underline;
+            cursor: pointer;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .link-underline:hover {
+            color: var(--primary-dark);
+        }
+
+        .highlight-text {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* Boring Stuff Overlay */
+        #boring-stuff-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--background);
+            z-index: 10001;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s, visibility 0.5s;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        #boring-stuff-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #boring-stuff-content {
+            color: var(--text-primary);
+            max-width: 900px;
+            width: 100%;
+            text-align: left;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        #boring-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            transition: opacity 0.5s ease-in-out, font-size 0.5s, line-height 0.5s;
+            letter-spacing: 0.1em;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        #boring-text {
+            font-size: 1.125rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            transition: opacity 0.7s ease-in-out;
+            opacity: 0;
+        }
+
+        #boring-text p {
+            margin-bottom: 1.25rem;
+        }
+
+        #boring-text strong {
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        #boring-cta-container {
+            width: 100%;
+            transition: opacity 0.7s ease-in-out;
+            opacity: 0;
+        }
+
+        #boring-progress-bar {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+
+        #boring-progress-bar:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 12px -1px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TGZL6PTS"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <!-- Boring Stuff Overlay -->
+    <div id="boring-stuff-overlay">
+        <div id="boring-stuff-content">
+            <h2 id="boring-title">PLEASE</h2>
+            <div id="boring-text">
+                <p>The most valuable things in life are usually the most boring. Insurance policies. Legal documents. Tax codes. Investment prospectuses. The stuff that actually matters is written to be ignored.</p>
+                <p>This is one of those things.</p>
+                <p>We found a boring legal loophole that gets students $500+ back on taxes. It's not sexy. It's not a hack. It's just paperwork that works.</p>
+                <p>The reason you've never heard of this isn't because it's secret - it's because it's boring. Really, really boring.</p>
+                <p>But boring pays.</p>
+                <p><strong>6 minutes. $500. Then we'll give you something mindless to watch.</strong></p>
+            </div>
+            <div id="boring-cta-container">
+                <div id="boring-progress-bar">
+                    <span>0% - Let's get this over with</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="content-section" id="contentSection">
+                <div id="motivationSection">
+                <div class="hero-headline">
+                    <h1>Taxes for Students, <span class="mobile-only-break"></span>Done Better</h1>
+                </div>
+                <div class="hero-subtitle">
+                    Renest is a tax preparation service that focuses on saving students money on taxes year-round, not just during tax season.
+                </div>
+                <!-- Reviews Section (now under headline) -->
+                <div class="reviews-container-wrapper" style="width: 100%; max-width: 800px; margin: 0.5rem 0 2rem 0; position: relative; min-height: 0;">
+                    <div class="review-card" style="background: linear-gradient(145deg, #ffffff, #f0f2f5); border-radius: 12px; margin-bottom: 0.75rem; position: relative; width: 100%; opacity: 0; transition: opacity 0.7s ease-in-out; display: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+                        <div class="review-content">
+                            <div class="review-header" style="display: flex; align-items: center; gap: 0.75rem;">
+                                <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener">
+                                    <img src="AlfonsoA.png" alt="Alfonso A." style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" onerror="this.outerHTML='<div style=\'width: 40px; height: 40px; border-radius: 50%; background-color: #4B227A; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 500;\'>A</div>'">
+                                </a>
+                                <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener" style="color: #0000EE; text-decoration: underline; font-weight: 600;">- Alfonso A.</a>
+                            </div>
+                            <div class="review-text">"Taxes in the US can be incredibly complex, especially if you've worked in multiple states like I did last year. The team at Renest has been incredibly helpful at every step, always ready to help whenever I had specific questions!"</div>
+                        </div>
+                    </div>
+                    <div class="review-card" style="background: linear-gradient(145deg, #ffffff, #f0f2f5); border-radius: 12px; margin-bottom: 0.75rem; position: relative; width: 100%; opacity: 0; transition: opacity 0.7s ease-in-out; display: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+                        <div class="review-content">
+                            <div class="review-header" style="display: flex; align-items: center; gap: 0.75rem;">
+                                <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener">
+                                    <img src="NirvaanK.png" alt="Nirvaan K." style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" onerror="this.outerHTML='<div style=\'width: 40px; height: 40px; border-radius: 50%; background-color: #4B227A; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 500;\'>N</div>'">
+                                </a>
+                                <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener" style="color: #0000EE; text-decoration: underline; font-weight: 600;">- Nirvaan K.</a>
+                            </div>
+                            <div class="review-text">"Pretty wild that something like this exists and actually works. Especially since im an international student. Lol this makes taxes much less frustrating. Renest actually just got me like 500$ out of nothing"</div>
+                        </div>
+                    </div>
+                    <div class="review-card" style="background: linear-gradient(145deg, #ffffff, #f0f2f5); border-radius: 12px; margin-bottom: 0.75rem; position: relative; width: 100%; display: block; opacity: 1; transition: opacity 0.7s ease-in-out; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+                        <div class="review-content">
+                            <div class="review-header" style="display: flex; align-items: center; gap: 0.75rem;">
+                                <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener">
+                                    <img src="JavierP.png" alt="Javier P." style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" onerror="this.outerHTML='<div style=\'width: 40px; height: 40px; border-radius: 50%; background-color: #4B227A; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 500;\'>J</div>'">
+                                </a>
+                                <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener" style="color: #0000EE; text-decoration: underline; font-weight: 600;">- Javier P.</a>
+                            </div>
+                            <div class="review-text">"The Renest team was extremely responsive and answered all my questions in great detail. Learned a lot and definitely recommend them if you are a student or recent graduate!"</div>
+                        </div>
+                    </div>
+                    <div class="review-card" style="background: linear-gradient(145deg, #ffffff, #f0f2f5); border-radius: 12px; margin-bottom: 0.75rem; position: relative; width: 100%; opacity: 0; transition: opacity 0.7s ease-in-out; display: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+                        <div class="review-content">
+                            <div class="review-header" style="display: flex; align-items: center; gap: 0.75rem;">
+                                <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener">
+                                    <img src="OjasP.png" alt="Ojas P." style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" onerror="this.outerHTML='<div style=\'width: 40px; height: 40px; border-radius: 50%; background-color: #4B227A; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 500;\'>O</div>'">
+                                </a>
+                                <a href="https://www.trustpilot.com/review/renesthorizons.com" target="_blank" rel="noopener" style="color: #0000EE; text-decoration: underline; font-weight: 600;">- Ojas P.</a>
+                            </div>
+                            <div class="review-text">"I came across Renest when looking for ways to help me save money ahead of my MBA and construct a budget. Renest made it super easy to set up a 529. Absolutely recommended for anyone going to school or thinking about paying for someone else to go to school!"</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="benefits-list">
+                    <div class="benefit-item">
+                        <span class="benefit-number">1</span>
+                        As a student you qualify for specific tax benefits related to your education
+                    </div>
+                    <div class="benefit-item">
+                        <span class="benefit-number">2</span>
+                        Mass-market tax services are focused on tax season only, but by then it's too late for students to qualify for these benefits
+                    </div>
+                    <div class="benefit-item">
+                        <span class="benefit-number">3</span>
+                        Renest is solely focused on students' taxes all year long. Invest 6 minutes now to create an account and we can unlock hundreds of dollars more back on your tax return!
+                    </div>
+                </div>
+
+                
+                <div class="student-calculator-header">
+                  Student in <span id="inlineState">Illinois <span id="stateArrow">▼</span></span> making $<span id="inlineIncome">25</span>k per year
+                </div>
+                <div id="refundChartContainer" style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin: 0 auto; max-width: 600px;">
+                    <!-- Chart will be rendered here by JS -->
+                </div>
+                <div style="margin-top: 1rem; font-size: 0.9rem; color: #666; font-style: italic; text-align: center; margin-bottom: 1rem;">
+                    Want to file your taxes the same way as last year? That's okay too! We can still help you maximize your benefits by guiding you through a few steps.
+                </div>
+
+
+                <div class="founder-intro">
+                    Founded by <span class="founder-link" data-founder="thomas">Thomas</span>, a former PhD student, and <span class="founder-link" data-founder="mo">Mo</span>, a former Wall Street professional, Renest's goal is to bring tax sophistication from boardrooms to classrooms, so students can do more with more.
+                </div>
+                
+                <div class="cta-box">
+                    <div class="cta-title">
+                        The earlier you start, the more you get back on your taxes
+                    </div>
+                    <div class="cta-content">
+                       <span id="howItWorksLink" class="link-underline">To qualify for these benefits</span> the IRS requires you to prepare documentation during the year—<span class="highlight-text">not just when you file</span>. 
+                    </div>
+                </div>
+            
+            </div>
+            
+            <!-- Signup Call-to-Action -->
+            <div style="width: 100%; padding: 1.5rem 2rem; text-align: center; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); display: flex; justify-content: center;">
+                <div style="width: 100%; max-width: 900px;">
+                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary); margin-bottom: 1rem; line-height: 1.3;">
+                        Sign up now and our intake form will identify your maximum tax benefit free of charge.
+                    </div>
+                </div>
+            </div>
+                </div>
+            
+            </div>
+            
+                <!-- Get Started Button -->
+                <div class="get-started-section" id="getStartedSection">
+                    <div class="content-wrapper">
+                        <button class="get-started-btn" id="getStartedBtn">Get Started</button>
+                    </div>
+                </div>
+
+                <!-- Remind Me Section -->
+                <div style="width: 100%; display: flex; justify-content: center; padding: 0 2rem 2rem 2rem;">
+                    <div style="width: 100%; max-width: 900px; display: flex; justify-content: center;">
+                        <div class="remind-section" style="width: 100%; max-width: 400px; padding: 0 1rem; box-sizing: border-box;">
+                    
+                    <div class="contact-us-box" style="background: linear-gradient(145deg, #ffffff, #f8f9fa); border-radius: 12px; box-shadow: 0 2px 8px rgba(60,60,100,0.06); padding: 1.2rem 1rem; display: flex; flex-direction: column; gap: 1.2rem; width: 100%; box-sizing: border-box;">
+                        <div>
+                            <strong>Email Us:</strong> <a href="mailto:thomas@renesthorizons.com" style="color: #3A5AFF; text-decoration: underline;">thomas@renesthorizons.com</a>
+                        </div>
+                        <div>
+                            <strong>Let's Chat:</strong> <a href="https://calendly.com/renesthorizons/30min" target="_blank" rel="noopener" style="color: #3A5AFF; text-decoration: underline;">Schedule via Calendly</a>
+                        </div>
+                    </div>
+                    <div class="email-form-container" style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 1.5rem; margin-top: 1rem; width: 100%; box-sizing: border-box;">
+                        <form id="emailForm" style="display: flex; gap: 0.5rem; width: 100%; align-items: center; box-sizing: border-box;">
+                            <input type="email" id="emailInput" placeholder="Enter email" required style="flex: 1; padding: 0.7rem 1rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; min-width: 0; box-sizing: border-box;">
+                            <button type="submit" class="submit-button" style="padding: 0.7rem 1.5rem; background: #4B227A; color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 0.5rem; white-space: nowrap; box-sizing: border-box;">
+                                <span>Remind Me</span>
+                                <span class="centered-checkmark" style="display: none; font-size: 1.3rem; color: white;">✓</span>
+                            </button>
+                        </form>
+                    </div>
+                                    </div>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- Sign Up Form Section -->
+            <div class="auth-section" id="signupSection">
+                <a href="#" class="back-button" id="backFromSignup">
+                    ← Back
+                </a>
+                <div class="auth-container">
+                    <h2 class="auth-title">Create Your Account</h2>
+                    
+                    <!-- Google One Tap Sign In for Sign Up -->
+                    <div id="g_id_onload_signup"
+                         data-client_id="1032310890772-gr5i4m4t9fr7m2sgdbta8c5rumh49jlh.apps.googleusercontent.com"
+                         data-context="signup"
+                         data-callback="handleCredentialResponse">
+                    </div>
+                    <div class="g_id_signin"
+                         data-type="standard"
+                         data-size="large"
+                         data-theme="outline"
+                         data-text="signup_with"
+                         data-shape="rectangular"
+                         data-logo_alignment="left">
+                    </div>
+
+                    <div class="divider">
+                        <span>or</span>
+                    </div>
+
+                    <form class="auth-form" id="signupForm">
+                        <div class="input-group">
+                            <input type="email" class="input-field" placeholder="Email" required>
+                        </div>
+                        <div class="input-group">
+                            <input type="password" class="input-field" placeholder="Password" id="password" required>
+                        </div>
+                        <div class="input-group">
+                            <input type="password" class="input-field" placeholder="Confirm Password" id="confirmPassword" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="signupSubmitBtn">
+                            <div class="btn-content">
+                                <span>Sign Up</span>
+                                <div class="spinner" id="signupSpinner"></div>
+                            </div>
+                        </button>
+                    </form>
+                    <div class="toggle-auth">
+                        <span>Already have an account?</span>
+                        <a href="#" id="showSigninBtn">Sign In</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sign In Form Section -->
+            <div class="auth-section" id="signinSection">
+                <a href="#" class="back-button" id="backFromSignin">
+                    ← Back
+                </a>
+                <div class="auth-container">
+                    <h2 class="auth-title">Sign In</h2>
+                    
+                    <!-- Google One Tap Sign In -->
+                    <div id="g_id_onload"
+                         data-client_id="1032310890772-gr5i4m4t9fr7m2sgdbta8c5rumh49jlh.apps.googleusercontent.com"
+                         data-context="signin"
+                         data-callback="handleCredentialResponse">
+                    </div>
+                    <div class="g_id_signin"
+                         data-type="standard"
+                         data-size="large"
+                         data-theme="outline"
+                         data-text="sign_in_with"
+                         data-shape="rectangular"
+                         data-logo_alignment="left">
+                    </div>
+
+                    <div class="divider">
+                        <span>or</span>
+                    </div>
+
+                    <form class="auth-form" id="authForm">
+                        <div class="input-group">
+                            <input type="email" class="input-field" placeholder="Email" required>
+                        </div>
+                        <div class="input-group">
+                            <input type="password" class="input-field" placeholder="Password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            <div class="btn-content">
+                                <span>Sign In</span>
+                                <div class="spinner" id="spinner"></div>
+                            </div>
+                        </button>
+                    </form>
+                    <div class="toggle-auth">
+                        <span>Don't have an account?</span>
+                        <a href="#" id="showSignupBtn">Sign Up</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <script src="taxdbb.js"></script>
+   <script>
+    // API URLs
+    const GOOGLE_AUTH_URL = 'https://i3tylsqn7i.execute-api.us-east-2.amazonaws.com';
+    const EMAIL_AUTH_URL = 'https://ff0u1oofme.execute-api.us-east-2.amazonaws.com';
+    const SIGNUP_API_URL = 'https://l3p0kf0zgd.execute-api.us-east-2.amazonaws.com';
+
+    // Handle Google Sign-In response
+    async function handleCredentialResponse(response) {
+        try {
+            const result = await fetch(`${GOOGLE_AUTH_URL}/auth/google`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    credential: response.credential
+                })
+            });
+
+            const data = await result.json();
+            if (data.token) {
+                localStorage.setItem('authToken', data.token);
+                window.location.href = '/dashboard.html';
+            }
+        } catch (error) {
+            console.error('Google authentication error:', error);
+            alert('Google authentication failed. Please try again.');
+        }
+    }
+
+    // Handle email/password form submission (Sign In)
+    document.getElementById('authForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Show spinner
+        const spinner = document.getElementById('spinner');
+        const submitBtn = document.getElementById('submitBtn');
+        spinner.style.display = 'block';
+        submitBtn.disabled = true;
+
+        const form = document.getElementById('authForm');
+        let email = form.querySelector('input[type="email"]').value;
+        let password = form.querySelector('input[type="password"]').value;
+
+        // Clean inputs
+        email = email.trim().toLowerCase();
+        password = password.trim();
+
+        try {
+            const response = await fetch(`${EMAIL_AUTH_URL}/renestsignin`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.token) {
+                localStorage.setItem('authToken', data.token);
+                window.location.href = '/dashboard.html';
+            } else {
+                alert(data.error || 'Invalid credentials');
+            }
+        } catch (error) {
+            console.error('Email/password sign-in error:', error);
+            alert('Sign in failed. Please try again.');
+        } finally {
+            // Hide spinner and re-enable button
+            spinner.style.display = 'none';
+            submitBtn.disabled = false;
+        }
+    });
+
+    // Handle sign up form submission
+    document.getElementById('signupForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Show spinner
+        const spinner = document.getElementById('signupSpinner');
+        const submitBtn = document.getElementById('signupSubmitBtn');
+        spinner.style.display = 'block';
+        submitBtn.disabled = true;
+
+        let email = document.querySelector('#signupForm input[type="email"]').value;
+        let password = document.getElementById('password').value;
+        let confirmPassword = document.getElementById('confirmPassword').value;
+
+        // Clean the inputs on the client side
+        email = email.trim().toLowerCase();
+        password = password.trim();
+        confirmPassword = confirmPassword.trim();
+
+        // Basic email format validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            alert('Please enter a valid email address.');
+            spinner.style.display = 'none';
+            submitBtn.disabled = false;
+            return;
+        }
+
+        // Password validation
+        const passwordRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{5,}$/;
+        if (!passwordRegex.test(password)) {
+            alert('Password must be at least 5 characters long and contain at least one capital letter, one number, and one special character.');
+            spinner.style.display = 'none';
+            submitBtn.disabled = false;
+            return;
+        }
+
+        // Check if passwords match
+        if (password !== confirmPassword) {
+            alert('Passwords do not match.');
+            spinner.style.display = 'none';
+            submitBtn.disabled = false;
+            return;
+        }
+
+        try {
+            const response = await fetch(`${SIGNUP_API_URL}/renest-signup`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.token) {
+                localStorage.setItem('authToken', data.token);
+                window.location.href = '/dashboard.html';
+            } else {
+                alert(data.error || 'Sign up failed. Please try again.');
+            }
+        } catch (error) {
+            console.error('Sign up error:', error);
+            alert('Sign up failed. Please try again.');
+        } finally {
+            // Hide spinner and re-enable button
+            spinner.style.display = 'none';
+            submitBtn.disabled = false;
+        }
+    });
+
+    // Motivation section calculations
+    
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // Boring stuff overlay logic
+        const boringOverlay = document.getElementById('boring-stuff-overlay');
+        const boringTitle = document.getElementById('boring-title');
+        const boringText = document.getElementById('boring-text');
+        const boringCta = document.getElementById('boring-cta-container');
+        const boringCtaButton = document.getElementById('boring-progress-bar');
+
+        // Function to show the overlay
+        function showBoringOverlay() {
+            // Check if the overlay has been shown before in this session
+            if (sessionStorage.getItem('boringOverlayShown')) {
+                return;
+            }
+            
+            boringOverlay.classList.add('visible');
+            document.body.style.overflow = 'hidden';
+
+            // Sequence of animations
+            setTimeout(() => {
+                boringTitle.style.opacity = 0; // Fade out "PLEASE"
+                
+                setTimeout(() => {
+                    // Change title text and style
+                    boringTitle.innerHTML = 'Please give us 6 minutes of your worst attention';
+                    boringTitle.style.fontSize = '2.5rem';
+                    boringTitle.style.fontWeight = '800';
+                    boringTitle.style.textAlign = 'left';
+                    boringTitle.style.letterSpacing = '-0.025em';
+                    boringTitle.style.lineHeight = '1.2';
+                    boringTitle.style.opacity = 1; // Fade in new title
+
+                    // After new title fades in, reveal the rest of the content
+                    setTimeout(() => {
+                        boringText.style.opacity = 1;
+                        boringCta.style.opacity = 1;
+                    }, 1000); // Wait 1s
+
+                }, 500); // Time for fade out transition
+            }, 2000); // Time "PLEASE" is displayed
+        }
+
+        // Function to hide the overlay
+        function hideBoringOverlay() {
+            boringOverlay.style.opacity = 0;
+            setTimeout(() => {
+                boringOverlay.classList.remove('visible');
+                document.body.style.overflow = '';
+                // Mark as shown for this session
+                sessionStorage.setItem('boringOverlayShown', 'true');
+            }, 500);
+        }
+
+        // Event listener for the CTA button
+        boringCtaButton.addEventListener('click', hideBoringOverlay);
+
+        // Show the overlay on page load
+        showBoringOverlay();
+
+        console.log('Carousel script running');
+        const expandSections = document.querySelectorAll('.expand-section');
+        expandSections.forEach(section => {
+            const header = section.querySelector('.expand-header');
+            header.addEventListener('click', function() {
+                // Close other sections
+                expandSections.forEach(other => {
+                    if (other !== section) other.classList.remove('active');
+                });
+                // Toggle current
+                section.classList.toggle('active');
+            });
+        });
+
+        // Form toggle functionality
+        const getStartedBtn = document.getElementById('getStartedBtn');
+        const contentSection = document.getElementById('contentSection');
+        const signupSection = document.getElementById('signupSection');
+        const signinSection = document.getElementById('signinSection');
+        const showSigninBtn = document.getElementById('showSigninBtn');
+        const showSignupBtn = document.getElementById('showSignupBtn');
+        const backFromSignup = document.getElementById('backFromSignup');
+        const backFromSignin = document.getElementById('backFromSignin');
+
+        // Show signup form when Get Started is clicked
+        getStartedBtn.addEventListener('click', function() {
+            contentSection.classList.add('hidden');
+            signupSection.classList.add('active');
+            signinSection.classList.remove('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        // Show signin form when "Sign In" link is clicked
+        showSigninBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            signupSection.classList.remove('active');
+            signinSection.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        // Show signup form when "Sign Up" link is clicked
+        showSignupBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            signinSection.classList.remove('active');
+            signupSection.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        // Back button functionality
+        backFromSignup.addEventListener('click', function(e) {
+            e.preventDefault();
+            signupSection.classList.remove('active');
+            signinSection.classList.remove('active');
+            contentSection.classList.remove('hidden');
+            document.body.style.overflow = '';
+        });
+
+        backFromSignin.addEventListener('click', function(e) {
+            e.preventDefault();
+            signupSection.classList.remove('active');
+            signinSection.classList.remove('active');
+            contentSection.classList.remove('hidden');
+            document.body.style.overflow = '';
+        });
+
+        // Review carousel logic (always start on page load)
+        let reviewInterval = null;
+        function startReviewCarousel() {
+            // Only target the left-side reviews under #motivationSection
+            const reviewCards = document.querySelectorAll('#motivationSection .reviews-container-wrapper .review-card');
+            let currentReviewIndex = 0;
+            // Hide all reviews first
+            reviewCards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.display = 'none';
+            });
+            // Show the first review (or all if only one)
+            if (reviewCards[0]) {
+                reviewCards[0].style.display = 'block';
+                setTimeout(() => {
+                    reviewCards[0].style.opacity = '1';
+                }, 10);
+            } else {
+                // Fallback: if no review cards found, try to show any .review-card for debugging
+                const fallback = document.querySelector('.review-card');
+                if (fallback) {
+                    fallback.style.display = 'block';
+                    fallback.style.opacity = '1';
+                }
+                return;
+            }
+            // Clear any previous interval
+            if (reviewInterval) clearInterval(reviewInterval);
+            // Start interval
+            reviewInterval = setInterval(() => {
+                reviewCards[currentReviewIndex].style.opacity = '0';
+                setTimeout(() => {
+                    reviewCards[currentReviewIndex].style.display = 'none';
+                    currentReviewIndex = (currentReviewIndex + 1) % reviewCards.length;
+                    reviewCards[currentReviewIndex].style.display = 'block';
+                    setTimeout(() => {
+                        reviewCards[currentReviewIndex].style.opacity = '1';
+                    }, 10);
+                }, 700);
+            }, 7000);
+        }
+        // Start the carousel immediately
+        startReviewCarousel();
+        function showFounderModal(which) {
+            document.getElementById('founderModalThomas').style.display = (which === 'thomas') ? 'flex' : 'none';
+            document.getElementById('founderModalMo').style.display = (which === 'mo') ? 'flex' : 'none';
+        }
+        document.querySelectorAll('.founder-link').forEach(function(el) {
+            el.addEventListener('click', function() {
+                showFounderModal(this.dataset.founder);
+            });
+        });
+        document.querySelectorAll('.founder-modal-close, .founder-modal-overlay').forEach(function(el) {
+            el.addEventListener('click', function() {
+                document.getElementById('founderModalThomas').style.display = 'none';
+                document.getElementById('founderModalMo').style.display = 'none';
+            });
+        });
+
+        // "How It Works" modal trigger
+        document.getElementById('howItWorksLink').addEventListener('click', function() {
+            document.getElementById('howItWorksModal').style.display = 'flex';
+        });
+
+        // Generic modal close logic for all modals with .founder-modal class
+        document.querySelectorAll('.founder-modal-close, .founder-modal-overlay').forEach(function(el) {
+            el.addEventListener('click', function(e) {
+                e.preventDefault();
+                el.closest('.founder-modal').style.display = 'none';
+            });
+        });
+    });
+
+    document.getElementById('emailForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = encodeURIComponent(document.getElementById('emailInput').value);
+        const baseUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSenipPEWBn8kayp5WTkKRAdbblVH-yhofMHFYfaAVVaH9FFuA/formResponse?usp=pp_url&entry.1160800181=';
+        const submitButton = document.querySelector('.submit-button');
+        const checkmark = submitButton.querySelector('.centered-checkmark');
+        const emailInput = document.getElementById('emailInput');
+        // Hide input and button, show checkmark
+        emailInput.style.display = 'none';
+        submitButton.querySelector('span').style.display = 'none';
+        checkmark.style.display = 'inline';
+        // Disable the submit button
+        submitButton.disabled = true;
+        // Using a hidden iframe to submit the form without redirecting
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.setAttribute('src', baseUrl + email);
+        document.body.appendChild(iframe);
+        // Hide checkmark and reset form after 1.5s
+        setTimeout(() => {
+            checkmark.style.display = 'none';
+            emailInput.style.display = '';
+            submitButton.querySelector('span').style.display = '';
+            document.getElementById('emailForm').reset();
+            submitButton.disabled = false;
+        }, 1500);
+        // Remove iframe after submission
+        setTimeout(() => {
+            document.body.removeChild(iframe);
+        }, 1000);
+    });
+
+    // --- Refund Chart Logic ---
+
+    // Helper: Format as currency
+    function formatCurrency(amount) {
+        return '$' + amount.toLocaleString(undefined, {maximumFractionDigits: 0});
+    }
+
+    let currentState = 'IL';
+    let currentIncomeK = 25;
+
+    function updateHeader(state, incomeK) {
+        const stateName = stateOptions[state] || 'Unknown';
+        document.getElementById('inlineState').innerHTML = `${stateName} <span id="stateArrow" style="font-size: 0.85em; margin-left: 0.3em; color: #3A5AFF;">▼</span>`;
+        document.getElementById('inlineIncome').textContent = incomeK;
+    }
+
+    function calculateRefunds(state, incomeK) {
+        // Constants
+        const qualifiedExpenses = 1500 * 12; // $18,000
+        const interestBenefit = 1500 * 12 * 0.04 * 0.2; // $144
+        const income = incomeK * 1000;
+        console.log('--- REFUND CALCULATION START ---');
+        console.log('State:', state, 'Income:', income);
+        // --- Federal Tax Calculation ---
+        const fedDeduction = federaltaxratedb.standardDeduction || 0;
+        const fedTaxable = Math.max(0, income - fedDeduction);
+        let fedTaxOwed = 0;
+        let prev = 0;
+        for (const bracket of federaltaxratedb.brackets) {
+            if (fedTaxable > prev) {
+                const amt = Math.min(fedTaxable, bracket.threshold) - prev;
+                fedTaxOwed += amt * (bracket.rate / 100);
+                console.log(`Federal bracket: 0-${bracket.threshold} @${bracket.rate}%: Taxed ${amt}, Tax so far: ${fedTaxOwed}`);
+                prev = bracket.threshold;
+            } else {
+                break;
+            }
+        }
+        const fedWithheld = fedTaxOwed * 1.20;
+        const fedRefund = fedWithheld - fedTaxOwed;
+        console.log('Federal: Deduction:', fedDeduction, 'Taxable:', fedTaxable, 'Tax Owed:', fedTaxOwed, 'Withheld:', fedWithheld, 'Refund:', fedRefund);
+        // --- State Tax Calculation ---
+        const stateDeduction = state529DB[state]?.deduction || 0;
+        const statePersonalExemption = statePersonalExemptionDB[state]?.amount || 0;
+        const stateTaxable = Math.max(0, income - statePersonalExemption);
+        console.log('State Deduction:', stateDeduction, 'State Personal Exemption:', statePersonalExemption, 'State Taxable:', stateTaxable);
+        
+        function calcStateTaxOwed(income, state) {
+            if (income <= 0) return 0;
+            const stateTaxInfo = stateTaxDB[state];
+            if (!stateTaxInfo || !stateTaxInfo.brackets || stateTaxInfo.brackets.length === 0) return 0;
+            let totalTax = 0;
+            let remainingIncome = income;
+            let previousThreshold = 0;
+            const sortedBrackets = [...stateTaxInfo.brackets].sort((a, b) => a.threshold - b.threshold);
+            for (let i = 0; i < sortedBrackets.length; i++) {
+                const bracket = sortedBrackets[i];
+                const nextThreshold = bracket.threshold;
+                const taxableInThisBracket = Math.min(remainingIncome, nextThreshold - previousThreshold);
+                if (taxableInThisBracket <= 0) break;
+                totalTax += (taxableInThisBracket * (bracket.rate / 100));
+                console.log(`State bracket: ${previousThreshold}-${nextThreshold} @${bracket.rate}%: Taxed ${taxableInThisBracket}, Tax so far: ${totalTax}`);
+                remainingIncome -= taxableInThisBracket;
+                previousThreshold = nextThreshold;
+                if (remainingIncome <= 0) break;
+            }
+            return totalTax;
+        }
+
+        const otherStateTaxOwed = calcStateTaxOwed(stateTaxable, state);
+        // State withholding is always based on the non-Renest (no 529 deduction) tax owed
+        const stateWithheld = otherStateTaxOwed * 1.10;
+        const otherStateRefund = stateWithheld - otherStateTaxOwed;
+
+        let renestStateRefund;
+        const deductibleAmount = Math.min(qualifiedExpenses, stateDeduction, stateTaxable);
+
+        // Special handling for credit states (IN, OR, MN) vs. deduction states
+        if (state === 'IN') {
+            const contributionCredit = deductibleAmount * 0.20;
+            const benefit = Math.min(contributionCredit, 1500, otherStateTaxOwed);
+            const renestStateTaxOwed = otherStateTaxOwed - benefit;
+            renestStateRefund = stateWithheld - renestStateTaxOwed;
+        } else if (state === 'OR') {
+            const benefit = Math.min(180, otherStateTaxOwed);
+            const renestStateTaxOwed = otherStateTaxOwed - benefit;
+            renestStateRefund = stateWithheld - renestStateTaxOwed;
+        } else if (state === 'MN') {
+            let benefit = 0;
+            if (income < 88810) {
+                benefit = Math.min(500, otherStateTaxOwed, 0.5 * qualifiedExpenses);
+            }
+            const renestStateTaxOwed = otherStateTaxOwed - benefit;
+            renestStateRefund = stateWithheld - renestStateTaxOwed;
+        } else {
+            // Standard deduction logic for all other states
+            const renestStateTaxable = Math.max(0, stateTaxable - deductibleAmount);
+            const renestStateTaxOwed = calcStateTaxOwed(renestStateTaxable, state);
+            renestStateRefund = stateWithheld - renestStateTaxOwed;
+            console.log('Renest State (Deduction): Taxable:', renestStateTaxable, 'Tax Owed:', renestStateTaxOwed, 'Refund:', renestStateRefund);
+        }
+
+        console.log('Other State: Taxable:', stateTaxable, 'Tax Owed:', otherStateTaxOwed, 'Withheld:', stateWithheld, 'Refund:', otherStateRefund);
+        let renestTotal = renestStateRefund + fedRefund + interestBenefit;
+        let otherTotal = otherStateRefund + fedRefund;
+        console.log('Renest Total Refund:', renestTotal, 'Other Total Refund:', otherTotal, 'Interest Benefit:', interestBenefit);
+        console.log('--- REFUND CALCULATION END ---');
+        return {
+            renest: Math.max(0, Math.round(renestTotal)),
+            turbotax: Math.max(0, Math.round(otherTotal)),
+            hrblock: Math.max(0, Math.round(otherTotal)),
+            sprinttax: Math.max(0, Math.round(otherTotal-125))
+        };
+    }
+
+    function renderRefundChart(refunds) {
+        const container = document.getElementById('refundChartContainer');
+        container.innerHTML = `
+            <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 0.5rem; font-size: 0.9rem;">
+                <div style="font-weight: 500;">Company</div>
+                <div style="font-weight: 500; text-align: right;">Average Refund</div>
+                <div style="color: #3A5AFF; font-weight: 600;">Renest</div>
+                <div style="text-align: right; color: #3A5AFF; font-weight: 600;">${formatCurrency(refunds.renest)}</div>
+                <div>TurboTax</div>
+                <div style="text-align: right;">${formatCurrency(refunds.turbotax)}</div>
+                <div>H&R Block</div>
+                <div style="text-align: right;">${formatCurrency(refunds.hrblock)}</div>
+                <div>SprintTax</div>
+                <div style="text-align: right;">${formatCurrency(refunds.sprinttax)}</div>
+            </div>
+            <div style='font-size: 0.82rem; color: #888; margin-top: 0.7rem; text-align: left; max-width: 500px; margin-left: auto; margin-right: auto;'>
+                 
+            </div>
+        `;
+    }
+
+    function updateRefundChart() {
+        updateHeader(currentState, currentIncomeK);
+        const refunds = calculateRefunds(currentState, currentIncomeK);
+        renderRefundChart(refunds);
+    }
+
+    // Inline state editing
+    function showStateDropdown() {
+        const span = document.getElementById('inlineState');
+        const select = document.createElement('select');
+        select.style.fontSize = '1rem';
+        select.style.padding = '0.1rem 0.3rem';
+        for (const [abbr, name] of Object.entries(stateOptions)) {
+            const option = document.createElement('option');
+            option.value = abbr;
+            option.textContent = name;
+            if (abbr === currentState) option.selected = true;
+            select.appendChild(option);
+        }
+        span.replaceWith(select);
+        select.focus();
+        if (typeof select.showPicker === 'function') {
+            select.showPicker();
+        }
+        select.addEventListener('change', function() {
+            currentState = this.value;
+            // Restore the span with the arrow
+            const newSpan = document.createElement('span');
+            newSpan.id = 'inlineState';
+            newSpan.style.cssText = 'text-decoration: none; cursor: pointer; color: #3A5AFF; background: #F0F4FF; padding: 0.1rem 0.4rem; border-radius: 6px; transition: all 0.2s ease; display: inline-flex; align-items: center;';
+            newSpan.innerHTML = `${stateOptions[currentState]} <span id=\"stateArrow\" style=\"font-size: 0.85em; margin-left: 0.3em; color: #3A5AFF;\">▼</span>`;
+            newSpan.addEventListener('click', showStateDropdown);
+            select.replaceWith(newSpan);
+            updateRefundChart();
+        });
+        select.addEventListener('blur', function() {
+            // Restore the span with the arrow
+            const newSpan = document.createElement('span');
+            newSpan.id = 'inlineState';
+            newSpan.style.cssText = 'text-decoration: none; cursor: pointer; color: #3A5AFF; background: #F0F4FF; padding: 0.1rem 0.4rem; border-radius: 6px; transition: all 0.2s ease; display: inline-flex; align-items: center;';
+            newSpan.innerHTML = `${stateOptions[currentState]} <span id=\"stateArrow\" style=\"font-size: 0.85em; margin-left: 0.3em; color: #3A5AFF;\">▼</span>`;
+            newSpan.addEventListener('click', showStateDropdown);
+            select.replaceWith(newSpan);
+            updateRefundChart();
+        });
+    }
+    document.getElementById('inlineState').addEventListener('click', showStateDropdown);
+
+    // Inline income editing
+    function showIncomeInput() {
+        const span = document.getElementById('inlineIncome');
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.min = 1;
+        input.max = 99;
+        input.value = currentIncomeK;
+        input.style.width = '40px';
+        input.style.fontSize = '1rem';
+        input.style.padding = '0.1rem 0.3rem';
+        span.replaceWith(input);
+        input.focus();
+        input.select();
+        function finish() {
+            let val = parseInt(input.value, 10);
+            if (isNaN(val) || val < 1) val = 1;
+            if (val > 99) val = 99;
+            currentIncomeK = val;
+            input.replaceWith(span);
+            updateRefundChart();
+        }
+        input.addEventListener('blur', finish);
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                finish();
+            }
+        });
+    }
+    document.getElementById('inlineIncome').addEventListener('click', showIncomeInput);
+
+    // Initial render
+    updateRefundChart();
+</script>
+
+<!-- How It Works Modal -->
+<div id="howItWorksModal" class="founder-modal" style="display:none;">
+  <div class="founder-modal-overlay"></div>
+  <div class="founder-modal-content" style="max-width: 650px; text-align: left; padding: 0;">
+    <button class="founder-modal-close" aria-label="Close">&times;</button>
+    <div class="modal-scroll-content" style="max-height: 85vh; overflow-y: auto; padding: 1.5rem 2rem;">
+        <div style="font-size: 1.5rem; font-weight: 700; color: #4B227A; margin-bottom: 1rem; text-align: center;">How It Works</div>
+        <div style="font-size: 1.05rem; color: #2d2346; line-height: 1.6;">
+            <div style="margin-bottom: 1rem; font-weight: 500; color: #4B227A;">We help students with their finances and taxes. This is what we'll ask for and do for you:</div>
+            <ol style="padding-left: 1rem; margin-bottom: 1rem; list-style-type: none;">
+                <li style="margin-bottom: 1rem; position: relative; padding-left: 2.2rem;">
+                    <span style="position: absolute; left: 0; color: #3A5AFF; font-weight: 700; font-size: 1.1rem;">1.</span>
+                    Based on your basic information and your state, we start to narrow down the tax benefits available to you.
+                </li>
+                <li style="margin-bottom: 1rem; position: relative; padding-left: 2.2rem;">
+                    <span style="position: absolute; left: 0; color: #3A5AFF; font-weight: 700; font-size: 1.1rem;">2.</span>
+                    Next, we ask for your income and education related expenses you've had this year (e.g., rent). These expenses qualify for a tax deduction in your state while you are a student. <br><span style="color: #666; font-size: 0.9rem;">(The state and federal law that creates this education benefit is based on section 529, just like how retirement benefits are described in section 401).</span>
+                </li>
+                <li style="margin-bottom: 1rem; position: relative; padding-left: 2.2rem;">
+                    <span style="position: absolute; left: 0; color: #3A5AFF; font-weight: 700; font-size: 1.1rem;">3.</span>
+                    We record this information so that it is ready to be submitted on your taxes. The records need to be made in the same calendar year that the expenses happen, so if you wait till next tax season (which is in the next calendar year) then you have lost the opportunity to qualify for your benefit.
+                </li>
+                <li style="margin-bottom: 1rem; position: relative; padding-left: 2.2rem;">
+                    <span style="position: absolute; left: 0; color: #3A5AFF; font-weight: 700; font-size: 1.1rem;">✓</span>
+                    In April, we file your taxes and include the paperwork to mark the extra benefits you qualify for based on the information you provided and the setup we did.
+                </li>
+                <li style="margin-bottom: 1rem; position: relative; padding-left: 2.2rem;">
+                    <span style="position: absolute; left: 0; color: #3A5AFF; font-weight: 700; font-size: 1.1rem;">👌</span>
+                    If you don't want us to submit your taxes, that's fine too! We'll go through the same steps and prepare all the paperwork for you to hand over to any other tax filing company or person you choose.
+                </li>
+                <li style="margin-bottom: 1rem; position: relative; padding-left: 2.2rem;">
+                    <span style="position: absolute; left: 0; color: #3A5AFF; font-weight: 700; font-size: 1.1rem;">💰</span>
+                    You only pay when you file your taxes and get your maximum benefit. We gaurantee a higher benefit with Renest than you would have received without us.
+                </li>
+            </ol>
+            <div style="font-size: 1.1rem; color: #4B227A; font-weight: 600; text-align: center; padding: 1rem; background: linear-gradient(145deg, #f0f2ff, #ffffff); border-radius: 8px; margin-top: 0.8rem;">Our goal is to make sure you get every benefit you're eligible for—simply and with confidence.</div>
+        </div>
+    </div>
+  </div>
+</div>
+<!-- Founder Modals -->
+<div id="founderModalThomas" class="founder-modal" style="display:none;">
+  <div class="founder-modal-overlay"></div>
+  <div class="founder-modal-content">
+    <button class="founder-modal-close" aria-label="Close">&times;</button>
+    <img src="thomasheadshot2.png" alt="Thomas Lloyd" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; margin-bottom: 1rem; background-color: white;">
+    <div style="font-weight: 700; color: #4B227A; font-size: 1.1rem; margin-bottom: 0.5rem;">Thomas Lloyd</div>
+    <div style="font-size: 0.98rem; color: #222; text-align: center; margin-bottom: 0.7rem;">"As a working student during my undergrad and PhD, I experienced firsthand the financial stress students face. I wanted real solutions, not bs. So I put my analytical skills towards building something meaningful."</div>
+    <a href="https://orcid.org/0000-0002-4271-8809" target="_blank" rel="noopener" style="color: #3A5AFF; font-size: 0.95rem; text-decoration: underline;">Thomas's Research</a>
+  </div>
+</div>
+<div id="founderModalMo" class="founder-modal" style="display:none;">
+  <div class="founder-modal-overlay"></div>
+  <div class="founder-modal-content">
+    <button class="founder-modal-close" aria-label="Close">&times;</button>
+    <img src="moheadshot.png" alt="Mo Zheng" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; margin-bottom: 1rem; background-color: white;">
+    <div style="font-weight: 700; color: #4B227A; font-size: 1.1rem; margin-bottom: 0.5rem;">Thomas "Mo" Zheng</div>
+    <div style="font-size: 0.98rem; color: #222; text-align: center; margin-bottom: 0.7rem;">"While paying for my education I made the most out of every dollar. After learning the ins-and-outs of finance on Wall Street, I was driven to make those powerful strategies accessible and impactful for all."</div>
+    <a href="https://www.linkedin.com/in/thomas-mo-zheng-b22830124" target="_blank" rel="noopener" style="color: #3A5AFF; font-size: 0.95rem; text-decoration: underline;">Mo's Career</a>
+  </div>
+</div>
+</body>
+</html>
