@@ -1328,6 +1328,70 @@
                 padding: 1rem 1.5rem;
             }
         }
+
+        #boring-step-2 {
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            display: none;
+        }
+        #boring-step-2.visible {
+            display: block;
+            opacity: 1;
+        }
+        #boring-step-2 p {
+            font-size: 1.125rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            margin-bottom: 1.25rem;
+        }
+        #boring-how-it-works-link {
+            color: var(--primary);
+            text-decoration: underline;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .boring-step-2-buttons {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .boring-btn {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .boring-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 12px -1px rgba(0, 0, 0, 0.15);
+        }
+        .boring-btn.secondary {
+            background: var(--background);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+        .boring-btn.secondary:hover {
+            background: var(--accent);
+        }
+
+        @media (max-width: 900px) {
+            #boring-title, #boring-title.animated {
+                font-size: 2rem;
+                line-height: 1.25;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1344,13 +1408,21 @@
                 <p>The most valuable monetary things in life are usually the most boring. Insurance policies. Legal documents. Tax codes. Investment prospectuses. The stuff that actually matters is written to be ignored.</p>
                 <p>This is one of those things.</p>
                 <p>We setup and process boring legal paperwork that gets students $500+ back on taxes. It's not sexy. It's not a hack. It's just paperwork that works.</p>
-            
+             
                 <p>Boring pays.</p>
                 <p><strong>6 minutes. $500. Then we'll reward you with mindless videos</strong></p>
             </div>
             <div id="boring-cta-container">
                 <div id="boring-progress-bar">
                     <span>0% - Let's get this over with</span>
+                </div>
+            </div>
+            <div id="boring-step-2">
+                <p>Oh wow, you actually clicked that button. Insane. Most people can't be bothered to read, so congrats.</p>
+                <p>In case you do want to learn a bit <a href="#" id="boring-how-it-works-link">how it works</a>, you can. Or you can just get straight into it.</p>
+                <div class="boring-step-2-buttons">
+                    <button id="boring-show-info-btn" class="boring-btn secondary">Explore The Site</button>
+                    <button id="boring-go-signup-btn" class="boring-btn">Get Started</button>
                 </div>
             </div>
         </div>
@@ -1762,6 +1834,10 @@
         const boringText = document.getElementById('boring-text');
         const boringCta = document.getElementById('boring-cta-container');
         const boringCtaButton = document.getElementById('boring-progress-bar');
+        const boringStep2 = document.getElementById('boring-step-2');
+        const boringShowInfoBtn = document.getElementById('boring-show-info-btn');
+        const boringGoSignupBtn = document.getElementById('boring-go-signup-btn');
+        const boringHowItWorksLink = document.getElementById('boring-how-it-works-link');
 
         // Function to show the overlay
         function showBoringOverlay() {
@@ -1805,7 +1881,33 @@
         }
 
         // Event listener for the CTA button
-        boringCtaButton.addEventListener('click', hideBoringOverlay);
+        boringCtaButton.addEventListener('click', () => {
+            boringText.style.opacity = 0;
+            boringCta.style.opacity = 0;
+
+            setTimeout(() => {
+                boringText.style.display = 'none';
+                boringCta.style.display = 'none';
+                boringStep2.classList.add('visible');
+            }, 500);
+        });
+
+        // Event listeners for second step
+        boringShowInfoBtn.addEventListener('click', hideBoringOverlay);
+
+        boringGoSignupBtn.addEventListener('click', () => {
+            hideBoringOverlay();
+            setTimeout(() => {
+                document.getElementById('contentSection').classList.add('hidden');
+                document.getElementById('signupSection').classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }, 500);
+        });
+
+        boringHowItWorksLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('howItWorksModal').style.display = 'flex';
+        });
 
         // Show the overlay on page load
         showBoringOverlay();
