@@ -1248,10 +1248,15 @@
             font-size: 2.5rem;
             font-weight: 800;
             margin-bottom: 2rem;
-            transition: opacity 0.5s ease-in-out, font-size 0.5s, line-height 0.5s;
+            transition: all 0.5s ease-in-out;
             letter-spacing: 0.1em;
             text-align: center;
             line-height: 1.2;
+        }
+
+        #boring-title.animated {
+            text-align: left;
+            letter-spacing: -0.025em;
         }
 
         #boring-text {
@@ -1298,6 +1303,30 @@
             background: var(--primary-dark);
             transform: translateY(-2px);
             box-shadow: 0 8px 12px -1px rgba(0, 0, 0, 0.15);
+        }
+
+        @media (max-width: 900px) {
+            #boring-title, #boring-title.animated {
+                font-size: 2rem;
+                line-height: 1.25;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #boring-stuff-overlay {
+                padding: 1.5rem 1rem;
+            }
+            #boring-title, #boring-title.animated {
+                font-size: 1.75rem;
+                line-height: 1.3;
+            }
+            #boring-text {
+                font-size: 1rem;
+            }
+            #boring-progress-bar {
+                font-size: 1rem;
+                padding: 1rem 1.5rem;
+            }
         }
     </style>
 </head>
@@ -1751,11 +1780,7 @@
                 setTimeout(() => {
                     // Change title text and style
                     boringTitle.innerHTML = 'Please give us 6 minutes of your worst attention';
-                    boringTitle.style.fontSize = '2.5rem';
-                    boringTitle.style.fontWeight = '800';
-                    boringTitle.style.textAlign = 'left';
-                    boringTitle.style.letterSpacing = '-0.025em';
-                    boringTitle.style.lineHeight = '1.2';
+                    boringTitle.classList.add('animated');
                     boringTitle.style.opacity = 1; // Fade in new title
 
                     // After new title fades in, reveal the rest of the content
