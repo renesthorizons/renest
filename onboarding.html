@@ -17,7 +17,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            background: linear-gradient(135deg, #667eea 0%, #31053c 100%);
+            background: linear-gradient(135deg, #334155 0%, #1e293b 100%);
             padding: 1rem;
         }
         
@@ -501,33 +501,21 @@
                     <h3 class="form-label" style="text-align: center; margin-bottom: 2rem;">Your Tax Benefit with Renest</h3>
                     
                     <div class="benefit-summary-card">
-                        <div class="benefit-row">
-                            <span>Annual Income:</span>
-                            <strong id="displayIncome">$0</strong>
-                        </div>
-                        <div class="benefit-row">
-                            <span>State Taxes Owed:</span>
-                            <strong id="stateTaxesOwed">$0</strong>
-                        </div>
-                        <div style="font-size: 0.9rem; color: #666; margin: 0.5rem 0; font-style: italic;">
-                            Other tax companies aim to make sure you don't pay more than this.
+                        <div style="text-align: center; margin-bottom: 1.5rem;">
+                            <div style="font-size: 1.1rem; color: #16a34a; margin-bottom: 0.5rem;">Additional Money Back</div>
+                            <div style="font-size: 2.5rem; font-weight: 800; color: #16a34a;" id="taxSavings">$0</div>
                         </div>
                         
-                        <div style="margin: 1rem 0; padding-top: 1rem; border-top: 1px solid #bbf7d0;">
-                            <div style="font-weight: 800; color: #16a34a; margin-bottom: 0.5rem; font-size: 1.2rem;">Renest does more:</div>
+                        <div style="font-size: 0.95rem; color: #374151; line-height: 1.6; margin-bottom: 1rem;">
+                            Based on your annual income of <strong id="displayIncome">$0</strong> and your qualified spending of <strong id="qualifiedSpending">$0</strong>, you qualify for a tax deduction of <strong id="deductionAmount">$0</strong> in <strong id="userState">your state</strong>.
                         </div>
                         
-                        <div class="benefit-row">
-                            <span>Your qualified education spending:</span>
-                            <strong id="qualifiedSpending">$0</strong>
-                        </div>
-                        <div class="benefit-row">
-                            <span>+ Tax Deduction:</span>
-                            <strong id="deductionAmount">$0</strong>
-                        </div>
-                        <div class="benefit-row benefit-total">
-                            <span>Additional Tax Savings/Refund:</span>
-                            <strong id="taxSavings" style="font-size: 1.4rem;">$0</strong>
+                        
+                    </div>
+                    <div style="background: #f0f9ff; padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #3b82f6;margin-bottom: 1rem;">
+                        <div style="font-weight: 600; color: #1e40af; margin-bottom: 0.5rem;">What does this mean?</div>
+                        <div style="font-size: 0.9rem; color: #374151; line-height: 1.5;">
+                            When you file taxes: if you get a refund you will get <strong id="refundMore">$0</strong> more, if you owe taxes you will owe <strong id="oweLess">$0</strong> less. Either way you get more money back in your pocket.
                         </div>
                     </div>
                     
@@ -704,12 +692,6 @@
                         </p>
                     </div>
 
-                    <!-- Email Display (Read-only) -->
-                    <div class="form-group">
-                        <label class="form-label">Email Address</label>
-                        <input type="email" id="displayEmail" class="form-input" readonly style="background-color: #f5f5f5; color: #666;">
-                    </div>
-
                     <!-- Google Sign-In -->
                     <div style="margin-bottom: 1.5rem;">
                         <div id="g_id_onload"
@@ -734,6 +716,12 @@
 
                     <!-- Password Setup Form -->
                     <div id="passwordForm">
+                        <!-- Username Display (Read-only) -->
+                        <div class="form-group">
+                            <label class="form-label">Username</label>
+                            <input type="email" id="displayEmail" class="form-input" readonly style="background-color: #f5f5f5; color: #666;">
+                        </div>
+                        
                         <div class="form-group">
                             <label for="passwordInput" class="form-label">Create Password <span style="color: red;">*</span></label>
                             <input type="password" id="passwordInput" class="form-input" placeholder="Enter password" required>
@@ -1168,14 +1156,28 @@
                  taxableStateIncome
              );
 
-             // Update current tax situation display
-             document.getElementById('displayIncome').textContent = '$' + income.toLocaleString('en-US');
-             document.getElementById('stateTaxesOwed').textContent = '$' + stateTaxesOwed.toLocaleString('en-US');
-             
              // Update benefit summary display
+             document.getElementById('displayIncome').textContent = '$' + income.toLocaleString('en-US');
              document.getElementById('qualifiedSpending').textContent = '$' + benefitDetails.qualifiedSpend.toLocaleString('en-US');
              document.getElementById('deductionAmount').textContent = '$' + deductionAmount.toLocaleString('en-US');
              document.getElementById('taxSavings').textContent = '$' + Math.round(benefitDetails.benefit).toLocaleString('en-US');
+             // Get full state name from abbreviation
+             const stateOptions = {
+                 'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas', 'CA': 'California',
+                 'CO': 'Colorado', 'CT': 'Connecticut', 'DE': 'Delaware', 'FL': 'Florida', 'GA': 'Georgia',
+                 'HI': 'Hawaii', 'ID': 'Idaho', 'IL': 'Illinois', 'IN': 'Indiana', 'IA': 'Iowa',
+                 'KS': 'Kansas', 'KY': 'Kentucky', 'LA': 'Louisiana', 'ME': 'Maine', 'MD': 'Maryland',
+                 'MA': 'Massachusetts', 'MI': 'Michigan', 'MN': 'Minnesota', 'MS': 'Mississippi', 'MO': 'Missouri',
+                 'MT': 'Montana', 'NE': 'Nebraska', 'NV': 'Nevada', 'NH': 'New Hampshire', 'NJ': 'New Jersey',
+                 'NM': 'New Mexico', 'NY': 'New York', 'NYC': 'New York City', 'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio',
+                 'OK': 'Oklahoma', 'OR': 'Oregon', 'PA': 'Pennsylvania', 'RI': 'Rhode Island', 'SC': 'South Carolina',
+                 'SD': 'South Dakota', 'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 'VT': 'Vermont',
+                 'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia', 'WI': 'Wisconsin', 'WY': 'Wyoming'
+             };
+             const fullStateName = stateOptions[formData.state] || formData.state;
+             document.getElementById('userState').textContent = fullStateName;
+             document.getElementById('refundMore').textContent = '$' + Math.round(benefitDetails.benefit).toLocaleString('en-US');
+             document.getElementById('oweLess').textContent = '$' + Math.round(benefitDetails.benefit).toLocaleString('en-US');
              
              // Update checkout display if elements exist
              const checkoutTaxSavings = document.getElementById('checkoutTaxSavings');
@@ -1270,8 +1272,13 @@
             const spinner = document.getElementById('createAccountSpinner');
             
             try {
+                // Disable all buttons to prevent multiple submissions
+                const allButtons = document.querySelectorAll('button');
+                allButtons.forEach(button => {
+                    button.disabled = true;
+                });
+                
                 // Show loading state
-                createAccountBtn.disabled = true;
                 spinner.style.display = 'block';
                 
                 console.log('Google Sign-In response received');
@@ -1285,7 +1292,13 @@
             } catch (error) {
                 console.error('Google Sign-In error:', error);
                 showError(`Google Sign-In failed: ${error.message}`);
-                createAccountBtn.disabled = false;
+                
+                // Re-enable all buttons if there's an error
+                const allButtons = document.querySelectorAll('button');
+                allButtons.forEach(button => {
+                    button.disabled = false;
+                });
+                
                 spinner.style.display = 'none';
             }
         }
@@ -1312,8 +1325,13 @@
                     return;
                 }
                 
+                // Disable all buttons to prevent multiple submissions
+                const allButtons = document.querySelectorAll('button');
+                allButtons.forEach(button => {
+                    button.disabled = true;
+                });
+                
                 // Show loading state
-                createAccountBtn.disabled = true;
                 spinner.style.display = 'block';
                 
                 console.log('Creating account with email/password and submitting data...');
@@ -1331,7 +1349,13 @@
             } catch (error) {
                 console.error('Account creation error:', error);
                 showError(`Account creation failed: ${error.message}`);
-                createAccountBtn.disabled = false;
+                
+                // Re-enable all buttons if there's an error
+                const allButtons = document.querySelectorAll('button');
+                allButtons.forEach(button => {
+                    button.disabled = false;
+                });
+                
                 spinner.style.display = 'none';
             }
         }
