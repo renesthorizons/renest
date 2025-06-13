@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>529 Account Notification Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .form-section {
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.95rem;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .generate-btn {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+
+        .preview-section {
+            background: #f8fafc;
+            padding: 30px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .preview-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .preview-header h3 {
+            color: #374151;
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+
+        .preview-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #374151;
+        }
+
+        .logo-placeholder {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #4f46e5;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .highlight {
+            background: #fef3c7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .important-box {
+            background: #eff6ff;
+            border: 2px solid #3b82f6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .important-box h4 {
+            color: #1e40af;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                margin: 10px;
+            }
+            
+            .header, .form-section, .preview-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>529 Account Notification Generator</h1>
+            <p>Create professional PDF notifications for newly opened 529 accounts</p>
+        </div>
+
+        <div class="form-section">
+            <form id="notificationForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="clientFirstName" class="form-label">Client First Name</label>
+                        <input type="text" id="clientFirstName" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="clientLastName" class="form-label">Client Last Name</label>
+                        <input type="text" id="clientLastName" class="form-input" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="clientEmail" class="form-label">Client Email</label>
+                    <input type="email" id="clientEmail" class="form-input" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="stateName" class="form-label">State Name</label>
+                        <input type="text" id="stateName" class="form-input" placeholder="e.g., California" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="planName" class="form-label">529 Plan Name</label>
+                        <input type="text" id="planName" class="form-input" placeholder="e.g., ScholarShare 529" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="username" class="form-label">529 Account Username</label>
+                    <input type="text" id="username" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="websiteUrl" class="form-label">State 529 Website URL</label>
+                    <input type="url" id="websiteUrl" class="form-input" placeholder="https://..." required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="qualifiedExpenses" class="form-label">Qualified Expenses Amount</label>
+                        <input type="number" id="qualifiedExpenses" class="form-input" placeholder="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="recommendedDeposit" class="form-label">Recommended Deposit Amount</label>
+                        <input type="number" id="recommendedDeposit" class="form-input" placeholder="0" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="additionalNotes" class="form-label">Additional Notes (Optional)</label>
+                    <textarea id="additionalNotes" class="form-textarea" placeholder="Any additional information or special instructions..."></textarea>
+                </div>
+
+                <button type="button" class="generate-btn" onclick="generatePDF()">
+                    Generate PDF Notification
+                </button>
+            </form>
+        </div>
+
+        <div class="preview-section">
+            <div class="preview-header">
+                <h3>Document Preview</h3>
+                <p>This is how your PDF will look</p>
+            </div>
+            <div class="preview-content" id="previewContent">
+                <div class="logo-placeholder">RENEST</div>
+                <h2 style="color: #1f2937; margin-bottom: 20px; text-align: center;">Your 529 Account is Now Active!</h2>
+                
+                <p><strong>Dear [Client Name],</strong></p>
+                
+                <p>Congratulations! Your <span class="highlight">[State] 529 Education Savings Plan</span> account has been successfully opened and is now active.</p>
+                
+                <div class="important-box">
+                    <h4>Your Account Information</h4>
+                    <p><strong>Username:</strong> [Username]</p>
+                    <p><strong>Website:</strong> [Website URL]</p>
+                    <p><strong>Next Step:</strong> Create your password by clicking "Forgot Password" on the login page</p>
+                </div>
+                
+                <p><strong>Based on your qualified expenses of $[Amount], we recommend depositing $[Amount] into your 529 account by the end of the year.</strong></p>
+                
+                <p>This deposit can be made as a lump sum or throughout the year - whatever works best for you. The great news is that you can withdraw this money whenever you want. The deposit and withdrawal process creates the necessary records for your state, which will get you your tax benefit during tax season.</p>
+                
+                <p><strong>This process takes as little as 10 minutes and can save you hundreds of dollars in taxes.</strong></p>
+                
+                <div class="important-box">
+                    <h4>Quick Start Steps</h4>
+                    <p>1. Visit your state's 529 website using the link above</p>
+                    <p>2. Reset your password using the "Forgot Password" option</p>
+                    <p>3. Log in with your username and new password</p>
+                    <p>4. Make your recommended deposit</p>
+                    <p>5. Keep records for tax season</p>
+                </div>
+                
+                <p>If you have any questions or need assistance, please don't hesitate to contact us.</p>
+                
+                <p>Best regards,<br><strong>The Renest Team</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Update preview when form fields change
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('notificationForm');
+            const inputs = form.querySelectorAll('input, textarea');
+            
+            inputs.forEach(input => {
+                input.addEventListener('input', updatePreview);
+            });
+            
+            updatePreview(); // Initial preview update
+        });
+
+        function updatePreview() {
+            const firstName = document.getElementById('clientFirstName').value || '[First Name]';
+            const lastName = document.getElementById('clientLastName').value || '[Last Name]';
+            const stateName = document.getElementById('stateName').value || '[State]';
+            const planName = document.getElementById('planName').value || '[Plan Name]';
+            const username = document.getElementById('username').value || '[Username]';
+            const websiteUrl = document.getElementById('websiteUrl').value || '[Website URL]';
+            const qualifiedExpenses = document.getElementById('qualifiedExpenses').value || '[Amount]';
+            const recommendedDeposit = document.getElementById('recommendedDeposit').value || '[Amount]';
+            
+            const formattedExpenses = qualifiedExpenses !== '[Amount]' ? 
+                '$' + parseInt(qualifiedExpenses).toLocaleString() : '[Amount]';
+            const formattedDeposit = recommendedDeposit !== '[Amount]' ? 
+                '$' + parseInt(recommendedDeposit).toLocaleString() : '[Amount]';
+            
+            const previewContent = `
+                <div class="logo-placeholder">RENEST</div>
+                <h2 style="color: #1f2937; margin-bottom: 20px; text-align: center;">Your 529 Account is Now Active!</h2>
+                
+                <p><strong>Dear ${firstName} ${lastName},</strong></p>
+                
+                <p>Congratulations! Your <span class="highlight">${stateName} 529 Education Savings Plan</span> account has been successfully opened and is now active.</p>
+                
+                <div class="important-box">
+                    <h4>Your Account Information</h4>
+                    <p><strong>Username:</strong> ${username}</p>
+                    <p><strong>Website:</strong> <a href="${websiteUrl}" target="_blank">${websiteUrl}</a></p>
+                    <p><strong>Next Step:</strong> Create your password by clicking "Forgot Password" on the login page</p>
+                </div>
+                
+                <p><strong>Based on your qualified expenses of ${formattedExpenses}, we recommend depositing ${formattedDeposit} into your 529 account by the end of the year.</strong></p>
+                
+                <p>This deposit can be made as a lump sum or throughout the year - whatever works best for you. The great news is that you can withdraw this money whenever you want. The deposit and withdrawal process creates the necessary records for your state, which will get you your tax benefit during tax season.</p>
+                
+                <p><strong>This process takes as little as 10 minutes and can save you hundreds of dollars in taxes.</strong></p>
+                
+                <div class="important-box">
+                    <h4>Quick Start Steps</h4>
+                    <p>1. Visit your state's 529 website using the link above</p>
+                    <p>2. Reset your password using the "Forgot Password" option</p>
+                    <p>3. Log in with your username and new password</p>
+                    <p>4. Make your recommended deposit of ${formattedDeposit}</p>
+                    <p>5. Keep records for tax season</p>
+                </div>
+                
+                <p>If you have any questions or need assistance, please don't hesitate to contact us.</p>
+                
+                <p>Best regards,<br><strong>The Renest Team</strong></p>
+            `;
+            
+            document.getElementById('previewContent').innerHTML = previewContent;
+        }
+
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            
+            // Get form values
+            const firstName = document.getElementById('clientFirstName').value;
+            const lastName = document.getElementById('clientLastName').value;
+            const clientEmail = document.getElementById('clientEmail').value;
+            const stateName = document.getElementById('stateName').value;
+            const planName = document.getElementById('planName').value;
+            const username = document.getElementById('username').value;
+            const websiteUrl = document.getElementById('websiteUrl').value;
+            const qualifiedExpenses = parseInt(document.getElementById('qualifiedExpenses').value);
+            const recommendedDeposit = parseInt(document.getElementById('recommendedDeposit').value);
+            const additionalNotes = document.getElementById('additionalNotes').value;
+            
+            // Validate required fields
+            if (!firstName || !lastName || !stateName || !username || !websiteUrl || !qualifiedExpenses || !recommendedDeposit) {
+                alert('Please fill in all required fields before generating the PDF.');
+                return;
+            }
+            
+            // Format currency
+            const formattedExpenses = '$' + qualifiedExpenses.toLocaleString();
+            const formattedDeposit = '$' + recommendedDeposit.toLocaleString();
+            
+            // Create PDF
+            const doc = new jsPDF();
+            
+            // Set colors
+            const primaryColor = [79, 70, 229]; // Purple
+            const secondaryColor = [99, 102, 241]; // Light purple
+            const textColor = [31, 41, 55]; // Dark gray
+            const highlightColor = [254, 243, 199]; // Light yellow
+            
+            // Header with logo
+            doc.setFontSize(24);
+            doc.setTextColor(...primaryColor);
+            doc.setFont(undefined, 'bold');
+            doc.text('RENEST', 105, 30, { align: 'center' });
+            
+            // Title
+            doc.setFontSize(18);
+            doc.setTextColor(...textColor);
+            doc.text('Your 529 Account is Now Active!', 105, 50, { align: 'center' });
+            
+            // Add line under title
+            doc.setDrawColor(...primaryColor);
+            doc.setLineWidth(0.5);
+            doc.line(20, 55, 190, 55);
+            
+            let yPosition = 70;
+            
+            // Greeting
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'bold');
+            doc.text(`Dear ${firstName} ${lastName},`, 20, yPosition);
+            yPosition += 15;
+            
+            // Main content
+            doc.setFont(undefined, 'normal');
+            const mainText = `Congratulations! Your ${stateName} 529 Education Savings Plan account has been successfully opened and is now active.`;
+            const splitMainText = doc.splitTextToSize(mainText, 170);
+            doc.text(splitMainText, 20, yPosition);
+            yPosition += splitMainText.length * 5 + 10;
+            
+            // Account Information Box
+            doc.setFillColor(239, 246, 255); // Light blue background
+            doc.setDrawColor(59, 130, 246); // Blue border
+            doc.roundedRect(20, yPosition, 170, 35, 3, 3, 'FD');
+            
+            doc.setFont(undefined, 'bold');
+            doc.setTextColor(30, 64, 175); // Dark blue
+            doc.text('Your Account Information', 25, yPosition + 10);
+            
+            doc.setFont(undefined, 'normal');
+            doc.setTextColor(...textColor);
+            doc.text(`Username: ${username}`, 25, yPosition + 20);
+            doc.text(`Website: ${websiteUrl}`, 25, yPosition + 27);
+            doc.text('Next Step: Create your password by clicking "Forgot Password" on the login page', 25, yPosition + 34);
+            yPosition += 45;
+            
+            // Recommendation paragraph
+            doc.setFont(undefined, 'bold');
+            const recommendationText = `Based on your qualified expenses of ${formattedExpenses}, we recommend depositing ${formattedDeposit} into your 529 account by the end of the year.`;
+            const splitRecommendation = doc.splitTextToSize(recommendationText, 170);
+            doc.text(splitRecommendation, 20, yPosition);
+            yPosition += splitRecommendation.length * 5 + 10;
+            
+            // Explanation paragraph
+            doc.setFont(undefined, 'normal');
+            const explanationText = 'This deposit can be made as a lump sum or throughout the year - whatever works best for you. The great news is that you can withdraw this money whenever you want. The deposit and withdrawal process creates the necessary records for your state, which will get you your tax benefit during tax season.';
+            const splitExplanation = doc.splitTextToSize(explanationText, 170);
+            doc.text(splitExplanation, 20, yPosition);
+            yPosition += splitExplanation.length * 5 + 10;
+            
+            // Highlight text
+            doc.setFont(undefined, 'bold');
+            const highlightText = 'This process takes as little as 10 minutes and can save you hundreds of dollars in taxes.';
+            const splitHighlight = doc.splitTextToSize(highlightText, 170);
+            doc.text(splitHighlight, 20, yPosition);
+            yPosition += splitHighlight.length * 5 + 15;
+            
+            // Quick Start Steps Box
+            doc.setFillColor(239, 246, 255); // Light blue background
+            doc.setDrawColor(59, 130, 246); // Blue border
+            doc.roundedRect(20, yPosition, 170, 45, 3, 3, 'FD');
+            
+            doc.setFont(undefined, 'bold');
+            doc.setTextColor(30, 64, 175); // Dark blue
+            doc.text('Quick Start Steps', 25, yPosition + 10);
+            
+            doc.setFont(undefined, 'normal');
+            doc.setTextColor(...textColor);
+            doc.text('1. Visit your state\'s 529 website using the link above', 25, yPosition + 18);
+            doc.text('2. Reset your password using the "Forgot Password" option', 25, yPosition + 25);
+            doc.text('3. Log in with your username and new password', 25, yPosition + 32);
+            doc.text(`4. Make your recommended deposit of ${formattedDeposit}`, 25, yPosition + 39);
+            doc.text('5. Keep records for tax season', 25, yPosition + 46);
+            yPosition += 60;
+            
+            // Additional notes if provided
+            if (additionalNotes.trim()) {
+                doc.setFont(undefined, 'bold');
+                doc.text('Additional Information:', 20, yPosition);
+                yPosition += 8;
+                
+                doc.setFont(undefined, 'normal');
+                const splitNotes = doc.splitTextToSize(additionalNotes, 170);
+                doc.text(splitNotes, 20, yPosition);
+                yPosition += splitNotes.length * 5 + 10;
+            }
+            
+            // Closing
+            const closingText = 'If you have any questions or need assistance, please don\'t hesitate to contact us.';
+            const splitClosing = doc.splitTextToSize(closingText, 170);
+            doc.text(splitClosing, 20, yPosition);
+            yPosition += splitClosing.length * 5 + 10;
+            
+            doc.text('Best regards,', 20, yPosition);
+            doc.setFont(undefined, 'bold');
+            doc.text('The Renest Team', 20, yPosition + 7);
+            
+            // Footer
+            doc.setFontSize(10);
+            doc.setFont(undefined, 'normal');
+            doc.setTextColor(107, 114, 128); // Gray
+            doc.text('This document was generated by Renest - Your Education Finance Partner', 105, 280, { align: 'center' });
+            
+            // Save the PDF
+            const fileName = `529_Account_Setup_${firstName}_${lastName}_${new Date().toISOString().split('T')[0]}.pdf`;
+            doc.save(fileName);
+        }
+    </script>
+</body>
+</html> 
