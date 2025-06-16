@@ -108,7 +108,9 @@ if (typeof window.submitSensitiveData === 'undefined') {
             phoneNumber: formDataBundle.phoneNumber,
             address: fullAddress, // Combined address
             state: formDataBundle.state,
-            school: formDataBundle.school
+            school: formDataBundle.school,
+            rentPayment: formDataBundle.totalRentPayments || 0,
+            otherQualifiedExpenses: formDataBundle.totalOtherQualifiedExpenses || 0
         };
 
         console.log('[submitSensitiveData] Submitting sensitive data to SSN API. Payload (excluding encryptedSSN for brevity):', { ...payload, encryptedSSN: '[ENCRYPTED]' });

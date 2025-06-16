@@ -984,6 +984,16 @@
                 formData.city = document.getElementById('cityInput').value;
                 formData.zipCode = document.getElementById('zipCodeInput').value;
                 
+                // Calculate rent and other qualified expenses totals
+                const expenseTotals = calculateRentAndOtherExpenses();
+                formData.totalRentPayments = expenseTotals.totalRentPayments;
+                formData.totalOtherQualifiedExpenses = expenseTotals.totalOtherQualifiedExpenses;
+                
+                console.log('[Step 7] Added expense totals to formData:', {
+                    totalRentPayments: formData.totalRentPayments,
+                    totalOtherQualifiedExpenses: formData.totalOtherQualifiedExpenses
+                });
+                
                 // Store all collected data in localStorage for account creation
                 localStorage.setItem('onboardingFormData', JSON.stringify(formData));
                 localStorage.setItem('onboardingHousingEntries', JSON.stringify(window.housingEntries));
@@ -1990,6 +2000,57 @@
              }
              return benefit;
          }
+
+        // Calculate total rent and other qualified expenses for the year
+        function calculateRentAndOtherExpenses() {
+            const currentYear = new Date().getFullYear();
+            const groceryInput = document.getElementById('groceryInput');
+            const monthlyGrocery = groceryInput ? parseInt(groceryInput.value) || 200 : 200;
+            
+            let totalRentPayments = 0;
+            let totalOtherQualifiedExpenses = 0;
+            
+            // For each enrolled month, calculate expenses
+            for (let month = 1; month <= 12; month++) {
+                if (!formData.enrolledMonths.includes(month)) continue;
+                
+                // Add grocery expense for enrolled months (this goes to other qualified expenses)
+                totalOtherQualifiedExpenses += monthlyGrocery;
+                
+                // Find applicable housing entry for this month
+                const applicableEntry = window.housingEntries.find(entry => {
+                    const startDate = new Date(entry.startYear, entry.startMonth - 1, 1);
+                    const endDate = new Date(entry.endYear, entry.endMonth - 1, 1);
+                    const thisMonth = new Date(currentYear, month - 1, 1);
+                    return thisMonth >= startDate && thisMonth <= endDate;
+                });
+                
+                if (applicableEntry) {
+                    // Rent goes to rent payments
+                    totalRentPayments += applicableEntry.rent;
+                    
+                    // Utilities and WiFi go to other qualified expenses
+                    // Only add utilities if they're NOT included in rent
+                    if (!applicableEntry.utilitiesIncluded) {
+                        totalOtherQualifiedExpenses += applicableEntry.utilities;
+                    }
+                    totalOtherQualifiedExpenses += applicableEntry.wifi;
+                }
+            }
+            
+            console.log('[calculateRentAndOtherExpenses] Calculated totals:', {
+                totalRentPayments,
+                totalOtherQualifiedExpenses,
+                enrolledMonths: formData.enrolledMonths,
+                monthlyGrocery,
+                housingEntries: window.housingEntries
+            });
+            
+            return {
+                totalRentPayments: Math.round(totalRentPayments),
+                totalOtherQualifiedExpenses: Math.round(totalOtherQualifiedExpenses)
+            };
+        }
      </script>
 </body>
 </html> 
