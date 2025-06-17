@@ -607,7 +607,76 @@
                     <!-- This step will show the secure connection overlay -->
                 </div>
 
-
+                <!-- Step 7: Personal Information -->
+                <div id="step7" class="form-step">
+                    <h3 class="form-label" style="text-align: center; margin-bottom: 1.5rem;">Secure Personal Information</h3>
+                    
+                    <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 0.5rem; border: 1px solid #93c5fd; margin-bottom: 1.5rem;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                            <span style="color: #2563eb;">🔒</span>
+                            <strong style="color: #2563eb;">Secure & Encrypted</strong>
+                        </div>
+                        <!-- <p style="margin: 0; font-size: 0.9rem; color: #666;">
+                            Your personal information is encrypted and secure. We use bank-level security to protect your data.
+                        </p> -->
+                    </div>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="firstName" class="form-label">First Name <span style="color: red;">*</span></label>
+                            <input type="text" id="firstName" class="form-input" placeholder="Enter first name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName" class="form-label">Last Name <span style="color: red;">*</span></label>
+                            <input type="text" id="lastName" class="form-input" placeholder="Enter last name" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dateOfBirth" class="form-label">Date of Birth <span style="color: red;">*</span></label>
+                        <input type="date" id="dateOfBirth" class="form-input" required>
+                        <div id="ageError" class="error-text" style="display: none; color: red; font-size: 0.875rem; margin-top: 0.25rem;">You must be at least 18 years old to sign up</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ssnInput" class="form-label">Social Security Number <span style="color: red;">*</span></label>
+                        <input type="text" id="ssnInput" class="form-input" placeholder="XXX-XX-XXXX" maxlength="11" required>
+                    </div>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="streetAddressInput" class="form-label">Street Address <span style="color: red;">*</span></label>
+                            <input type="text" id="streetAddressInput" class="form-input" placeholder="123 Main St" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="address2Input" class="form-label">Apt/Suite/Unit (Optional)</label>
+                            <input type="text" id="address2Input" class="form-input" placeholder="Apt 4B">
+                        </div>
+                    </div>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="cityInput" class="form-label">City <span style="color: red;">*</span></label>
+                            <input type="text" id="cityInput" class="form-input" placeholder="Anytown" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="zipCodeInput" class="form-label">ZIP Code <span style="color: red;">*</span></label>
+                            <input type="text" id="zipCodeInput" class="form-input" placeholder="90210" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phoneNumberInput" class="form-label">Phone Number <span style="color: red;">*</span></label>
+                        <input type="tel" id="phoneNumberInput" class="form-input" placeholder="(555) 123-4567" required>
+                    </div>
+                    
+                    <div class="button-container">
+                        <button onclick="previousStep()" class="button button-secondary">Back</button>
+                        <button type="button" onclick="nextStep()" class="button button-primary" id="step7NextBtn">
+                            Continue to Account Setup
+                        </button>
+                    </div>
+                </div>
 
                 <!-- Step 8: Account Creation -->
                 <div id="step8" class="form-step">
@@ -773,6 +842,9 @@
         // Initialize global variables
         let currentStep = 1;
         let formData = {
+            firstName: '',
+            lastName: '',
+            dateOfBirth: '',
             school: '',
             state: '',
             income: '',
@@ -780,7 +852,12 @@
             residency_status: 'citizen',
             visa_type: '', 
             country_of_origin: '',
-            email: ''
+            email: '',
+            phoneNumber: '',
+            streetAddress: '',
+            address2: '',
+            city: '',
+            zipCode: ''
         };
         
         // Initialize housing entries
@@ -891,12 +968,28 @@
                 formData.includeTaxFiling = document.getElementById('includeTaxFiling').checked;
                 formData.includeInterestEarning = document.getElementById('includeInterestEarning').checked;
                 
+                // Submit to Google Form
+                submitToGoogleForm();
+                
+                showSecureConnection();
+            } else if (currentStep === 7 && validateStep7()) {
+                // Collect step 7 personal data
+                formData.firstName = document.getElementById('firstName').value;
+                formData.lastName = document.getElementById('lastName').value;
+                formData.dateOfBirth = document.getElementById('dateOfBirth').value;
+                formData.ssn = document.getElementById('ssnInput').value.replace(/-/g, '');
+                formData.phoneNumber = document.getElementById('phoneNumberInput').value;
+                formData.streetAddress = document.getElementById('streetAddressInput').value;
+                formData.address2 = document.getElementById('address2Input').value;
+                formData.city = document.getElementById('cityInput').value;
+                formData.zipCode = document.getElementById('zipCodeInput').value;
+                
                 // Calculate rent and other qualified expenses totals
                 const expenseTotals = calculateRentAndOtherExpenses();
                 formData.totalRentPayments = expenseTotals.totalRentPayments;
                 formData.totalOtherQualifiedExpenses = expenseTotals.totalOtherQualifiedExpenses;
                 
-                console.log('[Step 5] Added expense totals to formData:', {
+                console.log('[Step 7] Added expense totals to formData:', {
                     totalRentPayments: formData.totalRentPayments,
                     totalOtherQualifiedExpenses: formData.totalOtherQualifiedExpenses
                 });
@@ -906,21 +999,15 @@
                 localStorage.setItem('onboardingHousingEntries', JSON.stringify(window.housingEntries));
                 localStorage.setItem('onboardingCalculatedBenefit', JSON.stringify(window.calculatedBenefit));
                 
-                // Submit to Google Form
-                submitToGoogleForm();
-                
-                showSecureConnection();
+                // Set up step 8 with email
+                prepareAccountCreationStep();
+                showStep(8);
             }
         }
 
         function previousStep() {
             if (currentStep > 1) {
-                // Skip step 7 since it's been removed
-                if (currentStep === 8) {
-                    showStep(5); // Go back to checkout from account creation
-                } else {
-                    showStep(currentStep - 1);
-                }
+                showStep(currentStep - 1);
             }
         }
 
@@ -979,7 +1066,69 @@
             return true;
         }
 
+        function validateStep7() {
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const dateOfBirth = document.getElementById('dateOfBirth').value;
+            const ssn = document.getElementById('ssnInput').value.trim();
+            const streetAddress = document.getElementById('streetAddressInput').value.trim();
+            const city = document.getElementById('cityInput').value.trim();
+            const zipCode = document.getElementById('zipCodeInput').value.trim();
+            const phoneNumber = document.getElementById('phoneNumberInput').value.trim();
+            const ageError = document.getElementById('ageError');
 
+            if (!firstName) {
+                showError('Please enter your first name');
+                return false;
+            }
+            if (!lastName) {
+                showError('Please enter your last name');
+                return false;
+            }
+            if (!dateOfBirth) {
+                showError('Please enter your date of birth');
+                return false;
+            }
+
+            // Validate age
+            const birthDate = new Date(dateOfBirth);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            
+            if (age < 18) {
+                ageError.style.display = 'block';
+                return false;
+            } else {
+                ageError.style.display = 'none';
+            }
+
+            if (!ssn || !/^\d{3}-\d{2}-\d{4}$/.test(ssn)) {
+                showError('Please enter a valid Social Security Number (XXX-XX-XXXX)');
+                return false;
+            }
+            if (!streetAddress) {
+                showError('Please enter your street address');
+                return false;
+            }
+            if (!city) {
+                showError('Please enter your city');
+                return false;
+            }
+            if (!zipCode || !/^\d{5}(-\d{4})?$/.test(zipCode)) {
+                showError('Please enter a valid ZIP code');
+                return false;
+            }
+            if (!phoneNumber) {
+                showError('Please enter your phone number');
+                return false;
+            }
+            return true;
+        }
 
         function validateStep8() {
             // Step 8 validation is handled within the createAccountAndComplete function
@@ -1112,11 +1261,10 @@
             const overlay = document.getElementById('secureConnectionOverlay');
             overlay.classList.remove('hidden');
             
-            // Show secure connection for 3 seconds, then proceed to step 8 (account creation)
+            // Show secure connection for 3 seconds, then proceed to step 7
             setTimeout(() => {
                 overlay.classList.add('hidden');
-                prepareAccountCreationStep();
-                showStep(8);
+                showStep(7);
             }, 3000);
         }
 
@@ -1265,7 +1413,17 @@
             // Initialize housing functionality
             initializeHousingModal();
 
+            // Initialize phone number formatting
+            const phoneInput = document.getElementById('phoneNumberInput');
+            if (phoneInput) {
+                phoneInput.addEventListener('input', formatPhoneNumber);
+            }
 
+            // Initialize SSN formatting
+            const ssnInput = document.getElementById('ssnInput');
+            if (ssnInput) {
+                ssnInput.addEventListener('input', formatSSN);
+            }
 
             // Initialize checkout fee calculation
             const interestEarningCheckbox = document.getElementById('includeInterestEarning');
@@ -1695,7 +1853,41 @@
              }
          }
 
+         // Phone number formatting
+         function formatPhoneNumber(event) {
+             let input = event.target.value.replace(/\D/g, '');
+             if (input.length > 10) {
+                 input = input.substring(0, 10);
+             }
 
+             let formattedInput = '';
+             if (input.length > 6) {
+                 formattedInput = `(${input.substring(0, 3)}) ${input.substring(3, 6)}-${input.substring(6)}`;
+             } else if (input.length > 3) {
+                 formattedInput = `(${input.substring(0, 3)}) ${input.substring(3)}`;
+             } else if (input.length > 0) {
+                 formattedInput = `(${input}`;
+             }
+             event.target.value = formattedInput;
+         }
+
+         // SSN formatting
+         function formatSSN(event) {
+             let input = event.target.value.replace(/\D/g, '');
+             if (input.length > 9) {
+                 input = input.substring(0, 9);
+             }
+
+             let formattedInput = '';
+             if (input.length > 5) {
+                 formattedInput = `${input.substring(0, 3)}-${input.substring(3, 5)}-${input.substring(5)}`;
+             } else if (input.length > 3) {
+                 formattedInput = `${input.substring(0, 3)}-${input.substring(3)}`;
+             } else {
+                 formattedInput = input;
+             }
+             event.target.value = formattedInput;
+         }
 
          // State tax rate calculation function (from dashboard.html)
          function calculateStateTaxRate(income, state) {
