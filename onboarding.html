@@ -209,6 +209,79 @@
             font-size: 1.2rem;
             margin-top: 10px;
         }
+
+        /* Progress Loading Overlay */
+        .progress-loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1050;
+            color: white;
+            text-align: center;
+        }
+
+        .progress-loading-content {
+            max-width: 400px;
+            width: 90%;
+            padding: 2rem;
+        }
+
+        .progress-loading-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .progress-loading-subtitle {
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            color: #e5e7eb;
+        }
+
+        .progress-bar-loading {
+            width: 100%;
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar-loading-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .progress-step-text {
+            font-size: 0.9rem;
+            color: #d1d5db;
+            min-height: 1.5rem;
+        }
+
+        .progress-checkmark {
+            font-size: 4rem;
+            color: #22c55e;
+            margin-bottom: 1rem;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.3s ease;
+        }
+
+        .progress-checkmark.show {
+            opacity: 1;
+            transform: scale(1);
+        }
         
         /* Mobile Optimization */
         @media (max-width: 768px) {
@@ -686,6 +759,21 @@
         <p class="secure-text">Establishing secure connection...</p>
     </div>
 
+    <!-- Progress Loading Overlay -->
+    <div id="progressLoadingOverlay" class="progress-loading-overlay hidden">
+        <div class="progress-loading-content">
+            <div id="progressCheckmark" class="progress-checkmark">✓</div>
+            <div class="progress-loading-title">Creating Your Account</div>
+            <div class="progress-loading-subtitle">Please wait while we set everything up...</div>
+            
+            <div class="progress-bar-loading">
+                <div id="progressBarLoadingFill" class="progress-bar-loading-fill"></div>
+            </div>
+            
+            <div id="progressStepText" class="progress-step-text">Initializing...</div>
+        </div>
+    </div>
+
     <!-- Housing Information Modal -->
     <div id="housingModal" class="modal-overlay hidden">
         <div class="modal-container">
@@ -1132,45 +1220,45 @@
 
         // Handle Google Sign-In credential response
         async function handleCredentialResponse(response) {
-            const createAccountBtn = document.getElementById('createAccountBtn');
-            const spinner = document.getElementById('createAccountSpinner');
-            
             try {
-                // Disable all buttons to prevent multiple submissions
-                const allButtons = document.querySelectorAll('button');
-                allButtons.forEach(button => {
-                    button.disabled = true;
-                });
+                // Disable all interactive elements
+                disableAllInteractiveElements();
                 
-                // Show loading state
-                spinner.style.display = 'block';
+                // Show progress overlay
+                showProgressOverlay();
+                updateProgress(10, 'Processing Google Sign-In...');
                 
                 console.log('Google Sign-In response received');
+                
+                // Add some delay to show progress steps
+                await new Promise(resolve => setTimeout(resolve, 500));
+                updateProgress(30, 'Verifying credentials...');
+                
+                await new Promise(resolve => setTimeout(resolve, 500));
+                updateProgress(50, 'Creating account...');
+                
                 const result = await window.onboardingCoordinator.handleGoogleSignInCallback(response);
                 
+                updateProgress(80, 'Submitting your data...');
+                await new Promise(resolve => setTimeout(resolve, 800));
+                
                 if (result.accountCreated && result.dataSubmitted) {
+                    updateProgress(100, 'Account created successfully!');
+                    await new Promise(resolve => setTimeout(resolve, 500));
                     showSuccessAndRedirect('Account created and data submitted successfully!');
                 } else {
                     throw new Error('Account creation or data submission failed');
                 }
             } catch (error) {
                 console.error('Google Sign-In error:', error);
+                hideProgressOverlay();
                 showError(`Google Sign-In failed: ${error.message}`);
-                
-                // Re-enable all buttons if there's an error
-                const allButtons = document.querySelectorAll('button');
-                allButtons.forEach(button => {
-                    button.disabled = false;
-                });
-                
-                spinner.style.display = 'none';
+                enableAllInteractiveElements();
             }
         }
 
         // Create account with email/password and submit all data
         async function createAccountAndComplete() {
-            const createAccountBtn = document.getElementById('createAccountBtn');
-            const spinner = document.getElementById('createAccountSpinner');
             const passwordInput = document.getElementById('passwordInput');
             const confirmPasswordInput = document.getElementById('confirmPasswordInput');
             
@@ -1189,22 +1277,36 @@
                     return;
                 }
                 
-                // Disable all buttons to prevent multiple submissions
-                const allButtons = document.querySelectorAll('button');
-                allButtons.forEach(button => {
-                    button.disabled = true;
-                });
+                // Disable all interactive elements
+                disableAllInteractiveElements();
                 
-                // Show loading state
-                spinner.style.display = 'block';
+                // Show progress overlay
+                showProgressOverlay();
+                updateProgress(5, 'Validating credentials...');
                 
                 console.log('Creating account with email/password and submitting data...');
+                
+                // Add progress updates with delays to show progression
+                await new Promise(resolve => setTimeout(resolve, 500));
+                updateProgress(15, 'Setting up secure connection...');
+                
+                await new Promise(resolve => setTimeout(resolve, 500));
+                updateProgress(30, 'Creating your account...');
+                
+                await new Promise(resolve => setTimeout(resolve, 800));
+                updateProgress(60, 'Preparing your data...');
+                
                 const result = await window.onboardingCoordinator.createAccountAndSubmitData(
                     formData.email, 
                     password
                 );
                 
+                updateProgress(85, 'Submitting your information...');
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
                 if (result.accountCreated && result.dataSubmitted) {
+                    updateProgress(100, 'Account created successfully!');
+                    await new Promise(resolve => setTimeout(resolve, 500));
                     showSuccessAndRedirect('Account created and data submitted successfully!');
                 } else {
                     throw new Error('Account creation or data submission failed');
@@ -1212,34 +1314,88 @@
                 
             } catch (error) {
                 console.error('Account creation error:', error);
+                hideProgressOverlay();
                 showError(`Account creation failed: ${error.message}`);
-                
-                // Re-enable all buttons if there's an error
-                const allButtons = document.querySelectorAll('button');
-                allButtons.forEach(button => {
-                    button.disabled = false;
-                });
-                
-                spinner.style.display = 'none';
+                enableAllInteractiveElements();
             }
+        }
+
+        // Progress tracking functions
+        function showProgressOverlay() {
+            const overlay = document.getElementById('progressLoadingOverlay');
+            overlay.classList.remove('hidden');
+            updateProgress(0, 'Initializing...');
+        }
+
+        function hideProgressOverlay() {
+            const overlay = document.getElementById('progressLoadingOverlay');
+            overlay.classList.add('hidden');
+        }
+
+        function updateProgress(percentage, stepText) {
+            const progressFill = document.getElementById('progressBarLoadingFill');
+            const stepTextEl = document.getElementById('progressStepText');
+            
+            if (progressFill) {
+                progressFill.style.width = `${percentage}%`;
+            }
+            
+            if (stepTextEl) {
+                stepTextEl.textContent = stepText;
+            }
+        }
+
+        function showProgressSuccess() {
+            const checkmark = document.getElementById('progressCheckmark');
+            const title = document.querySelector('.progress-loading-title');
+            const subtitle = document.querySelector('.progress-loading-subtitle');
+            
+            if (checkmark) {
+                checkmark.classList.add('show');
+            }
+            
+            if (title) {
+                title.textContent = 'Account Created Successfully!';
+            }
+            
+            if (subtitle) {
+                subtitle.textContent = 'Redirecting to your dashboard...';
+            }
+            
+            updateProgress(100, 'Complete!');
+        }
+
+        function disableAllInteractiveElements() {
+            // Disable all buttons
+            const allButtons = document.querySelectorAll('button');
+            allButtons.forEach(button => {
+                button.disabled = true;
+            });
+            
+            // Disable all form inputs
+            const allInputs = document.querySelectorAll('input, select, textarea');
+            allInputs.forEach(input => {
+                input.disabled = true;
+            });
+        }
+
+        function enableAllInteractiveElements() {
+            // Re-enable all buttons
+            const allButtons = document.querySelectorAll('button');
+            allButtons.forEach(button => {
+                button.disabled = false;
+            });
+            
+            // Re-enable all form inputs
+            const allInputs = document.querySelectorAll('input, select, textarea');
+            allInputs.forEach(input => {
+                input.disabled = false;
+            });
         }
 
         // Show success message and redirect
         function showSuccessAndRedirect(message) {
-            const successMessage = document.createElement('div');
-            successMessage.className = 'success-message';
-            successMessage.textContent = message + ' Redirecting to dashboard...';
-            successMessage.style.position = 'fixed';
-            successMessage.style.top = '20px';
-            successMessage.style.left = '50%';
-            successMessage.style.transform = 'translateX(-50%)';
-            successMessage.style.padding = '15px 25px';
-            successMessage.style.backgroundColor = '#4CAF50';
-            successMessage.style.color = 'white';
-            successMessage.style.borderRadius = '4px';
-            successMessage.style.zIndex = '1000';
-            successMessage.style.fontSize = '1rem';
-            document.body.appendChild(successMessage);
+            showProgressSuccess();
             
             // Redirect after 3 seconds
             setTimeout(() => {
