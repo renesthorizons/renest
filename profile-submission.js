@@ -25,7 +25,7 @@ async function submitUserProfile(formData, calculatedBenefit) {
         state: formData.state, // Student's school state
         income: formData.income,
         monthlyRent: rentForProfile, // From first housing entry
-        progressPercentage: 75, // Completion up to "Open 529"
+        progressPercentage: 70, // Completion up to "Open 529"
         totalPotentialBenefit: calculatedBenefit ? calculatedBenefit.benefit : 0,
         accountStatus: 'ACTIVE',  
         residency_status: formData.residency_status || 'citizen',

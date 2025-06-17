@@ -1,0 +1,1867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link rel="icon" href="blogo2.png" type="image/png">
+    <link rel="apple-touch-icon" href="blogo2.png">
+    
+    <title>Renest - Get Started</title>
+
+    <link rel="stylesheet" href="dashboard-style.css">
+    
+    <style>
+        /* Additional styles for onboarding page */
+        .onboarding-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, #334155 0%, #1e293b 100%);
+            padding: 1rem;
+        }
+        
+        .onboarding-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        
+        .onboarding-card {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            padding: 2rem;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-step {
+            display: none;
+        }
+        
+        .form-step.active {
+            display: block;
+        }
+        
+        .progress-container1 {
+            margin-bottom: 2rem;
+        }
+        
+        .progress-text {
+            text-align: center;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+        
+        .progress-bar-container1 {
+            background-color: #e5e7eb;
+            border-radius: 1rem;
+            height: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .progress-bar1 {
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            height: 100%;
+            border-radius: 1rem;
+            transition: width 0.3s ease;
+        }
+        
+        /* Benefit Summary Styles */
+        .benefit-summary-card {
+            background: #f0fdf4;
+            border-left: 4px solid #22c55e;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .benefit-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .benefit-total {
+            border-top: 1px solid #bbf7d0;
+            padding-top: 0.5rem;
+            margin-top: 0.5rem;
+            font-weight: 600;
+            color: #16a34a;
+        }
+        
+        /* Checkout Styles */
+        .checkout-card {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 2px solid #22c55e;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.1);
+        }
+        
+        .price-highlight {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
+        .price-main {
+            font-size: 1.3rem;
+            color: #15803d;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .price-description {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .add-on-option {
+            background: linear-gradient(135deg, #fefce8 0%, #fef3c7 100%);
+            border: 2px solid #f59e0b;
+            padding: 1.75rem;
+            border-radius: 1rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 3px 10px rgba(245, 158, 11, 0.1);
+            transition: all 0.2s ease;
+        }
+        
+        .add-on-option:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.15);
+        }
+        
+        .tax-filing-option {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 2px solid #0ea5e9;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 3px 10px rgba(14, 165, 233, 0.1);
+            transition: all 0.2s ease;
+        }
+        
+        .tax-filing-option:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(14, 165, 233, 0.15);
+        }
+        
+        .add-on-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            cursor: pointer;
+        }
+        
+        .add-on-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .add-on-description {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        /* Secure Connection Overlay */
+        .secure-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1050;
+            color: white;
+            text-align: center;
+        }
+        
+        .spinner-large {
+            width: 60px;
+            height: 60px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .secure-text {
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+        
+        /* Mobile Optimization */
+        @media (max-width: 768px) {
+            .onboarding-container {
+                padding: 0.5rem;
+            }
+            
+            .onboarding-content {
+                padding: 0.5rem;
+            }
+            
+            .onboarding-card {
+                padding: 1.5rem;
+                min-height: 450px;
+                border-radius: 0.5rem;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .button-container {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .button-container button {
+                width: 100%;
+                padding: 0.75rem;
+            }
+            
+            .month-checkboxes .month-row {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+            
+            .benefit-summary-card,
+            .checkout-card,
+            .add-on-option {
+                padding: 1rem;
+            }
+            
+            .price-main {
+                font-size: 1rem;
+            }
+            
+            .secure-text {
+                font-size: 1rem;
+            }
+        }
+        
+        /* Ensure consistent form step heights */
+        .form-step {
+            display: none;
+            min-height: 350px;
+        }
+        
+        .form-step.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        /* State dropdown keyboard navigation styling */
+        .select-items div.highlighted {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* Divider styles for step 8 */
+        .divider {
+            position: relative;
+            width: 100%;
+        }
+        
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: #ddd;
+        }
+        
+        .divider span {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            background: white;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Account creation specific styles */
+        #step8 .form-input[readonly] {
+            cursor: not-allowed;
+        }
+
+        /* Google Sign-In button styling */
+        .g_id_signin {
+            margin: 0 auto;
+        }
+        
+
+    </style>
+</head>
+<body>
+    <script src="countries.js"></script>
+    <script src="taxdbb.js"></script>
+    <!-- Google Sign-In Script -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <!-- Onboarding Scripts -->
+    <script src="account-creation.js"></script>
+    <script src="profile-submission.js"></script>
+    <script src="expenses-submission.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/forge/1.3.1/forge.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/3.3.2/jsencrypt.min.js"></script>
+    <script src="ssn-integration.js"></script>
+    <script src="onboarding-coordinator.js"></script>
+    
+    <div class="onboarding-container">
+        
+        <div class="onboarding-content">
+            <div class="onboarding-card">
+                <!-- Progress Bar -->
+                <div id="progressContainer" class="progress-container1">
+                    <div class="progress-text">
+                        Step <span id="currentStep">1</span> of 3
+                    </div>
+                    <div class="progress-bar-container1">
+                        <div id="progressBar1" class="progress-bar1" style="width: 33.3%"></div>
+                    </div>
+                </div>
+                
+                <!-- Step 1: Residency Information -->
+                <div id="step1" class="form-step active">
+                    <div class="form-group">
+                        <label for="residencyStatusInput" class="form-label">I am a...</label>
+                        <select id="residencyStatusInput" name="residencyStatusInput" class="form-input">
+                            <option value="citizen" selected>US Citizen</option>
+                            <option value="permanent_resident">Permanent Resident</option>
+                            <option value="resident_alien">Resident Alien</option>
+                            <option value="non_resident_alien">Non-Resident Alien</option>
+                            <option value="unknown_residency">I don't know</option>
+                        </select>
+                    </div>
+                    <div class="form-group hidden" id="visaTypeGroup">
+                        <label for="visaTypeInput" class="form-label">Visa Type</label>
+                        <select id="visaTypeInput" name="visaTypeInput" class="form-input">
+                            <option value="">Select Visa Type</option>
+                            <option value="F1">F1 (Student)</option>
+                            <option value="M1">M1 (Vocational Student)</option>
+                            <option value="J1">J1 (Exchange Visitor)</option>
+                            <option value="H1B">H1B (Specialty Occupation)</option>
+                            <option value="L1">L1 (Intracompany Transferee)</option>
+                            <option value="O1">O1 (Extraordinary Ability)</option>
+                            <option value="E2">E2 (Treaty Investor)</option>
+                            <option value="TN">TN (NAFTA Professional)</option>
+                            <option value="H4">H4 (Dependent)</option>
+                            <option value="L2">L2 (Dependent)</option>
+                            <option value="other_visa">Other</option>
+                            <option value="unknown_visa_type">I don't know my visa type</option>
+                        </select>
+                    </div>
+                    <div class="form-group hidden" id="countryOfOriginGroup">
+                        <label for="countryOfOriginInput" class="form-label">Country of Origin</label>
+                        <input type="text" id="countryOfOriginInput" name="countryOfOriginInput" class="form-input" list="countryListData" placeholder="Type or select country">
+                        <datalist id="countryListData">
+                            <!-- Countries will be populated by JS -->
+                        </datalist>
+                    </div>
+                    <div class="button-container">
+                        <button onclick="nextStep()" class="button button-primary">Next</button>
+                    </div>
+                </div>
+
+                <!-- Step 2: School Information -->
+                <div id="step2" class="form-step">
+                    <div class="form-group">
+                        <label for="school" class="form-label">School Name</label>
+                        <input type="text" id="school" class="form-input" placeholder="Enter school name">
+                    </div>
+                    <div class="form-group">
+                        <label for="state" class="form-label">Select Where You Attend School</label>
+                        <div class="custom-select">
+                            <div class="select-selected" tabindex="0">State</div>
+                            <div class="select-items hidden">
+                                <!-- The options will be populated by JavaScript -->
+                            </div>
+                        </div>
+                        <input type="hidden" id="state" name="state" value="">
+                    </div>
+                    <div class="form-group">
+                        <label for="income" class="form-label">Projected Total Income from all Sources this Year</label>
+                        <input type="text" id="income" class="form-input" placeholder="Enter annual income">
+                    </div>
+                    <div class="button-container">
+                        <button onclick="previousStep()" class="button button-secondary">Back</button>
+                        <button onclick="nextStep()" class="button button-primary">Next</button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Expenses -->
+                <div id="step3" class="form-step">
+                    <div class="form-group">
+                        <h3 class="form-label">My Housing Information</h3>
+                        <p class="form-description" style="margin-bottom: 1rem;">Include leases relevant to this calendar year. Averages and estimates are okay</p>
+                        
+                        <!-- Housing button and list -->
+                        <div id="housingEntriesContainer" style="margin-bottom: 1.5rem;">
+                            <!-- Housing entries will be listed here -->
+                        </div>
+                        
+                        <button type="button" id="addHousingButton" onclick="openHousingModal()" class="button button-primary" style="width: 100%; margin-bottom: 1.5rem;">
+                            + Add Housing Information
+                        </button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <p class="form-description" style="color: var(--text-dark);">I am enrolled as a student these months (uncheck if not enrolled)</p>
+                        <div class="month-checkboxes">
+                            <div class="month-row">
+                                <div class="month-item">
+                                    <input type="checkbox" id="month1" name="enrolledMonths" value="1" checked>
+                                    <label for="month1">January</label>
+                                </div>
+                                <div class="month-item">
+                                    <input type="checkbox" id="month2" name="enrolledMonths" value="2" checked>
+                                    <label for="month2">February</label>
+                                </div>
+                                <div class="month-item">
+                                    <input type="checkbox" id="month3" name="enrolledMonths" value="3" checked>
+                                    <label for="month3">March</label>
+                                </div>
+                                <div class="month-item">
+                                    <input type="checkbox" id="month4" name="enrolledMonths" value="4" checked>
+                                    <label for="month4">April</label>
+                                </div>
+                            </div>
+                            <div class="month-row">
+                                <div class="month-item">
+                                    <input type="checkbox" id="month5" name="enrolledMonths" value="5" checked>
+                                    <label for="month5">May</label>
+                                </div>
+                                <div class="month-item">
+                                    <input type="checkbox" id="month6" name="enrolledMonths" value="6" checked>
+                                    <label for="month6">June</label>
+                                </div>
+                                <div class="month-item">
+                                    <input type="checkbox" id="month7" name="enrolledMonths" value="7" checked>
+                                    <label for="month7">July</label>
+                                </div>
+                                <div class="month-item">
+                                    <input type="checkbox" id="month8" name="enrolledMonths" value="8" checked>
+                                    <label for="month8">August</label>
+                                </div>
+                            </div>
+                            <div class="month-row">
+                                <div class="month-item">
+                                    <input type="checkbox" id="month9" name="enrolledMonths" value="9" checked>
+                                    <label for="month9">September</label>
+                                </div>
+                                <div class="month-item">
+                                    <input type="checkbox" id="month10" name="enrolledMonths" value="10" checked>
+                                    <label for="month10">October</label>
+                                </div>
+                                <div class="month-item">
+                                    <input type="checkbox" id="month11" name="enrolledMonths" value="11" checked>
+                                    <label for="month11">November</label>
+                                </div>
+                                <div class="month-item">
+                                    <input type="checkbox" id="month12" name="enrolledMonths" value="12" checked>
+                                    <label for="month12">December</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="button-container">
+                        <button onclick="previousStep()" class="button button-secondary">Back</button>
+                        <button type="button" onclick="nextStep()" class="button button-primary" id="step3To4Button">
+                            Next
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 4: Benefit Summary -->
+                <div id="step4" class="form-step">
+                    <h3 class="form-label" style="text-align: center; margin-bottom: 2rem;">Your Tax Benefit with Renest</h3>
+                    
+                    <div class="benefit-summary-card">
+                        <div style="text-align: center; margin-bottom: 1.5rem;">
+                            <div style="font-size: 1.1rem; color: #16a34a; margin-bottom: 0.5rem;">Additional Money Back</div>
+                            <div style="font-size: 2.5rem; font-weight: 800; color: #16a34a;" id="taxSavings">$0</div>
+                        </div>
+                        
+                        <div style="font-size: 0.95rem; color: #374151; line-height: 1.6; margin-bottom: 1rem;">
+                            Based on your annual income of <strong id="displayIncome">$0</strong> and your qualified spending of <strong id="qualifiedSpending">$0</strong>, you qualify for a tax deduction of <strong id="deductionAmount">$0</strong> in <strong id="userState">your state</strong>.
+                        </div>
+                        
+                        
+                    </div>
+                    <div style="background: #f0f9ff; padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #3b82f6;margin-bottom: 1rem;">
+                        <div style="font-weight: 600; color: #1e40af; margin-bottom: 0.5rem;">What does this mean?</div>
+                        <div style="font-size: 0.9rem; color: #374151; line-height: 1.5;">
+                            When you file taxes: if you get a refund you will get <strong id="refundMore">$0</strong> more, if you owe taxes you will owe <strong id="oweLess">$0</strong> less. Either way you get more money back in your pocket.
+                        </div>
+                    </div>
+                    
+                    <div style="background: #f8fafc; padding: 1.5rem; border-radius: 0.5rem; border: 1px solid #e2e8f0; margin-bottom: 1.5rem;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="groceryInput" class="form-label">Estimated monthly grocery spending:</label>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="font-size: 1.2rem; color: var(--text-dark);">$</span>
+                                <input 
+                                    type="number" 
+                                    id="groceryInput" 
+                                    class="form-input" 
+                                    value="200" 
+                                    min="0" 
+                                    max="400" 
+                                    style="width: 120px; text-align: center; font-size: 1.1rem; font-weight: 600;"
+                                    oninput="updateBenefitCalculation()"
+                                >
+                                <span style="color: #666; font-size: 0.9rem;">/month (max $400)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="button-container">
+                        <button onclick="previousStep()" class="button button-secondary">Back</button>
+                        <button onclick="nextStep()" class="button button-primary">Continue</button>
+                    </div>
+                </div>
+
+                <!-- Step 5: Checkout -->
+                <div id="step5" class="form-step">
+                    <h3 class="form-label" style="text-align: center; margin-bottom: 2rem; font-size: 1.5rem; color: #374151;">Secure Your Tax Benefit</h3>
+                    
+                    <div class="checkout-card">
+                        <div class="price-highlight">
+                            <div class="price-main">
+                                Pay $60 → Get <span id="checkoutTaxSavings">$0</span> more back on your tax refund
+                            </div>
+                            <div style="font-size: 0.95rem; color: #4b5563; margin-top: 0.75rem; text-align: center; line-height: 1.5; font-weight: 500;">
+                                Money-back guarantee: Get your maximum tax benefit or we'll refund your payment, regardless of whether you file with Renest or another company.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="font-size: 1.2rem; font-weight: 600; color: #374151; margin-bottom: 1rem;">Add-ons</div>
+                    
+                    <!-- Interest Earning Option -->
+                    <div class="add-on-option">
+                        <label class="add-on-checkbox">
+                            <input type="checkbox" id="includeInterestEarning" style="margin-top: 0.25rem; transform: scale(1.1);">
+                            <div>
+                                <div class="add-on-title" style="font-size: 1.1rem; color: #92400e;"> Learn more & Earn more (Save $10!)</div>
+                                <div class="add-on-description" style="margin-top: 0.5rem; line-height: 1.5;">
+                                    Add 15 minutes more and you can earn <strong id="dynamicEarnings" style="color: #92400e;">$0</strong> more and our fee is reduced to $50. Why? More input from you = more money for you and fewer costs for us.
+                                    <div style="margin-top: 0.75rem; font-style: italic; color: #78716c;" id="savingsRecommendation">
+                                        Recommended if you have over $0 in savings or make at least $0/month.
+                                    </div>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                    
+                    <!-- Tax Filing Option -->
+                    <div class="tax-filing-option">
+                        <label style="display: flex; align-items: flex-start; gap: 0.75rem; cursor: pointer;">
+                            <input type="checkbox" id="includeTaxFiling" style="margin: 0.25rem 0 0 0; transform: scale(1.1);">
+                            <div>
+                                <div style="font-weight: 600; color: #0c4a6e; margin-bottom: 0.5rem;"> Add Tax Filing Service</div>
+                                <div style="color: #475569; line-height: 1.5;">
+                                    Renest will file your taxes for you during tax season. 
+                                    <span style="font-weight: 600; color: #0c4a6e;">(+$60, charged when we file your taxes)</span>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="form-group" style="margin-top: 2rem;">
+                        <label for="checkoutEmailInput" class="form-label" style="font-weight: 600; color: #374151;">Email Address <span style="color: #dc2626;">*</span></label>
+                        <input type="email" id="checkoutEmailInput" class="form-input" placeholder="Enter your email address" required style="padding: 0.875rem; font-size: 1rem; border: 2px solid #d1d5db; border-radius: 0.5rem;">
+                    </div>
+                    
+                    <div class="button-container" style="margin-top: 2rem; gap: 1rem;">
+                        <button onclick="previousStep()" class="button button-secondary" style="padding: 0.875rem 1.5rem; border-radius: 0.5rem;">Back</button>
+                        <button onclick="nextStep()" class="button button-primary" id="checkoutBtn" style="padding: 0.875rem 2rem; border-radius: 0.5rem; font-weight: 600; font-size: 1.05rem;">Continue</button>
+                    </div>
+                </div>
+
+                <!-- Step 6: Secure Connection -->
+                <div id="step6" class="form-step">
+                    <!-- This step will show the secure connection overlay -->
+                </div>
+
+
+
+                <!-- Step 8: Account Creation -->
+                <div id="step8" class="form-step">
+                    <h3 class="form-label" style="text-align: center; margin-bottom: 2rem; font-size: 1.5rem; color: #374151;">Create Your Account</h3>
+                    
+                    <div style="background: #f0fdf4; padding: 1.5rem; border-radius: 0.5rem; border: 1px solid #22c55e; margin-bottom: 2rem;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                            <span style="color: #16a34a;">✓</span>
+                            <strong style="color: #16a34a;">Almost Done!</strong>
+                        </div>
+                        <p style="margin: 0; font-size: 0.9rem; color: #666;">
+                            Create your account to save your tax benefit and access your dashboard.
+                        </p>
+                    </div>
+
+                    <!-- Google Sign-In -->
+                    <div style="margin-bottom: 1.5rem;">
+                        <div id="g_id_onload"
+                             data-client_id="1032310890772-gr5i4m4t9fr7m2sgdbta8c5rumh49jlh.apps.googleusercontent.com"
+                             data-context="signup"
+                             data-callback="handleCredentialResponse">
+                        </div>
+                        <div class="g_id_signin"
+                             data-type="standard"
+                             data-size="large"
+                             data-theme="outline"
+                             data-text="signup_with"
+                             data-shape="rectangular"
+                             data-logo_alignment="left"
+                             style="width: 100%; display: flex; justify-content: center;">
+                        </div>
+                    </div>
+
+                    <div class="divider" style="display: flex; align-items: center; text-align: center; margin: 1.5rem 0; color: #666;">
+                        <span style="padding: 0 1rem; background: white;">or</span>
+                    </div>
+
+                    <!-- Password Setup Form -->
+                    <div id="passwordForm">
+                        <!-- Username Display (Read-only) -->
+                        <div class="form-group">
+                            <label class="form-label">Username</label>
+                            <input type="email" id="displayEmail" class="form-input" readonly style="background-color: #f5f5f5; color: #666;">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="passwordInput" class="form-label">Create Password <span style="color: red;">*</span></label>
+                            <input type="password" id="passwordInput" class="form-input" placeholder="Enter password" required>
+                            <div style="font-size: 0.8rem; color: #666; margin-top: 0.25rem;">
+                                Password must be at least 5 characters with 1 uppercase letter, 1 number, and 1 special character
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPasswordInput" class="form-label">Confirm Password <span style="color: red;">*</span></label>
+                            <input type="password" id="confirmPasswordInput" class="form-input" placeholder="Confirm password" required>
+                        </div>
+                    </div>
+                    
+                    <div class="button-container" style="margin-top: 2rem; gap: 1rem;">
+                        <button onclick="previousStep()" class="button button-secondary" style="padding: 0.875rem 1.5rem; border-radius: 0.5rem;">Back</button>
+                        <button onclick="createAccountAndComplete()" class="button button-primary" id="createAccountBtn" style="padding: 0.875rem 2rem; border-radius: 0.5rem; font-weight: 600; font-size: 1.05rem;">
+                            <div class="btn-content">
+                                <span>Done</span>
+                                <div class="spinner" id="createAccountSpinner" style="display: none;"></div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Secure Connection Overlay -->
+    <div id="secureConnectionOverlay" class="secure-overlay hidden">
+        <div class="spinner-large"></div>
+        <p class="secure-text">Establishing secure connection...</p>
+    </div>
+
+    <!-- Housing Information Modal -->
+    <div id="housingModal" class="modal-overlay hidden">
+        <div class="modal-container">
+            <div class="modal-content">
+                <button class="close-button" onclick="closeHousingModal()">×</button>
+                <h2 id="housingModalTitle" style="margin-bottom: 1.5rem;">Add Housing Information</h2>
+                
+                <div class="form-group">
+                    <label class="form-label">Lease start date:</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <select id="leaseStartMonth" class="form-input" style="flex: 1;">
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                        <select id="leaseStartYear" class="form-input" style="flex: 1;">
+                            <!-- Will be populated via JavaScript -->
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Lease end date:</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <select id="leaseEndMonth" class="form-input" style="flex: 1;">
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                        <select id="leaseEndYear" class="form-input" style="flex: 1;">
+                            <!-- Will be populated via JavaScript -->
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="monthlyRent" class="form-label">Monthly rent payment:</label>
+                    <input type="text" id="monthlyRent" class="form-input" placeholder="Enter monthly rent">
+                </div>
+                
+                <div class="form-group">
+                    <div class="expense-input-group">
+                        <div class="expense-item">
+                            <label for="utilities" class="form-label">Monthly utilities:</label>
+                            <input type="text" id="utilities" class="form-input" placeholder="Enter monthly utilities">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="utilitiesIncluded" name="utilitiesIncluded">
+                                <label for="utilitiesIncluded">Utilities included in rent</label>
+                            </div>
+                        </div>
+                        <div class="expense-item">
+                            <label for="wifi" class="form-label">Monthly WiFi:</label>
+                            <input type="text" id="wifi" class="form-input" placeholder="Enter monthly WiFi">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="button-container">
+                    <button onclick="closeHousingModal()" class="button button-secondary">Cancel</button>
+                    <button onclick="saveHousingInfo()" id="saveHousingBtn" class="button button-primary">Save Housing Info</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize global variables
+        let currentStep = 1;
+        let formData = {
+            school: '',
+            state: '',
+            income: '',
+            enrolledMonths: [],
+            residency_status: 'citizen',
+            visa_type: '', 
+            country_of_origin: '',
+            email: ''
+        };
+        
+        // Initialize housing entries
+        if (typeof window.housingEntries === 'undefined') {
+            window.housingEntries = [];
+        }
+
+        // Utility functions
+        function formatCurrency(input) {
+            let nums = input.value.replace(/[^\d]/g, '');
+            let formatted = nums ? '$' + Number(nums).toLocaleString('en-US') : '';
+            input.value = formatted;
+            return nums ? Number(nums) : 0;
+        }
+
+        function showError(message) {
+            const errorMessage = document.createElement('div');
+            errorMessage.className = 'error-message';
+            errorMessage.textContent = message;
+            errorMessage.style.position = 'fixed';
+            errorMessage.style.top = '20px';
+            errorMessage.style.left = '50%';
+            errorMessage.style.transform = 'translateX(-50%)';
+            errorMessage.style.padding = '10px 20px';
+            errorMessage.style.backgroundColor = '#f44336';
+            errorMessage.style.color = 'white';
+            errorMessage.style.borderRadius = '4px';
+            errorMessage.style.zIndex = '1000';
+            document.body.appendChild(errorMessage);
+            setTimeout(() => errorMessage.remove(), 3000);
+        }
+
+        // Step navigation
+        function updateProgressBar() {
+            const progressContainer = document.getElementById('progressContainer');
+            
+            if (currentStep <= 3) {
+                // Show progress bar for steps 1-3
+                progressContainer.style.display = 'block';
+                const totalSteps = 3;
+                const progress = (currentStep / totalSteps) * 100;
+                const progressBar = document.getElementById('progressBar1');
+                progressBar.style.width = `${progress}%`;
+                progressBar.style.transition = 'width 0.3s ease';
+            } else {
+                // Hide progress bar for screens 4-7
+                progressContainer.style.display = 'none';
+            }
+        }
+
+        function showStep(stepNumber) {
+            document.querySelectorAll('.form-step').forEach(step => {
+                step.classList.remove('active');
+            });
+            
+            document.getElementById(`step${stepNumber}`).classList.add('active');
+            
+            // Only update step number display for steps 1-3
+            if (stepNumber <= 3) {
+                document.getElementById('currentStep').textContent = stepNumber;
+            }
+            
+            currentStep = stepNumber;
+            updateProgressBar();
+        }
+
+        function nextStep() {
+            if (currentStep === 1 && validateStep1()) {
+                // Save step 1 residency data
+                const residencyStatusValue = document.getElementById('residencyStatusInput').value;
+                const visaTypeValue = document.getElementById('visaTypeInput').value;
+                const countryOfOriginValue = document.getElementById('countryOfOriginInput').value;
+
+                if (residencyStatusValue === 'citizen' || residencyStatusValue === 'permanent_resident') {
+                    formData.residency_status = residencyStatusValue;
+                    formData.country_of_origin = '';
+                } else if (['resident_alien', 'non_resident_alien', 'unknown_residency'].includes(residencyStatusValue)) {
+                    if (visaTypeValue && visaTypeValue !== 'unknown_visa_type' && visaTypeValue !== '') {
+                        formData.residency_status = `${residencyStatusValue}_visa:${visaTypeValue}`;
+                    } else {
+                       formData.residency_status = residencyStatusValue;
+                    }
+                    formData.country_of_origin = countryOfOriginValue;
+                }
+                
+                showStep(2);
+            } else if (currentStep === 2 && validateStep2()) {
+                // Save step 2 data
+                formData.school = document.getElementById('school').value;
+                formData.state = document.getElementById('state').value;
+                formData.income = document.getElementById('income').value.replace(/[^\d]/g, '');
+                
+                showStep(3);
+            } else if (currentStep === 3 && validateStep3()) {
+                // Collect enrolled months
+                formData.enrolledMonths = Array.from(document.querySelectorAll('input[name="enrolledMonths"]:checked'))
+                                            .map(checkbox => parseInt(checkbox.value));
+                
+                // Calculate and display benefit summary
+                calculateAndDisplayBenefit();
+                showStep(4);
+            } else if (currentStep === 4) {
+                // From benefit summary to checkout
+                showStep(5);
+            } else if (currentStep === 5 && validateStep5()) {
+                // From checkout to secure connection
+                formData.email = document.getElementById('checkoutEmailInput').value;
+                formData.includeTaxFiling = document.getElementById('includeTaxFiling').checked;
+                formData.includeInterestEarning = document.getElementById('includeInterestEarning').checked;
+                
+                // Calculate rent and other qualified expenses totals
+                const expenseTotals = calculateRentAndOtherExpenses();
+                formData.totalRentPayments = expenseTotals.totalRentPayments;
+                formData.totalOtherQualifiedExpenses = expenseTotals.totalOtherQualifiedExpenses;
+                
+                console.log('[Step 5] Added expense totals to formData:', {
+                    totalRentPayments: formData.totalRentPayments,
+                    totalOtherQualifiedExpenses: formData.totalOtherQualifiedExpenses
+                });
+                
+                // Store all collected data in localStorage for account creation
+                localStorage.setItem('onboardingFormData', JSON.stringify(formData));
+                localStorage.setItem('onboardingHousingEntries', JSON.stringify(window.housingEntries));
+                localStorage.setItem('onboardingCalculatedBenefit', JSON.stringify(window.calculatedBenefit));
+                
+                // Submit to Google Form
+                submitToGoogleForm();
+                
+                // Skip secure connection animation and go directly to account creation
+                prepareAccountCreationStep();
+                showStep(8);
+            }
+        }
+
+        function previousStep() {
+            if (currentStep > 1) {
+                // Skip step 7 since it's been removed
+                if (currentStep === 8) {
+                    showStep(5); // Go back to checkout from account creation
+                } else {
+                    showStep(currentStep - 1);
+                }
+            }
+        }
+
+        // Validation functions
+        function validateStep1() {
+            // Step 1 now only validates residency status
+            return true;
+        }
+
+        function validateStep2() {
+            const school = document.getElementById('school').value.trim();
+            const state = document.getElementById('state').value;
+            const incomeElement = document.getElementById('income');
+            const income = incomeElement ? Number(incomeElement.value.replace(/[^\d]/g, '')) : 0;
+
+            if (!school) {
+                showError('Please enter your school name');
+                return false;
+            }
+            if (!state) {
+                showError('Please select the state where you attend school');
+                return false;
+            }
+            if (!incomeElement || !incomeElement.value.trim() || isNaN(income) || income < 0) {
+                showError('Please enter a valid annual income');
+                return false;
+            }
+
+            return true;
+        }
+
+        function validateStep3() {
+            const enrolledMonths = Array.from(document.querySelectorAll('input[name="enrolledMonths"]:checked'))
+                .map(checkbox => parseInt(checkbox.value));
+
+            if (enrolledMonths.length === 0) {
+                showError('Please select at least one enrolled month');
+                return false;
+            }
+            
+            if (window.housingEntries.length === 0) {
+                showError('Please add at least one housing entry');
+                return false;
+            }
+
+            return true;
+        }
+
+        function validateStep5() {
+            const email = document.getElementById('checkoutEmailInput').value.trim();
+
+            if (!email || !/\S+@\S+\.\S+/.test(email)) {
+                showError('Please enter a valid email address');
+                return false;
+            }
+            return true;
+        }
+
+
+
+        function validateStep8() {
+            // Step 8 validation is handled within the createAccountAndComplete function
+            return true;
+        }
+
+                 // Calculate and display benefit information
+         function calculateAndDisplayBenefit() {
+             // Use the grocery input value if available, otherwise default to 200
+             const groceryInput = document.getElementById('groceryInput');
+             const groceryValue = groceryInput ? parseInt(groceryInput.value) : 200;
+             const monthlyGrocery = isNaN(groceryValue) ? 200 : groceryValue;
+             
+             const benefitDetails = calculateBenefitWithMultipleHousingCustomGrocery(
+                 formData.state, 
+                 formData.income, 
+                 formData.enrolledMonths, 
+                 window.housingEntries,
+                 monthlyGrocery,
+                 true
+             );
+
+             // Calculate tax information for display
+             const income = Number(formData.income);
+             const stateTaxDeduction = statePersonalExemptionDB[formData.state]?.amount || 0;
+             const stateDeduction = state529DB[formData.state]?.deduction || 0;
+             const taxableStateIncome = income - stateTaxDeduction;
+             const taxRate = calculateStateTaxRate(taxableStateIncome, formData.state);
+             const stateTaxesOwed = Math.round(taxRate * taxableStateIncome);
+             
+             // Calculate the actual deduction amount (limited by various factors)
+             const deductionAmount = Math.min(
+                 benefitDetails.qualifiedSpend,
+                 stateDeduction,
+                 taxableStateIncome
+             );
+
+             // Update benefit summary display
+             document.getElementById('displayIncome').textContent = '$' + income.toLocaleString('en-US');
+             document.getElementById('qualifiedSpending').textContent = '$' + benefitDetails.qualifiedSpend.toLocaleString('en-US');
+             document.getElementById('deductionAmount').textContent = '$' + deductionAmount.toLocaleString('en-US');
+             document.getElementById('taxSavings').textContent = '$' + Math.round(benefitDetails.benefit).toLocaleString('en-US');
+             // Get full state name from abbreviation
+             const stateOptions = {
+                 'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas', 'CA': 'California',
+                 'CO': 'Colorado', 'CT': 'Connecticut', 'DE': 'Delaware', 'FL': 'Florida', 'GA': 'Georgia',
+                 'HI': 'Hawaii', 'ID': 'Idaho', 'IL': 'Illinois', 'IN': 'Indiana', 'IA': 'Iowa',
+                 'KS': 'Kansas', 'KY': 'Kentucky', 'LA': 'Louisiana', 'ME': 'Maine', 'MD': 'Maryland',
+                 'MA': 'Massachusetts', 'MI': 'Michigan', 'MN': 'Minnesota', 'MS': 'Mississippi', 'MO': 'Missouri',
+                 'MT': 'Montana', 'NE': 'Nebraska', 'NV': 'Nevada', 'NH': 'New Hampshire', 'NJ': 'New Jersey',
+                 'NM': 'New Mexico', 'NY': 'New York', 'NYC': 'New York City', 'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio',
+                 'OK': 'Oklahoma', 'OR': 'Oregon', 'PA': 'Pennsylvania', 'RI': 'Rhode Island', 'SC': 'South Carolina',
+                 'SD': 'South Dakota', 'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 'VT': 'Vermont',
+                 'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia', 'WI': 'Wisconsin', 'WY': 'Wyoming'
+             };
+             const fullStateName = stateOptions[formData.state] || formData.state;
+             document.getElementById('userState').textContent = fullStateName;
+             document.getElementById('refundMore').textContent = '$' + Math.round(benefitDetails.benefit).toLocaleString('en-US');
+             document.getElementById('oweLess').textContent = '$' + Math.round(benefitDetails.benefit).toLocaleString('en-US');
+             
+             // Update checkout display if elements exist
+             const checkoutTaxSavings = document.getElementById('checkoutTaxSavings');
+             if (checkoutTaxSavings) {
+                 checkoutTaxSavings.textContent = '$' + Math.round(benefitDetails.benefit).toLocaleString('en-US');
+             }
+             
+             // Store for later use
+             window.calculatedBenefit = benefitDetails;
+             
+             // Update dynamic earnings and recommendations
+             updateDynamicEarnings();
+         }
+
+         // Update benefit calculation when grocery input changes
+         function updateBenefitCalculation() {
+             const groceryInput = document.getElementById('groceryInput');
+             let groceryValue = parseInt(groceryInput.value);
+             if (isNaN(groceryValue)) groceryValue = 0;
+             
+             // Cap at $400
+             if (groceryValue > 400) {
+                 groceryValue = 400;
+                 groceryInput.value = 400;
+             }
+             
+             // Recalculate with new grocery amount
+             calculateAndDisplayBenefit();
+         }
+
+        // Submit to Google Form
+        function submitToGoogleForm() {
+            const email = encodeURIComponent(document.getElementById('checkoutEmailInput').value);
+            const includeTaxFiling = document.getElementById('includeTaxFiling').checked;
+            const includeInterestEarning = document.getElementById('includeInterestEarning').checked;
+            
+            // Determine product selection based on user choices
+            let productSelection;
+            if (includeInterestEarning && includeTaxFiling) {
+                productSelection = '$50+with+tax+filing';
+            } else if (includeInterestEarning && !includeTaxFiling) {
+                productSelection = '$50+no+tax+filing';
+            } else if (!includeInterestEarning && includeTaxFiling) {
+                productSelection = '$60+with+tax+filing';
+            } else {
+                productSelection = '$60+no+tax+filing';
+            }
+            
+            // Create the Google Form URL with parameters
+            const baseUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSejmRtmObNrp3zgK7fKV2sLYpQdyg7vFQkOq_p6zPCQaLmnwg/formResponse?usp=pp_url';
+            const formUrl = `${baseUrl}&entry.869093761=${email}&entry.2044388299=${encodeURIComponent(productSelection)}`;
+            
+            // Submit using hidden iframe (like in future.html)
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.setAttribute('src', formUrl);
+            document.body.appendChild(iframe);
+            
+            // Remove iframe after submission
+            setTimeout(() => {
+                if (document.body.contains(iframe)) {
+                    document.body.removeChild(iframe);
+                }
+            }, 1000);
+            
+            console.log('Submitted to Google Form:', { email: email, productSelection: productSelection });
+        }
+
+        // Show secure connection animation
+        function showSecureConnection() {
+            const overlay = document.getElementById('secureConnectionOverlay');
+            overlay.classList.remove('hidden');
+            
+            // Show secure connection for 3 seconds, then proceed to step 8 (account creation)
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+                prepareAccountCreationStep();
+                showStep(8);
+            }, 3000);
+        }
+
+        // Prepare step 8 account creation
+        function prepareAccountCreationStep() {
+            const displayEmail = document.getElementById('displayEmail');
+            if (displayEmail && formData.email) {
+                displayEmail.value = formData.email;
+            }
+        }
+
+        // Handle Google Sign-In credential response
+        async function handleCredentialResponse(response) {
+            const createAccountBtn = document.getElementById('createAccountBtn');
+            const spinner = document.getElementById('createAccountSpinner');
+            
+            try {
+                // Disable all buttons to prevent multiple submissions
+                const allButtons = document.querySelectorAll('button');
+                allButtons.forEach(button => {
+                    button.disabled = true;
+                });
+                
+                // Show loading state
+                spinner.style.display = 'block';
+                
+                console.log('Google Sign-In response received');
+                const result = await window.onboardingCoordinator.handleGoogleSignInCallback(response);
+                
+                if (result.accountCreated && result.dataSubmitted) {
+                    showSuccessAndRedirect('Account created and data submitted successfully!');
+                } else {
+                    throw new Error('Account creation or data submission failed');
+                }
+            } catch (error) {
+                console.error('Google Sign-In error:', error);
+                showError(`Google Sign-In failed: ${error.message}`);
+                
+                // Re-enable all buttons if there's an error
+                const allButtons = document.querySelectorAll('button');
+                allButtons.forEach(button => {
+                    button.disabled = false;
+                });
+                
+                spinner.style.display = 'none';
+            }
+        }
+
+        // Create account with email/password and submit all data
+        async function createAccountAndComplete() {
+            const createAccountBtn = document.getElementById('createAccountBtn');
+            const spinner = document.getElementById('createAccountSpinner');
+            const passwordInput = document.getElementById('passwordInput');
+            const confirmPasswordInput = document.getElementById('confirmPasswordInput');
+            
+            try {
+                // Validate password inputs
+                const password = passwordInput.value.trim();
+                const confirmPassword = confirmPasswordInput.value.trim();
+                
+                if (!password) {
+                    showError('Please enter a password');
+                    return;
+                }
+                
+                if (password !== confirmPassword) {
+                    showError('Passwords do not match');
+                    return;
+                }
+                
+                // Disable all buttons to prevent multiple submissions
+                const allButtons = document.querySelectorAll('button');
+                allButtons.forEach(button => {
+                    button.disabled = true;
+                });
+                
+                // Show loading state
+                spinner.style.display = 'block';
+                
+                console.log('Creating account with email/password and submitting data...');
+                const result = await window.onboardingCoordinator.createAccountAndSubmitData(
+                    formData.email, 
+                    password
+                );
+                
+                if (result.accountCreated && result.dataSubmitted) {
+                    showSuccessAndRedirect('Account created and data submitted successfully!');
+                } else {
+                    throw new Error('Account creation or data submission failed');
+                }
+                
+            } catch (error) {
+                console.error('Account creation error:', error);
+                showError(`Account creation failed: ${error.message}`);
+                
+                // Re-enable all buttons if there's an error
+                const allButtons = document.querySelectorAll('button');
+                allButtons.forEach(button => {
+                    button.disabled = false;
+                });
+                
+                spinner.style.display = 'none';
+            }
+        }
+
+        // Show success message and redirect
+        function showSuccessAndRedirect(message) {
+            const successMessage = document.createElement('div');
+            successMessage.className = 'success-message';
+            successMessage.textContent = message + ' Redirecting to dashboard...';
+            successMessage.style.position = 'fixed';
+            successMessage.style.top = '20px';
+            successMessage.style.left = '50%';
+            successMessage.style.transform = 'translateX(-50%)';
+            successMessage.style.padding = '15px 25px';
+            successMessage.style.backgroundColor = '#4CAF50';
+            successMessage.style.color = 'white';
+            successMessage.style.borderRadius = '4px';
+            successMessage.style.zIndex = '1000';
+            successMessage.style.fontSize = '1rem';
+            document.body.appendChild(successMessage);
+            
+            // Redirect after 3 seconds
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 3000);
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // Initialize currency formatting
+            const incomeInput = document.getElementById('income');
+            if (incomeInput) {
+                incomeInput.addEventListener('input', function() {
+                    formatCurrency(this);
+                });
+            }
+
+            // Initialize state dropdown
+            initializeStateDropdown();
+
+            // Initialize residency status handling
+            initializeResidencyHandling();
+
+            // Initialize housing functionality
+            initializeHousingModal();
+
+
+
+            // Initialize checkout fee calculation
+            const interestEarningCheckbox = document.getElementById('includeInterestEarning');
+            if (interestEarningCheckbox) {
+                interestEarningCheckbox.addEventListener('change', updateCheckoutFee);
+            }
+
+            // Initialize Google Sign-In when scripts are loaded
+            setTimeout(() => {
+                if (window.accountCreation) {
+                    window.accountCreation.initializeGoogleSignIn();
+                }
+            }, 1000);
+
+            // Ensure global handleCredentialResponse is available
+            window.handleCredentialResponse = handleCredentialResponse;
+        });
+
+        // Error handling for missing dependencies
+        function checkDependencies() {
+            const requiredScripts = [
+                'window.accountCreation',
+                'window.profileSubmission', 
+                'window.expensesSubmission',
+                'window.onboardingCoordinator'
+            ];
+            
+            for (let script of requiredScripts) {
+                if (!eval(script)) {
+                    console.error(`Missing dependency: ${script}`);
+                    showError(`System error: Missing required script. Please refresh the page.`);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // Enhanced error handling
+        window.addEventListener('error', function(e) {
+            console.error('Page error:', e.error);
+            if (e.error && e.error.message && e.error.message.includes('script')) {
+                showError('System error: Please refresh the page and try again.');
+            }
+        });
+
+        // Update checkout fee based on add-ons
+        function updateCheckoutFee() {
+            const includeInterestEarning = document.getElementById('includeInterestEarning').checked;
+            const basePrice = includeInterestEarning ? 50 : 60;
+            
+            if (window.calculatedBenefit) {
+                // Update the price display
+                const priceDisplay = document.querySelector('.price-main');
+                if (priceDisplay) {
+                    priceDisplay.innerHTML = `Pay $${basePrice} → Get <span id="checkoutTaxSavings">$${Math.round(window.calculatedBenefit.benefit).toLocaleString('en-US')}</span> in tax savings`;
+                }
+            }
+        }
+
+        // Update dynamic earnings and recommendations
+        function updateDynamicEarnings() {
+            if (window.calculatedBenefit) {
+                const qualifiedSpend = window.calculatedBenefit.qualifiedSpend;
+                
+                // Calculate dynamic earnings: qualified spend × 2.7% × 20%
+                const dynamicEarnings = Math.round(qualifiedSpend * 0.027 * 0.20);
+                document.getElementById('dynamicEarnings').textContent = '$' + dynamicEarnings.toLocaleString('en-US');
+                
+                // Calculate months remaining until December 31st
+                const today = new Date();
+                const endOfYear = new Date(today.getFullYear(), 11, 31); // December 31st
+                const monthsRemaining = Math.max(1, Math.ceil((endOfYear - today) / (1000 * 60 * 60 * 24 * 30.44)) - 2);
+                
+                // Calculate recommended monthly salary
+                const recommendedMonthlySalary = Math.round(qualifiedSpend / monthsRemaining);
+                
+                // Update recommendation text
+                const savingsRecommendation = document.getElementById('savingsRecommendation');
+                if (savingsRecommendation) {
+                    savingsRecommendation.textContent = `Recommended if you have over $${qualifiedSpend.toLocaleString('en-US')} in savings or make at least $${recommendedMonthlySalary.toLocaleString('en-US')}/month.`;
+                }
+            }
+        }
+
+         // Housing functionality
+         function initializeHousingModal() {
+             populateYearDropdowns();
+             loadExistingHousingEntries();
+             
+             // Add currency formatting to housing inputs
+             const rentInput = document.getElementById('monthlyRent');
+             const utilitiesInput = document.getElementById('utilities');
+             const wifiInput = document.getElementById('wifi');
+             
+             if (rentInput) rentInput.addEventListener('input', function() { formatCurrency(this); });
+             if (utilitiesInput) utilitiesInput.addEventListener('input', function() { formatCurrency(this); });
+             if (wifiInput) wifiInput.addEventListener('input', function() { formatCurrency(this); });
+         }
+
+         function populateYearDropdowns() {
+             const currentYear = new Date().getFullYear();
+             const yearRange = 3;
+             
+             const leaseStartYearSelect = document.getElementById('leaseStartYear');
+             const leaseEndYearSelect = document.getElementById('leaseEndYear');
+             
+             if (leaseStartYearSelect && leaseEndYearSelect) {
+                 leaseStartYearSelect.innerHTML = '';
+                 leaseEndYearSelect.innerHTML = '';
+                 
+                 for (let year = currentYear - yearRange; year <= currentYear + yearRange; year++) {
+                     const startOption = document.createElement('option');
+                     startOption.value = year;
+                     startOption.textContent = year;
+                     leaseStartYearSelect.appendChild(startOption);
+                     
+                     const endOption = document.createElement('option');
+                     endOption.value = year;
+                     endOption.textContent = year;
+                     leaseEndYearSelect.appendChild(endOption);
+                 }
+                 
+                 leaseStartYearSelect.value = currentYear;
+                 leaseEndYearSelect.value = currentYear + 1;
+             }
+         }
+
+         function openHousingModal() {
+             const today = new Date();
+             document.getElementById('leaseStartMonth').value = today.getMonth() + 1;
+             document.getElementById('leaseStartYear').value = today.getFullYear();
+             document.getElementById('leaseEndMonth').value = today.getMonth() + 1;
+             document.getElementById('leaseEndYear').value = today.getFullYear() + 1;
+             document.getElementById('monthlyRent').value = '';
+             document.getElementById('utilities').value = '';
+             document.getElementById('wifi').value = '';
+             document.getElementById('utilitiesIncluded').checked = false;
+             
+             document.getElementById('housingModal').classList.remove('hidden');
+         }
+
+         function closeHousingModal() {
+             document.getElementById('housingModal').classList.add('hidden');
+         }
+
+         function saveHousingInfo() {
+             const startMonth = parseInt(document.getElementById('leaseStartMonth').value);
+             const startYear = parseInt(document.getElementById('leaseStartYear').value);
+             const endMonth = parseInt(document.getElementById('leaseEndMonth').value);
+             const endYear = parseInt(document.getElementById('leaseEndYear').value);
+             const rent = document.getElementById('monthlyRent').value.replace(/[^\d]/g, '') || '0';
+             const utilities = document.getElementById('utilities').value.replace(/[^\d]/g, '') || '0';
+             const wifi = document.getElementById('wifi').value.replace(/[^\d]/g, '') || '0';
+             const utilitiesIncluded = document.getElementById('utilitiesIncluded').checked;
+             
+             if (parseInt(rent) === 0) {
+                 showError('Please enter a valid rent amount');
+                 return;
+             }
+             
+             const startDate = new Date(startYear, startMonth - 1, 1);
+             const endDate = new Date(endYear, endMonth - 1, 1);
+             
+             if (endDate <= startDate) {
+                 showError('Lease end date must be after start date');
+                 return;
+             }
+             
+             const housingEntry = {
+                 id: Date.now(),
+                 startMonth,
+                 startYear,
+                 endMonth,
+                 endYear,
+                 rent: parseFloat(rent),
+                 utilities: parseFloat(utilities),
+                 wifi: parseFloat(wifi),
+                 utilitiesIncluded
+             };
+             
+             window.housingEntries.push(housingEntry);
+             loadExistingHousingEntries();
+             closeHousingModal();
+             
+             const successMessage = document.createElement('div');
+             successMessage.className = 'success-message';
+             successMessage.textContent = 'Housing information added!';
+             successMessage.style.position = 'fixed';
+             successMessage.style.top = '20px';
+             successMessage.style.left = '50%';
+             successMessage.style.transform = 'translateX(-50%)';
+             successMessage.style.padding = '10px 20px';
+             successMessage.style.backgroundColor = '#4CAF50';
+             successMessage.style.color = 'white';
+             successMessage.style.borderRadius = '4px';
+             successMessage.style.zIndex = '1000';
+             document.body.appendChild(successMessage);
+             setTimeout(() => successMessage.remove(), 3000);
+         }
+
+         function loadExistingHousingEntries() {
+             const container = document.getElementById('housingEntriesContainer');
+             if (!container) return;
+             
+             container.innerHTML = '';
+             
+             if (window.housingEntries.length === 0) {
+                 const noHousingMessage = document.createElement('div');
+                 noHousingMessage.style.color = 'var(--text-dark)';
+                 noHousingMessage.style.fontStyle = 'italic';
+                 noHousingMessage.style.padding = '1rem';
+                 noHousingMessage.style.backgroundColor = 'rgba(240, 240, 240, 0.5)';
+                 noHousingMessage.style.borderRadius = '0.5rem';
+                 noHousingMessage.style.textAlign = 'center';
+                 noHousingMessage.textContent = 'No housing information added yet';
+                 container.appendChild(noHousingMessage);
+                 return;
+             }
+             
+             const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+             
+             window.housingEntries.forEach(entry => {
+                 const entryElement = document.createElement('div');
+                 entryElement.className = 'housing-entry';
+                 entryElement.style.border = '1px solid var(--border)';
+                 entryElement.style.borderRadius = '0.5rem';
+                 entryElement.style.padding = '1rem';
+                 entryElement.style.marginBottom = '1rem';
+                 entryElement.style.position = 'relative';
+                 
+                 const formatCurrency = value => '$' + value.toLocaleString('en-US');
+                 
+                 const dateHeader = document.createElement('div');
+                 dateHeader.style.marginBottom = '0.5rem';
+                 dateHeader.style.fontWeight = '600';
+                 dateHeader.style.color = 'var(--primary)';
+                 dateHeader.textContent = `${monthNames[entry.startMonth - 1]} ${entry.startYear} - ${monthNames[entry.endMonth - 1]} ${entry.endYear}`;
+                 
+                 const expenseSummary = document.createElement('div');
+                 expenseSummary.style.fontSize = '0.85rem';
+                 expenseSummary.style.color = '#666';
+                 
+                 let summaryText = `Rent: ${formatCurrency(entry.rent)}/month`;
+                 if (!entry.utilitiesIncluded && entry.utilities > 0) {
+                     summaryText += ` • Utilities: ${formatCurrency(entry.utilities)}/month`;
+                 }
+                 if (entry.wifi > 0) {
+                     summaryText += ` • WiFi: ${formatCurrency(entry.wifi)}/month`;
+                 }
+                 expenseSummary.textContent = summaryText;
+                 
+                 const removeButton = document.createElement('button');
+                 removeButton.style.position = 'absolute';
+                 removeButton.style.top = '0.75rem';
+                 removeButton.style.right = '0.75rem';
+                 removeButton.style.backgroundColor = '#f44336';
+                 removeButton.style.color = 'white';
+                 removeButton.style.border = 'none';
+                 removeButton.style.borderRadius = '0.25rem';
+                 removeButton.style.padding = '0.25rem 0.5rem';
+                 removeButton.style.cursor = 'pointer';
+                 removeButton.style.fontSize = '0.8rem';
+                 removeButton.textContent = 'Remove';
+                 removeButton.onclick = () => removeHousingEntry(entry.id);
+                 
+                 entryElement.appendChild(dateHeader);
+                 entryElement.appendChild(expenseSummary);
+                 entryElement.appendChild(removeButton);
+                 container.appendChild(entryElement);
+             });
+         }
+
+         function removeHousingEntry(id) {
+             window.housingEntries = window.housingEntries.filter(entry => entry.id !== id);
+             loadExistingHousingEntries();
+         }
+
+                 // State dropdown functionality
+        function initializeStateDropdown() {
+            const customSelect = document.querySelector('.custom-select');
+            const selectSelected = customSelect.querySelector('.select-selected');
+            const selectItems = customSelect.querySelector('.select-items');
+            const hiddenInput = document.getElementById('state');
+
+            // State options from taxdbb.js
+            const stateOptions = {
+                'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas', 'CA': 'California',
+                'CO': 'Colorado', 'CT': 'Connecticut', 'DE': 'Delaware', 'FL': 'Florida', 'GA': 'Georgia',
+                'HI': 'Hawaii', 'ID': 'Idaho', 'IL': 'Illinois', 'IN': 'Indiana', 'IA': 'Iowa',
+                'KS': 'Kansas', 'KY': 'Kentucky', 'LA': 'Louisiana', 'ME': 'Maine', 'MD': 'Maryland',
+                'MA': 'Massachusetts', 'MI': 'Michigan', 'MN': 'Minnesota', 'MS': 'Mississippi', 'MO': 'Missouri',
+                'MT': 'Montana', 'NE': 'Nebraska', 'NV': 'Nevada', 'NH': 'New Hampshire', 'NJ': 'New Jersey',
+                'NM': 'New Mexico', 'NY': 'New York', 'NYC': 'New York City', 'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio',
+                'OK': 'Oklahoma', 'OR': 'Oregon', 'PA': 'Pennsylvania', 'RI': 'Rhode Island', 'SC': 'South Carolina',
+                'SD': 'South Dakota', 'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 'VT': 'Vermont',
+                'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia', 'WI': 'Wisconsin', 'WY': 'Wyoming'
+            };
+
+            // Create sorted array of state options for keyboard navigation
+            const sortedStates = Object.entries(stateOptions).sort((a, b) => a[1].localeCompare(b[1]));
+
+            for (const [value, text] of sortedStates) {
+                const item = document.createElement('div');
+                item.textContent = text;
+                item.dataset.value = value;
+                selectItems.appendChild(item);
+            }
+
+            // Keyboard navigation variables
+            let lastKeyPressed = '';
+            let lastKeyTime = 0;
+
+            selectSelected.addEventListener('click', function(e) {
+                e.stopPropagation();
+                selectItems.classList.toggle('hidden');
+                selectSelected.classList.toggle('active');
+                
+                // Focus the select element for keyboard navigation
+                if (!selectItems.classList.contains('hidden')) {
+                    selectSelected.focus();
+                }
+            });
+
+            // Add keyboard navigation
+            selectSelected.addEventListener('keydown', function(e) {
+                const currentTime = Date.now();
+                const key = e.key.toLowerCase();
+                
+                // Only handle letter keys
+                if (key.length === 1 && key.match(/[a-z]/)) {
+                    e.preventDefault();
+                    
+                    // Reset if more than 1 second has passed since last keypress
+                    if (currentTime - lastKeyTime > 1000) {
+                        lastKeyPressed = '';
+                    }
+                    
+                    lastKeyPressed += key;
+                    lastKeyTime = currentTime;
+                    
+                    // Find the first state that starts with the typed letters
+                    const matchingState = sortedStates.find(([value, text]) => 
+                        text.toLowerCase().startsWith(lastKeyPressed)
+                    );
+                    
+                    if (matchingState) {
+                        const [value, text] = matchingState;
+                        selectSelected.textContent = text;
+                        hiddenInput.value = value;
+                        
+                        // Highlight the matching item in the dropdown if open
+                        if (!selectItems.classList.contains('hidden')) {
+                            const items = selectItems.querySelectorAll('div');
+                            items.forEach(item => item.classList.remove('highlighted'));
+                            
+                            const matchingItem = Array.from(items).find(item => 
+                                item.dataset.value === value
+                            );
+                            if (matchingItem) {
+                                matchingItem.classList.add('highlighted');
+                                matchingItem.scrollIntoView({ block: 'start', behavior: 'smooth' });
+                            }
+                        }
+                    }
+                } else if (e.key === 'Enter' || e.key === ' ') {
+                    // Toggle dropdown on Enter or Space
+                    e.preventDefault();
+                    selectItems.classList.toggle('hidden');
+                    selectSelected.classList.toggle('active');
+                } else if (e.key === 'Escape') {
+                    // Close dropdown on Escape
+                    e.preventDefault();
+                    selectItems.classList.add('hidden');
+                    selectSelected.classList.remove('active');
+                }
+            });
+
+            selectItems.addEventListener('click', function(e) {
+                const clickedItem = e.target;
+                if (clickedItem.tagName === 'DIV') {
+                    selectSelected.textContent = clickedItem.textContent;
+                    hiddenInput.value = clickedItem.dataset.value;
+                    selectItems.classList.add('hidden');
+                    selectSelected.classList.remove('active');
+                }
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!customSelect.contains(e.target)) {
+                    selectItems.classList.add('hidden');
+                    selectSelected.classList.remove('active');
+                }
+            });
+        }
+
+         // Residency status handling
+         function initializeResidencyHandling() {
+             const residencyStatusInputEl = document.getElementById('residencyStatusInput');
+             const visaTypeGroupEl = document.getElementById('visaTypeGroup');
+             const visaTypeInputEl = document.getElementById('visaTypeInput');
+             const countryOfOriginGroupEl = document.getElementById('countryOfOriginGroup');
+             const countryOfOriginInputEl = document.getElementById('countryOfOriginInput');
+             const countryDatalist = document.getElementById('countryListData');
+
+             // Populate country datalist
+             if (countryDatalist && typeof countryList !== 'undefined') {
+                 countryList.forEach(country => {
+                     const option = document.createElement('option');
+                     option.value = country;
+                     countryDatalist.appendChild(option);
+                 });
+             }
+
+             if (residencyStatusInputEl) {
+                 residencyStatusInputEl.addEventListener('change', function() {
+                     const selectedStatus = this.value;
+                     if (selectedStatus === 'resident_alien' || selectedStatus === 'non_resident_alien' || selectedStatus === 'unknown_residency') {
+                         if (visaTypeGroupEl) visaTypeGroupEl.classList.remove('hidden');
+                         if (countryOfOriginGroupEl) countryOfOriginGroupEl.classList.remove('hidden');
+                     } else {
+                         if (visaTypeGroupEl) visaTypeGroupEl.classList.add('hidden');
+                         if (visaTypeInputEl) visaTypeInputEl.value = '';
+                         if (countryOfOriginGroupEl) countryOfOriginGroupEl.classList.add('hidden');
+                         if (countryOfOriginInputEl) countryOfOriginInputEl.value = '';
+                     }
+                 });
+             }
+         }
+
+
+
+         // State tax rate calculation function (from dashboard.html)
+         function calculateStateTaxRate(income, state) {
+             if (income < 0) income = 0;
+             
+             const stateTaxInfo = stateTaxDB[state];
+             if (!stateTaxInfo || !stateTaxInfo.brackets || stateTaxInfo.brackets.length === 0) {
+                 console.warn(`No tax bracket information found for state: ${state}`);
+                 return 0;
+             }
+             
+             let totalTax = 0;
+             let remainingIncome = income;
+             let previousThreshold = 0;
+
+             // Sort brackets by threshold to ensure correct calculation order
+             const sortedBrackets = [...stateTaxInfo.brackets].sort((a, b) => a.threshold - b.threshold);
+             
+             // Calculate tax for each bracket
+             for (let i = 0; i < sortedBrackets.length; i++) {
+                 const bracket = sortedBrackets[i];
+                 const nextThreshold = bracket.threshold;
+                 
+                 // Calculate taxable amount for this bracket
+                 const taxableInThisBracket = Math.min(
+                     remainingIncome,
+                     nextThreshold - previousThreshold
+                 );
+                 
+                 if (taxableInThisBracket <= 0) break;
+                 
+                 // Add tax for this bracket
+                 totalTax += (taxableInThisBracket * (bracket.rate / 100));
+                 
+                 // Update remaining income
+                 remainingIncome -= taxableInThisBracket;
+                 previousThreshold = nextThreshold;
+                 
+                 // If no more income to tax, break
+                 if (remainingIncome <= 0) break;
+             }
+             
+             // Calculate effective tax rate
+             return totalTax / income;
+         }
+
+         // Proper benefit calculation function (from dashboard.html)
+         function calculateBenefitWithMultipleHousing(state, income, enrolledMonths, housingEntries, returnDetails = false) {
+             return calculateBenefitWithMultipleHousingCustomGrocery(state, income, enrolledMonths, housingEntries, 200, returnDetails);
+         }
+
+         // Benefit calculation function with custom grocery amount
+         function calculateBenefitWithMultipleHousingCustomGrocery(state, income, enrolledMonths, housingEntries, monthlyGrocery = 200, returnDetails = false) {
+             const currentYear = new Date().getFullYear();
+             if (!Array.isArray(enrolledMonths)) {
+                 console.error('CRITICAL: enrolledMonths is not an array in calculateBenefitWithMultipleHousing. Received:', enrolledMonths);
+                 enrolledMonths = [];
+             }
+             let totalQualifiedExpenses = 0;
+             
+             for (let month = 1; month <= 12; month++) {
+                 if (!enrolledMonths.includes(month)) continue;
+                 totalQualifiedExpenses += monthlyGrocery;
+                 
+                 const applicableEntry = housingEntries.find(entry => {
+                     const startDate = new Date(entry.startYear, entry.startMonth - 1, 1);
+                     const endDate = new Date(entry.endYear, entry.endMonth - 1, 1);
+                     const thisMonth = new Date(currentYear, month - 1, 1);
+                     return thisMonth >= startDate && thisMonth <= endDate;
+                 });
+                 
+                 if (applicableEntry) {
+                     totalQualifiedExpenses += applicableEntry.rent;
+                     if (!applicableEntry.utilitiesIncluded) {
+                         totalQualifiedExpenses += applicableEntry.utilities;
+                     }
+                     totalQualifiedExpenses += applicableEntry.wifi;
+                 }
+             }
+             
+             const stateTaxDeduction = statePersonalExemptionDB[state]?.amount || 0;
+             const stateDeduction = state529DB[state]?.deduction || 0;
+             const taxableStateIncome = Number(income) - stateTaxDeduction;
+             const taxRate = calculateStateTaxRate(taxableStateIncome, state);
+             const deductibleAmount = Math.min(
+                 totalQualifiedExpenses,
+                 stateDeduction,
+                 taxableStateIncome
+             );
+             const taxespaid = taxRate * taxableStateIncome;
+             
+             let benefit;
+             if (state === 'IN') {
+                 const contributionCredit = deductibleAmount * 0.20;
+                 benefit = Math.min(contributionCredit, 1500, taxespaid);
+             } else if (state === 'OR') {
+                 benefit = 180;
+             } else if (state === 'MN') {
+                 if (income < 88810) {
+                     benefit = Math.min(500, taxespaid, 0.5 * totalQualifiedExpenses);
+                 } else {
+                     benefit = 0;
+                 }
+             } else {
+                 benefit = Math.min(deductibleAmount * taxRate, taxespaid);
+             }
+             
+             if (returnDetails) {
+                 return { benefit, qualifiedSpend: totalQualifiedExpenses };
+             }
+             return benefit;
+         }
+
+        // Calculate total rent and other qualified expenses for the year
+        function calculateRentAndOtherExpenses() {
+            const currentYear = new Date().getFullYear();
+            const groceryInput = document.getElementById('groceryInput');
+            const monthlyGrocery = groceryInput ? parseInt(groceryInput.value) || 200 : 200;
+            
+            let totalRentPayments = 0;
+            let totalOtherQualifiedExpenses = 0;
+            
+            // For each enrolled month, calculate expenses
+            for (let month = 1; month <= 12; month++) {
+                if (!formData.enrolledMonths.includes(month)) continue;
+                
+                // Add grocery expense for enrolled months (this goes to other qualified expenses)
+                totalOtherQualifiedExpenses += monthlyGrocery;
+                
+                // Find applicable housing entry for this month
+                const applicableEntry = window.housingEntries.find(entry => {
+                    const startDate = new Date(entry.startYear, entry.startMonth - 1, 1);
+                    const endDate = new Date(entry.endYear, entry.endMonth - 1, 1);
+                    const thisMonth = new Date(currentYear, month - 1, 1);
+                    return thisMonth >= startDate && thisMonth <= endDate;
+                });
+                
+                if (applicableEntry) {
+                    // Rent goes to rent payments
+                    totalRentPayments += applicableEntry.rent;
+                    
+                    // Utilities and WiFi go to other qualified expenses
+                    // Only add utilities if they're NOT included in rent
+                    if (!applicableEntry.utilitiesIncluded) {
+                        totalOtherQualifiedExpenses += applicableEntry.utilities;
+                    }
+                    totalOtherQualifiedExpenses += applicableEntry.wifi;
+                }
+            }
+            
+            console.log('[calculateRentAndOtherExpenses] Calculated totals:', {
+                totalRentPayments,
+                totalOtherQualifiedExpenses,
+                enrolledMonths: formData.enrolledMonths,
+                monthlyGrocery,
+                housingEntries: window.housingEntries
+            });
+            
+            return {
+                totalRentPayments: Math.round(totalRentPayments),
+                totalOtherQualifiedExpenses: Math.round(totalOtherQualifiedExpenses)
+            };
+        }
+     </script>
+</body>
+</html> 
+</html> 
