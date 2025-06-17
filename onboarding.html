@@ -628,6 +628,9 @@
                                 Pay $60 → Get <span id="checkoutTaxSavings">$0</span> more back on your tax refund
                             </div>
                             <div style="font-size: 0.95rem; color: #4b5563; margin-top: 0.75rem; text-align: center; line-height: 1.5; font-weight: 500;">
+                                We prepare the paperwork and account necessary to claim your <span id="checkoutState">state</span> 529 deduction benefit. This paperwork qualifies you for your increased tax refund and is included when you file your taxes.
+                            </div>
+                            <div style="font-size: 0.85rem; color: #6b7280; margin-top: 0.75rem; text-align: center; line-height: 1.4; font-weight: 400; font-style: italic;">
                                 Money-back guarantee: Get your maximum tax benefit or we'll refund your payment, regardless of whether you file with Renest or another company.
                             </div>
                         </div>
@@ -1127,6 +1130,12 @@
              };
              const fullStateName = stateOptions[formData.state] || formData.state;
              document.getElementById('userState').textContent = fullStateName;
+             
+             // Update checkout state display if element exists
+             const checkoutState = document.getElementById('checkoutState');
+             if (checkoutState) {
+                 checkoutState.textContent = fullStateName;
+             }
              document.getElementById('refundMore').textContent = '$' + Math.round(benefitDetails.benefit).toLocaleString('en-US');
              document.getElementById('oweLess').textContent = '$' + Math.round(benefitDetails.benefit).toLocaleString('en-US');
              
