@@ -1321,6 +1321,11 @@
         }
 
         // Progress tracking functions
+        let progressTimer = null;
+        let countdownTimer = null;
+        let currentStepStartTime = null;
+        let originalStepText = '';
+
         function showProgressOverlay() {
             const overlay = document.getElementById('progressLoadingOverlay');
             overlay.classList.remove('hidden');
@@ -1330,19 +1335,65 @@
         function hideProgressOverlay() {
             const overlay = document.getElementById('progressLoadingOverlay');
             overlay.classList.add('hidden');
+            clearProgressTimers();
+        }
+
+        function clearProgressTimers() {
+            if (progressTimer) {
+                clearTimeout(progressTimer);
+                progressTimer = null;
+            }
+            if (countdownTimer) {
+                clearInterval(countdownTimer);
+                countdownTimer = null;
+            }
         }
 
         function updateProgress(percentage, stepText) {
             const progressFill = document.getElementById('progressBarLoadingFill');
             const stepTextEl = document.getElementById('progressStepText');
             
+            // Clear existing timers
+            clearProgressTimers();
+            
+            // Update progress bar
             if (progressFill) {
                 progressFill.style.width = `${percentage}%`;
             }
             
+            // Update step text
             if (stepTextEl) {
                 stepTextEl.textContent = stepText;
             }
+            
+            // Store the original step text and start time
+            originalStepText = stepText;
+            currentStepStartTime = Date.now();
+            
+            // Set up the 5-second timer to show "please wait" message
+            progressTimer = setTimeout(() => {
+                showPleaseWaitMessage();
+            }, 5000);
+        }
+
+        function showPleaseWaitMessage() {
+            const stepTextEl = document.getElementById('progressStepText');
+            if (!stepTextEl) return;
+            
+            let countdown = 15;
+            stepTextEl.textContent = `Please wait, everything is working. Your account is getting created... (${countdown}s)`;
+            
+            countdownTimer = setInterval(() => {
+                countdown--;
+                if (countdown > 0) {
+                    stepTextEl.textContent = `Please wait, everything is working. Your account is getting created... (${countdown}s)`;
+                } else {
+                    // After 15 seconds, show encouraging message
+                    stepTextEl.textContent = 'Almost there! Processing your information...';
+                    clearInterval(countdownTimer);
+                    countdownTimer = null;
+                }
+            }, 1000);
         }
 
         function showProgressSuccess() {
