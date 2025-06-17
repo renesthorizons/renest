@@ -459,6 +459,84 @@
             </div>
         </div>
     </div>
+
+    <!-- Sensitive Information Modal (triggers at 70% progress) -->
+    <div id="sensitiveInfoModal" class="modal-overlay hidden">
+        <div class="modal-container">
+            <div class="modal-content">
+                <button class="close-button" onclick="closeSensitiveInfoModal()">×</button>
+                <h2 style="margin-bottom: 1.5rem; text-align: center;">Secure Your Tax Benefit</h2>
+                
+                <div style="background: #f0fdf4; padding: 1.5rem; border-radius: 0.5rem; border: 1px solid #22c55e; margin-bottom: 2rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                        <span style="color: #16a34a;">🔒</span>
+                        <strong style="color: #16a34a;">Bank-Level Security</strong>
+                    </div>
+                    <p style="margin: 0; font-size: 0.9rem; color: #666;">
+                        Your information is encrypted using the same security standards as major banks.
+                    </p>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="sensitiveFirstNameInput" class="form-label">First Name</label>
+                        <input type="text" id="sensitiveFirstNameInput" class="form-input" placeholder="Enter first name">
+                    </div>
+                    <div class="form-group">
+                        <label for="sensitiveLastNameInput" class="form-label">Last Name</label>
+                        <input type="text" id="sensitiveLastNameInput" class="form-input" placeholder="Enter last name">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="sensitiveDOBInput" class="form-label">Date of Birth</label>
+                    <input type="date" id="sensitiveDOBInput" class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <label for="sensitiveSSNInput" class="form-label">Tax ID Number (SSN/ITIN)</label>
+                    <input type="text" id="sensitiveSSNInput" class="form-input" placeholder="___-__-____" maxlength="11">
+                </div>
+                
+                <div class="form-group">
+                    <label for="sensitivePhoneInput" class="form-label">Phone Number</label>
+                    <input type="tel" id="sensitivePhoneInput" class="form-input" placeholder="(555) 123-4567">
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="sensitiveStreetInput" class="form-label">Street Address</label>
+                        <input type="text" id="sensitiveStreetInput" class="form-input" placeholder="123 Main St">
+                    </div>
+                    <div class="form-group">
+                        <label for="sensitiveAddress2Input" class="form-label">Apt/Suite/Unit (Optional)</label>
+                        <input type="text" id="sensitiveAddress2Input" class="form-input" placeholder="Apt 4B">
+                    </div>
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="sensitiveCityInput" class="form-label">City</label>
+                        <input type="text" id="sensitiveCityInput" class="form-input" placeholder="Anytown">
+                    </div>
+                    <div class="form-group">
+                        <label for="sensitiveZipInput" class="form-label">ZIP Code</label>
+                        <input type="text" id="sensitiveZipInput" class="form-input" placeholder="90210">
+                    </div>
+                </div>
+                
+                <div class="button-container">
+                    <button onclick="closeSensitiveInfoModal()" class="button button-secondary">Cancel</button>
+                    <button type="button" onclick="submitSensitiveInformation()" class="button button-primary" id="sensitiveBenefitSubmitBtn">
+                        <div class="btn-content">
+                            <span>Secure My Benefit</span>
+                            <div class="spinner" id="sensitiveSpinner" style="display: none;"></div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <!-- Intro Modal for Onboarding (shows before onboarding modal) -->
     <div id="introOnboardingModal" class="modal-overlay hidden">
@@ -793,6 +871,14 @@ document.addEventListener('DOMContentLoaded', function() {
             const currentBenefit = Math.round(userData.currentBenefit || 0);
             const totalPotentialBenefit = Math.round(userData.totalPotentialBenefit || 0);
             // const benefitDifference = totalPotentialBenefit - currentBenefit; // No longer needed
+            
+            // Check if progress is 70% and trigger sensitive info collection
+            if (progressPercentage === 70 && !localStorage.getItem('sensitiveInfoCollected')) {
+                console.log('Progress is 70%, triggering sensitive info collection');
+                setTimeout(() => {
+                    triggerSensitiveInfoCollection();
+                }, 1000); // Small delay to let dashboard load first
+            }
             
             benefitSummary.innerHTML = `
                 <span style="font-size: 2rem; color: var(--primary); font-weight: 700;">$${totalPotentialBenefit.toLocaleString()}</span>
@@ -3844,6 +3930,265 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function closeContactUsPopup() {
             document.getElementById('contactUsPopup').classList.add('hidden');
+        }
+
+        // Sensitive Information Collection Functions
+        function triggerSensitiveInfoCollection() {
+            console.log('Starting sensitive info collection flow');
+            
+            // First show the secure connection animation
+            const overlay = document.getElementById('secureConnectionOverlay');
+            if (overlay) {
+                overlay.classList.remove('hidden');
+                console.log('Showing secure connection overlay');
+            }
+            
+            // After 2 seconds, hide animation and show sensitive info modal
+            setTimeout(() => {
+                if (overlay) {
+                    overlay.classList.add('hidden');
+                }
+                showSensitiveInfoModal();
+            }, 2000);
+        }
+
+        function showSensitiveInfoModal() {
+            console.log('Showing sensitive information modal');
+            const modal = document.getElementById('sensitiveInfoModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                
+                // Clear any previous form data
+                document.getElementById('sensitiveFirstNameInput').value = '';
+                document.getElementById('sensitiveLastNameInput').value = '';
+                document.getElementById('sensitiveDOBInput').value = '';
+                document.getElementById('sensitiveSSNInput').value = '';
+                document.getElementById('sensitivePhoneInput').value = '';
+                document.getElementById('sensitiveStreetInput').value = '';
+                document.getElementById('sensitiveAddress2Input').value = '';
+                document.getElementById('sensitiveCityInput').value = '';
+                document.getElementById('sensitiveZipInput').value = '';
+                
+                // Add formatting to inputs
+                setupSensitiveInputFormatting();
+            }
+        }
+
+        function closeSensitiveInfoModal() {
+            console.log('Closing sensitive information modal');
+            const modal = document.getElementById('sensitiveInfoModal');
+            if (modal) {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function setupSensitiveInputFormatting() {
+            // SSN formatting
+            const ssnInput = document.getElementById('sensitiveSSNInput');
+            if (ssnInput) {
+                ssnInput.addEventListener('input', formatSSN);
+                ssnInput.addEventListener('keydown', restrictSSNInput);
+            }
+
+            // Phone formatting
+            const phoneInput = document.getElementById('sensitivePhoneInput');
+            if (phoneInput) {
+                phoneInput.addEventListener('input', formatPhoneNumber);
+            }
+        }
+
+        async function submitSensitiveInformation() {
+            console.log('Starting sensitive information submission');
+            
+            const submitBtn = document.getElementById('sensitiveBenefitSubmitBtn');
+            const spinner = document.getElementById('sensitiveSpinner');
+            
+            try {
+                // Disable button and show spinner
+                submitBtn.disabled = true;
+                if (spinner) spinner.style.display = 'block';
+                
+                // Validate form
+                if (!validateSensitiveInfoForm()) {
+                    return;
+                }
+                
+                // Try to get existing user profile data (may be incomplete at 70% progress)
+                let userData = {};
+                try {
+                    userData = await getUserProfileData();
+                } catch (error) {
+                    console.log('Could not fetch existing profile data, using form data only');
+                }
+                
+                // Collect form data (prioritize form inputs over existing profile data)
+                const sensitiveData = {
+                    ssn: document.getElementById('sensitiveSSNInput').value.replace(/-/g, ''),
+                    phoneNumber: document.getElementById('sensitivePhoneInput').value,
+                    streetAddress: document.getElementById('sensitiveStreetInput').value,
+                    address2: document.getElementById('sensitiveAddress2Input').value,
+                    city: document.getElementById('sensitiveCityInput').value,
+                    zipCode: document.getElementById('sensitiveZipInput').value,
+                    // Use form data for required fields (in case profile is incomplete)
+                    firstName: document.getElementById('sensitiveFirstNameInput').value,
+                    lastName: document.getElementById('sensitiveLastNameInput').value,
+                    dateOfBirth: document.getElementById('sensitiveDOBInput').value,
+                    // Use existing profile data if available, otherwise will need to be provided elsewhere
+                    state: userData.state || localStorage.getItem('state') || '',
+                    school: userData.school || ''
+                };
+                
+                console.log('Submitting to SSN API with data (SSN hidden):', {
+                    ...sensitiveData,
+                    ssn: '[HIDDEN]'
+                });
+                
+                // Submit using ssn-integration.js
+                await window.submitSensitiveData(sensitiveData);
+                
+                // Mark as collected and update progress
+                localStorage.setItem('sensitiveInfoCollected', 'true');
+                await updateUserProgress(75); // Move to next progress level
+                
+                // Close modal and show success
+                closeSensitiveInfoModal();
+                showSuccessMessage('Your information has been securely saved!');
+                
+                // Refresh dashboard to show updated progress
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+                
+            } catch (error) {
+                console.error('Error submitting sensitive information:', error);
+                showError(`Failed to submit information: ${error.message}`);
+            } finally {
+                // Re-enable button and hide spinner
+                submitBtn.disabled = false;
+                if (spinner) spinner.style.display = 'none';
+            }
+        }
+
+        function validateSensitiveInfoForm() {
+            const firstName = document.getElementById('sensitiveFirstNameInput').value.trim();
+            const lastName = document.getElementById('sensitiveLastNameInput').value.trim();
+            const dob = document.getElementById('sensitiveDOBInput').value;
+            const ssn = document.getElementById('sensitiveSSNInput').value.trim();
+            const phone = document.getElementById('sensitivePhoneInput').value.trim();
+            const street = document.getElementById('sensitiveStreetInput').value.trim();
+            const city = document.getElementById('sensitiveCityInput').value.trim();
+            const zip = document.getElementById('sensitiveZipInput').value.trim();
+            
+            if (!firstName) {
+                showError('Please enter your first name');
+                return false;
+            }
+            if (!lastName) {
+                showError('Please enter your last name');
+                return false;
+            }
+            if (!dob) {
+                showError('Please enter your date of birth');
+                return false;
+            }
+            
+            // Validate age (must be at least 18)
+            const birthDate = new Date(dob);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            if (age < 18) {
+                showError('You must be at least 18 years old');
+                return false;
+            }
+            
+            if (!ssn || !/^(?:\d{9}|\d{3}-\d{2}-\d{4})$/.test(ssn)) {
+                showError('Please enter a valid SSN (e.g., 123-45-6789)');
+                return false;
+            }
+            if (!phone || !/^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/.test(phone)) {
+                showError('Please enter a valid phone number');
+                return false;
+            }
+            if (!street) {
+                showError('Please enter your street address');
+                return false;
+            }
+            if (!city) {
+                showError('Please enter your city');
+                return false;
+            }
+            if (!zip || !/^\d{5}(-\d{4})?$/.test(zip)) {
+                showError('Please enter a valid ZIP code');
+                return false;
+            }
+            
+            return true;
+        }
+
+        async function getUserProfileData() {
+            const authToken = localStorage.getItem('authToken');
+            if (!authToken) {
+                throw new Error('No authentication token found');
+            }
+
+            const response = await fetch('https://g4gri8abii.execute-api.us-east-2.amazonaws.com/prod/profile', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${authToken}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch user profile');
+            }
+
+            return await response.json();
+        }
+
+        async function updateUserProgress(newProgress) {
+            const authToken = localStorage.getItem('authToken');
+            if (!authToken) {
+                throw new Error('No authentication token found');
+            }
+
+            const response = await fetch('https://jmqfabgm02.execute-api.us-east-2.amazonaws.com/update-profile', {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${authToken}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    progressPercentage: newProgress
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update progress');
+            }
+
+            return await response.json();
+        }
+
+        function showSuccessMessage(message) {
+            const successMessage = document.createElement('div');
+            successMessage.className = 'success-message';
+            successMessage.textContent = message;
+            successMessage.style.position = 'fixed';
+            successMessage.style.top = '20px';
+            successMessage.style.left = '50%';
+            successMessage.style.transform = 'translateX(-50%)';
+            successMessage.style.padding = '10px 20px';
+            successMessage.style.backgroundColor = '#4CAF50';
+            successMessage.style.color = 'white';
+            successMessage.style.borderRadius = '4px';
+            successMessage.style.zIndex = '1000';
+            document.body.appendChild(successMessage);
+            setTimeout(() => successMessage.remove(), 3000);
         }
     </script>
 
