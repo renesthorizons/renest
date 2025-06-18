@@ -1845,6 +1845,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('Auth token retrieved.');
 
                 console.log('5. Submitting sensitive data (SSN, etc.)');
+                // Calculate rent and expense totals for complete submission
+                const expenseTotals = calculateRentAndExpenseTotals(formData.enrolledMonths, window.housingEntries);
+                
                 // The submitSensitiveData function expects a bundle of specific fields.
                 // We need to pass the already collected formData.firstName, lastName, dateOfBirth, school, state.
                 const sensitiveDataPayload = {
@@ -1858,7 +1861,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     city: formData.city,
                     state: formData.state, // State where student attends school
                     zipCode: formData.zipCode,
-                    school: formData.school
+                    school: formData.school,
+                    totalRentPayments: expenseTotals.totalRentPayments,
+                    totalOtherQualifiedExpenses: expenseTotals.totalOtherQualifiedExpenses
                 };
                 console.log('--- SENSITIVE DATA API: Attempting to submit ---');
                 console.log('Payload for sensitive data API:', JSON.parse(JSON.stringify(sensitiveDataPayload)));
@@ -2796,6 +2801,48 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('Error stack:', error.stack);
                 throw error; // Re-throw to be caught by submitForm
             }
+        }
+
+        // Function to calculate separate rent and other expense totals for sensitive data submission
+        function calculateRentAndExpenseTotals(enrolledMonths, housingEntries) {
+            const currentYear = new Date().getFullYear();
+            if (!Array.isArray(enrolledMonths)) {
+                console.error('CRITICAL: enrolledMonths is not an array in calculateRentAndExpenseTotals. Received:', enrolledMonths);
+                enrolledMonths = [];
+            }
+            
+            let totalRentPayments = 0;
+            let totalOtherQualifiedExpenses = 0;
+            const monthlyGrocery = 100; // Fixed amount for groceries
+            
+            for (let month = 1; month <= 12; month++) {
+                if (!enrolledMonths.includes(month)) continue;
+                
+                // Add monthly grocery expense
+                totalOtherQualifiedExpenses += monthlyGrocery;
+                
+                // Find applicable housing entry for this month
+                const applicableEntry = housingEntries.find(entry => {
+                    const startDate = new Date(entry.startYear, entry.startMonth - 1, 1);
+                    const endDate = new Date(entry.endYear, entry.endMonth - 1, 1);
+                    const thisMonth = new Date(currentYear, month - 1, 1);
+                    return thisMonth >= startDate && thisMonth <= endDate;
+                });
+                
+                if (applicableEntry) {
+                    // Add rent to rent total
+                    totalRentPayments += applicableEntry.rent;
+                    
+                    // Add utilities and wifi to other expenses (only if utilities not included in rent)
+                    if (!applicableEntry.utilitiesIncluded) {
+                        totalOtherQualifiedExpenses += applicableEntry.utilities;
+                    }
+                    totalOtherQualifiedExpenses += applicableEntry.wifi;
+                }
+            }
+            
+            console.log('Calculated expense totals:', { totalRentPayments, totalOtherQualifiedExpenses });
+            return { totalRentPayments, totalOtherQualifiedExpenses };
         }
 
         // Function to calculate benefit with multiple housing entries
