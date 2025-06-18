@@ -87,9 +87,40 @@ if (typeof window.submitPartialSensitiveData === 'undefined') {
         // Create payload with only provided fields
         const payload = {};
         
-        // Add all provided fields to the payload
+        // Handle SSN encryption if provided
+        if (partialData.ssn) {
+            const encryptedClientSSN = window.encryptSSNWithPublicKey(partialData.ssn);
+            if (!encryptedClientSSN) {
+                console.error('[submitPartialSensitiveData] Failed to encrypt SSN.');
+                throw new Error('Failed to encrypt sensitive information. Please try again or contact support.');
+            }
+            payload.encryptedSSN = encryptedClientSSN;
+            console.log('[submitPartialSensitiveData] SSN encrypted successfully');
+        }
+        
+        // Handle address construction if address components are provided
+        if (partialData.streetAddress || partialData.city || partialData.state || partialData.zipCode) {
+            let streetPart = partialData.streetAddress || '';
+            let address2Part = partialData.address2 && partialData.address2.trim() !== '' ? ' ' + partialData.address2.trim() : '';
+            let cityPart = partialData.city || '';
+            let stateZipPart = '';
+            
+            if (partialData.state || partialData.zipCode) {
+                stateZipPart = `${partialData.state || ''} ${partialData.zipCode || ''}`.trim();
+            }
+            
+            if (streetPart || cityPart || stateZipPart) {
+                const fullAddress = `${streetPart}${address2Part}${cityPart ? ', ' + cityPart : ''}${stateZipPart ? ', ' + stateZipPart : ''}`.trim();
+                if (fullAddress !== ',') { // Only add if not just commas
+                    payload.address = fullAddress;
+                }
+            }
+        }
+        
+        // Add all other provided fields to the payload (excluding raw SSN and address components)
+        const addressFields = ['ssn', 'streetAddress', 'address2', 'city', 'zipCode'];
         Object.keys(partialData).forEach(key => {
-            if (partialData[key] !== undefined && partialData[key] !== null && partialData[key] !== '') {
+            if (!addressFields.includes(key) && partialData[key] !== undefined && partialData[key] !== null && partialData[key] !== '') {
                 payload[key] = partialData[key];
             }
         });
