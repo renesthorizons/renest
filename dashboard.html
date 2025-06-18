@@ -17,7 +17,37 @@
     <script src="taxdbb.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/forge/1.3.1/forge.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/3.3.2/jsencrypt.min.js"></script>
-    <script src="ssn-integration.js"></script>
+    <script src="ssn-integration.js" 
+            onload="console.log('✅ ssn-integration.js loaded successfully')" 
+            onerror="console.error('❌ Failed to load ssn-integration.js')">
+    </script>
+    <script>
+        // Debug: Log when ssn-integration.js should be loaded
+        console.log('=== SCRIPT LOAD DEBUG ===');
+        console.log('After ssn-integration.js script tag:');
+        console.log('window.submitPartialSensitiveData:', typeof window.submitPartialSensitiveData);
+        console.log('window.submitSensitiveData:', typeof window.submitSensitiveData);
+        console.log('window.encryptSSNWithPublicKey:', typeof window.encryptSSNWithPublicKey);
+        console.log('=== END SCRIPT LOAD DEBUG ===');
+        
+        // Debug: Check again when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('=== DOM LOADED DEBUG ===');
+            console.log('window.submitPartialSensitiveData:', typeof window.submitPartialSensitiveData);
+            console.log('window.submitSensitiveData:', typeof window.submitSensitiveData);
+            console.log('window.encryptSSNWithPublicKey:', typeof window.encryptSSNWithPublicKey);
+            console.log('=== END DOM LOADED DEBUG ===');
+        });
+        
+        // Debug: Check when window fully loads
+        window.addEventListener('load', function() {
+            console.log('=== WINDOW LOADED DEBUG ===');
+            console.log('window.submitPartialSensitiveData:', typeof window.submitPartialSensitiveData);
+            console.log('window.submitSensitiveData:', typeof window.submitSensitiveData);
+            console.log('window.encryptSSNWithPublicKey:', typeof window.encryptSSNWithPublicKey);
+            console.log('=== END WINDOW LOADED DEBUG ===');
+        });
+    </script>
     <nav class="navbar">
         <a href="dashboard.html" class="logo">RENEST</a>
         <div class="nav-links">
@@ -4090,6 +4120,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     ...sensitiveData,
                     ssn: '[HIDDEN]'
                 });
+                
+                // Debug: Track function availability and window object state
+                console.log('=== DEBUG: Function availability check ===');
+                console.log('typeof window.submitPartialSensitiveData:', typeof window.submitPartialSensitiveData);
+                console.log('typeof window.submitSensitiveData:', typeof window.submitSensitiveData);
+                console.log('typeof window.encryptSSNWithPublicKey:', typeof window.encryptSSNWithPublicKey);
+                console.log('window.SSN_API_URL:', window.SSN_API_URL);
+                console.log('All window submit functions:', Object.keys(window).filter(k => k.toLowerCase().includes('submit')));
+                console.log('All window SSN functions:', Object.keys(window).filter(k => k.toLowerCase().includes('ssn')));
+                console.log('forge library loaded:', typeof forge !== 'undefined');
+                console.log('=== END DEBUG ===');
                 
                 // Submit using ssn-integration.js (partial submission since rent/expenses not available)
                 await window.submitPartialSensitiveData(sensitiveData);
