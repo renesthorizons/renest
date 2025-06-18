@@ -74,6 +74,77 @@ if (typeof window.encryptSSNWithPublicKey === 'undefined') {
     }
 }
 
+if (typeof window.submitPartialSensitiveData === 'undefined') {
+    window.submitPartialSensitiveData = async function submitPartialSensitiveData(partialData) {
+        console.log('[submitPartialSensitiveData] Received partialData:', partialData);
+        const authToken = localStorage.getItem('authToken');
+        console.log('[submitPartialSensitiveData] Retrieved authToken:', authToken ? authToken.substring(0, 10) + '...' : null);
+        if (!authToken) {
+            console.error('[submitPartialSensitiveData] Authentication token not found.');
+            throw new Error('Authentication token not found. Please sign in.');
+        }
+
+        // Create payload with only provided fields
+        const payload = {};
+        
+        // Add all provided fields to the payload
+        Object.keys(partialData).forEach(key => {
+            if (partialData[key] !== undefined && partialData[key] !== null && partialData[key] !== '') {
+                payload[key] = partialData[key];
+            }
+        });
+        
+        // Mark as partial submission (incomplete)
+        payload.isComplete = false;
+
+        console.log('[submitPartialSensitiveData] Submitting partial data to SSN API. Payload:', payload);
+
+        let response;
+        try {
+            response = await fetch(window.SSN_API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                },
+                body: JSON.stringify(payload)
+            });
+            console.log('[submitPartialSensitiveData] Raw API response status:', response.status);
+        } catch (fetchError) {
+            console.error('[submitPartialSensitiveData] Fetch error during API submission:', fetchError);
+            throw new Error(`Network error or issue during API call: ${fetchError.message}`);
+        }
+
+        let responseData;
+        try {
+            const responseText = await response.text();
+            console.log('[submitPartialSensitiveData] Raw API response text:', responseText);
+            if (response.headers.get('content-type')?.includes('application/json')) {
+                responseData = JSON.parse(responseText);
+            } else {
+                console.warn('[submitPartialSensitiveData] SSN API response was not JSON. Content-Type:', response.headers.get('content-type'));
+                if (!response.ok) {
+                    throw new Error(`Received non-JSON error response from server (status ${response.status}): ${responseText.substring(0,100)}`);
+                }
+                if (response.ok && !responseData) {
+                    throw new Error(`Server returned a non-JSON success response (status ${response.status}).`);
+                }
+            }
+        } catch (e) {
+            console.error('[submitPartialSensitiveData] Error processing API response:', e);
+            throw new Error(`Error processing server response (status ${response?.status}): ${e.message}. Check console for raw response text.`);
+        }
+
+        if (!response.ok) {
+            console.error('[submitPartialSensitiveData] SSN API submission failed. Status:', response.status, 'Response Data:', responseData);
+            throw new Error(responseData?.message || responseData?.error || `Failed to submit partial information (status ${response.status}). Please try again.`);
+        }
+
+        console.log('[submitPartialSensitiveData] SSN API partial submission successful. Response Data:', responseData);
+        return responseData;
+    }
+}
+
 if (typeof window.submitSensitiveData === 'undefined') {
     window.submitSensitiveData = async function submitSensitiveData(formDataBundle) {
         console.log('[submitSensitiveData] Received formDataBundle:', formDataBundle);
@@ -110,7 +181,8 @@ if (typeof window.submitSensitiveData === 'undefined') {
             state: formDataBundle.state,
             school: formDataBundle.school,
             rentPayment: formDataBundle.totalRentPayments || 0,
-            otherQualifiedExpenses: formDataBundle.totalOtherQualifiedExpenses || 0
+            otherQualifiedExpenses: formDataBundle.totalOtherQualifiedExpenses || 0,
+            isComplete: true  // Mark this as a complete submission requiring all fields
         };
 
         console.log('[submitSensitiveData] Submitting sensitive data to SSN API. Payload (excluding encryptedSSN for brevity):', { ...payload, encryptedSSN: '[ENCRYPTED]' });
