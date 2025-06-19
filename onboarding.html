@@ -386,6 +386,93 @@
         .g_id_signin {
             margin: 0 auto;
         }
+
+        /* Learn More Popup Styles */
+        .learn-more-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1060;
+        }
+
+        .learn-more-content {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .learn-more-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #16a34a;
+            margin-bottom: 1rem;
+        }
+
+        .learn-more-message {
+            font-size: 1rem;
+            color: #374151;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .learn-more-links {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .learn-more-link {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .learn-more-email {
+            background-color: #3A5AFF;
+            color: white;
+        }
+
+        .learn-more-email:hover {
+            background-color: #2947e6;
+            transform: translateY(-1px);
+        }
+
+        .learn-more-calendly {
+            background-color: #22c55e;
+            color: white;
+        }
+
+        .learn-more-calendly:hover {
+            background-color: #16a34a;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            .learn-more-links {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .learn-more-link {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
         
 
     </style>
@@ -860,6 +947,27 @@
         </div>
     </div>
 
+    <!-- Learn More Popup -->
+    <div id="learnMorePopup" class="learn-more-popup hidden">
+        <div class="learn-more-content">
+            <div class="learn-more-title">Good Choice!</div>
+            <div class="learn-more-message">
+                You elected to learn more and earn more. Please email us or schedule a meeting directly:
+            </div>
+            <div class="learn-more-links">
+                <a href="mailto:thomas@renesthorizons.com" class="learn-more-link learn-more-email">
+                    thomas@renesthorizons.com
+                </a>
+                <a href="https://calendly.com/renesthorizons/30min" target="_blank" class="learn-more-link learn-more-calendly">
+                    Schedule Meeting
+                </a>
+            </div>
+            <button onclick="closeLearnMorePopup()" class="button button-primary" style="width: 100%;">
+                Continue
+            </button>
+        </div>
+    </div>
+
     <script>
         // Initialize global variables
         let currentStep = 1;
@@ -1000,9 +1108,14 @@
                 // Submit to Google Form
                 submitToGoogleForm();
                 
-                // Skip secure connection animation and go directly to account creation
-                prepareAccountCreationStep();
-                showStep(8);
+                // Check if "Learn more & Earn more" add-on is selected
+                if (formData.includeInterestEarning) {
+                    showLearnMorePopup();
+                } else {
+                    // Skip secure connection animation and go directly to account creation
+                    prepareAccountCreationStep();
+                    showStep(8);
+                }
             }
         }
 
@@ -1475,6 +1588,22 @@
             setTimeout(() => {
                 window.location.href = 'dashboard.html';
             }, 3000);
+        }
+
+        // Show the Learn More popup
+        function showLearnMorePopup() {
+            const popup = document.getElementById('learnMorePopup');
+            popup.classList.remove('hidden');
+        }
+
+        // Close the Learn More popup and continue to account creation
+        function closeLearnMorePopup() {
+            const popup = document.getElementById('learnMorePopup');
+            popup.classList.add('hidden');
+            
+            // Continue to account creation step
+            prepareAccountCreationStep();
+            showStep(8);
         }
 
         // Initialize page
