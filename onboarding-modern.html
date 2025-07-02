@@ -250,6 +250,17 @@
             40% { transform: scale(1); opacity: 1; }
         }
         
+        /* Mobile benefit card adjustments */
+        @media (max-width: 768px) {
+            .benefit-card {
+                padding: 1.5rem !important;
+            }
+            
+            .benefit-card div:first-child {
+                font-size: 2rem !important;
+            }
+        }
+        
                 /* Mobile Responsiveness for Chat */
         @media (max-width: 768px) {
             .chat-header {
@@ -748,6 +759,7 @@
 <body>
     <script src="countries.js"></script>
     <script src="taxdbb.js"></script>
+    <script src="schoolrecognize.js"></script>
     <!-- Google Sign-In Script -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <!-- Onboarding Scripts -->
@@ -916,7 +928,7 @@
             state: '',
             income: '',
             enrolledMonths: [],
-            residency_status: 'citizen',
+            residency_status: '',
             visa_type: '', 
             country_of_origin: '',
             email: '',
@@ -928,6 +940,65 @@
         // Initialize housing entries
         if (typeof window.housingEntries === 'undefined') {
             window.housingEntries = [];
+        }
+        
+        // Initialize school recognizer when available
+        function initializeSchoolRecognizer() {
+            if (typeof schoolRecognizer !== 'undefined') {
+                console.log('School recognizer already available globally');
+            } else {
+                console.log('School recognizer not available yet, checking what is available:', {
+                    SchoolRecognizer: typeof SchoolRecognizer,
+                    schoolsDatabase: typeof schoolsDatabase,
+                    schoolRecognizer: typeof schoolRecognizer
+                });
+            }
+        }
+        
+        // Detect state from school name
+        async function detectSchoolState(schoolName) {
+            if (typeof schoolRecognizer === 'undefined') {
+                console.log('School recognizer not available, skipping state detection');
+                return;
+            }
+            
+            try {
+                const result = schoolRecognizer.findSchool(schoolName);
+                console.log('School recognition result:', result);
+                
+                if (result && result.found && result.state) {
+                    console.log('Detected school state:', result.state, 'for school:', result.school);
+                    
+                    // Map state names to state codes for the tax database
+                    const stateNameToCode = {
+                        'illinois': 'IL',
+                        'indiana': 'IN', 
+                        'colorado': 'CO',
+                        'pennsylvania': 'PA',
+                        'new york': 'NY',
+                        'new jersey': 'NJ',
+                        'new mexico': 'NM',
+                        'south carolina': 'SC',
+                        'wisconsin': 'WI',
+                        'minnesota': 'MN'
+                    };
+                    
+                    const normalizedState = result.state.toLowerCase().replace(/\s+/g, ' ').trim();
+                    const stateCode = stateNameToCode[normalizedState];
+                    
+                    if (stateCode) {
+                        chatData.detectedState = normalizedState;
+                        chatData.detectedStateCode = stateCode;
+                        console.log('State detection successful:', normalizedState, '->', stateCode);
+                    } else {
+                        console.log('Detected state not in our tax database:', result.state);
+                    }
+                } else {
+                    console.log('No state detected for school:', schoolName, 'Result:', result);
+                }
+            } catch (error) {
+                console.error('Error detecting school state:', error);
+            }
         }
         
         let currentQuestionIndex = 0;
@@ -982,10 +1053,23 @@
                 field: 'school'
             },
             {
+                id: 'state_confirmation',
+                type: 'bot',
+                message: "", // Will be dynamically generated
+                responseType: 'options',
+                showIf: (data) => data.detectedState,
+                options: [
+                    { value: 'yes', text: 'Yes, that\'s correct' },
+                    { value: 'no', text: 'No, that\'s wrong' }
+                ],
+                field: 'state_confirmed'
+            },
+            {
                 id: 'state',
                 type: 'bot',
                 message: "Which state is your school in?",
                 responseType: 'state_select',
+                showIf: (data) => !data.detectedState || data.state_confirmed === 'no',
                 field: 'state'
             },
             {
@@ -1122,7 +1206,7 @@
             });
         }
         
-        function showTypingIndicator() {
+        function showTypingIndicator(customText = null) {
             const messagesContainer = document.getElementById('chatMessages');
             const typingDiv = document.createElement('div');
             typingDiv.className = 'message bot';
@@ -1134,13 +1218,25 @@
             
             const typingIndicator = document.createElement('div');
             typingIndicator.className = 'typing-indicator';
-            typingIndicator.innerHTML = `
-                <div class="typing-dots">
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                </div>
-            `;
+            
+            if (customText) {
+                typingIndicator.innerHTML = `
+                    <div class="typing-dots">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                    <span style="margin-left: 0.5rem; font-style: italic; font-size: 0.8rem; color: #6b7280;">${customText}</span>
+                `;
+            } else {
+                typingIndicator.innerHTML = `
+                    <div class="typing-dots">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                `;
+            }
             
             typingDiv.appendChild(avatar);
             typingDiv.appendChild(typingIndicator);
@@ -1256,6 +1352,20 @@
                 chatData[field] = value;
             }
             
+            // Handle special state confirmation logic
+            if (field === 'state_confirmed') {
+                if (value === 'yes') {
+                    // Use the detected state
+                    chatData.state = chatData.detectedStateCode;
+                    console.log('Using detected state:', chatData.state);
+                } else {
+                    // Clear detected state so user can manually select
+                    chatData.detectedState = null;
+                    chatData.detectedStateCode = null;
+                    console.log('Cleared detected state, user will manually select');
+                }
+            }
+            
             // Clear input area
             clearInputArea();
             
@@ -1296,6 +1406,12 @@
                 }
                 chatData[field] = value;
                 await addMessage('user', value);
+            } else if (field === 'school') {
+                chatData[field] = value;
+                await addMessage('user', value);
+                
+                // Try to recognize the school and detect state
+                await detectSchoolState(value);
             } else {
                 chatData[field] = value;
                 await addMessage('user', value);
@@ -1346,15 +1462,30 @@
                 question.message = `In order to cover the costs of preparing your paperwork to get your $${benefit.toLocaleString('en-US')} benefit we charge $60. This comes with a money back guarantee, if you don't get your full benefit you get your money back.`;
             }
             
-            // Show typing indicator
-            showTypingIndicator();
+            // Handle state confirmation step dynamically
+            if (question.id === 'state_confirmation') {
+                const stateCodeToName = {
+                    'IL': 'Illinois', 'IN': 'Indiana', 'CO': 'Colorado', 
+                    'PA': 'Pennsylvania', 'NY': 'New York', 'NJ': 'New Jersey',
+                    'NM': 'New Mexico', 'SC': 'South Carolina', 'WI': 'Wisconsin', 
+                    'MN': 'Minnesota'
+                };
+                // Use the state code to get the full name for display
+                const stateName = stateCodeToName[chatData.detectedStateCode] || chatData.detectedState;
+                question.message = `Your school is in ${stateName}?`;
+            }
             
-            // Wait for typing delay
-            await new Promise(resolve => setTimeout(resolve, question.delay || 1000));
-            
-            // Remove typing indicator and show message
-            removeTypingIndicator();
-            await addMessage('bot', question.message);
+            // Show typing indicator (skip for benefit_display as it has custom animation)
+            if (question.id !== 'benefit_display') {
+                showTypingIndicator();
+                
+                // Wait for typing delay
+                await new Promise(resolve => setTimeout(resolve, question.delay || 1000));
+                
+                // Remove typing indicator and show message
+                removeTypingIndicator();
+                await addMessage('bot', question.message);
+            }
             
             // Handle response type
             if (question.responseType === 'options') {
@@ -1796,6 +1927,10 @@
         }
         
         async function showBenefitSummary() {
+            // Show custom typing indicator with calculation text
+            showTypingIndicator('analyzing your tax situation...');
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
             // Calculate benefit using existing function
             const benefitDetails = calculateBenefitWithMultipleHousingCustomGrocery(
                 chatData.state, 
@@ -1811,14 +1946,52 @@
             // Store for later use
             window.calculatedBenefit = benefitDetails;
             
-            // Create simple one-line benefit message
             const benefit = Math.round(Number(benefitDetails.benefit) || 0);
             const qualifiedSpend = Math.round(Number(benefitDetails.qualifiedSpend) || 0);
             const income = Number(chatData.income || 0);
             
-            const benefitMessage = `This is great! I calculate based on your income of $${income.toLocaleString('en-US')} and qualified expenses of $${qualifiedSpend.toLocaleString('en-US')} you qualify for $${benefit.toLocaleString('en-US')} more back on your taxes!`;
+            // Remove typing indicator and show first message
+            removeTypingIndicator();
+            const firstMessage = `That's great! Based on your $${income.toLocaleString('en-US')} income and $${qualifiedSpend.toLocaleString('en-US')} qualified spend we determined you qualify for`;
+            await addMessage('bot', firstMessage);
             
-            await addMessage('bot', benefitMessage);
+            // Show another typing indicator for the benefit card
+            showTypingIndicator('calculating tax savings...');
+            await new Promise(resolve => setTimeout(resolve, 1200));
+            
+            // Remove typing indicator and show benefit card
+            removeTypingIndicator();
+                        const benefitCard = `
+                <div class="benefit-card" style="
+                    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+                    border: 2px solid #22c55e;
+                    border-radius: 0.75rem;
+                    padding: 2rem;
+                    text-align: center;
+                    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.15);
+                    margin: 1rem 0;
+                ">
+                    <div style="
+                        font-size: 2.5rem;
+                        font-weight: 700;
+                        color: #16a34a;
+                        margin-bottom: 0.5rem;
+                    ">
+                        $${benefit.toLocaleString('en-US')}
+                    </div>
+                    <div style="
+                        font-size: 1.1rem;
+                        font-weight: 600;
+                        color: #15803d;
+                        margin-bottom: 1rem;
+                    ">
+                        more back on your taxes!
+                    </div>
+                    
+                </div>
+            `;
+            
+            await addMessage('bot', benefitCard);
             
             // Continue automatically after a short delay
             setTimeout(async () => {
@@ -2072,6 +2245,64 @@
             createAccountCreationOptions();
         }
         
+        // Google Sign-In initialization with retry mechanism
+        function initializeGoogleSignInWithRetry(maxRetries = 10, retryDelay = 500) {
+            let attempts = 0;
+            
+            function attemptInitialization() {
+                attempts++;
+                
+                if (window.google && window.google.accounts && window.google.accounts.id) {
+                    try {
+                        // Initialize Google Sign-In
+                        window.google.accounts.id.initialize({
+                            client_id: '1032310890772-gr5i4m4t9fr7m2sgdbta8c5rumh49jlh.apps.googleusercontent.com',
+                            callback: handleCredentialResponse,
+                            context: 'signup'
+                        });
+                        
+                        // Render the button if the element exists
+                        const buttonElement = document.getElementById('chat-g_id_signin');
+                        if (buttonElement) {
+                            window.google.accounts.id.renderButton(buttonElement, {
+                                type: 'standard',
+                                size: 'large',
+                                theme: 'outline',
+                                text: 'signup_with',
+                                shape: 'rectangular',
+                                logo_alignment: 'left',
+                                width: '300'
+                            });
+                            console.log('Google Sign-In button successfully initialized for chat');
+                        } else {
+                            console.log('Google Sign-In element not found, will retry when available');
+                        }
+                        
+                        return true; // Success
+                    } catch (error) {
+                        console.error('Error initializing Google Sign-In:', error);
+                        return false;
+                    }
+                } else {
+                    if (attempts < maxRetries) {
+                        console.log(`Google Sign-In API not ready yet (attempt ${attempts}/${maxRetries}), retrying...`);
+                        setTimeout(attemptInitialization, retryDelay);
+                    } else {
+                        console.warn('Google Sign-In API failed to load after maximum retries');
+                        // Hide the Google Sign-In section if it failed to load
+                        const googleContainer = document.getElementById('chat-g_id_signin');
+                        if (googleContainer && googleContainer.parentElement) {
+                            googleContainer.parentElement.style.display = 'none';
+                        }
+                    }
+                    return false;
+                }
+            }
+            
+            // Start the initialization attempt
+            setTimeout(attemptInitialization, 100);
+        }
+        
         function createAccountCreationOptions() {
             const inputArea = document.getElementById('chatInputArea');
             
@@ -2085,13 +2316,15 @@
             // Google Sign-In
             const googleContainer = document.createElement('div');
             googleContainer.style.marginBottom = '1rem';
+            googleContainer.style.textAlign = 'center';
             googleContainer.innerHTML = `
-                <div id="g_id_onload"
+                <div id="chat-g_id_onload"
                      data-client_id="1032310890772-gr5i4m4t9fr7m2sgdbta8c5rumh49jlh.apps.googleusercontent.com"
                      data-context="signup"
                      data-callback="handleCredentialResponse">
                 </div>
-                <div class="g_id_signin"
+                <div id="chat-g_id_signin"
+                     class="g_id_signin"
                      data-type="standard"
                      data-size="large"
                      data-theme="outline"
@@ -2130,6 +2363,9 @@
             
             // Add event listener for create account button
             document.getElementById('create-account-btn').onclick = createAccountAndComplete;
+            
+            // Initialize Google Sign-In with retry mechanism
+            initializeGoogleSignInWithRetry();
             
             // Scroll to show account creation
             scrollToBottom();
@@ -2622,6 +2858,11 @@
                     window.accountCreation.initializeGoogleSignIn();
                 }
             }, 1000);
+
+            // Initialize school recognizer when scripts are loaded
+            setTimeout(() => {
+                initializeSchoolRecognizer();
+            }, 1500);
 
             // Ensure global handleCredentialResponse is available
             window.handleCredentialResponse = handleCredentialResponse;
