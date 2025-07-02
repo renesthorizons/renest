@@ -787,6 +787,7 @@
     <script src="countries.js"></script>
     <script src="taxdbb.js"></script>
     <script src="schoolrecognize.js"></script>
+    <script src="pricing-calculator.js"></script>
     <!-- Google Sign-In Script -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <!-- Onboarding Scripts -->
@@ -963,6 +964,27 @@
             includeInterestEarning: false,
             includeTaxFiling: false
         };
+        
+        // Helper function to get full state name from abbreviation
+        function getStateName(stateCode) {
+            const stateCodeToName = {
+                'IL': 'Illinois', 'IN': 'Indiana', 'CO': 'Colorado', 
+                'PA': 'Pennsylvania', 'NY': 'New York', 'NJ': 'New Jersey',
+                'NM': 'New Mexico', 'SC': 'South Carolina', 'WI': 'Wisconsin', 
+                'MN': 'Minnesota', 'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 
+                'AR': 'Arkansas', 'CA': 'California', 'CT': 'Connecticut', 'DE': 'Delaware', 
+                'FL': 'Florida', 'GA': 'Georgia', 'HI': 'Hawaii', 'ID': 'Idaho', 
+                'IA': 'Iowa', 'KS': 'Kansas', 'KY': 'Kentucky', 'LA': 'Louisiana', 
+                'ME': 'Maine', 'MD': 'Maryland', 'MA': 'Massachusetts', 'MI': 'Michigan', 
+                'MS': 'Mississippi', 'MO': 'Missouri', 'MT': 'Montana', 'NE': 'Nebraska', 
+                'NV': 'Nevada', 'NH': 'New Hampshire', 'NC': 'North Carolina', 'ND': 'North Dakota', 
+                'OH': 'Ohio', 'OK': 'Oklahoma', 'OR': 'Oregon', 'RI': 'Rhode Island', 
+                'SD': 'South Dakota', 'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 
+                'VT': 'Vermont', 'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia', 
+                'WY': 'Wyoming', 'NYC': 'New York City'
+            };
+            return stateCodeToName[stateCode] || stateCode;
+        }
         
         // Initialize housing entries
         if (typeof window.housingEntries === 'undefined') {
@@ -1485,19 +1507,45 @@
             // Handle cost explanation step dynamically
             if (question.id === 'cost_explanation') {
                 const benefit = window.calculatedBenefit ? Math.round(Number(window.calculatedBenefit.benefit) || 0) : 0;
-                question.message = `In order to cover the costs of preparing your paperwork to get your $${benefit.toLocaleString('en-US')} benefit we charge $60. This comes with a money back guarantee, if you don't get your full benefit you get your money back.`;
+                
+                // Calculate dynamic pricing using the new pricing calculator
+                const pricing = window.pricingCalculator.calculatePricing(
+                    chatData.state,
+                    chatData.income,
+                    chatData.enrolledMonths,
+                    window.housingEntries,
+                    chatData.monthlyGrocery
+                );
+                
+                const totalCost = Math.round(pricing.totalCost);
+                const savingsAfterCost = Math.round(pricing.savingsAfterCost);
+                
+                const stateName = getStateName(chatData.state);
+                
+                question.message = `
+                    <div style="margin-bottom: 1rem;">
+                        Based on your benefit of $${benefit.toLocaleString('en-US')}, our service cost is $${totalCost.toLocaleString('en-US')}. You'll still save $${savingsAfterCost.toLocaleString('en-US')} after our fee!
+                    </div>
+                    <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid #0ea5e9; margin: 1rem 0;">
+                        <div style="font-weight: 600; color: #0c4a6e; margin-bottom: 0.75rem;">What we provide:</div>
+                        <div style="color: #374151; line-height: 1.5; margin-bottom: 1rem;">
+                            We prepare the paperwork and account necessary to claim your ${stateName} 529 deduction benefit. This paperwork qualifies you for your increased tax refund and is included when you file your taxes.
+                        </div>
+                        <div style="font-weight: 600; color: #0c4a6e; margin-bottom: 0.5rem;">When do I pay:</div>
+                        <div style="color: #374151; line-height: 1.5; margin-bottom: 1rem;">
+                            You only pay when you get your maximum benefit.
+                        </div>
+                        <div style="font-weight: 600; color: #0c4a6e; margin-bottom: 0.5rem;">Money-back guarantee:</div>
+                        <div style="color: #374151; line-height: 1.5;">
+                            Get your maximum tax benefit or we'll refund your payment, regardless of whether you file with Renest or another company.
+                        </div>
+                    </div>
+                `;
             }
             
             // Handle state confirmation step dynamically
             if (question.id === 'state_confirmation') {
-                const stateCodeToName = {
-                    'IL': 'Illinois', 'IN': 'Indiana', 'CO': 'Colorado', 
-                    'PA': 'Pennsylvania', 'NY': 'New York', 'NJ': 'New Jersey',
-                    'NM': 'New Mexico', 'SC': 'South Carolina', 'WI': 'Wisconsin', 
-                    'MN': 'Minnesota'
-                };
-                // Use the state code to get the full name for display
-                const stateName = stateCodeToName[chatData.detectedStateCode] || chatData.detectedState;
+                const stateName = getStateName(chatData.detectedStateCode) || chatData.detectedState;
                 question.message = `Your school is in ${stateName}?`;
             }
             
@@ -2022,6 +2070,25 @@
             
             await addMessage('bot', benefitCard);
             
+            // Add explanation of what the benefit means
+            showTypingIndicator();
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            removeTypingIndicator();
+            
+            const stateName = getStateName(chatData.state);
+            const benefitAmount = Math.round(Number(benefitDetails.benefit) || 0);
+            
+            const explanationMessage = `
+                <div style="background: #f8fafc; padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid #3b82f6; margin: 1rem 0;">
+                    <div style="font-weight: 600; color: #1e40af; margin-bottom: 0.75rem;">What does this mean?</div>
+                    <div style="color: #374151; line-height: 1.5;">
+                        When you file taxes: if you get a refund you will get $${benefitAmount.toLocaleString('en-US')} more, if you owe taxes you will owe $${benefitAmount.toLocaleString('en-US')} less. Either way you get more money back in your pocket.
+                    </div>
+                </div>
+            `;
+            
+            await addMessage('bot', explanationMessage);
+            
             // Continue automatically after a short delay
             setTimeout(async () => {
                 await processNextQuestion();
@@ -2044,8 +2111,8 @@
             learnMoreDiv.style.backgroundColor = '#fefce8';
             learnMoreDiv.style.borderColor = '#f59e0b';
             learnMoreDiv.innerHTML = `
-                <div style="font-weight: 600; color: #92400e; margin-bottom: 0.5rem;">20% discount if you sign up for a 15 min call</div>
-                <div style="font-size: 0.9rem; color: #666;">Add 15 minutes and earn more money while paying $50 instead of $60.</div>
+                <div style="font-weight: 600; color: #92400e; margin-bottom: 0.5rem;">15% discount if you sign up for a 15 min call</div>
+                <div style="font-size: 0.9rem; color: #666;">Add 15 minutes and earn more money while paying less.</div>
             `;
             
             learnMoreDiv.onclick = () => {
