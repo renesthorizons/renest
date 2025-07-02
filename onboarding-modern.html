@@ -1,0 +1,3253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link rel="icon" href="blogo2.png" type="image/png">
+    <link rel="apple-touch-icon" href="blogo2.png">
+    
+    <title>Renest - Get Started</title>
+
+    <link rel="stylesheet" href="dashboard-style.css">
+    
+    <style>
+        /* Chat-style onboarding */
+        .onboarding-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, #334155 0%, #1e293b 100%);
+            padding: 0;
+        }
+        
+        .chat-header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .chat-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .chat-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .chat-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+            background: white;
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            min-height: 400px;
+        }
+        
+        .message {
+            display: flex;
+            gap: 0.75rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: messageAppear 0.5s ease forwards;
+        }
+        
+        .message.user {
+            flex-direction: row-reverse;
+        }
+        
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .message-avatar.bot {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+        }
+        
+        .message-avatar.user {
+            background: linear-gradient(135deg, #64748b, #475569);
+        }
+        
+        .message-content {
+            max-width: 70%;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        
+        .message.bot .message-content {
+            background: #f1f5f9;
+            color: #1e293b;
+            border-bottom-left-radius: 0.25rem;
+        }
+        
+        .message.user .message-content {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border-bottom-right-radius: 0.25rem;
+        }
+        
+        .chat-input-area {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid #e2e8f0;
+            background: #f8fafc;
+        }
+        
+        .response-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .response-option {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+            text-align: left;
+        }
+        
+        .response-option:hover {
+            border-color: var(--primary);
+            background: #f0fdf4;
+            transform: translateY(-1px);
+        }
+        
+        .response-option.selected {
+            border-color: var(--primary);
+            background: #dcfce7;
+        }
+        
+        .response-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.75rem;
+        }
+        
+        .text-input-container {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+        
+        .text-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+        
+        .text-input:focus {
+            border-color: var(--primary);
+        }
+        
+        .send-button {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .send-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.3);
+        }
+        
+        .send-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        @keyframes messageAppear {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f1f5f9;
+            border-radius: 1rem;
+            border-bottom-left-radius: 0.25rem;
+            max-width: fit-content;
+        }
+        
+        .typing-dots {
+            display: flex;
+            gap: 0.25rem;
+        }
+        
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: #64748b;
+            border-radius: 50%;
+            animation: typingBounce 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes typingBounce {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+        
+                /* Mobile Responsiveness for Chat */
+        @media (max-width: 768px) {
+            .chat-header {
+                padding: 0.75rem 1rem;
+            }
+            
+            .chat-messages {
+                padding: 1rem;
+                min-height: 300px;
+            }
+            
+            .chat-input-area {
+                padding: 1rem;
+            }
+            
+            .message-content {
+                max-width: 85%;
+                font-size: 0.9rem;
+            }
+            
+            .response-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .text-input-container {
+            flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .text-input {
+                width: 100%;
+            }
+            
+            .send-button {
+                width: 100%;
+            }
+            
+            .chat-title {
+                font-size: 1rem;
+            }
+            
+            .chat-subtitle {
+                font-size: 0.8rem;
+            }
+        }
+        
+        /* Modern Month Selector Mobile Styles */
+        @media (max-width: 640px) {
+            .modern-month-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 0.5rem !important;
+            }
+            
+            .modern-month-button {
+                padding: 0.75rem 0.25rem !important;
+                font-size: 0.8rem !important;
+            }
+        }
+        
+        .form-step {
+            display: none;
+        }
+        
+        .form-step.active {
+            display: block;
+        }
+        
+        .progress-container1 {
+            margin-bottom: 2rem;
+        }
+        
+        .progress-text {
+            text-align: center;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+        
+        .progress-bar-container1 {
+            background-color: #e5e7eb;
+            border-radius: 1rem;
+            height: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .progress-bar1 {
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            height: 100%;
+            border-radius: 1rem;
+            transition: width 0.3s ease;
+        }
+        
+        /* Benefit Summary Styles */
+        .benefit-summary-card {
+            background: #f0fdf4;
+            border-left: 4px solid #22c55e;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .benefit-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .benefit-total {
+            border-top: 1px solid #bbf7d0;
+            padding-top: 0.5rem;
+            margin-top: 0.5rem;
+            font-weight: 600;
+            color: #16a34a;
+        }
+        
+        /* Checkout Styles */
+        .checkout-card {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 2px solid #22c55e;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.1);
+        }
+        
+        .price-highlight {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
+        .price-main {
+            font-size: 1.3rem;
+            color: #15803d;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .price-description {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .add-on-option {
+            background: linear-gradient(135deg, #fefce8 0%, #fef3c7 100%);
+            border: 2px solid #f59e0b;
+            padding: 1.75rem;
+            border-radius: 1rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 3px 10px rgba(245, 158, 11, 0.1);
+            transition: all 0.2s ease;
+        }
+        
+        .add-on-option:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.15);
+        }
+        
+        .tax-filing-option {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 2px solid #0ea5e9;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 3px 10px rgba(14, 165, 233, 0.1);
+            transition: all 0.2s ease;
+        }
+        
+        .tax-filing-option:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(14, 165, 233, 0.15);
+        }
+        
+        .add-on-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            cursor: pointer;
+        }
+        
+        .add-on-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .add-on-description {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        /* Secure Connection Overlay */
+        .secure-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1050;
+            color: white;
+            text-align: center;
+        }
+        
+        .spinner-large {
+            width: 60px;
+            height: 60px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .secure-text {
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+
+        /* Progress Loading Overlay */
+        .progress-loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1050;
+            color: white;
+            text-align: center;
+        }
+
+        .progress-loading-content {
+            max-width: 400px;
+            width: 90%;
+            padding: 2rem;
+        }
+
+        .progress-loading-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .progress-loading-subtitle {
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            color: #e5e7eb;
+        }
+
+        .progress-bar-loading {
+            width: 100%;
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar-loading-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .progress-step-text {
+            font-size: 0.9rem;
+            color: #d1d5db;
+            min-height: 1.5rem;
+        }
+
+        .progress-checkmark {
+            font-size: 4rem;
+            color: #22c55e;
+            margin-bottom: 1rem;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.3s ease;
+        }
+
+        .progress-checkmark.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        /* Mobile Optimization */
+        @media (max-width: 768px) {
+            .onboarding-container {
+                padding: 0.5rem;
+            }
+            
+            .onboarding-content {
+                padding: 0.5rem;
+            }
+            
+            .onboarding-card {
+                padding: 1.5rem;
+                min-height: 450px;
+                border-radius: 0.5rem;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .button-container {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .button-container button {
+                width: 100%;
+                padding: 0.75rem;
+            }
+            
+            .month-checkboxes .month-row {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+            
+            .benefit-summary-card,
+            .checkout-card,
+            .add-on-option {
+                padding: 1rem;
+            }
+            
+            .price-main {
+                font-size: 1rem;
+            }
+            
+            .secure-text {
+                font-size: 1rem;
+            }
+        }
+        
+        /* Ensure consistent form step heights */
+        .form-step {
+            display: none;
+            min-height: 350px;
+        }
+        
+        .form-step.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        /* State dropdown keyboard navigation styling */
+        .select-items div.highlighted {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* Divider styles for step 8 */
+        .divider {
+            position: relative;
+            width: 100%;
+        }
+        
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: #ddd;
+        }
+        
+        .divider span {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            background: white;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Account creation specific styles */
+        #step8 .form-input[readonly] {
+            cursor: not-allowed;
+        }
+
+        /* Google Sign-In button styling */
+        .g_id_signin {
+            margin: 0 auto;
+        }
+
+        /* Learn More Popup Styles */
+        .learn-more-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1060;
+        }
+
+        .learn-more-content {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .learn-more-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #16a34a;
+            margin-bottom: 1rem;
+        }
+
+        .learn-more-message {
+            font-size: 1rem;
+            color: #374151;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .learn-more-links {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .learn-more-link {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .learn-more-email {
+            background-color: #3A5AFF;
+            color: white;
+        }
+
+        .learn-more-email:hover {
+            background-color: #2947e6;
+            transform: translateY(-1px);
+        }
+
+        .learn-more-calendly {
+            background-color: #22c55e;
+            color: white;
+        }
+
+        .learn-more-calendly:hover {
+            background-color: #16a34a;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            .learn-more-links {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .learn-more-link {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+        
+
+    </style>
+</head>
+<body>
+    <script src="countries.js"></script>
+    <script src="taxdbb.js"></script>
+    <!-- Google Sign-In Script -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <!-- Onboarding Scripts -->
+    <script src="account-creation.js"></script>
+    <script src="profile-submission.js"></script>
+    <script src="expenses-submission.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/forge/1.3.1/forge.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/3.3.2/jsencrypt.min.js"></script>
+    <script src="ssn-integration.js"></script>
+    <script src="onboarding-coordinator.js"></script>
+    
+    <div class="onboarding-container">
+        <!-- Chat Header -->
+        <div class="chat-header">
+            <div class="chat-avatar">R</div>
+            <div>
+                <div class="chat-title">Renest Assistant</div>
+                <div class="chat-subtitle">Let's get your tax benefits set up!</div>
+            </div>
+        </div>
+        
+        <!-- Chat Container -->
+        <div class="chat-container">
+            <!-- Chat Messages -->
+            <div class="chat-messages" id="chatMessages">
+                <!-- Messages will be added here dynamically -->
+            </div>
+            
+            <!-- Chat Input Area -->
+            <div class="chat-input-area" id="chatInputArea">
+                <!-- Response options will be added here dynamically -->
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Secure Connection Overlay -->
+    <div id="secureConnectionOverlay" class="secure-overlay hidden">
+        <div class="spinner-large"></div>
+        <p class="secure-text">Establishing secure connection...</p>
+    </div>
+
+    <!-- Progress Loading Overlay -->
+    <div id="progressLoadingOverlay" class="progress-loading-overlay hidden">
+        <div class="progress-loading-content">
+            <div id="progressCheckmark" class="progress-checkmark">✓</div>
+            <div class="progress-loading-title">Creating Your Account</div>
+            <div class="progress-loading-subtitle">Please wait while we set everything up...</div>
+            
+            <div class="progress-bar-loading">
+                <div id="progressBarLoadingFill" class="progress-bar-loading-fill"></div>
+            </div>
+            
+            <div id="progressStepText" class="progress-step-text">Initializing...</div>
+        </div>
+    </div>
+
+    <!-- Housing Information Modal -->
+    <div id="housingModal" class="modal-overlay hidden">
+        <div class="modal-container">
+            <div class="modal-content">
+                <button class="close-button" onclick="closeHousingModal()">×</button>
+                <h2 id="housingModalTitle" style="margin-bottom: 1.5rem;">Add Housing Information</h2>
+                
+                <div class="form-group">
+                    <label class="form-label">Lease start date:</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <select id="leaseStartMonth" class="form-input" style="flex: 1;">
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                        <select id="leaseStartYear" class="form-input" style="flex: 1;">
+                            <!-- Will be populated via JavaScript -->
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Lease end date:</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <select id="leaseEndMonth" class="form-input" style="flex: 1;">
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                        <select id="leaseEndYear" class="form-input" style="flex: 1;">
+                            <!-- Will be populated via JavaScript -->
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="monthlyRent" class="form-label">Monthly rent payment:</label>
+                    <input type="text" id="monthlyRent" class="form-input" placeholder="Enter monthly rent">
+                </div>
+                
+                <div class="form-group">
+                    <div class="expense-input-group">
+                        <div class="expense-item">
+                            <label for="utilities" class="form-label">Monthly utilities:</label>
+                            <input type="text" id="utilities" class="form-input" placeholder="Enter monthly utilities">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="utilitiesIncluded" name="utilitiesIncluded">
+                                <label for="utilitiesIncluded">Utilities included in rent</label>
+                            </div>
+                        </div>
+                        <div class="expense-item">
+                            <label for="wifi" class="form-label">Monthly WiFi:</label>
+                            <input type="text" id="wifi" class="form-input" placeholder="Enter monthly WiFi">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="button-container">
+                    <button onclick="closeHousingModal()" class="button button-secondary">Cancel</button>
+                    <button onclick="saveHousingInfo()" id="saveHousingBtn" class="button button-primary">Save Housing Info</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Learn More Popup -->
+    <div id="learnMorePopup" class="learn-more-popup hidden">
+        <div class="learn-more-content">
+            <div class="learn-more-title">Good Choice!</div>
+            <div class="learn-more-message">
+                You elected to learn more and earn more. Please email us or schedule a meeting directly:
+            </div>
+            <div class="learn-more-links">
+                <a href="mailto:thomas@renesthorizons.com" class="learn-more-link learn-more-email">
+                    thomas@renesthorizons.com
+                </a>
+                <a href="https://calendly.com/renesthorizons/30min" target="_blank" class="learn-more-link learn-more-calendly">
+                    Schedule Meeting
+                </a>
+            </div>
+            <button onclick="closeLearnMorePopup()" class="button button-primary" style="width: 100%;">
+                Continue
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Chat Interface Variables
+        let chatData = {
+            school: '',
+            state: '',
+            income: '',
+            enrolledMonths: [],
+            residency_status: 'citizen',
+            visa_type: '', 
+            country_of_origin: '',
+            email: '',
+            monthlyGrocery: 200,
+            includeInterestEarning: false,
+            includeTaxFiling: false
+        };
+        
+        // Initialize housing entries
+        if (typeof window.housingEntries === 'undefined') {
+            window.housingEntries = [];
+        }
+        
+        let currentQuestionIndex = 0;
+        let waitingForResponse = false;
+        
+        // Define the conversation flow
+        const conversationFlow = [
+            {
+                id: 'welcome',
+                type: 'bot',
+                message: "Hi! I'm here to help you save money on your taxes. Let's start by getting to know you better.",
+                delay: 1000
+            },
+            {
+                id: 'residency',
+                type: 'bot',
+                message: "What's your residency status?",
+                responseType: 'options',
+                options: [
+                    { value: 'citizen', text: 'US Citizen' },
+                    { value: 'permanent_resident', text: 'Permanent Resident' },
+                    { value: 'resident_alien', text: 'Resident Alien' },
+                    { value: 'non_resident_alien', text: 'Non-Resident Alien' },
+                    { value: 'unknown_residency', text: "I don't know" }
+                ],
+                field: 'residency_status'
+            },
+            {
+                id: 'visa_type',
+                type: 'bot',
+                message: "What type of visa do you have?",
+                responseType: 'options',
+                showIf: (data) => ['resident_alien', 'non_resident_alien', 'unknown_residency'].includes(data.residency_status),
+                options: [
+                    { value: 'F1', text: 'F1 (Student)' },
+                    { value: 'M1', text: 'M1 (Vocational Student)' },
+                    { value: 'J1', text: 'J1 (Exchange Visitor)' },
+                    { value: 'H1B', text: 'H1B (Specialty Occupation)' },
+                    { value: 'L1', text: 'L1 (Intracompany Transferee)' },
+                    { value: 'O1', text: 'O1 (Extraordinary Ability)' },
+                    { value: 'other_visa', text: 'Other' },
+                    { value: 'unknown_visa_type', text: "I don't know my visa type" }
+                ],
+                field: 'visa_type'
+            },
+            {
+                id: 'school',
+                type: 'bot',
+                message: "What school do you attend?",
+                responseType: 'text',
+                placeholder: "Enter your school name",
+                field: 'school'
+            },
+            {
+                id: 'state',
+                type: 'bot',
+                message: "Which state is your school in?",
+                responseType: 'state_select',
+                field: 'state'
+            },
+            {
+                id: 'income',
+                type: 'bot',
+                message: "What's your projected total income from all sources this year?",
+                responseType: 'currency',
+                placeholder: "Enter your annual income",
+                field: 'income'
+            },
+            {
+                id: 'housing_intro',
+                type: 'bot',
+                message: "Great! Now let's add your housing information to maximize your tax savings.",
+                delay: 1500
+            },
+            {
+                id: 'housing_modal',
+                type: 'bot',
+                message: "Please add your housing details below. This helps us calculate your maximum tax benefits.",
+                responseType: 'housing_modal',
+                action: 'openHousingModal'
+            },
+            {
+                id: 'enrolled_months',
+                type: 'bot',
+                message: "Which months are you NOT enrolled as a student this year? (Most students are not enrolled during summer months)",
+                responseType: 'months_not_enrolled',
+                field: 'notEnrolledMonths'
+            },
+            {
+                id: 'grocery_spending',
+                type: 'bot',
+                message: "What's your estimated monthly grocery spending? (This also qualifies for deductions!)",
+                responseType: 'currency_slider',
+                min: 0,
+                max: 400,
+                defaultValue: 200,
+                field: 'monthlyGrocery'
+            },
+            {
+                id: 'benefit_calculation',
+                type: 'bot',
+                message: "Perfect! Let me calculate your potential tax savings...",
+                delay: 2000,
+                action: 'calculateBenefit'
+            },
+            {
+                id: 'benefit_display',
+                type: 'bot',
+                message: "", // Will be dynamically generated
+                responseType: 'benefit_summary'
+            },
+            {
+                id: 'email',
+                type: 'bot',
+                message: "What's your email address? We'll use this to create your account.",
+                responseType: 'email',
+                placeholder: "Enter your email",
+                field: 'email'
+            },
+            {
+                id: 'cost_explanation',
+                type: 'bot',
+                message: "", // Will be dynamically generated with benefit amount
+                delay: 1000
+            },
+            {
+                id: 'addons',
+                type: 'bot',
+                message: "Would you like to add any of these services?",
+                responseType: 'addons',
+                field: 'addons'
+            },
+            {
+                id: 'final_summary',
+                type: 'bot',
+                message: "Excellent! Let me prepare everything for you...",
+                delay: 1500,
+                action: 'submitData'
+            }
+        ];
+
+        // Utility functions
+        function formatCurrency(input) {
+            let nums = input.value.replace(/[^\d]/g, '');
+            let formatted = nums ? '$' + Number(nums).toLocaleString('en-US') : '';
+            input.value = formatted;
+            return nums ? Number(nums) : 0;
+        }
+
+        function showError(message) {
+            const errorMessage = document.createElement('div');
+            errorMessage.className = 'error-message';
+            errorMessage.textContent = message;
+            errorMessage.style.position = 'fixed';
+            errorMessage.style.top = '20px';
+            errorMessage.style.left = '50%';
+            errorMessage.style.transform = 'translateX(-50%)';
+            errorMessage.style.padding = '10px 20px';
+            errorMessage.style.backgroundColor = '#f44336';
+            errorMessage.style.color = 'white';
+            errorMessage.style.borderRadius = '4px';
+            errorMessage.style.zIndex = '1000';
+            document.body.appendChild(errorMessage);
+            setTimeout(() => errorMessage.remove(), 3000);
+        }
+
+        // Chat functions
+        function addMessage(type, content, delay = 0) {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    const messagesContainer = document.getElementById('chatMessages');
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = `message ${type}`;
+                    
+                    const avatar = document.createElement('div');
+                    avatar.className = `message-avatar ${type}`;
+                    avatar.textContent = type === 'bot' ? 'R' : 'U';
+                    
+                    const messageContent = document.createElement('div');
+                    messageContent.className = 'message-content';
+                    messageContent.innerHTML = content;
+                    
+                    messageDiv.appendChild(avatar);
+                    messageDiv.appendChild(messageContent);
+                    messagesContainer.appendChild(messageDiv);
+                    
+                    // Scroll to bottom
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    
+                    resolve();
+                }, delay);
+            });
+        }
+        
+        function showTypingIndicator() {
+            const messagesContainer = document.getElementById('chatMessages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message bot';
+            typingDiv.id = 'typingIndicator';
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar bot';
+            avatar.textContent = 'R';
+            
+            const typingIndicator = document.createElement('div');
+            typingIndicator.className = 'typing-indicator';
+            typingIndicator.innerHTML = `
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            `;
+            
+            typingDiv.appendChild(avatar);
+            typingDiv.appendChild(typingIndicator);
+            messagesContainer.appendChild(typingDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        function removeTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+        
+        function clearInputArea() {
+            const inputArea = document.getElementById('chatInputArea');
+            inputArea.innerHTML = '';
+        }
+        
+        function scrollToBottom() {
+            const messagesContainer = document.getElementById('chatMessages');
+            const chatContainer = document.querySelector('.chat-container');
+            const inputArea = document.getElementById('chatInputArea');
+            
+            // Multiple attempts to ensure scrolling works
+            setTimeout(() => {
+                if (messagesContainer) {
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }
+                if (chatContainer) {
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                }
+                
+                // Scroll the input area into view
+                if (inputArea) {
+                    inputArea.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                }
+                
+                // Additional scroll attempt after a short delay
+                setTimeout(() => {
+                    if (chatContainer) {
+                        chatContainer.scrollTop = chatContainer.scrollHeight;
+                    }
+                    // Force scroll to bottom of page as well
+                    window.scrollTo({
+                        top: document.body.scrollHeight,
+                        behavior: 'smooth'
+                    });
+                }, 200);
+            }, 100);
+        }
+        
+        function createResponseOptions(options, field) {
+            const inputArea = document.getElementById('chatInputArea');
+            const optionsContainer = document.createElement('div');
+            optionsContainer.className = 'response-options';
+            
+            options.forEach(option => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'response-option';
+                optionDiv.textContent = option.text;
+                optionDiv.onclick = () => handleOptionResponse(option.value, option.text, field);
+                optionsContainer.appendChild(optionDiv);
+            });
+            
+            inputArea.appendChild(optionsContainer);
+            scrollToBottom();
+        }
+        
+        function createTextInput(placeholder, field, type = 'text') {
+            const inputArea = document.getElementById('chatInputArea');
+            const inputContainer = document.createElement('div');
+            inputContainer.className = 'text-input-container';
+            
+            const input = document.createElement('input');
+            input.type = type;
+            input.className = 'text-input';
+            input.placeholder = placeholder;
+            input.id = `chat-${field}`;
+            
+            const sendButton = document.createElement('button');
+            sendButton.className = 'send-button';
+            sendButton.textContent = 'Send';
+            sendButton.onclick = () => handleTextResponse(field);
+            
+            // Handle Enter key
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    handleTextResponse(field);
+                }
+            });
+            
+            inputContainer.appendChild(input);
+            inputContainer.appendChild(sendButton);
+            inputArea.appendChild(inputContainer);
+            
+            // Focus the input and scroll
+            setTimeout(() => {
+                input.focus();
+                scrollToBottom();
+            }, 100);
+        }
+        
+        async function handleOptionResponse(value, text, field) {
+            if (waitingForResponse) return;
+            waitingForResponse = true;
+            
+            // Add user response to chat
+            await addMessage('user', text);
+            
+            // Save data
+            if (field) {
+                chatData[field] = value;
+            }
+            
+            // Clear input area
+            clearInputArea();
+            
+            // Process next question
+            await processNextQuestion();
+            
+            waitingForResponse = false;
+        }
+        
+        async function handleTextResponse(field) {
+            if (waitingForResponse) return;
+            
+            const input = document.getElementById(`chat-${field}`);
+            const value = input.value.trim();
+            
+            if (!value) {
+                showError('Please enter a value');
+                return;
+            }
+            
+            waitingForResponse = true;
+            
+            // Validate input based on field type
+            if (field === 'income') {
+                const numericValue = value.replace(/[^\d]/g, '');
+                if (!numericValue) {
+                    showError('Please enter a valid income amount');
+                    waitingForResponse = false;
+                    return;
+                }
+                chatData[field] = Number(numericValue); // Store as number
+                await addMessage('user', '$' + Number(numericValue).toLocaleString('en-US'));
+            } else if (field === 'email') {
+                if (!/\S+@\S+\.\S+/.test(value)) {
+                    showError('Please enter a valid email address');
+                    waitingForResponse = false;
+                    return;
+                }
+                chatData[field] = value;
+                await addMessage('user', value);
+            } else {
+                chatData[field] = value;
+                await addMessage('user', value);
+            }
+            
+            // Clear input area
+            clearInputArea();
+            
+            // Process next question
+            await processNextQuestion();
+            
+            waitingForResponse = false;
+        }
+        
+        async function processNextQuestion() {
+            currentQuestionIndex++;
+            
+            // Check if we've reached the end
+            if (currentQuestionIndex >= conversationFlow.length) {
+                await finishConversation();
+                return;
+            }
+            
+            const question = conversationFlow[currentQuestionIndex];
+            console.log('Processing question:', question.id, 'Current data:', chatData);
+            
+            // Check if this question should be shown
+            if (question.showIf && !question.showIf(chatData)) {
+                console.log('Skipping question due to showIf condition:', question.id);
+                await processNextQuestion();
+                return;
+            }
+            
+            // Handle special actions
+            if (question.action) {
+                await handleSpecialAction(question.action, question);
+                // Only auto-continue for certain actions, not all
+                if (question.action === 'submitData' || question.action === 'calculateBenefit') {
+                    await processNextQuestion();
+                    return;
+                }
+                // For openHousingModal, let it continue to show the message and handle response type
+            }
+            
+            // Handle cost explanation step dynamically
+            if (question.id === 'cost_explanation') {
+                const benefit = window.calculatedBenefit ? Math.round(Number(window.calculatedBenefit.benefit) || 0) : 0;
+                question.message = `In order to cover the costs of preparing your paperwork to get your $${benefit.toLocaleString('en-US')} benefit we charge $60. This comes with a money back guarantee, if you don't get your full benefit you get your money back.`;
+            }
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            // Wait for typing delay
+            await new Promise(resolve => setTimeout(resolve, question.delay || 1000));
+            
+            // Remove typing indicator and show message
+            removeTypingIndicator();
+            await addMessage('bot', question.message);
+            
+            // Handle response type
+            if (question.responseType === 'options') {
+                createResponseOptions(question.options, question.field);
+            } else if (question.responseType === 'text') {
+                createTextInput(question.placeholder, question.field);
+            } else if (question.responseType === 'email') {
+                createTextInput(question.placeholder, question.field, 'email');
+            } else if (question.responseType === 'currency') {
+                createTextInput(question.placeholder, question.field);
+            } else if (question.responseType === 'state_select') {
+                createStateSelect(question.field);
+            } else if (question.responseType === 'months') {
+                createMonthSelector(question.field);
+            } else if (question.responseType === 'months_not_enrolled') {
+                createModernMonthSelector(question.field);
+            } else if (question.responseType === 'currency_slider') {
+                createCurrencySlider(question.field, question.min, question.max, question.defaultValue);
+            } else if (question.responseType === 'benefit_summary') {
+                await showBenefitSummary();
+            } else if (question.responseType === 'addons') {
+                createAddonSelector(question.field);
+            } else if (question.responseType === 'housing_modal') {
+                // Housing modal is handled by the action, no additional input needed
+                // The housing interface will call handleOptionResponse when done
+            } else if (!question.responseType) {
+                // For informational messages without response type, automatically continue
+                console.log('Auto-continuing from informational message:', question.id);
+                setTimeout(async () => {
+                    await processNextQuestion();
+                }, question.delay || 1000);
+            }
+        }
+        
+        async function startConversation() {
+            currentQuestionIndex = 0;
+            const firstQuestion = conversationFlow[0];
+            
+            showTypingIndicator();
+            await new Promise(resolve => setTimeout(resolve, firstQuestion.delay || 1000));
+            removeTypingIndicator();
+            
+            await addMessage('bot', firstQuestion.message);
+            
+            // Automatically move to next question
+            await processNextQuestion();
+        }
+        
+        function createStateSelect(field) {
+            const inputArea = document.getElementById('chatInputArea');
+            const inputContainer = document.createElement('div');
+            inputContainer.className = 'text-input-container';
+            
+            const stateOptions = {
+                'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas', 'CA': 'California',
+                'CO': 'Colorado', 'CT': 'Connecticut', 'DE': 'Delaware', 'FL': 'Florida', 'GA': 'Georgia',
+                'HI': 'Hawaii', 'ID': 'Idaho', 'IL': 'Illinois', 'IN': 'Indiana', 'IA': 'Iowa',
+                'KS': 'Kansas', 'KY': 'Kentucky', 'LA': 'Louisiana', 'ME': 'Maine', 'MD': 'Maryland',
+                'MA': 'Massachusetts', 'MI': 'Michigan', 'MN': 'Minnesota', 'MS': 'Mississippi', 'MO': 'Missouri',
+                'MT': 'Montana', 'NE': 'Nebraska', 'NV': 'Nevada', 'NH': 'New Hampshire', 'NJ': 'New Jersey',
+                'NM': 'New Mexico', 'NY': 'New York', 'NYC': 'New York City', 'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio',
+                'OK': 'Oklahoma', 'OR': 'Oregon', 'PA': 'Pennsylvania', 'RI': 'Rhode Island', 'SC': 'South Carolina',
+                'SD': 'South Dakota', 'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 'VT': 'Vermont',
+                'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia', 'WI': 'Wisconsin', 'WY': 'Wyoming'
+            };
+            
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'text-input';
+            input.placeholder = 'Type your state name (e.g., California, NY, etc.)';
+            input.id = `chat-${field}`;
+            
+            const sendButton = document.createElement('button');
+            sendButton.className = 'send-button';
+            sendButton.textContent = 'Send';
+            
+            // Function to find best matching state
+            function findBestStateMatch(userInput) {
+                const input = userInput.toLowerCase().trim();
+                
+                // First try exact matches
+                for (const [code, name] of Object.entries(stateOptions)) {
+                    if (name.toLowerCase() === input || code.toLowerCase() === input) {
+                        return { code, name };
+                    }
+                }
+                
+                // Then try partial matches - starts with
+                for (const [code, name] of Object.entries(stateOptions)) {
+                    if (name.toLowerCase().startsWith(input) || code.toLowerCase().startsWith(input)) {
+                        return { code, name };
+                    }
+                }
+                
+                // Then try contains
+                for (const [code, name] of Object.entries(stateOptions)) {
+                    if (name.toLowerCase().includes(input)) {
+                        return { code, name };
+                    }
+                }
+                
+                return null;
+            }
+            
+            function handleStateSubmit() {
+                const userInput = input.value.trim();
+                if (!userInput) {
+                    showError('Please enter a state name');
+                    return;
+                }
+                
+                const match = findBestStateMatch(userInput);
+                if (match) {
+                    handleOptionResponse(match.code, match.name, field);
+                } else {
+                    showError('State not found. Please try again (e.g., "California", "NY", "Texas")');
+                }
+            }
+            
+            sendButton.onclick = handleStateSubmit;
+            
+            // Handle Enter key
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    handleStateSubmit();
+                }
+            });
+            
+            inputContainer.appendChild(input);
+            inputContainer.appendChild(sendButton);
+            inputArea.appendChild(inputContainer);
+            
+            // Focus the input and scroll
+            setTimeout(() => {
+                input.focus();
+                scrollToBottom();
+            }, 100);
+        }
+        
+                function createMonthSelector(field) {
+            const inputArea = document.getElementById('chatInputArea');
+            const monthContainer = document.createElement('div');
+            monthContainer.className = 'response-options';
+            
+            const months = [
+                'January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'
+            ];
+            
+            const selectedMonths = [];
+            
+            // Create instruction
+            const instruction = document.createElement('div');
+            instruction.style.marginBottom = '1rem';
+            instruction.style.textAlign = 'center';
+            instruction.style.color = '#666';
+            instruction.textContent = 'Click months to select/deselect. Click Continue when done.';
+            monthContainer.appendChild(instruction);
+            
+            // Create month grid
+            const monthGrid = document.createElement('div');
+            monthGrid.className = 'response-grid';
+            monthGrid.style.gridTemplateColumns = 'repeat(3, 1fr)';
+            
+            months.forEach((month, index) => {
+                const monthDiv = document.createElement('div');
+                monthDiv.className = 'response-option';
+                monthDiv.textContent = month;
+                monthDiv.style.backgroundColor = '#dcfce7'; // Start selected - green theme
+                monthDiv.dataset.selected = 'true';
+                selectedMonths.push(index + 1);
+                
+                monthDiv.onclick = () => {
+                    const isSelected = monthDiv.dataset.selected === 'true';
+                    if (isSelected) {
+                        monthDiv.style.backgroundColor = 'white';
+                        monthDiv.dataset.selected = 'false';
+                        const idx = selectedMonths.indexOf(index + 1);
+                        if (idx > -1) selectedMonths.splice(idx, 1);
+                } else {
+                        monthDiv.style.backgroundColor = '#dcfce7'; // Green theme
+                        monthDiv.dataset.selected = 'true';
+                        selectedMonths.push(index + 1);
+                    }
+                };
+                
+                monthGrid.appendChild(monthDiv);
+            });
+            
+            monthContainer.appendChild(monthGrid);
+            
+            // Continue button
+            const continueBtn = document.createElement('button');
+            continueBtn.className = 'send-button';
+            continueBtn.textContent = 'Continue';
+            continueBtn.style.width = '100%';
+            continueBtn.style.marginTop = '1rem';
+            continueBtn.onclick = () => {
+                if (selectedMonths.length === 0) {
+                    showError('Please select at least one month');
+                    return;
+                }
+                const monthNames = selectedMonths.map(m => months[m - 1]);
+                handleOptionResponse(selectedMonths, monthNames.join(', '), field);
+            };
+            
+            monthContainer.appendChild(continueBtn);
+            inputArea.appendChild(monthContainer);
+            scrollToBottom();
+        }
+        
+        function createModernMonthSelector(field) {
+            const inputArea = document.getElementById('chatInputArea');
+            const monthContainer = document.createElement('div');
+            monthContainer.style.padding = '1.5rem';
+            monthContainer.style.backgroundColor = 'white';
+            monthContainer.style.borderRadius = '0.75rem';
+            monthContainer.style.border = '2px solid #e2e8f0';
+            
+            const months = [
+                'January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'
+            ];
+            
+            // Common summer months that students are typically not enrolled
+            const commonNotEnrolledMonths = [6, 7, 8]; // June, July, August
+            const notEnrolledMonths = [...commonNotEnrolledMonths];
+            
+            // Create instruction
+            const instruction = document.createElement('div');
+            instruction.style.marginBottom = '1.5rem';
+            instruction.style.textAlign = 'center';
+            instruction.style.color = '#374151';
+            instruction.style.fontSize = '0.95rem';
+            instruction.innerHTML = `
+                <div style="font-weight: 600; margin-bottom: 0.5rem;">Select months you are NOT enrolled</div>
+                <div style="color: #6b7280;">Tap to toggle each month. Summer months are pre-selected.</div>
+            `;
+            monthContainer.appendChild(instruction);
+            
+            // Create modern month grid
+            const monthGrid = document.createElement('div');
+            monthGrid.className = 'modern-month-grid';
+            monthGrid.style.display = 'grid';
+            monthGrid.style.gridTemplateColumns = 'repeat(3, 1fr)';
+            monthGrid.style.gap = '0.75rem';
+            monthGrid.style.marginBottom = '1.5rem';
+            
+            months.forEach((month, index) => {
+                const monthWrapper = document.createElement('div');
+                monthWrapper.style.position = 'relative';
+                
+                const monthButton = document.createElement('button');
+                monthButton.type = 'button';
+                monthButton.className = 'modern-month-button';
+                monthButton.style.width = '100%';
+                monthButton.style.padding = '1rem 0.5rem';
+                monthButton.style.border = '2px solid #e2e8f0';
+                monthButton.style.borderRadius = '0.75rem';
+                monthButton.style.background = 'white';
+                monthButton.style.cursor = 'pointer';
+                monthButton.style.transition = 'all 0.2s ease';
+                monthButton.style.fontSize = '0.9rem';
+                monthButton.style.fontWeight = '500';
+                monthButton.style.position = 'relative';
+                monthButton.style.overflow = 'hidden';
+                
+                // Month name
+                const monthName = document.createElement('div');
+                monthName.textContent = month.substring(0, 3); // Show first 3 letters
+                monthName.style.position = 'relative';
+                monthName.style.zIndex = '2';
+                
+                // Status indicator
+                const statusIndicator = document.createElement('div');
+                statusIndicator.style.position = 'absolute';
+                statusIndicator.style.top = '0.25rem';
+                statusIndicator.style.right = '0.25rem';
+                statusIndicator.style.width = '0.5rem';
+                statusIndicator.style.height = '0.5rem';
+                statusIndicator.style.borderRadius = '50%';
+                statusIndicator.style.zIndex = '3';
+                
+                // Set initial state
+                const isNotEnrolled = notEnrolledMonths.includes(index + 1);
+                updateMonthButtonState(monthButton, statusIndicator, monthName, isNotEnrolled);
+                
+                monthButton.onclick = () => {
+                    const currentlyNotEnrolled = notEnrolledMonths.includes(index + 1);
+                    if (currentlyNotEnrolled) {
+                        // Remove from not enrolled (meaning they ARE enrolled this month)
+                        const idx = notEnrolledMonths.indexOf(index + 1);
+                        if (idx > -1) notEnrolledMonths.splice(idx, 1);
+                    } else {
+                        // Add to not enrolled
+                        notEnrolledMonths.push(index + 1);
+                    }
+                    updateMonthButtonState(monthButton, statusIndicator, monthName, !currentlyNotEnrolled);
+                };
+                
+                monthButton.appendChild(monthName);
+                monthButton.appendChild(statusIndicator);
+                monthWrapper.appendChild(monthButton);
+                monthGrid.appendChild(monthWrapper);
+            });
+            
+            function updateMonthButtonState(button, indicator, nameElement, isNotEnrolled) {
+                if (isNotEnrolled) {
+                    // Not enrolled - red styling
+                    button.style.backgroundColor = '#fef2f2';
+                    button.style.borderColor = '#f87171';
+                    button.style.color = '#dc2626';
+                    indicator.style.backgroundColor = '#ef4444';
+                    nameElement.style.color = '#dc2626';
+                } else {
+                    // Enrolled - green styling
+                    button.style.backgroundColor = '#f0fdf4';
+                    button.style.borderColor = '#22c55e';
+                    button.style.color = '#16a34a';
+                    indicator.style.backgroundColor = '#22c55e';
+                    nameElement.style.color = '#16a34a';
+                }
+            }
+            
+            monthContainer.appendChild(monthGrid);
+            
+            // Summary display
+            const summaryDiv = document.createElement('div');
+            summaryDiv.style.padding = '1rem';
+            summaryDiv.style.backgroundColor = '#f8fafc';
+            summaryDiv.style.borderRadius = '0.5rem';
+            summaryDiv.style.marginBottom = '1rem';
+            summaryDiv.style.fontSize = '0.9rem';
+            summaryDiv.style.textAlign = 'center';
+            
+            function updateSummary() {
+                const enrolledCount = 12 - notEnrolledMonths.length;
+                const notEnrolledNames = notEnrolledMonths.map(m => months[m - 1].substring(0, 3)).join(', ');
+                summaryDiv.innerHTML = `
+                    <div style="color: #16a34a; font-weight: 600; margin-bottom: 0.25rem;">
+                        Enrolled for ${enrolledCount} month${enrolledCount !== 1 ? 's' : ''}
+                    </div>
+                    <div style="color: #6b7280;">
+                        ${notEnrolledMonths.length > 0 ? `Not enrolled: ${notEnrolledNames}` : 'Enrolled all year'}
+                    </div>
+                `;
+            }
+            
+            // Update summary initially and on changes
+            updateSummary();
+            monthGrid.addEventListener('click', () => {
+                setTimeout(updateSummary, 10); // Small delay to ensure state is updated
+            });
+            
+            monthContainer.appendChild(summaryDiv);
+            
+            // Continue button
+            const continueBtn = document.createElement('button');
+            continueBtn.className = 'send-button';
+            continueBtn.textContent = 'Continue';
+            continueBtn.style.width = '100%';
+            continueBtn.onclick = () => {
+                // Convert not enrolled months to enrolled months
+                const enrolledMonths = [];
+                for (let i = 1; i <= 12; i++) {
+                    if (!notEnrolledMonths.includes(i)) {
+                        enrolledMonths.push(i);
+                    }
+                }
+                
+                if (enrolledMonths.length === 0) {
+                    showError('You must be enrolled for at least one month');
+                    return;
+                }
+                
+                // Store enrolled months in chatData for compatibility
+                chatData.enrolledMonths = enrolledMonths;
+                
+                console.log('[modernMonthSelector] Enrolled months:', enrolledMonths);
+                
+                const enrolledCount = enrolledMonths.length;
+                const responseText = `Enrolled for ${enrolledCount} month${enrolledCount !== 1 ? 's' : ''}`;
+                
+                // Pass enrolled months instead of not enrolled months for the response
+                handleOptionResponse(enrolledMonths, responseText, 'enrolledMonths');
+            };
+            
+            monthContainer.appendChild(continueBtn);
+            inputArea.appendChild(monthContainer);
+            scrollToBottom();
+        }
+        
+        function createCurrencySlider(field, min, max, defaultValue) {
+            const inputArea = document.getElementById('chatInputArea');
+            const sliderContainer = document.createElement('div');
+            sliderContainer.style.padding = '1rem';
+            sliderContainer.style.backgroundColor = 'white';
+            sliderContainer.style.borderRadius = '0.75rem';
+            sliderContainer.style.border = '2px solid #e2e8f0';
+            
+            // Current value display
+            const valueDisplay = document.createElement('div');
+            valueDisplay.style.textAlign = 'center';
+            valueDisplay.style.fontSize = '1.5rem';
+            valueDisplay.style.fontWeight = '600';
+            valueDisplay.style.marginBottom = '1rem';
+            valueDisplay.style.color = '#16a34a';
+            valueDisplay.textContent = '$' + defaultValue + '/month';
+            
+            // Slider
+            const slider = document.createElement('input');
+            slider.type = 'range';
+            slider.min = min;
+            slider.max = max;
+            slider.value = defaultValue;
+            slider.style.width = '100%';
+            slider.style.marginBottom = '1rem';
+            
+            slider.oninput = () => {
+                valueDisplay.textContent = '$' + slider.value + '/month';
+            };
+            
+            // Continue button
+            const continueBtn = document.createElement('button');
+            continueBtn.className = 'send-button';
+            continueBtn.textContent = 'Continue';
+            continueBtn.style.width = '100%';
+            continueBtn.onclick = () => {
+                const sliderValue = Number(slider.value);
+                chatData[field] = sliderValue; // Store as number
+                handleOptionResponse(sliderValue, '$' + sliderValue + '/month', field);
+            };
+            
+            sliderContainer.appendChild(valueDisplay);
+            sliderContainer.appendChild(slider);
+            sliderContainer.appendChild(continueBtn);
+            inputArea.appendChild(sliderContainer);
+            scrollToBottom();
+        }
+        
+        async function showBenefitSummary() {
+            // Calculate benefit using existing function
+            const benefitDetails = calculateBenefitWithMultipleHousingCustomGrocery(
+                chatData.state, 
+                Number(chatData.income), 
+                chatData.enrolledMonths, 
+                window.housingEntries,
+                Number(chatData.monthlyGrocery) || 200,
+                true
+            );
+            
+            console.log('Benefit calculation details:', benefitDetails);
+            
+            // Store for later use
+            window.calculatedBenefit = benefitDetails;
+            
+            // Create simple one-line benefit message
+            const benefit = Math.round(Number(benefitDetails.benefit) || 0);
+            const qualifiedSpend = Math.round(Number(benefitDetails.qualifiedSpend) || 0);
+            const income = Number(chatData.income || 0);
+            
+            const benefitMessage = `This is great! I calculate based on your income of $${income.toLocaleString('en-US')} and qualified expenses of $${qualifiedSpend.toLocaleString('en-US')} you qualify for $${benefit.toLocaleString('en-US')} more back on your taxes!`;
+            
+            await addMessage('bot', benefitMessage);
+            
+            // Continue automatically after a short delay
+            setTimeout(async () => {
+                await processNextQuestion();
+            }, 2000);
+        }
+        
+        function createAddonSelector(field) {
+            const inputArea = document.getElementById('chatInputArea');
+            const addonContainer = document.createElement('div');
+            addonContainer.className = 'response-options';
+            
+            const addons = {
+                learnMore: false,
+                taxFiling: false
+            };
+            
+            // Learn More Option
+            const learnMoreDiv = document.createElement('div');
+            learnMoreDiv.className = 'response-option';
+            learnMoreDiv.style.backgroundColor = '#fefce8';
+            learnMoreDiv.style.borderColor = '#f59e0b';
+            learnMoreDiv.innerHTML = `
+                <div style="font-weight: 600; color: #92400e; margin-bottom: 0.5rem;">20% discount if you sign up for a 15 min call</div>
+                <div style="font-size: 0.9rem; color: #666;">Add 15 minutes and earn more money while paying $50 instead of $60.</div>
+            `;
+            
+            learnMoreDiv.onclick = () => {
+                addons.learnMore = !addons.learnMore;
+                if (addons.learnMore) {
+                    learnMoreDiv.style.backgroundColor = '#fbbf24';
+                    learnMoreDiv.style.color = 'white';
+                } else {
+                    learnMoreDiv.style.backgroundColor = '#fefce8';
+                    learnMoreDiv.style.color = 'inherit';
+                }
+            };
+            
+            // Tax Filing Option
+            const taxFilingDiv = document.createElement('div');
+            taxFilingDiv.className = 'response-option';
+            taxFilingDiv.style.backgroundColor = '#f0f9ff';
+            taxFilingDiv.style.borderColor = '#0ea5e9';
+            taxFilingDiv.innerHTML = `
+                <div style="font-weight: 600; color: #0c4a6e; margin-bottom: 0.5rem;">Add Tax Filing Service</div>
+                <div style="font-size: 0.9rem; color: #666;">We'll file your taxes for you (+$60, charged when we file).</div>
+            `;
+            
+            taxFilingDiv.onclick = () => {
+                addons.taxFiling = !addons.taxFiling;
+                if (addons.taxFiling) {
+                    taxFilingDiv.style.backgroundColor = '#0ea5e9';
+                    taxFilingDiv.style.color = 'white';
+                } else {
+                    taxFilingDiv.style.backgroundColor = '#f0f9ff';
+                    taxFilingDiv.style.color = 'inherit';
+                }
+            };
+            
+            // Continue button
+            const continueBtn = document.createElement('button');
+            continueBtn.className = 'send-button';
+            continueBtn.textContent = 'Continue';
+            continueBtn.style.width = '100%';
+            continueBtn.style.marginTop = '1rem';
+            continueBtn.onclick = () => {
+                chatData.includeInterestEarning = addons.learnMore;
+                chatData.includeTaxFiling = addons.taxFiling;
+                
+                const selectedAddons = [];
+                if (addons.learnMore) selectedAddons.push('Learn & Earn More');
+                if (addons.taxFiling) selectedAddons.push('Tax Filing Service');
+                
+                const responseText = selectedAddons.length > 0 ? selectedAddons.join(' + ') : 'No add-ons';
+                handleOptionResponse(addons, responseText, field);
+            };
+            
+            addonContainer.appendChild(learnMoreDiv);
+            addonContainer.appendChild(taxFilingDiv);
+            addonContainer.appendChild(continueBtn);
+            inputArea.appendChild(addonContainer);
+            scrollToBottom();
+        }
+        
+        async function handleSpecialAction(action, question) {
+            console.log('Handling special action:', action);
+            if (action === 'calculateBenefit') {
+                // This is handled automatically in showBenefitSummary
+                return;
+            }
+            if (action === 'submitData') {
+                await submitFormData();
+            }
+            if (action === 'openHousingModal') {
+                console.log('Opening housing modal interface');
+                await handleHousingModal();
+            }
+        }
+        
+        async function handleHousingModal() {
+            console.log('handleHousingModal called');
+            // Show the housing interface in chat
+            const inputArea = document.getElementById('chatInputArea');
+            
+            if (!inputArea) {
+                console.error('Input area not found!');
+                return;
+            }
+            
+            const housingContainer = document.createElement('div');
+            housingContainer.style.padding = '1.5rem';
+            housingContainer.style.backgroundColor = 'white';
+            housingContainer.style.borderRadius = '0.75rem';
+            housingContainer.style.border = '2px solid #e2e8f0';
+            housingContainer.style.marginBottom = '1rem';
+            
+            // Show existing housing entries if any
+            const existingHousingDiv = document.createElement('div');
+            existingHousingDiv.id = 'chat-housing-list';
+            updateChatHousingDisplay(existingHousingDiv);
+            
+            // Add housing button
+            const addHousingBtn = document.createElement('button');
+            addHousingBtn.className = 'send-button';
+            addHousingBtn.textContent = window.housingEntries.length > 0 ? '+ Add Another Housing Entry' : '+ Add Housing Information';
+            addHousingBtn.style.width = '100%';
+            addHousingBtn.style.marginBottom = '1rem';
+            addHousingBtn.onclick = () => {
+                openHousingModal();
+                // Add event listener for when modal closes
+                const modal = document.getElementById('housingModal');
+                const observer = new MutationObserver((mutations) => {
+                    mutations.forEach((mutation) => {
+                        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                            if (modal.classList.contains('hidden')) {
+                                updateChatHousingDisplay(existingHousingDiv);
+                                observer.disconnect();
+                            }
+                        }
+                    });
+                });
+                observer.observe(modal, { attributes: true });
+            };
+            
+            // Continue button
+            const continueBtn = document.createElement('button');
+            continueBtn.className = 'send-button';
+            continueBtn.textContent = 'Continue';
+            continueBtn.style.width = '100%';
+            continueBtn.onclick = async () => {
+                if (waitingForResponse) return;
+                
+                if (window.housingEntries.length === 0) {
+                    showError('Please add at least one housing entry to continue');
+                    return;
+                }
+                
+                waitingForResponse = true;
+                
+                // Add a summary message
+                const housingCount = window.housingEntries.length;
+                const summaryText = `Added ${housingCount} housing ${housingCount === 1 ? 'entry' : 'entries'}`;
+                
+                // Add user response and continue conversation
+                await addMessage('user', summaryText);
+                clearInputArea();
+                await processNextQuestion();
+                
+                waitingForResponse = false;
+            };
+            
+            housingContainer.appendChild(existingHousingDiv);
+            housingContainer.appendChild(addHousingBtn);
+            housingContainer.appendChild(continueBtn);
+            inputArea.appendChild(housingContainer);
+            
+            // Scroll to show the housing interface
+            scrollToBottom();
+        }
+        
+        function updateChatHousingDisplay(container) {
+            container.innerHTML = '';
+            
+            if (window.housingEntries.length === 0) {
+                const noHousingMsg = document.createElement('div');
+                noHousingMsg.style.textAlign = 'center';
+                noHousingMsg.style.color = '#666';
+                noHousingMsg.style.padding = '1rem';
+                noHousingMsg.style.fontStyle = 'italic';
+                noHousingMsg.textContent = 'No housing information added yet';
+                container.appendChild(noHousingMsg);
+                return;
+            }
+            
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            
+            window.housingEntries.forEach((entry, index) => {
+                const entryDiv = document.createElement('div');
+                entryDiv.style.border = '1px solid #e2e8f0';
+                entryDiv.style.borderRadius = '0.5rem';
+                entryDiv.style.padding = '0.75rem';
+                entryDiv.style.marginBottom = '0.5rem';
+                entryDiv.style.backgroundColor = '#f8fafc';
+                entryDiv.style.fontSize = '0.9rem';
+                
+                const title = document.createElement('div');
+                title.style.fontWeight = '600';
+                title.style.color = 'var(--primary)';
+                title.style.marginBottom = '0.25rem';
+                title.textContent = `${monthNames[entry.startMonth - 1]} ${entry.startYear} - ${monthNames[entry.endMonth - 1]} ${entry.endYear}`;
+                
+                const details = document.createElement('div');
+                details.style.color = '#666';
+                details.textContent = `Rent: $${entry.rent.toLocaleString()}/mo`;
+                if (!entry.utilitiesIncluded && entry.utilities > 0) {
+                    details.textContent += ` • Utilities: $${entry.utilities.toLocaleString()}/mo`;
+                }
+                if (entry.wifi > 0) {
+                    details.textContent += ` • WiFi: $${entry.wifi.toLocaleString()}/mo`;
+                }
+                
+                entryDiv.appendChild(title);
+                entryDiv.appendChild(details);
+                container.appendChild(entryDiv);
+            });
+        }
+        
+        async function submitFormData() {
+            // Copy chat data to the original formData format for compatibility
+            const formData = { ...chatData };
+            
+            // Submit to Google Form
+            submitToGoogleForm();
+            
+            // Store data for account creation
+            localStorage.setItem('onboardingFormData', JSON.stringify(formData));
+            localStorage.setItem('onboardingHousingEntries', JSON.stringify(window.housingEntries));
+            localStorage.setItem('onboardingCalculatedBenefit', JSON.stringify(window.calculatedBenefit));
+            
+            console.log('Chat data submitted:', formData);
+        }
+        
+        async function finishConversation() {
+            showTypingIndicator();
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            removeTypingIndicator();
+            
+            await addMessage('bot', "Perfect! Now let's create your account to secure your tax benefits.");
+            
+            // Show account creation options
+            createAccountCreationOptions();
+        }
+        
+        function createAccountCreationOptions() {
+            const inputArea = document.getElementById('chatInputArea');
+            
+            // Account creation container
+            const accountContainer = document.createElement('div');
+            accountContainer.style.padding = '1.5rem';
+            accountContainer.style.backgroundColor = 'white';
+            accountContainer.style.borderRadius = '0.75rem';
+            accountContainer.style.border = '2px solid #e2e8f0';
+            
+            // Google Sign-In
+            const googleContainer = document.createElement('div');
+            googleContainer.style.marginBottom = '1rem';
+            googleContainer.innerHTML = `
+                <div id="g_id_onload"
+                     data-client_id="1032310890772-gr5i4m4t9fr7m2sgdbta8c5rumh49jlh.apps.googleusercontent.com"
+                     data-context="signup"
+                     data-callback="handleCredentialResponse">
+                </div>
+                <div class="g_id_signin"
+                     data-type="standard"
+                     data-size="large"
+                     data-theme="outline"
+                     data-text="signup_with"
+                     data-shape="rectangular"
+                     data-logo_alignment="left"
+                     style="width: 100%; display: flex; justify-content: center;">
+                </div>
+            `;
+            
+            // Or divider
+            const divider = document.createElement('div');
+            divider.style.textAlign = 'center';
+            divider.style.margin = '1rem 0';
+            divider.style.color = '#666';
+            divider.textContent = 'or';
+            
+            // Email/Password form
+            const emailPasswordContainer = document.createElement('div');
+            emailPasswordContainer.innerHTML = `
+                <input type="email" id="final-email" placeholder="Email" value="${chatData.email}" readonly 
+                       style="width: 100%; padding: 0.75rem; margin-bottom: 0.5rem; border: 2px solid #e2e8f0; border-radius: 0.5rem; background: #f5f5f5;">
+                <input type="password" id="final-password" placeholder="Create password" 
+                       style="width: 100%; padding: 0.75rem; margin-bottom: 0.5rem; border: 2px solid #e2e8f0; border-radius: 0.5rem;">
+                <input type="password" id="final-confirm-password" placeholder="Confirm password" 
+                       style="width: 100%; padding: 0.75rem; margin-bottom: 1rem; border: 2px solid #e2e8f0; border-radius: 0.5rem;">
+                <button id="create-account-btn" style="width: 100%; padding: 0.75rem; background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; border: none; border-radius: 0.5rem; font-weight: 600; cursor: pointer;">
+                    Create Account & Complete
+                </button>
+            `;
+            
+            accountContainer.appendChild(googleContainer);
+            accountContainer.appendChild(divider);
+            accountContainer.appendChild(emailPasswordContainer);
+            inputArea.appendChild(accountContainer);
+            
+            // Add event listener for create account button
+            document.getElementById('create-account-btn').onclick = createAccountAndComplete;
+            
+            // Scroll to show account creation
+            scrollToBottom();
+        }
+
+        // Validation functions
+        function validateStep1() {
+            // Step 1 now only validates residency status
+            return true;
+        }
+
+        function validateStep2() {
+            const school = document.getElementById('school').value.trim();
+            const state = document.getElementById('state').value;
+            const incomeElement = document.getElementById('income');
+            const income = incomeElement ? Number(incomeElement.value.replace(/[^\d]/g, '')) : 0;
+
+            if (!school) {
+                showError('Please enter your school name');
+                return false;
+            }
+            if (!state) {
+                showError('Please select the state where you attend school');
+                return false;
+            }
+            if (!incomeElement || !incomeElement.value.trim() || isNaN(income) || income < 0) {
+                showError('Please enter a valid annual income');
+                return false;
+            }
+
+            return true;
+        }
+
+        function validateStep3() {
+            const enrolledMonths = Array.from(document.querySelectorAll('input[name="enrolledMonths"]:checked'))
+                .map(checkbox => parseInt(checkbox.value));
+
+            if (enrolledMonths.length === 0) {
+                showError('Please select at least one enrolled month');
+                return false;
+            }
+            
+            if (window.housingEntries.length === 0) {
+                showError('Please add at least one housing entry');
+                return false;
+            }
+
+            return true;
+        }
+
+        function validateStep5() {
+            const email = document.getElementById('checkoutEmailInput').value.trim();
+
+            if (!email || !/\S+@\S+\.\S+/.test(email)) {
+                showError('Please enter a valid email address');
+                return false;
+            }
+            return true;
+        }
+
+
+
+        function validateStep8() {
+            // Step 8 validation is handled within the createAccountAndComplete function
+            return true;
+        }
+
+                 // Calculate and display benefit information
+         function calculateAndDisplayBenefit() {
+             // Use the grocery input value if available, otherwise default to 200
+             const groceryInput = document.getElementById('groceryInput');
+             const groceryValue = groceryInput ? parseInt(groceryInput.value) : 200;
+             const monthlyGrocery = isNaN(groceryValue) ? 200 : groceryValue;
+             
+             const benefitDetails = calculateBenefitWithMultipleHousingCustomGrocery(
+                 formData.state, 
+                 formData.income, 
+                 formData.enrolledMonths, 
+                 window.housingEntries,
+                 monthlyGrocery,
+                 true
+             );
+
+             // Calculate tax information for display
+             const income = Number(formData.income);
+             const stateTaxDeduction = statePersonalExemptionDB[formData.state]?.amount || 0;
+             const stateDeduction = state529DB[formData.state]?.deduction || 0;
+             const taxableStateIncome = income - stateTaxDeduction;
+             const taxRate = calculateStateTaxRate(taxableStateIncome, formData.state);
+             const stateTaxesOwed = Math.round(taxRate * taxableStateIncome);
+             
+             // Calculate the actual deduction amount (limited by various factors)
+             const deductionAmount = Math.min(
+                 benefitDetails.qualifiedSpend,
+                 stateDeduction,
+                 taxableStateIncome
+             );
+
+             // Update benefit summary display
+             document.getElementById('displayIncome').textContent = '$' + income.toLocaleString('en-US');
+             document.getElementById('qualifiedSpending').textContent = '$' + benefitDetails.qualifiedSpend.toLocaleString('en-US');
+             document.getElementById('deductionAmount').textContent = '$' + deductionAmount.toLocaleString('en-US');
+             document.getElementById('taxSavings').textContent = '$' + Math.round(benefitDetails.benefit).toLocaleString('en-US');
+             // Get full state name from abbreviation
+             const stateOptions = {
+                 'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas', 'CA': 'California',
+                 'CO': 'Colorado', 'CT': 'Connecticut', 'DE': 'Delaware', 'FL': 'Florida', 'GA': 'Georgia',
+                 'HI': 'Hawaii', 'ID': 'Idaho', 'IL': 'Illinois', 'IN': 'Indiana', 'IA': 'Iowa',
+                 'KS': 'Kansas', 'KY': 'Kentucky', 'LA': 'Louisiana', 'ME': 'Maine', 'MD': 'Maryland',
+                 'MA': 'Massachusetts', 'MI': 'Michigan', 'MN': 'Minnesota', 'MS': 'Mississippi', 'MO': 'Missouri',
+                 'MT': 'Montana', 'NE': 'Nebraska', 'NV': 'Nevada', 'NH': 'New Hampshire', 'NJ': 'New Jersey',
+                 'NM': 'New Mexico', 'NY': 'New York', 'NYC': 'New York City', 'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio',
+                 'OK': 'Oklahoma', 'OR': 'Oregon', 'PA': 'Pennsylvania', 'RI': 'Rhode Island', 'SC': 'South Carolina',
+                 'SD': 'South Dakota', 'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 'VT': 'Vermont',
+                 'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia', 'WI': 'Wisconsin', 'WY': 'Wyoming'
+             };
+             const fullStateName = stateOptions[formData.state] || formData.state;
+             document.getElementById('userState').textContent = fullStateName;
+             
+             // Update checkout state display if element exists
+             const checkoutState = document.getElementById('checkoutState');
+             if (checkoutState) {
+                 checkoutState.textContent = fullStateName;
+             }
+             document.getElementById('refundMore').textContent = '$' + Math.round(benefitDetails.benefit).toLocaleString('en-US');
+             document.getElementById('oweLess').textContent = '$' + Math.round(benefitDetails.benefit).toLocaleString('en-US');
+             
+             // Update checkout display if elements exist
+             const checkoutTaxSavings = document.getElementById('checkoutTaxSavings');
+             if (checkoutTaxSavings) {
+                 checkoutTaxSavings.textContent = '$' + Math.round(benefitDetails.benefit).toLocaleString('en-US');
+             }
+             
+             // Store for later use
+             window.calculatedBenefit = benefitDetails;
+             
+             // Update dynamic earnings and recommendations
+             updateDynamicEarnings();
+         }
+
+         // Update benefit calculation when grocery input changes
+         function updateBenefitCalculation() {
+             const groceryInput = document.getElementById('groceryInput');
+             let groceryValue = parseInt(groceryInput.value);
+             if (isNaN(groceryValue)) groceryValue = 0;
+             
+             // Cap at $400
+             if (groceryValue > 400) {
+                 groceryValue = 400;
+                 groceryInput.value = 400;
+             }
+             
+             // Recalculate with new grocery amount
+             calculateAndDisplayBenefit();
+         }
+
+        // Submit to Google Form
+        function submitToGoogleForm() {
+            const email = encodeURIComponent(chatData.email);
+            const includeTaxFiling = chatData.includeTaxFiling;
+            const includeInterestEarning = chatData.includeInterestEarning;
+            
+            // Determine product selection based on user choices
+            let productSelection;
+            if (includeInterestEarning && includeTaxFiling) {
+                productSelection = '$50+with+tax+filing';
+            } else if (includeInterestEarning && !includeTaxFiling) {
+                productSelection = '$50+no+tax+filing';
+            } else if (!includeInterestEarning && includeTaxFiling) {
+                productSelection = '$60+with+tax+filing';
+            } else {
+                productSelection = '$60+no+tax+filing';
+            }
+            
+            // Create the Google Form URL with parameters
+            const baseUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSejmRtmObNrp3zgK7fKV2sLYpQdyg7vFQkOq_p6zPCQaLmnwg/formResponse?usp=pp_url';
+            const formUrl = `${baseUrl}&entry.869093761=${email}&entry.2044388299=${encodeURIComponent(productSelection)}`;
+            
+            // Submit using hidden iframe (like in future.html)
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.setAttribute('src', formUrl);
+            document.body.appendChild(iframe);
+            
+            // Remove iframe after submission
+            setTimeout(() => {
+                if (document.body.contains(iframe)) {
+                    document.body.removeChild(iframe);
+                }
+            }, 1000);
+            
+            console.log('Submitted to Google Form:', { email: email, productSelection: productSelection });
+        }
+
+        // Show secure connection animation
+        function showSecureConnection() {
+            const overlay = document.getElementById('secureConnectionOverlay');
+            overlay.classList.remove('hidden');
+            
+            // Show secure connection for 3 seconds, then proceed to step 8 (account creation)
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+                prepareAccountCreationStep();
+                showStep(8);
+            }, 3000);
+        }
+
+        // Prepare step 8 account creation
+        function prepareAccountCreationStep() {
+            const displayEmail = document.getElementById('displayEmail');
+            if (displayEmail && formData.email) {
+                displayEmail.value = formData.email;
+            }
+        }
+
+        // Handle Google Sign-In credential response
+        async function handleCredentialResponse(response) {
+            try {
+                // Disable all interactive elements
+                disableAllInteractiveElements();
+                
+                // Show progress overlay
+                showProgressOverlay();
+                updateProgress(10, 'Processing Google Sign-In...');
+                
+                console.log('Google Sign-In response received');
+                
+                // Add some delay to show progress steps
+                await new Promise(resolve => setTimeout(resolve, 500));
+                updateProgress(30, 'Verifying credentials...');
+                
+                await new Promise(resolve => setTimeout(resolve, 500));
+                updateProgress(50, 'Creating account...');
+                
+                const result = await window.onboardingCoordinator.handleGoogleSignInCallback(response);
+                
+                // Submit expense data to sensitive data table alongside other data submissions
+                const expenseTotals = calculateRentAndOtherExpenses();
+                await window.submitPartialSensitiveData({
+                    rentPayment: expenseTotals.totalRentPayments,
+                    otherQualifiedExpenses: expenseTotals.totalOtherQualifiedExpenses
+                });
+                
+                updateProgress(80, 'Submitting your data...');
+                await new Promise(resolve => setTimeout(resolve, 800));
+                
+                if (result.accountCreated && result.dataSubmitted) {
+                    updateProgress(100, 'Account created successfully!');
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                    showSuccessAndRedirect('Account created and data submitted successfully!');
+                } else {
+                    throw new Error('Account creation or data submission failed');
+                }
+            } catch (error) {
+                console.error('Google Sign-In error:', error);
+                hideProgressOverlay();
+                showError(`Google Sign-In failed: ${error.message}`);
+                enableAllInteractiveElements();
+            }
+        }
+
+        // Create account with email/password and submit all data
+        async function createAccountAndComplete() {
+            const passwordInput = document.getElementById('final-password');
+            const confirmPasswordInput = document.getElementById('final-confirm-password');
+            
+            try {
+                // Validate password inputs
+                const password = passwordInput.value.trim();
+                const confirmPassword = confirmPasswordInput.value.trim();
+                
+                if (!password) {
+                    showError('Please enter a password');
+                    return;
+                }
+                
+                if (password !== confirmPassword) {
+                    showError('Passwords do not match');
+                    return;
+                }
+                
+                // Disable all interactive elements
+                disableAllInteractiveElements();
+                
+                // Show progress overlay
+                showProgressOverlay();
+                updateProgress(5, 'Validating credentials...');
+                
+                console.log('Creating account with email/password and submitting data...');
+                
+                // Add progress updates with delays to show progression
+                await new Promise(resolve => setTimeout(resolve, 500));
+                updateProgress(15, 'Setting up secure connection...');
+                
+                await new Promise(resolve => setTimeout(resolve, 500));
+                updateProgress(30, 'Creating your account...');
+                
+                await new Promise(resolve => setTimeout(resolve, 800));
+                updateProgress(60, 'Preparing your data...');
+                
+                const result = await window.onboardingCoordinator.createAccountAndSubmitData(
+                    chatData.email, 
+                    password
+                );
+                
+                // Submit expense data to sensitive data table alongside other data submissions
+                const expenseTotals = calculateRentAndOtherExpenses();
+                await window.submitPartialSensitiveData({
+                    rentPayment: expenseTotals.totalRentPayments,
+                    otherQualifiedExpenses: expenseTotals.totalOtherQualifiedExpenses
+                });
+                
+                updateProgress(85, 'Submitting your information...');
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                if (result.accountCreated && result.dataSubmitted) {
+                    updateProgress(100, 'Account created successfully!');
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                    showSuccessAndRedirect('Account created and data submitted successfully!');
+                } else {
+                    throw new Error('Account creation or data submission failed');
+                }
+                
+            } catch (error) {
+                console.error('Account creation error:', error);
+                hideProgressOverlay();
+                showError(`Account creation failed: ${error.message}`);
+                enableAllInteractiveElements();
+            }
+        }
+
+        // Progress tracking functions
+        let progressTimer = null;
+        let countdownTimer = null;
+        let currentStepStartTime = null;
+        let originalStepText = '';
+
+        function showProgressOverlay() {
+            const overlay = document.getElementById('progressLoadingOverlay');
+            overlay.classList.remove('hidden');
+            updateProgress(0, 'Initializing...');
+        }
+
+        function hideProgressOverlay() {
+            const overlay = document.getElementById('progressLoadingOverlay');
+            overlay.classList.add('hidden');
+            clearProgressTimers();
+        }
+
+        function clearProgressTimers() {
+            if (progressTimer) {
+                clearTimeout(progressTimer);
+                progressTimer = null;
+            }
+            if (countdownTimer) {
+                clearInterval(countdownTimer);
+                countdownTimer = null;
+            }
+        }
+
+        function updateProgress(percentage, stepText) {
+            const progressFill = document.getElementById('progressBarLoadingFill');
+            const stepTextEl = document.getElementById('progressStepText');
+            
+            // Clear existing timers
+            clearProgressTimers();
+            
+            // Update progress bar
+            if (progressFill) {
+                progressFill.style.width = `${percentage}%`;
+            }
+            
+            // Update step text
+            if (stepTextEl) {
+                stepTextEl.textContent = stepText;
+            }
+            
+            // Store the original step text and start time
+            originalStepText = stepText;
+            currentStepStartTime = Date.now();
+            
+            // Set up the 5-second timer to show "please wait" message
+            progressTimer = setTimeout(() => {
+                showPleaseWaitMessage();
+            }, 5000);
+        }
+
+        function showPleaseWaitMessage() {
+            const stepTextEl = document.getElementById('progressStepText');
+            if (!stepTextEl) return;
+            
+            let countdown = 15;
+            stepTextEl.textContent = `Please wait, everything is working. Your account is getting created... (${countdown}s)`;
+            
+            countdownTimer = setInterval(() => {
+                countdown--;
+                if (countdown > 0) {
+                    stepTextEl.textContent = `Please wait, everything is working. Your account is getting created... (${countdown}s)`;
+                } else {
+                    // After 15 seconds, show encouraging message
+                    stepTextEl.textContent = 'Almost there! Processing your information...';
+                    clearInterval(countdownTimer);
+                    countdownTimer = null;
+                }
+            }, 1000);
+        }
+
+        function showProgressSuccess() {
+            const checkmark = document.getElementById('progressCheckmark');
+            const title = document.querySelector('.progress-loading-title');
+            const subtitle = document.querySelector('.progress-loading-subtitle');
+            
+            if (checkmark) {
+                checkmark.classList.add('show');
+            }
+            
+            if (title) {
+                title.textContent = 'Account Created Successfully!';
+            }
+            
+            if (subtitle) {
+                subtitle.textContent = 'Redirecting to your dashboard...';
+            }
+            
+            updateProgress(100, 'Complete!');
+        }
+
+        function disableAllInteractiveElements() {
+            // Disable all buttons
+            const allButtons = document.querySelectorAll('button');
+            allButtons.forEach(button => {
+                button.disabled = true;
+            });
+            
+            // Disable all form inputs
+            const allInputs = document.querySelectorAll('input, select, textarea');
+            allInputs.forEach(input => {
+                input.disabled = true;
+            });
+        }
+
+        function enableAllInteractiveElements() {
+            // Re-enable all buttons
+            const allButtons = document.querySelectorAll('button');
+            allButtons.forEach(button => {
+                button.disabled = false;
+            });
+            
+            // Re-enable all form inputs
+            const allInputs = document.querySelectorAll('input, select, textarea');
+            allInputs.forEach(input => {
+                input.disabled = false;
+            });
+        }
+
+        // Show success message and redirect
+        function showSuccessAndRedirect(message) {
+            showProgressSuccess();
+            
+            // Redirect after 3 seconds
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 3000);
+        }
+
+        // Show the Learn More popup
+        function showLearnMorePopup() {
+            const popup = document.getElementById('learnMorePopup');
+            popup.classList.remove('hidden');
+        }
+
+        // Close the Learn More popup and continue to account creation
+        function closeLearnMorePopup() {
+            const popup = document.getElementById('learnMorePopup');
+            popup.classList.add('hidden');
+            
+            // Continue to account creation step
+            prepareAccountCreationStep();
+            showStep(8);
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize housing functionality (still needed for housing modal)
+            initializeHousingModal();
+
+            // Initialize Google Sign-In when scripts are loaded
+            setTimeout(() => {
+                if (window.accountCreation) {
+                    window.accountCreation.initializeGoogleSignIn();
+                }
+            }, 1000);
+
+            // Ensure global handleCredentialResponse is available
+            window.handleCredentialResponse = handleCredentialResponse;
+            
+            // Start the chat conversation
+            setTimeout(() => {
+                startConversation();
+            }, 500);
+        });
+
+        // Error handling for missing dependencies
+        function checkDependencies() {
+            const requiredScripts = [
+                'window.accountCreation',
+                'window.profileSubmission', 
+                'window.expensesSubmission',
+                'window.onboardingCoordinator'
+            ];
+            
+            for (let script of requiredScripts) {
+                if (!eval(script)) {
+                    console.error(`Missing dependency: ${script}`);
+                    showError(`System error: Missing required script. Please refresh the page.`);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // Enhanced error handling
+        window.addEventListener('error', function(e) {
+            console.error('Page error:', e.error);
+            if (e.error && e.error.message && e.error.message.includes('script')) {
+                showError('System error: Please refresh the page and try again.');
+            }
+        });
+
+        // Update checkout fee based on add-ons
+        function updateCheckoutFee() {
+            const includeInterestEarning = document.getElementById('includeInterestEarning').checked;
+            const basePrice = includeInterestEarning ? 50 : 60;
+            
+            if (window.calculatedBenefit) {
+                // Update the price display
+                const priceDisplay = document.querySelector('.price-main');
+                if (priceDisplay) {
+                    priceDisplay.innerHTML = `Pay $${basePrice} → Get <span id="checkoutTaxSavings">$${Math.round(window.calculatedBenefit.benefit).toLocaleString('en-US')}</span> in tax savings`;
+                }
+            }
+        }
+
+        // Update dynamic earnings and recommendations
+        function updateDynamicEarnings() {
+            if (window.calculatedBenefit) {
+                const qualifiedSpend = window.calculatedBenefit.qualifiedSpend;
+                
+                // Calculate dynamic earnings: qualified spend × 2.7% × 20%
+                const dynamicEarnings = Math.round(qualifiedSpend * 0.027 * 0.20);
+                document.getElementById('dynamicEarnings').textContent = '$' + dynamicEarnings.toLocaleString('en-US');
+                
+                // Calculate months remaining until December 31st
+                const today = new Date();
+                const endOfYear = new Date(today.getFullYear(), 11, 31); // December 31st
+                const monthsRemaining = Math.max(1, Math.ceil((endOfYear - today) / (1000 * 60 * 60 * 24 * 30.44)) - 2);
+                
+                // Calculate recommended monthly salary
+                const recommendedMonthlySalary = Math.round(qualifiedSpend / monthsRemaining);
+                
+                // Update recommendation text
+                const savingsRecommendation = document.getElementById('savingsRecommendation');
+                if (savingsRecommendation) {
+                    savingsRecommendation.textContent = `Recommended if you have over $${qualifiedSpend.toLocaleString('en-US')} in savings or make at least $${recommendedMonthlySalary.toLocaleString('en-US')}/month.`;
+                }
+            }
+        }
+
+         // Housing functionality
+         function initializeHousingModal() {
+             populateYearDropdowns();
+             loadExistingHousingEntries();
+             
+             // Add currency formatting to housing inputs
+             const rentInput = document.getElementById('monthlyRent');
+             const utilitiesInput = document.getElementById('utilities');
+             const wifiInput = document.getElementById('wifi');
+             
+             if (rentInput) rentInput.addEventListener('input', function() { formatCurrency(this); });
+             if (utilitiesInput) utilitiesInput.addEventListener('input', function() { formatCurrency(this); });
+             if (wifiInput) wifiInput.addEventListener('input', function() { formatCurrency(this); });
+         }
+
+         function populateYearDropdowns() {
+             const currentYear = new Date().getFullYear();
+             const yearRange = 3;
+             
+             const leaseStartYearSelect = document.getElementById('leaseStartYear');
+             const leaseEndYearSelect = document.getElementById('leaseEndYear');
+             
+             if (leaseStartYearSelect && leaseEndYearSelect) {
+                 leaseStartYearSelect.innerHTML = '';
+                 leaseEndYearSelect.innerHTML = '';
+                 
+                 for (let year = currentYear - yearRange; year <= currentYear + yearRange; year++) {
+                     const startOption = document.createElement('option');
+                     startOption.value = year;
+                     startOption.textContent = year;
+                     leaseStartYearSelect.appendChild(startOption);
+                     
+                     const endOption = document.createElement('option');
+                     endOption.value = year;
+                     endOption.textContent = year;
+                     leaseEndYearSelect.appendChild(endOption);
+                 }
+                 
+                 leaseStartYearSelect.value = currentYear;
+                 leaseEndYearSelect.value = currentYear + 1;
+             }
+         }
+
+         function openHousingModal() {
+             const today = new Date();
+             document.getElementById('leaseStartMonth').value = today.getMonth() + 1;
+             document.getElementById('leaseStartYear').value = today.getFullYear();
+             document.getElementById('leaseEndMonth').value = today.getMonth() + 1;
+             document.getElementById('leaseEndYear').value = today.getFullYear() + 1;
+             document.getElementById('monthlyRent').value = '';
+             document.getElementById('utilities').value = '';
+             document.getElementById('wifi').value = '';
+             document.getElementById('utilitiesIncluded').checked = false;
+             
+             document.getElementById('housingModal').classList.remove('hidden');
+         }
+
+         function closeHousingModal() {
+             document.getElementById('housingModal').classList.add('hidden');
+         }
+
+         function saveHousingInfo() {
+             const startMonth = parseInt(document.getElementById('leaseStartMonth').value);
+             const startYear = parseInt(document.getElementById('leaseStartYear').value);
+             const endMonth = parseInt(document.getElementById('leaseEndMonth').value);
+             const endYear = parseInt(document.getElementById('leaseEndYear').value);
+             
+             // Clean and parse monetary values properly
+             const rentValue = document.getElementById('monthlyRent').value.replace(/[^\d]/g, '') || '0';
+             const utilitiesValue = document.getElementById('utilities').value.replace(/[^\d]/g, '') || '0';
+             const wifiValue = document.getElementById('wifi').value.replace(/[^\d]/g, '') || '0';
+             const utilitiesIncluded = document.getElementById('utilitiesIncluded').checked;
+             
+             const rent = parseInt(rentValue, 10);
+             const utilities = parseInt(utilitiesValue, 10);
+             const wifi = parseInt(wifiValue, 10);
+             
+             if (rent === 0 || isNaN(rent)) {
+                 showError('Please enter a valid rent amount');
+                 return;
+             }
+             
+             const startDate = new Date(startYear, startMonth - 1, 1);
+             const endDate = new Date(endYear, endMonth - 1, 1);
+             
+             if (endDate <= startDate) {
+                 showError('Lease end date must be after start date');
+                 return;
+             }
+             
+             const housingEntry = {
+                 id: Date.now(),
+                 startMonth,
+                 startYear,
+                 endMonth,
+                 endYear,
+                 rent: rent,
+                 utilities: utilities,
+                 wifi: wifi,
+                 utilitiesIncluded
+             };
+             
+             console.log('[saveHousingInfo] Created housing entry:', housingEntry);
+             
+             window.housingEntries.push(housingEntry);
+             loadExistingHousingEntries();
+             closeHousingModal();
+             
+             const successMessage = document.createElement('div');
+             successMessage.className = 'success-message';
+             successMessage.textContent = 'Housing information added!';
+             successMessage.style.position = 'fixed';
+             successMessage.style.top = '20px';
+             successMessage.style.left = '50%';
+             successMessage.style.transform = 'translateX(-50%)';
+             successMessage.style.padding = '10px 20px';
+             successMessage.style.backgroundColor = '#4CAF50';
+             successMessage.style.color = 'white';
+             successMessage.style.borderRadius = '4px';
+             successMessage.style.zIndex = '1000';
+             document.body.appendChild(successMessage);
+             setTimeout(() => successMessage.remove(), 3000);
+         }
+
+         function loadExistingHousingEntries() {
+             const container = document.getElementById('housingEntriesContainer');
+             if (!container) return;
+             
+             container.innerHTML = '';
+             
+             if (window.housingEntries.length === 0) {
+                 const noHousingMessage = document.createElement('div');
+                 noHousingMessage.style.color = 'var(--text-dark)';
+                 noHousingMessage.style.fontStyle = 'italic';
+                 noHousingMessage.style.padding = '1rem';
+                 noHousingMessage.style.backgroundColor = 'rgba(240, 240, 240, 0.5)';
+                 noHousingMessage.style.borderRadius = '0.5rem';
+                 noHousingMessage.style.textAlign = 'center';
+                 noHousingMessage.textContent = 'No housing information added yet';
+                 container.appendChild(noHousingMessage);
+                 return;
+             }
+             
+             const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+             
+             window.housingEntries.forEach(entry => {
+                 const entryElement = document.createElement('div');
+                 entryElement.className = 'housing-entry';
+                 entryElement.style.border = '1px solid var(--border)';
+                 entryElement.style.borderRadius = '0.5rem';
+                 entryElement.style.padding = '1rem';
+                 entryElement.style.marginBottom = '1rem';
+                 entryElement.style.position = 'relative';
+                 
+                 const formatCurrency = value => '$' + value.toLocaleString('en-US');
+                 
+                 const dateHeader = document.createElement('div');
+                 dateHeader.style.marginBottom = '0.5rem';
+                 dateHeader.style.fontWeight = '600';
+                 dateHeader.style.color = 'var(--primary)';
+                 dateHeader.textContent = `${monthNames[entry.startMonth - 1]} ${entry.startYear} - ${monthNames[entry.endMonth - 1]} ${entry.endYear}`;
+                 
+                 const expenseSummary = document.createElement('div');
+                 expenseSummary.style.fontSize = '0.85rem';
+                 expenseSummary.style.color = '#666';
+                 
+                 let summaryText = `Rent: ${formatCurrency(entry.rent)}/month`;
+                 if (!entry.utilitiesIncluded && entry.utilities > 0) {
+                     summaryText += ` • Utilities: ${formatCurrency(entry.utilities)}/month`;
+                 }
+                 if (entry.wifi > 0) {
+                     summaryText += ` • WiFi: ${formatCurrency(entry.wifi)}/month`;
+                 }
+                 expenseSummary.textContent = summaryText;
+                 
+                 const removeButton = document.createElement('button');
+                 removeButton.style.position = 'absolute';
+                 removeButton.style.top = '0.75rem';
+                 removeButton.style.right = '0.75rem';
+                 removeButton.style.backgroundColor = '#f44336';
+                 removeButton.style.color = 'white';
+                 removeButton.style.border = 'none';
+                 removeButton.style.borderRadius = '0.25rem';
+                 removeButton.style.padding = '0.25rem 0.5rem';
+                 removeButton.style.cursor = 'pointer';
+                 removeButton.style.fontSize = '0.8rem';
+                 removeButton.textContent = 'Remove';
+                 removeButton.onclick = () => removeHousingEntry(entry.id);
+                 
+                 entryElement.appendChild(dateHeader);
+                 entryElement.appendChild(expenseSummary);
+                 entryElement.appendChild(removeButton);
+                 container.appendChild(entryElement);
+             });
+         }
+
+         function removeHousingEntry(id) {
+             window.housingEntries = window.housingEntries.filter(entry => entry.id !== id);
+             loadExistingHousingEntries();
+         }
+
+                 // State dropdown functionality
+        function initializeStateDropdown() {
+            const customSelect = document.querySelector('.custom-select');
+            const selectSelected = customSelect.querySelector('.select-selected');
+            const selectItems = customSelect.querySelector('.select-items');
+            const hiddenInput = document.getElementById('state');
+
+            // State options from taxdbb.js
+            const stateOptions = {
+                'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas', 'CA': 'California',
+                'CO': 'Colorado', 'CT': 'Connecticut', 'DE': 'Delaware', 'FL': 'Florida', 'GA': 'Georgia',
+                'HI': 'Hawaii', 'ID': 'Idaho', 'IL': 'Illinois', 'IN': 'Indiana', 'IA': 'Iowa',
+                'KS': 'Kansas', 'KY': 'Kentucky', 'LA': 'Louisiana', 'ME': 'Maine', 'MD': 'Maryland',
+                'MA': 'Massachusetts', 'MI': 'Michigan', 'MN': 'Minnesota', 'MS': 'Mississippi', 'MO': 'Missouri',
+                'MT': 'Montana', 'NE': 'Nebraska', 'NV': 'Nevada', 'NH': 'New Hampshire', 'NJ': 'New Jersey',
+                'NM': 'New Mexico', 'NY': 'New York', 'NYC': 'New York City', 'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio',
+                'OK': 'Oklahoma', 'OR': 'Oregon', 'PA': 'Pennsylvania', 'RI': 'Rhode Island', 'SC': 'South Carolina',
+                'SD': 'South Dakota', 'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 'VT': 'Vermont',
+                'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia', 'WI': 'Wisconsin', 'WY': 'Wyoming'
+            };
+
+            // Create sorted array of state options for keyboard navigation
+            const sortedStates = Object.entries(stateOptions).sort((a, b) => a[1].localeCompare(b[1]));
+
+            for (const [value, text] of sortedStates) {
+                const item = document.createElement('div');
+                item.textContent = text;
+                item.dataset.value = value;
+                selectItems.appendChild(item);
+            }
+
+            // Keyboard navigation variables
+            let lastKeyPressed = '';
+            let lastKeyTime = 0;
+
+            selectSelected.addEventListener('click', function(e) {
+                e.stopPropagation();
+                selectItems.classList.toggle('hidden');
+                selectSelected.classList.toggle('active');
+                
+                // Focus the select element for keyboard navigation
+                if (!selectItems.classList.contains('hidden')) {
+                    selectSelected.focus();
+                }
+            });
+
+            // Add keyboard navigation
+            selectSelected.addEventListener('keydown', function(e) {
+                const currentTime = Date.now();
+                const key = e.key.toLowerCase();
+                
+                // Only handle letter keys
+                if (key.length === 1 && key.match(/[a-z]/)) {
+                    e.preventDefault();
+                    
+                    // Reset if more than 1 second has passed since last keypress
+                    if (currentTime - lastKeyTime > 1000) {
+                        lastKeyPressed = '';
+                    }
+                    
+                    lastKeyPressed += key;
+                    lastKeyTime = currentTime;
+                    
+                    // Find the first state that starts with the typed letters
+                    const matchingState = sortedStates.find(([value, text]) => 
+                        text.toLowerCase().startsWith(lastKeyPressed)
+                    );
+                    
+                    if (matchingState) {
+                        const [value, text] = matchingState;
+                        selectSelected.textContent = text;
+                        hiddenInput.value = value;
+                        
+                        // Highlight the matching item in the dropdown if open
+                        if (!selectItems.classList.contains('hidden')) {
+                            const items = selectItems.querySelectorAll('div');
+                            items.forEach(item => item.classList.remove('highlighted'));
+                            
+                            const matchingItem = Array.from(items).find(item => 
+                                item.dataset.value === value
+                            );
+                            if (matchingItem) {
+                                matchingItem.classList.add('highlighted');
+                                matchingItem.scrollIntoView({ block: 'start', behavior: 'smooth' });
+                            }
+                        }
+                    }
+                } else if (e.key === 'Enter' || e.key === ' ') {
+                    // Toggle dropdown on Enter or Space
+                    e.preventDefault();
+                    selectItems.classList.toggle('hidden');
+                    selectSelected.classList.toggle('active');
+                } else if (e.key === 'Escape') {
+                    // Close dropdown on Escape
+                    e.preventDefault();
+                    selectItems.classList.add('hidden');
+                    selectSelected.classList.remove('active');
+                }
+            });
+
+            selectItems.addEventListener('click', function(e) {
+                const clickedItem = e.target;
+                if (clickedItem.tagName === 'DIV') {
+                    selectSelected.textContent = clickedItem.textContent;
+                    hiddenInput.value = clickedItem.dataset.value;
+                    selectItems.classList.add('hidden');
+                    selectSelected.classList.remove('active');
+                }
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!customSelect.contains(e.target)) {
+                    selectItems.classList.add('hidden');
+                    selectSelected.classList.remove('active');
+                }
+            });
+        }
+
+         // Residency status handling
+         function initializeResidencyHandling() {
+             const residencyStatusInputEl = document.getElementById('residencyStatusInput');
+             const visaTypeGroupEl = document.getElementById('visaTypeGroup');
+             const visaTypeInputEl = document.getElementById('visaTypeInput');
+             const countryOfOriginGroupEl = document.getElementById('countryOfOriginGroup');
+             const countryOfOriginInputEl = document.getElementById('countryOfOriginInput');
+             const countryDatalist = document.getElementById('countryListData');
+
+             // Populate country datalist
+             if (countryDatalist && typeof countryList !== 'undefined') {
+                 countryList.forEach(country => {
+                     const option = document.createElement('option');
+                     option.value = country;
+                     countryDatalist.appendChild(option);
+                 });
+             }
+
+             if (residencyStatusInputEl) {
+                 residencyStatusInputEl.addEventListener('change', function() {
+                     const selectedStatus = this.value;
+                     if (selectedStatus === 'resident_alien' || selectedStatus === 'non_resident_alien' || selectedStatus === 'unknown_residency') {
+                         if (visaTypeGroupEl) visaTypeGroupEl.classList.remove('hidden');
+                         if (countryOfOriginGroupEl) countryOfOriginGroupEl.classList.remove('hidden');
+                     } else {
+                         if (visaTypeGroupEl) visaTypeGroupEl.classList.add('hidden');
+                         if (visaTypeInputEl) visaTypeInputEl.value = '';
+                         if (countryOfOriginGroupEl) countryOfOriginGroupEl.classList.add('hidden');
+                         if (countryOfOriginInputEl) countryOfOriginInputEl.value = '';
+                     }
+                 });
+             }
+         }
+
+
+
+         // State tax rate calculation function (from dashboard.html)
+         function calculateStateTaxRate(income, state) {
+             if (income < 0) income = 0;
+             
+             const stateTaxInfo = stateTaxDB[state];
+             if (!stateTaxInfo || !stateTaxInfo.brackets || stateTaxInfo.brackets.length === 0) {
+                 console.warn(`No tax bracket information found for state: ${state}`);
+                 return 0;
+             }
+             
+             let totalTax = 0;
+             let remainingIncome = income;
+             let previousThreshold = 0;
+
+             // Sort brackets by threshold to ensure correct calculation order
+             const sortedBrackets = [...stateTaxInfo.brackets].sort((a, b) => a.threshold - b.threshold);
+             
+             // Calculate tax for each bracket
+             for (let i = 0; i < sortedBrackets.length; i++) {
+                 const bracket = sortedBrackets[i];
+                 const nextThreshold = bracket.threshold;
+                 
+                 // Calculate taxable amount for this bracket
+                 const taxableInThisBracket = Math.min(
+                     remainingIncome,
+                     nextThreshold - previousThreshold
+                 );
+                 
+                 if (taxableInThisBracket <= 0) break;
+                 
+                 // Add tax for this bracket
+                 totalTax += (taxableInThisBracket * (bracket.rate / 100));
+                 
+                 // Update remaining income
+                 remainingIncome -= taxableInThisBracket;
+                 previousThreshold = nextThreshold;
+                 
+                 // If no more income to tax, break
+                 if (remainingIncome <= 0) break;
+             }
+             
+             // Calculate effective tax rate
+             return totalTax / income;
+         }
+
+         // Proper benefit calculation function (from dashboard.html)
+         function calculateBenefitWithMultipleHousing(state, income, enrolledMonths, housingEntries, returnDetails = false) {
+             return calculateBenefitWithMultipleHousingCustomGrocery(state, income, enrolledMonths, housingEntries, 200, returnDetails);
+         }
+
+         // Benefit calculation function with custom grocery amount
+         function calculateBenefitWithMultipleHousingCustomGrocery(state, income, enrolledMonths, housingEntries, monthlyGrocery = 200, returnDetails = false) {
+             const currentYear = new Date().getFullYear();
+             
+             // Ensure all inputs are properly typed
+             income = Number(income) || 0;
+             monthlyGrocery = Number(monthlyGrocery) || 200;
+             
+             if (!Array.isArray(enrolledMonths)) {
+                 console.error('CRITICAL: enrolledMonths is not an array in calculateBenefitWithMultipleHousing. Received:', enrolledMonths);
+                 enrolledMonths = [];
+             }
+             
+             if (!Array.isArray(housingEntries)) {
+                 console.error('CRITICAL: housingEntries is not an array. Received:', housingEntries);
+                 housingEntries = [];
+             }
+             
+             let totalQualifiedExpenses = 0;
+             
+             for (let month = 1; month <= 12; month++) {
+                 if (!enrolledMonths.includes(month)) continue;
+                 
+                 // Add grocery expense (ensure it's a number)
+                 totalQualifiedExpenses += Number(monthlyGrocery);
+                 
+                 const applicableEntry = housingEntries.find(entry => {
+                     const startDate = new Date(entry.startYear, entry.startMonth - 1, 1);
+                     const endDate = new Date(entry.endYear, entry.endMonth - 1, 1);
+                     const thisMonth = new Date(currentYear, month - 1, 1);
+                     return thisMonth >= startDate && thisMonth <= endDate;
+                 });
+                 
+                 if (applicableEntry) {
+                     // Ensure all housing values are numbers
+                     const rent = Number(applicableEntry.rent) || 0;
+                     const utilities = Number(applicableEntry.utilities) || 0;
+                     const wifi = Number(applicableEntry.wifi) || 0;
+                     
+                     totalQualifiedExpenses += rent;
+                     if (!applicableEntry.utilitiesIncluded) {
+                         totalQualifiedExpenses += utilities;
+                     }
+                     totalQualifiedExpenses += wifi;
+                 }
+             }
+             
+             console.log('[calculateBenefit] Debug info:', {
+                 state,
+                 income,
+                 enrolledMonths,
+                 monthlyGrocery,
+                 housingEntries,
+                 totalQualifiedExpenses
+             });
+             
+             const stateTaxDeduction = statePersonalExemptionDB[state]?.amount || 0;
+             const stateDeduction = state529DB[state]?.deduction || 0;
+             const taxableStateIncome = Number(income) - stateTaxDeduction;
+             const taxRate = calculateStateTaxRate(taxableStateIncome, state);
+             const deductibleAmount = Math.min(
+                 totalQualifiedExpenses,
+                 stateDeduction,
+                 taxableStateIncome
+             );
+             const taxespaid = taxRate * taxableStateIncome;
+             
+             let benefit;
+             if (state === 'IN') {
+                 const contributionCredit = deductibleAmount * 0.20;
+                 benefit = Math.min(contributionCredit, 1500, taxespaid);
+             } else if (state === 'OR') {
+                 benefit = 180;
+             } else if (state === 'MN') {
+                 if (income < 88810) {
+                     benefit = Math.min(500, taxespaid, 0.5 * totalQualifiedExpenses);
+                 } else {
+                     benefit = 0;
+                 }
+             } else {
+                 benefit = Math.min(deductibleAmount * taxRate, taxespaid);
+             }
+             
+             if (returnDetails) {
+                 return { 
+                     benefit: Number(benefit) || 0, 
+                     qualifiedSpend: Number(totalQualifiedExpenses) || 0 
+                 };
+             }
+             return Number(benefit) || 0;
+         }
+
+                 // Calculate total rent and other qualified expenses for the year
+        function calculateRentAndOtherExpenses() {
+            const currentYear = new Date().getFullYear();
+            const monthlyGrocery = Number(chatData.monthlyGrocery) || 200;
+            
+            let totalRentPayments = 0;
+            let totalOtherQualifiedExpenses = 0;
+            
+            // Ensure enrolled months is an array
+            const enrolledMonths = Array.isArray(chatData.enrolledMonths) ? chatData.enrolledMonths : [];
+            
+            // For each enrolled month, calculate expenses
+            for (let month = 1; month <= 12; month++) {
+                if (!enrolledMonths.includes(month)) continue;
+                
+                // Add grocery expense for enrolled months (this goes to other qualified expenses)
+                totalOtherQualifiedExpenses += Number(monthlyGrocery);
+                
+                // Find applicable housing entry for this month
+                const applicableEntry = window.housingEntries.find(entry => {
+                    const startDate = new Date(entry.startYear, entry.startMonth - 1, 1);
+                    const endDate = new Date(entry.endYear, entry.endMonth - 1, 1);
+                    const thisMonth = new Date(currentYear, month - 1, 1);
+                    return thisMonth >= startDate && thisMonth <= endDate;
+                });
+                
+                if (applicableEntry) {
+                    // Rent goes to rent payments (ensure it's a number)
+                    totalRentPayments += Number(applicableEntry.rent) || 0;
+                    
+                    // Utilities and WiFi go to other qualified expenses
+                    // Only add utilities if they're NOT included in rent
+                    if (!applicableEntry.utilitiesIncluded) {
+                        totalOtherQualifiedExpenses += Number(applicableEntry.utilities) || 0;
+                    }
+                    totalOtherQualifiedExpenses += Number(applicableEntry.wifi) || 0;
+                }
+            }
+            
+            console.log('[calculateRentAndOtherExpenses] Calculated totals:', {
+                totalRentPayments,
+                totalOtherQualifiedExpenses,
+                enrolledMonths: enrolledMonths,
+                monthlyGrocery,
+                housingEntries: window.housingEntries
+            });
+            
+            return {
+                totalRentPayments: Math.round(totalRentPayments),
+                totalOtherQualifiedExpenses: Math.round(totalOtherQualifiedExpenses)
+            };
+        }
+     </script>
+</body>
+</html> 
+</html> 
