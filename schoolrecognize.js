@@ -404,6 +404,18 @@ const schoolsDatabase = {
       { name: "San Juan College", variations: ["sjc", "san juan"] },
       { name: "University of New Mexico-Taos", variations: ["unm taos", "nm taos"] }
     ],
+    community: [
+      { name: "Central New Mexico Community College", variations: ["cnm", "central nm cc"] },
+      { name: "Santa Fe Community College", variations: ["sfcc", "santa fe cc"] },
+      { name: "Clovis Community College", variations: ["ccc", "clovis cc"] },
+      { name: "Luna Community College", variations: ["lcc", "luna cc"] },
+      { name: "Mesalands Community College", variations: ["mcc", "mesalands"] },
+      { name: "New Mexico Junior College", variations: ["nmjc", "nm junior college"] },
+      { name: "New Mexico Military Institute", variations: ["nmmi", "military institute"] },
+      { name: "Dona Ana Community College", variations: ["dacc", "dona ana"] },
+      { name: "San Juan College", variations: ["sjc", "san juan college"] },
+      { name: "University of New Mexico-Gallup", variations: ["unm gallup", "gallup"] }
+    ],
     state: [
       { name: "New Mexico State University", variations: ["nmsu", "nm state"] },
       { name: "New Mexico Highlands University", variations: ["nmhu", "highlands"] },
@@ -432,7 +444,6 @@ const schoolsDatabase = {
 
   "south carolina": {
     private: [
-      { name: "Duke University", variations: ["duke", "blue devils"] },
       { name: "Furman University", variations: ["furman", "paladins"] },
       { name: "Wofford College", variations: ["wofford", "terriers"] },
       { name: "Presbyterian College", variations: ["pc", "presbyterian", "blue hose"] },
@@ -498,7 +509,6 @@ const schoolsDatabase = {
       { name: "Marquette University", variations: ["marquette", "mu", "golden eagles"] },
       { name: "Lawrence University", variations: ["lawrence", "vikings"] },
       { name: "Beloit College", variations: ["beloit", "buccaneers"] },
-      { name: "Carleton College", variations: ["carleton", "knights"] },
       { name: "Ripon College", variations: ["ripon", "red hawks"] },
       { name: "Carroll University", variations: ["carroll", "pioneers"] },
       { name: "Concordia University Wisconsin", variations: ["cuw", "concordia wisconsin"] },
@@ -616,6 +626,257 @@ const schoolsDatabase = {
       { name: "Art Institutes International Minnesota", variations: ["art institutes mn", "ai mn"] },
       { name: "Brown College", variations: ["brown college", "brown"] },
       { name: "Globe University", variations: ["globe mn", "globe university"] }
+    ]
+  },
+
+  michigan: {
+    private: [
+      { name: "University of Detroit Mercy", variations: ["udm", "detroit mercy", "u detroit mercy"] },
+      { name: "Hillsdale College", variations: ["hillsdale", "hillsdale college"] },
+      { name: "Kalamazoo College", variations: ["kzoo", "kalamazoo", "k college"] },
+      { name: "Albion College", variations: ["albion", "albion college"] },
+      { name: "Hope College", variations: ["hope", "hope college"] },
+      { name: "Calvin University", variations: ["calvin", "calvin college", "calvin u"] },
+      { name: "Andrews University", variations: ["andrews", "andrews u"] },
+      { name: "Aquinas College", variations: ["aquinas", "aquinas college"] },
+      { name: "Alma College", variations: ["alma", "alma college"] },
+      { name: "Adrian College", variations: ["adrian", "adrian college"] }
+    ],
+    public: [
+      { name: "University of Michigan", variations: ["u of m", "michigan", "wolverines", "um", "umich"] },
+      { name: "Michigan State University", variations: ["msu", "michigan state", "spartans"] },
+      { name: "Wayne State University", variations: ["wsu", "wayne state", "warriors"] },
+      { name: "Western Michigan University", variations: ["wmu", "western michigan", "broncos"] },
+      { name: "Eastern Michigan University", variations: ["emu", "eastern michigan", "eagles"] },
+      { name: "Central Michigan University", variations: ["cmu", "central michigan", "chippewas"] },
+      { name: "Northern Michigan University", variations: ["nmu", "northern michigan", "wildcats"] },
+      { name: "Michigan Technological University", variations: ["michigan tech", "mtu", "huskies"] },
+      { name: "Grand Valley State University", variations: ["gvsu", "grand valley", "lakers"] },
+      { name: "Ferris State University", variations: ["fsu", "ferris state", "bulldogs"] }
+    ],
+    community: [
+      { name: "Washtenaw Community College", variations: ["wcc", "washtenaw cc"] },
+      { name: "Oakland Community College", variations: ["occ", "oakland cc"] },
+      { name: "Macomb Community College", variations: ["macomb cc", "mcc"] },
+      { name: "Grand Rapids Community College", variations: ["grcc", "grand rapids cc"] },
+      { name: "Lansing Community College", variations: ["lcc", "lansing cc"] },
+      { name: "Kalamazoo Valley Community College", variations: ["kvcc", "kalamazoo valley"] },
+      { name: "Schoolcraft College", variations: ["schoolcraft", "schoolcraft college"] },
+      { name: "Henry Ford College", variations: ["hfc", "henry ford"] },
+      { name: "Delta College", variations: ["delta", "delta college"] },
+      { name: "Muskegon Community College", variations: ["mcc", "muskegon cc"] }
+    ],
+    state: [
+      { name: "University of Michigan", variations: ["u of m", "michigan", "wolverines"] },
+      { name: "Michigan State University", variations: ["msu", "michigan state"] },
+      { name: "Wayne State University", variations: ["wsu", "wayne state"] },
+      { name: "Western Michigan University", variations: ["wmu", "western michigan"] },
+      { name: "Eastern Michigan University", variations: ["emu", "eastern michigan"] },
+      { name: "Central Michigan University", variations: ["cmu", "central michigan"] },
+      { name: "Northern Michigan University", variations: ["nmu", "northern michigan"] },
+      { name: "Michigan Technological University", variations: ["michigan tech", "mtu"] },
+      { name: "Grand Valley State University", variations: ["gvsu", "grand valley"] },
+      { name: "Ferris State University", variations: ["fsu", "ferris state"] }
+    ],
+    trade: [
+      { name: "Baker College", variations: ["baker", "baker college"] },
+      { name: "ITT Technical Institute", variations: ["itt tech", "itt"] },
+      { name: "Specs Howard School of Media Arts", variations: ["specs howard", "specs"] },
+      { name: "Davenport University", variations: ["davenport", "davenport u"] },
+      { name: "Lawrence Technological University", variations: ["lawrence tech", "ltu"] },
+      { name: "College for Creative Studies", variations: ["ccs", "creative studies"] },
+      { name: "Michigan School of Professional Psychology", variations: ["mspp", "michigan psychology"] },
+      { name: "Compass College of Cinematic Arts", variations: ["compass college", "compass"] },
+      { name: "Paul Mitchell The School", variations: ["paul mitchell mi", "pm mi"] },
+      { name: "Aveda Institute", variations: ["aveda mi", "aveda institute"] }
+    ]
+  },
+
+  florida: {
+    private: [
+      { name: "University of Miami", variations: ["miami", "um", "hurricanes", "the u"] },
+      { name: "Florida Institute of Technology", variations: ["florida tech", "fit"] },
+      { name: "Rollins College", variations: ["rollins", "rollins college"] },
+      { name: "Nova Southeastern University", variations: ["nsu", "nova southeastern", "nova"] },
+      { name: "Lynn University", variations: ["lynn", "lynn u"] },
+      { name: "Florida International University", variations: ["fiu", "florida international"] },
+      { name: "Barry University", variations: ["barry", "barry u"] },
+      { name: "Stetson University", variations: ["stetson", "stetson u"] },
+      { name: "Florida Southern College", variations: ["florida southern", "fsc"] },
+      { name: "Embry-Riddle Aeronautical University", variations: ["embry riddle", "erau", "riddle"] }
+    ],
+    public: [
+      { name: "University of Florida", variations: ["uf", "florida", "gators"] },
+      { name: "Florida State University", variations: ["fsu", "florida state", "seminoles", "noles"] },
+      { name: "University of Central Florida", variations: ["ucf", "central florida", "knights"] },
+      { name: "University of South Florida", variations: ["usf", "south florida", "bulls"] },
+      { name: "Florida International University", variations: ["fiu", "florida international", "panthers"] },
+      { name: "Florida Atlantic University", variations: ["fau", "florida atlantic", "owls"] },
+      { name: "Florida Institute of Technology", variations: ["florida tech", "fit", "panthers"] },
+      { name: "Florida A&M University", variations: ["famu", "florida a&m", "rattlers"] },
+      { name: "Florida Gulf Coast University", variations: ["fgcu", "florida gulf coast", "eagles"] },
+      { name: "Florida Polytechnic University", variations: ["florida poly", "fpoly", "phoenix"] }
+    ],
+    community: [
+      { name: "Miami Dade College", variations: ["mdc", "miami dade", "miami dade cc"] },
+      { name: "Valencia College", variations: ["valencia", "valencia college"] },
+      { name: "Broward College", variations: ["broward", "broward college"] },
+      { name: "Hillsborough Community College", variations: ["hcc", "hillsborough cc"] },
+      { name: "St. Petersburg College", variations: ["spc", "st petersburg college", "st pete college"] },
+      { name: "Seminole State College", variations: ["seminole state", "ssc"] },
+      { name: "Palm Beach State College", variations: ["pbsc", "palm beach state"] },
+      { name: "Indian River State College", variations: ["irsc", "indian river"] },
+      { name: "Polk State College", variations: ["polk state", "psc"] },
+      { name: "Santa Fe College", variations: ["santa fe", "santa fe college"] }
+    ],
+    state: [
+      { name: "University of Florida", variations: ["uf", "florida", "gators"] },
+      { name: "Florida State University", variations: ["fsu", "florida state"] },
+      { name: "University of Central Florida", variations: ["ucf", "central florida"] },
+      { name: "University of South Florida", variations: ["usf", "south florida"] },
+      { name: "Florida International University", variations: ["fiu", "florida international"] },
+      { name: "Florida Atlantic University", variations: ["fau", "florida atlantic"] },
+      { name: "Florida A&M University", variations: ["famu", "florida a&m"] },
+      { name: "Florida Gulf Coast University", variations: ["fgcu", "florida gulf coast"] },
+      { name: "Florida Polytechnic University", variations: ["florida poly", "fpoly"] },
+      { name: "New College of Florida", variations: ["new college", "ncf"] }
+    ],
+    trade: [
+      { name: "Florida Career College", variations: ["fcc", "florida career"] },
+      { name: "Keiser University", variations: ["keiser", "keiser u"] },
+      { name: "Lincoln Technical Institute", variations: ["lincoln tech", "lti"] },
+      { name: "Florida Technical College", variations: ["ftc", "florida technical"] },
+      { name: "Everest University", variations: ["everest", "everest u"] },
+      { name: "Paul Mitchell The School", variations: ["paul mitchell fl", "pm fl"] },
+      { name: "Aveda Institute", variations: ["aveda fl", "aveda institute"] },
+      { name: "Art Institute of Fort Lauderdale", variations: ["art institute fl", "ai fort lauderdale"] },
+      { name: "Johnson & Wales University Miami", variations: ["jwu miami", "johnson wales miami"] },
+      { name: "Le Cordon Bleu College of Culinary Arts", variations: ["cordon bleu miami", "le cordon bleu"] }
+    ]
+  },
+
+  massachusetts: {
+    private: [
+      { name: "Harvard University", variations: ["harvard", "harvard u", "crimson"] },
+      { name: "Massachusetts Institute of Technology", variations: ["mit", "mass tech"] },
+      { name: "Boston University", variations: ["bu", "boston u", "terriers"] },
+      { name: "Northeastern University", variations: ["northeastern", "nu", "huskies"] },
+      { name: "Tufts University", variations: ["tufts", "jumbos"] },
+      { name: "Brandeis University", variations: ["brandeis", "judges"] },
+      { name: "Boston College", variations: ["bc", "boston college", "eagles"] },
+      { name: "Wellesley College", variations: ["wellesley", "wellesley college"] },
+      { name: "Williams College", variations: ["williams", "ephs"] },
+      { name: "Amherst College", variations: ["amherst", "mammoths"] }
+    ],
+    public: [
+      { name: "University of Massachusetts Amherst", variations: ["umass", "umass amherst", "minutemen"] },
+      { name: "University of Massachusetts Boston", variations: ["umass boston", "umb", "beacons"] },
+      { name: "University of Massachusetts Lowell", variations: ["umass lowell", "uml", "river hawks"] },
+      { name: "University of Massachusetts Dartmouth", variations: ["umass dartmouth", "umd", "corsairs"] },
+      { name: "Bridgewater State University", variations: ["bridgewater state", "bsu", "bears"] },
+      { name: "Salem State University", variations: ["salem state", "ssu", "vikings"] },
+      { name: "Westfield State University", variations: ["westfield state", "wsu", "owls"] },
+      { name: "Fitchburg State University", variations: ["fitchburg state", "fsu", "falcons"] },
+      { name: "Framingham State University", variations: ["framingham state", "frams", "rams"] },
+      { name: "Worcester State University", variations: ["worcester state", "wsu", "lancers"] }
+    ],
+    community: [
+      { name: "Bunker Hill Community College", variations: ["bhcc", "bunker hill"] },
+      { name: "MassBay Community College", variations: ["massbay", "massbay cc"] },
+      { name: "North Shore Community College", variations: ["nscc", "north shore"] },
+      { name: "Northern Essex Community College", variations: ["necc", "northern essex"] },
+      { name: "Middlesex Community College", variations: ["mcc", "middlesex cc"] },
+      { name: "Quinsigamond Community College", variations: ["qcc", "quinsigamond"] },
+      { name: "Springfield Technical Community College", variations: ["stcc", "springfield tech"] },
+      { name: "Holyoke Community College", variations: ["hcc", "holyoke cc"] },
+      { name: "Greenfield Community College", variations: ["gcc", "greenfield cc"] },
+      { name: "Berkshire Community College", variations: ["bcc", "berkshire cc"] }
+    ],
+    state: [
+      { name: "University of Massachusetts Amherst", variations: ["umass", "umass amherst"] },
+      { name: "University of Massachusetts Boston", variations: ["umass boston", "umb"] },
+      { name: "University of Massachusetts Lowell", variations: ["umass lowell", "uml"] },
+      { name: "University of Massachusetts Dartmouth", variations: ["umass dartmouth", "umd"] },
+      { name: "Bridgewater State University", variations: ["bridgewater state", "bsu"] },
+      { name: "Salem State University", variations: ["salem state", "ssu"] },
+      { name: "Westfield State University", variations: ["westfield state", "wsu"] },
+      { name: "Fitchburg State University", variations: ["fitchburg state", "fsu"] },
+      { name: "Framingham State University", variations: ["framingham state", "frams"] },
+      { name: "Worcester State University", variations: ["worcester state", "wsu"] }
+    ],
+    trade: [
+      { name: "Benjamin Franklin Institute of Technology", variations: ["bfit", "benjamin franklin tech"] },
+      { name: "New England Institute of Technology", variations: ["neit", "new england tech"] },
+      { name: "Lincoln Technical Institute", variations: ["lincoln tech", "lti"] },
+      { name: "Porter and Chester Institute", variations: ["pci", "porter chester"] },
+      { name: "The Art Institute of Boston", variations: ["ai boston", "art institute boston"] },
+      { name: "Emerson College", variations: ["emerson", "emerson college"] },
+      { name: "Berklee College of Music", variations: ["berklee", "berklee music"] },
+      { name: "New England Conservatory", variations: ["nec", "new england conservatory"] },
+      { name: "Paul Mitchell The School", variations: ["paul mitchell ma", "pm ma"] },
+      { name: "Aveda Institute", variations: ["aveda ma", "aveda institute"] }
+    ]
+  },
+  california: {
+    private: [
+      { name: "Stanford University", variations: ["stanford", "stanford univ", "su"] },
+      { name: "University of Southern California", variations: ["usc", "southern cal", "southern california"] },
+      { name: "California Institute of Technology", variations: ["caltech", "cal tech", "cit"] },
+      { name: "Pepperdine University", variations: ["pepperdine", "pepp"] },
+      { name: "Santa Clara University", variations: ["santa clara", "scu"] },
+      { name: "Loyola Marymount University", variations: ["lmu", "loyola marymount", "loyola"] },
+      { name: "University of San Diego", variations: ["usd", "san diego", "u san diego"] },
+      { name: "Chapman University", variations: ["chapman", "chapman u"] },
+      { name: "Occidental College", variations: ["occidental", "oxy"] },
+      { name: "Claremont McKenna College", variations: ["claremont mckenna", "cmc", "claremont"] }
+    ],
+    public: [
+      { name: "University of California, Berkeley", variations: ["uc berkeley", "berkeley", "cal berkeley", "ucb"] },
+      { name: "University of California, Los Angeles", variations: ["ucla", "uc la", "uc los angeles"] },
+      { name: "University of California, San Diego", variations: ["ucsd", "uc san diego", "uc sd"] },
+      { name: "University of California, Davis", variations: ["uc davis", "ucd", "davis"] },
+      { name: "University of California, Santa Barbara", variations: ["ucsb", "uc santa barbara", "uc sb"] },
+      { name: "University of California, Irvine", variations: ["uci", "uc irvine"] },
+      { name: "University of California, Santa Cruz", variations: ["ucsc", "uc santa cruz", "uc sc"] },
+      { name: "University of California, Riverside", variations: ["ucr", "uc riverside"] },
+      { name: "University of California, Merced", variations: ["ucm", "uc merced"] },
+      { name: "San Diego State University", variations: ["sdsu", "san diego state", "sd state"] }
+    ],
+    community: [
+      { name: "Santa Monica College", variations: ["smc", "santa monica cc"] },
+      { name: "Pasadena City College", variations: ["pcc", "pasadena cc"] },
+      { name: "De Anza College", variations: ["de anza", "deanza"] },
+      { name: "Diablo Valley College", variations: ["dvc", "diablo valley"] },
+      { name: "Orange Coast College", variations: ["occ", "orange coast"] },
+      { name: "Mt. San Antonio College", variations: ["mt sac", "mount sac"] },
+      { name: "Foothill College", variations: ["foothill"] },
+      { name: "El Camino College", variations: ["el camino", "ecc"] },
+      { name: "Glendale Community College", variations: ["glendale cc", "gcc"] },
+      { name: "Cerritos College", variations: ["cerritos"] }
+    ],
+    state: [
+      { name: "California State University, Long Beach", variations: ["csulb", "cal state long beach", "long beach state"] },
+      { name: "California State University, Los Angeles", variations: ["csula", "cal state la"] },
+      { name: "California State University, Northridge", variations: ["csun", "cal state northridge"] },
+      { name: "California State University, Fullerton", variations: ["csuf", "cal state fullerton"] },
+      { name: "California State University, Sacramento", variations: ["csus", "sac state", "sacramento state"] },
+      { name: "California State University, San Bernardino", variations: ["csusb", "cal state san bernardino"] },
+      { name: "California State University, Fresno", variations: ["fresno state", "csuf"] },
+      { name: "California State University, San Jose", variations: ["sjsu", "san jose state"] },
+      { name: "California State University, Chico", variations: ["chico state", "csuc"] },
+      { name: "California State University, Pomona", variations: ["cal poly pomona", "cpp"] }
+    ],
+    trade: [
+      { name: "Universal Technical Institute", variations: ["uti", "universal tech"] },
+      { name: "WyoTech", variations: ["wyotech", "wyoming tech"] },
+      { name: "Marinello Schools of Beauty", variations: ["marinello"] },
+      { name: "Paul Mitchell The School", variations: ["paul mitchell"] },
+      { name: "Le Cordon Bleu College of Culinary Arts", variations: ["le cordon bleu", "cordon bleu"] },
+      { name: "Art Institute of California", variations: ["art institute", "ai"] },
+      { name: "Fashion Institute of Design & Merchandising", variations: ["fidm"] },
+      { name: "Musicians Institute", variations: ["mi", "musicians inst"] },
+      { name: "Academy of Art University", variations: ["academy of art", "aau"] },
+      { name: "NewSchool of Architecture and Design", variations: ["newschool", "nsad"] }
     ]
   }
 };
