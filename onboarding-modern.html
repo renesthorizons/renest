@@ -12,6 +12,11 @@
     <link rel="stylesheet" href="dashboard-style.css">
     
     <style>
+        /* Global smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        
         /* Chat-style onboarding */
         .onboarding-container {
             min-height: 100vh;
@@ -64,6 +69,7 @@
             background: white;
             overflow-y: auto;
             max-height: 100vh;
+            scroll-behavior: smooth;
         }
         
         .chat-messages {
@@ -74,14 +80,15 @@
             flex-direction: column;
             gap: 1rem;
             min-height: 400px;
+            scroll-behavior: smooth;
         }
         
         .message {
             display: flex;
             gap: 0.75rem;
             opacity: 0;
-            transform: translateY(20px);
-            animation: messageAppear 0.5s ease forwards;
+            transform: translateY(10px);
+            animation: messageAppear 0.4s ease-out forwards;
         }
         
         .message.user {
@@ -147,15 +154,19 @@
             border-radius: 0.75rem;
             padding: 1rem;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.25s ease-out;
             font-size: 0.95rem;
             text-align: left;
+            opacity: 0;
+            transform: translateY(5px);
+            animation: optionAppear 0.3s ease-out forwards;
         }
         
         .response-option:hover {
             border-color: var(--primary);
             background: #f0fdf4;
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         
         .response-option.selected {
@@ -212,6 +223,13 @@
         }
         
         @keyframes messageAppear {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes optionAppear {
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -283,6 +301,15 @@
             
             .response-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .response-option {
+                animation-delay: 0s !important; /* Faster animations on mobile */
+                animation-duration: 0.2s; /* Faster animation on mobile */
+            }
+            
+            .message {
+                animation-duration: 0.25s; /* Faster message animation on mobile */
             }
             
             .text-input-container {
@@ -1256,37 +1283,32 @@
             inputArea.innerHTML = '';
         }
         
-        function scrollToBottom() {
+        function smoothScrollToBottom() {
             const messagesContainer = document.getElementById('chatMessages');
-            const chatContainer = document.querySelector('.chat-container');
-            const inputArea = document.getElementById('chatInputArea');
             
-            // Multiple attempts to ensure scrolling works
-            setTimeout(() => {
-                if (messagesContainer) {
+            // Use requestAnimationFrame for smoother scrolling
+            if (messagesContainer) {
+                requestAnimationFrame(() => {
                     messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                }
-                if (chatContainer) {
-                    chatContainer.scrollTop = chatContainer.scrollHeight;
-                }
-                
-                // Scroll the input area into view
-                if (inputArea) {
-                    inputArea.scrollIntoView({ behavior: 'smooth', block: 'end' });
-                }
-                
-                // Additional scroll attempt after a short delay
-                setTimeout(() => {
-                    if (chatContainer) {
-                        chatContainer.scrollTop = chatContainer.scrollHeight;
+                    
+                    // Ensure input area is visible on mobile
+                    const inputArea = document.getElementById('chatInputArea');
+                    if (inputArea && window.innerWidth <= 768) {
+                        setTimeout(() => {
+                            inputArea.scrollIntoView({ 
+                                behavior: 'smooth', 
+                                block: 'nearest',
+                                inline: 'nearest'
+                            });
+                        }, 150);
                     }
-                    // Force scroll to bottom of page as well
-                    window.scrollTo({
-                        top: document.body.scrollHeight,
-                        behavior: 'smooth'
-                    });
-                }, 200);
-            }, 100);
+                });
+            }
+        }
+        
+        // Legacy function for backward compatibility
+        function scrollToBottom() {
+            smoothScrollToBottom();
         }
         
         function createResponseOptions(options, field) {
@@ -1294,16 +1316,17 @@
             const optionsContainer = document.createElement('div');
             optionsContainer.className = 'response-options';
             
-            options.forEach(option => {
+            options.forEach((option, index) => {
                 const optionDiv = document.createElement('div');
                 optionDiv.className = 'response-option';
                 optionDiv.textContent = option.text;
                 optionDiv.onclick = () => handleOptionResponse(option.value, option.text, field);
+                optionDiv.style.animationDelay = `${index * 0.1}s`;
                 optionsContainer.appendChild(optionDiv);
             });
             
             inputArea.appendChild(optionsContainer);
-            scrollToBottom();
+            smoothScrollToBottom();
         }
         
         function createTextInput(placeholder, field, type = 'text') {
@@ -1336,8 +1359,8 @@
             // Focus the input and scroll
             setTimeout(() => {
                 input.focus();
-                scrollToBottom();
-            }, 100);
+                smoothScrollToBottom();
+            }, 150);
         }
         
         async function handleOptionResponse(value, text, field) {
@@ -1621,8 +1644,8 @@
             // Focus the input and scroll
             setTimeout(() => {
                 input.focus();
-                scrollToBottom();
-            }, 100);
+                smoothScrollToBottom();
+            }, 150);
         }
         
                 function createMonthSelector(field) {
