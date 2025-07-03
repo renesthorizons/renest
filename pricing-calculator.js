@@ -8,7 +8,7 @@ class PricingCalculator {
         this.INTEREST_RATE = 0.04; // 4% APY
         this.INTEREST_PERIOD_DAYS = 30; // 30 days
         this.DAYS_IN_YEAR = 365;
-        this.BENEFIT_PERCENTAGE = 0.20; // 20% of benefit
+        this.BENEFIT_PERCENTAGE = 0.15; // 20% of benefit
     }
 
     /**
