@@ -2661,17 +2661,10 @@
             console.log('Submitted to Google Form:', { email: email, productSelection: productSelection });
         }
 
-        // Show secure connection animation
+        // Show secure connection animation (now handled in chat)
         function showSecureConnection() {
-            const overlay = document.getElementById('secureConnectionOverlay');
-            overlay.classList.remove('hidden');
-            
-            // Show secure connection for 3 seconds, then proceed to step 8 (account creation)
-            setTimeout(() => {
-                overlay.classList.add('hidden');
-                prepareAccountCreationStep();
-                showStep(8);
-            }, 3000);
+            // This is now handled through chat messages instead of overlay
+            console.log('Secure connection handled through chat interface');
         }
 
         // Prepare step 8 account creation
@@ -2685,21 +2678,29 @@
         // Handle Google Sign-In credential response
         async function handleCredentialResponse(response) {
             try {
-                // Disable all interactive elements
+                // Clear input area and disable interactive elements
+                clearInputArea();
                 disableAllInteractiveElements();
-                
-                // Show progress overlay
-                showProgressOverlay();
-                updateProgress(10, 'Processing Google Sign-In...');
                 
                 console.log('Google Sign-In response received');
                 
-                // Add some delay to show progress steps
-                await new Promise(resolve => setTimeout(resolve, 500));
-                updateProgress(30, 'Verifying credentials...');
+                // Show progress through chat messages
+                await addMessage('user', 'Sign in with Google');
                 
-                await new Promise(resolve => setTimeout(resolve, 500));
-                updateProgress(50, 'Creating account...');
+                showTypingIndicator('processing your sign-in...');
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                removeTypingIndicator();
+                await addMessage('bot', '🔐 Processing Google Sign-In...');
+                
+                showTypingIndicator('verifying your credentials...');
+                await new Promise(resolve => setTimeout(resolve, 1200));
+                removeTypingIndicator();
+                await addMessage('bot', '✅ Credentials verified successfully!');
+                
+                showTypingIndicator('creating your account...');
+                await new Promise(resolve => setTimeout(resolve, 800));
+                removeTypingIndicator();
+                await addMessage('bot', '🚀 Creating your account...');
                 
                 const result = await window.onboardingCoordinator.handleGoogleSignInCallback(response);
                 
@@ -2710,21 +2711,30 @@
                     otherQualifiedExpenses: expenseTotals.totalOtherQualifiedExpenses
                 });
                 
-                updateProgress(80, 'Submitting your data...');
-                await new Promise(resolve => setTimeout(resolve, 800));
+                showTypingIndicator('submitting your information...');
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                removeTypingIndicator();
+                await addMessage('bot', '📄 Submitting your tax benefit information...');
                 
                 if (result.accountCreated && result.dataSubmitted) {
-                    updateProgress(100, 'Account created successfully!');
-                    await new Promise(resolve => setTimeout(resolve, 500));
-                    showSuccessAndRedirect('Account created and data submitted successfully!');
+                    showTypingIndicator();
+                    await new Promise(resolve => setTimeout(resolve, 800));
+                    removeTypingIndicator();
+                    await addMessage('bot', '🎉 Account created successfully! Redirecting to your dashboard...');
+                    
+                    // Redirect after showing success
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
                 } else {
                     throw new Error('Account creation or data submission failed');
                 }
             } catch (error) {
                 console.error('Google Sign-In error:', error);
-                hideProgressOverlay();
-                showError(`Google Sign-In failed: ${error.message}`);
+                await addMessage('bot', `❌ Sign-in failed: ${error.message}. Please try again.`);
                 enableAllInteractiveElements();
+                // Recreate the account creation options
+                createAccountCreationOptions();
             }
         }
 
@@ -2748,29 +2758,39 @@
                     return;
                 }
                 
-                // Disable all interactive elements
+                // Clear input area and disable interactive elements
+                clearInputArea();
                 disableAllInteractiveElements();
-                
-                // Show progress overlay
-                showProgressOverlay();
-                updateProgress(5, 'Validating credentials...');
                 
                 console.log('Creating account with email/password and submitting data...');
                 
-                // Add progress updates with delays to show progression
-                await new Promise(resolve => setTimeout(resolve, 500));
-                updateProgress(15, 'Setting up secure connection...');
+                // Show progress through chat messages
+                await addMessage('user', 'Create account with email');
                 
-                await new Promise(resolve => setTimeout(resolve, 500));
-                updateProgress(30, 'Creating your account...');
-                
+                showTypingIndicator('validating your information...');
                 await new Promise(resolve => setTimeout(resolve, 800));
-                updateProgress(60, 'Preparing your data...');
+                removeTypingIndicator();
+                await addMessage('bot', '🔍 Validating credentials...');
+                
+                showTypingIndicator('setting up secure connection...');
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                removeTypingIndicator();
+                await addMessage('bot', '🔒 Setting up secure connection...');
+                
+                showTypingIndicator('creating your account...');
+                await new Promise(resolve => setTimeout(resolve, 1200));
+                removeTypingIndicator();
+                await addMessage('bot', '👤 Creating your account...');
                 
                 const result = await window.onboardingCoordinator.createAccountAndSubmitData(
                     chatData.email, 
                     password
                 );
+                
+                showTypingIndicator('preparing your tax benefit data...');
+                await new Promise(resolve => setTimeout(resolve, 800));
+                removeTypingIndicator();
+                await addMessage('bot', '📊 Preparing your tax benefit data...');
                 
                 // Submit expense data to sensitive data table alongside other data submissions
                 const expenseTotals = calculateRentAndOtherExpenses();
@@ -2779,119 +2799,53 @@
                     otherQualifiedExpenses: expenseTotals.totalOtherQualifiedExpenses
                 });
                 
-                updateProgress(85, 'Submitting your information...');
+                showTypingIndicator('submitting your information...');
                 await new Promise(resolve => setTimeout(resolve, 1000));
+                removeTypingIndicator();
+                await addMessage('bot', '📄 Submitting your information...');
                 
                 if (result.accountCreated && result.dataSubmitted) {
-                    updateProgress(100, 'Account created successfully!');
-                    await new Promise(resolve => setTimeout(resolve, 500));
-                    showSuccessAndRedirect('Account created and data submitted successfully!');
+                    showTypingIndicator();
+                    await new Promise(resolve => setTimeout(resolve, 800));
+                    removeTypingIndicator();
+                    await addMessage('bot', '🎉 Account created successfully! Redirecting to your dashboard...');
+                    
+                    // Redirect after showing success
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
                 } else {
                     throw new Error('Account creation or data submission failed');
                 }
                 
             } catch (error) {
                 console.error('Account creation error:', error);
-                hideProgressOverlay();
-                showError(`Account creation failed: ${error.message}`);
+                await addMessage('bot', `❌ Account creation failed: ${error.message}. Please try again.`);
                 enableAllInteractiveElements();
+                // Recreate the account creation options
+                createAccountCreationOptions();
             }
         }
 
-        // Progress tracking functions
-        let progressTimer = null;
-        let countdownTimer = null;
-        let currentStepStartTime = null;
-        let originalStepText = '';
-
+        // Progress tracking functions (now handled through chat messages)
         function showProgressOverlay() {
-            const overlay = document.getElementById('progressLoadingOverlay');
-            overlay.classList.remove('hidden');
-            updateProgress(0, 'Initializing...');
+            // This is now handled through chat messages instead
+            console.log('Progress shown through chat interface');
         }
 
         function hideProgressOverlay() {
-            const overlay = document.getElementById('progressLoadingOverlay');
-            overlay.classList.add('hidden');
-            clearProgressTimers();
-        }
-
-        function clearProgressTimers() {
-            if (progressTimer) {
-                clearTimeout(progressTimer);
-                progressTimer = null;
-            }
-            if (countdownTimer) {
-                clearInterval(countdownTimer);
-                countdownTimer = null;
-            }
+            // This is now handled through chat messages instead
+            console.log('Progress hidden through chat interface');
         }
 
         function updateProgress(percentage, stepText) {
-            const progressFill = document.getElementById('progressBarLoadingFill');
-            const stepTextEl = document.getElementById('progressStepText');
-            
-            // Clear existing timers
-            clearProgressTimers();
-            
-            // Update progress bar
-            if (progressFill) {
-                progressFill.style.width = `${percentage}%`;
-            }
-            
-            // Update step text
-            if (stepTextEl) {
-                stepTextEl.textContent = stepText;
-            }
-            
-            // Store the original step text and start time
-            originalStepText = stepText;
-            currentStepStartTime = Date.now();
-            
-            // Set up the 5-second timer to show "please wait" message
-            progressTimer = setTimeout(() => {
-                showPleaseWaitMessage();
-            }, 5000);
-        }
-
-        function showPleaseWaitMessage() {
-            const stepTextEl = document.getElementById('progressStepText');
-            if (!stepTextEl) return;
-            
-            let countdown = 15;
-            stepTextEl.textContent = `Please wait, everything is working. Your account is getting created... (${countdown}s)`;
-            
-            countdownTimer = setInterval(() => {
-                countdown--;
-                if (countdown > 0) {
-                    stepTextEl.textContent = `Please wait, everything is working. Your account is getting created... (${countdown}s)`;
-                } else {
-                    // After 15 seconds, show encouraging message
-                    stepTextEl.textContent = 'Almost there! Processing your information...';
-                    clearInterval(countdownTimer);
-                    countdownTimer = null;
-                }
-            }, 1000);
+            // This is now handled through chat messages instead
+            console.log(`Progress: ${percentage}% - ${stepText}`);
         }
 
         function showProgressSuccess() {
-            const checkmark = document.getElementById('progressCheckmark');
-            const title = document.querySelector('.progress-loading-title');
-            const subtitle = document.querySelector('.progress-loading-subtitle');
-            
-            if (checkmark) {
-                checkmark.classList.add('show');
-            }
-            
-            if (title) {
-                title.textContent = 'Account Created Successfully!';
-            }
-            
-            if (subtitle) {
-                subtitle.textContent = 'Redirecting to your dashboard...';
-            }
-            
-            updateProgress(100, 'Complete!');
+            // This is now handled through chat messages instead
+            console.log('Success shown through chat interface');
         }
 
         function disableAllInteractiveElements() {
@@ -2922,14 +2876,10 @@
             });
         }
 
-        // Show success message and redirect
+        // Show success message and redirect (now handled in chat)
         function showSuccessAndRedirect(message) {
-            showProgressSuccess();
-            
-            // Redirect after 3 seconds
-            setTimeout(() => {
-                window.location.href = 'dashboard.html';
-            }, 3000);
+            // This is now handled through chat messages instead
+            console.log('Success and redirect handled through chat interface');
         }
 
         // Show the Learn More popup
