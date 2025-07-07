@@ -5,10 +5,10 @@
 
 class PricingCalculator {
     constructor() {
-        this.INTEREST_RATE = 0.04; // 4% APY
+        this.INTEREST_RATE = 0.04; // 7% APY
         this.INTEREST_PERIOD_DAYS = 30; // 30 days
         this.DAYS_IN_YEAR = 365;
-        this.BENEFIT_PERCENTAGE = 0.125; // 20% of benefit
+        this.BENEFIT_PERCENTAGE = 0.125; // 12% of benefit
     }
 
     /**
@@ -16,14 +16,14 @@ class PricingCalculator {
      * @param {string} state - State abbreviation
      * @param {number} income - Annual income
      * @param {Array} enrolledMonths - Array of enrolled months
-     * @param {Array} housingEntries - Housing information
+     * @param {Object|Array} housingData - Housing information (either old housingEntries array or new monthlyHousingCosts object)
      * @param {number} monthlyGrocery - Monthly grocery spending
      * @returns {Object} Pricing breakdown
      */
-    calculatePricing(state, income, enrolledMonths, housingEntries, monthlyGrocery = 200) {
+    calculatePricing(state, income, enrolledMonths, housingData, monthlyGrocery = 200) {
         try {
             // First, calculate the benefit using existing logic
-            const benefitDetails = this.calculateBenefit(state, income, enrolledMonths, housingEntries, monthlyGrocery);
+            const benefitDetails = this.calculateBenefit(state, income, enrolledMonths, housingData, monthlyGrocery);
             
             // Calculate the amount that needs to go into 529
             const amount529Investment = this.calculate529InvestmentAmount(state, income, benefitDetails.qualifiedSpend);
@@ -31,7 +31,7 @@ class PricingCalculator {
             // Calculate interest cost on the 529 investment
             const interestCost = this.calculateInterestCost(amount529Investment);
             
-            // Calculate base service cost (20% of benefit)
+            // Calculate base service cost (12% of benefit)
             const baseCost = benefitDetails.benefit * this.BENEFIT_PERCENTAGE;
             
             // Total cost
@@ -64,22 +64,29 @@ class PricingCalculator {
     /**
      * Calculate the amount that needs to be invested in 529
      * This is the minimum of: qualified expenses, state deduction limit, taxable income
+     * 
+     * Key insight: We only need to invest enough to get the benefit, not all qualified expenses.
+     * If income < qualified expenses, we only invest up to taxable income.
      */
     calculate529InvestmentAmount(state, income, qualifiedSpend) {
-        // Get state-specific information
+        // Get state-specific information from databases
         const stateTaxDeduction = (typeof statePersonalExemptionDB !== 'undefined' && statePersonalExemptionDB[state]) 
             ? statePersonalExemptionDB[state].amount : 0;
         const stateDeduction = (typeof state529DB !== 'undefined' && state529DB[state]) 
             ? state529DB[state].deduction : 0;
         
+        // Calculate taxable income after state standard deduction
         const taxableStateIncome = Math.max(0, income - stateTaxDeduction);
         
-        // The 529 investment amount is the minimum of these three
+        // The 529 investment amount is the minimum of these three:
+        // 1. qualifiedSpend - total qualified expenses
+        // 2. stateDeduction - state's 529 deduction limit 
+        // 3. taxableStateIncome - can't deduct more than taxable income
         return Math.min(qualifiedSpend, stateDeduction, taxableStateIncome);
     }
 
     /**
-     * Calculate interest cost on 529 investment for 30 days at 4% APY
+     * Calculate interest cost on 529 investment for 30 days at 7% APY
      */
     calculateInterestCost(investmentAmount) {
         if (investmentAmount <= 0) return 0;
@@ -95,9 +102,9 @@ class PricingCalculator {
 
     /**
      * Calculate benefit using the same logic as the existing system
-     * This mirrors the calculateBenefitWithMultipleHousingCustomGrocery function
+     * This mirrors both calculateBenefitWithMultipleHousingCustomGrocery and calculateBenefitWithMonthlyHousingCustomGrocery functions
      */
-    calculateBenefit(state, income, enrolledMonths, housingEntries, monthlyGrocery = 200) {
+    calculateBenefit(state, income, enrolledMonths, housingData, monthlyGrocery = 200) {
         const currentYear = new Date().getFullYear();
         
         // Ensure inputs are properly typed
@@ -108,11 +115,10 @@ class PricingCalculator {
             enrolledMonths = [];
         }
         
-        if (!Array.isArray(housingEntries)) {
-            housingEntries = [];
-        }
-        
         let totalQualifiedExpenses = 0;
+        
+        // Detect if we're using the new monthly housing costs structure or old housing entries
+        const isMonthlyHousingCosts = housingData && !Array.isArray(housingData) && typeof housingData === 'object';
         
         // Calculate qualified expenses for each enrolled month
         for (let month = 1; month <= 12; month++) {
@@ -121,24 +127,39 @@ class PricingCalculator {
             // Add grocery expense
             totalQualifiedExpenses += Number(monthlyGrocery);
             
-            // Find applicable housing entry for this month
-            const applicableEntry = housingEntries.find(entry => {
-                const startDate = new Date(entry.startYear, entry.startMonth - 1, 1);
-                const endDate = new Date(entry.endYear, entry.endMonth - 1, 1);
-                const thisMonth = new Date(currentYear, month - 1, 1);
-                return thisMonth >= startDate && thisMonth <= endDate;
-            });
-            
-            if (applicableEntry) {
-                const rent = Number(applicableEntry.rent) || 0;
-                const utilities = Number(applicableEntry.utilities) || 0;
-                const wifi = Number(applicableEntry.wifi) || 0;
-                
-                totalQualifiedExpenses += rent;
-                if (!applicableEntry.utilitiesIncluded) {
-                    totalQualifiedExpenses += utilities;
+            if (isMonthlyHousingCosts) {
+                // New structure: monthlyHousingCosts object
+                const housingCosts = housingData[month];
+                if (housingCosts) {
+                    const rent = Number(housingCosts.rent) || 0;
+                    const utilities = Number(housingCosts.utilities) || 0;
+                    const wifi = Number(housingCosts.wifi) || 0;
+                    
+                    totalQualifiedExpenses += rent + utilities + wifi;
                 }
-                totalQualifiedExpenses += wifi;
+            } else {
+                // Old structure: housingEntries array
+                const housingEntries = Array.isArray(housingData) ? housingData : [];
+                
+                // Find applicable housing entry for this month
+                const applicableEntry = housingEntries.find(entry => {
+                    const startDate = new Date(entry.startYear, entry.startMonth - 1, 1);
+                    const endDate = new Date(entry.endYear, entry.endMonth - 1, 1);
+                    const thisMonth = new Date(currentYear, month - 1, 1);
+                    return thisMonth >= startDate && thisMonth <= endDate;
+                });
+                
+                if (applicableEntry) {
+                    const rent = Number(applicableEntry.rent) || 0;
+                    const utilities = Number(applicableEntry.utilities) || 0;
+                    const wifi = Number(applicableEntry.wifi) || 0;
+                    
+                    totalQualifiedExpenses += rent;
+                    if (!applicableEntry.utilitiesIncluded) {
+                        totalQualifiedExpenses += utilities;
+                    }
+                    totalQualifiedExpenses += wifi;
+                }
             }
         }
         
@@ -148,7 +169,7 @@ class PricingCalculator {
         const stateDeduction = (typeof state529DB !== 'undefined' && state529DB[state]) 
             ? state529DB[state].deduction : 0;
         
-        const taxableStateIncome = Number(income) - stateTaxDeduction;
+        const taxableStateIncome = Math.max(0, Number(income) - stateTaxDeduction);
         const taxRate = this.calculateStateTaxRate(taxableStateIncome, state);
         const deductibleAmount = Math.min(
             totalQualifiedExpenses,
@@ -242,8 +263,8 @@ class PricingCalculator {
     /**
      * Get a detailed pricing breakdown as formatted text
      */
-    getPricingBreakdown(state, income, enrolledMonths, housingEntries, monthlyGrocery = 200) {
-        const pricing = this.calculatePricing(state, income, enrolledMonths, housingEntries, monthlyGrocery);
+    getPricingBreakdown(state, income, enrolledMonths, housingData, monthlyGrocery = 200) {
+        const pricing = this.calculatePricing(state, income, enrolledMonths, housingData, monthlyGrocery);
         
         if (pricing.error) {
             return `Error calculating pricing: ${pricing.error}`;

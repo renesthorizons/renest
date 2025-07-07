@@ -1164,17 +1164,19 @@
 
         /* Improved inline editing elements */
         #inlineState, #inlineIncome {
-            background: var(--accent) !important;
-            color: var(--primary) !important;
-            border: 1px solid var(--border) !important;
+            background: #E6EFFF !important;
+            color: #1d4ed8 !important;
+            border: 1px solid #3b82f6 !important;
             padding: 0.25rem 0.75rem !important;
             border-radius: 6px !important;
             font-weight: 600 !important;
             transition: all 0.2s !important;
+            cursor: pointer !important;
         }
 
         #inlineState:hover, #inlineIncome:hover {
-            background: var(--border-light) !important;
+            background: #dbeafe !important;
+            color: #1e40af !important;
         }
 
 
@@ -2217,7 +2219,7 @@
                 </div>
 
                 <div class="student-calculator-header">
-                    Student in <span id="inlineState">Illinois <span id="stateArrow">▼</span></span> making $<span id="inlineIncome">25</span>k per year
+                    Student in <span id="inlineState" style="text-decoration: none; cursor: pointer; color: #1d4ed8; background: #E6EFFF; padding: 0.1rem 0.4rem; border-radius: 6px; transition: all 0.2s ease; display: inline-flex; align-items: center; border: 1px solid #3b82f6; font-weight: 600;">Illinois <span id="stateArrow" style="font-size: 0.85em; margin-left: 0.3em; color: #1d4ed8;">▼</span></span> making $<span id="inlineIncome" style="text-decoration: none; cursor: pointer; color: #1d4ed8; background: #E6EFFF; padding: 0.1rem 0.4rem; border-radius: 6px; transition: all 0.2s ease; border: 1px solid #3b82f6; font-weight: 600;">25</span>k per year
                   </div>
                   <div id="refundChartContainer" style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin: 0 auto; max-width: 600px;">
                       <!-- Chart will be rendered here by JS -->
@@ -2481,7 +2483,7 @@
 
     function updateHeader(state, incomeK) {
         const stateName = stateOptions[state] || 'Unknown';
-        document.getElementById('inlineState').innerHTML = `${stateName} <span id="stateArrow" style="font-size: 0.85em; margin-left: 0.3em; color: #3A5AFF;">▼</span>`;
+        document.getElementById('inlineState').innerHTML = `${stateName} <span id="stateArrow" style="font-size: 0.85em; margin-left: 0.3em; color: #1d4ed8;">▼</span>`;
         document.getElementById('inlineIncome').textContent = incomeK;
     }
 
@@ -2634,8 +2636,8 @@
             // Restore the span with the arrow
             const newSpan = document.createElement('span');
             newSpan.id = 'inlineState';
-            newSpan.style.cssText = 'text-decoration: none; cursor: pointer; color: #3A5AFF; background: #F0F4FF; padding: 0.1rem 0.4rem; border-radius: 6px; transition: all 0.2s ease; display: inline-flex; align-items: center;';
-            newSpan.innerHTML = `${stateOptions[currentState]} <span id=\"stateArrow\" style=\"font-size: 0.85em; margin-left: 0.3em; color: #3A5AFF;\">▼</span>`;
+            newSpan.style.cssText = 'text-decoration: none; cursor: pointer; color: #1d4ed8; background: #E6EFFF; padding: 0.1rem 0.4rem; border-radius: 6px; transition: all 0.2s ease; display: inline-flex; align-items: center; border: 1px solid #3b82f6; font-weight: 600;';
+            newSpan.innerHTML = `${stateOptions[currentState]} <span id=\"stateArrow\" style=\"font-size: 0.85em; margin-left: 0.3em; color: #1d4ed8;\">▼</span>`;
             newSpan.addEventListener('click', showStateDropdown);
             select.replaceWith(newSpan);
             updateRefundChart();
@@ -2644,8 +2646,8 @@
             // Restore the span with the arrow
             const newSpan = document.createElement('span');
             newSpan.id = 'inlineState';
-            newSpan.style.cssText = 'text-decoration: none; cursor: pointer; color: #3A5AFF; background: #F0F4FF; padding: 0.1rem 0.4rem; border-radius: 6px; transition: all 0.2s ease; display: inline-flex; align-items: center;';
-            newSpan.innerHTML = `${stateOptions[currentState]} <span id=\"stateArrow\" style=\"font-size: 0.85em; margin-left: 0.3em; color: #3A5AFF;\">▼</span>`;
+            newSpan.style.cssText = 'text-decoration: none; cursor: pointer; color: #1d4ed8; background: #E6EFFF; padding: 0.1rem 0.4rem; border-radius: 6px; transition: all 0.2s ease; display: inline-flex; align-items: center; border: 1px solid #3b82f6; font-weight: 600;';
+            newSpan.innerHTML = `${stateOptions[currentState]} <span id=\"stateArrow\" style=\"font-size: 0.85em; margin-left: 0.3em; color: #1d4ed8;\">▼</span>`;
             newSpan.addEventListener('click', showStateDropdown);
             select.replaceWith(newSpan);
             updateRefundChart();
