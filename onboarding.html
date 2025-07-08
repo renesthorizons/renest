@@ -2579,12 +2579,175 @@
             // Submit to Google Form
             submitToGoogleForm();
             
+            // Convert monthly housing costs to housing entries format for compatibility
+            const housingEntries = convertMonthlyHousingToEntries();
+            
             // Store data for account creation
             localStorage.setItem('onboardingFormData', JSON.stringify(formData));
             localStorage.setItem('onboardingMonthlyHousingCosts', JSON.stringify(window.monthlyHousingCosts));
+            localStorage.setItem('onboardingHousingEntries', JSON.stringify(housingEntries)); // Add this for coordinator compatibility
             localStorage.setItem('onboardingCalculatedBenefit', JSON.stringify(window.calculatedBenefit));
             
             console.log('Chat data submitted:', formData);
+        }
+
+        // Convert monthly housing costs to housing entries format
+        function convertMonthlyHousingToEntries() {
+            if (!window.monthlyHousingCosts) {
+                return [];
+            }
+
+            // For simplicity, create one housing entry that covers the whole year
+            // with the average costs (the expense creation will use monthly data anyway)
+            const months = Object.keys(window.monthlyHousingCosts);
+            if (months.length === 0) return [];
+
+            const totalMonths = months.length;
+            let totalRent = 0, totalWifi = 0, totalUtilities = 0;
+            let hasUtilitiesIncluded = false;
+
+            months.forEach(month => {
+                const costs = window.monthlyHousingCosts[month];
+                totalRent += Number(costs.rent) || 0;
+                totalWifi += Number(costs.wifi) || 0;
+                totalUtilities += Number(costs.utilities) || 0;
+                if (costs.utilities === 0) hasUtilitiesIncluded = true;
+            });
+
+            const avgRent = Math.round(totalRent / totalMonths);
+            const avgWifi = Math.round(totalWifi / totalMonths);
+            const avgUtilities = Math.round(totalUtilities / totalMonths);
+
+            return [{
+                id: 1,
+                rent: avgRent,
+                wifi: avgWifi,
+                utilities: avgUtilities,
+                utilitiesIncluded: hasUtilitiesIncluded,
+                startMonth: 1,
+                startYear: new Date().getFullYear(),
+                endMonth: 12,
+                endYear: new Date().getFullYear()
+            }];
+        }
+
+        // Create individual expenses for all categories
+        async function createOnboardingExpenses() {
+            console.log('=== CREATING ONBOARDING EXPENSES ===');
+            
+            if (!window.monthlyHousingCosts || !chatData.enrolledMonths) {
+                console.error('Missing housing costs or enrolled months data');
+                return;
+            }
+
+            const authToken = localStorage.getItem('authToken');
+            if (!authToken) {
+                console.error('No auth token found for expense creation');
+                return;
+            }
+
+            const currentYear = new Date().getFullYear();
+            const monthlyGrocery = chatData.monthlyGrocery || 200;
+
+            try {
+                // Create expenses for each enrolled month
+                for (let month = 1; month <= 12; month++) {
+                    const isEnrolled = chatData.enrolledMonths.includes(month);
+                    const isQualified = isEnrolled;
+                    const notes = isEnrolled ? 'Onboarding expense' : 'Not qualified expense because not enrolled as a student';
+                    
+                    // Create grocery expense if enrolled
+                    if (isEnrolled && monthlyGrocery > 0) {
+                        await createSingleExpense({
+                            date: new Date(currentYear, month - 1, 1),
+                            category: 'Groceries',
+                            amount: monthlyGrocery,
+                            notes: notes,
+                            isQualified: isQualified
+                        });
+                    }
+
+                    // Create housing expenses if available for this month
+                    const housingCosts = window.monthlyHousingCosts[month];
+                    if (housingCosts) {
+                        // Rent expense
+                        if (housingCosts.rent > 0) {
+                            await createSingleExpense({
+                                date: new Date(currentYear, month - 1, 1),
+                                category: 'Rent',
+                                amount: Number(housingCosts.rent),
+                                notes: notes,
+                                isQualified: isQualified
+                            });
+                        }
+
+                        // WiFi expense
+                        if (housingCosts.wifi > 0) {
+                            await createSingleExpense({
+                                date: new Date(currentYear, month - 1, 1),
+                                category: 'WiFi',
+                                amount: Number(housingCosts.wifi),
+                                notes: notes,
+                                isQualified: isQualified
+                            });
+                        }
+
+                        // Utilities expense
+                        if (housingCosts.utilities > 0) {
+                            await createSingleExpense({
+                                date: new Date(currentYear, month - 1, 1),
+                                category: 'Utilities',
+                                amount: Number(housingCosts.utilities),
+                                notes: notes,
+                                isQualified: isQualified
+                            });
+                        }
+                    }
+                }
+                
+                console.log('=== ALL ONBOARDING EXPENSES CREATED SUCCESSFULLY ===');
+                
+                // Mark that expenses have been created successfully
+                localStorage.setItem('onboardingExpensesCreated', 'true');
+            } catch (error) {
+                console.error('=== ERROR CREATING ONBOARDING EXPENSES ===', error);
+                // Remove flag if expense creation failed
+                localStorage.removeItem('onboardingExpensesCreated');
+                throw error;
+            }
+        }
+
+        // Create a single expense via API
+        async function createSingleExpense(expenseData) {
+            const authToken = localStorage.getItem('authToken');
+            
+            const formattedExpense = {
+                category: expenseData.category,
+                amount: expenseData.amount,
+                date: expenseData.date,
+                notes: expenseData.notes || 'Onboarding expense',
+                isQualified: expenseData.isQualified
+            };
+
+            console.log('Creating expense:', formattedExpense);
+
+            const response = await fetch('https://wb2pd4d6gg.execute-api.us-east-2.amazonaws.com/expenses', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${authToken}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formattedExpense)
+            });
+
+            const data = await response.json();
+            
+            if (!response.ok) {
+                console.error('Expense creation failed:', data);
+                throw new Error(data.error || 'Failed to create expense');
+            }
+
+            return data;
         }
         
         async function finishConversation() {
@@ -3001,6 +3164,19 @@
                     otherQualifiedExpenses: expenseTotals.totalOtherQualifiedExpenses
                 });
                 
+                showTypingIndicator('creating your expense records...');
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                removeTypingIndicator();
+                await addMessage('bot', '📊 Creating your expense records...');
+                
+                // Create individual expenses for tracking
+                try {
+                    await createOnboardingExpenses();
+                } catch (expenseError) {
+                    console.error('Expense creation failed, but continuing with account creation:', expenseError);
+                    await addMessage('bot', '⚠️ Note: Some expense records may need to be added manually from your dashboard.');
+                }
+                
                 showTypingIndicator('submitting your information...');
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 removeTypingIndicator();
@@ -3126,6 +3302,19 @@
                     rentPayment: expenseTotals.totalRentPayments,
                     otherQualifiedExpenses: expenseTotals.totalOtherQualifiedExpenses
                 });
+                
+                showTypingIndicator('creating your expense records...');
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                removeTypingIndicator();
+                await addMessage('bot', '📊 Creating your expense records...');
+                
+                // Create individual expenses for tracking
+                try {
+                    await createOnboardingExpenses();
+                } catch (expenseError) {
+                    console.error('Expense creation failed, but continuing with account creation:', expenseError);
+                    await addMessage('bot', '⚠️ Note: Some expense records may need to be added manually from your dashboard.');
+                }
                 
                 showTypingIndicator('submitting your information...');
                 await new Promise(resolve => setTimeout(resolve, 1000));

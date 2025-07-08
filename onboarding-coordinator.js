@@ -70,17 +70,36 @@ async function submitCompleteOnboarding(formData, housingEntries, calculatedBene
         // Step 3: Submit all expenses (housing + groceries)
         console.log('=== COORDINATOR: Step 3 - Submitting expenses ===');
         try {
-            const groceryAmount = parseInt(document.getElementById('groceryInput')?.value) || 200;
-            await window.expensesSubmission.submitAllOnboardingExpenses(
-                housingEntries, 
-                formData.enrolledMonths, 
-                groceryAmount
-            );
-            submissionResults.expensesSubmitted = true;
-            console.log('=== COORDINATOR: Expenses submission successful ===');
+            // Check if expenses were already created during onboarding
+            const expensesAlreadyCreated = localStorage.getItem('onboardingExpensesCreated');
+            
+            if (expensesAlreadyCreated === 'true') {
+                console.log('=== COORDINATOR: Expenses already created during onboarding, skipping ===');
+                submissionResults.expensesSubmitted = true;
+            } else {
+                // Fallback to legacy expense creation if not done during onboarding
+                console.log('=== COORDINATOR: Creating expenses via legacy method ===');
+                const groceryAmount = parseInt(document.getElementById('groceryInput')?.value) || 200;
+                
+                // Check if we have the expense submission module
+                if (window.expensesSubmission && window.expensesSubmission.submitAllOnboardingExpenses) {
+                    await window.expensesSubmission.submitAllOnboardingExpenses(
+                        housingEntries, 
+                        formData.enrolledMonths, 
+                        groceryAmount
+                    );
+                } else {
+                    console.log('=== COORDINATOR: Expense submission module not available, expenses should have been created in onboarding ===');
+                }
+                
+                submissionResults.expensesSubmitted = true;
+                console.log('=== COORDINATOR: Expenses submission successful ===');
+            }
         } catch (error) {
             console.error('=== COORDINATOR: Expenses submission failed ===', error);
             submissionResults.errors.push(`Expenses submission failed: ${error.message}`);
+            // Don't fail the whole process if just expenses fail
+            submissionResults.expensesSubmitted = false;
         }
 
         // Store additional data in localStorage

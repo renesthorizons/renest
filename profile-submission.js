@@ -13,9 +13,42 @@ async function submitUserProfile(formData, calculatedBenefit) {
         throw new Error('No authentication token found');
     }
 
-    // Prepare profile data based on dashboard.html pattern
-    const firstHousing = window.housingEntries && window.housingEntries[0] ? window.housingEntries[0] : { rent: 0 };
-    const rentForProfile = firstHousing.rent.toString();
+    // Prepare profile data based on available housing data
+    let rentForProfile = '0';
+    
+    // Try to get rent from housing entries (dashboard format)
+    if (window.housingEntries && window.housingEntries[0]) {
+        rentForProfile = window.housingEntries[0].rent.toString();
+    } 
+    // Try to get rent from monthly housing costs (onboarding format)
+    else if (window.monthlyHousingCosts) {
+        // Calculate average rent from monthly costs
+        const months = Object.keys(window.monthlyHousingCosts);
+        if (months.length > 0) {
+            let totalRent = 0;
+            months.forEach(month => {
+                totalRent += Number(window.monthlyHousingCosts[month].rent) || 0;
+            });
+            const avgRent = Math.round(totalRent / months.length);
+            rentForProfile = avgRent.toString();
+        }
+    }
+    // Try to get from stored onboarding data
+    else {
+        const storedHousingCosts = localStorage.getItem('onboardingMonthlyHousingCosts');
+        if (storedHousingCosts) {
+            const housingCosts = JSON.parse(storedHousingCosts);
+            const months = Object.keys(housingCosts);
+            if (months.length > 0) {
+                let totalRent = 0;
+                months.forEach(month => {
+                    totalRent += Number(housingCosts[month].rent) || 0;
+                });
+                const avgRent = Math.round(totalRent / months.length);
+                rentForProfile = avgRent.toString();
+            }
+        }
+    }
 
     const profileData = {
         firstName: formData.firstName,
