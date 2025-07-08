@@ -2668,8 +2668,8 @@
                     const isQualified = isEnrolled;
                     const notes = isEnrolled ? 'Onboarding expense' : 'Not qualified expense because not enrolled as a student';
                     
-                    // Create grocery expense if enrolled
-                    if (isEnrolled && monthlyGrocery > 0) {
+                    // Create grocery expense for all months (qualified only if enrolled)
+                    if (monthlyGrocery > 0) {
                         await createSingleExpense({
                             date: new Date(currentYear, month - 1, 1),
                             category: 'Groceries',
