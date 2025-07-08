@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
     <!-- Favicon -->
     <link rel="icon" href="blogo2.png" type="image/png">
     <link rel="apple-touch-icon" href="blogo2.png">
@@ -288,10 +288,18 @@
             .chat-messages {
                 padding: 1rem;
                 min-height: 300px;
+                /* Ensure messages can scroll above keyboard */
+                padding-bottom: 2rem;
             }
             
             .chat-input-area {
                 padding: 1rem;
+                /* Ensure input area stays above keyboard */
+                position: relative;
+                z-index: 100;
+                background: #f8fafc;
+                /* Add safe area for devices with home indicator */
+                padding-bottom: max(1rem, env(safe-area-inset-bottom));
             }
             
             .message-content {
@@ -313,16 +321,26 @@
             }
             
             .text-input-container {
-            flex-direction: column;
+                flex-direction: column;
                 gap: 0.5rem;
+                /* Ensure container maintains its position */
+                position: relative;
             }
             
             .text-input {
                 width: 100%;
+                /* Ensure input is easily tappable */
+                min-height: 44px;
+                font-size: 16px; /* Prevents zoom on iOS */
             }
             
             .send-button {
                 width: 100%;
+                /* Ensure button is easily tappable */
+                min-height: 44px;
+                font-size: 16px;
+                /* Make it more prominent when keyboard is up */
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
             }
             
             .chat-title {
@@ -331,6 +349,31 @@
             
             .chat-subtitle {
                 font-size: 0.8rem;
+            }
+        }
+        
+        /* Keyboard handling for mobile */
+        @media (max-width: 768px) {
+            /* Adjust chat container when keyboard might be present */
+            .chat-container.keyboard-active {
+                height: 50vh; /* Reduce height when keyboard is up */
+            }
+            
+            .chat-container.keyboard-active .chat-messages {
+                max-height: calc(50vh - 120px); /* Account for input area */
+                overflow-y: auto;
+            }
+            
+            /* Ensure input area stays visible */
+            .chat-input-area.keyboard-active {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                z-index: 1000;
+                background: #f8fafc;
+                border-top: 1px solid #e2e8f0;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
             }
         }
         
@@ -1381,6 +1424,11 @@
                 }
             });
             
+            // Add mobile keyboard handling
+            if (window.innerWidth <= 768) {
+                setupMobileKeyboardHandling(input);
+            }
+            
             inputContainer.appendChild(input);
             inputContainer.appendChild(sendButton);
             inputArea.appendChild(inputContainer);
@@ -1393,6 +1441,75 @@
                 }
                 smoothScrollToBottom();
             }, 150);
+        }
+        
+        // Mobile keyboard handling functions
+        function setupMobileKeyboardHandling(input) {
+            const chatContainer = document.querySelector('.chat-container');
+            const inputArea = document.getElementById('chatInputArea');
+            
+            // Store initial viewport height
+            const initialViewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+            
+            // Handle focus (keyboard appears)
+            input.addEventListener('focus', () => {
+                setTimeout(() => {
+                    detectKeyboardAndAdjust(chatContainer, inputArea, input);
+                }, 300); // Delay to let keyboard fully appear
+            });
+            
+            // Handle blur (keyboard disappears)
+            input.addEventListener('blur', () => {
+                setTimeout(() => {
+                    resetKeyboardLayout(chatContainer, inputArea);
+                }, 100);
+            });
+            
+            // Handle viewport resize (keyboard height change)
+            if (window.visualViewport) {
+                window.visualViewport.addEventListener('resize', () => {
+                    if (document.activeElement === input) {
+                        detectKeyboardAndAdjust(chatContainer, inputArea, input);
+                    }
+                });
+            } else {
+                // Fallback for older browsers
+                window.addEventListener('resize', () => {
+                    if (document.activeElement === input) {
+                        setTimeout(() => {
+                            detectKeyboardAndAdjust(chatContainer, inputArea, input);
+                        }, 100);
+                    }
+                });
+            }
+        }
+        
+        function detectKeyboardAndAdjust(chatContainer, inputArea, input) {
+            const currentViewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+            const screenHeight = window.screen.height;
+            const keyboardThreshold = screenHeight * 0.75; // Assume keyboard is up if viewport < 75% of screen
+            
+            if (currentViewportHeight < keyboardThreshold) {
+                // Keyboard is likely up
+                chatContainer.classList.add('keyboard-active');
+                inputArea.classList.add('keyboard-active');
+                
+                // Scroll the input into view
+                setTimeout(() => {
+                    input.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'end',
+                        inline: 'nearest'
+                    });
+                }, 100);
+            } else {
+                resetKeyboardLayout(chatContainer, inputArea);
+            }
+        }
+        
+        function resetKeyboardLayout(chatContainer, inputArea) {
+            chatContainer.classList.remove('keyboard-active');
+            inputArea.classList.remove('keyboard-active');
         }
         
         async function handleOptionResponse(value, text, field) {
@@ -1689,6 +1806,11 @@
                     handleStateSubmit();
                 }
             });
+            
+            // Add mobile keyboard handling
+            if (window.innerWidth <= 768) {
+                setupMobileKeyboardHandling(input);
+            }
             
             inputContainer.appendChild(input);
             inputContainer.appendChild(sendButton);
@@ -2324,6 +2446,11 @@
                 formatCurrency(rentInput);
             });
             
+            // Add mobile keyboard handling
+            if (window.innerWidth <= 768) {
+                setupMobileKeyboardHandling(rentInput);
+            }
+            
             rentGroup.appendChild(rentLabel);
             rentGroup.appendChild(rentInput);
             
@@ -2361,6 +2488,11 @@
                 formatCurrency(wifiInput);
             });
             
+            // Add mobile keyboard handling
+            if (window.innerWidth <= 768) {
+                setupMobileKeyboardHandling(wifiInput);
+            }
+            
             wifiGroup.appendChild(wifiLabel);
             wifiGroup.appendChild(wifiInput);
             
@@ -2397,6 +2529,11 @@
             utilitiesInput.addEventListener('input', () => {
                 formatCurrency(utilitiesInput);
             });
+            
+            // Add mobile keyboard handling
+            if (window.innerWidth <= 768) {
+                setupMobileKeyboardHandling(utilitiesInput);
+            }
             
             utilitiesGroup.appendChild(utilitiesLabel);
             utilitiesGroup.appendChild(utilitiesInput);
