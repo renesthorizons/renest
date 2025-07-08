@@ -3433,11 +3433,29 @@
             showStep(8);
         }
 
+        // Handle input focus for better mobile experience
+        function handleInputFocus() {
+            // Wait for keyboard to appear, then scroll to bottom
+            setTimeout(() => {
+                const messagesContainer = document.getElementById('chatMessages');
+                if (messagesContainer) {
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }
+            }, 300);
+        }
+
         // Initialize page
         document.addEventListener('DOMContentLoaded', function() {
             // Clear any existing expense creation flags to start fresh
             localStorage.removeItem('onboardingExpensesCreated');
             console.log('=== ONBOARDING START: Cleared expense creation flag ===');
+            
+            // Add global input focus handler using event delegation
+            document.addEventListener('focusin', function(e) {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                    handleInputFocus();
+                }
+            });
             
             // Initialize Google Sign-In when scripts are loaded
             setTimeout(() => {
