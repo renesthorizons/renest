@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Favicon -->
     <link rel="icon" href="blogo2.png" type="image/png">
     <link rel="apple-touch-icon" href="blogo2.png">
@@ -288,18 +288,10 @@
             .chat-messages {
                 padding: 1rem;
                 min-height: 300px;
-                /* Ensure messages can scroll above keyboard */
-                padding-bottom: 2rem;
             }
             
             .chat-input-area {
                 padding: 1rem;
-                /* Ensure input area stays above keyboard */
-                position: relative;
-                z-index: 100;
-                background: #f8fafc;
-                /* Add safe area for devices with home indicator */
-                padding-bottom: max(1rem, env(safe-area-inset-bottom));
             }
             
             .message-content {
@@ -321,26 +313,16 @@
             }
             
             .text-input-container {
-                flex-direction: column;
+            flex-direction: column;
                 gap: 0.5rem;
-                /* Ensure container maintains its position */
-                position: relative;
             }
             
             .text-input {
                 width: 100%;
-                /* Ensure input is easily tappable */
-                min-height: 44px;
-                font-size: 16px; /* Prevents zoom on iOS */
             }
             
             .send-button {
                 width: 100%;
-                /* Ensure button is easily tappable */
-                min-height: 44px;
-                font-size: 16px;
-                /* Make it more prominent when keyboard is up */
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
             }
             
             .chat-title {
@@ -349,47 +331,6 @@
             
             .chat-subtitle {
                 font-size: 0.8rem;
-            }
-        }
-        
-        /* Keyboard handling for mobile */
-        @media (max-width: 768px) {
-            /* Smooth transition for keyboard appearance */
-            .chat-container {
-                transition: transform 0.3s ease-out, height 0.3s ease-out;
-            }
-            
-            .chat-input-area {
-                transition: all 0.3s ease-out;
-            }
-            
-            /* When keyboard is active, slide everything up */
-            .chat-container.keyboard-active {
-                /* Calculate keyboard height dynamically via JS */
-                transform: translateY(var(--keyboard-offset, -200px));
-                height: calc(100vh + var(--keyboard-offset, -200px));
-            }
-            
-            .chat-container.keyboard-active .chat-messages {
-                /* Ensure messages stay scrollable */
-                max-height: calc(100vh - 200px + var(--keyboard-offset, -200px));
-                overflow-y: auto;
-                scroll-behavior: smooth;
-            }
-            
-            /* Keep input area positioned properly */
-            .chat-input-area.keyboard-active {
-                position: relative;
-                background: #f8fafc;
-                border-top: 1px solid #e2e8f0;
-                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-                z-index: 100;
-            }
-            
-            /* Ensure the onboarding container doesn't scroll behind */
-            .onboarding-container.keyboard-active {
-                overflow: hidden;
-                height: 100vh;
             }
         }
         
@@ -1440,11 +1381,6 @@
                 }
             });
             
-            // Add mobile keyboard handling
-            if (window.innerWidth <= 768) {
-                setupMobileKeyboardHandling(input);
-            }
-            
             inputContainer.appendChild(input);
             inputContainer.appendChild(sendButton);
             inputArea.appendChild(inputContainer);
@@ -1457,102 +1393,6 @@
                 }
                 smoothScrollToBottom();
             }, 150);
-        }
-        
-        // Mobile keyboard handling functions
-        function setupMobileKeyboardHandling(input) {
-            const chatContainer = document.querySelector('.chat-container');
-            const inputArea = document.getElementById('chatInputArea');
-            
-            // Store initial viewport height for more accurate detection
-            if (!window.initialViewportHeight) {
-                window.initialViewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-            }
-            
-            // Handle focus (keyboard appears)
-            input.addEventListener('focus', () => {
-                setTimeout(() => {
-                    detectKeyboardAndAdjust(chatContainer, inputArea, input);
-                }, 300); // Delay to let keyboard fully appear
-            });
-            
-            // Handle blur (keyboard disappears)
-            input.addEventListener('blur', () => {
-                setTimeout(() => {
-                    resetKeyboardLayout(chatContainer, inputArea);
-                }, 100);
-            });
-            
-            // Handle viewport resize (keyboard height change)
-            if (window.visualViewport) {
-                window.visualViewport.addEventListener('resize', () => {
-                    if (document.activeElement === input) {
-                        detectKeyboardAndAdjust(chatContainer, inputArea, input);
-                    }
-                });
-            } else {
-                // Fallback for older browsers
-                window.addEventListener('resize', () => {
-                    if (document.activeElement === input) {
-                        setTimeout(() => {
-                            detectKeyboardAndAdjust(chatContainer, inputArea, input);
-                        }, 100);
-                    }
-                });
-            }
-        }
-        
-        function detectKeyboardAndAdjust(chatContainer, inputArea, input) {
-            const currentViewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-            const initialHeight = window.initialViewportHeight || window.innerHeight;
-            const heightDifference = initialHeight - currentViewportHeight;
-            
-            // Consider keyboard active if viewport shrunk by more than 150px
-            if (heightDifference > 150) {
-                // Use the height difference as keyboard height
-                const keyboardHeight = heightDifference;
-                const offset = Math.min(keyboardHeight, initialHeight * 0.4); // Cap at 40% of initial height
-                
-                // Apply the offset as a CSS custom property
-                const onboardingContainer = document.querySelector('.onboarding-container');
-                const offsetValue = `-${offset}px`;
-                
-                chatContainer.style.setProperty('--keyboard-offset', offsetValue);
-                onboardingContainer.style.setProperty('--keyboard-offset', offsetValue);
-                
-                // Add keyboard-active classes
-                chatContainer.classList.add('keyboard-active');
-                inputArea.classList.add('keyboard-active');
-                onboardingContainer.classList.add('keyboard-active');
-                
-                console.log(`Keyboard detected: height=${keyboardHeight}px, offset=${offsetValue}`);
-                
-                // Ensure the active input stays visible
-                setTimeout(() => {
-                    // Scroll messages to bottom to keep context
-                    const messagesContainer = chatContainer.querySelector('.chat-messages');
-                    if (messagesContainer) {
-                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                    }
-                }, 350); // After transition completes
-            } else {
-                resetKeyboardLayout(chatContainer, inputArea);
-            }
-        }
-        
-        function resetKeyboardLayout(chatContainer, inputArea) {
-            const onboardingContainer = document.querySelector('.onboarding-container');
-            
-            // Remove keyboard-active classes
-            chatContainer.classList.remove('keyboard-active');
-            inputArea.classList.remove('keyboard-active');
-            onboardingContainer.classList.remove('keyboard-active');
-            
-            // Clear CSS custom properties
-            chatContainer.style.removeProperty('--keyboard-offset');
-            onboardingContainer.style.removeProperty('--keyboard-offset');
-            
-            console.log('Keyboard hidden - layout reset');
         }
         
         async function handleOptionResponse(value, text, field) {
@@ -1849,11 +1689,6 @@
                     handleStateSubmit();
                 }
             });
-            
-            // Add mobile keyboard handling
-            if (window.innerWidth <= 768) {
-                setupMobileKeyboardHandling(input);
-            }
             
             inputContainer.appendChild(input);
             inputContainer.appendChild(sendButton);
@@ -2262,7 +2097,7 @@
             // Continue automatically after a longer delay to let users absorb the explanation
             setTimeout(async () => {
                 await processNextQuestion();
-            }, 6000);
+            }, 4500);
         }
         
         function createAddonSelector(field) {
@@ -2375,14 +2210,14 @@
             title.style.fontWeight = '600';
             title.style.marginBottom = '1rem';
             title.style.textAlign = 'center';
-            title.textContent = 'Review Your Average Monthly Housing Costs';
+            title.textContent = 'Review Your Monthly Housing Costs';
             
             const instruction = document.createElement('div');
             instruction.style.marginBottom = '1.5rem';
             instruction.style.textAlign = 'center';
             instruction.style.color = '#6b7280';
             instruction.style.fontSize = '0.9rem';
-            instruction.textContent = 'Tap months where your expenese changed significantly, like a new lease!';
+            instruction.textContent = 'Tap months where you paid different amounts to edit them';
             
             // Month grid
             const monthGrid = document.createElement('div');
@@ -2489,11 +2324,6 @@
                 formatCurrency(rentInput);
             });
             
-            // Add mobile keyboard handling
-            if (window.innerWidth <= 768) {
-                setupMobileKeyboardHandling(rentInput);
-            }
-            
             rentGroup.appendChild(rentLabel);
             rentGroup.appendChild(rentInput);
             
@@ -2531,11 +2361,6 @@
                 formatCurrency(wifiInput);
             });
             
-            // Add mobile keyboard handling
-            if (window.innerWidth <= 768) {
-                setupMobileKeyboardHandling(wifiInput);
-            }
-            
             wifiGroup.appendChild(wifiLabel);
             wifiGroup.appendChild(wifiInput);
             
@@ -2572,11 +2397,6 @@
             utilitiesInput.addEventListener('input', () => {
                 formatCurrency(utilitiesInput);
             });
-            
-            // Add mobile keyboard handling
-            if (window.innerWidth <= 768) {
-                setupMobileKeyboardHandling(utilitiesInput);
-            }
             
             utilitiesGroup.appendChild(utilitiesLabel);
             utilitiesGroup.appendChild(utilitiesInput);
