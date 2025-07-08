@@ -845,88 +845,7 @@
         </div>
     </div>
 
-    <!-- Housing Information Modal -->
-    <div id="housingModal" class="modal-overlay hidden">
-        <div class="modal-container">
-            <div class="modal-content">
-                <button class="close-button" onclick="closeHousingModal()">×</button>
-                <h2 id="housingModalTitle" style="margin-bottom: 1.5rem;">Add Housing Information</h2>
-                
-                <div class="form-group">
-                    <label class="form-label">Lease start date:</label>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <select id="leaseStartMonth" class="form-input" style="flex: 1;">
-                            <option value="1">January</option>
-                            <option value="2">February</option>
-                            <option value="3">March</option>
-                            <option value="4">April</option>
-                            <option value="5">May</option>
-                            <option value="6">June</option>
-                            <option value="7">July</option>
-                            <option value="8">August</option>
-                            <option value="9">September</option>
-                            <option value="10">October</option>
-                            <option value="11">November</option>
-                            <option value="12">December</option>
-                        </select>
-                        <select id="leaseStartYear" class="form-input" style="flex: 1;">
-                            <!-- Will be populated via JavaScript -->
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Lease end date:</label>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <select id="leaseEndMonth" class="form-input" style="flex: 1;">
-                            <option value="1">January</option>
-                            <option value="2">February</option>
-                            <option value="3">March</option>
-                            <option value="4">April</option>
-                            <option value="5">May</option>
-                            <option value="6">June</option>
-                            <option value="7">July</option>
-                            <option value="8">August</option>
-                            <option value="9">September</option>
-                            <option value="10">October</option>
-                            <option value="11">November</option>
-                            <option value="12">December</option>
-                        </select>
-                        <select id="leaseEndYear" class="form-input" style="flex: 1;">
-                            <!-- Will be populated via JavaScript -->
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="monthlyRent" class="form-label">Monthly rent payment:</label>
-                    <input type="text" id="monthlyRent" class="form-input" placeholder="Enter monthly rent">
-                </div>
-                
-                <div class="form-group">
-                    <div class="expense-input-group">
-                        <div class="expense-item">
-                            <label for="utilities" class="form-label">Monthly utilities:</label>
-                            <input type="text" id="utilities" class="form-input" placeholder="Enter monthly utilities">
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="utilitiesIncluded" name="utilitiesIncluded">
-                                <label for="utilitiesIncluded">Utilities included in rent</label>
-                            </div>
-                        </div>
-                        <div class="expense-item">
-                            <label for="wifi" class="form-label">Monthly WiFi:</label>
-                            <input type="text" id="wifi" class="form-input" placeholder="Enter monthly WiFi">
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="button-container">
-                    <button onclick="closeHousingModal()" class="button button-secondary">Cancel</button>
-                    <button onclick="saveHousingInfo()" id="saveHousingBtn" class="button button-primary">Save Housing Info</button>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
     <!-- Learn More Popup -->
     <div id="learnMorePopup" class="learn-more-popup hidden">
@@ -986,9 +905,9 @@
             return stateCodeToName[stateCode] || stateCode;
         }
         
-        // Initialize housing entries
-        if (typeof window.housingEntries === 'undefined') {
-            window.housingEntries = [];
+        // Initialize monthly housing costs
+        if (typeof window.monthlyHousingCosts === 'undefined') {
+            window.monthlyHousingCosts = {};
         }
         
         // Initialize school recognizer when available
@@ -1145,11 +1064,47 @@
                 delay: 1500
             },
             {
-                id: 'housing_modal',
+                id: 'rent_amount',
                 type: 'bot',
-                message: "Please add your housing details below. This helps us calculate your maximum tax benefits.",
-                responseType: 'housing_modal',
-                action: 'openHousingModal'
+                message: "How much is your rent per month?",
+                responseType: 'currency',
+                placeholder: "Enter monthly rent",
+                field: 'monthlyRent'
+            },
+            {
+                id: 'wifi_amount',
+                type: 'bot',
+                message: "How much is WiFi per month?",
+                responseType: 'currency',
+                placeholder: "Enter monthly WiFi cost",
+                field: 'monthlyWifi'
+            },
+            {
+                id: 'utilities_included',
+                type: 'bot',
+                message: "Are utilities (electricity, water, gas) included in your rent?",
+                responseType: 'options',
+                options: [
+                    { value: 'yes', text: 'Yes, utilities are included' },
+                    { value: 'no', text: 'No, I pay utilities separately' }
+                ],
+                field: 'utilitiesIncluded'
+            },
+            {
+                id: 'utilities_amount',
+                type: 'bot',
+                message: "How much are utilities per month?",
+                responseType: 'currency',
+                placeholder: "Enter monthly utilities cost",
+                showIf: (data) => data.utilitiesIncluded === 'no',
+                field: 'monthlyUtilities'
+            },
+            {
+                id: 'housing_review',
+                type: 'bot',
+                message: "Perfect! Now let's review your monthly housing costs and adjust any months where you paid different amounts.",
+                responseType: 'housing_review',
+                action: 'setupHousingReview'
             },
             {
                 id: 'enrolled_months',
@@ -1182,18 +1137,19 @@
                 responseType: 'benefit_summary'
             },
             {
-                id: 'email',
-                type: 'bot',
-                message: "What's your email address? We'll use this to create your account.",
-                responseType: 'email',
-                placeholder: "Enter your email",
-                field: 'email'
-            },
-            {
                 id: 'cost_explanation',
                 type: 'bot',
                 message: "", // Will be dynamically generated with benefit amount
                 delay: 1000
+            },
+            
+            {
+                id: 'email',
+                type: 'bot',
+                message: "What's your email address? We'll use this to create your account and get you set up.",
+                responseType: 'email',
+                placeholder: "Enter your email",
+                field: 'email'
             },
             {
                 id: 'addons',
@@ -1306,6 +1262,48 @@
             const typingIndicator = document.getElementById('typingIndicator');
             if (typingIndicator) {
                 typingIndicator.remove();
+            }
+        }
+        
+        // Countdown message functions for sophisticated timeout handling
+        async function addCountdownMessage(type, content, delay = 0) {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    const messagesContainer = document.getElementById('chatMessages');
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = `message ${type}`;
+                    
+                    // Generate unique ID for this message
+                    const messageId = 'countdown-message-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+                    messageDiv.id = messageId;
+                    
+                    const avatar = document.createElement('div');
+                    avatar.className = `message-avatar ${type}`;
+                    avatar.textContent = type === 'bot' ? 'R' : 'U';
+                    
+                    const messageContent = document.createElement('div');
+                    messageContent.className = 'message-content countdown-content';
+                    messageContent.innerHTML = content;
+                    
+                    messageDiv.appendChild(avatar);
+                    messageDiv.appendChild(messageContent);
+                    messagesContainer.appendChild(messageDiv);
+                    
+                    // Scroll to bottom
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    
+                    resolve(messageId);
+                }, delay);
+            });
+        }
+        
+        function updateCountdownMessage(messageId, newContent) {
+            const messageElement = document.getElementById(messageId);
+            if (messageElement) {
+                const contentElement = messageElement.querySelector('.countdown-content');
+                if (contentElement) {
+                    contentElement.innerHTML = newContent;
+                }
             }
         }
         
@@ -1446,10 +1444,10 @@
             waitingForResponse = true;
             
             // Validate input based on field type
-            if (field === 'income') {
+            if (field === 'income' || field === 'monthlyRent' || field === 'monthlyWifi' || field === 'monthlyUtilities') {
                 const numericValue = value.replace(/[^\d]/g, '');
                 if (!numericValue) {
-                    showError('Please enter a valid income amount');
+                    showError('Please enter a valid amount');
                     waitingForResponse = false;
                     return;
                 }
@@ -1522,7 +1520,7 @@
                     chatData.state,
                     chatData.income,
                     chatData.enrolledMonths,
-                    window.housingEntries,
+                    window.monthlyHousingCosts,
                     chatData.monthlyGrocery
                 );
                 
@@ -1533,12 +1531,12 @@
                 
                 question.message = `
                     <div style="margin-bottom: 1rem;">
-                        Based on your benefit of $${benefit.toLocaleString('en-US')}, our service cost is $${totalCost.toLocaleString('en-US')}. You'll still save $${savingsAfterCost.toLocaleString('en-US')} after our fee!
+                        To cover our costs, we charge $${totalCost.toLocaleString('en-US')} to unlock your $${benefit.toLocaleString('en-US')} benefit!
                     </div>
                     <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid #0ea5e9; margin: 1rem 0;">
-                        <div style="font-weight: 600; color: #0c4a6e; margin-bottom: 0.75rem;">What we provide:</div>
+                        <div style="font-weight: 600; color: #0c4a6e; margin-bottom: 0.75rem;">What we provide:</div> 
                         <div style="color: #374151; line-height: 1.5; margin-bottom: 1rem;">
-                            We prepare the paperwork and account necessary to claim your ${stateName} 529 deduction benefit. This paperwork qualifies you for your increased tax refund and is included when you file your taxes.
+                            We take the expenses you just told us about and prepare the paperwork and account necessary in order to qualify these expenses for your ${stateName} education benefit. This paperwork qualifies you for your increased tax refund and is included when you file your taxes.
                         </div>
                         <div style="font-weight: 600; color: #0c4a6e; margin-bottom: 0.5rem;">When do I pay:</div>
                         <div style="color: #374151; line-height: 1.5; margin-bottom: 1rem;">
@@ -1587,9 +1585,8 @@
                 await showBenefitSummary();
             } else if (question.responseType === 'addons') {
                 createAddonSelector(question.field);
-            } else if (question.responseType === 'housing_modal') {
-                // Housing modal is handled by the action, no additional input needed
-                // The housing interface will call handleOptionResponse when done
+            } else if (question.responseType === 'housing_review') {
+                createHousingReview(question.field);
             } else if (!question.responseType) {
                 // For informational messages without response type, automatically continue
                 console.log('Auto-continuing from informational message:', question.id);
@@ -1975,19 +1972,21 @@
             valueDisplay.style.fontWeight = '600';
             valueDisplay.style.marginBottom = '1rem';
             valueDisplay.style.color = '#16a34a';
-            valueDisplay.textContent = '$' + defaultValue + '/month';
+            valueDisplay.textContent = '$' + Number(defaultValue).toLocaleString('en-US') + '/month';
             
             // Slider
             const slider = document.createElement('input');
             slider.type = 'range';
             slider.min = min;
             slider.max = max;
+            slider.step = 10; // $10 increments
             slider.value = defaultValue;
             slider.style.width = '100%';
             slider.style.marginBottom = '1rem';
             
             slider.oninput = () => {
-                valueDisplay.textContent = '$' + slider.value + '/month';
+                const value = Number(slider.value);
+                valueDisplay.textContent = '$' + value.toLocaleString('en-US') + '/month';
             };
             
             // Continue button
@@ -1997,8 +1996,9 @@
             continueBtn.style.width = '100%';
             continueBtn.onclick = () => {
                 const sliderValue = Number(slider.value);
-                chatData[field] = sliderValue; // Store as number
-                handleOptionResponse(sliderValue, '$' + sliderValue + '/month', field);
+                chatData[field] = sliderValue; // Store as number (including 0)
+                const displayText = '$' + sliderValue.toLocaleString('en-US') + '/month';
+                handleOptionResponse(sliderValue, displayText, field);
             };
             
             sliderContainer.appendChild(valueDisplay);
@@ -2013,13 +2013,13 @@
             showTypingIndicator('analyzing your tax situation...');
             await new Promise(resolve => setTimeout(resolve, 2000));
             
-            // Calculate benefit using existing function
-            const benefitDetails = calculateBenefitWithMultipleHousingCustomGrocery(
+            // Calculate benefit using existing function with new housing structure
+            const benefitDetails = calculateBenefitWithMonthlyHousingCustomGrocery(
                 chatData.state, 
                 Number(chatData.income), 
                 chatData.enrolledMonths, 
-                window.housingEntries,
-                Number(chatData.monthlyGrocery) || 200,
+                window.monthlyHousingCosts,
+                chatData.monthlyGrocery !== undefined ? Number(chatData.monthlyGrocery) : 200,
                 true
             );
             
@@ -2094,10 +2094,10 @@
             
             await addMessage('bot', explanationMessage);
             
-            // Continue automatically after a short delay
+            // Continue automatically after a longer delay to let users absorb the explanation
             setTimeout(async () => {
                 await processNextQuestion();
-            }, 2000);
+            }, 4500);
         }
         
         function createAddonSelector(field) {
@@ -2177,6 +2177,384 @@
             scrollToBottom();
         }
         
+        function createHousingReview(field) {
+            const inputArea = document.getElementById('chatInputArea');
+            const housingContainer = document.createElement('div');
+            housingContainer.style.padding = '1.5rem';
+            housingContainer.style.backgroundColor = 'white';
+            housingContainer.style.borderRadius = '0.75rem';
+            housingContainer.style.border = '2px solid #e2e8f0';
+            
+            const months = [
+                'January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'
+            ];
+            
+            // Initialize monthly costs with defaults
+            const defaultRent = Number(chatData.monthlyRent) || 0;
+            const defaultWifi = Number(chatData.monthlyWifi) || 0;
+            const defaultUtilities = chatData.utilitiesIncluded === 'yes' ? 0 : (Number(chatData.monthlyUtilities) || 0);
+            
+            // Initialize all months with default values
+            window.monthlyHousingCosts = {};
+            for (let i = 1; i <= 12; i++) {
+                window.monthlyHousingCosts[i] = {
+                    rent: defaultRent,
+                    wifi: defaultWifi,
+                    utilities: defaultUtilities
+                };
+            }
+            
+            // Title and instruction
+            const title = document.createElement('div');
+            title.style.fontWeight = '600';
+            title.style.marginBottom = '1rem';
+            title.style.textAlign = 'center';
+            title.textContent = 'Review Your Monthly Housing Costs';
+            
+            const instruction = document.createElement('div');
+            instruction.style.marginBottom = '1.5rem';
+            instruction.style.textAlign = 'center';
+            instruction.style.color = '#6b7280';
+            instruction.style.fontSize = '0.9rem';
+            instruction.textContent = 'Tap months where you paid different amounts to edit them';
+            
+            // Month grid
+            const monthGrid = document.createElement('div');
+            monthGrid.style.display = 'grid';
+            monthGrid.style.gridTemplateColumns = 'repeat(2, 1fr)';
+            monthGrid.style.gap = '0.75rem';
+            monthGrid.style.marginBottom = '1.5rem';
+            
+            const selectedMonths = new Set();
+            
+            months.forEach((month, index) => {
+                const monthNumber = index + 1;
+                const monthDiv = document.createElement('div');
+                monthDiv.style.border = '2px solid #e2e8f0';
+                monthDiv.style.borderRadius = '0.5rem';
+                monthDiv.style.padding = '0.75rem';
+                monthDiv.style.cursor = 'pointer';
+                monthDiv.style.transition = 'all 0.2s ease';
+                monthDiv.style.fontSize = '0.85rem';
+                
+                const monthName = document.createElement('div');
+                monthName.style.fontWeight = '600';
+                monthName.style.marginBottom = '0.25rem';
+                monthName.textContent = month;
+                
+                const costSummary = document.createElement('div');
+                costSummary.style.color = '#6b7280';
+                costSummary.style.fontSize = '0.8rem';
+                
+                function updateCostDisplay() {
+                    const costs = window.monthlyHousingCosts[monthNumber];
+                    let summary = `$${costs.rent.toLocaleString('en-US')} rent`;
+                    if (costs.wifi > 0) summary += ` • $${costs.wifi.toLocaleString('en-US')} wifi`;
+                    if (costs.utilities > 0) summary += ` • $${costs.utilities.toLocaleString('en-US')} utilities`;
+                    costSummary.textContent = summary;
+                }
+                updateCostDisplay();
+                
+                monthDiv.onclick = () => {
+                    if (selectedMonths.has(monthNumber)) {
+                        selectedMonths.delete(monthNumber);
+                        monthDiv.style.backgroundColor = 'white';
+                        monthDiv.style.borderColor = '#e2e8f0';
+                    } else {
+                        selectedMonths.add(monthNumber);
+                        monthDiv.style.backgroundColor = '#f0fdf4';
+                        monthDiv.style.borderColor = '#22c55e';
+                    }
+                };
+                
+                monthDiv.appendChild(monthName);
+                monthDiv.appendChild(costSummary);
+                monthGrid.appendChild(monthDiv);
+            });
+            
+            // Edit panel (initially hidden)
+            const editPanel = document.createElement('div');
+            editPanel.style.display = 'none';
+            editPanel.style.padding = '1.5rem';
+            editPanel.style.backgroundColor = '#f8fafc';
+            editPanel.style.borderRadius = '0.75rem';
+            editPanel.style.marginBottom = '1rem';
+            editPanel.style.border = '2px solid #e2e8f0';
+            editPanel.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.1)';
+            
+            const editTitle = document.createElement('div');
+            editTitle.style.fontWeight = '600';
+            editTitle.style.marginBottom = '1.5rem';
+            editTitle.style.color = '#374151';
+            editTitle.style.fontSize = '1.1rem';
+            editTitle.textContent = 'Edit Selected Months';
+            
+            // Rent input group
+            const rentGroup = document.createElement('div');
+            rentGroup.style.marginBottom = '1rem';
+            
+            const rentLabel = document.createElement('label');
+            rentLabel.style.display = 'block';
+            rentLabel.style.fontWeight = '500';
+            rentLabel.style.marginBottom = '0.5rem';
+            rentLabel.style.color = '#374151';
+            rentLabel.style.fontSize = '0.9rem';
+            rentLabel.textContent = 'Monthly Rent';
+            
+            const rentInput = document.createElement('input');
+            rentInput.type = 'text';
+            rentInput.placeholder = 'Enter rent amount';
+            rentInput.style.width = '100%';
+            rentInput.style.padding = '0.75rem';
+            rentInput.style.border = '2px solid #e2e8f0';
+            rentInput.style.borderRadius = '0.5rem';
+            rentInput.style.fontSize = '1rem';
+            rentInput.style.transition = 'border-color 0.2s ease';
+            rentInput.style.boxSizing = 'border-box';
+            
+            rentInput.addEventListener('focus', () => {
+                rentInput.style.borderColor = '#3b82f6';
+                rentInput.style.outline = 'none';
+            });
+            rentInput.addEventListener('blur', () => {
+                rentInput.style.borderColor = '#e2e8f0';
+            });
+            rentInput.addEventListener('input', () => {
+                formatCurrency(rentInput);
+            });
+            
+            rentGroup.appendChild(rentLabel);
+            rentGroup.appendChild(rentInput);
+            
+            // WiFi input group
+            const wifiGroup = document.createElement('div');
+            wifiGroup.style.marginBottom = '1rem';
+            
+            const wifiLabel = document.createElement('label');
+            wifiLabel.style.display = 'block';
+            wifiLabel.style.fontWeight = '500';
+            wifiLabel.style.marginBottom = '0.5rem';
+            wifiLabel.style.color = '#374151';
+            wifiLabel.style.fontSize = '0.9rem';
+            wifiLabel.textContent = 'Monthly WiFi';
+            
+            const wifiInput = document.createElement('input');
+            wifiInput.type = 'text';
+            wifiInput.placeholder = 'Enter WiFi amount';
+            wifiInput.style.width = '100%';
+            wifiInput.style.padding = '0.75rem';
+            wifiInput.style.border = '2px solid #e2e8f0';
+            wifiInput.style.borderRadius = '0.5rem';
+            wifiInput.style.fontSize = '1rem';
+            wifiInput.style.transition = 'border-color 0.2s ease';
+            wifiInput.style.boxSizing = 'border-box';
+            
+            wifiInput.addEventListener('focus', () => {
+                wifiInput.style.borderColor = '#3b82f6';
+                wifiInput.style.outline = 'none';
+            });
+            wifiInput.addEventListener('blur', () => {
+                wifiInput.style.borderColor = '#e2e8f0';
+            });
+            wifiInput.addEventListener('input', () => {
+                formatCurrency(wifiInput);
+            });
+            
+            wifiGroup.appendChild(wifiLabel);
+            wifiGroup.appendChild(wifiInput);
+            
+            // Utilities input group (conditional)
+            const utilitiesGroup = document.createElement('div');
+            utilitiesGroup.style.marginBottom = '1.5rem';
+            
+            const utilitiesLabel = document.createElement('label');
+            utilitiesLabel.style.display = 'block';
+            utilitiesLabel.style.fontWeight = '500';
+            utilitiesLabel.style.marginBottom = '0.5rem';
+            utilitiesLabel.style.color = '#374151';
+            utilitiesLabel.style.fontSize = '0.9rem';
+            utilitiesLabel.textContent = 'Monthly Utilities';
+            
+            const utilitiesInput = document.createElement('input');
+            utilitiesInput.type = 'text';
+            utilitiesInput.placeholder = 'Enter utilities amount';
+            utilitiesInput.style.width = '100%';
+            utilitiesInput.style.padding = '0.75rem';
+            utilitiesInput.style.border = '2px solid #e2e8f0';
+            utilitiesInput.style.borderRadius = '0.5rem';
+            utilitiesInput.style.fontSize = '1rem';
+            utilitiesInput.style.transition = 'border-color 0.2s ease';
+            utilitiesInput.style.boxSizing = 'border-box';
+            
+            utilitiesInput.addEventListener('focus', () => {
+                utilitiesInput.style.borderColor = '#3b82f6';
+                utilitiesInput.style.outline = 'none';
+            });
+            utilitiesInput.addEventListener('blur', () => {
+                utilitiesInput.style.borderColor = '#e2e8f0';
+            });
+            utilitiesInput.addEventListener('input', () => {
+                formatCurrency(utilitiesInput);
+            });
+            
+            utilitiesGroup.appendChild(utilitiesLabel);
+            utilitiesGroup.appendChild(utilitiesInput);
+            
+            if (chatData.utilitiesIncluded === 'yes') {
+                utilitiesGroup.style.display = 'none';
+            }
+            
+            // Button container
+            const editButtonContainer = document.createElement('div');
+            editButtonContainer.style.display = 'flex';
+            editButtonContainer.style.gap = '0.75rem';
+            editButtonContainer.style.justifyContent = 'flex-end';
+            
+            const applyBtn = document.createElement('button');
+            applyBtn.textContent = 'Apply Changes';
+            applyBtn.style.backgroundColor = '#22c55e';
+            applyBtn.style.color = 'white';
+            applyBtn.style.border = 'none';
+            applyBtn.style.borderRadius = '0.5rem';
+            applyBtn.style.padding = '0.75rem 1.5rem';
+            applyBtn.style.fontSize = '0.9rem';
+            applyBtn.style.fontWeight = '600';
+            applyBtn.style.cursor = 'pointer';
+            applyBtn.style.transition = 'all 0.2s ease';
+            
+            applyBtn.addEventListener('mouseenter', () => {
+                applyBtn.style.backgroundColor = '#16a34a';
+                applyBtn.style.transform = 'translateY(-1px)';
+            });
+            applyBtn.addEventListener('mouseleave', () => {
+                applyBtn.style.backgroundColor = '#22c55e';
+                applyBtn.style.transform = 'translateY(0)';
+            });
+            
+            const cancelBtn = document.createElement('button');
+            cancelBtn.textContent = 'Cancel';
+            cancelBtn.style.backgroundColor = '#6b7280';
+            cancelBtn.style.color = 'white';
+            cancelBtn.style.border = 'none';
+            cancelBtn.style.borderRadius = '0.5rem';
+            cancelBtn.style.padding = '0.75rem 1.5rem';
+            cancelBtn.style.fontSize = '0.9rem';
+            cancelBtn.style.fontWeight = '600';
+            cancelBtn.style.cursor = 'pointer';
+            cancelBtn.style.transition = 'all 0.2s ease';
+            
+            cancelBtn.addEventListener('mouseenter', () => {
+                cancelBtn.style.backgroundColor = '#4b5563';
+                cancelBtn.style.transform = 'translateY(-1px)';
+            });
+            cancelBtn.addEventListener('mouseleave', () => {
+                cancelBtn.style.backgroundColor = '#6b7280';
+                cancelBtn.style.transform = 'translateY(0)';
+            });
+            
+            editButtonContainer.appendChild(cancelBtn);
+            editButtonContainer.appendChild(applyBtn);
+            
+            editPanel.appendChild(editTitle);
+            editPanel.appendChild(rentGroup);
+            editPanel.appendChild(wifiGroup);
+            editPanel.appendChild(utilitiesGroup);
+            editPanel.appendChild(editButtonContainer);
+            
+            // Edit and Continue buttons
+            const buttonContainer = document.createElement('div');
+            buttonContainer.style.display = 'flex';
+            buttonContainer.style.gap = '0.5rem';
+            
+            const editBtn = document.createElement('button');
+            editBtn.className = 'send-button';
+            editBtn.textContent = 'Edit Selected Months';
+            editBtn.style.flex = '1';
+            editBtn.onclick = () => {
+                if (selectedMonths.size === 0) {
+                    showError('Please select at least one month to edit');
+                    return;
+                }
+                editPanel.style.display = 'block';
+                
+                // Pre-fill with current values from first selected month
+                const firstMonth = Array.from(selectedMonths)[0];
+                const costs = window.monthlyHousingCosts[firstMonth];
+                rentInput.value = '$' + costs.rent.toLocaleString('en-US');
+                wifiInput.value = '$' + costs.wifi.toLocaleString('en-US');
+                if (chatData.utilitiesIncluded !== 'yes') {
+                    utilitiesInput.value = '$' + costs.utilities.toLocaleString('en-US');
+                }
+            };
+            
+            const continueBtn = document.createElement('button');
+            continueBtn.className = 'send-button';
+            continueBtn.textContent = 'Continue';
+            continueBtn.style.flex = '1';
+            continueBtn.onclick = () => {
+                // Convert monthly housing costs to summary for response
+                const totalMonths = Object.keys(window.monthlyHousingCosts).length;
+                const totalRent = Object.values(window.monthlyHousingCosts).reduce((sum, costs) => sum + costs.rent, 0);
+                const avgRent = Math.round(totalRent / totalMonths);
+                
+                const responseText = `Housing costs reviewed (avg $${avgRent}/mo rent)`;
+                handleOptionResponse(window.monthlyHousingCosts, responseText, 'monthlyHousingCosts');
+            };
+            
+            // Event handlers for edit panel
+            applyBtn.onclick = () => {
+                const rent = Number(rentInput.value.replace(/[^\d]/g, '')) || 0;
+                const wifi = Number(wifiInput.value.replace(/[^\d]/g, '')) || 0;
+                const utilities = chatData.utilitiesIncluded === 'yes' ? 0 : (Number(utilitiesInput.value.replace(/[^\d]/g, '')) || 0);
+                
+                selectedMonths.forEach(monthNumber => {
+                    window.monthlyHousingCosts[monthNumber] = { rent, wifi, utilities };
+                });
+                
+                // Update displays
+                months.forEach((month, index) => {
+                    const monthNumber = index + 1;
+                    const monthDiv = monthGrid.children[index];
+                    const costSummary = monthDiv.children[1];
+                    const costs = window.monthlyHousingCosts[monthNumber];
+                    let summary = `$${costs.rent.toLocaleString('en-US')} rent`;
+                    if (costs.wifi > 0) summary += ` • $${costs.wifi.toLocaleString('en-US')} wifi`;
+                    if (costs.utilities > 0) summary += ` • $${costs.utilities.toLocaleString('en-US')} utilities`;
+                    costSummary.textContent = summary;
+                });
+                
+                // Clear selection and hide edit panel
+                selectedMonths.clear();
+                monthGrid.querySelectorAll('div').forEach(div => {
+                    div.style.backgroundColor = 'white';
+                    div.style.borderColor = '#e2e8f0';
+                });
+                editPanel.style.display = 'none';
+            };
+            
+            cancelBtn.onclick = () => {
+                editPanel.style.display = 'none';
+                selectedMonths.clear();
+                monthGrid.querySelectorAll('div').forEach(div => {
+                    div.style.backgroundColor = 'white';
+                    div.style.borderColor = '#e2e8f0';
+                });
+            };
+            
+            buttonContainer.appendChild(editBtn);
+            buttonContainer.appendChild(continueBtn);
+            
+            housingContainer.appendChild(title);
+            housingContainer.appendChild(instruction);
+            housingContainer.appendChild(monthGrid);
+            housingContainer.appendChild(editPanel);
+            housingContainer.appendChild(buttonContainer);
+            inputArea.appendChild(housingContainer);
+            
+            scrollToBottom();
+        }
+        
         async function handleSpecialAction(action, question) {
             console.log('Handling special action:', action);
             if (action === 'calculateBenefit') {
@@ -2186,139 +2564,13 @@
             if (action === 'submitData') {
                 await submitFormData();
             }
-            if (action === 'openHousingModal') {
-                console.log('Opening housing modal interface');
-                await handleHousingModal();
+            if (action === 'setupHousingReview') {
+                // Housing review is handled by the response type, no special action needed
+                console.log('Housing review setup handled by response type');
             }
         }
         
-        async function handleHousingModal() {
-            console.log('handleHousingModal called');
-            // Show the housing interface in chat
-            const inputArea = document.getElementById('chatInputArea');
-            
-            if (!inputArea) {
-                console.error('Input area not found!');
-                return;
-            }
-            
-            const housingContainer = document.createElement('div');
-            housingContainer.style.padding = '1.5rem';
-            housingContainer.style.backgroundColor = 'white';
-            housingContainer.style.borderRadius = '0.75rem';
-            housingContainer.style.border = '2px solid #e2e8f0';
-            housingContainer.style.marginBottom = '1rem';
-            
-            // Show existing housing entries if any
-            const existingHousingDiv = document.createElement('div');
-            existingHousingDiv.id = 'chat-housing-list';
-            updateChatHousingDisplay(existingHousingDiv);
-            
-            // Add housing button
-            const addHousingBtn = document.createElement('button');
-            addHousingBtn.className = 'send-button';
-            addHousingBtn.textContent = window.housingEntries.length > 0 ? '+ Add Another Housing Entry' : '+ Add Housing Information';
-            addHousingBtn.style.width = '100%';
-            addHousingBtn.style.marginBottom = '1rem';
-            addHousingBtn.onclick = () => {
-                openHousingModal();
-                // Add event listener for when modal closes
-                const modal = document.getElementById('housingModal');
-                const observer = new MutationObserver((mutations) => {
-                    mutations.forEach((mutation) => {
-                        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-                            if (modal.classList.contains('hidden')) {
-                                updateChatHousingDisplay(existingHousingDiv);
-                                observer.disconnect();
-                            }
-                        }
-                    });
-                });
-                observer.observe(modal, { attributes: true });
-            };
-            
-            // Continue button
-            const continueBtn = document.createElement('button');
-            continueBtn.className = 'send-button';
-            continueBtn.textContent = 'Continue';
-            continueBtn.style.width = '100%';
-            continueBtn.onclick = async () => {
-                if (waitingForResponse) return;
-                
-                if (window.housingEntries.length === 0) {
-                    showError('Please add at least one housing entry to continue');
-                    return;
-                }
-                
-                waitingForResponse = true;
-                
-                // Add a summary message
-                const housingCount = window.housingEntries.length;
-                const summaryText = `Added ${housingCount} housing ${housingCount === 1 ? 'entry' : 'entries'}`;
-                
-                // Add user response and continue conversation
-                await addMessage('user', summaryText);
-                clearInputArea();
-                await processNextQuestion();
-                
-                waitingForResponse = false;
-            };
-            
-            housingContainer.appendChild(existingHousingDiv);
-            housingContainer.appendChild(addHousingBtn);
-            housingContainer.appendChild(continueBtn);
-            inputArea.appendChild(housingContainer);
-            
-            // Scroll to show the housing interface
-            scrollToBottom();
-        }
-        
-        function updateChatHousingDisplay(container) {
-            container.innerHTML = '';
-            
-            if (window.housingEntries.length === 0) {
-                const noHousingMsg = document.createElement('div');
-                noHousingMsg.style.textAlign = 'center';
-                noHousingMsg.style.color = '#666';
-                noHousingMsg.style.padding = '1rem';
-                noHousingMsg.style.fontStyle = 'italic';
-                noHousingMsg.textContent = 'No housing information added yet';
-                container.appendChild(noHousingMsg);
-                return;
-            }
-            
-            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            
-            window.housingEntries.forEach((entry, index) => {
-                const entryDiv = document.createElement('div');
-                entryDiv.style.border = '1px solid #e2e8f0';
-                entryDiv.style.borderRadius = '0.5rem';
-                entryDiv.style.padding = '0.75rem';
-                entryDiv.style.marginBottom = '0.5rem';
-                entryDiv.style.backgroundColor = '#f8fafc';
-                entryDiv.style.fontSize = '0.9rem';
-                
-                const title = document.createElement('div');
-                title.style.fontWeight = '600';
-                title.style.color = 'var(--primary)';
-                title.style.marginBottom = '0.25rem';
-                title.textContent = `${monthNames[entry.startMonth - 1]} ${entry.startYear} - ${monthNames[entry.endMonth - 1]} ${entry.endYear}`;
-                
-                const details = document.createElement('div');
-                details.style.color = '#666';
-                details.textContent = `Rent: $${entry.rent.toLocaleString()}/mo`;
-                if (!entry.utilitiesIncluded && entry.utilities > 0) {
-                    details.textContent += ` • Utilities: $${entry.utilities.toLocaleString()}/mo`;
-                }
-                if (entry.wifi > 0) {
-                    details.textContent += ` • WiFi: $${entry.wifi.toLocaleString()}/mo`;
-                }
-                
-                entryDiv.appendChild(title);
-                entryDiv.appendChild(details);
-                container.appendChild(entryDiv);
-            });
-        }
+
         
         async function submitFormData() {
             // Copy chat data to the original formData format for compatibility
@@ -2329,7 +2581,7 @@
             
             // Store data for account creation
             localStorage.setItem('onboardingFormData', JSON.stringify(formData));
-            localStorage.setItem('onboardingHousingEntries', JSON.stringify(window.housingEntries));
+            localStorage.setItem('onboardingMonthlyHousingCosts', JSON.stringify(window.monthlyHousingCosts));
             localStorage.setItem('onboardingCalculatedBenefit', JSON.stringify(window.calculatedBenefit));
             
             console.log('Chat data submitted:', formData);
@@ -2702,7 +2954,45 @@
                 removeTypingIndicator();
                 await addMessage('bot', '🚀 Creating your account...');
                 
-                const result = await window.onboardingCoordinator.handleGoogleSignInCallback(response);
+                // Add sophisticated timeout messaging like old onboarding
+                let timeoutMessageId = null;
+                let countdownInterval = null;
+                
+                const timeoutPromise = new Promise(async (resolve) => {
+                    await new Promise(r => setTimeout(r, 5000)); // Wait 5 seconds
+                    
+                    // Start countdown message
+                    let countdown = 15;
+                    timeoutMessageId = await addCountdownMessage('bot', `Please wait, everything is working. Your account is getting created... (${countdown}s)`);
+                    
+                    countdownInterval = setInterval(() => {
+                        countdown--;
+                        if (countdown > 0) {
+                            updateCountdownMessage(timeoutMessageId, `Please wait, everything is working. Your account is getting created... (${countdown}s)`);
+                        } else {
+                            // After 15 seconds, show encouraging message
+                            updateCountdownMessage(timeoutMessageId, 'Almost there! Processing your information...');
+                            clearInterval(countdownInterval);
+                            countdownInterval = null;
+                        }
+                    }, 1000);
+                    
+                    resolve();
+                });
+                
+                const googleSignInPromise = window.onboardingCoordinator.handleGoogleSignInCallback(response);
+                
+                // Race between timeout message and actual completion
+                const result = await Promise.race([
+                    googleSignInPromise,
+                    timeoutPromise.then(() => googleSignInPromise)
+                ]);
+                
+                // Clear countdown if still running
+                if (countdownInterval) {
+                    clearInterval(countdownInterval);
+                    countdownInterval = null;
+                }
                 
                 // Submit expense data to sensitive data table alongside other data submissions
                 const expenseTotals = calculateRentAndOtherExpenses();
@@ -2782,10 +3072,48 @@
                 removeTypingIndicator();
                 await addMessage('bot', '👤 Creating your account...');
                 
-                const result = await window.onboardingCoordinator.createAccountAndSubmitData(
+                // Add sophisticated timeout messaging like old onboarding
+                let timeoutMessageId = null;
+                let countdownInterval = null;
+                
+                const timeoutPromise = new Promise(async (resolve) => {
+                    await new Promise(r => setTimeout(r, 5000)); // Wait 5 seconds
+                    
+                    // Start countdown message
+                    let countdown = 15;
+                    timeoutMessageId = await addCountdownMessage('bot', `Please wait, everything is working. Your account is getting created... (${countdown}s)`);
+                    
+                    countdownInterval = setInterval(() => {
+                        countdown--;
+                        if (countdown > 0) {
+                            updateCountdownMessage(timeoutMessageId, `Please wait, everything is working. Your account is getting created... (${countdown}s)`);
+                        } else {
+                            // After 15 seconds, show encouraging message
+                            updateCountdownMessage(timeoutMessageId, 'Almost there! Processing your information...');
+                            clearInterval(countdownInterval);
+                            countdownInterval = null;
+                        }
+                    }, 1000);
+                    
+                    resolve();
+                });
+                
+                const accountCreationPromise = window.onboardingCoordinator.createAccountAndSubmitData(
                     chatData.email, 
                     password
                 );
+                
+                // Race between timeout message and actual completion
+                const result = await Promise.race([
+                    accountCreationPromise,
+                    timeoutPromise.then(() => accountCreationPromise)
+                ]);
+                
+                // Clear countdown if still running
+                if (countdownInterval) {
+                    clearInterval(countdownInterval);
+                    countdownInterval = null;
+                }
                 
                 showTypingIndicator('preparing your tax benefit data...');
                 await new Promise(resolve => setTimeout(resolve, 800));
@@ -2900,9 +3228,6 @@
 
         // Initialize page
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize housing functionality (still needed for housing modal)
-            initializeHousingModal();
-
             // Initialize Google Sign-In when scripts are loaded
             setTimeout(() => {
                 if (window.accountCreation) {
@@ -2990,206 +3315,7 @@
             }
         }
 
-         // Housing functionality
-         function initializeHousingModal() {
-             populateYearDropdowns();
-             loadExistingHousingEntries();
-             
-             // Add currency formatting to housing inputs
-             const rentInput = document.getElementById('monthlyRent');
-             const utilitiesInput = document.getElementById('utilities');
-             const wifiInput = document.getElementById('wifi');
-             
-             if (rentInput) rentInput.addEventListener('input', function() { formatCurrency(this); });
-             if (utilitiesInput) utilitiesInput.addEventListener('input', function() { formatCurrency(this); });
-             if (wifiInput) wifiInput.addEventListener('input', function() { formatCurrency(this); });
-         }
 
-         function populateYearDropdowns() {
-             const currentYear = new Date().getFullYear();
-             const yearRange = 3;
-             
-             const leaseStartYearSelect = document.getElementById('leaseStartYear');
-             const leaseEndYearSelect = document.getElementById('leaseEndYear');
-             
-             if (leaseStartYearSelect && leaseEndYearSelect) {
-                 leaseStartYearSelect.innerHTML = '';
-                 leaseEndYearSelect.innerHTML = '';
-                 
-                 for (let year = currentYear - yearRange; year <= currentYear + yearRange; year++) {
-                     const startOption = document.createElement('option');
-                     startOption.value = year;
-                     startOption.textContent = year;
-                     leaseStartYearSelect.appendChild(startOption);
-                     
-                     const endOption = document.createElement('option');
-                     endOption.value = year;
-                     endOption.textContent = year;
-                     leaseEndYearSelect.appendChild(endOption);
-                 }
-                 
-                 leaseStartYearSelect.value = currentYear;
-                 leaseEndYearSelect.value = currentYear + 1;
-             }
-         }
-
-         function openHousingModal() {
-             const today = new Date();
-             document.getElementById('leaseStartMonth').value = today.getMonth() + 1;
-             document.getElementById('leaseStartYear').value = today.getFullYear();
-             document.getElementById('leaseEndMonth').value = today.getMonth() + 1;
-             document.getElementById('leaseEndYear').value = today.getFullYear() + 1;
-             document.getElementById('monthlyRent').value = '';
-             document.getElementById('utilities').value = '';
-             document.getElementById('wifi').value = '';
-             document.getElementById('utilitiesIncluded').checked = false;
-             
-             document.getElementById('housingModal').classList.remove('hidden');
-         }
-
-         function closeHousingModal() {
-             document.getElementById('housingModal').classList.add('hidden');
-         }
-
-         function saveHousingInfo() {
-             const startMonth = parseInt(document.getElementById('leaseStartMonth').value);
-             const startYear = parseInt(document.getElementById('leaseStartYear').value);
-             const endMonth = parseInt(document.getElementById('leaseEndMonth').value);
-             const endYear = parseInt(document.getElementById('leaseEndYear').value);
-             
-             // Clean and parse monetary values properly
-             const rentValue = document.getElementById('monthlyRent').value.replace(/[^\d]/g, '') || '0';
-             const utilitiesValue = document.getElementById('utilities').value.replace(/[^\d]/g, '') || '0';
-             const wifiValue = document.getElementById('wifi').value.replace(/[^\d]/g, '') || '0';
-             const utilitiesIncluded = document.getElementById('utilitiesIncluded').checked;
-             
-             const rent = parseInt(rentValue, 10);
-             const utilities = parseInt(utilitiesValue, 10);
-             const wifi = parseInt(wifiValue, 10);
-             
-             if (rent === 0 || isNaN(rent)) {
-                 showError('Please enter a valid rent amount');
-                 return;
-             }
-             
-             const startDate = new Date(startYear, startMonth - 1, 1);
-             const endDate = new Date(endYear, endMonth - 1, 1);
-             
-             if (endDate <= startDate) {
-                 showError('Lease end date must be after start date');
-                 return;
-             }
-             
-             const housingEntry = {
-                 id: Date.now(),
-                 startMonth,
-                 startYear,
-                 endMonth,
-                 endYear,
-                 rent: rent,
-                 utilities: utilities,
-                 wifi: wifi,
-                 utilitiesIncluded
-             };
-             
-             console.log('[saveHousingInfo] Created housing entry:', housingEntry);
-             
-             window.housingEntries.push(housingEntry);
-             loadExistingHousingEntries();
-             closeHousingModal();
-             
-             const successMessage = document.createElement('div');
-             successMessage.className = 'success-message';
-             successMessage.textContent = 'Housing information added!';
-             successMessage.style.position = 'fixed';
-             successMessage.style.top = '20px';
-             successMessage.style.left = '50%';
-             successMessage.style.transform = 'translateX(-50%)';
-             successMessage.style.padding = '10px 20px';
-             successMessage.style.backgroundColor = '#4CAF50';
-             successMessage.style.color = 'white';
-             successMessage.style.borderRadius = '4px';
-             successMessage.style.zIndex = '1000';
-             document.body.appendChild(successMessage);
-             setTimeout(() => successMessage.remove(), 3000);
-         }
-
-         function loadExistingHousingEntries() {
-             const container = document.getElementById('housingEntriesContainer');
-             if (!container) return;
-             
-             container.innerHTML = '';
-             
-             if (window.housingEntries.length === 0) {
-                 const noHousingMessage = document.createElement('div');
-                 noHousingMessage.style.color = 'var(--text-dark)';
-                 noHousingMessage.style.fontStyle = 'italic';
-                 noHousingMessage.style.padding = '1rem';
-                 noHousingMessage.style.backgroundColor = 'rgba(240, 240, 240, 0.5)';
-                 noHousingMessage.style.borderRadius = '0.5rem';
-                 noHousingMessage.style.textAlign = 'center';
-                 noHousingMessage.textContent = 'No housing information added yet';
-                 container.appendChild(noHousingMessage);
-                 return;
-             }
-             
-             const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-             
-             window.housingEntries.forEach(entry => {
-                 const entryElement = document.createElement('div');
-                 entryElement.className = 'housing-entry';
-                 entryElement.style.border = '1px solid var(--border)';
-                 entryElement.style.borderRadius = '0.5rem';
-                 entryElement.style.padding = '1rem';
-                 entryElement.style.marginBottom = '1rem';
-                 entryElement.style.position = 'relative';
-                 
-                 const formatCurrency = value => '$' + value.toLocaleString('en-US');
-                 
-                 const dateHeader = document.createElement('div');
-                 dateHeader.style.marginBottom = '0.5rem';
-                 dateHeader.style.fontWeight = '600';
-                 dateHeader.style.color = 'var(--primary)';
-                 dateHeader.textContent = `${monthNames[entry.startMonth - 1]} ${entry.startYear} - ${monthNames[entry.endMonth - 1]} ${entry.endYear}`;
-                 
-                 const expenseSummary = document.createElement('div');
-                 expenseSummary.style.fontSize = '0.85rem';
-                 expenseSummary.style.color = '#666';
-                 
-                 let summaryText = `Rent: ${formatCurrency(entry.rent)}/month`;
-                 if (!entry.utilitiesIncluded && entry.utilities > 0) {
-                     summaryText += ` • Utilities: ${formatCurrency(entry.utilities)}/month`;
-                 }
-                 if (entry.wifi > 0) {
-                     summaryText += ` • WiFi: ${formatCurrency(entry.wifi)}/month`;
-                 }
-                 expenseSummary.textContent = summaryText;
-                 
-                 const removeButton = document.createElement('button');
-                 removeButton.style.position = 'absolute';
-                 removeButton.style.top = '0.75rem';
-                 removeButton.style.right = '0.75rem';
-                 removeButton.style.backgroundColor = '#f44336';
-                 removeButton.style.color = 'white';
-                 removeButton.style.border = 'none';
-                 removeButton.style.borderRadius = '0.25rem';
-                 removeButton.style.padding = '0.25rem 0.5rem';
-                 removeButton.style.cursor = 'pointer';
-                 removeButton.style.fontSize = '0.8rem';
-                 removeButton.textContent = 'Remove';
-                 removeButton.onclick = () => removeHousingEntry(entry.id);
-                 
-                 entryElement.appendChild(dateHeader);
-                 entryElement.appendChild(expenseSummary);
-                 entryElement.appendChild(removeButton);
-                 container.appendChild(entryElement);
-             });
-         }
-
-         function removeHousingEntry(id) {
-             window.housingEntries = window.housingEntries.filter(entry => entry.id !== id);
-             loadExistingHousingEntries();
-         }
 
                  // State dropdown functionality
         function initializeStateDropdown() {
@@ -3401,7 +3527,7 @@
              
              // Ensure all inputs are properly typed
              income = Number(income) || 0;
-             monthlyGrocery = Number(monthlyGrocery) || 200;
+             monthlyGrocery = monthlyGrocery !== undefined && monthlyGrocery !== null ? Number(monthlyGrocery) : 200;
              
              if (!Array.isArray(enrolledMonths)) {
                  console.error('CRITICAL: enrolledMonths is not an array in calculateBenefitWithMultipleHousing. Received:', enrolledMonths);
@@ -3487,10 +3613,89 @@
              return Number(benefit) || 0;
          }
 
+         // New benefit calculation function for monthly housing costs structure
+         function calculateBenefitWithMonthlyHousingCustomGrocery(state, income, enrolledMonths, monthlyHousingCosts, monthlyGrocery = 200, returnDetails = false) {
+             // Ensure all inputs are properly typed
+             income = Number(income) || 0;
+             monthlyGrocery = monthlyGrocery !== undefined && monthlyGrocery !== null ? Number(monthlyGrocery) : 200;
+             
+             if (!Array.isArray(enrolledMonths)) {
+                 console.error('CRITICAL: enrolledMonths is not an array. Received:', enrolledMonths);
+                 enrolledMonths = [];
+             }
+             
+             if (!monthlyHousingCosts || typeof monthlyHousingCosts !== 'object') {
+                 console.error('CRITICAL: monthlyHousingCosts is not an object. Received:', monthlyHousingCosts);
+                 monthlyHousingCosts = {};
+             }
+             
+             let totalQualifiedExpenses = 0;
+             
+             for (let month = 1; month <= 12; month++) {
+                 if (!enrolledMonths.includes(month)) continue;
+                 
+                 // Add grocery expense (ensure it's a number)
+                 totalQualifiedExpenses += Number(monthlyGrocery);
+                 
+                 // Add housing costs for this month if available
+                 const housingCosts = monthlyHousingCosts[month];
+                 if (housingCosts) {
+                     const rent = Number(housingCosts.rent) || 0;
+                     const utilities = Number(housingCosts.utilities) || 0;
+                     const wifi = Number(housingCosts.wifi) || 0;
+                     
+                     totalQualifiedExpenses += rent + utilities + wifi;
+                 }
+             }
+             
+             console.log('[calculateBenefitWithMonthlyHousing] Debug info:', {
+                 state,
+                 income,
+                 enrolledMonths,
+                 monthlyGrocery,
+                 monthlyHousingCosts,
+                 totalQualifiedExpenses
+             });
+             
+             const stateTaxDeduction = statePersonalExemptionDB[state]?.amount || 0;
+             const stateDeduction = state529DB[state]?.deduction || 0;
+             const taxableStateIncome = Number(income) - stateTaxDeduction;
+             const taxRate = calculateStateTaxRate(taxableStateIncome, state);
+             const deductibleAmount = Math.min(
+                 totalQualifiedExpenses,
+                 stateDeduction,
+                 taxableStateIncome
+             );
+             const taxespaid = taxRate * taxableStateIncome;
+             
+             let benefit;
+             if (state === 'IN') {
+                 const contributionCredit = deductibleAmount * 0.20;
+                 benefit = Math.min(contributionCredit, 1500, taxespaid);
+             } else if (state === 'OR') {
+                 benefit = 180;
+             } else if (state === 'MN') {
+                 if (income < 88810) {
+                     benefit = Math.min(500, taxespaid, 0.5 * totalQualifiedExpenses);
+                 } else {
+                     benefit = 0;
+                 }
+             } else {
+                 benefit = Math.min(deductibleAmount * taxRate, taxespaid);
+             }
+             
+             if (returnDetails) {
+                 return { 
+                     benefit: Number(benefit) || 0, 
+                     qualifiedSpend: Number(totalQualifiedExpenses) || 0 
+                 };
+             }
+             return Number(benefit) || 0;
+         }
+
                  // Calculate total rent and other qualified expenses for the year
         function calculateRentAndOtherExpenses() {
-            const currentYear = new Date().getFullYear();
-            const monthlyGrocery = Number(chatData.monthlyGrocery) || 200;
+            const monthlyGrocery = chatData.monthlyGrocery !== undefined ? Number(chatData.monthlyGrocery) : 200;
             
             let totalRentPayments = 0;
             let totalOtherQualifiedExpenses = 0;
@@ -3505,24 +3710,15 @@
                 // Add grocery expense for enrolled months (this goes to other qualified expenses)
                 totalOtherQualifiedExpenses += Number(monthlyGrocery);
                 
-                // Find applicable housing entry for this month
-                const applicableEntry = window.housingEntries.find(entry => {
-                    const startDate = new Date(entry.startYear, entry.startMonth - 1, 1);
-                    const endDate = new Date(entry.endYear, entry.endMonth - 1, 1);
-                    const thisMonth = new Date(currentYear, month - 1, 1);
-                    return thisMonth >= startDate && thisMonth <= endDate;
-                });
-                
-                if (applicableEntry) {
-                    // Rent goes to rent payments (ensure it's a number)
-                    totalRentPayments += Number(applicableEntry.rent) || 0;
+                // Get housing costs for this month from the new structure
+                const housingCosts = window.monthlyHousingCosts && window.monthlyHousingCosts[month];
+                if (housingCosts) {
+                    // Rent goes to rent payments
+                    totalRentPayments += Number(housingCosts.rent) || 0;
                     
                     // Utilities and WiFi go to other qualified expenses
-                    // Only add utilities if they're NOT included in rent
-                    if (!applicableEntry.utilitiesIncluded) {
-                        totalOtherQualifiedExpenses += Number(applicableEntry.utilities) || 0;
-                    }
-                    totalOtherQualifiedExpenses += Number(applicableEntry.wifi) || 0;
+                    totalOtherQualifiedExpenses += Number(housingCosts.utilities) || 0;
+                    totalOtherQualifiedExpenses += Number(housingCosts.wifi) || 0;
                 }
             }
             
@@ -3531,7 +3727,7 @@
                 totalOtherQualifiedExpenses,
                 enrolledMonths: enrolledMonths,
                 monthlyGrocery,
-                housingEntries: window.housingEntries
+                monthlyHousingCosts: window.monthlyHousingCosts
             });
             
             return {
