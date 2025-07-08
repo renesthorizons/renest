@@ -68,37 +68,36 @@ async function submitCompleteOnboarding(formData, housingEntries, calculatedBene
         }
 
         // Step 3: Submit all expenses (housing + groceries)
-        console.log('=== COORDINATOR: Step 3 - Submitting expenses ===');
+        console.log('=== COORDINATOR: Step 3 - Checking expense creation status ===');
         try {
             // Check if expenses were already created during onboarding
             const expensesAlreadyCreated = localStorage.getItem('onboardingExpensesCreated');
+            console.log('=== COORDINATOR: onboardingExpensesCreated flag value:', expensesAlreadyCreated);
             
             if (expensesAlreadyCreated === 'true') {
-                console.log('=== COORDINATOR: Expenses already created during onboarding, skipping ===');
+                console.log('=== COORDINATOR: Expenses already created during onboarding, skipping legacy creation ===');
                 submissionResults.expensesSubmitted = true;
             } else {
-                // Fallback to legacy expense creation if not done during onboarding
-                console.log('=== COORDINATOR: Creating expenses via legacy method ===');
-                const groceryAmount = parseInt(document.getElementById('groceryInput')?.value) || 200;
+                console.log('=== COORDINATOR: Flag not set, expenses were not created during onboarding ===');
+                console.log('=== COORDINATOR: WARNING - This should not happen with new onboarding flow ===');
                 
-                // Check if we have the expense submission module
-                if (window.expensesSubmission && window.expensesSubmission.submitAllOnboardingExpenses) {
-                    await window.expensesSubmission.submitAllOnboardingExpenses(
-                        housingEntries, 
-                        formData.enrolledMonths, 
-                        groceryAmount
-                    );
-                } else {
-                    console.log('=== COORDINATOR: Expense submission module not available, expenses should have been created in onboarding ===');
-                }
+                // This should NOT happen with the new onboarding flow
+                // Log detailed information for debugging
+                console.log('=== COORDINATOR: Debugging info ===');
+                console.log('localStorage contents:', Object.keys(localStorage));
+                console.log('onboardingExpensesCreated:', localStorage.getItem('onboardingExpensesCreated'));
+                console.log('formData:', formData);
+                console.log('housingEntries:', housingEntries);
                 
-                submissionResults.expensesSubmitted = true;
-                console.log('=== COORDINATOR: Expenses submission successful ===');
+                // Don't create expenses in the legacy way to avoid duplicates
+                // Instead, mark as failed so we can investigate
+                submissionResults.expensesSubmitted = false;
+                submissionResults.errors.push('Expenses were not created during onboarding - investigation needed');
+                console.log('=== COORDINATOR: Skipping legacy expense creation to avoid duplicates ===');
             }
         } catch (error) {
-            console.error('=== COORDINATOR: Expenses submission failed ===', error);
-            submissionResults.errors.push(`Expenses submission failed: ${error.message}`);
-            // Don't fail the whole process if just expenses fail
+            console.error('=== COORDINATOR: Expenses status check failed ===', error);
+            submissionResults.errors.push(`Expenses status check failed: ${error.message}`);
             submissionResults.expensesSubmitted = false;
         }
 
