@@ -354,26 +354,42 @@
         
         /* Keyboard handling for mobile */
         @media (max-width: 768px) {
-            /* Adjust chat container when keyboard might be present */
+            /* Smooth transition for keyboard appearance */
+            .chat-container {
+                transition: transform 0.3s ease-out, height 0.3s ease-out;
+            }
+            
+            .chat-input-area {
+                transition: all 0.3s ease-out;
+            }
+            
+            /* When keyboard is active, slide everything up */
             .chat-container.keyboard-active {
-                height: 50vh; /* Reduce height when keyboard is up */
+                /* Calculate keyboard height dynamically via JS */
+                transform: translateY(var(--keyboard-offset, -200px));
+                height: calc(100vh + var(--keyboard-offset, -200px));
             }
             
             .chat-container.keyboard-active .chat-messages {
-                max-height: calc(50vh - 120px); /* Account for input area */
+                /* Ensure messages stay scrollable */
+                max-height: calc(100vh - 200px + var(--keyboard-offset, -200px));
                 overflow-y: auto;
+                scroll-behavior: smooth;
             }
             
-            /* Ensure input area stays visible */
+            /* Keep input area positioned properly */
             .chat-input-area.keyboard-active {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                z-index: 1000;
+                position: relative;
                 background: #f8fafc;
                 border-top: 1px solid #e2e8f0;
                 box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+                z-index: 100;
+            }
+            
+            /* Ensure the onboarding container doesn't scroll behind */
+            .onboarding-container.keyboard-active {
+                overflow: hidden;
+                height: 100vh;
             }
         }
         
@@ -1448,8 +1464,10 @@
             const chatContainer = document.querySelector('.chat-container');
             const inputArea = document.getElementById('chatInputArea');
             
-            // Store initial viewport height
-            const initialViewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+            // Store initial viewport height for more accurate detection
+            if (!window.initialViewportHeight) {
+                window.initialViewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+            }
             
             // Handle focus (keyboard appears)
             input.addEventListener('focus', () => {
@@ -1486,30 +1504,55 @@
         
         function detectKeyboardAndAdjust(chatContainer, inputArea, input) {
             const currentViewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-            const screenHeight = window.screen.height;
-            const keyboardThreshold = screenHeight * 0.75; // Assume keyboard is up if viewport < 75% of screen
+            const initialHeight = window.initialViewportHeight || window.innerHeight;
+            const heightDifference = initialHeight - currentViewportHeight;
             
-            if (currentViewportHeight < keyboardThreshold) {
-                // Keyboard is likely up
+            // Consider keyboard active if viewport shrunk by more than 150px
+            if (heightDifference > 150) {
+                // Use the height difference as keyboard height
+                const keyboardHeight = heightDifference;
+                const offset = Math.min(keyboardHeight, initialHeight * 0.4); // Cap at 40% of initial height
+                
+                // Apply the offset as a CSS custom property
+                const onboardingContainer = document.querySelector('.onboarding-container');
+                const offsetValue = `-${offset}px`;
+                
+                chatContainer.style.setProperty('--keyboard-offset', offsetValue);
+                onboardingContainer.style.setProperty('--keyboard-offset', offsetValue);
+                
+                // Add keyboard-active classes
                 chatContainer.classList.add('keyboard-active');
                 inputArea.classList.add('keyboard-active');
+                onboardingContainer.classList.add('keyboard-active');
                 
-                // Scroll the input into view
+                console.log(`Keyboard detected: height=${keyboardHeight}px, offset=${offsetValue}`);
+                
+                // Ensure the active input stays visible
                 setTimeout(() => {
-                    input.scrollIntoView({ 
-                        behavior: 'smooth', 
-                        block: 'end',
-                        inline: 'nearest'
-                    });
-                }, 100);
+                    // Scroll messages to bottom to keep context
+                    const messagesContainer = chatContainer.querySelector('.chat-messages');
+                    if (messagesContainer) {
+                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    }
+                }, 350); // After transition completes
             } else {
                 resetKeyboardLayout(chatContainer, inputArea);
             }
         }
         
         function resetKeyboardLayout(chatContainer, inputArea) {
+            const onboardingContainer = document.querySelector('.onboarding-container');
+            
+            // Remove keyboard-active classes
             chatContainer.classList.remove('keyboard-active');
             inputArea.classList.remove('keyboard-active');
+            onboardingContainer.classList.remove('keyboard-active');
+            
+            // Clear CSS custom properties
+            chatContainer.style.removeProperty('--keyboard-offset');
+            onboardingContainer.style.removeProperty('--keyboard-offset');
+            
+            console.log('Keyboard hidden - layout reset');
         }
         
         async function handleOptionResponse(value, text, field) {
