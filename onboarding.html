@@ -356,15 +356,17 @@
         @media (max-width: 768px) {
             /* Adjust chat container when keyboard might be present */
             .chat-container.keyboard-active {
-                height: 50vh; /* Reduce height when keyboard is up */
+                /* Allow the container to maintain its height but scroll content up */
+                position: relative;
             }
             
             .chat-container.keyboard-active .chat-messages {
-                max-height: calc(50vh - 120px); /* Account for input area */
+                /* Ensure messages can scroll properly */
                 overflow-y: auto;
+                scroll-behavior: smooth;
             }
             
-            /* Ensure input area stays visible */
+            /* Enhanced input area positioning for keyboard */
             .chat-input-area.keyboard-active {
                 position: fixed;
                 bottom: 0;
@@ -373,7 +375,19 @@
                 z-index: 1000;
                 background: #f8fafc;
                 border-top: 1px solid #e2e8f0;
-                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+                box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+                /* The transform will be applied by JavaScript */
+                will-change: transform;
+            }
+            
+            /* Smooth transitions for keyboard adjustments */
+            .chat-input-area {
+                transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+            }
+            
+            .chat-messages {
+                transition: transform 0.3s ease-out;
+                will-change: transform;
             }
         }
         
@@ -1494,11 +1508,31 @@
                 chatContainer.classList.add('keyboard-active');
                 inputArea.classList.add('keyboard-active');
                 
-                // Scroll the input into view
+                // Calculate keyboard height
+                const keyboardHeight = screenHeight - currentViewportHeight;
+                
+                // Scroll the entire chat container up to make room for keyboard
                 setTimeout(() => {
+                    // First, scroll the chat messages to the bottom
+                    const chatMessages = document.getElementById('chatMessages');
+                    if (chatMessages) {
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                        
+                        // Also slide the messages container up slightly for better visual feedback
+                        chatMessages.style.transform = `translateY(-${Math.min(keyboardHeight * 0.1, 20)}px)`;
+                        chatMessages.style.transition = 'transform 0.3s ease-out';
+                    }
+                    
+                    // Then slide the entire conversation up by moving the input area
+                    // The input area will now be positioned just above the keyboard
+                    const slideDistance = Math.min(keyboardHeight * 0.8, window.innerHeight * 0.4);
+                    inputArea.style.transform = `translateY(-${slideDistance}px)`;
+                    inputArea.style.transition = 'transform 0.3s ease-out';
+                    
+                    // Ensure the input is visible and focused
                     input.scrollIntoView({ 
                         behavior: 'smooth', 
-                        block: 'end',
+                        block: 'center',
                         inline: 'nearest'
                     });
                 }, 100);
@@ -1510,6 +1544,17 @@
         function resetKeyboardLayout(chatContainer, inputArea) {
             chatContainer.classList.remove('keyboard-active');
             inputArea.classList.remove('keyboard-active');
+            
+            // Reset the input area transform and transition
+            inputArea.style.transform = '';
+            inputArea.style.transition = '';
+            
+            // Reset the chat messages transform and transition
+            const chatMessages = document.getElementById('chatMessages');
+            if (chatMessages) {
+                chatMessages.style.transform = '';
+                chatMessages.style.transition = '';
+            }
         }
         
         async function handleOptionResponse(value, text, field) {
@@ -2332,14 +2377,14 @@
             title.style.fontWeight = '600';
             title.style.marginBottom = '1rem';
             title.style.textAlign = 'center';
-            title.textContent = 'Review Your Monthly Housing Costs';
+            title.textContent = 'Review Your Average Monthly Housing Costs';
             
             const instruction = document.createElement('div');
             instruction.style.marginBottom = '1.5rem';
             instruction.style.textAlign = 'center';
             instruction.style.color = '#6b7280';
             instruction.style.fontSize = '0.9rem';
-            instruction.textContent = 'Tap months where you paid different amounts to edit them';
+            instruction.textContent = 'Tap months where your expenses changed significantly, like a new lease!';
             
             // Month grid
             const monthGrid = document.createElement('div');
