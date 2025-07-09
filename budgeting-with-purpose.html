@@ -1191,23 +1191,17 @@
             position: relative;
             padding-bottom: 1.5rem;
             letter-spacing: -0.025em;
-            background: linear-gradient(135deg, var(--text-primary) 0%, var(--primary) 100%);
+        }
+
+        .hero-headline h1 span.highlight {
+            background: var(--primary-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            position: relative;
         }
 
-        .hero-headline h1::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 310px;
-            height: 4px;
-            background: var(--primary-gradient);
-            border-radius: var(--radius-sm);
-            box-shadow: 0 2px 8px rgba(0, 102, 255, 0.3);
-        }
+
 
         .hero-subtitle {
             font-size: 1.5rem;
@@ -1272,7 +1266,7 @@
         .hero-image-container {
             position: relative;
             width: 100%;
-            height: 400px;
+            max-width: 500px;
             border-radius: var(--radius-2xl);
             overflow: hidden;
             box-shadow: var(--shadow-xl);
@@ -1281,8 +1275,8 @@
 
         .hero-img {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
+            height: auto;
+            object-fit: contain;
             transition: transform 0.3s ease;
         }
 
@@ -1383,10 +1377,7 @@
                 font-size: 2.25rem;
             }
 
-            .hero-headline h1::after {
-                left: 50%;
-                transform: translateX(-50%);
-            }
+
             
             .hero-subtitle {
                 font-size: 1.125rem;
@@ -1407,7 +1398,7 @@
             }
 
             .hero-image-container {
-                height: 300px;
+                max-width: 400px;
             }
 
             .benefit-item {
@@ -1520,7 +1511,7 @@
             }
 
             .hero-image-container {
-                height: 250px;
+                max-width: 300px;
             }
 
             .benefit-item {
@@ -1936,7 +1927,7 @@
                     <div class="hero-content">
                         <div class="hero-text">
                             <div class="hero-headline">
-                                <h1>Budgeting with <span class="mobile-only-break"></span>Purpose</h1>
+                                <h1>Budgeting with <span class="highlight">Purpose</span></h1>
                             </div>
                             <div class="hero-subtitle">
                                 The first budgeting tool that gets working students cashback on essentials like rent and groceries.
@@ -1958,7 +1949,7 @@
                         </div>
                         <div class="hero-image">
                             <div class="hero-image-container">
-                                <img src="renest-calm.jpg" alt="Renest budgeting app interface" class="hero-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <img src="529iphoneimage3style.png" alt="Renest budgeting app interface" class="hero-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                                
                                 <div class="hero-img-fallback" style="display: none;">
                                     <div class="fallback-icon">📱</div>
@@ -2072,15 +2063,23 @@
                 </div>
                 
                 <!-- App Preview Section -->
-                <div style="display: flex; justify-content: center; margin: 2.5rem 0; width: 100%;">
+                <!-- <div style="display: flex; justify-content: center; margin: 2.5rem 0; width: 100%;">
                     <div style="max-width: 280px; text-align: center;">
                         <img src="529iphoneimage3style.png" alt="Renest budgeting app interface" style="width: 100%; max-width: 1000px; height: auto; border-radius: 16px; box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12); transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'" onerror="this.style.display='none'">
                         <div style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-secondary); font-weight: 500; font-style: italic;">
                             Track expenses and unlock cashback with Renest
                         </div>
                     </div>
+                </div> -->
+                <div class="student-calculator-header">
+                    Student in <span id="inlineState" style="text-decoration: none; cursor: pointer; color: #1d4ed8 !important; background: #E6EFFF !important; padding: 0.1rem 0.4rem; border-radius: 6px; transition: all 0.2s ease; display: inline-flex; align-items: center; border: 1px solid #3b82f6; font-weight: 600;">Illinois <span id="stateArrow" style="font-size: 0.85em; margin-left: 0.3em; color: #1d4ed8;">▼</span></span> making $<span id="inlineIncome" style="text-decoration: none; cursor: pointer; color: #1d4ed8 !important; background: #E6EFFF !important; padding: 0.1rem 0.4rem; border-radius: 6px; transition: all 0.2s ease; border: 1px solid #3b82f6; font-weight: 600;">25</span>k per year - See the difference
                 </div>
-
+                <div id="refundChartContainer" style="background: var(--surface-elevated); padding: 2rem; border-radius: var(--radius-xl); box-shadow: var(--shadow-professional); margin: 2rem auto; max-width: 600px; border: 1px solid var(--border-light); animation: fadeInUp 0.8s ease-out 0.3s both;">
+                    <!-- Chart will be rendered here by JS -->
+                </div>
+                <!-- <div style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted); font-style: italic; text-align: center; margin-bottom: 1rem; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto;">
+                    Unlike other budgeting apps, Renest gives you real cashback benefits based on your student status and expenses.
+                </div> -->
                 <div class="benefits-list">
                     <div class="benefit-item">
                         <span class="benefit-number">1</span>
@@ -2097,15 +2096,7 @@
                 </div>
 
                 
-                <div class="student-calculator-header">
-                    Student in <span id="inlineState" style="text-decoration: none; cursor: pointer; color: #1d4ed8 !important; background: #E6EFFF !important; padding: 0.1rem 0.4rem; border-radius: 6px; transition: all 0.2s ease; display: inline-flex; align-items: center; border: 1px solid #3b82f6; font-weight: 600;">Illinois <span id="stateArrow" style="font-size: 0.85em; margin-left: 0.3em; color: #1d4ed8;">▼</span></span> making $<span id="inlineIncome" style="text-decoration: none; cursor: pointer; color: #1d4ed8 !important; background: #E6EFFF !important; padding: 0.1rem 0.4rem; border-radius: 6px; transition: all 0.2s ease; border: 1px solid #3b82f6; font-weight: 600;">25</span>k per year - See the difference
-                </div>
-                <div id="refundChartContainer" style="background: var(--surface-elevated); padding: 2rem; border-radius: var(--radius-xl); box-shadow: var(--shadow-professional); margin: 2rem auto; max-width: 600px; border: 1px solid var(--border-light); animation: fadeInUp 0.8s ease-out 0.3s both;">
-                    <!-- Chart will be rendered here by JS -->
-                </div>
-                <!-- <div style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted); font-style: italic; text-align: center; margin-bottom: 1rem; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto;">
-                    Unlike other budgeting apps, Renest gives you real cashback benefits based on your student status and expenses.
-                </div> -->
+                
                
                 <div class="founders-section">
                     <div class="founders-photos">
