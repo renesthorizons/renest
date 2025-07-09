@@ -3138,7 +3138,7 @@
                 let countdownInterval = null;
                 
                 const timeoutPromise = new Promise(async (resolve) => {
-                    await new Promise(r => setTimeout(r, 5000)); // Wait 5 seconds
+                    await new Promise(r => setTimeout(r, 6000)); // Wait 6 seconds
                     
                     // Start countdown message
                     let countdown = 15;
@@ -3185,10 +3185,50 @@
                 removeTypingIndicator();
                 await addMessage('bot', '📊 Creating your expense records...');
                 
-                // Create individual expenses for tracking
+                // Create individual expenses for tracking with timeout messaging
                 try {
                     console.log('=== GOOGLE SIGN-IN FLOW: Calling createOnboardingExpenses ===');
-                    await createOnboardingExpenses();
+                    
+                    // Add timeout messaging for expense creation
+                    let expenseTimeoutMessageId = null;
+                    let expenseCountdownInterval = null;
+                    
+                    const expenseTimeoutPromise = new Promise(async (resolve) => {
+                        await new Promise(r => setTimeout(r, 6000)); // Wait 6 seconds
+                        
+                        // Start countdown message
+                        let countdown = 20;
+                        expenseTimeoutMessageId = await addCountdownMessage('bot', `Please wait, everything is working. Creating your expense records... (${countdown}s)`);
+                        
+                        expenseCountdownInterval = setInterval(() => {
+                            countdown--;
+                            if (countdown > 0) {
+                                updateCountdownMessage(expenseTimeoutMessageId, `Please wait, everything is working. Creating your expense records... (${countdown}s)`);
+                            } else {
+                                // After 20 seconds, show encouraging message
+                                updateCountdownMessage(expenseTimeoutMessageId, 'Almost there! Finalizing your expense tracking...');
+                                clearInterval(expenseCountdownInterval);
+                                expenseCountdownInterval = null;
+                            }
+                        }, 1000);
+                        
+                        resolve();
+                    });
+                    
+                    const expenseCreationPromise = createOnboardingExpenses();
+                    
+                    // Race between timeout message and actual completion
+                    await Promise.race([
+                        expenseCreationPromise,
+                        expenseTimeoutPromise.then(() => expenseCreationPromise)
+                    ]);
+                    
+                    // Clear countdown if still running
+                    if (expenseCountdownInterval) {
+                        clearInterval(expenseCountdownInterval);
+                        expenseCountdownInterval = null;
+                    }
+                    
                 } catch (expenseError) {
                     console.error('Expense creation failed, but continuing with account creation:', expenseError);
                     await addMessage('bot', '⚠️ Note: Some expense records may need to be added manually from your dashboard.');
@@ -3270,7 +3310,7 @@
                 let countdownInterval = null;
                 
                 const timeoutPromise = new Promise(async (resolve) => {
-                    await new Promise(r => setTimeout(r, 5000)); // Wait 5 seconds
+                    await new Promise(r => setTimeout(r, 6000)); // Wait 6 seconds
                     
                     // Start countdown message
                     let countdown = 15;
@@ -3325,10 +3365,50 @@
                 removeTypingIndicator();
                 await addMessage('bot', '📊 Creating your expense records...');
                 
-                // Create individual expenses for tracking
+                // Create individual expenses for tracking with timeout messaging
                 try {
                     console.log('=== EMAIL/PASSWORD FLOW: Calling createOnboardingExpenses ===');
-                    await createOnboardingExpenses();
+                    
+                    // Add timeout messaging for expense creation
+                    let expenseTimeoutMessageId = null;
+                    let expenseCountdownInterval = null;
+                    
+                    const expenseTimeoutPromise = new Promise(async (resolve) => {
+                        await new Promise(r => setTimeout(r, 6000)); // Wait 6 seconds
+                        
+                        // Start countdown message
+                        let countdown = 20;
+                        expenseTimeoutMessageId = await addCountdownMessage('bot', `Please wait, everything is working. Creating your expense records... (${countdown}s)`);
+                        
+                        expenseCountdownInterval = setInterval(() => {
+                            countdown--;
+                            if (countdown > 0) {
+                                updateCountdownMessage(expenseTimeoutMessageId, `Please wait, everything is working. Creating your expense records... (${countdown}s)`);
+                            } else {
+                                // After 20 seconds, show encouraging message
+                                updateCountdownMessage(expenseTimeoutMessageId, 'Almost there! Finalizing your expense tracking...');
+                                clearInterval(expenseCountdownInterval);
+                                expenseCountdownInterval = null;
+                            }
+                        }, 1000);
+                        
+                        resolve();
+                    });
+                    
+                    const expenseCreationPromise = createOnboardingExpenses();
+                    
+                    // Race between timeout message and actual completion
+                    await Promise.race([
+                        expenseCreationPromise,
+                        expenseTimeoutPromise.then(() => expenseCreationPromise)
+                    ]);
+                    
+                    // Clear countdown if still running
+                    if (expenseCountdownInterval) {
+                        clearInterval(expenseCountdownInterval);
+                        expenseCountdownInterval = null;
+                    }
+                    
                 } catch (expenseError) {
                     console.error('Expense creation failed, but continuing with account creation:', expenseError);
                     await addMessage('bot', '⚠️ Note: Some expense records may need to be added manually from your dashboard.');
