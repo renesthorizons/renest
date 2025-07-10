@@ -119,13 +119,62 @@ function trackTimeOnPage() {
 
 function trackClicks() {
     let clickCount = 0;
+    let clickEvents = []; // Store detailed click data
     
     document.addEventListener('click', (e) => {
         clickCount++;
-        console.log('Click detected, total clicks:', clickCount); // Add debug logging
+        
+        // Calculate current scroll position
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const documentHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrollPercent = Math.round((scrollTop / documentHeight) * 100);
+        
+        // Get text content from the element
+        let elementText = e.target.textContent?.trim() || null;
+        
+        // If no direct text, try to get meaningful identifier
+        if (!elementText && e.target.value) {
+            elementText = e.target.value; // For input buttons
+        }
+        if (!elementText && e.target.alt) {
+            elementText = e.target.alt; // For images
+        }
+        if (!elementText && e.target.title) {
+            elementText = e.target.title; // For elements with title
+        }
+        
+        // Get href for links
+        const href = e.target.href || null;
+        
+        // Get data attributes that might be useful
+        const dataAttributes = {};
+        for (let attr of e.target.attributes) {
+            if (attr.name.startsWith('data-')) {
+                dataAttributes[attr.name] = attr.value;
+            }
+        }
+        
+        // Store click with context
+        const clickData = {
+            click_number: clickCount,
+            scroll_position: scrollPercent,
+            timestamp: Date.now(),
+            element_tag: e.target.tagName.toLowerCase(),
+            element_class: e.target.className || null,
+            element_id: e.target.id || null,
+            element_text: elementText,
+            element_href: href,
+            data_attributes: Object.keys(dataAttributes).length > 0 ? dataAttributes : null
+        };
+        
+        clickEvents.push(clickData);
+        console.log('Click detected:', clickData); // Add debug logging
     });
     
-    return () => clickCount;
+    return {
+        getClickCount: () => clickCount,
+        getClickEvents: () => clickEvents
+    };
 }
 
 // Function to send tracking data
@@ -151,7 +200,7 @@ function sendTrackingData(data) {
 console.log('Initializing tracking for page:', getPageIdentifier()); // Add debug logging
 const getScrollDepth = trackScrollDepth();
 const getTimeOnPage = trackTimeOnPage();
-const getClickCount = trackClicks();
+const clickTracker = trackClicks();
 
 // Generate a unique session ID for this visit
 const sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -211,7 +260,8 @@ window.addEventListener('beforeunload', function() {
         qr_code: currentPageId, // automatically detected from URL
         time_on_page: getTimeOnPage(),
         scroll_depth: getScrollDepth(),
-        click_count: getClickCount(),
+        click_count: clickTracker.getClickCount(),
+        click_events: clickTracker.getClickEvents(), // Detailed click data with scroll positions
         session_end: true
     };
     
