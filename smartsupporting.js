@@ -196,6 +196,23 @@ function sendTrackingData(data) {
     });
 }
 
+// Function to track calculator interactions
+function trackCalculatorInteraction(type, oldValue, newValue) {
+    const interactionData = {
+        session_id: sessionId,
+        qr_code: currentPageId,
+        interaction_type: 'calculator_change',
+        field_changed: type, // 'state' or 'income'
+        old_value: oldValue,
+        new_value: newValue,
+        timestamp: Date.now(),
+        page_url: window.location.href
+    };
+    
+    console.log('Calculator interaction:', interactionData);
+    sendTrackingData(interactionData);
+}
+
 // Initialize tracking
 console.log('Initializing tracking for page:', getPageIdentifier()); // Add debug logging
 const getScrollDepth = trackScrollDepth();

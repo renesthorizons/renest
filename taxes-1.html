@@ -2566,7 +2566,14 @@
             select.showPicker();
         }
         select.addEventListener('change', function() {
+            const oldState = currentState;
             currentState = this.value;
+            
+            // Track the state change
+            if (typeof trackCalculatorInteraction === 'function') {
+                trackCalculatorInteraction('state', oldState, currentState);
+            }
+            
             // Restore the span with the arrow
             const newSpan = document.createElement('span');
             newSpan.id = 'inlineState';
@@ -2607,7 +2614,15 @@
             let val = parseInt(input.value, 10);
             if (isNaN(val) || val < 1) val = 1;
             if (val > 99) val = 99;
+            
+            const oldIncome = currentIncomeK;
             currentIncomeK = val;
+            
+            // Track the income change
+            if (oldIncome !== currentIncomeK && typeof trackCalculatorInteraction === 'function') {
+                trackCalculatorInteraction('income', oldIncome, currentIncomeK);
+            }
+            
             input.replaceWith(span);
             updateRefundChart();
         }
