@@ -53,16 +53,23 @@ function getUTMParameters() {
 
 function getApproximateLocation() {
     // Get rough location from IP address (no user permission needed)
+    console.log('Attempting to get location...'); // Add debug logging
     return fetch('https://ipapi.co/json/')
-        .then(response => response.json())
-        .then(data => ({
-            city: data.city || null,
-            region: data.region || null,
-            country: data.country_name || null,
-            postal: data.postal || null,
-            latitude: data.latitude || null,
-            longitude: data.longitude || null
-        }))
+        .then(response => {
+            console.log('Location API response status:', response.status); // Add debug logging
+            return response.json();
+        })
+        .then(data => {
+            console.log('Location data received:', data); // Add debug logging
+            return {
+                city: data.city || null,
+                region: data.region || null,
+                country: data.country_name || null,
+                postal: data.postal || null,
+                latitude: data.latitude || null,
+                longitude: data.longitude || null
+            };
+        })
         .catch(error => {
             console.log('Location lookup failed:', error);
             return {
@@ -95,6 +102,7 @@ function trackScrollDepth() {
         
         if (scrollPercent > maxScroll) {
             maxScroll = scrollPercent;
+            console.log('New max scroll depth:', maxScroll + '%'); // Add debug logging
         }
     });
     
@@ -114,6 +122,7 @@ function trackClicks() {
     
     document.addEventListener('click', (e) => {
         clickCount++;
+        console.log('Click detected, total clicks:', clickCount); // Add debug logging
     });
     
     return () => clickCount;
@@ -121,18 +130,25 @@ function trackClicks() {
 
 // Function to send tracking data
 function sendTrackingData(data) {
+    console.log('Sending tracking data:', data); // Add debug logging
     fetch('https://gesw5yp192.execute-api.us-east-2.amazonaws.com/prod/track', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(data)
-    }).catch(error => {
+    })
+    .then(response => {
+        console.log('Tracking response:', response.status); // Add success logging
+        return response;
+    })
+    .catch(error => {
         console.log('Tracking error:', error);
     });
 }
 
 // Initialize tracking
+console.log('Initializing tracking for page:', getPageIdentifier()); // Add debug logging
 const getScrollDepth = trackScrollDepth();
 const getTimeOnPage = trackTimeOnPage();
 const getClickCount = trackClicks();
@@ -189,6 +205,8 @@ window.addEventListener('beforeunload', function() {
         click_count: getClickCount(),
         session_end: true
     };
+    
+    console.log('Page unloading - final tracking data:', finalData); // Add debug logging
     
     // Use sendBeacon for reliable delivery when page is closing
     if (navigator.sendBeacon) {
