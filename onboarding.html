@@ -874,7 +874,10 @@
         let chatData = {
             school: '',
             state: '',
-            income: '',
+            primaryStateIncome: 0,    // Income in the state where they go to school
+            hasMultiStateIncome: '',  // 'yes' or 'no'
+            otherStateName: '',       // State code for other income
+            otherStateIncome: 0,      // Amount earned in other state
             enrolledMonths: [],
             residency_status: '',
             visa_type: '', 
@@ -904,6 +907,13 @@
                 'WY': 'Wyoming', 'NYC': 'New York City'
             };
             return stateCodeToName[stateCode] || stateCode;
+        }
+        
+        // Calculate total income from all states
+        function calculateTotalIncome() {
+            const primaryIncome = Number(chatData.primaryStateIncome) || 0;
+            const otherIncome = Number(chatData.otherStateIncome) || 0;
+            return primaryIncome + otherIncome;
         }
         
         // Initialize monthly housing costs
@@ -1053,10 +1063,38 @@
             {
                 id: 'income',
                 type: 'bot',
-                message: "What's your projected total income from all sources this year?",
+                message: "", // Will be dynamically generated with state name
                 responseType: 'currency',
-                placeholder: "Enter your annual income",
-                field: 'income'
+                placeholder: "Enter your income in this state",
+                field: 'primaryStateIncome'
+            },
+            {
+                id: 'multi_state_earnings',
+                type: 'bot',
+                message: "Did you earn money while in any other state (e.g., summer internship)?",
+                responseType: 'options',
+                options: [
+                    { value: 'yes', text: 'Yes, I earned money in another state' },
+                    { value: 'no', text: 'No, all my income was in this state' }
+                ],
+                field: 'hasMultiStateIncome'
+            },
+            {
+                id: 'other_state_name',
+                type: 'bot',
+                message: "Which other state did you earn money in?",
+                responseType: 'state_select',
+                showIf: (data) => data.hasMultiStateIncome === 'yes',
+                field: 'otherStateName'
+            },
+            {
+                id: 'other_state_income',
+                type: 'bot',
+                message: "", // Will be dynamically generated with state name
+                responseType: 'currency',
+                placeholder: "Enter income earned in other state",
+                showIf: (data) => data.hasMultiStateIncome === 'yes',
+                field: 'otherStateIncome'
             },
             {
                 id: 'housing_intro',
@@ -1445,7 +1483,7 @@
             waitingForResponse = true;
             
             // Validate input based on field type
-            if (field === 'income' || field === 'monthlyRent' || field === 'monthlyWifi' || field === 'monthlyUtilities') {
+            if (field === 'primaryStateIncome' || field === 'otherStateIncome' || field === 'monthlyRent' || field === 'monthlyWifi' || field === 'monthlyUtilities') {
                 const numericValue = value.replace(/[^\d]/g, '');
                 if (!numericValue) {
                     showError('Please enter a valid amount');
@@ -1512,14 +1550,29 @@
                 // For openHousingModal, let it continue to show the message and handle response type
             }
             
+            // Handle income question step dynamically
+            if (question.id === 'income') {
+                const stateName = getStateName(chatData.state);
+                question.message = `What's your projected total income this year in ${stateName}?`;
+            }
+            
+            // Handle other state income question dynamically
+            if (question.id === 'other_state_income') {
+                const otherStateName = getStateName(chatData.otherStateName);
+                question.message = `How much did you earn in ${otherStateName}?`;
+            }
+            
             // Handle cost explanation step dynamically
             if (question.id === 'cost_explanation') {
                 const benefit = window.calculatedBenefit ? Math.round(Number(window.calculatedBenefit.benefit) || 0) : 0;
                 
+                // Calculate total income for pricing
+                const totalIncome = calculateTotalIncome();
+                
                 // Calculate dynamic pricing using the new pricing calculator
                 const pricing = window.pricingCalculator.calculatePricing(
                     chatData.state,
-                    chatData.income,
+                    totalIncome,
                     chatData.enrolledMonths,
                     window.monthlyHousingCosts,
                     chatData.monthlyGrocery
@@ -2205,9 +2258,10 @@
             await new Promise(resolve => setTimeout(resolve, 2000));
             
             // Calculate benefit using existing function with new housing structure
+            const totalIncome = calculateTotalIncome();
             const benefitDetails = calculateBenefitWithMonthlyHousingCustomGrocery(
                 chatData.state, 
-                Number(chatData.income), 
+                totalIncome, 
                 chatData.enrolledMonths, 
                 window.monthlyHousingCosts,
                 chatData.monthlyGrocery !== undefined ? Number(chatData.monthlyGrocery) : 200,
@@ -2221,12 +2275,25 @@
             
             const benefit = Math.round(Number(benefitDetails.benefit) || 0);
             const qualifiedSpend = Math.round(Number(benefitDetails.qualifiedSpend) || 0);
-            const income = Number(chatData.income || 0);
+            const income = totalIncome;
             
             // Remove typing indicator and show first message
             removeTypingIndicator();
-            const firstMessage = `That's great! Based on your $${income.toLocaleString('en-US')} income and $${qualifiedSpend.toLocaleString('en-US')} qualified spend we determined you qualify for`;
-            await addMessage('bot', firstMessage);
+            
+            // Create income summary message
+            let incomeMessage;
+            if (chatData.hasMultiStateIncome === 'yes' && chatData.otherStateName && chatData.otherStateIncome) {
+                const primaryStateName = getStateName(chatData.state);
+                const otherStateName = getStateName(chatData.otherStateName);
+                const primaryIncome = Number(chatData.primaryStateIncome);
+                const otherIncome = Number(chatData.otherStateIncome);
+                incomeMessage = `That's great! Based on your income of $${primaryIncome.toLocaleString('en-US')} in ${primaryStateName} and $${otherIncome.toLocaleString('en-US')} in ${otherStateName} (total: $${income.toLocaleString('en-US')}) and $${qualifiedSpend.toLocaleString('en-US')} qualified spend we determined you qualify for`;
+            } else {
+                const stateName = getStateName(chatData.state);
+                incomeMessage = `That's great! Based on your $${income.toLocaleString('en-US')} income in ${stateName} and $${qualifiedSpend.toLocaleString('en-US')} qualified spend we determined you qualify for`;
+            }
+            
+            await addMessage('bot', incomeMessage);
             
             // Show another typing indicator for the benefit card
             showTypingIndicator('calculating tax savings...');
@@ -2767,6 +2834,23 @@
             // Copy chat data to the original formData format for compatibility
             const formData = { ...chatData };
             
+            // Add total income for backward compatibility
+            formData.income = calculateTotalIncome();
+            
+            // Prepare account status data based on multi-state income
+            if (chatData.hasMultiStateIncome === 'yes' && chatData.otherStateName && chatData.otherStateIncome) {
+                // Multi-state income - create account status object
+                formData.accountStatus = {
+                    [`${chatData.state}Income`]: Number(chatData.primaryStateIncome) || 0,
+                    [`${chatData.otherStateName}Income`]: Number(chatData.otherStateIncome) || 0
+                };
+            } else {
+                // Single state income - keep it simple
+                formData.accountStatus = {
+                    [`${chatData.state}Income`]: Number(chatData.primaryStateIncome) || 0
+                };
+            }
+            
             // Submit to Google Form
             submitToGoogleForm();
             
@@ -2780,6 +2864,7 @@
             localStorage.setItem('onboardingCalculatedBenefit', JSON.stringify(window.calculatedBenefit));
             
             console.log('Chat data submitted:', formData);
+            console.log('Account status data:', formData.accountStatus);
         }
 
         // Convert monthly housing costs to housing entries format
