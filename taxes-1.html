@@ -11,9 +11,9 @@
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RENEST - Student 401k for Working Students</title>
+    <title>RENEST - Tax Benefits for Students</title>
     <link rel="icon" href="blogo2.png" type="image/png">
-    
+    <script src="smartsupporting.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
         
@@ -92,6 +92,17 @@
             max-width: 100%;
         }
 
+        body {
+            background: var(--hero-gradient);
+            min-height: 100vh;
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-weight: 400;
+            letter-spacing: -0.005em;
+            position: relative;
+            overflow-x: hidden;
+        }
+
         /* Modern scrollbar styling */
         ::-webkit-scrollbar {
             width: 8px;
@@ -109,6 +120,33 @@
 
         ::-webkit-scrollbar-thumb:hover {
             background: var(--accent-gradient);
+        }
+
+        .container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 100vw;
+            overflow-x: hidden;
+            position: relative;
+            z-index: 1;
+        }
+
+        .main-content {
+            width: 100%;
+            max-width: 100%;
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 0;
+            overflow-x: hidden;
+            position: relative;
+            z-index: 2;
         }
 
         /* Add animation keyframes for modern effects */
@@ -168,56 +206,6 @@
         /* Simplified animations */
         .fadeInUp {
             animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) both;
-        }
-
-        body {
-            background: var(--hero-gradient);
-            min-height: 100vh;
-            color: var(--text-primary);
-            line-height: 1.6;
-            font-weight: 400;
-            letter-spacing: -0.005em;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        .container {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            max-width: 100vw;
-            overflow-x: hidden;
-            position: relative;
-            z-index: 1;
-        }
-
-        .container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 60vh;
-            background: radial-gradient(ellipse at top, rgba(0, 102, 255, 0.05) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .main-content {
-            width: 100%;
-            max-width: 100%;
-            color: var(--text-primary);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 0;
-            overflow-x: hidden;
-            position: relative;
-            z-index: 2;
         }
 
         #motivationSection {
@@ -928,6 +916,8 @@
             backdrop-filter: blur(16px);
         }
 
+
+
         @media (hover: hover) and (pointer: fine) {
             .review-card:hover {
                 transform: translateY(-8px) scale(1.02);
@@ -1081,17 +1071,18 @@
             -moz-appearance: textfield;
         }
 
-        /* Modern contact section */
+        /* Improved contact section */
         .contact-us-box {
             background: var(--surface-elevated) !important;
-            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            border: 1px solid rgba(255, 255, 255, 0.4) !important;
             border-radius: var(--radius-2xl) !important;
-            box-shadow: var(--shadow-lg) !important;
+            box-shadow: var(--shadow-xl) !important;
             padding: 2.5rem !important;
             margin-top: 2.5rem !important;
             position: relative;
             overflow: hidden;
-            backdrop-filter: blur(16px);
+            backdrop-filter: blur(12px) !important;
+            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) !important;
         }
 
         .contact-us-box::before {
@@ -1100,39 +1091,40 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 6px;
+            height: 5px;
             background: var(--primary-gradient);
-            border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+            box-shadow: var(--shadow-glow);
         }
 
         .contact-us-box strong {
             color: var(--text-primary);
-            font-weight: 700;
+            font-weight: 600;
         }
 
         .contact-us-box a {
-            color: var(--text-accent) !important;
+            color: var(--primary) !important;
             text-decoration: none !important;
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
 
         .contact-us-box a:hover {
             color: var(--primary-dark) !important;
             text-decoration: underline !important;
-            transform: translateY(-1px);
         }
 
         /* Improved refund chart */
         #refundChartContainer {
-            background: var(--surface) !important;
-            border: 1px solid var(--border-light) !important;
-            border-radius: var(--radius-xl) !important;
-            box-shadow: var(--shadow-md) !important;
-            padding: 2.5rem !important;
-            margin: 2rem auto !important;
+            background: var(--surface-elevated) !important;
+            border: 1px solid rgba(255, 255, 255, 0.4) !important;
+            border-radius: var(--radius-2xl) !important;
+            box-shadow: var(--shadow-xl) !important;
+            padding: 3rem !important;
+            margin: 3rem auto !important;
             position: relative;
             overflow: hidden;
+            backdrop-filter: blur(16px) !important;
+            animation: scaleIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) !important;
         }
 
         #refundChartContainer::before {
@@ -1141,23 +1133,37 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 4px;
+            height: 5px;
             background: var(--primary-gradient);
+            box-shadow: var(--shadow-glow);
+        }
+
+        #refundChartContainer::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(99, 102, 241, 0.03) 0%, transparent 70%);
+            pointer-events: none;
         }
 
         /* Improved inline editing elements */
         #inlineState, #inlineIncome {
-            background: var(--accent) !important;
-            color: var(--primary) !important;
-            border: 1px solid var(--border) !important;
+            background: #E6EFFF !important;
+            color: #1d4ed8 !important;
+            border: 1px solid #3b82f6 !important;
             padding: 0.25rem 0.75rem !important;
             border-radius: 6px !important;
             font-weight: 600 !important;
             transition: all 0.2s !important;
+            cursor: pointer !important;
         }
 
         #inlineState:hover, #inlineIncome:hover {
-            background: var(--border-light) !important;
+            background: #dbeafe !important;
+            color: #1e40af !important;
         }
 
 
@@ -1263,6 +1269,8 @@
             overflow: hidden;
         }
 
+
+
         @media (hover: hover) and (pointer: fine) {
             .stat-item:hover {
                 transform: translateY(-4px);
@@ -1315,8 +1323,10 @@
             transition: transform 0.3s ease;
         }
 
-        .hero-img:hover {
-            transform: scale(1.05);
+        @media (hover: hover) and (pointer: fine) {
+            .hero-img:hover {
+                transform: scale(1.05);
+            }
         }
 
         .hero-img-fallback {
@@ -1355,24 +1365,23 @@
             min-height: 220px;
         }
 
-        /* Modern section headline styling */
+        /* Section headline styling */
         .section-headline {
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             text-align: center;
             position: relative;
             width: 100%;
         }
 
         .section-headline h2 {
-            font-family: 'Space Grotesk', 'Inter', sans-serif;
-            font-size: 2.75rem;
+            font-size: 2.5rem;
             font-weight: 800;
             color: var(--text-primary);
             line-height: 1.2;
             margin: 0;
             position: relative;
-            padding-bottom: 2rem;
-            letter-spacing: -0.025em;
+            padding-bottom: 1.5rem;
+            letter-spacing: -0.02em;
             background: linear-gradient(135deg, var(--text-primary) 0%, var(--primary) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -1385,11 +1394,11 @@
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 100px;
-            height: 6px;
+            width: 80px;
+            height: 4px;
             background: var(--primary-gradient);
             border-radius: var(--radius-sm);
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+            box-shadow: 0 2px 8px rgba(0, 102, 255, 0.3);
         }
 
         @media (max-width: 900px) {
@@ -1425,17 +1434,38 @@
                 text-align: center;
             }
 
+            .final-cta-section {
+                padding: 4rem 2rem !important;
+            }
+
+            .final-cta-section div:first-child {
+                font-size: 2.25rem !important;
+            }
+
+            .get-started-btn {
+                min-width: 300px;
+                padding: 1.75rem 3rem;
+                font-size: 1.25rem;
+            }
+
             .hero-stats {
-                grid-template-columns: 1fr;
-                gap: 1rem;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.2rem;
+                margin-top: 2rem;
             }
 
             .stat-item {
-                padding: 1rem;
+                padding: 1.5rem 1.2rem;
             }
 
             .stat-number {
-                font-size: 1.5rem;
+                font-size: 1.75rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .stat-label {
+                font-size: 0.8rem;
+                line-height: 1.3;
             }
 
             .hero-image-container {
@@ -1464,17 +1494,21 @@
             }
 
             .get-started-btn {
-                min-width: 300px;
-                padding: 1.75rem 3rem;
-                font-size: 1.25rem;
+                padding: 1.125rem 2.25rem;
+                font-size: 1.0625rem;
+                width: auto;
+                min-width: 220px;
+                max-width: 280px;
+                justify-content: center;
+                text-align: center;
             }
 
             .get-started-section {
-                padding: 2rem 1.5rem 4rem 1.5rem;
+                padding: 1.5rem 1.5rem 3rem 1.5rem;
             }
 
             .section-headline h2 {
-                font-size: 2.25rem;
+                font-size: 1.75rem;
             }
 
             .section-headline {
@@ -1511,40 +1545,73 @@
 
         @media (max-width: 480px) {
             #motivationSection {
-                padding: 2rem 1rem;
-                margin: 0.5rem;
-                border-radius: var(--radius-lg);
+                padding: 3rem 2rem;
+                margin: 1.5rem 0.5rem;
+                border-radius: var(--radius-xl);
             }
 
             .hero-content {
-                gap: 2rem;
+                gap: 3rem;
                 min-height: auto;
             }
 
             .hero-headline h1 {
-                font-size: 2.125rem;
-                line-height: 1.2;
+                font-size: 3.25rem;
+                line-height: 1.05;
             }
 
             .hero-subtitle {
-                font-size: 1rem;
+                font-size: 1.25rem;
+            }
+
+            .final-cta-section {
+                padding: 3rem 1.5rem !important;
+            }
+
+            .final-cta-section div:first-child {
+                font-size: 1.75rem !important;
+            }
+
+            .get-started-btn {
+                min-width: 280px;
+                padding: 1.5rem 3rem;
+                font-size: 1.125rem;
+            }
+
+            .stat-number {
+                font-size: 2.5rem;
+            }
+
+            .benefit-item {
+                padding: 2rem;
+                gap: 1.5rem;
+            }
+
+            .benefit-number {
+                width: 48px;
+                height: 48px;
+                font-size: 1.25rem;
             }
 
             .hero-stats {
                 grid-template-columns: repeat(3, 1fr);
-                gap: 0.75rem;
+                gap: 0.8rem;
+                margin-top: 2rem;
             }
 
             .stat-item {
-                padding: 0.75rem;
+                padding: 1.25rem 1rem;
             }
 
             .stat-number {
-                font-size: 1.25rem;
+                font-size: 1.5rem;
+                margin-bottom: 0.5rem;
             }
 
             .stat-label {
-                font-size: 0.75rem;
+                font-size: 0.7rem;
+                line-height: 1.2;
+                font-weight: 600;
             }
 
             .hero-image-container {
@@ -1640,7 +1707,7 @@
         .benefits-list {
             margin-bottom: 3rem;
             display: grid;
-            gap: 1.5rem;
+            gap: 1.25rem;
         }
 
         .benefit-item {
@@ -1648,54 +1715,42 @@
             align-items: flex-start;
             gap: 1.5rem;
             padding: 2rem;
-            background: var(--surface);
-            border: 1px solid var(--border-light);
+            background: var(--background);
+            border: 1px solid var(--border);
             border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow-md);
             font-size: 1.125rem;
-            font-weight: 500;
+            font-weight: 400;
             color: var(--text-primary);
             line-height: 1.6;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            overflow: hidden;
         }
 
-        .benefit-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: var(--primary-gradient);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
 
-        .benefit-item:hover {
-            transform: translateX(8px);
-            box-shadow: var(--shadow-md);
-            border-color: var(--primary);
-        }
 
-        .benefit-item:hover::before {
-            opacity: 1;
+        @media (hover: hover) and (pointer: fine) {
+            .benefit-item:hover {
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-lg);
+                border-color: var(--border-accent);
+            }
         }
 
         .benefit-number {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: var(--radius-lg);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
             background: var(--primary-gradient);
             color: white;
-            font-size: 1rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
             font-weight: 700;
             flex-shrink: 0;
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow-md);
         }
 
         /* Student calculator header */
@@ -1781,9 +1836,11 @@
             transition: all 0.3s ease;
         }
 
-        .founder-headshot:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
+        @media (hover: hover) and (pointer: fine) {
+            .founder-headshot:hover {
+                transform: translateY(-4px);
+                box-shadow: var(--shadow-lg);
+            }
         }
 
         .founder-name {
@@ -1799,18 +1856,16 @@
             font-weight: 500;
         }
 
-        /* Modern CTA box styling */
+        /* CTA box styling */
         .cta-box {
-            background: var(--surface-elevated);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: var(--radius-2xl);
-            box-shadow: var(--shadow-xl);
+            background: var(--background);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
             padding: 4rem;
             margin: 4rem auto;
-            max-width: 1000px;
+            max-width: 1100px;
             position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(16px);
         }
 
         .cta-box::before {
@@ -1819,28 +1874,27 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 6px;
+            height: 4px;
             background: var(--primary-gradient);
-            border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
         }
 
         .cta-title {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.75rem;
+            font-size: 2.25rem;
             font-weight: 800;
             color: var(--text-primary);
             text-align: center;
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
             line-height: 1.2;
-            letter-spacing: -0.015em;
+            letter-spacing: -0.02em;
         }
 
         .cta-content {
             font-size: 1.25rem;
             color: var(--text-secondary);
-            line-height: 1.7;
+            line-height: 1.6;
             margin-bottom: 2.5rem;
-            font-weight: 400;
         }
 
         .path-comparison {
@@ -1851,32 +1905,40 @@
         }
 
         .path-item {
-            padding: 1.5rem;
-            border-radius: var(--radius-xl);
-            border: 2px solid;
+            padding: 1.75rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            overflow: hidden;
+            background: var(--background);
         }
 
         .path-success {
             border-color: var(--success);
-            background: linear-gradient(135deg, rgba(3, 152, 85, 0.05) 0%, rgba(3, 152, 85, 0.02) 100%);
+            background: linear-gradient(135deg, rgba(5, 150, 105, 0.05) 0%, rgba(16, 185, 129, 0.02) 100%);
         }
 
-        .path-success:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(3, 152, 85, 0.15);
+
+
+        @media (hover: hover) and (pointer: fine) {
+            .path-success:hover {
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-lg);
+            }
         }
 
         .path-warning {
             border-color: var(--warning);
-            background: linear-gradient(135deg, rgba(220, 104, 3, 0.05) 0%, rgba(220, 104, 3, 0.02) 100%);
+            background: linear-gradient(135deg, rgba(217, 119, 6, 0.05) 0%, rgba(245, 158, 11, 0.02) 100%);
         }
 
-        .path-warning:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(220, 104, 3, 0.15);
+
+
+        @media (hover: hover) and (pointer: fine) {
+            .path-warning:hover {
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-lg);
+            }
         }
 
         .path-header {
@@ -1968,18 +2030,18 @@
                     <div class="hero-content">
                         <div class="hero-text">
                             <div class="hero-headline">
-                                <h1>The Student <span class="mobile-only-break"></span>401(k)</h1>
+                                <h1>Taxes for <span class="highlight">Students</span>, <span class="mobile-only-break"></span>Done <span class="highlight">Better</span></h1>
                             </div>
                             <div class="hero-subtitle">
-                                The first full service account specifically for working students. Get immediate benefits while building your future.
+                                Renest is a tax preparation service that focuses on saving students money on taxes year-round, not just during tax season.
                             </div>
                             <div class="hero-stats">
                                 <div class="stat-item">
-                                    <div class="stat-number">$4,500+</div>
-                                    <div class="stat-label">Increase in Savings</div>
+                                    <div class="stat-number">$500+</div>
+                                    <div class="stat-label">Additional savings</div>
                                 </div>
                                 <div class="stat-item">
-                                    <div class="stat-number">2000+</div>
+                                    <div class="stat-number">2,000+</div>
                                     <div class="stat-label">Students helped</div>
                                 </div>
                                 <div class="stat-item">
@@ -1990,11 +2052,12 @@
                         </div>
                         <div class="hero-image">
                             <div class="hero-image-container">
-                                <img src="renest-calm.jpg" alt="Renest budgeting app interface" class="hero-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <!-- <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Three people sitting at table laughing together" class="hero-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"> -->
+                                <img src="renest-calm.jpg" alt="Three people sitting at table laughing together" class="hero-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                                
                                 <div class="hero-img-fallback" style="display: none;">
-                                    <div class="fallback-icon">📱</div>
-                                    <div class="fallback-text">Budgeting App</div>
+                                    <div class="fallback-icon">👥</div>
+                                    <div class="fallback-text">Students</div>
                                 </div>
                             </div>
                         </div>
@@ -2068,101 +2131,68 @@
                 </div>
 
                 <!-- Section Header -->
-                <div class="section-headline">
-                    <h2>More Freedom, More Security</h2>
+                <div class="section-headline" style="text-align: center; max-width: 900px; margin: 0 auto;">
+                    <h2>Start Now: Less Stress and More Money Back on Your Taxes</h2>
                 </div>
 
                 <div class="cta-box">
                     <!-- <div class="cta-title">
-                       Why Working Students Need Their Own 401k 
+                       Less Stress and More Money Back on Your Taxes
                     </div> -->
                     <div class="cta-content">
-                       Traditional 401(k)s and other savings accounts are not designed for students. You need immediate benefits, not just future ones. <span id="howItWorksLink" class="link-underline">Renest 529(sb)</span> is designed specifically for your unique situation as a working student.
+                       <span id="howItWorksLink" class="link-underline">To qualify for student specific benefits</span> the IRS requires you to prepare documentation during the year—<span class="highlight-text">not just when you file</span>.
                     </div>
                     
                     <div class="path-comparison">
                         <div class="path-item path-success">
                             <div class="path-header">
-                                <div class="path-icon">🎓</div>
-                                <div class="path-title">Renest 529(sb)</div>
+                                <div class="path-icon">✓</div>
+                                <div class="path-title">Start Now</div>
                        </div>
                             <div class="path-steps">
-                                Contribute income → Immediate tax refund → Build future savings → Student-focused benefits
+                                We handle the paperwork → Stress-free tax season → Avg. of $500 more on your tax refund
                             </div>
                         </div>
                         
                         <div class="path-item path-warning">
                             <div class="path-header">
-                                <div class="path-icon">💼</div>
-                                <div class="path-title">Traditional 401(k)</div>
+                                <div class="path-icon">⏳</div>
+                                <div class="path-title">Wait</div>
                             </div>
                             <div class="path-steps">
-                                Contribute income → Wait until 65 → No immediate benefits → Not designed for students
+                                Miss qualification window → Regular tax stress → No extra benefits
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <!-- App Preview Section -->
-                <!-- <div style="display: flex; justify-content: center; margin: 2.5rem 0; width: 100%;">
-                    <div style="max-width: 280px; text-align: center;">
-                        <img src="529iphoneimage3.png" alt="Renest 529 student retirement app interface" style="width: 100%; max-width: 240px; height: auto; border-radius: 16px; box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12); transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'" onerror="this.style.display='none'">
-                        <div style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-secondary); font-weight: 500; font-style: italic;">
-                            Your student 401k in your pocket
-                        </div>
-                    </div>
-                </div> -->
 
-                <!-- <div class="benefits-list">
+                <div class="student-calculator-header">
+                    Student in <span id="inlineState" style="text-decoration: none; cursor: pointer; color: #1d4ed8; background: #E6EFFF; padding: 0.1rem 0.4rem; border-radius: 6px; transition: all 0.2s ease; display: inline-flex; align-items: center; border: 1px solid #3b82f6; font-weight: 600;">Illinois <span id="stateArrow" style="font-size: 0.85em; margin-left: 0.3em; color: #1d4ed8;">▼</span></span> making $<span id="inlineIncome" style="text-decoration: none; cursor: pointer; color: #1d4ed8; background: #E6EFFF; padding: 0.1rem 0.4rem; border-radius: 6px; transition: all 0.2s ease; border: 1px solid #3b82f6; font-weight: 600;">25</span>k per year
+                  </div>
+                  <div id="refundChartContainer" style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin: 0 auto; max-width: 600px;">
+                      <!-- Chart will be rendered here by JS -->
+                  </div>
+                  <div style="margin-top: 1rem; font-size: 0.9rem; color: #666; font-style: italic; text-align: center; margin-bottom: 1rem; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto;">
+                      Want to file your taxes the same way as last year? That's okay too! We can still help you maximize your benefits by guiding you through a few steps.
+                  </div>
+                
+                <div class="benefits-list">
                     <div class="benefit-item">
                         <span class="benefit-number">1</span>
-                        As a working student, you can contribute up to $2,500/year and get immediate tax refunds - money back in your pocket now
+                        As a student you qualify for specific tax benefits on expenses related to your education (e.g., tuition, rent, groceries, etc.)
                     </div>
                     <div class="benefit-item">
                         <span class="benefit-number">2</span>
-                        Traditional 401ks require you to wait until age 60 to access benefits. Renest 529(sb) gives you immediate value while building your future
+                        Typical tax filing services are focused on tax season only, but by then it's too late for students to qualify for these benefits
                     </div>
                     <div class="benefit-item">
                         <span class="benefit-number">3</span>
-                        Your contributions can be used for education expenses and long-term investing tax-free, making this the perfect bridge between your working years and career
+                        Renest is solely focused on students' taxes all year long. Invest 6 minutes now to fill out our intake form and we can unlock hundreds of dollars more back on your tax return!
                     </div>
-                </div> -->
+                </div>
 
                 
-                <div class="student-calculator-header">
-                  The Renest 529(sb) Advantage
-                </div>
-                <div id="comparisonChartContainer" style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin: 2rem auto; max-width: 800px;">
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 2rem;">
-                        
-                        <!-- Benefit 1: Freedom & Flexibility -->
-                        <div style="text-align: center; padding: 2rem 1.5rem; background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%); border-radius: 12px; border: 2px solid #0066ff;">
-                            <div style="font-size: 3rem; margin-bottom: 1rem;">🔄</div>
-                            <div style="font-size: 1.125rem; font-weight: 700; color: #0066ff; margin-bottom: 1rem; line-height: 1.3;">Freedom & Flexibility</div>
-                            <div style="font-size: 0.95rem; color: #475467; line-height: 1.5;">Move money in and out when you need it while keeping tax benefits</div>
-                        </div>
-
-                        <!-- Benefit 2: Employer Independent -->
-                        <div style="text-align: center; padding: 2rem 1.5rem; background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%); border-radius: 12px; border: 2px solid #0066ff;">
-                            <div style="font-size: 3rem; margin-bottom: 1rem;">🎓</div>
-                            <div style="font-size: 1.125rem; font-weight: 700; color: #0066ff; margin-bottom: 1rem; line-height: 1.3;">Employer Independent</div>
-                            <div style="font-size: 0.95rem; color: #475467; line-height: 1.5;">Works with any income - part-time jobs, gigs, internships, anything</div>
-                        </div>
-
-                        <!-- Benefit 3: Immediate + Future -->
-                        <div style="text-align: center; padding: 2rem 1.5rem; background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%); border-radius: 12px; border: 2px solid #0066ff;">
-                            <div style="font-size: 3rem; margin-bottom: 1rem;">💰</div>
-                            <div style="font-size: 1.125rem; font-weight: 700; color: #0066ff; margin-bottom: 1rem; line-height: 1.3;">Immediate + Future</div>
-                            <div style="font-size: 0.95rem; color: #475467; line-height: 1.5;">Get cashback on rent & groceries now while saving for your future</div>
-                        </div>
-                        
-                    </div>
-                    
-                    <div style="text-align: center; padding-top: 1.5rem; border-top: 1px solid #eee; font-size: 1rem; color: #0066ff; font-weight: 600;">
-                        Your student 401k that actually works for <span style="color: #039855;">your life as a student</span>
-                    </div>
-                </div>
-               
+                
                 <div class="founders-section">
                     <div class="founders-photos">
                         <div class="founder-photo">
@@ -2179,7 +2209,7 @@
                 </div>
 
                 <div class="founder-intro">
-                    Founded by Thomas, a former PhD student, and Mo, a former corporate financial advisor, Renest's goal is to bring sophisticated retirement planning from boardrooms to dorm rooms, so working students can start building wealth immediately.
+                    Founded by Thomas, a former PhD student, and Mo, a former corporate financial advisor, Renest's goal is to bring tax sophistication from boardrooms to classrooms, so students can do more with more.
                 </div>
 
                 <!-- Founders Section -->
@@ -2188,12 +2218,13 @@
             </div>
             
             <!-- Signup Call-to-Action -->
-            <div style="width: 100%; padding: 3rem 2rem; text-align: center; background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%); display: flex; justify-content: center; position: relative;">
-                <div style="width: 100%; max-width: 1000px;">
-                    <div style="font-size: 1.75rem; font-weight: 800; color: var(--text-primary); margin-bottom: 1.5rem; line-height: 1.2; letter-spacing: -0.01em;">
-                        Ready to start your student 401k and get immediate tax refunds while building your future?
+            <div class="final-cta-section" style="width: 100%; padding: 4rem 2rem; text-align: center; background: var(--background-secondary); display: flex; justify-content: center; border-top: 1px solid var(--border-light);">
+                <div style="width: 100%; max-width: 1200px;">
+                    <div style="font-family: 'Space Grotesk', sans-serif; font-size: 2.25rem; font-weight: 800; color: var(--text-primary); margin-bottom: 1.5rem; line-height: 1.2; letter-spacing: -0.02em;">
+                        Get started now and our intake form will identify your maximum tax benefit free of charge
                     </div>
-                    
+                    <div style="font-size: 1.125rem; color: var(--text-secondary); font-weight: 400; max-width: 800px; margin: 0 auto; line-height: 1.6;">
+                        Join thousands of students who've already maximized their tax benefits with Renest
                 </div>
             </div>
                 </div>
@@ -2207,45 +2238,47 @@
                     </div>
                 </div>
 
-                <!-- Remind Me Section -->
-                <div style="width: 100%; display: flex; justify-content: center; padding: 0 2rem 2rem 2rem;">
-                    <div style="width: 100%; max-width: 900px; display: flex; justify-content: center;">
-                        <div class="remind-section" style="width: 100%; max-width: 400px; padding: 0 1rem; box-sizing: border-box;">
-                    
-                    <div class="contact-us-box" style="background: linear-gradient(145deg, #ffffff, #f8f9fa); border-radius: 12px; box-shadow: 0 2px 8px rgba(60,60,100,0.06); padding: 1.2rem 1rem; display: flex; flex-direction: column; gap: 1.2rem; width: 100%; box-sizing: border-box;">
-                        <div>
-                            <strong>Email Us:</strong> <a href="mailto:thomas@renesthorizons.com" style="color: #3A5AFF; text-decoration: underline;">thomas@renesthorizons.com</a>
-                        </div>
-                        <div>
-                            <strong>Let's Chat:</strong> <a href="https://calendly.com/renesthorizons/30min" target="_blank" rel="noopener" style="color: #3A5AFF; text-decoration: underline;">Schedule via Calendly</a>
-                        </div>
+                <!-- Simple Footnote Section -->
+                <div style="width: 100%; text-align: center; padding: 2rem 1rem; border-top: 1px solid #e5e7eb; margin-top: 2rem; font-size: 0.875rem; color: #6b7280;">
+                    <div style="margin-bottom: 1rem;">
+                        Questions? Email <a href="mailto:thomas@renesthorizons.com" style="color: #2563eb;">thomas@renesthorizons.com</a> or <a href="https://calendly.com/renesthorizons/30min" target="_blank" rel="noopener" style="color: #2563eb;">schedule a call</a>
                     </div>
-                    <div class="email-form-container" style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 1.5rem; margin-top: 1rem; width: 100%; box-sizing: border-box;">
-                        <form id="emailForm" style="display: flex; gap: 0.5rem; width: 100%; align-items: center; box-sizing: border-box;">
-                            <input type="email" id="emailInput" placeholder="Enter email" required style="flex: 1; padding: 0.7rem 1rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; min-width: 0; box-sizing: border-box;">
-                            <button type="submit" class="submit-button" style="padding: 0.7rem 1.5rem; background: #4B227A; color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 0.5rem; white-space: nowrap; box-sizing: border-box;">
-                                <span>Remind Me</span>
-                                <span class="centered-checkmark" style="display: none; font-size: 1.3rem; color: white;">✓</span>
-                            </button>
-                        </form>
-                    </div>
-                                    </div>
-                        </div>
-                    </div>
+                    <form id="emailForm" style="display: inline-flex; gap: 0.5rem; align-items: center; justify-content: center;">
+                        <input type="email" id="emailInput" placeholder="Get reminded" required style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 4px; font-size: 0.875rem; width: 180px; max-width: 180px; flex-shrink: 0; box-sizing: border-box;">
+                        <button type="submit" class="submit-button" style="padding: 0.5rem 1rem; background: #374151; color: white; border: none; border-radius: 4px; font-size: 0.875rem; cursor: pointer; flex-shrink: 0;">
+                            <span>Remind Me</span>
+                            <span class="centered-checkmark" style="display: none;">✓</span>
+                        </button>
+                    </form>
                 </div>
 
 
         </div>
     </div>
 
-
+   <script src="taxdbb.js"></script>
    <script>
 
     // Motivation section calculations
     
 
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('Carousel script running');
+        console.log('Clean modern design loaded');
+        
+        // Add smooth scroll behavior for better UX
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
         const expandSections = document.querySelectorAll('.expand-section');
         expandSections.forEach(section => {
             const header = section.querySelector('.expand-header');
@@ -2372,7 +2405,223 @@
         }, 1000);
     });
 
-    // No additional JavaScript needed for budgeting page
+    // --- Refund Chart Logic ---
+
+    // Helper: Format as currency
+    function formatCurrency(amount) {
+        return '$' + amount.toLocaleString(undefined, {maximumFractionDigits: 0});
+    }
+
+    let currentState = 'IL';
+    let currentIncomeK = 25;
+
+    function updateHeader(state, incomeK) {
+        const stateName = stateOptions[state] || 'Unknown';
+        document.getElementById('inlineState').innerHTML = `${stateName} <span id="stateArrow" style="font-size: 0.85em; margin-left: 0.3em; color: #1d4ed8;">▼</span>`;
+        document.getElementById('inlineIncome').textContent = incomeK;
+    }
+
+    function calculateRefunds(state, incomeK) {
+        // Constants
+        const qualifiedExpenses = 1500 * 12; // $18,000
+        const interestBenefit = 1500 * 12 * 0.04 * 0.2; // $144
+        const income = incomeK * 1000;
+        console.log('--- REFUND CALCULATION START ---');
+        console.log('State:', state, 'Income:', income);
+        // --- Federal Tax Calculation ---
+        const fedDeduction = federaltaxratedb.standardDeduction || 0;
+        const fedTaxable = Math.max(0, income - fedDeduction);
+        let fedTaxOwed = 0;
+        let prev = 0;
+        for (const bracket of federaltaxratedb.brackets) {
+            if (fedTaxable > prev) {
+                const amt = Math.min(fedTaxable, bracket.threshold) - prev;
+                fedTaxOwed += amt * (bracket.rate / 100);
+                console.log(`Federal bracket: 0-${bracket.threshold} @${bracket.rate}%: Taxed ${amt}, Tax so far: ${fedTaxOwed}`);
+                prev = bracket.threshold;
+            } else {
+                break;
+            }
+        }
+        const fedWithheld = fedTaxOwed * 1.20;
+        const fedRefund = fedWithheld - fedTaxOwed;
+        console.log('Federal: Deduction:', fedDeduction, 'Taxable:', fedTaxable, 'Tax Owed:', fedTaxOwed, 'Withheld:', fedWithheld, 'Refund:', fedRefund);
+        // --- State Tax Calculation ---
+        const stateDeduction = state529DB[state]?.deduction || 0;
+        const statePersonalExemption = statePersonalExemptionDB[state]?.amount || 0;
+        const stateTaxable = Math.max(0, income - statePersonalExemption);
+        console.log('State Deduction:', stateDeduction, 'State Personal Exemption:', statePersonalExemption, 'State Taxable:', stateTaxable);
+        
+        function calcStateTaxOwed(income, state) {
+            if (income <= 0) return 0;
+            const stateTaxInfo = stateTaxDB[state];
+            if (!stateTaxInfo || !stateTaxInfo.brackets || stateTaxInfo.brackets.length === 0) return 0;
+            let totalTax = 0;
+            let remainingIncome = income;
+            let previousThreshold = 0;
+            const sortedBrackets = [...stateTaxInfo.brackets].sort((a, b) => a.threshold - b.threshold);
+            for (let i = 0; i < sortedBrackets.length; i++) {
+                const bracket = sortedBrackets[i];
+                const nextThreshold = bracket.threshold;
+                const taxableInThisBracket = Math.min(remainingIncome, nextThreshold - previousThreshold);
+                if (taxableInThisBracket <= 0) break;
+                totalTax += (taxableInThisBracket * (bracket.rate / 100));
+                console.log(`State bracket: ${previousThreshold}-${nextThreshold} @${bracket.rate}%: Taxed ${taxableInThisBracket}, Tax so far: ${totalTax}`);
+                remainingIncome -= taxableInThisBracket;
+                previousThreshold = nextThreshold;
+                if (remainingIncome <= 0) break;
+            }
+            return totalTax;
+        }
+
+        const otherStateTaxOwed = calcStateTaxOwed(stateTaxable, state);
+        // State withholding is always based on the non-Renest (no 529 deduction) tax owed
+        const stateWithheld = otherStateTaxOwed * 1.10;
+        const otherStateRefund = stateWithheld - otherStateTaxOwed;
+
+        let renestStateRefund;
+        const deductibleAmount = Math.min(qualifiedExpenses, stateDeduction, stateTaxable);
+
+        // Special handling for credit states (IN, OR, MN) vs. deduction states
+        if (state === 'IN') {
+            const contributionCredit = deductibleAmount * 0.20;
+            const benefit = Math.min(contributionCredit, 1500, otherStateTaxOwed);
+            const renestStateTaxOwed = otherStateTaxOwed - benefit;
+            renestStateRefund = stateWithheld - renestStateTaxOwed;
+        } else if (state === 'OR') {
+            const benefit = Math.min(180, otherStateTaxOwed);
+            const renestStateTaxOwed = otherStateTaxOwed - benefit;
+            renestStateRefund = stateWithheld - renestStateTaxOwed;
+        } else if (state === 'MN') {
+            let benefit = 0;
+            if (income < 88810) {
+                benefit = Math.min(500, otherStateTaxOwed, 0.5 * qualifiedExpenses);
+            }
+            const renestStateTaxOwed = otherStateTaxOwed - benefit;
+            renestStateRefund = stateWithheld - renestStateTaxOwed;
+        } else {
+            // Standard deduction logic for all other states
+            const renestStateTaxable = Math.max(0, stateTaxable - deductibleAmount);
+            const renestStateTaxOwed = calcStateTaxOwed(renestStateTaxable, state);
+            renestStateRefund = stateWithheld - renestStateTaxOwed;
+            console.log('Renest State (Deduction): Taxable:', renestStateTaxable, 'Tax Owed:', renestStateTaxOwed, 'Refund:', renestStateRefund);
+        }
+
+        console.log('Other State: Taxable:', stateTaxable, 'Tax Owed:', otherStateTaxOwed, 'Withheld:', stateWithheld, 'Refund:', otherStateRefund);
+        let renestTotal = renestStateRefund + fedRefund + interestBenefit;
+        let otherTotal = otherStateRefund + fedRefund;
+        console.log('Renest Total Refund:', renestTotal, 'Other Total Refund:', otherTotal, 'Interest Benefit:', interestBenefit);
+        console.log('--- REFUND CALCULATION END ---');
+        return {
+            renest: Math.max(0, Math.round(renestTotal)),
+            turbotax: Math.max(0, Math.round(otherTotal)),
+            hrblock: Math.max(0, Math.round(otherTotal)),
+            sprinttax: Math.max(0, Math.round(otherTotal-125))
+        };
+    }
+
+    function renderRefundChart(refunds) {
+        const container = document.getElementById('refundChartContainer');
+        container.innerHTML = `
+            <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 0.5rem; font-size: 0.9rem;">
+                <div style="font-weight: 500;">Company</div>
+                <div style="font-weight: 500; text-align: right;">Average Refund</div>
+                <div style="color: #3A5AFF; font-weight: 600;">Renest</div>
+                <div style="text-align: right; color: #3A5AFF; font-weight: 600;">${formatCurrency(refunds.renest)}</div>
+                <div>TurboTax</div>
+                <div style="text-align: right;">${formatCurrency(refunds.turbotax)}</div>
+                <div>H&R Block</div>
+                <div style="text-align: right;">${formatCurrency(refunds.hrblock)}</div>
+                <div>SprintTax</div>
+                <div style="text-align: right;">${formatCurrency(refunds.sprinttax)}</div>
+            </div>
+            <div style='font-size: 0.82rem; color: #888; margin-top: 0.7rem; text-align: left; max-width: 500px; margin-left: auto; margin-right: auto;'>
+                 
+            </div>
+        `;
+    }
+
+    function updateRefundChart() {
+        updateHeader(currentState, currentIncomeK);
+        const refunds = calculateRefunds(currentState, currentIncomeK);
+        renderRefundChart(refunds);
+    }
+
+    // Inline state editing
+    function showStateDropdown() {
+        const span = document.getElementById('inlineState');
+        const select = document.createElement('select');
+        select.style.fontSize = '1rem';
+        select.style.padding = '0.1rem 0.3rem';
+        for (const [abbr, name] of Object.entries(stateOptions)) {
+            const option = document.createElement('option');
+            option.value = abbr;
+            option.textContent = name;
+            if (abbr === currentState) option.selected = true;
+            select.appendChild(option);
+        }
+        span.replaceWith(select);
+        select.focus();
+        if (typeof select.showPicker === 'function') {
+            select.showPicker();
+        }
+        select.addEventListener('change', function() {
+            currentState = this.value;
+            // Restore the span with the arrow
+            const newSpan = document.createElement('span');
+            newSpan.id = 'inlineState';
+            newSpan.style.cssText = 'text-decoration: none; cursor: pointer; color: #1d4ed8; background: #E6EFFF; padding: 0.1rem 0.4rem; border-radius: 6px; transition: all 0.2s ease; display: inline-flex; align-items: center; border: 1px solid #3b82f6; font-weight: 600;';
+            newSpan.innerHTML = `${stateOptions[currentState]} <span id=\"stateArrow\" style=\"font-size: 0.85em; margin-left: 0.3em; color: #1d4ed8;\">▼</span>`;
+            newSpan.addEventListener('click', showStateDropdown);
+            select.replaceWith(newSpan);
+            updateRefundChart();
+        });
+        select.addEventListener('blur', function() {
+            // Restore the span with the arrow
+            const newSpan = document.createElement('span');
+            newSpan.id = 'inlineState';
+            newSpan.style.cssText = 'text-decoration: none; cursor: pointer; color: #1d4ed8; background: #E6EFFF; padding: 0.1rem 0.4rem; border-radius: 6px; transition: all 0.2s ease; display: inline-flex; align-items: center; border: 1px solid #3b82f6; font-weight: 600;';
+            newSpan.innerHTML = `${stateOptions[currentState]} <span id=\"stateArrow\" style=\"font-size: 0.85em; margin-left: 0.3em; color: #1d4ed8;\">▼</span>`;
+            newSpan.addEventListener('click', showStateDropdown);
+            select.replaceWith(newSpan);
+            updateRefundChart();
+        });
+    }
+    document.getElementById('inlineState').addEventListener('click', showStateDropdown);
+
+    // Inline income editing
+    function showIncomeInput() {
+        const span = document.getElementById('inlineIncome');
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.min = 1;
+        input.max = 99;
+        input.value = currentIncomeK;
+        input.style.width = '40px';
+        input.style.fontSize = '1rem';
+        input.style.padding = '0.1rem 0.3rem';
+        span.replaceWith(input);
+        input.focus();
+        input.select();
+        function finish() {
+            let val = parseInt(input.value, 10);
+            if (isNaN(val) || val < 1) val = 1;
+            if (val > 99) val = 99;
+            currentIncomeK = val;
+            input.replaceWith(span);
+            updateRefundChart();
+        }
+        input.addEventListener('blur', finish);
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                finish();
+            }
+        });
+    }
+    document.getElementById('inlineIncome').addEventListener('click', showIncomeInput);
+
+    // Initial render
+    updateRefundChart();
 </script>
 
 <!-- How It Works Modal -->
@@ -2381,36 +2630,36 @@
   <div class="founder-modal-content" style="max-width: 650px; text-align: left; padding: 0;">
     <button class="founder-modal-close" aria-label="Close">&times;</button>
     <div class="modal-scroll-content" style="max-height: 85vh; overflow-y: auto; padding: 1.5rem 2rem;">
-        <div style="font-size: 1.5rem; font-weight: 700; color: #4B227A; margin-bottom: 1rem; text-align: center;">How Renest 529(sb) Works</div>
+        <div style="font-size: 1.5rem; font-weight: 700; color: #4B227A; margin-bottom: 1rem; text-align: center;">How It Works</div>
         <div style="font-size: 1.05rem; color: #2d2346; line-height: 1.6;">
-            <div style="margin-bottom: 1rem; font-weight: 500; color: #4B227A;">The first account designed for working students. Here's how it works:</div>
+            <div style="margin-bottom: 1rem; font-weight: 500; color: #4B227A;">We help students with their finances and taxes. This is what we'll ask for and do for you:</div>
             <ol style="padding-left: 1rem; margin-bottom: 1rem; list-style-type: none;">
                 <li style="margin-bottom: 1rem; position: relative; padding-left: 2.2rem;">
                     <span style="position: absolute; left: 0; color: #3A5AFF; font-weight: 700; font-size: 1.1rem;">1.</span>
-                    <strong>Set Up Your Student 401k:</strong> We help you open a Renest 529(sb) account specifically designed for working students.<br><span style="color: #666; font-size: 0.9rem;">(The state and federal law that creates this benefit is based on section 529, just like how retirement benefits are described in section 401).</span>
+                    Based on your basic information and your state, we start to narrow down the tax benefits available to you.
                 </li>
                 <li style="margin-bottom: 1rem; position: relative; padding-left: 2.2rem;">
                     <span style="position: absolute; left: 0; color: #3A5AFF; font-weight: 700; font-size: 1.1rem;">2.</span>
-                    <strong>Make Contributions:</strong> Each dollar you contribute works harder for you now and in the future.
+                    Next, we ask for your income and education related expenses you've had this year (e.g., rent). These expenses qualify for a tax deduction in your state while you are a student. <br><span style="color: #666; font-size: 0.9rem;">(The state and federal law that creates this education benefit is based on section 529, just like how retirement benefits are described in section 401).</span>
                 </li>
                 <li style="margin-bottom: 1rem; position: relative; padding-left: 2.2rem;">
                     <span style="position: absolute; left: 0; color: #3A5AFF; font-weight: 700; font-size: 1.1rem;">3.</span>
-                    <strong>Get Immediate Tax Refunds:</strong> Your contributions are tax-deductible, meaning you get money back on your tax return right away - not in 40 years.
+                    We record this information so that it is ready to be submitted on your taxes. The records need to be made in the same calendar year that the expenses happen, so if you wait till next tax season (which is in the next calendar year) then you have lost the opportunity to qualify for your benefit.
                 </li>
                 <li style="margin-bottom: 1rem; position: relative; padding-left: 2.2rem;">
-                    <span style="position: absolute; left: 0; color: #3A5AFF; font-weight: 700; font-size: 1.1rem;">💡</span>
-                    <strong>Flexible Access:</strong> Use funds tax-free for qualified education expenses, or keep growing them for retirement like a traditional 401k.
+                    <span style="position: absolute; left: 0; color: #3A5AFF; font-weight: 700; font-size: 1.1rem;">✓</span>
+                    In April, we file your taxes and include the paperwork to mark the extra benefits you qualify for based on the information you provided and the setup we did.
                 </li>
                 <li style="margin-bottom: 1rem; position: relative; padding-left: 2.2rem;">
-                    <span style="position: absolute; left: 0; color: #3A5AFF; font-weight: 700; font-size: 1.1rem;">🚀</span>
-                    <strong>Build Wealth Early:</strong> Start building your retirement savings while you're young, taking advantage of decades of compound growth.
+                    <span style="position: absolute; left: 0; color: #3A5AFF; font-weight: 700; font-size: 1.1rem;">👌</span>
+                    If you don't want us to submit your taxes, that's fine too! We'll go through the same steps and prepare all the paperwork for you to hand over to any other tax filing company or person you choose.
                 </li>
-                <!-- <li style="margin-bottom: 1rem; position: relative; padding-left: 2.2rem;">
+                <li style="margin-bottom: 1rem; position: relative; padding-left: 2.2rem;">
                     <span style="position: absolute; left: 0; color: #3A5AFF; font-weight: 700; font-size: 1.1rem;">💰</span>
-                    <strong>Net Positive:</strong> At just $8/month, you get back over $2,400/year in tax refunds, making this an incredibly profitable investment.
-                </li> -->
+                    You only pay when you file your taxes and get your maximum benefit. We gaurantee a higher benefit with Renest than you would have received without us.
+                </li>
             </ol>
-            <div style="font-size: 1.1rem; color: #4B227A; font-weight: 600; text-align: center; padding: 1rem; background: linear-gradient(145deg, #f0f2ff, #ffffff); border-radius: 8px; margin-top: 0.8rem;">More than just savings—we're giving you immediate financial benefits as a working student.</div>
+            <div style="font-size: 1.1rem; color: #4B227A; font-weight: 600; text-align: center; padding: 1rem; background: linear-gradient(145deg, #f0f2ff, #ffffff); border-radius: 8px; margin-top: 0.8rem;">Our goal is to make sure you get every benefit you're eligible for—simply and with confidence.</div>
         </div>
     </div>
   </div>
