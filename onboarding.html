@@ -2019,10 +2019,13 @@
             sliderContainer.style.borderRadius = '0.75rem';
             sliderContainer.style.border = '2px solid #e2e8f0';
             
+            // Check if mobile
+            const isMobile = window.innerWidth <= 768;
+            
             // Current value display
             const valueDisplay = document.createElement('div');
             valueDisplay.style.textAlign = 'center';
-            valueDisplay.style.fontSize = '1.5rem';
+            valueDisplay.style.fontSize = isMobile ? '1.3rem' : '1.5rem';
             valueDisplay.style.fontWeight = '600';
             valueDisplay.style.marginBottom = '1.5rem';
             valueDisplay.style.color = '#16a34a';
@@ -2032,9 +2035,9 @@
             const sliderWrapper = document.createElement('div');
             sliderWrapper.style.position = 'relative';
             sliderWrapper.style.marginBottom = '2rem';
-            sliderWrapper.style.padding = '1rem 0';
+            sliderWrapper.style.padding = isMobile ? '2rem 0' : '1rem 0';
             
-            // Slider
+            // Slider with enhanced mobile styling
             const slider = document.createElement('input');
             slider.type = 'range';
             slider.min = min;
@@ -2042,58 +2045,102 @@
             slider.step = 10; // $10 increments
             slider.value = defaultValue;
             slider.style.width = '100%';
-            slider.style.height = '8px';
+            slider.style.height = isMobile ? '6px' : '8px';
             slider.style.outline = 'none';
             slider.style.background = '#e2e8f0';
             slider.style.borderRadius = '4px';
             slider.style.appearance = 'none';
             slider.style.webkitAppearance = 'none';
             slider.style.cursor = 'pointer';
+            slider.style.touchAction = 'pan-x'; // Allow horizontal panning only
             
-            // Enhanced mobile styling
-            if (window.innerWidth <= 768) {
-                slider.style.height = '12px';
-                slider.style.padding = '0.5rem 0';
-                sliderWrapper.style.padding = '1.5rem 0';
-            }
+            // Enhanced CSS for better mobile compatibility
+            const sliderId = 'slider-' + Math.random().toString(36).substr(2, 9);
+            slider.id = sliderId;
             
-            // Custom slider thumb styling
             const sliderStyle = document.createElement('style');
             sliderStyle.textContent = `
-                input[type="range"]::-webkit-slider-thumb {
+                /* General range input styling */
+                #${sliderId} {
+                    background: linear-gradient(to right, #16a34a 0%, #16a34a ${((defaultValue - min) / (max - min)) * 100}%, #e2e8f0 ${((defaultValue - min) / (max - min)) * 100}%, #e2e8f0 100%);
+                    border: none;
+                    outline: none;
+                }
+                
+                /* Webkit browsers (Chrome, Safari, Edge) */
+                #${sliderId}::-webkit-slider-thumb {
+                    -webkit-appearance: none;
                     appearance: none;
-                    height: 24px;
-                    width: 24px;
+                    height: ${isMobile ? '40px' : '28px'};
+                    width: ${isMobile ? '40px' : '28px'};
                     border-radius: 50%;
                     background: #16a34a;
                     cursor: pointer;
-                    border: 2px solid white;
-                    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+                    border: 3px solid white;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+                    position: relative;
+                    z-index: 10;
                 }
                 
-                input[type="range"]::-moz-range-thumb {
-                    height: 24px;
-                    width: 24px;
+                #${sliderId}::-webkit-slider-track {
+                    height: ${isMobile ? '6px' : '8px'};
+                    background: transparent;
+                    border-radius: 4px;
+                }
+                
+                /* Firefox */
+                #${sliderId}::-moz-range-thumb {
+                    height: ${isMobile ? '40px' : '28px'};
+                    width: ${isMobile ? '40px' : '28px'};
                     border-radius: 50%;
                     background: #16a34a;
                     cursor: pointer;
-                    border: 2px solid white;
-                    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+                    border: 3px solid white;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+                    position: relative;
+                    z-index: 10;
                 }
                 
+                #${sliderId}::-moz-range-track {
+                    height: ${isMobile ? '6px' : '8px'};
+                    background: #e2e8f0;
+                    border-radius: 4px;
+                    border: none;
+                }
+                
+                #${sliderId}::-moz-range-progress {
+                    height: ${isMobile ? '6px' : '8px'};
+                    background: #16a34a;
+                    border-radius: 4px;
+                }
+                
+                /* Active/Focus states */
+                #${sliderId}:active::-webkit-slider-thumb,
+                #${sliderId}:focus::-webkit-slider-thumb {
+                    box-shadow: 0 2px 12px rgba(22, 163, 74, 0.4);
+                    transform: scale(1.1);
+                }
+                
+                #${sliderId}:active::-moz-range-thumb,
+                #${sliderId}:focus::-moz-range-thumb {
+                    box-shadow: 0 2px 12px rgba(22, 163, 74, 0.4);
+                    transform: scale(1.1);
+                }
+                
+                /* Touch-friendly spacing for mobile */
                 @media (max-width: 768px) {
-                    input[type="range"]::-webkit-slider-thumb {
-                        height: 32px;
-                        width: 32px;
-                    }
-                    
-                    input[type="range"]::-moz-range-thumb {
-                        height: 32px;
-                        width: 32px;
+                    #${sliderId} {
+                        margin: 20px 0;
                     }
                 }
             `;
             document.head.appendChild(sliderStyle);
+            
+            // Update background gradient function
+            function updateSliderBackground() {
+                const percentage = ((slider.value - min) / (max - min)) * 100;
+                slider.style.background = `linear-gradient(to right, #16a34a 0%, #16a34a ${percentage}%, #e2e8f0 ${percentage}%, #e2e8f0 100%)`;
+            }
             
             // Min/Max labels
             const labelContainer = document.createElement('div');
@@ -2111,24 +2158,8 @@
             labelContainer.appendChild(minLabel);
             labelContainer.appendChild(maxLabel);
             
-            // Touch event handling for better mobile experience
-            let isDragging = false;
-            
-            slider.addEventListener('touchstart', (e) => {
-                isDragging = true;
-                // Prevent scrolling while dragging slider
-                e.preventDefault();
-            }, { passive: false });
-            
-            slider.addEventListener('touchmove', (e) => {
-                if (isDragging) {
-                    e.preventDefault();
-                }
-            }, { passive: false });
-            
-            slider.addEventListener('touchend', () => {
-                isDragging = false;
-            });
+            // Improved mobile touch handling - remove conflicting touch events
+            // Let the browser handle touch events natively for better compatibility
             
             // Quick select instruction
             const instructionText = document.createElement('div');
@@ -2136,97 +2167,99 @@
             instructionText.style.fontSize = '0.85rem';
             instructionText.style.color = '#6b7280';
             instructionText.style.marginBottom = '0.75rem';
-            instructionText.textContent = 'Quick select or drag the slider below';
+            instructionText.textContent = isMobile ? 'Tap buttons or drag slider' : 'Quick select or drag the slider below';
             
             // Quick select buttons for common amounts
             const quickSelectContainer = document.createElement('div');
             quickSelectContainer.style.display = 'flex';
-            quickSelectContainer.style.gap = '0.5rem';
-            quickSelectContainer.style.marginBottom = '1rem';
+            quickSelectContainer.style.gap = isMobile ? '0.375rem' : '0.5rem';
+            quickSelectContainer.style.marginBottom = isMobile ? '1.5rem' : '1rem';
             quickSelectContainer.style.flexWrap = 'wrap';
             quickSelectContainer.style.justifyContent = 'center';
-            
-            // Mobile responsive styling
-            if (window.innerWidth <= 768) {
-                quickSelectContainer.style.gap = '0.375rem';
-                quickSelectContainer.style.marginBottom = '1.5rem';
-            }
             
             const commonAmounts = [100, 150, 200, 250, 300, 350];
             commonAmounts.forEach(amount => {
                 const btn = document.createElement('button');
                 btn.type = 'button';
                 btn.textContent = '$' + amount;
-                btn.style.padding = '0.5rem 0.75rem';
+                btn.style.padding = isMobile ? '0.75rem 1rem' : '0.5rem 0.75rem';
                 btn.style.border = '2px solid #e2e8f0';
-                btn.style.borderRadius = '0.5rem';
+                btn.style.borderRadius = isMobile ? '0.625rem' : '0.5rem';
                 btn.style.background = 'white';
                 btn.style.cursor = 'pointer';
-                btn.style.fontSize = '0.85rem';
+                btn.style.fontSize = isMobile ? '0.9rem' : '0.85rem';
                 btn.style.fontWeight = '500';
                 btn.style.transition = 'all 0.2s ease';
-                btn.style.minHeight = '44px'; // Minimum touch target size
-                btn.style.minWidth = '60px';
-                
-                // Enhanced mobile styling
-                if (window.innerWidth <= 768) {
-                    btn.style.padding = '0.625rem 0.875rem';
-                    btn.style.fontSize = '0.9rem';
-                    btn.style.minHeight = '48px';
-                    btn.style.minWidth = '70px';
-                    btn.style.borderRadius = '0.625rem';
-                }
+                btn.style.minHeight = isMobile ? '48px' : '44px'; // Minimum touch target size
+                btn.style.minWidth = isMobile ? '70px' : '60px';
+                btn.style.touchAction = 'manipulation'; // Prevent zoom on double-tap
                 
                 btn.onclick = () => {
                     slider.value = amount;
-                    updateValue(); // This will automatically handle the visual feedback
+                    updateValue();
+                    updateSliderBackground();
                 };
                 
-                btn.onmouseenter = () => {
-                    if (btn.style.backgroundColor !== 'rgb(22, 163, 74)') {
-                        btn.style.borderColor = '#16a34a';
-                        btn.style.transform = 'translateY(-1px)';
-                        btn.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
-                    }
-                };
-                
-                btn.onmouseleave = () => {
-                    if (btn.style.backgroundColor !== 'rgb(22, 163, 74)') {
-                        btn.style.borderColor = '#e2e8f0';
-                    }
-                    btn.style.transform = 'translateY(0)';
-                    btn.style.boxShadow = 'none';
-                };
+                // Only add hover effects on non-mobile devices
+                if (!isMobile) {
+                    btn.onmouseenter = () => {
+                        if (btn.style.backgroundColor !== 'rgb(22, 163, 74)') {
+                            btn.style.borderColor = '#16a34a';
+                            btn.style.transform = 'translateY(-1px)';
+                            btn.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                        }
+                    };
+                    
+                    btn.onmouseleave = () => {
+                        if (btn.style.backgroundColor !== 'rgb(22, 163, 74)') {
+                            btn.style.borderColor = '#e2e8f0';
+                        }
+                        btn.style.transform = 'translateY(0)';
+                        btn.style.boxShadow = 'none';
+                    };
+                }
                 
                 quickSelectContainer.appendChild(btn);
             });
             
-            // Update value display function (defined after quickSelectContainer exists)
+            // Update value display function
             function updateValue() {
                 const value = Number(slider.value);
                 valueDisplay.textContent = '$' + value.toLocaleString('en-US') + '/month';
                 
-                // Clear preset button selection when slider is moved manually
+                // Update button selection states
                 quickSelectContainer.querySelectorAll('button').forEach(btn => {
                     if (Number(btn.textContent.replace('$', '')) === value) {
-                        // Highlight the matching preset button
                         btn.style.backgroundColor = '#16a34a';
                         btn.style.borderColor = '#16a34a';
                         btn.style.color = 'white';
                     } else {
-                        // Deselect other preset buttons
                         btn.style.backgroundColor = 'white';
                         btn.style.borderColor = '#e2e8f0';
                         btn.style.color = '#374151';
                     }
                 });
+                
+                // Update slider background
+                updateSliderBackground();
             }
             
-            // Set up slider event listeners
-            slider.oninput = updateValue;
-            slider.onchange = updateValue; // For better mobile compatibility
+            // Set up slider event listeners with better mobile support
+            slider.addEventListener('input', updateValue);
+            slider.addEventListener('change', updateValue);
             
-            // Set initial preset button state based on default value
+            // Additional mobile-specific event handling
+            if (isMobile) {
+                slider.addEventListener('touchstart', function(e) {
+                    e.stopPropagation(); // Prevent conflicts with page scrolling
+                });
+                
+                slider.addEventListener('touchend', function(e) {
+                    updateValue(); // Ensure value is updated after touch
+                });
+            }
+            
+            // Set initial state
             updateValue();
             
             // Continue button
@@ -2234,9 +2267,10 @@
             continueBtn.className = 'send-button';
             continueBtn.textContent = 'Continue';
             continueBtn.style.width = '100%';
+            continueBtn.style.touchAction = 'manipulation'; // Prevent zoom on double-tap
             continueBtn.onclick = () => {
                 const sliderValue = Number(slider.value);
-                chatData[field] = sliderValue; // Store as number (including 0)
+                chatData[field] = sliderValue;
                 const displayText = '$' + sliderValue.toLocaleString('en-US') + '/month';
                 handleOptionResponse(sliderValue, displayText, field);
             };
