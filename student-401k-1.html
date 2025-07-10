@@ -1429,29 +1429,20 @@
             .hero-stats {
                 grid-template-columns: 1fr;
                 gap: 1rem;
-                margin-top: 2rem;
-                max-width: 300px;
-                margin-left: auto;
-                margin-right: auto;
             }
 
             .stat-item {
-                padding: 1rem 1.5rem;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
+                padding: 1rem;
+            }
+
+            /* Stack the Renest 529 advantage boxes on mobile */
+            #comparisonChartContainer > div:first-child {
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
             }
 
             .stat-number {
                 font-size: 1.5rem;
-                margin-bottom: 0;
-            }
-
-            .stat-label {
-                font-size: 0.8rem;
-                line-height: 1.2;
-                font-weight: 600;
-                margin-left: 1rem;
             }
 
             .hero-image-container {
@@ -1547,7 +1538,7 @@
             }
 
             .hero-stats {
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: 1fr;
                 gap: 0.75rem;
             }
 
@@ -1609,6 +1600,12 @@
 
             .get-started-section {
                 padding: 1rem 1rem 2rem 1rem;
+            }
+
+            /* Stack the Renest 529 advantage boxes on small mobile */
+            #comparisonChartContainer > div:first-child {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
             }
 
             .review-card {
@@ -2158,9 +2155,9 @@
                 </div> -->
 
                 
-                <div class="student-calculator-header">
+                <!-- <div class="student-calculator-header">
                   The Renest 529(sb) Advantage
-                </div>
+                </div> -->
                 <div id="comparisonChartContainer" style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin: 2rem auto; max-width: 800px;">
                     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 2rem;">
                         
@@ -2187,9 +2184,9 @@
                         
                     </div>
                     
-                    <div style="text-align: center; padding-top: 1.5rem; border-top: 1px solid #eee; font-size: 1rem; color: #0066ff; font-weight: 600;">
+                    <!-- <div style="text-align: center; padding-top: 1.5rem; border-top: 1px solid #eee; font-size: 1rem; color: #0066ff; font-weight: 600;">
                         Your student 401k that actually works for <span style="color: #039855;">your life as a student</span>
-                    </div>
+                    </div> -->
                 </div>
                
                 <div class="founders-section">
@@ -2233,6 +2230,33 @@
                 <div class="get-started-section" id="getStartedSection">
                     <div class="content-wrapper">
                         <button class="get-started-btn" id="getStartedBtn">Get Started</button>
+                    </div>
+                </div>
+
+                <!-- Remind Me Section -->
+                <div style="width: 100%; display: flex; justify-content: center; padding: 0 2rem 2rem 2rem;">
+                    <div style="width: 100%; max-width: 900px; display: flex; justify-content: center;">
+                        <div class="remind-section" style="width: 100%; max-width: 400px; padding: 0 1rem; box-sizing: border-box;">
+                    
+                    <div class="contact-us-box" style="background: linear-gradient(145deg, #ffffff, #f8f9fa); border-radius: 12px; box-shadow: 0 2px 8px rgba(60,60,100,0.06); padding: 1.2rem 1rem; display: flex; flex-direction: column; gap: 1.2rem; width: 100%; box-sizing: border-box;">
+                        <div>
+                            <strong>Email Us:</strong> <a href="mailto:thomas@renesthorizons.com" style="color: #3A5AFF; text-decoration: underline;">thomas@renesthorizons.com</a>
+                        </div>
+                        <div>
+                            <strong>Let's Chat:</strong> <a href="https://calendly.com/renesthorizons/30min" target="_blank" rel="noopener" style="color: #3A5AFF; text-decoration: underline;">Schedule via Calendly</a>
+                        </div>
+                    </div>
+                    <div class="email-form-container" style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 1.5rem; margin-top: 1rem; width: 100%; box-sizing: border-box;">
+                        <form id="emailForm" style="display: flex; gap: 0.5rem; width: 100%; align-items: center; box-sizing: border-box;">
+                            <input type="email" id="emailInput" placeholder="Enter email" required style="flex: 1; padding: 0.7rem 1rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; min-width: 0; box-sizing: border-box;">
+                            <button type="submit" class="submit-button" style="padding: 0.7rem 1.5rem; background: #4B227A; color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 0.5rem; white-space: nowrap; box-sizing: border-box;">
+                                <span>Remind Me</span>
+                                <span class="centered-checkmark" style="display: none; font-size: 1.3rem; color: white;">✓</span>
+                            </button>
+                        </form>
+                    </div>
+                                    </div>
+                        </div>
                     </div>
                 </div>
 
@@ -2342,7 +2366,39 @@
         });
     });
 
-    // No additional JavaScript needed for this page
+    document.getElementById('emailForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = encodeURIComponent(document.getElementById('emailInput').value);
+        const baseUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSenipPEWBn8kayp5WTkKRAdbblVH-yhofMHFYfaAVVaH9FFuA/formResponse?usp=pp_url&entry.1160800181=';
+        const submitButton = document.querySelector('.submit-button');
+        const checkmark = submitButton.querySelector('.centered-checkmark');
+        const emailInput = document.getElementById('emailInput');
+        // Hide input and button, show checkmark
+        emailInput.style.display = 'none';
+        submitButton.querySelector('span').style.display = 'none';
+        checkmark.style.display = 'inline';
+        // Disable the submit button
+        submitButton.disabled = true;
+        // Using a hidden iframe to submit the form without redirecting
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.setAttribute('src', baseUrl + email);
+        document.body.appendChild(iframe);
+        // Hide checkmark and reset form after 1.5s
+        setTimeout(() => {
+            checkmark.style.display = 'none';
+            emailInput.style.display = '';
+            submitButton.querySelector('span').style.display = '';
+            document.getElementById('emailForm').reset();
+            submitButton.disabled = false;
+        }, 1500);
+        // Remove iframe after submission
+        setTimeout(() => {
+            document.body.removeChild(iframe);
+        }, 1000);
+    });
+
+    // No additional JavaScript needed for budgeting page
 </script>
 
 <!-- How It Works Modal -->
