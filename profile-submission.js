@@ -63,6 +63,8 @@ async function submitUserProfile(formData, calculatedBenefit) {
         accountStatus: 'ACTIVE',  
         residency_status: formData.residency_status || 'citizen',
         country_of_origin: formData.country_of_origin || '',
+        // Add income breakdown for multi-state income tracking
+        incomeBreakdown: formData.accountStatus || null,
         // Note: SSN and detailed address are NOT sent to this endpoint
         // They are sent to the separate sensitive data API
     };
