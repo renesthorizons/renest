@@ -153,6 +153,9 @@ const getScrollDepth = trackScrollDepth();
 const getTimeOnPage = trackTimeOnPage();
 const getClickCount = trackClicks();
 
+// Generate a unique session ID for this visit
+const sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+
 // Get the current page identifier automatically
 const currentPageId = getPageIdentifier();
 
@@ -161,6 +164,9 @@ window.addEventListener('load', function() {
     // Get location data first, then send tracking data
     getApproximateLocation().then(locationData => {
         const pageData = {
+            // Session linking
+            session_id: sessionId,
+            
             // Page info - automatically detected from URL
             qr_code: currentPageId,
             page_url: window.location.href,
@@ -199,6 +205,9 @@ window.addEventListener('load', function() {
 // Track when user leaves the page
 window.addEventListener('beforeunload', function() {
     const finalData = {
+        // Session linking
+        session_id: sessionId,
+        
         qr_code: currentPageId, // automatically detected from URL
         time_on_page: getTimeOnPage(),
         scroll_depth: getScrollDepth(),
