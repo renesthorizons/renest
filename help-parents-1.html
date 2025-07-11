@@ -2292,16 +2292,22 @@
         // Year 1: Just the annual tax savings
         const year1Total = annual529Benefit;
         
-        // 4 years: Total tax savings over college years (pure savings, no growth)
-        const totalTaxSavings = annual529Benefit * 4;
-        
-        // 20+ years: Project the 4-year savings forward with compound growth
+        // 4 years: Tax savings with compound growth during college years
         const growthRate = 0.07; // Conservative long-term growth rate
-        const year20Plus = totalTaxSavings * Math.pow(1 + growthRate, 20);
+        let year4Total = 0;
+        for (let year = 1; year <= 4; year++) {
+            year4Total += annual529Benefit;
+            if (year > 1) {
+                year4Total = year4Total * (1 + growthRate);
+            }
+        }
+        
+        // 20+ years: Project the 4-year total forward with compound growth for 16 more years
+        const year20Plus = year4Total * Math.pow(1 + growthRate, 16);
         
         return {
             year1: Math.round(year1Total),
-            year4: Math.round(totalTaxSavings),
+            year4: Math.round(year4Total),
             year20Plus: Math.round(year20Plus)
         };
     }
@@ -2311,7 +2317,7 @@
         
         container.innerHTML = `
             <div style="margin-bottom: 1.5rem; text-align: center; font-size: 1.1rem; font-weight: 600; color: #2563eb;">
-                Tax Savings for Parents Supporting Education 
+                More Savings for Parents Using Renest 
             </div>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; font-size: 0.9rem;">
                 
@@ -2329,7 +2335,7 @@
                     <div style="font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem;">
                         ${formatCurrency(benefits.year4)}
                     </div>
-                    <div style="font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem;">4-Year Tax Savings</div>
+                    <div style="font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem;">Avg Value by Graduation</div>
                     
                 </div>
                  
@@ -2338,14 +2344,12 @@
                     <div style="font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem;">
                         ${formatCurrency(benefits.year20Plus)}
                     </div>
-                    <div style="font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem;">20-Year Growth</div>
+                    <div style="font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem;">Long Term Growth</div>
                     
                 </div>
                 
             </div>
-            <div style="margin-top: 1.5rem; font-size: 0.85rem; color: #666; text-align: center; line-height: 1.4;">
-                Assumes married filing jointly with doubled 529 deductions
-            </div>
+            
         `;
         
         // Add hover effects for desktop
