@@ -1013,27 +1013,15 @@
             {
                 id: 'early_access_explanation',
                 type: 'bot',
-                message: "Perfect! We can start saving you money today - we'll just need a little help from you with some information including how much you make and how much you spend on rent, wifi, and utilities. Eventually this information we will get directly from your linked cards!",
+                message: "Perfect! We can start saving you money today - we'll just need a little help from you with some information including how much you make and how much you spend on rent, wifi, and utilities. Eventually this information we will get directly from your linked cards! Let's get started!",
                 showIf: (data) => data.wantsEarlyAccess === 'yes',
                 delay: 2000
-            },
-            {
-                id: 'continue_with_setup',
-                type: 'bot',
-                message: "Would you like to continue with the setup to start saving money right away?",
-                responseType: 'options',
-                showIf: (data) => data.wantsEarlyAccess === 'yes',
-                options: [
-                    { value: 'yes', text: 'Yes, let\'s get started!' },
-                    { value: 'no', text: 'Maybe later, just waitlist for now' }
-                ],
-                field: 'continueSetup'
             },
             {
                 id: 'waitlist_only_message',
                 type: 'bot',
                 message: "Perfect! You've been added to our waitlist. We'll notify you as soon as our full budgeting app is ready. Thanks for your interest! 🎉",
-                showIf: (data) => data.wantsEarlyAccess === 'no' || data.continueSetup === 'no',
+                showIf: (data) => data.wantsEarlyAccess === 'no',
                 delay: 1500,
                 action: 'submitWaitlistOnly'
             },
@@ -1042,7 +1030,7 @@
                 type: 'bot',
                 message: "What's your residency status?",
                 responseType: 'options',
-                showIf: (data) => data.wantsEarlyAccess === 'yes' && data.continueSetup === 'yes',
+                showIf: (data) => data.wantsEarlyAccess === 'yes',
                 options: [
                     { value: 'citizen', text: 'US Citizen' },
                     { value: 'permanent_resident', text: 'Permanent Resident' },
@@ -1057,7 +1045,7 @@
                 type: 'bot',
                 message: "What type of visa do you have?",
                 responseType: 'options',
-                showIf: (data) => data.wantsEarlyAccess === 'yes' && data.continueSetup === 'yes' && ['resident_alien', 'non_resident_alien', 'unknown_residency'].includes(data.residency_status),
+                showIf: (data) => data.wantsEarlyAccess === 'yes' && ['resident_alien', 'non_resident_alien', 'unknown_residency'].includes(data.residency_status),
                 options: [
                     { value: 'F1', text: 'F1 (Student)' },
                     { value: 'M1', text: 'M1 (Vocational Student)' },
@@ -1076,7 +1064,7 @@
                 message: "What country are you from?",
                 responseType: 'text',
                 placeholder: "Enter your country of origin",
-                showIf: (data) => data.wantsEarlyAccess === 'yes' && data.continueSetup === 'yes' && ['resident_alien', 'non_resident_alien', 'unknown_residency'].includes(data.residency_status),
+                showIf: (data) => data.wantsEarlyAccess === 'yes' && ['resident_alien', 'non_resident_alien', 'unknown_residency'].includes(data.residency_status),
                 field: 'country_of_origin'
             },
             {
@@ -1085,7 +1073,7 @@
                 message: "What school do you attend?",
                 responseType: 'text',
                 placeholder: "Enter your school name",
-                showIf: (data) => data.wantsEarlyAccess === 'yes' && data.continueSetup === 'yes',
+                showIf: (data) => data.wantsEarlyAccess === 'yes',
                 field: 'school'
             },
             {
@@ -1093,7 +1081,7 @@
                 type: 'bot',
                 message: "", // Will be dynamically generated
                 responseType: 'options',
-                showIf: (data) => data.wantsEarlyAccess === 'yes' && data.continueSetup === 'yes' && data.detectedState,
+                showIf: (data) => data.wantsEarlyAccess === 'yes' && data.detectedState,
                 options: [
                     { value: 'yes', text: 'Yes, that\'s correct' },
                     { value: 'no', text: 'No, that\'s wrong' }
@@ -1105,7 +1093,7 @@
                 type: 'bot',
                 message: "Which state is your school in?",
                 responseType: 'state_select',
-                showIf: (data) => data.wantsEarlyAccess === 'yes' && data.continueSetup === 'yes' && (!data.detectedState || data.state_confirmed === 'no'),
+                showIf: (data) => data.wantsEarlyAccess === 'yes' && (!data.detectedState || data.state_confirmed === 'no'),
                 field: 'state'
             },
             {
@@ -1114,7 +1102,7 @@
                 message: "", // Will be dynamically generated with state name
                 responseType: 'currency',
                 placeholder: "Enter your income in this state",
-                showIf: (data) => data.wantsEarlyAccess === 'yes' && data.continueSetup === 'yes',
+                showIf: (data) => data.wantsEarlyAccess === 'yes',
                 field: 'primaryStateIncome'
             },
             {
@@ -1122,7 +1110,7 @@
                 type: 'bot',
                 message: "Did you earn money while in any other state (e.g., summer internship)?",
                 responseType: 'options',
-                showIf: (data) => data.wantsEarlyAccess === 'yes' && data.continueSetup === 'yes',
+                showIf: (data) => data.wantsEarlyAccess === 'yes',
                 options: [
                     { value: 'yes', text: 'Yes, I earned money in another state' },
                     { value: 'no', text: 'No, all my income was in this state' }
@@ -1134,7 +1122,7 @@
                 type: 'bot',
                 message: "Which other state did you earn money in?",
                 responseType: 'state_select',
-                showIf: (data) => data.wantsEarlyAccess === 'yes' && data.continueSetup === 'yes' && data.hasMultiStateIncome === 'yes',
+                showIf: (data) => data.wantsEarlyAccess === 'yes' && data.hasMultiStateIncome === 'yes',
                 field: 'otherStateName'
             },
             {
@@ -1143,14 +1131,14 @@
                 message: "", // Will be dynamically generated with state name
                 responseType: 'currency',
                 placeholder: "Enter income earned in other state",
-                showIf: (data) => data.wantsEarlyAccess === 'yes' && data.continueSetup === 'yes' && data.hasMultiStateIncome === 'yes',
+                showIf: (data) => data.wantsEarlyAccess === 'yes' && data.hasMultiStateIncome === 'yes',
                 field: 'otherStateIncome'
             },
             {
                 id: 'housing_intro',
                 type: 'bot',
                 message: "Great! Now let's add your housing information to maximize your tax savings.",
-                showIf: (data) => data.wantsEarlyAccess === 'yes' && data.continueSetup === 'yes',
+                showIf: (data) => data.wantsEarlyAccess === 'yes',
                 delay: 1500
             },
             {
@@ -1159,7 +1147,7 @@
                 message: "How much is your rent per month?",
                 responseType: 'currency',
                 placeholder: "Enter monthly rent",
-                showIf: (data) => data.wantsEarlyAccess === 'yes' && data.continueSetup === 'yes',
+                showIf: (data) => data.wantsEarlyAccess === 'yes',
                 field: 'monthlyRent'
             },
             {
@@ -1168,7 +1156,7 @@
                 message: "How much is WiFi per month?",
                 responseType: 'currency',
                 placeholder: "Enter monthly WiFi cost",
-                showIf: (data) => data.wantsEarlyAccess === 'yes' && data.continueSetup === 'yes',
+                showIf: (data) => data.wantsEarlyAccess === 'yes',
                 field: 'monthlyWifi'
             },
             {
@@ -1176,7 +1164,7 @@
                 type: 'bot',
                 message: "Are utilities (electricity, water, gas) included in your rent?",
                 responseType: 'options',
-                showIf: (data) => data.wantsEarlyAccess === 'yes' && data.continueSetup === 'yes',
+                showIf: (data) => data.wantsEarlyAccess === 'yes',
                 options: [
                     { value: 'yes', text: 'Yes, utilities are included' },
                     { value: 'no', text: 'No, I pay utilities separately' }
@@ -1189,7 +1177,7 @@
                 message: "How much are utilities per month?",
                 responseType: 'currency',
                 placeholder: "Enter monthly utilities cost",
-                showIf: (data) => data.wantsEarlyAccess === 'yes' && data.continueSetup === 'yes' && data.utilitiesIncluded === 'no',
+                showIf: (data) => data.wantsEarlyAccess === 'yes' && data.utilitiesIncluded === 'no',
                 field: 'monthlyUtilities'
             },
             {
@@ -1197,7 +1185,7 @@
                 type: 'bot',
                 message: "Perfect! Now let's review your monthly housing costs and adjust any months where you paid different amounts.",
                 responseType: 'housing_review',
-                showIf: (data) => data.wantsEarlyAccess === 'yes' && data.continueSetup === 'yes',
+                showIf: (data) => data.wantsEarlyAccess === 'yes',
                 action: 'setupHousingReview'
             },
             {
@@ -1205,7 +1193,7 @@
                 type: 'bot',
                 message: "Which months are you NOT enrolled as a student this year? (Most students are not enrolled during summer months)",
                 responseType: 'months_not_enrolled',
-                showIf: (data) => data.wantsEarlyAccess === 'yes' && data.continueSetup === 'yes',
+                showIf: (data) => data.wantsEarlyAccess === 'yes',
                 field: 'notEnrolledMonths'
             },
             {
@@ -1216,14 +1204,14 @@
                 min: 0,
                 max: 400,
                 defaultValue: 200,
-                showIf: (data) => data.wantsEarlyAccess === 'yes' && data.continueSetup === 'yes',
+                showIf: (data) => data.wantsEarlyAccess === 'yes',
                 field: 'monthlyGrocery'
             },
             {
                 id: 'benefit_calculation',
                 type: 'bot',
                 message: "Perfect! Let me calculate your potential tax savings...",
-                showIf: (data) => data.wantsEarlyAccess === 'yes' && data.continueSetup === 'yes',
+                showIf: (data) => data.wantsEarlyAccess === 'yes',
                 delay: 2000,
                 action: 'calculateBenefit'
             },
@@ -1232,13 +1220,13 @@
                 type: 'bot',
                 message: "", // Will be dynamically generated
                 responseType: 'benefit_summary',
-                showIf: (data) => data.wantsEarlyAccess === 'yes' && data.continueSetup === 'yes'
+                showIf: (data) => data.wantsEarlyAccess === 'yes'
             },
             {
                 id: 'cost_explanation',
                 type: 'bot',
                 message: "", // Will be dynamically generated with benefit amount
-                showIf: (data) => data.wantsEarlyAccess === 'yes' && data.continueSetup === 'yes',
+                showIf: (data) => data.wantsEarlyAccess === 'yes',
                 delay: 1000
             },
             {
@@ -1246,14 +1234,14 @@
                 type: 'bot',
                 message: "Would you like to add any of these services?",
                 responseType: 'addons',
-                showIf: (data) => data.wantsEarlyAccess === 'yes' && data.continueSetup === 'yes',
+                showIf: (data) => data.wantsEarlyAccess === 'yes',
                 field: 'addons'
             },
             {
                 id: 'final_summary',
                 type: 'bot',
                 message: "Excellent! Let me prepare everything for you...",
-                showIf: (data) => data.wantsEarlyAccess === 'yes' && data.continueSetup === 'yes',
+                showIf: (data) => data.wantsEarlyAccess === 'yes',
                 delay: 1500,
                 action: 'submitData'
             }
