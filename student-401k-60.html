@@ -1196,10 +1196,9 @@
         }
 
         .hero-content {
-            display: grid;
-            grid-template-columns: 1fr 0.8fr;
-            gap: 4rem;
-            align-items: center;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
             min-height: 500px;
         }
 
@@ -1207,6 +1206,40 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+        }
+
+        .hero-text-container {
+            background: #000000;
+            padding: 3rem 2.5rem;
+            border-radius: var(--radius-2xl);
+            margin-bottom: 3rem;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .hero-logo {
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .renest-logo {
+            height: 60px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .hero-text-container .hero-headline h1 {
+            color: #ffffff;
+        }
+
+        .hero-text-container .hero-headline h1 span.highlight {
+            background: linear-gradient(135deg, #ffffff 0%, #e5e7eb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-text-container .hero-subtitle {
+            color: #e5e7eb;
         }
 
         .hero-headline {
@@ -1401,9 +1434,17 @@
             }
 
             .hero-content {
-                grid-template-columns: 1fr;
-                gap: 4rem;
+                align-items: center;
                 text-align: center;
+            }
+
+            .hero-text-container {
+                padding: 2.5rem 2rem;
+                margin-bottom: 2rem;
+            }
+
+            .renest-logo {
+                height: 50px;
             }
 
             .hero-headline {
@@ -1525,8 +1566,21 @@
             }
 
             .hero-content {
-                gap: 2rem;
                 min-height: auto;
+            }
+
+            .hero-text-container {
+                padding: 2rem 1.5rem;
+                margin-bottom: 2rem;
+                border-radius: var(--radius-xl);
+            }
+
+            .renest-logo {
+                height: 40px;
+            }
+
+            .hero-logo {
+                margin-bottom: 1.5rem;
             }
 
             .hero-headline {
@@ -1997,15 +2051,20 @@
                 <div class="hero-container">
                     <div class="hero-content">
                         <div class="hero-text">
-                            <div class="hero-headline">
-                                <h1>The<span class="mobile-only-break"></span> <span class="highlight">Student</span><span class="mobile-only-break"></span> <span class="highlight">401(k)</span></h1>
-                            </div>
-                            <div class="hero-subtitle">
-                                The first full service account specifically for working students. Get immediate benefits while building your future.
+                            <div class="hero-text-container">
+                                <div class="hero-logo">
+                                    <img src="white.png" alt="Renest Logo" class="renest-logo">
+                                </div>
+                                <div class="hero-headline">
+                                    <h1>The<span class="mobile-only-break"></span> <span class="highlight">Student</span><span class="mobile-only-break"></span> <span class="highlight">401(k)</span></h1>
+                                </div>
+                                <div class="hero-subtitle">
+                                    The first full service account specifically for working students. Get immediate benefits while building your future.
+                                </div>
                             </div>
                             <div class="hero-stats">
                                 <div class="stat-item">
-                                    <div class="stat-number">$4,500+</div>
+                                    <div class="stat-number">$4500+</div>
                                     <div class="stat-label">Increase in Savings</div>
                                 </div>
                                 <div class="stat-item">
@@ -2015,16 +2074,6 @@
                                 <div class="stat-item">
                                     <div class="stat-number">6 min</div>
                                     <div class="stat-label">Setup time</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="hero-image">
-                            <div class="hero-image-container">
-                                <img src="renest-calm.jpg" alt="Renest budgeting app interface" class="hero-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                               
-                                <div class="hero-img-fallback" style="display: none;">
-                                    <div class="fallback-icon">📱</div>
-                                    <div class="fallback-text">Budgeting App</div>
                                 </div>
                             </div>
                         </div>
