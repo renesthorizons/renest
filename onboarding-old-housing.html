@@ -2629,16 +2629,52 @@
             const includeTaxFiling = chatData.includeTaxFiling;
             const includeInterestEarning = chatData.includeInterestEarning;
             
-            // Determine product selection based on user choices
-            let productSelection;
-            if (includeInterestEarning && includeTaxFiling) {
-                productSelection = '$50+with+tax+filing';
-            } else if (includeInterestEarning && !includeTaxFiling) {
-                productSelection = '$50+no+tax+filing';
-            } else if (!includeInterestEarning && includeTaxFiling) {
-                productSelection = '$60+with+tax+filing';
-            } else {
-                productSelection = '$60+no+tax+filing';
+            // Calculate the actual cost using pricing calculator
+            let finalCost = 0;
+            
+            try {
+                // Use pricing calculator to get base cost
+                const pricing = window.pricingCalculator.calculatePricing(
+                    chatData.state,
+                    chatData.income,
+                    chatData.enrolledMonths,
+                    window.housingEntries,
+                    chatData.monthlyGrocery
+                );
+                
+                finalCost = Math.round(pricing.totalCost);
+                
+                // Apply 15% discount if they selected "learn more"
+                if (includeInterestEarning) {
+                    finalCost = Math.round(finalCost * 0.85); // 15% discount
+                }
+                
+                // Add tax filing fee if selected
+                if (includeTaxFiling) {
+                    finalCost += 60;
+                }
+                
+            } catch (error) {
+                console.error('Error calculating pricing for Google Form:', error);
+                // Fallback to original hardcoded logic if pricing calculator fails
+                if (includeInterestEarning && includeTaxFiling) {
+                    finalCost = 110; // $50 base + $60 tax filing
+                } else if (includeInterestEarning && !includeTaxFiling) {
+                    finalCost = 50;
+                } else if (!includeInterestEarning && includeTaxFiling) {
+                    finalCost = 120; // $60 base + $60 tax filing  
+                } else {
+                    finalCost = 60;
+                }
+            }
+            
+            // Create product selection string with calculated cost
+            let productSelection = `$${finalCost}`;
+            if (includeInterestEarning) {
+                productSelection += '+learn_more_discount';
+            }
+            if (includeTaxFiling) {
+                productSelection += '+tax_filing';
             }
             
             // Create the Google Form URL with parameters
@@ -2658,7 +2694,13 @@
                 }
             }, 1000);
             
-            console.log('Submitted to Google Form:', { email: email, productSelection: productSelection });
+            console.log('Submitted to Google Form:', { 
+                email: chatData.email, 
+                finalCost: finalCost,
+                productSelection: productSelection,
+                includeInterestEarning: includeInterestEarning,
+                includeTaxFiling: includeTaxFiling
+            });
         }
 
         // Show secure connection animation (now handled in chat)

@@ -412,7 +412,7 @@
             
             #motivationSection {
                 padding: 2rem 1rem;
-                width: 100%;
+                width: calc(100% - 2rem);
                 max-width: 100%;
                 box-sizing: border-box;
                 margin: 1rem auto;
@@ -586,7 +586,7 @@
             
             #motivationSection {
                 padding: 1.5rem 0.75rem;
-                width: 100%;
+                width: calc(100% - 1rem);
                 max-width: 100%;
                 box-sizing: border-box;
                 margin: 0.5rem auto;
@@ -1493,9 +1493,9 @@
             }
 
             .hero-container {
-                margin: 1rem auto;
+                margin: 1rem 0;
                 max-width: 100%;
-                width: auto;
+                width: 100%;
                 border-radius: var(--radius-xl);
             }
 
@@ -1633,9 +1633,9 @@
             }
 
             .hero-container {
-                margin: 0.5rem auto;
+                margin: 0.5rem 0;
                 max-width: 100%;
-                width: auto;
+                width: 100%;
                 border-radius: var(--radius-lg);
             }
 
@@ -2669,92 +2669,6 @@
     
 
     document.addEventListener('DOMContentLoaded', function() {
-        // Debug logging for layout issues
-        function debugLayout() {
-            console.log('=== LAYOUT DEBUG INFO ===');
-            
-            const body = document.body;
-            const container = document.querySelector('.container');
-            const mainContent = document.querySelector('.main-content');
-            const motivationSection = document.querySelector('#motivationSection');
-            const heroContainer = document.querySelector('.hero-container');
-            
-            const elements = [
-                { name: 'body', el: body },
-                { name: 'container', el: container },
-                { name: 'main-content', el: mainContent },
-                { name: 'motivationSection', el: motivationSection },
-                { name: 'hero-container', el: heroContainer }
-            ];
-            
-            elements.forEach(({ name, el }) => {
-                if (el) {
-                    const rect = el.getBoundingClientRect();
-                    const style = window.getComputedStyle(el);
-                    console.log(`${name}:`, {
-                        left: rect.left,
-                        right: rect.right,
-                        width: rect.width,
-                        clientWidth: el.clientWidth,
-                        offsetWidth: el.offsetWidth,
-                        scrollWidth: el.scrollWidth,
-                        margin: style.margin,
-                        padding: style.padding,
-                        maxWidth: style.maxWidth,
-                        textAlign: style.textAlign,
-                        display: style.display,
-                        alignItems: style.alignItems,
-                        justifyContent: style.justifyContent
-                    });
-                }
-            });
-            
-            // Check for horizontal scrolling
-            console.log('Document scroll width vs client width:', {
-                scrollWidth: document.documentElement.scrollWidth,
-                clientWidth: document.documentElement.clientWidth,
-                hasHorizontalScroll: document.documentElement.scrollWidth > document.documentElement.clientWidth
-            });
-            
-            // Check viewport
-            console.log('Viewport info:', {
-                innerWidth: window.innerWidth,
-                outerWidth: window.outerWidth,
-                screen: { width: screen.width, height: screen.height }
-            });
-        }
-        
-        // Run debug immediately and on resize
-        debugLayout();
-        window.addEventListener('resize', debugLayout);
-        
-        // Add visual debugging borders (remove after debugging)
-        function addVisualDebug() {
-            const style = document.createElement('style');
-            style.id = 'debug-style';
-            style.textContent = `
-                .container { border: 2px solid red !important; }
-                .main-content { border: 2px solid blue !important; }
-                #motivationSection { border: 2px solid green !important; }
-                .hero-container { border: 2px solid purple !important; }
-                .hero-content { border: 2px solid orange !important; }
-                .hero-text { border: 2px solid pink !important; }
-            `;
-            document.head.appendChild(style);
-            
-            console.log('Visual debug borders added. Call removeVisualDebug() to remove them.');
-        }
-        
-        function removeVisualDebug() {
-            const style = document.getElementById('debug-style');
-            if (style) style.remove();
-        }
-        
-        // Make functions available globally for testing
-        window.debugLayout = debugLayout;
-        window.addVisualDebug = addVisualDebug;
-        window.removeVisualDebug = removeVisualDebug;
-        
         const expandSections = document.querySelectorAll('.expand-section');
         expandSections.forEach(section => {
             const header = section.querySelector('.expand-header');

@@ -7,7 +7,7 @@
     <link rel="icon" href="blogo2.png" type="image/png">
     <link rel="apple-touch-icon" href="blogo2.png">
     
-    <title>Renest Budgeting - Join Waitlist</title>
+    <title>Renest - Get Started</title>
 
     <link rel="stylesheet" href="dashboard-style.css">
     
@@ -805,8 +805,8 @@
         <div class="chat-header">
             <div class="chat-avatar">R</div>
             <div>
-                <div class="chat-title">Renest Budgeting</div>
-                <div class="chat-subtitle">Join our waitlist for the future of budgeting!</div>
+                <div class="chat-title">Renest Assistant</div>
+                <div class="chat-subtitle">Let's get your tax benefits set up!</div>
             </div>
         </div>
         
@@ -988,49 +988,14 @@
             {
                 id: 'welcome',
                 type: 'bot',
-                message: "Hi! Thanks for your interest in our budgeting app. We're excited to help you take control of your finances!",
+                message: "Hi! I'm here to help you save money on your taxes as a parent. Let's start by getting to know you better.",
                 delay: 1000
-            },
-            {
-                id: 'waitlist_email',
-                type: 'bot',
-                message: "What's your email so we can add you to our waitlist and get you started with our early access features?",
-                responseType: 'email',
-                placeholder: "Enter your email",
-                field: 'email'
-            },
-            {
-                id: 'early_access_question',
-                type: 'bot',
-                message: "Great! Do you want to learn more about our current features?",
-                responseType: 'options',
-                options: [
-                    { value: 'yes', text: 'Yes, tell me more!' },
-                    { value: 'no', text: 'No, just add me to the waitlist' }
-                ],
-                field: 'wantsEarlyAccess'
-            },
-            {
-                id: 'early_access_explanation',
-                type: 'bot',
-                message: "Perfect! We can start saving you money today - we'll just need a little help from you with some information including how much you make and how much you spend on rent, wifi, and utilities. Eventually this information we will get directly from your linked cards! Let's get started!",
-                showIf: (data) => data.wantsEarlyAccess === 'yes',
-                delay: 2000
-            },
-            {
-                id: 'waitlist_only_message',
-                type: 'bot',
-                message: "Perfect! You've been added to our waitlist. We'll notify you as soon as our full budgeting app is ready. Thanks for your interest! 🎉",
-                showIf: (data) => data.wantsEarlyAccess === 'no',
-                delay: 1500,
-                action: 'submitWaitlistOnly'
             },
             {
                 id: 'residency',
                 type: 'bot',
                 message: "What's your residency status?",
                 responseType: 'options',
-                showIf: (data) => data.wantsEarlyAccess === 'yes',
                 options: [
                     { value: 'citizen', text: 'US Citizen' },
                     { value: 'permanent_resident', text: 'Permanent Resident' },
@@ -1045,7 +1010,7 @@
                 type: 'bot',
                 message: "What type of visa do you have?",
                 responseType: 'options',
-                showIf: (data) => data.wantsEarlyAccess === 'yes' && ['resident_alien', 'non_resident_alien', 'unknown_residency'].includes(data.residency_status),
+                showIf: (data) => ['resident_alien', 'non_resident_alien', 'unknown_residency'].includes(data.residency_status),
                 options: [
                     { value: 'F1', text: 'F1 (Student)' },
                     { value: 'M1', text: 'M1 (Vocational Student)' },
@@ -1064,55 +1029,39 @@
                 message: "What country are you from?",
                 responseType: 'text',
                 placeholder: "Enter your country of origin",
-                showIf: (data) => data.wantsEarlyAccess === 'yes' && ['resident_alien', 'non_resident_alien', 'unknown_residency'].includes(data.residency_status),
+                showIf: (data) => ['resident_alien', 'non_resident_alien', 'unknown_residency'].includes(data.residency_status),
                 field: 'country_of_origin'
-            },
-            {
-                id: 'school',
-                type: 'bot',
-                message: "What school do you attend?",
-                responseType: 'text',
-                placeholder: "Enter your school name",
-                showIf: (data) => data.wantsEarlyAccess === 'yes',
-                field: 'school'
-            },
-            {
-                id: 'state_confirmation',
-                type: 'bot',
-                message: "", // Will be dynamically generated
-                responseType: 'options',
-                showIf: (data) => data.wantsEarlyAccess === 'yes' && data.detectedState,
-                options: [
-                    { value: 'yes', text: 'Yes, that\'s correct' },
-                    { value: 'no', text: 'No, that\'s wrong' }
-                ],
-                field: 'state_confirmed'
             },
             {
                 id: 'state',
                 type: 'bot',
-                message: "Which state is your school in?",
+                message: "Which state do you live in? (This is where you'll claim the tax benefits)",
                 responseType: 'state_select',
-                showIf: (data) => data.wantsEarlyAccess === 'yes' && (!data.detectedState || data.state_confirmed === 'no'),
                 field: 'state'
+            },
+            {
+                id: 'school',
+                type: 'bot',
+                message: "What school does your child attend?",
+                responseType: 'text',
+                placeholder: "Enter your child's school name",
+                field: 'school'
             },
             {
                 id: 'income',
                 type: 'bot',
                 message: "", // Will be dynamically generated with state name
                 responseType: 'currency',
-                placeholder: "Enter your income in this state",
-                showIf: (data) => data.wantsEarlyAccess === 'yes',
+                placeholder: "Enter your annual income",
                 field: 'primaryStateIncome'
             },
             {
                 id: 'multi_state_earnings',
                 type: 'bot',
-                message: "Did you earn money while in any other state (e.g., summer internship)?",
+                message: "Did you earn income in any other state this year?",
                 responseType: 'options',
-                showIf: (data) => data.wantsEarlyAccess === 'yes',
                 options: [
-                    { value: 'yes', text: 'Yes, I earned money in another state' },
+                    { value: 'yes', text: 'Yes, I earned income in another state' },
                     { value: 'no', text: 'No, all my income was in this state' }
                 ],
                 field: 'hasMultiStateIncome'
@@ -1120,9 +1069,9 @@
             {
                 id: 'other_state_name',
                 type: 'bot',
-                message: "Which other state did you earn money in?",
+                message: "Which other state did you earn income in?",
                 responseType: 'state_select',
-                showIf: (data) => data.wantsEarlyAccess === 'yes' && data.hasMultiStateIncome === 'yes',
+                showIf: (data) => data.hasMultiStateIncome === 'yes',
                 field: 'otherStateName'
             },
             {
@@ -1131,40 +1080,36 @@
                 message: "", // Will be dynamically generated with state name
                 responseType: 'currency',
                 placeholder: "Enter income earned in other state",
-                showIf: (data) => data.wantsEarlyAccess === 'yes' && data.hasMultiStateIncome === 'yes',
+                showIf: (data) => data.hasMultiStateIncome === 'yes',
                 field: 'otherStateIncome'
             },
             {
                 id: 'housing_intro',
                 type: 'bot',
-                message: "Great! Now let's add your housing information to maximize your tax savings.",
-                showIf: (data) => data.wantsEarlyAccess === 'yes',
+                message: "Great! Now let's add the housing expenses you pay for your child to maximize your tax savings.",
                 delay: 1500
             },
             {
                 id: 'rent_amount',
                 type: 'bot',
-                message: "How much is your rent per month?",
+                message: "How much rent do you pay for your child per month?",
                 responseType: 'currency',
-                placeholder: "Enter monthly rent",
-                showIf: (data) => data.wantsEarlyAccess === 'yes',
+                placeholder: "Enter monthly rent you pay",
                 field: 'monthlyRent'
             },
             {
                 id: 'wifi_amount',
                 type: 'bot',
-                message: "How much is WiFi per month?",
+                message: "How much do you pay for your child's WiFi per month?",
                 responseType: 'currency',
-                placeholder: "Enter monthly WiFi cost",
-                showIf: (data) => data.wantsEarlyAccess === 'yes',
+                placeholder: "Enter monthly WiFi cost you pay",
                 field: 'monthlyWifi'
             },
             {
                 id: 'utilities_included',
                 type: 'bot',
-                message: "Are utilities (electricity, water, gas) included in your rent?",
+                message: "Are utilities (electricity, water, gas) included in the rent you pay?",
                 responseType: 'options',
-                showIf: (data) => data.wantsEarlyAccess === 'yes',
                 options: [
                     { value: 'yes', text: 'Yes, utilities are included' },
                     { value: 'no', text: 'No, I pay utilities separately' }
@@ -1174,44 +1119,40 @@
             {
                 id: 'utilities_amount',
                 type: 'bot',
-                message: "How much are utilities per month?",
+                message: "How much do you pay for utilities per month?",
                 responseType: 'currency',
-                placeholder: "Enter monthly utilities cost",
-                showIf: (data) => data.wantsEarlyAccess === 'yes' && data.utilitiesIncluded === 'no',
+                placeholder: "Enter monthly utilities cost you pay",
+                showIf: (data) => data.utilitiesIncluded === 'no',
                 field: 'monthlyUtilities'
             },
             {
                 id: 'housing_review',
                 type: 'bot',
-                message: "Perfect! Now let's review your monthly housing costs and adjust any months where you paid different amounts.",
+                message: "Perfect! Now let's review the monthly housing costs you pay and adjust any months where you paid different amounts.",
                 responseType: 'housing_review',
-                showIf: (data) => data.wantsEarlyAccess === 'yes',
                 action: 'setupHousingReview'
             },
             {
                 id: 'enrolled_months',
                 type: 'bot',
-                message: "Which months are you NOT enrolled as a student this year? (Most students are not enrolled during summer months)",
+                message: "Which months is your child NOT enrolled as a student this year? (Most students are not enrolled during summer months)",
                 responseType: 'months_not_enrolled',
-                showIf: (data) => data.wantsEarlyAccess === 'yes',
                 field: 'notEnrolledMonths'
             },
             {
                 id: 'grocery_spending',
                 type: 'bot',
-                message: "What's your estimated monthly grocery spending? (This also qualifies for deductions!)",
+                message: "What do you spend on groceries for your child per month? (This also qualifies for deductions!)",
                 responseType: 'currency_slider',
                 min: 0,
                 max: 400,
                 defaultValue: 200,
-                showIf: (data) => data.wantsEarlyAccess === 'yes',
                 field: 'monthlyGrocery'
             },
             {
                 id: 'benefit_calculation',
                 type: 'bot',
                 message: "Perfect! Let me calculate your potential tax savings...",
-                showIf: (data) => data.wantsEarlyAccess === 'yes',
                 delay: 2000,
                 action: 'calculateBenefit'
             },
@@ -1219,29 +1160,34 @@
                 id: 'benefit_display',
                 type: 'bot',
                 message: "", // Will be dynamically generated
-                responseType: 'benefit_summary',
-                showIf: (data) => data.wantsEarlyAccess === 'yes'
+                responseType: 'benefit_summary'
             },
             {
                 id: 'cost_explanation',
                 type: 'bot',
                 message: "", // Will be dynamically generated with benefit amount
-                showIf: (data) => data.wantsEarlyAccess === 'yes',
                 delay: 1000
+            },
+            
+            {
+                id: 'email',
+                type: 'bot',
+                message: "What's your email address? We'll use this to create your account and get you set up.",
+                responseType: 'email',
+                placeholder: "Enter your email",
+                field: 'email'
             },
             {
                 id: 'addons',
                 type: 'bot',
                 message: "Would you like to add any of these services?",
                 responseType: 'addons',
-                showIf: (data) => data.wantsEarlyAccess === 'yes',
                 field: 'addons'
             },
             {
                 id: 'final_summary',
                 type: 'bot',
                 message: "Excellent! Let me prepare everything for you...",
-                showIf: (data) => data.wantsEarlyAccess === 'yes',
                 delay: 1500,
                 action: 'submitData'
             }
@@ -1541,9 +1487,6 @@
                 }
                 chatData[field] = value;
                 await addMessage('user', value);
-                
-                // Submit email to waitlist form immediately
-                submitToGoogleForm();
             } else if (field === 'school') {
                 chatData[field] = value;
                 await addMessage('user', value);
@@ -1591,10 +1534,6 @@
                     await processNextQuestion();
                     return;
                 }
-                // For submitWaitlistOnly, end the conversation
-                if (question.action === 'submitWaitlistOnly') {
-                    return; // Don't continue to next question
-                }
                 // For openHousingModal, let it continue to show the message and handle response type
             }
             
@@ -1629,6 +1568,9 @@
                 const totalCost = Math.round(pricing.totalCost);
                 const savingsAfterCost = Math.round(pricing.savingsAfterCost);
                 
+                // Store the calculated cost for Google Form submission
+                chatData.calculatedCost = totalCost;
+                
                 const stateName = getStateName(chatData.state);
                 
                 question.message = `
@@ -1638,7 +1580,7 @@
                     <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid #0ea5e9; margin: 1rem 0;">
                         <div style="font-weight: 600; color: #0c4a6e; margin-bottom: 0.75rem;">What we provide:</div> 
                         <div style="color: #374151; line-height: 1.5; margin-bottom: 1rem;">
-                            We take the expenses you just told us about and prepare the paperwork and account necessary in order to qualify these expenses for your ${stateName} education benefit. This paperwork qualifies you for your increased tax refund and is included when you file your taxes.
+                            We take the expenses you pay for your child and prepare the paperwork and account necessary to qualify these expenses for your ${stateName} education benefit. This paperwork qualifies you for your increased tax refund and is included when you file your taxes.
                         </div>
                         <div style="font-weight: 600; color: #0c4a6e; margin-bottom: 0.5rem;">When do I pay:</div>
                         <div style="color: #374151; line-height: 1.5; margin-bottom: 1rem;">
@@ -1902,7 +1844,7 @@
             instruction.style.color = '#374151';
             instruction.style.fontSize = '0.95rem';
             instruction.innerHTML = `
-                <div style="font-weight: 600; margin-bottom: 0.5rem;">Select months you are NOT enrolled</div>
+                <div style="font-weight: 600; margin-bottom: 0.5rem;">Select months your child is NOT enrolled</div>
                 <div style="color: #6b7280;">Tap to toggle each month. Summer months are pre-selected.</div>
             `;
             monthContainer.appendChild(instruction);
@@ -2007,7 +1949,7 @@
                 const notEnrolledNames = notEnrolledMonths.map(m => months[m - 1].substring(0, 3)).join(', ');
                 summaryDiv.innerHTML = `
                     <div style="color: #16a34a; font-weight: 600; margin-bottom: 0.25rem;">
-                        Enrolled for ${enrolledCount} month${enrolledCount !== 1 ? 's' : ''}
+                        Your child is enrolled for ${enrolledCount} month${enrolledCount !== 1 ? 's' : ''}
                     </div>
                     <div style="color: #6b7280;">
                         ${notEnrolledMonths.length > 0 ? `Not enrolled: ${notEnrolledNames}` : 'Enrolled all year'}
@@ -2048,7 +1990,7 @@
                 console.log('[modernMonthSelector] Enrolled months:', enrolledMonths);
                 
                 const enrolledCount = enrolledMonths.length;
-                const responseText = `Enrolled for ${enrolledCount} month${enrolledCount !== 1 ? 's' : ''}`;
+                const responseText = `Child enrolled for ${enrolledCount} month${enrolledCount !== 1 ? 's' : ''}`;
                 
                 // Pass enrolled months instead of not enrolled months for the response
                 handleOptionResponse(enrolledMonths, responseText, 'enrolledMonths');
@@ -2369,10 +2311,10 @@
                 const otherStateName = getStateName(chatData.otherStateName);
                 const primaryIncome = Number(chatData.primaryStateIncome);
                 const otherIncome = Number(chatData.otherStateIncome);
-                incomeMessage = `That's great! Based on your income of $${primaryIncome.toLocaleString('en-US')} in ${primaryStateName} and $${otherIncome.toLocaleString('en-US')} in ${otherStateName} (total: $${income.toLocaleString('en-US')}) and $${qualifiedSpend.toLocaleString('en-US')} qualified spend we determined you qualify for`;
+                incomeMessage = `That's great! Based on your income of $${primaryIncome.toLocaleString('en-US')} in ${primaryStateName} and $${otherIncome.toLocaleString('en-US')} in ${otherStateName} (total: $${income.toLocaleString('en-US')}) and the $${qualifiedSpend.toLocaleString('en-US')} you spend on your child's qualified expenses, you qualify for`;
             } else {
                 const stateName = getStateName(chatData.state);
-                incomeMessage = `That's great! Based on your $${income.toLocaleString('en-US')} income in ${stateName} and $${qualifiedSpend.toLocaleString('en-US')} qualified spend we determined you qualify for`;
+                incomeMessage = `That's great! Based on your $${income.toLocaleString('en-US')} income in ${stateName} and the $${qualifiedSpend.toLocaleString('en-US')} you spend on your child's qualified expenses, you qualify for`;
             }
             
             await addMessage('bot', incomeMessage);
@@ -2550,14 +2492,14 @@
             title.style.fontWeight = '600';
             title.style.marginBottom = '1rem';
             title.style.textAlign = 'center';
-            title.textContent = 'Review Your Average Monthly Housing Costs';
+            title.textContent = 'Review Your Average Monthly Housing Costs for Your Child';
             
             const instruction = document.createElement('div');
             instruction.style.marginBottom = '1.5rem';
             instruction.style.textAlign = 'center';
             instruction.style.color = '#6b7280';
             instruction.style.fontSize = '0.9rem';
-            instruction.textContent = 'Tap months where your expenses changed significantly, like a new lease!';
+            instruction.textContent = 'Tap months where the expenses you pay changed significantly, like a new lease!';
             
             // Month grid
             const monthGrid = document.createElement('div');
@@ -2640,11 +2582,11 @@
             rentLabel.style.marginBottom = '0.5rem';
             rentLabel.style.color = '#374151';
             rentLabel.style.fontSize = '0.9rem';
-            rentLabel.textContent = 'Monthly Rent';
+            rentLabel.textContent = 'Monthly Rent You Pay';
             
             const rentInput = document.createElement('input');
             rentInput.type = 'text';
-            rentInput.placeholder = 'Enter rent amount';
+            rentInput.placeholder = 'Enter rent amount you pay';
             rentInput.style.width = '100%';
             rentInput.style.padding = '0.75rem';
             rentInput.style.border = '2px solid #e2e8f0';
@@ -2677,11 +2619,11 @@
             wifiLabel.style.marginBottom = '0.5rem';
             wifiLabel.style.color = '#374151';
             wifiLabel.style.fontSize = '0.9rem';
-            wifiLabel.textContent = 'Monthly WiFi';
+            wifiLabel.textContent = 'Monthly WiFi You Pay';
             
             const wifiInput = document.createElement('input');
             wifiInput.type = 'text';
-            wifiInput.placeholder = 'Enter WiFi amount';
+            wifiInput.placeholder = 'Enter WiFi amount you pay';
             wifiInput.style.width = '100%';
             wifiInput.style.padding = '0.75rem';
             wifiInput.style.border = '2px solid #e2e8f0';
@@ -2714,11 +2656,11 @@
             utilitiesLabel.style.marginBottom = '0.5rem';
             utilitiesLabel.style.color = '#374151';
             utilitiesLabel.style.fontSize = '0.9rem';
-            utilitiesLabel.textContent = 'Monthly Utilities';
+            utilitiesLabel.textContent = 'Monthly Utilities You Pay';
             
             const utilitiesInput = document.createElement('input');
             utilitiesInput.type = 'text';
-            utilitiesInput.placeholder = 'Enter utilities amount';
+            utilitiesInput.placeholder = 'Enter utilities amount you pay';
             utilitiesInput.style.width = '100%';
             utilitiesInput.style.padding = '0.75rem';
             utilitiesInput.style.border = '2px solid #e2e8f0';
@@ -2904,14 +2846,6 @@
             if (action === 'submitData') {
                 await submitFormData();
             }
-            if (action === 'submitWaitlistOnly') {
-                await submitWaitlistOnly();
-                // End the conversation here for waitlist-only users
-                setTimeout(() => {
-                    showSuccessMessage("Thanks for joining our waitlist! We'll be in touch soon.");
-                }, 1000);
-                return;
-            }
             if (action === 'setupHousingReview') {
                 // Housing review is handled by the response type, no special action needed
                 console.log('Housing review setup handled by response type');
@@ -2941,8 +2875,8 @@
                 };
             }
             
-            // Submit to pricing Google Form (not waitlist)
-            submitToPricingGoogleForm();
+            // Submit to Google Form
+            submitToGoogleForm();
             
             // Convert monthly housing costs to housing entries format for compatibility
             const housingEntries = convertMonthlyHousingToEntries();
@@ -3419,37 +3353,13 @@
              calculateAndDisplayBenefit();
          }
 
-        // Submit to Google Form for waitlist
+        // Submit to Google Form
         function submitToGoogleForm() {
-            const email = encodeURIComponent(chatData.email);
-            
-            // Use the budgeting app waitlist form URL
-            const baseUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSehJFz3vGwSbLJdDUy8xhqUe3BMwGcRgIqJS98jIbZGlp4Jfg/formResponse?usp=pp_url';
-            const formUrl = `${baseUrl}&entry.1992676123=${email}`;
-            
-            // Submit using hidden iframe (same pattern as taxes-1.html)
-            const iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.setAttribute('src', formUrl);
-            document.body.appendChild(iframe);
-            
-            // Remove iframe after submission
-            setTimeout(() => {
-                if (document.body.contains(iframe)) {
-                    document.body.removeChild(iframe);
-                }
-            }, 1000);
-            
-            console.log('Submitted to budgeting app waitlist Google Form:', { email: email });
-        }
-
-        // Submit to pricing Google Form (for full onboarding flow)
-        function submitToPricingGoogleForm() {
             const email = encodeURIComponent(chatData.email);
             const includeTaxFiling = chatData.includeTaxFiling;
             const includeInterestEarning = chatData.includeInterestEarning;
             
-            // Calculate the actual cost using pricing calculator
+            // Calculate the final cost including discounts and add-ons
             const totalIncome = calculateTotalIncome();
             let finalCost = 0;
             
@@ -3477,20 +3387,21 @@
                 
             } catch (error) {
                 console.error('Error calculating pricing for Google Form:', error);
-                // Fallback to original hardcoded logic if pricing calculator fails
-                if (includeInterestEarning && includeTaxFiling) {
-                    finalCost = 110; // $50 base + $60 tax filing
-                } else if (includeInterestEarning && !includeTaxFiling) {
-                    finalCost = 50;
-                } else if (!includeInterestEarning && includeTaxFiling) {
-                    finalCost = 120; // $60 base + $60 tax filing  
-                } else {
-                    finalCost = 60;
+                // Fallback to base calculated cost or hardcoded values
+                const baseCost = chatData.calculatedCost || 60;
+                finalCost = baseCost;
+                
+                // Apply discount and add-ons to fallback
+                if (includeInterestEarning) {
+                    finalCost = Math.round(finalCost * 0.85); // 15% discount
+                }
+                if (includeTaxFiling) {
+                    finalCost += 60;
                 }
             }
             
-            // Create product selection string with calculated cost and Budgeting prefix
-            let productSelection = `Budgeting+$${finalCost}`;
+            // Create product selection string with calculated cost
+            let productSelection = `Parents+$${finalCost}`;
             if (includeInterestEarning) {
                 productSelection += '+learn_more_discount';
             }
@@ -3498,7 +3409,7 @@
                 productSelection += '+tax_filing';
             }
             
-            // Create the main pricing Google Form URL with parameters
+            // Create the Google Form URL with parameters
             const baseUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSejmRtmObNrp3zgK7fKV2sLYpQdyg7vFQkOq_p6zPCQaLmnwg/formResponse?usp=pp_url';
             const formUrl = `${baseUrl}&entry.869093761=${email}&entry.2044388299=${encodeURIComponent(productSelection)}`;
             
@@ -3515,19 +3426,13 @@
                 }
             }, 1000);
             
-            console.log('Submitted to pricing Google Form:', { 
+            console.log('Submitted to Google Form:', { 
                 email: chatData.email, 
                 finalCost: finalCost,
                 productSelection: productSelection,
                 includeInterestEarning: includeInterestEarning,
                 includeTaxFiling: includeTaxFiling
             });
-        }
-
-        // Submit waitlist-only users
-        function submitWaitlistOnly() {
-            submitToGoogleForm();
-            console.log('User added to waitlist only:', chatData.email);
         }
 
         // Show secure connection animation (now handled in chat)
@@ -3933,15 +3838,6 @@
         function showSuccessAndRedirect(message) {
             // This is now handled through chat messages instead
             console.log('Success and redirect handled through chat interface');
-        }
-
-        // Show success message for waitlist users
-        async function showSuccessMessage(message) {
-            showTypingIndicator();
-            await new Promise(resolve => setTimeout(resolve, 800));
-            removeTypingIndicator();
-            await addMessage('bot', message);
-            clearInputArea();
         }
 
         // Show the Learn More popup
