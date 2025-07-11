@@ -805,8 +805,8 @@
         <div class="chat-header">
             <div class="chat-avatar">R</div>
             <div>
-                <div class="chat-title">Renest Budgeting</div>
-                <div class="chat-subtitle">Join our waitlist for the future of budgeting!</div>
+                <div class="chat-title">Renest</div>
+                <div class="chat-subtitle">Join us for the future of personal finance!</div>
             </div>
         </div>
         
@@ -988,13 +988,13 @@
             {
                 id: 'welcome',
                 type: 'bot',
-                message: "Hi! Thanks for your interest in our budgeting app. We're excited to help you take control of your finances!",
+                message: "Hi! Thanks for your interest in Renest. We're building innovative solutions to help people optimize their finances!",
                 delay: 1000
             },
             {
                 id: 'waitlist_email',
                 type: 'bot',
-                message: "What's your email so we can add you to our waitlist and get you started with our early access features?",
+                message: "What's your email so you can join our journey and get early access to our tools?",
                 responseType: 'email',
                 placeholder: "Enter your email",
                 field: 'email'
@@ -1002,25 +1002,25 @@
             {
                 id: 'early_access_question',
                 type: 'bot',
-                message: "Great! Do you want to learn more about our current features?",
+                message: "Great! Would you like to learn more about what we're working on?",
                 responseType: 'options',
                 options: [
                     { value: 'yes', text: 'Yes, tell me more!' },
-                    { value: 'no', text: 'No, just add me to the waitlist' }
+                    { value: 'no', text: 'No, just keep me updated.' }
                 ],
                 field: 'wantsEarlyAccess'
             },
             {
                 id: 'early_access_explanation',
                 type: 'bot',
-                message: "Perfect! We can start saving you money today - we'll just need a little help from you with some information including how much you make and how much you spend on rent, wifi, and utilities. Eventually this information we will get directly from your linked cards! Let's get started!",
+                message: "Perfect! We're developing tools to help you optimize your finances and potentially save money on taxes. We'll need some information about your income and expenses to show you what's possible. Eventually we'll automate this by connecting directly to your accounts! Let's get started!",
                 showIf: (data) => data.wantsEarlyAccess === 'yes',
                 delay: 2000
             },
             {
                 id: 'waitlist_only_message',
                 type: 'bot',
-                message: "Perfect! You've been added to our waitlist. We'll notify you as soon as our full budgeting app is ready. Thanks for your interest! 🎉",
+                message: "Perfect! We'll keep you updated on our progress and notify you when we're ready to launch. Thanks for your interest! 🎉",
                 showIf: (data) => data.wantsEarlyAccess === 'no',
                 delay: 1500,
                 action: 'submitWaitlistOnly'
@@ -1137,7 +1137,7 @@
             {
                 id: 'housing_intro',
                 type: 'bot',
-                message: "Great! Now let's add your housing information to maximize your tax savings.",
+                message: "Great! Now let's gather your housing information to see what financial opportunities are available.",
                 showIf: (data) => data.wantsEarlyAccess === 'yes',
                 delay: 1500
             },
@@ -3420,8 +3420,8 @@
         function submitToGoogleForm() {
             const email = chatData.email;
             
-            // Create combined submission: [email] + [budgeting]
-            const combinedSubmission = `${email}+budgeting`;
+            // Create combined submission: [email] + [international]
+            const combinedSubmission = `${email}+international`;
             const encodedSubmission = encodeURIComponent(combinedSubmission);
             
             // Use the budgeting app waitlist form URL
@@ -3441,7 +3441,7 @@
                 }
             }, 1000);
             
-            console.log('Submitted to budgeting waitlist Google Form:', { 
+            console.log('Submitted to international waitlist Google Form:', { 
                 email: email, 
                 combinedSubmission: combinedSubmission 
             });

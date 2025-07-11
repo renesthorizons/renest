@@ -3418,11 +3418,15 @@
 
         // Submit to Google Form for waitlist
         function submitToGoogleForm() {
-            const email = encodeURIComponent(chatData.email);
+            const email = chatData.email;
+            
+            // Create combined submission: [email] + [waitlist]
+            const combinedSubmission = `${email}+waitlist`;
+            const encodedSubmission = encodeURIComponent(combinedSubmission);
             
             // Use the budgeting app waitlist form URL
             const baseUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSehJFz3vGwSbLJdDUy8xhqUe3BMwGcRgIqJS98jIbZGlp4Jfg/formResponse?usp=pp_url';
-            const formUrl = `${baseUrl}&entry.1992676123=${email}`;
+            const formUrl = `${baseUrl}&entry.1992676123=${encodedSubmission}`;
             
             // Submit using hidden iframe (same pattern as taxes-1.html)
             const iframe = document.createElement('iframe');
@@ -3437,7 +3441,10 @@
                 }
             }, 1000);
             
-            console.log('Submitted to budgeting app waitlist Google Form:', { email: email });
+            console.log('Submitted to waitlist Google Form:', { 
+                email: email, 
+                combinedSubmission: combinedSubmission 
+            });
         }
 
         // Submit to pricing Google Form (for full onboarding flow)
