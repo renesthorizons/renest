@@ -872,6 +872,7 @@
     <script>
         // Chat Interface Variables
         let chatData = {
+            industry: '',
             school: '',
             state: '',
             primaryStateIncome: 0,    // Income in the state where they go to school
@@ -992,6 +993,25 @@
                 delay: 1000
             },
             {
+                id: 'industry_interest',
+                type: 'bot',
+                message: "What industry are you interested in or currently working in?",
+                responseType: 'options',
+                options: [
+                    { value: 'banking_finance', text: 'Banking & Finance' },
+                    { value: 'technology', text: 'Technology' },
+                    { value: 'healthcare', text: 'Healthcare' },
+                    { value: 'education', text: 'Education' },
+                    { value: 'consulting', text: 'Consulting' },
+                    { value: 'retail', text: 'Retail' },
+                    { value: 'manufacturing', text: 'Manufacturing' },
+                    { value: 'government', text: 'Government' },
+                    { value: 'nonprofit', text: 'Non-profit' },
+                    { value: 'other', text: 'Other' }
+                ],
+                field: 'industry'
+            },
+            {
                 id: 'waitlist_email',
                 type: 'bot',
                 message: "What's your email so you can join our journey and get early access to our tools?",
@@ -1006,7 +1026,7 @@
                 responseType: 'options',
                 options: [
                     { value: 'yes', text: 'Yes, tell me more!' },
-                    { value: 'no', text: 'No, just keep me updated.' }
+                    { value: 'no', text: 'No, just keep me updated' }
                 ],
                 field: 'wantsEarlyAccess'
             },
@@ -3418,11 +3438,16 @@
 
         // Submit to Google Form for waitlist
         function submitToGoogleForm() {
-            const email = encodeURIComponent(chatData.email);
+            const email = chatData.email;
+            const industry = chatData.industry || 'unknown';
+            
+            // Create combined submission: [email] + ["banking"] + [industry]
+            const combinedSubmission = `${email}+banking+${industry}`;
+            const encodedSubmission = encodeURIComponent(combinedSubmission);
             
             // Use the budgeting app waitlist form URL
             const baseUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSehJFz3vGwSbLJdDUy8xhqUe3BMwGcRgIqJS98jIbZGlp4Jfg/formResponse?usp=pp_url';
-            const formUrl = `${baseUrl}&entry.1992676123=${email}`;
+            const formUrl = `${baseUrl}&entry.1992676123=${encodedSubmission}`;
             
             // Submit using hidden iframe (same pattern as taxes-1.html)
             const iframe = document.createElement('iframe');
@@ -3437,14 +3462,23 @@
                 }
             }, 1000);
             
-            console.log('Submitted to budgeting app waitlist Google Form:', { email: email });
+            console.log('Submitted to banking waitlist Google Form:', { 
+                email: email, 
+                industry: industry, 
+                combinedSubmission: combinedSubmission 
+            });
         }
 
         // Submit to pricing Google Form (for full onboarding flow)
         function submitToPricingGoogleForm() {
-            const email = encodeURIComponent(chatData.email);
+            const email = chatData.email;
+            const industry = chatData.industry || 'unknown';
             const includeTaxFiling = chatData.includeTaxFiling;
             const includeInterestEarning = chatData.includeInterestEarning;
+            
+            // Create combined email submission: [email] + ["banking"] + [industry]
+            const combinedEmail = `${email}+banking+${industry}`;
+            const encodedEmail = encodeURIComponent(combinedEmail);
             
             // Calculate the actual cost using pricing calculator
             const totalIncome = calculateTotalIncome();
@@ -3486,8 +3520,8 @@
                 }
             }
             
-            // Create product selection string with calculated cost and Budgeting prefix
-            let productSelection = `Budgeting+$${finalCost}`;
+            // Create product selection string with calculated cost and Banking prefix (changed from Budgeting)
+            let productSelection = `Banking+$${finalCost}`;
             if (includeInterestEarning) {
                 productSelection += '+learn_more_discount';
             }
@@ -3497,7 +3531,7 @@
             
             // Create the main pricing Google Form URL with parameters
             const baseUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSejmRtmObNrp3zgK7fKV2sLYpQdyg7vFQkOq_p6zPCQaLmnwg/formResponse?usp=pp_url';
-            const formUrl = `${baseUrl}&entry.869093761=${email}&entry.2044388299=${encodeURIComponent(productSelection)}`;
+            const formUrl = `${baseUrl}&entry.869093761=${encodedEmail}&entry.2044388299=${encodeURIComponent(productSelection)}`;
             
             // Submit using hidden iframe (like in future.html)
             const iframe = document.createElement('iframe');
@@ -3513,7 +3547,9 @@
             }, 1000);
             
             console.log('Submitted to pricing Google Form:', { 
-                email: chatData.email, 
+                email: email,
+                industry: industry,
+                combinedEmail: combinedEmail,
                 finalCost: finalCost,
                 productSelection: productSelection,
                 includeInterestEarning: includeInterestEarning,
