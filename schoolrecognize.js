@@ -13,7 +13,8 @@ const schoolsDatabase = {
       { name: "Knox College", variations: ["knox", "knox college"] },
       { name: "Wheaton College", variations: ["wheaton", "wheaton il"] },
       { name: "Lake Forest College", variations: ["lake forest", "lfc"] },
-      { name: "Augustana College", variations: ["augustana", "augustana il"] }
+      { name: "Augustana College", variations: ["augustana", "augustana il"] },
+      { name: "Columbia College Chicago", variations: ["ccc"] }
     ],
     public: [
       { name: "University of Illinois at Urbana-Champaign", variations: ["uiuc", "u of i", "illinois", "urbana champaign"] },
@@ -881,6 +882,19 @@ const schoolsDatabase = {
   }
 };
 
+// NYC Schools - these should use NYC tax code instead of NY
+const nycSchools = [
+  'Columbia University', 'New York University', 'Fordham University', 'St. John\'s University',
+  'Yeshiva University', 'The New School', 'Barnard College', 'Fashion Institute of Technology',
+  'City College of New York', 'Hunter College', 'Brooklyn College', 'Queens College',
+  'Baruch College', 'Borough of Manhattan Community College', 'LaGuardia Community College',
+  'Queensborough Community College', 'Bronx Community College', 'Kingsborough Community College',
+  'Lincoln Technical Institute', 'Plaza College', 'ASA College', 'Swedish Institute',
+  'New York Film Academy', 'Institute of Culinary Education', 'Mandl School',
+  'New York School of Interior Design', 'American Academy McAllister Institute',
+  'Technical Career Institutes'
+];
+
 // School Recognition System
 class SchoolRecognizer {
   constructor(database) {
@@ -895,11 +909,15 @@ class SchoolRecognizer {
     for (const [state, categories] of Object.entries(this.database)) {
       for (const [category, schools] of Object.entries(categories)) {
         schools.forEach(school => {
+          // Determine if this is a NYC school
+          const isNYCSchool = state === 'new york' && nycSchools.includes(school.name);
+          const effectiveState = isNYCSchool ? 'new york city' : state;
+          
           // Add the main name
           index.push({
             name: school.name,
             searchName: this.normalizeString(school.name),
-            state: state,
+            state: effectiveState,
             category: category,
             originalName: school.name
           });
@@ -909,7 +927,7 @@ class SchoolRecognizer {
             index.push({
               name: variation,
               searchName: this.normalizeString(variation),
-              state: state,
+              state: effectiveState,
               category: category,
               originalName: school.name
             });
