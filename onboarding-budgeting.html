@@ -3719,6 +3719,27 @@
                     return;
                 }
                 
+                // Validate password requirements
+                if (password.length < 5) {
+                    showError('Password must be at least 5 characters long');
+                    return;
+                }
+                
+                if (!/[A-Z]/.test(password)) {
+                    showError('Password must contain at least 1 uppercase letter');
+                    return;
+                }
+                
+                if (!/[0-9]/.test(password)) {
+                    showError('Password must contain at least 1 number');
+                    return;
+                }
+                
+                if (!/[^A-Za-z0-9]/.test(password)) {
+                    showError('Password must contain at least 1 special character');
+                    return;
+                }
+                
                 // Clear input area and disable interactive elements
                 clearInputArea();
                 disableAllInteractiveElements();
@@ -3733,6 +3754,13 @@
                 removeTypingIndicator();
                 await addMessage('bot', '🔍 Validating credentials...');
                 
+                // Start account creation API call first
+                const accountCreationPromise = window.onboardingCoordinator.createAccountAndSubmitData(
+                    chatData.email, 
+                    password
+                );
+                
+                // Show progress and setup timeout only after API call begins
                 showTypingIndicator('setting up secure connection...');
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 removeTypingIndicator();
@@ -3768,11 +3796,6 @@
                     
                     resolve();
                 });
-                
-                const accountCreationPromise = window.onboardingCoordinator.createAccountAndSubmitData(
-                    chatData.email, 
-                    password
-                );
                 
                 // Race between timeout message and actual completion
                 const result = await Promise.race([
