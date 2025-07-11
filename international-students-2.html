@@ -188,7 +188,7 @@
             flex-direction: column;
             align-items: center;
             width: 100%;
-            max-width: 100vw;
+            max-width: 100%;
             overflow-x: hidden;
             position: relative;
             z-index: 1;
@@ -230,8 +230,8 @@
             padding: 6rem 4rem;
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
-            text-align: left;
+            align-items: center;
+            text-align: center;
             margin: 2rem auto;
             box-sizing: border-box;
             border: 1px solid var(--border-light);
@@ -277,7 +277,7 @@
             color: var(--text-secondary);
             margin-bottom: 1.25rem;
             line-height: 1.7;
-            text-align: left;
+            text-align: center;
         }
 
         .motivation-message.headline, .motivation-message[style*='font-size: 1.5rem'] {
@@ -393,21 +393,31 @@
         @media (max-width: 900px) {
             html, body {
                 overflow-x: hidden !important;
+                margin: 0;
+                padding: 0;
+                width: 100%;
             }
             
             .main-content {
                 min-height: auto;
                 padding: 0;
                 width: 100%;
-                max-width: 100vw;
+                max-width: 100%;
                 overflow-x: hidden;
+                margin: 0 auto;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
             }
             
             #motivationSection {
                 padding: 2rem 1rem;
-                width: 100%;
+                width: calc(100% - 2rem);
                 max-width: 100%;
                 box-sizing: border-box;
+                margin: 1rem auto;
+                align-items: center;
+                text-align: center;
             }
             
             .motivation-counter {
@@ -522,8 +532,8 @@
             
             /* Fix modal positioning on mobile */
             .founder-modal-content {
-                width: 95vw !important;
-                max-width: 95vw !important;
+                width: 95% !important;
+                max-width: 95% !important;
                 margin: 1rem !important;
                 box-sizing: border-box !important;
             }
@@ -549,7 +559,7 @@
             
             /* Ensure everything stays within viewport */
             * {
-                max-width: 100vw !important;
+                max-width: 100% !important;
                 box-sizing: border-box !important;
             }
         }
@@ -557,21 +567,31 @@
         @media (max-width: 480px) {
             html, body {
                 overflow-x: hidden !important;
+                margin: 0;
+                padding: 0;
+                width: 100%;
             }
             
             .main-content {
                 min-height: auto;
                 width: 100%;
-                max-width: 100vw;
+                max-width: 100%;
                 overflow-x: hidden;
                 padding: 0;
+                margin: 0 auto;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
             }
             
             #motivationSection {
                 padding: 1.5rem 0.75rem;
-                width: 100%;
+                width: calc(100% - 1rem);
                 max-width: 100%;
                 box-sizing: border-box;
+                margin: 0.5rem auto;
+                align-items: center;
+                text-align: center;
             }
             
             .brand-logo {
@@ -629,8 +649,8 @@
             }
             
             .founder-modal-content {
-                width: 98vw !important;
-                max-width: 98vw !important;
+                width: 98% !important;
+                max-width: 98% !important;
                 padding: 1.5rem 1rem !important;
                 margin: 0.5rem !important;
             }
@@ -782,7 +802,7 @@
             box-shadow: var(--shadow-xl);
             padding: 3rem 2.5rem;
             max-width: 500px;
-            width: 90vw;
+            width: 90%;
             text-align: center;
             animation: founderModalIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             border: 1px solid var(--border-light);
@@ -1194,6 +1214,33 @@
         .hero-container {
             margin-bottom: 4rem;
             width: 100%;
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #1f2937 100%);
+            border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-xl);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(30, 58, 138, 0.95) 0%, rgba(30, 64, 175, 0.95) 50%, rgba(31, 41, 55, 0.95) 100%);
+            z-index: 1;
+        }
+
+        .hero-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="80" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="40" cy="60" r="0.5" fill="rgba(255,255,255,0.08)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            z-index: 2;
         }
 
         .hero-content {
@@ -1203,6 +1250,9 @@
             text-align: center;
             min-height: 500px;
             justify-content: center;
+            padding: 4rem 2rem;
+            position: relative;
+            z-index: 3;
         }
 
         .hero-text {
@@ -1211,6 +1261,7 @@
             justify-content: center;
             align-items: center;
             max-width: 900px;
+            width: 100%;
         }
 
         .hero-headline {
@@ -1228,26 +1279,62 @@
             position: relative;
             padding-bottom: 2rem;
             letter-spacing: -0.025em;
-            color: var(--text-primary);
+            color: white;
             text-align: center;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
         .hero-headline h1 span.highlight {
-            background: var(--primary-gradient);
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             position: relative;
+            text-shadow: none;
         }
 
         .hero-subtitle {
-            font-size: 1.5rem;
-            color: var(--text-secondary);
             margin-bottom: 3rem;
-            font-weight: 400;
-            line-height: 1.6;
-            letter-spacing: -0.005em;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.25) 0%, rgba(59, 130, 246, 0.15) 100%);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(96, 165, 250, 0.4);
+            backdrop-filter: blur(15px);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .hero-subtitle-text {
+            font-size: 1.375rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 400;
+            line-height: 1.7;
+            letter-spacing: -0.005em;
+            max-width: 800px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
         }
 
         .hero-stats {
@@ -1260,20 +1347,22 @@
         .stat-item {
             text-align: center;
             padding: 2.5rem 1.5rem;
-            background: var(--background);
+            background: rgba(96, 165, 250, 0.1);
             border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-lg);
-            border: 1px solid var(--border);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(96, 165, 250, 0.25);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            backdrop-filter: blur(15px);
         }
 
         @media (hover: hover) and (pointer: fine) {
             .stat-item:hover {
                 transform: translateY(-4px);
-                box-shadow: var(--shadow-xl);
-                border-color: var(--border-accent);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+                border-color: rgba(96, 165, 250, 0.5);
+                background: rgba(96, 165, 250, 0.15);
             }
         }
 
@@ -1281,17 +1370,15 @@
             font-family: 'Space Grotesk', sans-serif;
             font-size: 2.5rem;
             font-weight: 800;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: white;
             margin-bottom: 0.75rem;
             letter-spacing: -0.02em;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         .stat-label {
             font-size: 0.9rem;
-            color: var(--text-muted);
+            color: rgba(255, 255, 255, 0.8);
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -1405,9 +1492,23 @@
                 border-radius: var(--radius-2xl);
             }
 
+            .hero-container {
+                margin: 1rem 0;
+                max-width: 100%;
+                width: 100%;
+                border-radius: var(--radius-xl);
+            }
+
             .hero-content {
-                gap: 4rem;
+                gap: 3rem;
                 text-align: center;
+                padding: 3rem 1.5rem;
+            }
+
+            .hero-text {
+                max-width: 100%;
+                width: 100%;
+                margin: 0 auto;
             }
 
             .hero-headline {
@@ -1415,14 +1516,23 @@
             }
 
             .hero-headline h1 {
-                font-size: 4rem;
-                line-height: 1.05;
+                font-size: 2.75rem;
+                line-height: 1.1;
                 text-align: center;
             }
             
             .hero-subtitle {
-                font-size: 1.5rem;
-                text-align: center;
+                gap: 1rem;
+            }
+
+            .hero-badge {
+                font-size: 0.9rem;
+                padding: 0.6rem 1.25rem;
+            }
+
+            .hero-subtitle-text {
+                font-size: 1.125rem;
+                line-height: 1.6;
             }
 
             .hero-stats {
@@ -1522,9 +1632,23 @@
                 border-radius: var(--radius-lg);
             }
 
+            .hero-container {
+                margin: 0.5rem 0;
+                max-width: 100%;
+                width: 100%;
+                border-radius: var(--radius-lg);
+            }
+
             .hero-content {
                 gap: 2rem;
                 min-height: auto;
+                padding: 2rem 0.75rem;
+            }
+
+            .hero-text {
+                max-width: 100%;
+                width: 100%;
+                margin: 0 auto;
             }
 
             .hero-headline {
@@ -1532,13 +1656,23 @@
             }
 
             .hero-headline h1 {
-                font-size: 3.5rem;
-                line-height: 1.1;
+                font-size: 2.25rem;
+                line-height: 1.2;
                 text-align: center;
             }
 
             .hero-subtitle {
+                gap: 0.75rem;
+            }
+
+            .hero-badge {
+                font-size: 0.85rem;
+                padding: 0.5rem 1rem;
+            }
+
+            .hero-subtitle-text {
                 font-size: 1rem;
+                line-height: 1.5;
             }
 
             .hero-stats {
@@ -1999,7 +2133,9 @@
                                 <h1>US Finances Made Simple for <span class="highlight">International Students</span></h1>
                             </div>
                             <div class="hero-subtitle">
-                                You came here for opportunity—to study, excel, and make an impact. But navigating U.S. taxes, investing, and visa requirements shouldn't drain your energy. Renest helps international students from day one as a non-resident alien all the way to permanent residency (or beyond). 
+                                <div class="hero-subtitle-text">
+                                    You came here for opportunity—to study, excel, and make an impact. But navigating U.S. taxes, investing, and visa requirements shouldn't drain your energy. Renest helps international students from day one as a non-resident alien all the way to permanent residency (or beyond).
+                                </div>
                             </div>
                                                             <div class="hero-stats">
                                     <div class="stat-item">
@@ -2551,7 +2687,7 @@
 
         // Redirect to onboarding when Get Started is clicked
         getStartedBtn.addEventListener('click', function() {
-            window.location.href = 'onboarding.html';
+            window.location.href = 'onboarding-international.html';
         });
 
         // Review carousel logic (always start on page load)
@@ -2640,7 +2776,7 @@
     document.getElementById('emailForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const email = encodeURIComponent(document.getElementById('emailInput').value);
-        const baseUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSenipPEWBn8kayp5WTkKRAdbblVH-yhofMHFYfaAVVaH9FFuA/formResponse?usp=pp_url&entry.1160800181=';
+        const baseUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSfVE1BZeikTGfHH6g_EJ7lwdWQTrKS3pncv_0BOPL4vSHejAg/formResponse?usp=pp_url&entry.156098149=';
         const submitButton = document.querySelector('.submit-button');
         const checkmark = submitButton.querySelector('.centered-checkmark');
         const emailInput = document.getElementById('emailInput');
