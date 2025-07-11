@@ -2281,12 +2281,9 @@
             showTypingIndicator('analyzing your tax situation...');
             await new Promise(resolve => setTimeout(resolve, 2000));
             
-            // Calculate benefit using existing function with new housing structure
-            const totalIncome = calculateTotalIncome();
-            const benefitDetails = calculateBenefitWithMonthlyHousingCustomGrocery(
-                chatData.state, 
-                totalIncome, 
-                chatData.enrolledMonths, 
+            // Calculate benefit using new multi-state function with optimal expense distribution
+            const benefitDetails = calculateMultiStateBenefitWithMonthlyHousing(
+                chatData,
                 window.monthlyHousingCosts,
                 chatData.monthlyGrocery !== undefined ? Number(chatData.monthlyGrocery) : 200,
                 true
@@ -2299,7 +2296,7 @@
             
             const benefit = Math.round(Number(benefitDetails.benefit) || 0);
             const qualifiedSpend = Math.round(Number(benefitDetails.qualifiedSpend) || 0);
-            const income = totalIncome;
+            const income = calculateTotalIncome(); // Still need total for display
             
             // Remove typing indicator and show first message
             removeTypingIndicator();
@@ -4347,6 +4344,198 @@
                      qualifiedSpend: Number(totalQualifiedExpenses) || 0 
                  };
              }
+             return Number(benefit) || 0;
+         }
+
+         // NEW: Multi-state benefit calculation with optimal expense distribution
+         function calculateMultiStateBenefitWithMonthlyHousing(chatData, monthlyHousingCosts, monthlyGrocery = 200, returnDetails = false) {
+             console.log('[calculateMultiStateBenefit] Starting calculation with:', {
+                 hasMultiStateIncome: chatData.hasMultiStateIncome,
+                 primaryState: chatData.state,
+                 primaryIncome: chatData.primaryStateIncome,
+                 otherState: chatData.otherStateName,
+                 otherIncome: chatData.otherStateIncome,
+                 enrolledMonths: chatData.enrolledMonths
+             });
+
+             // Single state income - use existing function
+             if (chatData.hasMultiStateIncome !== 'yes' || !chatData.otherStateName || !chatData.otherStateIncome) {
+                 const singleStateIncome = Number(chatData.primaryStateIncome) || 0;
+                 return calculateBenefitWithMonthlyHousingCustomGrocery(
+                     chatData.state, 
+                     singleStateIncome, 
+                     chatData.enrolledMonths, 
+                     monthlyHousingCosts, 
+                     monthlyGrocery, 
+                     returnDetails
+                 );
+             }
+
+             // Calculate total qualified expenses first
+             const totalQualifiedExpenses = calculateTotalQualifiedExpenses(chatData.enrolledMonths, monthlyHousingCosts, monthlyGrocery);
+
+             // Multi-state income calculation with optimal expense distribution
+             const primaryStateIncome = Number(chatData.primaryStateIncome) || 0;
+             const otherStateIncome = Number(chatData.otherStateIncome) || 0;
+
+             // Get state deduction limits and tax info
+             const primaryStateTaxDeduction = statePersonalExemptionDB[chatData.state]?.amount || 0;
+             const primaryStateDeduction = state529DB[chatData.state]?.deduction || 0;
+             const primaryTaxableIncome = Math.max(0, primaryStateIncome - primaryStateTaxDeduction);
+
+             const otherStateTaxDeduction = statePersonalExemptionDB[chatData.otherStateName]?.amount || 0;
+             const otherStateDeduction = state529DB[chatData.otherStateName]?.deduction || 0;
+             const otherTaxableIncome = Math.max(0, otherStateIncome - otherStateTaxDeduction);
+
+             // Distribute qualified expenses optimally
+             let remainingExpenses = totalQualifiedExpenses;
+
+             // Allocate to primary state first (up to its limits)
+             const primaryStateExpenseAllocation = Math.min(
+                 remainingExpenses,
+                 primaryStateDeduction,
+                 primaryTaxableIncome
+             );
+             remainingExpenses -= primaryStateExpenseAllocation;
+
+             // Allocate remaining expenses to other state (up to its limits)
+             const otherStateExpenseAllocation = Math.min(
+                 remainingExpenses,
+                 otherStateDeduction,
+                 otherTaxableIncome
+             );
+
+             console.log('[calculateMultiStateBenefit] Expense allocation:', {
+                 totalQualifiedExpenses,
+                 primaryStateAllocation: primaryStateExpenseAllocation,
+                 otherStateAllocation: otherStateExpenseAllocation,
+                 unallocatedExpenses: remainingExpenses - otherStateExpenseAllocation
+             });
+
+             // Calculate benefits for each state using allocated expenses
+             const primaryStateBenefit = calculateStateBenefit(
+                 chatData.state, 
+                 primaryStateIncome, 
+                 primaryStateExpenseAllocation
+             );
+
+             const otherStateBenefit = calculateStateBenefit(
+                 chatData.otherStateName, 
+                 otherStateIncome, 
+                 otherStateExpenseAllocation
+             );
+
+             console.log('[calculateMultiStateBenefit] Individual state calculations:', {
+                 primaryState: {
+                     state: chatData.state,
+                     income: primaryStateIncome,
+                     allocatedExpenses: primaryStateExpenseAllocation,
+                     benefit: primaryStateBenefit
+                 },
+                 otherState: {
+                     state: chatData.otherStateName,
+                     income: otherStateIncome,
+                     allocatedExpenses: otherStateExpenseAllocation,
+                     benefit: otherStateBenefit
+                 }
+             });
+
+             // Sum the benefits
+             const totalBenefit = primaryStateBenefit + otherStateBenefit;
+
+             console.log('[calculateMultiStateBenefit] Final totals:', {
+                 totalBenefit,
+                 totalQualifiedExpenses,
+                 breakdown: {
+                     [`${chatData.state} benefit`]: primaryStateBenefit,
+                     [`${chatData.otherStateName} benefit`]: otherStateBenefit
+                 }
+             });
+
+             if (returnDetails) {
+                 return { 
+                     benefit: Number(totalBenefit) || 0, 
+                     qualifiedSpend: Number(totalQualifiedExpenses) || 0,
+                     breakdown: {
+                         primaryState: {
+                             state: chatData.state,
+                             income: primaryStateIncome,
+                             allocatedExpenses: primaryStateExpenseAllocation,
+                             benefit: primaryStateBenefit
+                         },
+                         otherState: {
+                             state: chatData.otherStateName,
+                             income: otherStateIncome,
+                             allocatedExpenses: otherStateExpenseAllocation,
+                             benefit: otherStateBenefit
+                         }
+                     }
+                 };
+             }
+             return Number(totalBenefit) || 0;
+         }
+
+         // Helper function to calculate total qualified expenses
+         function calculateTotalQualifiedExpenses(enrolledMonths, monthlyHousingCosts, monthlyGrocery) {
+             if (!Array.isArray(enrolledMonths)) {
+                 enrolledMonths = [];
+             }
+             
+             let totalQualifiedExpenses = 0;
+             
+             for (let month = 1; month <= 12; month++) {
+                 if (!enrolledMonths.includes(month)) continue;
+                 
+                 // Add grocery expense
+                 totalQualifiedExpenses += Number(monthlyGrocery) || 0;
+                 
+                 // Add housing costs for this month if available
+                 const housingCosts = monthlyHousingCosts && monthlyHousingCosts[month];
+                 if (housingCosts) {
+                     const rent = Number(housingCosts.rent) || 0;
+                     const utilities = Number(housingCosts.utilities) || 0;
+                     const wifi = Number(housingCosts.wifi) || 0;
+                     
+                     totalQualifiedExpenses += rent + utilities + wifi;
+                 }
+             }
+             
+             return totalQualifiedExpenses;
+         }
+
+         // Helper function to calculate benefit for a single state with specific expense allocation
+         function calculateStateBenefit(state, income, allocatedExpenses) {
+             income = Number(income) || 0;
+             allocatedExpenses = Number(allocatedExpenses) || 0;
+
+             if (income === 0 || allocatedExpenses === 0) {
+                 return 0;
+             }
+
+             const stateTaxDeduction = statePersonalExemptionDB[state]?.amount || 0;
+             const taxableStateIncome = Math.max(0, income - stateTaxDeduction);
+             const taxRate = calculateStateTaxRate(taxableStateIncome, state);
+             const taxespaid = taxRate * taxableStateIncome;
+
+             // The deductible amount is already optimally allocated
+             const deductibleAmount = allocatedExpenses;
+
+             let benefit;
+             if (state === 'IN') {
+                 const contributionCredit = deductibleAmount * 0.20;
+                 benefit = Math.min(contributionCredit, 1500, taxespaid);
+             } else if (state === 'OR') {
+                 benefit = Math.min(180, taxespaid);
+             } else if (state === 'MN') {
+                 if (income < 88810) {
+                     benefit = Math.min(500, taxespaid, 0.5 * allocatedExpenses);
+                 } else {
+                     benefit = 0;
+                 }
+             } else {
+                 benefit = Math.min(deductibleAmount * taxRate, taxespaid);
+             }
+
              return Number(benefit) || 0;
          }
 
