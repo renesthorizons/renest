@@ -143,13 +143,23 @@ class PricingCalculator {
             ? state529DB[chatData.otherStateName].deduction : 0;
         const otherTaxableIncome = Math.max(0, otherStateIncome - otherStateTaxDeduction);
 
-        // Calculate optimal expense distribution
-        const primaryStateMaxDeduction = Math.min(primaryStateDeduction, primaryTaxableIncome);
-        const otherStateMaxDeduction = Math.min(otherStateDeduction, otherTaxableIncome);
+        // Distribute qualified expenses optimally (same logic as main onboarding flow)
+        let remainingExpenses = totalQualifiedExpenses;
 
-        // Distribute expenses optimally
-        let primaryStateExpenses = Math.min(totalQualifiedExpenses, primaryStateMaxDeduction);
-        let otherStateExpenses = Math.min(totalQualifiedExpenses - primaryStateExpenses, otherStateMaxDeduction);
+        // Allocate to primary state first (up to its limits)
+        const primaryStateExpenses = Math.min(
+            remainingExpenses,
+            primaryStateDeduction,
+            primaryTaxableIncome
+        );
+        remainingExpenses -= primaryStateExpenses;
+
+        // Allocate remaining expenses to other state (up to its limits)
+        const otherStateExpenses = Math.min(
+            remainingExpenses,
+            otherStateDeduction,
+            otherTaxableIncome
+        );
 
         // Calculate benefits for each state
         const primaryBenefit = this.calculateStateBenefit(chatData.state, primaryStateIncome, primaryStateExpenses);
@@ -194,17 +204,14 @@ class PricingCalculator {
             
             if (isMonthlyHousingCosts) {
                 // New structure: monthlyHousingCosts object
-                const monthlyHousingCosts = housingData;
-                const rent = Number(monthlyHousingCosts.rent) || 0;
-                const utilities = Number(monthlyHousingCosts.utilities) || 0;
-                const wifi = Number(monthlyHousingCosts.wifi) || 0;
-                const utilitiesIncluded = monthlyHousingCosts.utilitiesIncluded || false;
-                
-                totalQualifiedExpenses += rent;
-                if (!utilitiesIncluded) {
-                    totalQualifiedExpenses += utilities;
+                const housingCosts = housingData[month];
+                if (housingCosts) {
+                    const rent = Number(housingCosts.rent) || 0;
+                    const utilities = Number(housingCosts.utilities) || 0;
+                    const wifi = Number(housingCosts.wifi) || 0;
+                    
+                    totalQualifiedExpenses += rent + utilities + wifi;
                 }
-                totalQualifiedExpenses += wifi;
             } else {
                 // Old structure: housingEntries array
                 const housingEntries = housingData || [];
