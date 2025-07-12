@@ -35,7 +35,16 @@ class PricingCalculator {
             }
             
             // Calculate the amount that needs to go into 529
-            const amount529Investment = this.calculate529InvestmentAmount(state, income, benefitDetails.qualifiedSpend);
+            let amount529Investment;
+            if (chatData && chatData.hasMultiStateIncome === 'yes' && chatData.otherStateName && chatData.otherStateIncome) {
+                // Multi-state: calculate 529 investment for each state separately
+                const primaryState529 = this.calculate529InvestmentAmount(chatData.state, chatData.primaryStateIncome, benefitDetails.primaryExpenses);
+                const otherState529 = this.calculate529InvestmentAmount(chatData.otherStateName, chatData.otherStateIncome, benefitDetails.otherExpenses);
+                amount529Investment = primaryState529 + otherState529;
+            } else {
+                // Single-state: use existing logic
+                amount529Investment = this.calculate529InvestmentAmount(state, income, benefitDetails.qualifiedSpend);
+            }
             
             // Calculate interest cost on the 529 investment
             const interestCost = this.calculateInterestCost(amount529Investment);
