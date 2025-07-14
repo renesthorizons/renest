@@ -472,7 +472,7 @@
                 
                 <div style="background: #f0fdf4; padding: 1.5rem; border-radius: 0.5rem; border: 1px solid #22c55e; margin-bottom: 2rem;">
                     <p style="margin: 0; font-size: 0.9rem; color: #666;">
-                        Your information is encrypted and stored securely. We use this data to complete all necessary tax forms, accounts, paperwork, and documents required to secure your tax benefits and ensure you receive the maximum refund you qualify for.
+                        Your information is encrypted and stored securely. We use this data to complete all necessary tax forms, accounts, paperwork, and documents required to secure your tax benefits and ensure you receive the maximum refund.
                     </p>
                 </div>
 
@@ -497,10 +497,71 @@
                     <input type="date" id="sensitiveDOBInput" class="form-input">
                 </div>
 
-                <div class="form-group">
-                    <label for="sensitiveSSNInput" class="form-label">Tax ID Number (SSN/ITIN)</label>
+                <div class="form-group" style="position: relative;">
+                    <label for="sensitiveSSNInput" class="form-label" style="display: flex; align-items: center;">
+                        Tax ID Number (SSN/ITIN)
+                        <button type="button"
+                            tabindex="0"
+                            aria-label="More info about data security"
+                            class="info-tooltip-btn"
+                            style="background: none; border: none; padding: 0 0.25rem; margin-left: 0.25rem; cursor: pointer; font-size: 1.1em; color: #22c55e; display: flex; align-items: center;"
+                            onclick="this.nextElementSibling.classList.toggle('show-tooltip')"
+                            onblur="this.nextElementSibling.classList.remove('show-tooltip')"
+                            ontouchstart="event.stopPropagation(); this.nextElementSibling.classList.toggle('show-tooltip')"
+                        >
+                            <span style="display: inline-block; width: 1.2em; height: 1.2em; border-radius: 50%; background: #e0fbe6; color: #22c55e; text-align: center; line-height: 1.2em; font-weight: bold;">i</span>
+                        </button>
+                        <span class="info-tooltip-content" style="
+                            display: none;
+                            position: absolute;
+                            left: 0;
+                            top: 2.5em;
+                            z-index: 10;
+                            background: #fff;
+                            color: #222;
+                            border: 1px solid #22c55e;
+                            border-radius: 0.5em;
+                            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+                            padding: 0.85em 1em;
+                            font-size: 0.95em;
+                            max-width: 260px;
+                            width: max-content;
+                            min-width: 180px;
+                        ">
+                            Your data is encrypted and secured in an air-gapped database—just as secure as the typical financial institutions you are used to.
+                        </span>
+                    </label>
                     <input type="text" id="sensitiveSSNInput" class="form-input" placeholder="___-__-____" maxlength="11">
                 </div>
+                <script>
+                // Mobile-friendly tooltip: close on outside tap
+                document.addEventListener('touchstart', function(e) {
+                    document.querySelectorAll('.info-tooltip-content.show-tooltip').forEach(function(el) {
+                        if (!el.previousElementSibling.contains(e.target) && !el.contains(e.target)) {
+                            el.classList.remove('show-tooltip');
+                        }
+                    });
+                });
+                // Show/hide tooltip on focus/blur for accessibility
+                document.querySelectorAll('.info-tooltip-btn').forEach(function(btn) {
+                    btn.addEventListener('focus', function() {
+                        btn.nextElementSibling.classList.add('show-tooltip');
+                    });
+                    btn.addEventListener('blur', function() {
+                        btn.nextElementSibling.classList.remove('show-tooltip');
+                    });
+                });
+                // CSS for tooltip show
+                (function() {
+                    var style = document.createElement('style');
+                    style.innerHTML = `
+                        .info-tooltip-content.show-tooltip {
+                            display: block !important;
+                        }
+                    `;
+                    document.head.appendChild(style);
+                })();
+                </script>
                 
                 <div class="form-group">
                     <label for="sensitivePhoneInput" class="form-label">Phone Number</label>
