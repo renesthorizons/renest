@@ -1022,7 +1022,7 @@
             {
                 id: 'early_access_explanation',
                 type: 'bot',
-                message: "Perfect! We're developing tools to help you optimize your finances and save money on taxes. We'll need some information about your income and expenses to show you what's possible. Eventually we'll automate this by connecting directly to your accounts! Let's get started!",
+                message: "Perfect! We're developing tools to help you optimize your finances and save money on taxes. We'll need some information about your income and expenses to show you what's possible. Let's get started!",
                 // showIf: (data) => data.wantsEarlyAccess === 'yes',
                 delay: 2000
             },
@@ -1133,6 +1133,18 @@
                 responseType: 'state_select',
                 showIf: (data) => data.hasMultiStateIncome === 'yes',
                 field: 'otherStateName'
+            },
+            {
+                id: 'nyc_clarification',
+                type: 'bot',
+                message: "Were you specifically in New York City, or elsewhere in New York state?",
+                responseType: 'options',
+                showIf: (data) => data.hasMultiStateIncome === 'yes' && data.otherStateName === 'NY',
+                options: [
+                    { value: 'nyc', text: 'Yup, I was in New York City' },
+                    { value: 'ny', text: 'Nope, I was elsewhere in New York state' }
+                ],
+                field: 'nycClarification'
             },
             {
                 id: 'other_state_income',
@@ -1515,6 +1527,19 @@
                     chatData.detectedState = null;
                     chatData.detectedStateCode = null;
                     console.log('Cleared detected state, user will manually select');
+                }
+            }
+            
+            // Handle NYC clarification logic
+            if (field === 'nycClarification') {
+                if (value === 'nyc') {
+                    // Update other state name to NYC
+                    chatData.otherStateName = 'NYC';
+                    console.log('Updated other state to NYC');
+                } else {
+                    // Keep as NY (New York state)
+                    chatData.otherStateName = 'NY';
+                    console.log('Keeping other state as NY');
                 }
             }
             
