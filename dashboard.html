@@ -505,9 +505,6 @@
                             aria-label="More info about data security"
                             class="info-tooltip-btn"
                             style="background: none; border: none; padding: 0 0.25rem; margin-left: 0.25rem; cursor: pointer; font-size: 1.1em; color: #22c55e; display: flex; align-items: center;"
-                            onclick="this.nextElementSibling.classList.toggle('show-tooltip')"
-                            onblur="this.nextElementSibling.classList.remove('show-tooltip')"
-                            ontouchstart="event.stopPropagation(); this.nextElementSibling.classList.toggle('show-tooltip')"
                         >
                             <span style="display: inline-block; width: 1.2em; height: 1.2em; border-radius: 50%; background: #e0fbe6; color: #22c55e; text-align: center; line-height: 1.2em; font-weight: bold;">i</span>
                         </button>
@@ -534,25 +531,59 @@
                     <input type="text" id="sensitiveSSNInput" class="form-input" placeholder="___-__-____" maxlength="11">
                 </div>
                 <script>
-                // Mobile-friendly tooltip: close on outside tap
-                document.addEventListener('touchstart', function(e) {
-                    document.querySelectorAll('.info-tooltip-content.show-tooltip').forEach(function(el) {
-                        if (!el.previousElementSibling.contains(e.target) && !el.contains(e.target)) {
-                            el.classList.remove('show-tooltip');
-                        }
-                    });
-                });
-                // Show/hide tooltip on focus/blur for accessibility
-                document.querySelectorAll('.info-tooltip-btn').forEach(function(btn) {
-                    btn.addEventListener('focus', function() {
-                        btn.nextElementSibling.classList.add('show-tooltip');
-                    });
-                    btn.addEventListener('blur', function() {
-                        btn.nextElementSibling.classList.remove('show-tooltip');
-                    });
-                });
-                // CSS for tooltip show
+                // Tooltip logic: tap to toggle, tap "i" again or outside to close, but don't close immediately after tap
                 (function() {
+                    // Helper to close all tooltips except the one passed
+                    function closeAllTooltips(except) {
+                        document.querySelectorAll('.info-tooltip-content.show-tooltip').forEach(function(el) {
+                            if (el !== except) el.classList.remove('show-tooltip');
+                        });
+                    }
+
+                    // Toggle tooltip on button click/tap
+                    document.querySelectorAll('.info-tooltip-btn').forEach(function(btn) {
+                        var tooltip = btn.nextElementSibling;
+                        btn.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            if (tooltip.classList.contains('show-tooltip')) {
+                                tooltip.classList.remove('show-tooltip');
+                            } else {
+                                closeAllTooltips(tooltip);
+                                tooltip.classList.add('show-tooltip');
+                            }
+                        });
+                        // For accessibility: show on focus, hide on blur
+                        btn.addEventListener('focus', function() {
+                            closeAllTooltips(tooltip);
+                            tooltip.classList.add('show-tooltip');
+                        });
+                        btn.addEventListener('blur', function() {
+                            // Only hide if not just clicked (avoid immediate close after tap)
+                            setTimeout(function() {
+                                tooltip.classList.remove('show-tooltip');
+                            }, 100);
+                        });
+                    });
+
+                    // Close tooltip if tapping/clicking outside
+                    function handleCloseTooltip(e) {
+                        document.querySelectorAll('.info-tooltip-content.show-tooltip').forEach(function(el) {
+                            var btn = el.previousElementSibling;
+                            if (!btn.contains(e.target) && !el.contains(e.target)) {
+                                el.classList.remove('show-tooltip');
+                            }
+                        });
+                    }
+                    document.addEventListener('mousedown', handleCloseTooltip);
+                    document.addEventListener('touchstart', handleCloseTooltip);
+
+                    // Prevent tooltip from closing when interacting with tooltip content
+                    document.querySelectorAll('.info-tooltip-content').forEach(function(tooltip) {
+                        tooltip.addEventListener('mousedown', function(e) { e.stopPropagation(); });
+                        tooltip.addEventListener('touchstart', function(e) { e.stopPropagation(); });
+                    });
+
+                    // CSS for tooltip show
                     var style = document.createElement('style');
                     style.innerHTML = `
                         .info-tooltip-content.show-tooltip {
