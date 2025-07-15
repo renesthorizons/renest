@@ -970,7 +970,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Check if progress is 70% and trigger sensitive info collection
             if (progressPercentage === 70) {
-                console.log('Progress is 70%, triggering sensitive info collection');
+                // console.log('Progress is 70%, triggering sensitive info collection');
                 setTimeout(() => {
                     triggerSensitiveInfoCollection();
                 }, 1000); // Small delay to let dashboard load first
@@ -1120,7 +1120,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         const isDisabled = this.classList.contains('disabled');
 
                         if (isDisabled && stepId !== 'stepGetMoney') { // Allow clicking disabled gold step for potential info
-                            console.log(`${stepId} is disabled.`);
+                            // console.log(`${stepId} is disabled.`);
                             // Optionally show a message like "Complete previous steps first."
                             const tempMsg = document.createElement('div');
                             tempMsg.className = 'error-message'; // Use existing error style
@@ -1132,7 +1132,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         
                         // Specific handling for "Get My Money Now" disabled state
                         if (stepId === 'stepGetMoney' && isDisabled) {
-                             console.log('Get Money Now is disabled. Current benefit or previous steps not met.');
+                            //  console.log('Get Money Now is disabled. Current benefit or previous steps not met.');
                              const tempMsg = document.createElement('div');
                              tempMsg.className = 'error-message';
                              tempMsg.textContent = 'Complete all steps';
@@ -1774,7 +1774,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add this function to show the congratulatory modal
         function showCongratulationsModal(benefitAmount, qualifiedSpend) {
             console.log('--- CONGRATULATIONS MODAL: Preparing to display ---');
-            console.log('Raw benefit amount received:', benefitAmount);
+            // console.log('Raw benefit amount received:', benefitAmount);
             const formattedAmount = '$' + Math.round(benefitAmount).toLocaleString();
             // Calculate interest: qualifiedSpend * (0.03 * 350/365)
             const interest = qualifiedSpend * (0.03 * 350 / 365);
@@ -1782,7 +1782,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const formattedInterest = '$' + Math.round(interest).toLocaleString();
             const totalBenefit = benefitAmount + interest;
             const formattedTotalBenefit = '$' + Math.round(totalBenefit).toLocaleString();
-            console.log('Qualified spend:', qualifiedSpend, 'Interest:', interest, 'Total benefit:', totalBenefit);
+            // console.log('Qualified spend:', qualifiedSpend, 'Interest:', interest, 'Total benefit:', totalBenefit);
             const modalHtml = `
                 <div id="congratsModal" class="modal-overlay" style="display: flex; z-index: 1100;">
                     <div class="modal-container" style="max-width: 500px;">
@@ -1856,7 +1856,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!formData.enrolledMonths || formData.enrolledMonths.length === 0) {
                 formData.enrolledMonths = Array.from(document.querySelectorAll('input[name="enrolledMonths"]:checked'))
                                                 .map(checkbox => parseInt(checkbox.value));
-                console.log('Collected enrolledMonths in submitForm:', JSON.parse(JSON.stringify(formData.enrolledMonths)));
+                // console.log('Collected enrolledMonths in submitForm:', JSON.parse(JSON.stringify(formData.enrolledMonths)));
             }
 
             try {
@@ -1914,13 +1914,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 const firstHousing = window.housingEntries[0] || { rent: 0 }; // Still needed for profile monthlyRent
                 const rentForProfile = firstHousing.rent.toString();
 
-                console.log('Combined formData for submission (pre-API calls):', JSON.parse(JSON.stringify(formData))); // Deep copy for logging
-                console.log('Housing entries for submission:', JSON.parse(JSON.stringify(window.housingEntries))); // Deep copy
+                // console.log('Combined formData for submission (pre-API calls):', JSON.parse(JSON.stringify(formData))); // Deep copy for logging
+                // console.log('Housing entries for submission:', JSON.parse(JSON.stringify(window.housingEntries))); // Deep copy
 
                 // Calculate benefit amount using all housing entries
                 // Ensure formData.state and formData.income are correctly populated before this call
                 const benefitDetails = calculateBenefitWithMultipleHousing(formData.state, formData.income, formData.enrolledMonths, window.housingEntries, true);
-                console.log('Calculated benefit for congratulations modal:', benefitDetails.benefit, 'Qualified spend:', benefitDetails.qualifiedSpend);
+                // console.log('Calculated benefit for congratulations modal:', benefitDetails.benefit, 'Qualified spend:', benefitDetails.qualifiedSpend);
                 showCongratulationsModal(benefitDetails.benefit, benefitDetails.qualifiedSpend);
 
                 // Store some key items in localStorage (consider if all are still needed here)
@@ -1930,16 +1930,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 localStorage.setItem('accountStatus', 'ACTIVE'); // This will be set by profile update
                 localStorage.setItem('progressPercentage', '75'); // Assuming completion up to "Open 529"
 
-                console.log('4. Getting auth token');
+                // console.log('4. Getting auth token');
                 const authToken = localStorage.getItem('authToken');
                 if (!authToken) {
                     console.error('No auth token found in localStorage');
                     showError('Authentication error. Please sign in again.');
                     throw new Error('No authentication token found');
                 }
-                console.log('Auth token retrieved.');
+                // console.log('Auth token retrieved.');
 
-                console.log('5. Submitting sensitive data (SSN, etc.)');
+                // console.log('5. Submitting sensitive data (SSN, etc.)');
                 // Calculate rent and expense totals for complete submission
                 const expenseTotals = calculateRentAndExpenseTotals(formData.enrolledMonths, window.housingEntries);
                 
@@ -1960,14 +1960,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     totalRentPayments: expenseTotals.totalRentPayments,
                     totalOtherQualifiedExpenses: expenseTotals.totalOtherQualifiedExpenses
                 };
-                console.log('--- SENSITIVE DATA API: Attempting to submit ---');
-                console.log('Payload for sensitive data API:', JSON.parse(JSON.stringify(sensitiveDataPayload)));
+                // console.log('--- SENSITIVE DATA API: Attempting to submit ---');
+                // console.log('Payload for sensitive data API:', JSON.parse(JSON.stringify(sensitiveDataPayload)));
 
                 try {
                     await window.submitSensitiveData(sensitiveDataPayload); // from ssn-integration.js, now on window
-                    console.log('--- SENSITIVE DATA API: Submitted successfully. ---');
+                    // console.log('--- SENSITIVE DATA API: Submitted successfully. ---');
                 } catch (sensitiveDataError) {
-                    console.error('--- SENSITIVE DATA API: Failed to submit. ---', sensitiveDataError);
+                    // console.error('--- SENSITIVE DATA API: Failed to submit. ---', sensitiveDataError);
                     showError(`Error submitting sensitive information: ${sensitiveDataError.message}. Please try again.`);
                     // Re-enable form elements on Step 4
                     allInputs.forEach(input => input.disabled = false);
@@ -1979,7 +1979,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
 
-                console.log('6. Updating user profile');
+                // console.log('6. Updating user profile');
                 const profileData = {
                     firstName: formData.firstName,
                     lastName: formData.lastName,
@@ -1996,8 +1996,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Note: SSN and detailed address are NOT sent to this /update-profile endpoint.
                     // They are sent to the separate sensitive data API.
                 };
-                console.log('--- PROFILE API: Attempting to update profile ---');
-                console.log('Profile update payload:', JSON.parse(JSON.stringify(profileData)));
+                // console.log('--- PROFILE API: Attempting to update profile ---');
+                // console.log('Profile update payload:', JSON.parse(JSON.stringify(profileData)));
 
                 const profileResponse = await fetch('https://jmqfabgm02.execute-api.us-east-2.amazonaws.com/update-profile', {
                     method: 'PUT',
@@ -2008,10 +2008,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     body: JSON.stringify(profileData)
                 });
 
-                console.log('Profile update API response status:', profileResponse.status);
+                // console.log('Profile update API response status:', profileResponse.status);
                 if (!profileResponse.ok) {
                     const errorText = await profileResponse.text();
-                    console.error('--- PROFILE API: Update failed. --- Response text:', errorText);
+                    // console.error('--- PROFILE API: Update failed. --- Response text:', errorText);
                     showError(`Failed to update profile: ${errorText}. Your sensitive data was submitted, but profile update failed. Please contact support.`);
                     // Even if profile update fails, the sensitive data might have been submitted.
                     // The redirect logic might still proceed or be handled differently.
@@ -2019,17 +2019,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     throw new Error(`Failed to update profile: ${errorText}`);
                 }
                 const profileUpdateResult = await profileResponse.json(); // Assuming it returns JSON
-                console.log('--- PROFILE API: Updated successfully. --- Response data:', profileUpdateResult);
+                // console.log('--- PROFILE API: Updated successfully. --- Response data:', profileUpdateResult);
 
-                console.log('7. Creating onboarding expenses from housing entries');
+                // console.log('7. Creating onboarding expenses from housing entries');
                 // Ensure formData.enrolledMonths is correctly populated
                 await addHousingEntryExpenses(window.housingEntries, formData.enrolledMonths);
-                console.log('--- EXPENSES API: Finished processing all onboarding expenses. ---');
+                // console.log('--- EXPENSES API: Finished processing all onboarding expenses. ---');
 
-                console.log('8. Hiding onboarding modal');
+                // console.log('8. Hiding onboarding modal');
                 hideOnboardingModal();
                 
-                console.log('===== FORM SUBMISSION (Step 4): Try block finished successfully. =====');
+                // console.log('===== FORM SUBMISSION (Step 4): Try block finished successfully. =====');
                 
             } catch (error) {
                 // Errors from submitSensitiveData or profile update will be caught here if not handled locally.
@@ -2100,8 +2100,8 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         async function createExpense(expenseData) {
-            console.log('===== CREATE EXPENSE (called from addHousingEntryExpenses) =====');
-            console.log('Raw expense data received:', JSON.parse(JSON.stringify(expenseData)));
+            // console.log('===== CREATE EXPENSE (called from addHousingEntryExpenses) =====');
+            // console.log('Raw expense data received:', JSON.parse(JSON.stringify(expenseData)));
             
             try {
                 const token = API.getToken();
@@ -2120,7 +2120,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 };
 
                 console.log('--- EXPENSES API (Single Expense): Attempting to create ---');
-                console.log('Formatted expense payload:', JSON.parse(JSON.stringify(formattedExpense)));
+                // console.log('Formatted expense payload:', JSON.parse(JSON.stringify(formattedExpense)));
 
                 const response = await fetch(`${API.baseUrl}/expenses`, {
                     method: 'POST',
@@ -2131,15 +2131,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     body: JSON.stringify(formattedExpense)
                 });
 
-                console.log('Create expense API response status:', response.status);
+                // console.log('Create expense API response status:', response.status);
                 const data = await response.json();
                 
                 if (!response.ok) {
-                    console.error('--- EXPENSES API (Single Expense): Create failed. --- Response data:', data);
+                    // console.error('--- EXPENSES API (Single Expense): Create failed. --- Response data:', data);
                     throw new Error(data.error || 'Failed to create expense');
                 }
 
-                console.log('--- EXPENSES API (Single Expense): Created successfully. --- Response data:', data);
+                // console.log('--- EXPENSES API (Single Expense): Created successfully. --- Response data:', data);
                 return data;
             } catch (error) {
                 console.error('Error in createExpense function:', error);
@@ -4077,13 +4077,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Sensitive Information Collection Functions
         function triggerSensitiveInfoCollection() {
-            console.log('Starting sensitive info collection flow');
+            // console.log('Starting sensitive info collection flow');
             
             // First show the secure connection animation
             const overlay = document.getElementById('secureConnectionOverlay');
             if (overlay) {
                 overlay.classList.remove('hidden');
-                console.log('Showing secure connection overlay');
+                // console.log('Showing secure connection overlay');
             }
             
             // After 2 seconds, hide animation and show sensitive info modal
@@ -4096,7 +4096,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function showSensitiveInfoModal() {
-            console.log('Showing sensitive information modal');
+            // console.log('Showing sensitive information modal');
             const modal = document.getElementById('sensitiveInfoModal');
             if (modal) {
                 modal.classList.remove('hidden');
@@ -4118,7 +4118,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function closeSensitiveInfoModal() {
-            console.log('Closing sensitive information modal');
+            // console.log('Closing sensitive information modal');
             const modal = document.getElementById('sensitiveInfoModal');
             if (modal) {
                 modal.classList.add('hidden');
@@ -4141,7 +4141,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         async function submitSensitiveInformation() {
-            console.log('Starting sensitive information submission');
+            // console.log('Starting sensitive information submission');
             
             const submitBtn = document.getElementById('sensitiveBenefitSubmitBtn');
             const spinner = document.getElementById('sensitiveSpinner');
@@ -4161,7 +4161,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 try {
                     userData = await getUserProfileData();
                 } catch (error) {
-                    console.log('Could not fetch existing profile data, using form data only');
+                    // console.log('Could not fetch existing profile data, using form data only');
                 }
                 
                 // Collect form data (prioritize form inputs over existing profile data)
@@ -4181,21 +4181,21 @@ document.addEventListener('DOMContentLoaded', function() {
                     school: userData.school || ''
                 };
                 
-                console.log('Submitting to SSN API with data (SSN hidden):', {
-                    ...sensitiveData,
-                    ssn: '[HIDDEN]'
-                });
+                // console.log('Submitting to SSN API with data (SSN hidden):', {
+                    // ...sensitiveData,
+                    // ssn: '[HIDDEN]'
+                // });
                 
                 // Debug: Track function availability and window object state
-                console.log('=== DEBUG: Function availability check ===');
-                console.log('typeof window.submitPartialSensitiveData:', typeof window.submitPartialSensitiveData);
-                console.log('typeof window.submitSensitiveData:', typeof window.submitSensitiveData);
-                console.log('typeof window.encryptSSNWithPublicKey:', typeof window.encryptSSNWithPublicKey);
-                console.log('window.SSN_API_URL:', window.SSN_API_URL);
-                console.log('All window submit functions:', Object.keys(window).filter(k => k.toLowerCase().includes('submit')));
-                console.log('All window SSN functions:', Object.keys(window).filter(k => k.toLowerCase().includes('ssn')));
-                console.log('forge library loaded:', typeof forge !== 'undefined');
-                console.log('=== END DEBUG ===');
+                // console.log('=== DEBUG: Function availability check ===');
+                // console.log('typeof window.submitPartialSensitiveData:', typeof window.submitPartialSensitiveData);
+                // console.log('typeof window.submitSensitiveData:', typeof window.submitSensitiveData);
+                // console.log('typeof window.encryptSSNWithPublicKey:', typeof window.encryptSSNWithPublicKey);
+                // console.log('window.SSN_API_URL:', window.SSN_API_URL);
+                // console.log('All window submit functions:', Object.keys(window).filter(k => k.toLowerCase().includes('submit')));
+                // console.log('All window SSN functions:', Object.keys(window).filter(k => k.toLowerCase().includes('ssn')));
+                // console.log('forge library loaded:', typeof forge !== 'undefined');
+                // console.log('=== END DEBUG ===');
                 
                 // Submit using ssn-integration.js (partial submission since rent/expenses not available)
                 await window.submitPartialSensitiveData(sensitiveData);
