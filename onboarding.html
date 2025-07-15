@@ -1088,6 +1088,18 @@
                 field: 'otherStateName'
             },
             {
+                id: 'nyc_clarification',
+                type: 'bot',
+                message: "Were you specifically in New York City, or elsewhere in New York state?",
+                responseType: 'options',
+                showIf: (data) => data.hasMultiStateIncome === 'yes' && data.otherStateName === 'NY',
+                options: [
+                    { value: 'nyc', text: 'Yup, I was in New York City' },
+                    { value: 'ny', text: 'Nope, I was elsewhere in New York state' }
+                ],
+                field: 'nycClarification'
+            },
+            {
                 id: 'other_state_income',
                 type: 'bot',
                 message: "", // Will be dynamically generated with state name
@@ -1457,6 +1469,19 @@
                     chatData.detectedState = null;
                     chatData.detectedStateCode = null;
                     console.log('Cleared detected state, user will manually select');
+                }
+            }
+            
+             // Handle NYC clarification logic
+             if (field === 'nycClarification') {
+                if (value === 'nyc') {
+                    // Update other state name to NYC
+                    chatData.otherStateName = 'NYC';
+                    console.log('Updated other state to NYC');
+                } else {
+                    // Keep as NY (New York state)
+                    chatData.otherStateName = 'NY';
+                    console.log('Keeping other state as NY');
                 }
             }
             
