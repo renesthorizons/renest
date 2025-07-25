@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meteor RENEST Logo</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500&display=swap');
+        
+        body {
+            margin: 0;
+            padding: 40px;
+            background: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .logo-container {
+            text-align: center;
+            position: relative;
+            max-width: 800px;
+        }
+        
+        .meteor-container {
+            position: relative;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .meteor-trail {
+            position: absolute;
+            top: -30px;
+            right: 20px;
+            width: 120px;
+            height: 60px;
+            background: linear-gradient(45deg, 
+                rgba(255, 69, 0, 0.9) 0%,
+                rgba(255, 140, 0, 0.8) 30%,
+                rgba(255, 215, 0, 0.6) 60%,
+                rgba(255, 255, 255, 0.3) 80%,
+                transparent 100%);
+            border-radius: 30px;
+            transform: rotate(35deg);
+            filter: blur(1px);
+            animation: meteorGlow 3s ease-in-out infinite alternate;
+        }
+        
+        .meteor-trail::before {
+            content: '';
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 100px;
+            height: 40px;
+            background: linear-gradient(45deg, 
+                rgba(255, 0, 0, 0.7) 0%,
+                rgba(255, 165, 0, 0.5) 50%,
+                transparent 100%);
+            border-radius: 25px;
+            filter: blur(1px);
+        }
+        
+        .meteor-text {
+            font-family: 'Orbitron', monospace;
+            font-size: 3.5rem;
+            font-weight: 900;
+            font-style: italic;
+            color: #333;
+            text-shadow: 
+                0 0 10px rgba(255, 140, 0, 0.3),
+                0 0 20px rgba(255, 69, 0, 0.2);
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 10;
+            animation: meteorShine 2s ease-in-out infinite alternate;
+        }
+        
+        .renest-text {
+            font-family: 'Orbitron', monospace;
+            font-size: 4.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 4px;
+            text-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+            margin: 10px 0;
+            position: relative;
+        }
+        
+        .renest-text::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+            border-radius: 2px;
+            opacity: 0.6;
+        }
+        
+        .tagline {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 300;
+            color: #666;
+            margin-top: 20px;
+            letter-spacing: 1px;
+            opacity: 0.9;
+        }
+        
+        .impact-word {
+            font-weight: 500;
+            color: #fbbf24;
+            text-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+        }
+        
+        .sparkles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #fbbf24;
+            border-radius: 50%;
+            animation: sparkle 2s linear infinite;
+        }
+        
+        .sparkle:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+        .sparkle:nth-child(2) { top: 40%; left: 80%; animation-delay: 0.5s; }
+        .sparkle:nth-child(3) { top: 60%; left: 20%; animation-delay: 1s; }
+        .sparkle:nth-child(4) { top: 80%; left: 70%; animation-delay: 1.5s; }
+        .sparkle:nth-child(5) { top: 30%; left: 60%; animation-delay: 0.8s; }
+        
+        @keyframes meteorGlow {
+            0% { opacity: 0.6; transform: rotate(-25deg) scale(1); }
+            100% { opacity: 1; transform: rotate(-25deg) scale(1.05); }
+        }
+        
+        @keyframes meteorShine {
+            0% { text-shadow: 
+                0 0 10px rgba(255, 140, 0, 0.3),
+                0 0 20px rgba(255, 69, 0, 0.2); }
+            100% { text-shadow: 
+                0 0 15px rgba(255, 140, 0, 0.5),
+                0 0 25px rgba(255, 69, 0, 0.3); }
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+        
+        @media (max-width: 768px) {
+            .meteor-text { font-size: 2.5rem; }
+            .renest-text { font-size: 3.2rem; letter-spacing: 2px; }
+            .tagline { font-size: 1rem; }
+            .meteor-trail { width: 120px; height: 50px; right: -20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <div class="sparkles">
+            <div class="sparkle"></div>
+            <div class="sparkle"></div>
+            <div class="sparkle"></div>
+            <div class="sparkle"></div>
+            <div class="sparkle"></div>
+        </div>
+        
+        <div class="meteor-container">
+            <div class="meteor-trail"></div>
+            <div class="meteor-text">Meteor</div>
+        </div>
+        
+        <div class="renest-text">RENEST</div>
+        
+        <div class="tagline">
+            make an <span class="impact-word">impact</span><br>
+            with your taxes
+        </div>
+    </div>
+</body>
+</html>
