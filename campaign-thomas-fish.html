@@ -976,12 +976,29 @@
 
         <!-- Final CTA -->
         <section class="cta-section">
+            <button id="share-campaign-btn" class="cta-button" type="button" style="background:var(--success);color:#fff;margin-top:0.5rem;">Share This Campaign</button>
+            <div id="share-fallback" style="display:none;color:var(--warning);margin-top:0.7rem;font-size:1rem;">Sharing not supported on this device.</div>
             
             <br><br>
             <a href="champions-campaigns.html" class="cta-button" style="background:var(--gradient-accent);margin-top:1.5rem;">
                 See Other Champions Campaigns
             </a>
+            <br><br>
+           
         </section>
+        <script>
+        document.getElementById('share-campaign-btn').onclick = function() {
+            if (navigator.share) {
+                navigator.share({
+                    title: document.title,
+                    text: 'Check out this campaign to save our oceans!',
+                    url: window.location.href
+                });
+            } else {
+                document.getElementById('share-fallback').style.display = 'block';
+            }
+        };
+        </script>
 
         <!-- Renest Simple Section -->
         <section class="renest-simple-section">
