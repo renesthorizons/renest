@@ -4670,12 +4670,12 @@
             const inputArea = document.getElementById('chatInputArea');
             inputArea.innerHTML = '';
             const container = document.createElement('div');
-            container.style.padding = '1.5rem';
+            container.style.padding = window.innerWidth <= 768 ? '1rem' : '1.5rem';
             container.style.backgroundColor = 'white';
             container.style.borderRadius = '0.75rem';
             container.style.border = '2px solid #e2e8f0';
             container.style.textAlign = 'center';
-            container.style.marginBottom = '1rem';
+            container.style.marginBottom = window.innerWidth <= 768 ? '0.5rem' : '1rem';
 
             // Get benefit amount
             const benefit = window.calculatedBenefit ? Math.round(Number(window.calculatedBenefit.benefit) || 0) : 0;
@@ -4699,33 +4699,42 @@
             // Title
             const title = document.createElement('div');
             title.style.fontWeight = '600';
-            title.style.marginBottom = '1rem';
-            title.style.fontSize = '1.1rem';
+            title.style.marginBottom = window.innerWidth <= 768 ? '0.5rem' : '1rem';
+            title.style.fontSize = window.innerWidth <= 768 ? '1rem' : '1.1rem';
             title.textContent = 'Choose how to split your unlocked savings:';
             container.appendChild(title);
 
             // Value display
             const valueDisplay = document.createElement('div');
-            valueDisplay.style.marginBottom = '1.5rem';
-            valueDisplay.style.fontSize = '1.1rem';
+            valueDisplay.style.marginBottom = window.innerWidth <= 768 ? '0.75rem' : '1.5rem';
+            valueDisplay.style.fontSize = window.innerWidth <= 768 ? '0.98rem' : '1.1rem';
+            valueDisplay.style.display = 'flex';
+            valueDisplay.style.justifyContent = 'center';
+            valueDisplay.style.alignItems = 'center';
+            valueDisplay.style.gap = window.innerWidth <= 768 ? '0.5rem' : '1.5rem';
+            valueDisplay.style.flexWrap = 'nowrap';
             valueDisplay.innerHTML = `
-                <span style="color:#16a34a;font-weight:600;">You keep: $<span id="splitSelfAmount">${Math.round(benefit * splitSelf / 100).toLocaleString('en-US')}</span></span>
-                <span style="margin:0 1.5rem;">|</span>
-                <span style="color:#3b82f6;font-weight:600;">To cause: $<span id="splitCauseAmount">${Math.round(benefit * splitCause / 100).toLocaleString('en-US')}</span></span>
+                <span style="color:#16a34a;font-weight:600;white-space:nowrap;">You keep: $<span id="splitSelfAmount">${Math.round(benefit * splitSelf / 100).toLocaleString('en-US')}</span></span>
+                <span style="color:#888;">|</span>
+                <span style="color:#3b82f6;font-weight:600;white-space:nowrap;">To cause: $<span id="splitCauseAmount">${Math.round(benefit * splitCause / 100).toLocaleString('en-US')}</span></span>
             `;
             container.appendChild(valueDisplay);
 
-            // Cost display (NEW)
-            const costDisplay = document.createElement('div');
-            costDisplay.style.marginBottom = '1.5rem';
-            costDisplay.style.fontSize = '1.05rem';
-            costDisplay.innerHTML = `
-                <span style="color:#0c4a6e;font-weight:600;">My cost: $<span id="splitUserPays">${userPays.toLocaleString('en-US')}</span></span>
-                <span style="margin:0 1.2rem;">|</span>
-                <span style="color:#64748b;font-weight:600;">Campaign covers: $<span id="splitCausePays">${causePays.toLocaleString('en-US')}</span></span>
-                <span style="margin-left:1.2rem;color:#888;font-size:0.95em;">(Total: $${totalCost.toLocaleString('en-US')})</span>
-            `;
-            container.appendChild(costDisplay);
+            // Cost display (NEW, but now hidden on mobile)
+            if (window.innerWidth > 768) {
+                const costDisplay = document.createElement('div');
+                costDisplay.style.marginBottom = '1.5rem';
+                costDisplay.style.fontSize = '1.05rem';
+                costDisplay.style.display = 'flex';
+                costDisplay.style.justifyContent = 'center';
+                costDisplay.style.alignItems = 'center';
+                costDisplay.style.gap = '1.2rem';
+                costDisplay.innerHTML = `
+                    <span style="color:#0c4a6e;font-weight:600;white-space:nowrap;">My cost: $<span id="splitUserPays">${userPays.toLocaleString('en-US')}</span></span>
+                    <span style="color:#64748b;font-weight:600;white-space:nowrap;">Campaign covers: $<span id="splitCausePays">${causePays.toLocaleString('en-US')}</span></span>
+                `;
+                container.appendChild(costDisplay);
+            }
 
             // Slider
             const slider = document.createElement('input');
@@ -4735,15 +4744,15 @@
             slider.value = splitSelf;
             slider.step = 1;
             slider.style.width = '100%';
-            slider.style.marginBottom = '1rem';
+            slider.style.marginBottom = window.innerWidth <= 768 ? '0.5rem' : '1rem';
             container.appendChild(slider);
 
             // Quick select buttons
             const quickBtns = document.createElement('div');
             quickBtns.style.display = 'flex';
             quickBtns.style.justifyContent = 'center';
-            quickBtns.style.gap = '0.5rem';
-            quickBtns.style.marginBottom = '1.5rem';
+            quickBtns.style.gap = window.innerWidth <= 768 ? '0.25rem' : '0.5rem';
+            quickBtns.style.marginBottom = window.innerWidth <= 768 ? '0.75rem' : '1.5rem';
             [
                 { label: 'All to You', value: 100 },
                 { label: '50/50', value: 50 },
@@ -4753,8 +4762,8 @@
                 btn.type = 'button';
                 btn.textContent = opt.label;
                 btn.className = 'send-button';
-                btn.style.padding = '0.5rem 1.2rem';
-                btn.style.fontSize = '0.95rem';
+                btn.style.padding = window.innerWidth <= 768 ? '0.4rem 0.7rem' : '0.5rem 1.2rem';
+                btn.style.fontSize = window.innerWidth <= 768 ? '0.85rem' : '0.95rem';
                 btn.style.background = opt.value === 100 ? '#16a34a' : (opt.value === 0 ? '#3b82f6' : '#fbbf24');
                 btn.style.color = 'white';
                 btn.style.border = 'none';
@@ -4796,8 +4805,10 @@
                 causePays = totalCost - userPays;
                 document.getElementById('splitSelfAmount').textContent = Math.round(benefit * splitSelf / 100).toLocaleString('en-US');
                 document.getElementById('splitCauseAmount').textContent = Math.round(benefit * splitCause / 100).toLocaleString('en-US');
-                document.getElementById('splitUserPays').textContent = userPays.toLocaleString('en-US');
-                document.getElementById('splitCausePays').textContent = causePays.toLocaleString('en-US');
+                if (window.innerWidth > 768) {
+                    document.getElementById('splitUserPays').textContent = userPays.toLocaleString('en-US');
+                    document.getElementById('splitCausePays').textContent = causePays.toLocaleString('en-US');
+                }
             }
             slider.addEventListener('input', updateValues);
 
