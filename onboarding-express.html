@@ -950,19 +950,25 @@
                 if (result && result.found && result.state) {
                     console.log('Detected school state:', result.state, 'for school:', result.school);
                     
-                                    // Map state names to state codes for the tax database
-                const stateNameToCode = {
-                    'alabama': 'AL', 'alaska': 'AK', 'arizona': 'AZ', 'arkansas': 'AR', 'california': 'CA',
-                    'colorado': 'CO', 'connecticut': 'CT', 'delaware': 'DE', 'florida': 'FL', 'georgia': 'GA',
-                    'hawaii': 'HI', 'idaho': 'ID', 'illinois': 'IL', 'indiana': 'IN', 'iowa': 'IA',
-                    'kansas': 'KS', 'kentucky': 'KY', 'louisiana': 'LA', 'maine': 'ME', 'maryland': 'MD',
-                    'massachusetts': 'MA', 'michigan': 'MI', 'minnesota': 'MN', 'mississippi': 'MS', 'missouri': 'MO',
-                    'montana': 'MT', 'nebraska': 'NE', 'nevada': 'NV', 'new hampshire': 'NH', 'new jersey': 'NJ',
-                    'new mexico': 'NM', 'new york': 'NY', 'new york city': 'NYC', 'north carolina': 'NC', 'north dakota': 'ND', 'ohio': 'OH',
-                    'oklahoma': 'OK', 'oregon': 'OR', 'pennsylvania': 'PA', 'rhode island': 'RI', 'south carolina': 'SC',
-                    'south dakota': 'SD', 'tennessee': 'TN', 'texas': 'TX', 'utah': 'UT', 'vermont': 'VT',
-                    'virginia': 'VA', 'washington': 'WA', 'west virginia': 'WV', 'wisconsin': 'WI', 'wyoming': 'WY'
-                };
+                    // Store the ftcredits if available
+                    if (result.ftcredits) {
+                        chatData.schoolFtCredits = result.ftcredits;
+                        console.log('Stored school ftcredits:', result.ftcredits);
+                    }
+                    
+                    // Map state names to state codes for the tax database
+                    const stateNameToCode = {
+                        'alabama': 'AL', 'alaska': 'AK', 'arizona': 'AZ', 'arkansas': 'AR', 'california': 'CA',
+                        'colorado': 'CO', 'connecticut': 'CT', 'delaware': 'DE', 'florida': 'FL', 'georgia': 'GA',
+                        'hawaii': 'HI', 'idaho': 'ID', 'illinois': 'IL', 'indiana': 'IN', 'iowa': 'IA',
+                        'kansas': 'KS', 'kentucky': 'KY', 'louisiana': 'LA', 'maine': 'ME', 'maryland': 'MD',
+                        'massachusetts': 'MA', 'michigan': 'MI', 'minnesota': 'MN', 'mississippi': 'MS', 'missouri': 'MO',
+                        'montana': 'MT', 'nebraska': 'NE', 'nevada': 'NV', 'new hampshire': 'NH', 'new jersey': 'NJ',
+                        'new mexico': 'NM', 'new york': 'NY', 'new york city': 'NYC', 'north carolina': 'NC', 'north dakota': 'ND', 'ohio': 'OH',
+                        'oklahoma': 'OK', 'oregon': 'OR', 'pennsylvania': 'PA', 'rhode island': 'RI', 'south carolina': 'SC',
+                        'south dakota': 'SD', 'tennessee': 'TN', 'texas': 'TX', 'utah': 'UT', 'vermont': 'VT',
+                        'virginia': 'VA', 'washington': 'WA', 'west virginia': 'WV', 'wisconsin': 'WI', 'wyoming': 'WY'
+                    };
                     
                     const normalizedState = result.state.toLowerCase().replace(/\s+/g, ' ').trim();
                     const stateCode = stateNameToCode[normalizedState];
@@ -1191,7 +1197,7 @@
             {
                 id: 'enrolled_months',
                 type: 'bot',
-                message: "Which months are you NOT enrolled as a student this year? (Most students are not enrolled during summer months)",
+                message: "", // Will be dynamically generated with credit requirements
                 responseType: 'months_not_enrolled',
                 field: 'notEnrolledMonths'
             },
@@ -1881,6 +1887,21 @@
                 question.message = `Your school is in ${displayName}?`;
             }
             
+            // Handle enrolled months question dynamically with credit requirements
+            if (question.id === 'enrolled_months') {
+                // Use ftcredits from school recognition if available
+                if (chatData.schoolFtCredits) {
+                    // Calculate half-time credits (divide by 2)
+                    const halfTimeCredits = Math.ceil(chatData.schoolFtCredits / 2);
+                    question.message = `Which months were you enrolled in less than ${halfTimeCredits} credits? Red = enrolled in less than ${halfTimeCredits} credits.`;
+                    console.log('Using school ftcredits for enrollment question:', chatData.schoolFtCredits);
+                } else {
+                    // Use original message if no ftcredits available
+                    question.message = "Which months are you NOT enrolled as a student this year? (Most students are not enrolled during summer months)";
+                    console.log('No school ftcredits available, using default enrollment message');
+                }
+            }
+            
             // Show typing indicator (skip for benefit_display as it has custom animation)
             if (question.id !== 'benefit_display') {
                 showTypingIndicator();
@@ -1907,7 +1928,7 @@
             } else if (question.responseType === 'months') {
                 createMonthSelector(question.field);
             } else if (question.responseType === 'months_not_enrolled') {
-                createModernMonthSelector(question.field);
+                createModernMonthSelector(question.field, question.message);
             } else if (question.responseType === 'currency_slider') {
                 createCurrencySlider(question.field, question.min, question.max, question.defaultValue);
             } else if (question.responseType === 'benefit_summary') {
@@ -2107,7 +2128,7 @@
             scrollToBottom();
         }
         
-        function createModernMonthSelector(field) {
+        function createModernMonthSelector(field, customMessage) {
             const inputArea = document.getElementById('chatInputArea');
             const monthContainer = document.createElement('div');
             monthContainer.style.padding = '1.5rem';
@@ -2130,8 +2151,11 @@
             instruction.style.textAlign = 'center';
             instruction.style.color = '#374151';
             instruction.style.fontSize = '0.95rem';
+            
+            // Use custom message if provided, otherwise use default
+            const mainMessage = customMessage || "Select months you are NOT enrolled";
             instruction.innerHTML = `
-                <div style="font-weight: 600; margin-bottom: 0.5rem;">Select months you are NOT enrolled</div>
+                <div style="font-weight: 600; margin-bottom: 0.5rem;">${mainMessage}</div>
                 <div style="color: #6b7280;">Tap to toggle each month. Summer months are pre-selected.</div>
             `;
             monthContainer.appendChild(instruction);

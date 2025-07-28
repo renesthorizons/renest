@@ -4,29 +4,29 @@
 const schoolsDatabase = {
   illinois: {
     private: [
-      { name: "University of Chicago", variations: ["uchicago", "u chicago", "chicago", "uc"] },
-      { name: "Northwestern University", variations: ["northwestern", "nu", "nwestern"] },
-      { name: "DePaul University", variations: ["depaul", "depaul u"] },
-      { name: "Loyola University Chicago", variations: ["loyola chicago", "loyola", "luc"] },
-      { name: "Illinois Institute of Technology", variations: ["iit", "illinois tech", "il tech"] },
-      { name: "Bradley University", variations: ["bradley", "bu"] },
-      { name: "Knox College", variations: ["knox", "knox college"] },
-      { name: "Wheaton College", variations: ["wheaton", "wheaton il"] },
-      { name: "Lake Forest College", variations: ["lake forest", "lfc"] },
-      { name: "Augustana College", variations: ["augustana", "augustana il"] },
-      { name: "Columbia College Chicago", variations: ["ccc"] }
+      { name: "University of Chicago", variations: ["uchicago", "u chicago", "chicago", "uc"], ftcredits: 300 },
+      { name: "Northwestern University", variations: ["northwestern", "nu", "nwestern"], ftcredits: 12 },
+      { name: "DePaul University", variations: ["depaul", "depaul u"], ftcredits: 12 },
+      { name: "Loyola University Chicago", variations: ["loyola chicago", "loyola", "luc"], ftcredits: 12 },
+      { name: "Illinois Institute of Technology", variations: ["iit", "illinois tech", "il tech"], ftcredits: 12 },
+      { name: "Bradley University", variations: ["bradley", "bu"], ftcredits: 12 },
+      { name: "Knox College", variations: ["knox", "knox college"], ftcredits: 12 },
+      { name: "Wheaton College", variations: ["wheaton", "wheaton il"], ftcredits: 12 },
+      { name: "Lake Forest College", variations: ["lake forest", "lfc"], ftcredits: 12 },
+      { name: "Augustana College", variations: ["augustana", "augustana il"], ftcredits: 12 },
+      { name: "Columbia College Chicago", variations: ["ccc"], ftcredits: 12 }
     ],
     public: [
-      { name: "University of Illinois at Urbana-Champaign", variations: ["uiuc", "u of i", "illinois", "urbana champaign"] },
-      { name: "University of Illinois at Chicago", variations: ["uic", "u illinois chicago"] },
-      { name: "Illinois State University", variations: ["isu", "illinois state", "il state"] },
-      { name: "Northern Illinois University", variations: ["niu", "northern illinois", "northern il"] },
-      { name: "Southern Illinois University", variations: ["siu", "southern illinois", "southern il"] },
-      { name: "Eastern Illinois University", variations: ["eiu", "eastern illinois", "eastern il"] },
-      { name: "Western Illinois University", variations: ["wiu", "western illinois", "western il"] },
-      { name: "University of Illinois Springfield", variations: ["uis", "u illinois springfield"] },
-      { name: "Chicago State University", variations: ["csu", "chicago state"] },
-      { name: "Governors State University", variations: ["gsu", "governors state"] }
+      { name: "University of Illinois at Urbana-Champaign", variations: ["uiuc", "u of i", "illinois", "urbana champaign"], ftcredits: 12 },
+      { name: "University of Illinois at Chicago", variations: ["uic", "u illinois chicago"], ftcredits: 12 },
+      { name: "Illinois State University", variations: ["isu", "illinois state", "il state"], ftcredits: 12 },
+      { name: "Northern Illinois University", variations: ["niu", "northern illinois", "northern il"], ftcredits: 12 },
+      { name: "Southern Illinois University", variations: ["siu", "southern illinois", "southern il"], ftcredits: 12 },
+      { name: "Eastern Illinois University", variations: ["eiu", "eastern illinois", "eastern il"], ftcredits: 12 },
+      { name: "Western Illinois University", variations: ["wiu", "western illinois", "western il"], ftcredits: 12 },
+      { name: "University of Illinois Springfield", variations: ["uis", "u illinois springfield"], ftcredits: 12 },
+      { name: "Chicago State University", variations: ["csu", "chicago state"], ftcredits: 12 },
+      { name: "Governors State University", variations: ["gsu", "governors state"], ftcredits: 12 }
     ],
     community: [
       { name: "College of DuPage", variations: ["cod", "dupage", "college of dupage"] },
@@ -68,28 +68,28 @@ const schoolsDatabase = {
 
   indiana: {
     private: [
-      { name: "University of Notre Dame", variations: ["notre dame", "nd", "fighting irish"] },
-      { name: "Butler University", variations: ["butler", "bu"] },
-      { name: "DePauw University", variations: ["depauw", "depauw u"] },
-      { name: "Earlham College", variations: ["earlham", "earlham college"] },
-      { name: "Wabash College", variations: ["wabash", "wabash college"] },
-      { name: "Rose-Hulman Institute of Technology", variations: ["rose hulman", "rhit", "rose"] },
-      { name: "Valparaiso University", variations: ["valpo", "valparaiso", "vu"] },
-      { name: "Franklin College", variations: ["franklin", "franklin college"] },
-      { name: "Hanover College", variations: ["hanover", "hanover college"] },
-      { name: "Taylor University", variations: ["taylor", "taylor u"] }
+      { name: "University of Notre Dame", variations: ["notre dame", "nd", "fighting irish"], ftcredits: 12 },
+      { name: "Butler University", variations: ["butler", "bu"], ftcredits: 12 },
+      { name: "DePauw University", variations: ["depauw", "depauw u"], ftcredits: 12 },
+      { name: "Earlham College", variations: ["earlham", "earlham college"], ftcredits: 12 },
+      { name: "Wabash College", variations: ["wabash", "wabash college"], ftcredits: 12 },
+      { name: "Rose-Hulman Institute of Technology", variations: ["rose hulman", "rhit", "rose"], ftcredits: 12 },
+      { name: "Valparaiso University", variations: ["valpo", "valparaiso", "vu"], ftcredits: 12 },
+      { name: "Franklin College", variations: ["franklin", "franklin college"], ftcredits: 12 },
+      { name: "Hanover College", variations: ["hanover", "hanover college"], ftcredits: 12 },
+      { name: "Taylor University", variations: ["taylor", "taylor u"], ftcredits: 12 }
     ],
     public: [
-      { name: "Indiana University Bloomington", variations: ["iu", "indiana", "iu bloomington", "hoosiers"] },
-      { name: "Purdue University", variations: ["purdue", "boilermakers", "pu"] },
-      { name: "Indiana State University", variations: ["isu", "indiana state", "sycamores"] },
-      { name: "Ball State University", variations: ["ball state", "bsu", "cardinals"] },
-      { name: "Indiana University-Purdue University Indianapolis", variations: ["iupui", "iu purdue indianapolis"] },
-      { name: "University of Southern Indiana", variations: ["usi", "southern indiana"] },
-      { name: "Indiana University Northwest", variations: ["iun", "iu northwest"] },
-      { name: "Indiana University Southeast", variations: ["ius", "iu southeast"] },
-      { name: "Vincennes University", variations: ["vincennes", "vu"] },
-      { name: "Indiana University East", variations: ["iue", "iu east"] }
+      { name: "Indiana University Bloomington", variations: ["iu", "indiana", "iu bloomington", "hoosiers"], ftcredits: 12 },
+      { name: "Purdue University", variations: ["purdue", "boilermakers", "pu"], ftcredits: 12 },
+      { name: "Indiana State University", variations: ["isu", "indiana state", "sycamores"], ftcredits: 12 },
+      { name: "Ball State University", variations: ["ball state", "bsu", "cardinals"], ftcredits: 12 },
+      { name: "Indiana University-Purdue University Indianapolis", variations: ["iupui", "iu purdue indianapolis"], ftcredits: 12 },
+      { name: "University of Southern Indiana", variations: ["usi", "southern indiana"], ftcredits: 12 },
+      { name: "Indiana University Northwest", variations: ["iun", "iu northwest"], ftcredits: 12 },
+      { name: "Indiana University Southeast", variations: ["ius", "iu southeast"], ftcredits: 12 },
+      { name: "Vincennes University", variations: ["vincennes", "vu"], ftcredits: 12 },
+      { name: "Indiana University East", variations: ["iue", "iu east"], ftcredits: 12 }
     ],
     community: [
       { name: "Ivy Tech Community College", variations: ["ivy tech", "itcc"] },
@@ -131,28 +131,28 @@ const schoolsDatabase = {
 
   colorado: {
     private: [
-      { name: "University of Denver", variations: ["du", "denver", "u denver"] },
-      { name: "Colorado College", variations: ["cc", "colorado college"] },
-      { name: "Regis University", variations: ["regis", "regis u"] },
-      { name: "Colorado Christian University", variations: ["ccu", "colorado christian"] },
-      { name: "Johnson & Wales University Denver", variations: ["jwu denver", "johnson wales"] },
-      { name: "Colorado Technical University", variations: ["ctu", "colorado tech"] },
-      { name: "Naropa University", variations: ["naropa", "naropa u"] },
-      { name: "Rocky Mountain College of Art + Design", variations: ["rmcad", "rocky mountain art"] },
-      { name: "Denver Seminary", variations: ["denver seminary", "ds"] },
-      { name: "National American University", variations: ["nau", "national american"] }
+      { name: "University of Denver", variations: ["du", "denver", "u denver"], ftcredits: 12 },
+      { name: "Colorado College", variations: ["cc", "colorado college"], ftcredits: 12 },
+      { name: "Regis University", variations: ["regis", "regis u"], ftcredits: 12 },
+      { name: "Colorado Christian University", variations: ["ccu", "colorado christian"], ftcredits: 12 },
+      { name: "Johnson & Wales University Denver", variations: ["jwu denver", "johnson wales"], ftcredits: 12 },
+      { name: "Colorado Technical University", variations: ["ctu", "colorado tech"], ftcredits: 12 },
+      { name: "Naropa University", variations: ["naropa", "naropa u"], ftcredits: 12 },
+      { name: "Rocky Mountain College of Art + Design", variations: ["rmcad", "rocky mountain art"], ftcredits: 12 },
+      { name: "Denver Seminary", variations: ["denver seminary", "ds"], ftcredits: 12 },
+      { name: "National American University", variations: ["nau", "national american"], ftcredits: 12 }
     ],
     public: [
-      { name: "University of Colorado Boulder", variations: ["cu boulder", "colorado boulder", "cu", "buffs"] },
-      { name: "Colorado State University", variations: ["csu", "colorado state", "rams"] },
-      { name: "University of Colorado Denver", variations: ["cu denver", "ucd"] },
-      { name: "Colorado School of Mines", variations: ["mines", "csm", "colorado mines"] },
-      { name: "University of Northern Colorado", variations: ["unc", "northern colorado", "bears"] },
-      { name: "Colorado State University Pueblo", variations: ["csu pueblo", "colorado state pueblo"] },
-      { name: "Western Colorado University", variations: ["western colorado", "wcu"] },
-      { name: "Adams State University", variations: ["adams state", "asu"] },
-      { name: "Fort Lewis College", variations: ["fort lewis", "flc"] },
-      { name: "Colorado Mesa University", variations: ["cmu", "colorado mesa"] }
+      { name: "University of Colorado Boulder", variations: ["cu boulder", "colorado boulder", "cu", "buffs"], ftcredits: 12 },
+      { name: "Colorado State University", variations: ["csu", "colorado state", "rams"], ftcredits: 12 },
+      { name: "University of Colorado Denver", variations: ["cu denver", "ucd"], ftcredits: 12 },
+      { name: "Colorado School of Mines", variations: ["mines", "csm", "colorado mines"], ftcredits: 12 },
+      { name: "University of Northern Colorado", variations: ["unc", "northern colorado", "bears"], ftcredits: 12 },
+      { name: "Colorado State University Pueblo", variations: ["csu pueblo", "colorado state pueblo"], ftcredits: 12 },
+      { name: "Western Colorado University", variations: ["western colorado", "wcu"], ftcredits: 12 },
+      { name: "Adams State University", variations: ["adams state", "asu"], ftcredits: 12 },
+      { name: "Fort Lewis College", variations: ["fort lewis", "flc"], ftcredits: 12 },
+      { name: "Colorado Mesa University", variations: ["cmu", "colorado mesa"], ftcredits: 12 }
     ],
     community: [
       { name: "Community College of Denver", variations: ["ccd", "denver cc"] },
@@ -194,28 +194,28 @@ const schoolsDatabase = {
 
   pennsylvania: {
     private: [
-      { name: "University of Pennsylvania", variations: ["upenn", "penn", "u penn", "wharton"] },
-      { name: "Carnegie Mellon University", variations: ["cmu", "carnegie mellon", "carnegie"] },
-      { name: "Swarthmore College", variations: ["swarthmore", "swat"] },
-      { name: "Haverford College", variations: ["haverford", "haverford college"] },
-      { name: "Bryn Mawr College", variations: ["bryn mawr", "bryn mawr college"] },
-      { name: "Lehigh University", variations: ["lehigh", "lu"] },
-      { name: "Bucknell University", variations: ["bucknell", "bu"] },
-      { name: "Lafayette College", variations: ["lafayette", "lafayette college"] },
-      { name: "Villanova University", variations: ["villanova", "nova", "vu"] },
-      { name: "Drexel University", variations: ["drexel", "du"] }
+      { name: "University of Pennsylvania", variations: ["upenn", "penn", "u penn", "wharton"], ftcredits: 12 },
+      { name: "Carnegie Mellon University", variations: ["cmu", "carnegie mellon", "carnegie"], ftcredits: 12 },
+      { name: "Swarthmore College", variations: ["swarthmore", "swat"], ftcredits: 12 },
+      { name: "Haverford College", variations: ["haverford", "haverford college"], ftcredits: 12 },
+      { name: "Bryn Mawr College", variations: ["bryn mawr", "bryn mawr college"], ftcredits: 12 },
+      { name: "Lehigh University", variations: ["lehigh", "lu"], ftcredits: 12 },
+      { name: "Bucknell University", variations: ["bucknell", "bu"], ftcredits: 12 },
+      { name: "Lafayette College", variations: ["lafayette", "lafayette college"], ftcredits: 12 },
+      { name: "Villanova University", variations: ["villanova", "nova", "vu"], ftcredits: 12 },
+      { name: "Drexel University", variations: ["drexel", "du"], ftcredits: 12 }
     ],
     public: [
-      { name: "Pennsylvania State University", variations: ["penn state", "psu", "nittany lions"] },
-      { name: "University of Pittsburgh", variations: ["pitt", "u pitt", "panthers"] },
-      { name: "Temple University", variations: ["temple", "tu", "owls"] },
-      { name: "West Chester University", variations: ["west chester", "wcu"] },
-      { name: "Indiana University of Pennsylvania", variations: ["iup", "indiana pa"] },
-      { name: "Kutztown University", variations: ["kutztown", "ku"] },
-      { name: "Millersville University", variations: ["millersville", "mu"] },
-      { name: "Shippensburg University", variations: ["shippensburg", "ship"] },
-      { name: "East Stroudsburg University", variations: ["east stroudsburg", "esu"] },
-      { name: "Bloomsburg University", variations: ["bloomsburg", "bu"] }
+      { name: "Pennsylvania State University", variations: ["penn state", "psu", "nittany lions"], ftcredits: 12 },
+      { name: "University of Pittsburgh", variations: ["pitt", "u pitt", "panthers"], ftcredits: 12 },
+      { name: "Temple University", variations: ["temple", "tu", "owls"], ftcredits: 12 },
+      { name: "West Chester University", variations: ["west chester", "wcu"], ftcredits: 12 },
+      { name: "Indiana University of Pennsylvania", variations: ["iup", "indiana pa"], ftcredits: 12 },
+      { name: "Kutztown University", variations: ["kutztown", "ku"], ftcredits: 12 },
+      { name: "Millersville University", variations: ["millersville", "mu"], ftcredits: 12 },
+      { name: "Shippensburg University", variations: ["shippensburg", "ship"], ftcredits: 12 },
+      { name: "East Stroudsburg University", variations: ["east stroudsburg", "esu"], ftcredits: 12 },
+      { name: "Bloomsburg University", variations: ["bloomsburg", "bu"], ftcredits: 12 }
     ],
     community: [
       { name: "Community College of Philadelphia", variations: ["ccp", "philadelphia cc"] },
@@ -257,28 +257,28 @@ const schoolsDatabase = {
 
   "new york": {
     private: [
-      { name: "Columbia University", variations: ["columbia", "cu", "columbia u"] },
-      { name: "New York University", variations: ["nyu", "new york u"] },
-      { name: "Cornell University", variations: ["cornell", "big red"] },
-      { name: "University of Rochester", variations: ["rochester", "u rochester", "ur"] },
-      { name: "Syracuse University", variations: ["syracuse", "cuse", "orange"] },
-      { name: "Fordham University", variations: ["fordham", "fu"] },
-      { name: "St. John's University", variations: ["st johns", "sju"] },
-      { name: "Yeshiva University", variations: ["yeshiva", "yu"] },
-      { name: "The New School", variations: ["new school", "parsons"] },
-      { name: "Barnard College", variations: ["barnard", "barnard college"] }
+      { name: "Columbia University", variations: ["columbia", "cu", "columbia u"], ftcredits: 12 },
+      { name: "New York University", variations: ["nyu", "new york u"], ftcredits: 12 },
+      { name: "Cornell University", variations: ["cornell", "big red"], ftcredits: 12 },
+      { name: "University of Rochester", variations: ["rochester", "u rochester", "ur"], ftcredits: 12 },
+      { name: "Syracuse University", variations: ["syracuse", "cuse", "orange"], ftcredits: 12 },
+      { name: "Fordham University", variations: ["fordham", "fu"], ftcredits: 12 },
+      { name: "St. John's University", variations: ["st johns", "sju"], ftcredits: 12 },
+      { name: "Yeshiva University", variations: ["yeshiva", "yu"], ftcredits: 12 },
+      { name: "The New School", variations: ["new school", "parsons"], ftcredits: 12 },
+      { name: "Barnard College", variations: ["barnard", "barnard college"], ftcredits: 12 }
     ],
     public: [
-      { name: "State University of New York at Buffalo", variations: ["ub", "buffalo", "suny buffalo"] },
-      { name: "Stony Brook University", variations: ["stony brook", "sbu", "suny stony brook"] },
-      { name: "Binghamton University", variations: ["binghamton", "bing", "suny binghamton"] },
-      { name: "University at Albany", variations: ["albany", "suny albany", "ualbany"] },
-      { name: "Fashion Institute of Technology", variations: ["fit", "fashion institute"] },
-      { name: "City College of New York", variations: ["ccny", "city college"] },
-      { name: "Hunter College", variations: ["hunter", "hunter college"] },
-      { name: "Brooklyn College", variations: ["brooklyn college", "bc"] },
-      { name: "Queens College", variations: ["queens college", "qc"] },
-      { name: "Baruch College", variations: ["baruch", "baruch college"] }
+      { name: "State University of New York at Buffalo", variations: ["ub", "buffalo", "suny buffalo"], ftcredits: 12 },
+      { name: "Stony Brook University", variations: ["stony brook", "sbu", "suny stony brook"], ftcredits: 12 },
+      { name: "Binghamton University", variations: ["binghamton", "bing", "suny binghamton"], ftcredits: 12 },
+      { name: "University at Albany", variations: ["albany", "suny albany", "ualbany"], ftcredits: 12 },
+      { name: "Fashion Institute of Technology", variations: ["fit", "fashion institute"], ftcredits: 12 },
+      { name: "City College of New York", variations: ["ccny", "city college"], ftcredits: 12 },
+      { name: "Hunter College", variations: ["hunter", "hunter college"], ftcredits: 12 },
+      { name: "Brooklyn College", variations: ["brooklyn college", "bc"], ftcredits: 12 },
+      { name: "Queens College", variations: ["queens college", "qc"], ftcredits: 12 },
+      { name: "Baruch College", variations: ["baruch", "baruch college"], ftcredits: 12 }
     ],
     community: [
       { name: "Borough of Manhattan Community College", variations: ["bmcc", "manhattan cc"] },
@@ -919,7 +919,8 @@ class SchoolRecognizer {
             searchName: this.normalizeString(school.name),
             state: effectiveState,
             category: category,
-            originalName: school.name
+            originalName: school.name,
+            ftcredits: school.ftcredits
           });
           
           // Add all variations
@@ -929,7 +930,8 @@ class SchoolRecognizer {
               searchName: this.normalizeString(variation),
               state: effectiveState,
               category: category,
-              originalName: school.name
+              originalName: school.name,
+              ftcredits: school.ftcredits
             });
           });
         });
@@ -962,6 +964,7 @@ class SchoolRecognizer {
         school: exactMatch.originalName,
         state: exactMatch.state,
         category: exactMatch.category,
+        ftcredits: exactMatch.ftcredits,
         confidence: 1.0
       };
     }
@@ -986,6 +989,7 @@ class SchoolRecognizer {
         school: bestMatch.originalName,
         state: bestMatch.state,
         category: bestMatch.category,
+        ftcredits: bestMatch.ftcredits,
         confidence: this.calculateMatchScore(normalizedInput, bestMatch.searchName),
         suggestions: partialMatches.slice(1, 4).map(m => m.originalName) // Additional suggestions
       };
