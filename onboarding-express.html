@@ -1749,14 +1749,52 @@
             
             // Validate input based on field type
             if (field === 'primaryStateIncome' || field === 'otherStateIncome' || field === 'monthlyRent' || field === 'monthlyWifi' || field === 'monthlyUtilities') {
-                const numericValue = value.replace(/[^\d]/g, '');
-                if (!numericValue) {
-                    showError('Please enter a valid amount');
-                    waitingForResponse = false;
-                    return;
+                // Parse income value - allow k/K suffix for thousands
+                let parsedValue = 0;
+                let displayValue = '';
+                
+                if (field === 'primaryStateIncome' || field === 'otherStateIncome' || field === 'monthlyRent') {
+                    // For income and rent fields, handle k/K suffix
+                    const cleanValue = value.trim().toLowerCase();
+                    if (cleanValue.endsWith('k')) {
+                        const numericPart = cleanValue.slice(0, -1).replace(/[^\d]/g, '');
+                        if (!numericPart) {
+                            showError('Please enter a valid amount (e.g., 50k or 50000)');
+                            waitingForResponse = false;
+                            return;
+                        }
+                        parsedValue = Number(numericPart) * 1000;
+                        displayValue = '$' + parsedValue.toLocaleString('en-US');
+                    } else {
+                        // Check for any alphabetic characters (except k/K which we already handled)
+                        if (/[a-jl-z]/i.test(cleanValue)) {
+                            showError('Please enter a valid amount (numbers only, or use k for thousands)');
+                            waitingForResponse = false;
+                            return;
+                        }
+                        const numericValue = cleanValue.replace(/[^\d]/g, '');
+                        if (!numericValue) {
+                            showError('Please enter a valid amount');
+                            waitingForResponse = false;
+                            return;
+                        }
+                        parsedValue = Number(numericValue);
+                        displayValue = '$' + parsedValue.toLocaleString('en-US');
+                    }
+                } else {
+                    // For other numeric fields (wifi, utilities), use original logic
+                    const numericValue = value.replace(/[^\d]/g, '');
+                    if (!numericValue) {
+                        showError('Please enter a valid amount');
+                        waitingForResponse = false;
+                        return;
+                    }
+                    parsedValue = Number(numericValue);
+                    displayValue = '$' + parsedValue.toLocaleString('en-US');
                 }
-                chatData[field] = Number(numericValue); // Store as number
-                await addMessage('user', '$' + Number(numericValue).toLocaleString('en-US'));
+                
+                chatData[field] = parsedValue; // Store as number
+                await addMessage('user', displayValue);
             } else if (field === 'email') {
                 if (!/\S+@\S+\.\S+/.test(value)) {
                     showError('Please enter a valid email address');
