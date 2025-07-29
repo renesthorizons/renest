@@ -1757,9 +1757,9 @@
                     // For income and rent fields, handle k/K suffix
                     const cleanValue = value.trim().toLowerCase();
                     if (cleanValue.endsWith('k')) {
-                        const numericPart = cleanValue.slice(0, -1).replace(/[^\d]/g, '');
+                        const numericPart = cleanValue.slice(0, -1).replace(/[^\d.]/g, '');
                         if (!numericPart) {
-                            showError('Please enter a valid amount (e.g., 50k or 50000)');
+                            showError('Please enter a valid amount (e.g., 1.2k or 1200)');
                             waitingForResponse = false;
                             return;
                         }
