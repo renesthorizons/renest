@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Club Onboarding</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            background: #f5f5f5;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Club Onboarding Functionality</h1>
+    
+    <div class="test-section">
+        <h2>Step 1: Set Club Information (Simulate RSO Platform)</h2>
+        <p>This simulates what happens when someone clicks the button on the RSO platform.</p>
+        
+        <button onclick="setClubInfo('Computer Science Club', 'CS001', 'University of Illinois', 'Illinois')">
+            Set Club Info (UIUC CS Club)
+        </button>
+        
+        <button onclick="setClubInfo('Engineering Society', 'ENG002', 'Stanford University', 'California')">
+            Set Club Info (Stanford Engineering)
+        </button>
+        
+        <button onclick="setClubInfo('Business Association', 'BUS003', 'New York University', 'New York')">
+            Set Club Info (NYU Business)
+        </button>
+        
+        <button onclick="setClubInfo('Baking Club', 'baking_club', 'University of Colorado Boulder', 'Colorado')">
+            Set Club Info (CU Boulder Baking Club)
+        </button>
+        
+        <button onclick="clearClubInfo()">
+            Clear Club Info
+        </button>
+        
+        <div id="clubInfoDisplay" class="info">
+            <strong>Current Club Info:</strong> <span id="clubInfoText">None</span>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Step 2: Test Onboarding Flow</h2>
+        <p>Click the button below to test the onboarding flow with the club information.</p>
+        
+        <button onclick="testOnboarding()">
+            Test Onboarding Flow
+        </button>
+        
+        <div id="onboardingResult" class="info" style="display: none;">
+            <strong>Onboarding Result:</strong> <span id="onboardingResultText"></span>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Step 3: View LocalStorage</h2>
+        <button onclick="viewLocalStorage()">
+            View LocalStorage Contents
+        </button>
+        
+        <div id="localStorageDisplay" class="info" style="display: none;">
+            <strong>LocalStorage Contents:</strong>
+            <pre id="localStorageText"></pre>
+        </div>
+    </div>
+
+    <script>
+        // Function to set club info (same as RSO platform)
+        function setClubInfo(clubName, clubId, school, state) {
+            localStorage.setItem('renest_club_info', JSON.stringify({
+                clubName: clubName,
+                clubId: clubId,
+                school: school,
+                state: state
+            }));
+            updateClubInfoDisplay();
+        }
+        
+        // Function to clear club info
+        function clearClubInfo() {
+            localStorage.removeItem('renest_club_info');
+            updateClubInfoDisplay();
+        }
+        
+        // Function to update club info display
+        function updateClubInfoDisplay() {
+            const clubInfo = localStorage.getItem('renest_club_info');
+            const displayElement = document.getElementById('clubInfoText');
+            
+            if (clubInfo) {
+                try {
+                    const parsed = JSON.parse(clubInfo);
+                    displayElement.textContent = `${parsed.clubName} at ${parsed.school} (${parsed.state})`;
+                } catch (e) {
+                    displayElement.textContent = 'Error parsing club info';
+                }
+            } else {
+                displayElement.textContent = 'None';
+            }
+        }
+        
+        // Function to test onboarding flow
+        function testOnboarding() {
+            const clubInfo = localStorage.getItem('renest_club_info');
+            const resultElement = document.getElementById('onboardingResult');
+            const resultTextElement = document.getElementById('onboardingResultText');
+            
+            if (clubInfo) {
+                try {
+                    const parsed = JSON.parse(clubInfo);
+                    resultTextElement.textContent = `Club info found: ${parsed.clubName} at ${parsed.school}. Onboarding should skip club and school questions.`;
+                } catch (e) {
+                    resultTextElement.textContent = 'Error parsing club info';
+                }
+            } else {
+                resultTextElement.textContent = 'No club info found. Onboarding will ask all questions normally.';
+            }
+            
+            resultElement.style.display = 'block';
+        }
+        
+        // Function to view localStorage contents
+        function viewLocalStorage() {
+            const displayElement = document.getElementById('localStorageDisplay');
+            const textElement = document.getElementById('localStorageText');
+            
+            let contents = '';
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+                contents += `${key}: ${value}\n\n`;
+            }
+            
+            textElement.textContent = contents || 'LocalStorage is empty';
+            displayElement.style.display = 'block';
+        }
+        
+        // Initialize display on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateClubInfoDisplay();
+        });
+    </script>
+</body>
+</html> 
