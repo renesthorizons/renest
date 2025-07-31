@@ -886,58 +886,9 @@
             monthlyGrocery: 200,
             includeInterestEarning: false,
             includeTaxFiling: false,
-            club: '', // New field for club information
-            splitToSelf: 80, // Default split values
-            splitToCause: 20,
-            splitSelfAmount: 0,
-            splitCauseAmount: 0,
-            splitUserPays: 0,
-            splitCausePays: 0
+            quickEstimateCompleted: false,
+            quickEstimateEmail: ''
         };
-        
-        // Club detection functionality
-        function detectClubFromStorage() {
-            const clubInfo = localStorage.getItem('renest_club_info');
-            if (clubInfo) {
-                try {
-                    const parsed = JSON.parse(clubInfo);
-                    chatData.club = parsed.clubName || '';
-                    chatData.clubId = parsed.clubId || '';
-                    console.log('Detected club from storage:', chatData.club);
-                    return true;
-                } catch (e) {
-                    console.error('Error parsing club info from storage:', e);
-                }
-            }
-            return false;
-        }
-        
-        // Function to submit split data to Google Form
-        async function submitSplitData() {
-            if (!chatData.email || !chatData.club) {
-                console.log('Missing email or club info for split submission');
-                return;
-            }
-            
-            const formData = new FormData();
-            formData.append('entry.1234567890', chatData.email); // Replace with actual form field ID
-            formData.append('entry.0987654321', chatData.club); // Replace with actual form field ID
-            formData.append('entry.1111111111', chatData.splitToSelf.toString()); // Replace with actual form field ID
-            formData.append('entry.2222222222', chatData.splitToCause.toString()); // Replace with actual form field ID
-            formData.append('entry.3333333333', chatData.splitSelfAmount.toString()); // Replace with actual form field ID
-            formData.append('entry.4444444444', chatData.splitCauseAmount.toString()); // Replace with actual form field ID
-            
-            try {
-                const response = await fetch('https://docs.google.com/forms/d/YOUR_FORM_ID/formResponse', {
-                    method: 'POST',
-                    body: formData,
-                    mode: 'no-cors' // Required for Google Forms
-                });
-                console.log('Split data submitted successfully');
-            } catch (error) {
-                console.error('Error submitting split data:', error);
-            }
-        }
         
         // Helper function to get full state name from abbreviation
         function getStateName(stateCode) {
@@ -958,36 +909,6 @@
                 'WY': 'Wyoming', 'NYC': 'New York City'
             };
             return stateCodeToName[stateCode] || stateCode;
-        }
-        
-        // Helper function to convert state name to state code
-        function convertStateNameToCode(stateName) {
-            const stateNameToCode = {
-                'alabama': 'AL', 'alaska': 'AK', 'arizona': 'AZ', 'arkansas': 'AR', 'california': 'CA',
-                'colorado': 'CO', 'connecticut': 'CT', 'delaware': 'DE', 'florida': 'FL', 'georgia': 'GA',
-                'hawaii': 'HI', 'idaho': 'ID', 'illinois': 'IL', 'indiana': 'IN', 'iowa': 'IA',
-                'kansas': 'KS', 'kentucky': 'KY', 'louisiana': 'LA', 'maine': 'ME', 'maryland': 'MD',
-                'massachusetts': 'MA', 'michigan': 'MI', 'minnesota': 'MN', 'mississippi': 'MS', 'missouri': 'MO',
-                'montana': 'MT', 'nebraska': 'NE', 'nevada': 'NV', 'new hampshire': 'NH', 'new jersey': 'NJ',
-                'new mexico': 'NM', 'new york': 'NY', 'new york city': 'NYC', 'north carolina': 'NC', 'north dakota': 'ND', 'ohio': 'OH',
-                'oklahoma': 'OK', 'oregon': 'OR', 'pennsylvania': 'PA', 'rhode island': 'RI', 'south carolina': 'SC',
-                'south dakota': 'SD', 'tennessee': 'TN', 'texas': 'TX', 'utah': 'UT', 'vermont': 'VT',
-                'virginia': 'VA', 'washington': 'WA', 'west virginia': 'WV', 'wisconsin': 'WI', 'wyoming': 'WY'
-            };
-            
-            // If it's already a state code, return it
-            if (stateNameToCode[stateName.toLowerCase()]) {
-                return stateNameToCode[stateName.toLowerCase()];
-            }
-            
-            // If it's already a valid state code, return it
-            if (Object.values(stateNameToCode).includes(stateName.toUpperCase())) {
-                return stateName.toUpperCase();
-            }
-            
-            // If no match found, return the original
-            console.warn('Could not convert state name to code:', stateName);
-            return stateName;
         }
         
         // Calculate total income from all states
@@ -1072,27 +993,11 @@
         
         // Define the conversation flow
         const conversationFlow = [
-        {
+            {
                 id: 'welcome',
                 type: 'bot',
-                message: `Hi! Welcome to Renest's club savings tool.<br><br>We'll ask a few quick questions about your school, income, and living expenses.<br><br>This helps us find every way you can save money on your essential education costs.<br><br>At the end, you'll see your total savings and get to choose how much to keep for yourself and how much to support your club!`,
+                message: "Hi! I'm here to help you save money on your taxes, and together we can use those savings to fund amazing startup ideas and make a real impact. Let's start with a quick estimate of your potential savings.",
                 delay: 1000
-            },
-            {
-                id: 'club_detection',
-                type: 'bot',
-                message: "", // Will be dynamically generated
-                responseType: 'club_detection',
-                action: 'detectClub'
-            },
-            {
-                id: 'club_question',
-                type: 'bot',
-                message: "What club or organization are you supporting?",
-                responseType: 'text',
-                placeholder: "Enter your club name",
-                showIf: (data) => !data.club,
-                field: 'club'
             },
             {
                 id: 'school',
@@ -1326,18 +1231,12 @@
                 delay: 1000
             },
             {
-                id: 'split_cost_explanation',
+                id: 'competition_entry',
                 type: 'bot',
-                message: "", // Will be dynamically generated
+                message: "🎯 <strong>Ready to make an impact?</strong><br><br>Entering our startup competition to register your idea, vote, or join a team requires a minimum contribution of $50 from what we've helped you save! This goes directly into the funding pool for student startups.",
                 delay: 1000
             },
-            {
-                id: 'split_savings',
-                type: 'bot',
-                message: "How would you like to split your unlocked savings between yourself and your club?",
-                responseType: 'split_slider',
-                field: 'splitSavings'
-            },
+            
             {
                 id: 'email',
                 type: 'bot',
@@ -1674,23 +1573,6 @@
         function calculateQuickEstimateSavings(income, rent, grocery, enrolledMonths, wifi, utilities) {
             // Use the actual tax calculation logic for accurate estimate
             try {
-                                    // Ensure state is in correct format for tax calculation
-                    let stateForCalculation = chatData.state;
-                    if (stateForCalculation && typeof stateForCalculation === 'string') {
-                        stateForCalculation = convertStateNameToCode(stateForCalculation);
-                    }
-                    
-                    console.log('Quick estimate state conversion:', chatData.state, '->', stateForCalculation);
-                    console.log('Quick estimate calculation inputs:', {
-                        state: stateForCalculation,
-                        income,
-                        rent,
-                        grocery,
-                        enrolledMonths: enrolledMonths.length,
-                        wifi,
-                        utilities
-                    });
-                
                 // Create monthly housing costs object for the calculation
                 const monthlyHousingCosts = {};
                 for (let i = 1; i <= 12; i++) {
@@ -1720,7 +1602,7 @@
                 } else {
                     // Use single-state benefit calculation
                     const benefitDetails = calculateBenefitWithMultipleHousingCustomGrocery(
-                        stateForCalculation,
+                        chatData.state,
                         income,
                         enrolledMonths,
                         [{
@@ -1966,13 +1848,6 @@
                 return;
             }
             
-            // Skip questions if we already have the data from club info
-            if (question.field && chatData[question.field]) {
-                console.log('Skipping question - data already available:', question.id, chatData[question.field]);
-                await processNextQuestion();
-                return;
-            }
-            
             // Handle special actions
             if (question.action) {
                 await handleSpecialAction(question.action, question);
@@ -2048,35 +1923,6 @@
                 `;
             }
             
-            // Handle split cost explanation step dynamically
-            if (question.id === 'split_cost_explanation') {
-                // Use pricing calculator for total cost
-                const totalIncome = calculateTotalIncome();
-                const pricing = window.pricingCalculator.calculatePricing(
-                    chatData.state,
-                    totalIncome,
-                    chatData.enrolledMonths,
-                    window.monthlyHousingCosts,
-                    chatData.monthlyGrocery,
-                    chatData
-                );
-                const totalCost = Math.round(pricing.totalCost);
-                question.message = `
-                    <div style="margin-bottom: 1rem;">
-                        <strong>It costs us $${totalCost.toLocaleString('en-US')} to provide this service and unlock your savings.</strong>
-                    </div>
-                    <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid #0ea5e9; margin: 1rem 0;">
-                        <div style="font-weight: 600; color: #0c4a6e; margin-bottom: 0.75rem;">How it works:</div>
-                        <div style="color: #374151; line-height: 1.5; margin-bottom: 1rem;">
-                            You only pay for the part you keep. The split is simple: if you keep 70% and donate 30%, you only pay 70%.
-                        </div>
-                        <div style="color: #16a34a; font-weight: 600; font-size: 1.1rem;">
-                            The more you give, the less you pay!
-                        </div>
-                    </div>
-                `;
-            }
-            
             // Handle state confirmation step dynamically
             if (question.id === 'state_confirmation') {
                 const stateName = getStateName(chatData.detectedStateCode) || chatData.detectedState;
@@ -2085,47 +1931,18 @@
                 question.message = `Your school is in ${displayName}?`;
             }
             
-            // If we have school info but no state, try to detect state from school
-            if (question.id === 'school' && chatData.school && !chatData.state) {
-                console.log('School info available, attempting state detection');
-                await detectSchoolState(chatData.school);
-                // If state was detected, skip the school question and go to state confirmation
-                if (chatData.detectedState || chatData.detectedStateCode) {
-                    console.log('State detected from school, skipping school question');
-                    await processNextQuestion();
-                    return;
-                } else {
-                    // If state detection failed but we have school info, skip school question and go to state selection
-                    console.log('State detection failed, but school info available, skipping school question');
-                    await processNextQuestion();
-                    return;
-                }
-            }
-            
-            // If we have state info from club data, skip state questions
-            if ((question.id === 'state' || question.id === 'state_confirmation') && chatData.state) {
-                console.log('State info available from club data, skipping state questions');
-                await processNextQuestion();
-                return;
-            }
-            
             // Handle enrolled months question dynamically with credit requirements
             if (question.id === 'enrolled_months') {
-                console.log('Processing enrolled months question. School:', chatData.school, 'SchoolFtCredits:', chatData.schoolFtCredits);
                 // Use ftcredits from school recognition if available
                 if (chatData.schoolFtCredits) {
                     // Calculate half-time credits (divide by 2)
                     const halfTimeCredits = Math.ceil(chatData.schoolFtCredits / 2);
                     question.message = `Which months were you enrolled in less than ${halfTimeCredits} credits? Red = enrolled in less than ${halfTimeCredits} credits.`;
-                    console.log('Using school ftcredits for enrollment question:', chatData.schoolFtCredits, 'Half-time credits:', halfTimeCredits);
+                    console.log('Using school ftcredits for enrollment question:', chatData.schoolFtCredits);
                 } else {
                     // Use original message if no ftcredits available
                     question.message = "Which months are you NOT enrolled as a student this year? (Most students are not enrolled during summer months)";
-                    console.log('No school ftcredits available, using default enrollment message. School data:', {
-                        school: chatData.school,
-                        schoolFtCredits: chatData.schoolFtCredits,
-                        state: chatData.state
-                    });
+                    console.log('No school ftcredits available, using default enrollment message');
                 }
             }
             
@@ -2160,13 +1977,6 @@
                 createCurrencySlider(question.field, question.min, question.max, question.defaultValue);
             } else if (question.responseType === 'benefit_summary') {
                 await showBenefitSummary();
-            } else if (question.responseType === 'split_slider') {
-                createSplitSlider(question.field);
-            } else if (question.responseType === 'club_detection') {
-                // Club detection is handled by the action, just continue
-                setTimeout(async () => {
-                    await processNextQuestion();
-                }, 1000);
             } else if (question.responseType === 'addons') {
                 createAddonSelector(question.field);
             } else if (question.responseType === 'housing_review') {
@@ -2184,52 +1994,6 @@
         
         async function startConversation() {
             currentQuestionIndex = 0;
-            
-            // Check for existing club information from RSO platform
-            const clubInfo = localStorage.getItem('renest_club_info');
-            if (clubInfo) {
-                try {
-                    const parsed = JSON.parse(clubInfo);
-                    console.log('Found existing club info:', parsed);
-                    
-                    // Pre-populate chat data with available information
-                    if (parsed.clubName) chatData.club = parsed.clubName;
-                    if (parsed.clubId) chatData.clubId = parsed.clubId;
-                    if (parsed.school) {
-                        chatData.school = parsed.school;
-                        // Detect school state and ftcredits when school is loaded from localStorage
-                        console.log('School loaded from localStorage, detecting state and ftcredits...');
-                        await detectSchoolState(parsed.school);
-                    }
-                    if (parsed.state) {
-                        // Convert state name to state code if needed
-                        const stateCode = convertStateNameToCode(parsed.state);
-                        chatData.state = stateCode;
-                        console.log('Converted state name to code:', parsed.state, '->', stateCode);
-                    }
-                    
-                    // Show welcome message acknowledging the club
-                    const firstQuestion = conversationFlow[0];
-                    showTypingIndicator();
-                    await new Promise(resolve => setTimeout(resolve, firstQuestion.delay || 1000));
-                    removeTypingIndicator();
-                    
-                    const welcomeMessage = `Hi! Welcome to Renest's club savings tool.<br><br>I can see you're supporting <strong>${parsed.clubName}</strong> at ${parsed.school}.<br><br>We'll ask a few quick questions about your income and living expenses to find every way you can save money on your essential education costs.<br><br>At the end, you'll see your total savings and get to choose how much to keep for yourself and how much to support your club!`;
-                    
-                    await addMessage('bot', welcomeMessage);
-                    
-                    // Skip to the first question that needs user input (after club detection)
-                    currentQuestionIndex = 1; // Skip the club detection step
-                    await processNextQuestion();
-                    return;
-                } catch (e) {
-                    console.error('Error parsing club info from storage:', e);
-                    // If parsing fails, continue with normal flow
-                    console.log('Continuing with normal flow due to parsing error');
-                }
-            }
-            
-            // If no club info found, proceed with normal flow
             const firstQuestion = conversationFlow[0];
             
             showTypingIndicator();
@@ -3438,14 +3202,6 @@
                 // Housing review is handled by the response type, no special action needed
                 console.log('Housing review setup handled by response type');
             }
-            if (action === 'detectClub') {
-                const clubDetected = detectClubFromStorage();
-                if (clubDetected) {
-                    question.message = `Great! I can see you're supporting <strong>${chatData.club}</strong>. Let's get started with your savings calculation!`;
-                } else {
-                    question.message = "I don't see any club information. Let me ask you about the club or organization you're supporting.";
-                }
-            }
         }
         
 
@@ -3662,12 +3418,6 @@
         }
         
         async function finishConversation() {
-            console.log('Conversation finished. Final chat data:', chatData);
-            
-            // Clear club info from localStorage since onboarding is complete
-            localStorage.removeItem('renest_club_info');
-            console.log('Cleared club info from localStorage');
-            
             showTypingIndicator();
             await new Promise(resolve => setTimeout(resolve, 1500));
             removeTypingIndicator();
@@ -4489,19 +4239,6 @@
             localStorage.removeItem('onboardingExpensesCreated');
             console.log('=== ONBOARDING START: Cleared expense creation flag ===');
             
-            // Check for existing club info
-            const clubInfo = localStorage.getItem('renest_club_info');
-            if (clubInfo) {
-                try {
-                    const parsed = JSON.parse(clubInfo);
-                    console.log('=== FOUND EXISTING CLUB INFO ===', parsed);
-                } catch (e) {
-                    console.error('Error parsing club info:', e);
-                }
-            } else {
-                console.log('=== NO EXISTING CLUB INFO FOUND ===');
-            }
-            
             // Initialize Google Sign-In when scripts are loaded
             setTimeout(() => {
                 if (window.accountCreation) {
@@ -4749,11 +4486,9 @@
          function calculateStateTaxRate(income, state) {
              if (income < 0) income = 0;
              
-             console.log('Calculating state tax rate for:', { income, state });
              const stateTaxInfo = stateTaxDB[state];
              if (!stateTaxInfo || !stateTaxInfo.brackets || stateTaxInfo.brackets.length === 0) {
                  console.warn(`No tax bracket information found for state: ${state}`);
-                 console.log('Available states in tax database:', Object.keys(stateTaxDB));
                  return 0;
              }
              
@@ -4800,14 +4535,6 @@
          // Benefit calculation function with custom grocery amount
          function calculateBenefitWithMultipleHousingCustomGrocery(state, income, enrolledMonths, housingEntries, monthlyGrocery = 200, returnDetails = false) {
              const currentYear = new Date().getFullYear();
-             
-             console.log('[calculateBenefitWithMultipleHousingCustomGrocery] Inputs:', {
-                 state,
-                 income,
-                 enrolledMonths: enrolledMonths.length,
-                 housingEntries: housingEntries.length,
-                 monthlyGrocery
-             });
              
              // Ensure all inputs are properly typed
              income = Number(income) || 0;
@@ -5210,161 +4937,6 @@
                 totalRentPayments: Math.round(totalRentPayments),
                 totalOtherQualifiedExpenses: Math.round(totalOtherQualifiedExpenses)
             };
-        }
-        
-        // Add this function after createCurrencySlider and before showBenefitSummary
-        function createSplitSlider(field) {
-            const inputArea = document.getElementById('chatInputArea');
-            inputArea.innerHTML = '';
-            const container = document.createElement('div');
-            container.style.padding = window.innerWidth <= 768 ? '1rem' : '1.5rem';
-            container.style.backgroundColor = 'white';
-            container.style.borderRadius = '0.75rem';
-            container.style.border = '2px solid #e2e8f0';
-            container.style.textAlign = 'center';
-            container.style.marginBottom = window.innerWidth <= 768 ? '0.5rem' : '1rem';
-
-            // Get benefit amount
-            const benefit = window.calculatedBenefit ? Math.round(Number(window.calculatedBenefit.benefit) || 0) : 0;
-            // Get total cost from pricing calculator
-            const totalIncome = calculateTotalIncome();
-            const pricing = window.pricingCalculator.calculatePricing(
-                chatData.state,
-                totalIncome,
-                chatData.enrolledMonths,
-                window.monthlyHousingCosts,
-                chatData.monthlyGrocery,
-                chatData
-            );
-            const totalCost = Math.round(pricing.totalCost);
-            // Default split: 80% to self, 20% to club
-            let splitSelf = 80;
-            let splitCause = 20;
-            let userPays = Math.round(totalCost * splitSelf / 100);
-            let causePays = totalCost - userPays;
-
-            // Title
-            const title = document.createElement('div');
-            title.style.fontWeight = '600';
-            title.style.marginBottom = window.innerWidth <= 768 ? '0.5rem' : '1rem';
-            title.style.fontSize = window.innerWidth <= 768 ? '1rem' : '1.1rem';
-            title.textContent = 'Choose how to split your unlocked savings:';
-            container.appendChild(title);
-
-            // Value display
-            const valueDisplay = document.createElement('div');
-            valueDisplay.style.marginBottom = window.innerWidth <= 768 ? '0.75rem' : '1.5rem';
-            valueDisplay.style.fontSize = window.innerWidth <= 768 ? '0.98rem' : '1.1rem';
-            valueDisplay.style.display = 'flex';
-            valueDisplay.style.justifyContent = 'center';
-            valueDisplay.style.alignItems = 'center';
-            valueDisplay.style.gap = window.innerWidth <= 768 ? '0.5rem' : '1.5rem';
-            valueDisplay.style.flexWrap = 'nowrap';
-            valueDisplay.innerHTML = `
-                <span style="color:#16a34a;font-weight:600;white-space:nowrap;">You keep: $<span id="splitSelfAmount">${Math.round(benefit * splitSelf / 100).toLocaleString('en-US')}</span></span>
-                <span style="color:#888;">|</span>
-                <span style="color:#3b82f6;font-weight:600;white-space:nowrap;">To club: $<span id="splitCauseAmount">${Math.round(benefit * splitCause / 100).toLocaleString('en-US')}</span></span>
-            `;
-            container.appendChild(valueDisplay);
-
-            // Cost display (NEW, but now hidden on mobile)
-            if (window.innerWidth > 768) {
-                const costDisplay = document.createElement('div');
-                costDisplay.style.marginBottom = '1.5rem';
-                costDisplay.style.fontSize = '1.05rem';
-                costDisplay.style.display = 'flex';
-                costDisplay.style.justifyContent = 'center';
-                costDisplay.style.alignItems = 'center';
-                costDisplay.style.gap = '1.2rem';
-                costDisplay.innerHTML = `
-                    <span style="color:#0c4a6e;font-weight:600;white-space:nowrap;">My cost: $<span id="splitUserPays">${userPays.toLocaleString('en-US')}</span></span>
-                    <span style="color:#64748b;font-weight:600;white-space:nowrap;">Club covers: $<span id="splitCausePays">${causePays.toLocaleString('en-US')}</span></span>
-                `;
-                container.appendChild(costDisplay);
-            }
-
-            // Slider
-            const slider = document.createElement('input');
-            slider.type = 'range';
-            slider.min = 0;
-            slider.max = 100;
-            slider.value = splitSelf;
-            slider.step = 1;
-            slider.style.width = '100%';
-            slider.style.marginBottom = window.innerWidth <= 768 ? '0.5rem' : '1rem';
-            container.appendChild(slider);
-
-            // Quick select buttons
-            const quickBtns = document.createElement('div');
-            quickBtns.style.display = 'flex';
-            quickBtns.style.justifyContent = 'center';
-            quickBtns.style.gap = window.innerWidth <= 768 ? '0.25rem' : '0.5rem';
-            quickBtns.style.marginBottom = window.innerWidth <= 768 ? '0.75rem' : '1.5rem';
-            [
-                { label: 'All to You', value: 100 },
-                { label: '50/50', value: 50 },
-                { label: 'All to Club', value: 0 }
-            ].forEach(opt => {
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.textContent = opt.label;
-                btn.className = 'send-button';
-                btn.style.padding = window.innerWidth <= 768 ? '0.4rem 0.7rem' : '0.5rem 1.2rem';
-                btn.style.fontSize = window.innerWidth <= 768 ? '0.85rem' : '0.95rem';
-                btn.style.background = opt.value === 100 ? '#16a34a' : (opt.value === 0 ? '#3b82f6' : '#fbbf24');
-                btn.style.color = 'white';
-                btn.style.border = 'none';
-                btn.style.borderRadius = '0.5rem';
-                btn.style.cursor = 'pointer';
-                btn.onclick = () => {
-                    slider.value = opt.value;
-                    updateValues();
-                };
-                quickBtns.appendChild(btn);
-            });
-            container.appendChild(quickBtns);
-
-            // Continue button
-            const continueBtn = document.createElement('button');
-            continueBtn.className = 'send-button';
-            continueBtn.textContent = 'Continue';
-            continueBtn.style.width = '100%';
-            continueBtn.onclick = () => {
-                const selfPct = Number(slider.value);
-                const causePct = 100 - selfPct;
-                const userPays = Math.round(totalCost * selfPct / 100);
-                const causePays = totalCost - userPays;
-                chatData.splitToSelf = selfPct;
-                chatData.splitToCause = causePct;
-                chatData.splitSelfAmount = Math.round(benefit * selfPct / 100);
-                chatData.splitCauseAmount = Math.round(benefit * causePct / 100);
-                chatData.splitUserPays = userPays;
-                chatData.splitCausePays = causePays;
-                
-                // Submit split data to Google Form
-                submitSplitData();
-                
-                handleOptionResponse({ self: selfPct, cause: causePct }, `You keep $${chatData.splitSelfAmount.toLocaleString('en-US')}, to club $${chatData.splitCauseAmount.toLocaleString('en-US')}`, field);
-            };
-            container.appendChild(continueBtn);
-
-            // Update function
-            function updateValues() {
-                splitSelf = Number(slider.value);
-                splitCause = 100 - splitSelf;
-                userPays = Math.round(totalCost * splitSelf / 100);
-                causePays = totalCost - userPays;
-                document.getElementById('splitSelfAmount').textContent = Math.round(benefit * splitSelf / 100).toLocaleString('en-US');
-                document.getElementById('splitCauseAmount').textContent = Math.round(benefit * splitCause / 100).toLocaleString('en-US');
-                if (window.innerWidth > 768) {
-                    document.getElementById('splitUserPays').textContent = userPays.toLocaleString('en-US');
-                    document.getElementById('splitCausePays').textContent = causePays.toLocaleString('en-US');
-                }
-            }
-            slider.addEventListener('input', updateValues);
-
-            inputArea.appendChild(container);
-            scrollToBottom();
         }
      </script>
 </body>

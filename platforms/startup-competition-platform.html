@@ -526,12 +526,27 @@
             font-size: 1.05rem;
         }
 
-        /* Student Stories Section - Clean Professional Background */
+        /* How It Works Section - Gaming Tech Aesthetic */
         .stories-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%);
             padding: 6rem 0;
             margin: 4rem 0;
             position: relative;
+            overflow: hidden;
+        }
+
+        .stories-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+            pointer-events: none;
         }
 
         .stories-grid {
@@ -544,33 +559,384 @@
         }
 
         .story-card {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(120, 219, 255, 0.3);
+            border-radius: 16px;
             padding: 2rem;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .story-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(120, 219, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .story-card:hover::before {
+            left: 100%;
         }
 
         .story-card:hover {
             transform: translateY(-8px) scale(1.02);
-            box-shadow: var(--shadow-xl);
-            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 
+                0 20px 40px rgba(120, 219, 255, 0.2),
+                0 0 0 1px rgba(120, 219, 255, 0.5);
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .story-avatar {
             width: 80px;
             height: 80px;
-            border-radius: 50%;
-            background: white;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 2rem;
             font-weight: 700;
-            color: var(--primary);
+            color: white;
             margin: 0 auto 1rem auto;
-            box-shadow: var(--shadow-md);
+            box-shadow: 
+                0 8px 32px rgba(0, 212, 255, 0.3),
+                0 0 0 1px rgba(0, 212, 255, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .story-avatar::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        /* Startup Card Styles */
+        .startup-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(120, 219, 255, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+            width: 280px;
+            max-width: 100%;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .startup-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .startup-card:hover::before {
+            left: 100%;
+        }
+
+        .startup-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 
+                0 20px 40px rgba(0, 212, 255, 0.2),
+                0 0 0 1px rgba(0, 212, 255, 0.5);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .startup-card.winner {
+            border-color: rgba(0, 212, 255, 0.6);
+            box-shadow: 
+                0 8px 32px rgba(0, 212, 255, 0.3),
+                0 0 0 1px rgba(0, 212, 255, 0.4);
+            animation: winnerGlow 2s ease-in-out infinite alternate;
+        }
+
+        .startup-card.champion {
+            border-color: #ffd700;
+            box-shadow: 
+                0 8px 32px rgba(255, 215, 0, 0.4),
+                0 0 0 1px rgba(255, 215, 0, 0.6);
+            animation: championGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes winnerGlow {
+            0% { box-shadow: 0 8px 32px rgba(0, 212, 255, 0.3), 0 0 0 1px rgba(0, 212, 255, 0.4); }
+            100% { box-shadow: 0 8px 32px rgba(0, 212, 255, 0.5), 0 0 0 1px rgba(0, 212, 255, 0.7); }
+        }
+
+        @keyframes championGlow {
+            0% { box-shadow: 0 8px 32px rgba(255, 215, 0, 0.4), 0 0 0 1px rgba(255, 215, 0, 0.6); }
+            100% { box-shadow: 0 8px 32px rgba(255, 215, 0, 0.7), 0 0 0 1px rgba(255, 215, 0, 0.9); }
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .startup-icon {
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 16px rgba(0, 212, 255, 0.3);
+        }
+
+        .startup-name {
+            color: white;
+            font-weight: 700;
+            font-size: 1.125rem;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .startup-desc {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.875rem;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .vote-count {
+            color: #00d4ff;
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .prize-amount {
+            color: #ffd700;
+            font-weight: 700;
+            font-size: 1rem;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .vs-line {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vs-line::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+            animation: flowLine 2s ease-in-out infinite;
+        }
+
+        @keyframes flowLine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Tournament Animation Styles */
+        .startup-card.winner {
+            border-color: #10b981;
+            box-shadow: 
+                0 8px 32px rgba(16, 185, 129, 0.4),
+                0 0 0 1px rgba(16, 185, 129, 0.6);
+            animation: winnerGlow 1s ease-in-out infinite alternate;
+        }
+
+        .startup-card.second-place {
+            border-color: #f59e0b;
+            box-shadow: 
+                0 8px 32px rgba(245, 158, 11, 0.4),
+                0 0 0 1px rgba(245, 158, 11, 0.6);
+            animation: secondPlaceGlow 1s ease-in-out infinite alternate;
+        }
+
+        .startup-card.eliminated {
+            opacity: 0.3;
+            transform: scale(0.95);
+            transition: all 0.5s ease;
+        }
+
+        .startup-card.competing {
+            border-color: #ff6b9d;
+            box-shadow: 
+                0 8px 32px rgba(255, 107, 157, 0.4),
+                0 0 0 1px rgba(255, 107, 157, 0.6);
+            animation: competingPulse 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes competingPulse {
+            0% { box-shadow: 0 8px 32px rgba(255, 107, 157, 0.4), 0 0 0 1px rgba(255, 107, 157, 0.6); }
+            100% { box-shadow: 0 8px 32px rgba(255, 107, 157, 0.7), 0 0 0 1px rgba(255, 107, 157, 0.9); }
+        }
+
+        @keyframes winnerGlow {
+            0% { box-shadow: 0 8px 32px rgba(16, 185, 129, 0.4), 0 0 0 1px rgba(16, 185, 129, 0.6); }
+            100% { box-shadow: 0 8px 32px rgba(16, 185, 129, 0.7), 0 0 0 1px rgba(16, 185, 129, 0.9); }
+        }
+
+        @keyframes secondPlaceGlow {
+            0% { box-shadow: 0 8px 32px rgba(245, 158, 11, 0.4), 0 0 0 1px rgba(245, 158, 11, 0.6); }
+            100% { box-shadow: 0 8px 32px rgba(245, 158, 11, 0.7), 0 0 0 1px rgba(245, 158, 11, 0.9); }
+        }
+
+        .prize-display {
+            color: #ffd700;
+            font-weight: 700;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .tournament-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 212, 255, 0.4);
+        }
+
+        .matchup-card {
+            animation: matchupPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes matchupPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .vs-badge {
+            background: linear-gradient(135deg, #00d4ff 0%, #ff6b9d 100%);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 16px rgba(0, 212, 255, 0.3);
+        }
+
+        /* Vote Animation Styles */
+        .vote-bar-container {
+            background: rgba(255, 255, 255, 0.1);
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+            position: relative;
+        }
+
+        .vote-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00d4ff 0%, #ff6b9d 100%);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 1.5s ease-out;
+        }
+
+        .vote-count {
+            color: #00d4ff;
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .round-title-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #00d4ff 0%, #ff6b9d 100%);
+            color: white;
+            padding: 2rem 3rem;
+            border-radius: 20px;
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: 'Space Grotesk', sans-serif;
+            z-index: 1000;
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.4);
+            animation: roundTitlePop 3s ease-in-out forwards;
+        }
+
+        @keyframes roundTitlePop {
+            0% { 
+                opacity: 0; 
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+            20% { 
+                opacity: 1; 
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+            80% { 
+                opacity: 1; 
+                transform: translate(-50%, -50%) scale(1);
+            }
+            100% { 
+                opacity: 0; 
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+        }
+
+        .champion-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            color: #1a1a2e;
+            padding: 3rem 4rem;
+            border-radius: 30px;
+            font-size: 2.5rem;
+            font-weight: 900;
+            font-family: 'Space Grotesk', sans-serif;
+            z-index: 1000;
+            box-shadow: 
+                0 30px 60px rgba(255, 215, 0, 0.4),
+                0 0 0 3px rgba(255, 215, 0, 0.6);
+            animation: championPop 4s ease-in-out forwards;
+            text-align: center;
+        }
+
+        @keyframes championPop {
+            0% { 
+                opacity: 0; 
+                transform: translate(-50%, -50%) scale(0.3) rotate(-10deg);
+            }
+            20% { 
+                opacity: 1; 
+                transform: translate(-50%, -50%) scale(1.2) rotate(5deg);
+            }
+            40% { 
+                transform: translate(-50%, -50%) scale(1.1) rotate(-2deg);
+            }
+            60% { 
+                transform: translate(-50%, -50%) scale(1.05) rotate(1deg);
+            }
+            80% { 
+                opacity: 1; 
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+            }
+            100% { 
+                opacity: 0; 
+                transform: translate(-50%, -50%) scale(0.8) rotate(0deg);
+            }
         }
 
         .story-quote {
@@ -799,11 +1165,94 @@
             .stories-grid {
                 grid-template-columns: 1fr;
             }
+
+            .bracket-round {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .startup-card {
+                width: 100%;
+                max-width: 320px;
+            }
+
+            .vs-line {
+                width: 2px !important;
+                height: 40px !important;
+                margin: 0 !important;
+            }
         }
 
         @media (max-width: 768px) {
+            .hero-cta-desktop {
+                display: none !important;
+            }
+            
+            .hero-cta-mobile {
+                display: block !important;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .hero-cta-desktop {
+                display: block !important;
+            }
+            
+            .hero-cta-mobile {
+                display: none !important;
+            }
+        }
+        
+        @media (max-width: 768px) {
             .container {
                 padding: 0 1rem;
+            }
+            
+            .startup-grid {
+                grid-template-columns: repeat(4, 1fr) !important;
+                max-width: 100% !important;
+                gap: 0.5rem !important;
+            }
+            
+            /* Mobile-optimized startup cards */
+            .startup-grid .startup-card {
+                width: 100% !important;
+                max-width: none !important;
+                padding: 0.75rem 0.5rem !important;
+                min-height: 80px !important;
+            }
+            
+            .startup-grid .card-header {
+                flex-direction: column !important;
+                gap: 0.25rem !important;
+                text-align: center !important;
+            }
+            
+            .startup-grid .startup-icon {
+                font-size: 1.5rem !important;
+                width: 40px !important;
+                height: 40px !important;
+                margin: 0 auto !important;
+            }
+            
+            .startup-grid .startup-name {
+                font-size: 0.75rem !important;
+                line-height: 1.2 !important;
+                margin: 0 !important;
+            }
+            
+            .startup-grid .startup-desc {
+                display: none !important;
+            }
+            
+            .startup-grid .vote-count {
+                font-size: 0.625rem !important;
+                margin: 0.25rem 0 0 0 !important;
+            }
+            
+            .startup-grid .prize-display {
+                font-size: 0.625rem !important;
+                margin: 0.25rem 0 0 0 !important;
             }
             
             .hero-section {
@@ -881,6 +1330,35 @@
         }
 
         @media (max-width: 480px) {
+            .startup-grid {
+                grid-template-columns: repeat(4, 1fr) !important;
+                max-width: 100% !important;
+                gap: 0.25rem !important;
+            }
+            
+            .startup-grid .startup-card {
+                padding: 0.5rem 0.25rem !important;
+                min-height: 70px !important;
+            }
+            
+            .startup-grid .startup-icon {
+                font-size: 1.25rem !important;
+                width: 32px !important;
+                height: 32px !important;
+            }
+            
+            .startup-grid .startup-name {
+                font-size: 0.625rem !important;
+            }
+            
+            .startup-grid .vote-count {
+                font-size: 0.5rem !important;
+            }
+            
+            .startup-grid .prize-display {
+                font-size: 0.5rem !important;
+            }
+            
             .hero-title {
                 font-size: 2rem;
             }
@@ -929,14 +1407,14 @@
                     <h1 class="hero-title">From Idea <br>to Impact</h1>
                     
                     <p class="hero-subtitle">
-                        Renest hosts startup competitions where students submit ideas, get sorted into brackets, and then compete for funding. The community votes to determine which startups get funded and succeed.
+                        Renest hosts startup competitions where students submit ideas, get sorted into brackets, and then compete for funding. The community votes to determine which startups they want to succeed.
                     </p>
                     
-                    <!-- <div style="text-align: center; margin-top: 2rem;">
-                        <a href="onboarding-campaign.html" class="cta-button">
+                    <div class="hero-cta-desktop" style="text-align: left; margin-top: 2rem;">
+                        <a href="../onboarding-express-startup.html" class="cta-button">
                             Get Started
                         </a>
-                    </div> -->
+                    </div>
                 </div>
                 
                 <div class="hero-media">
@@ -944,6 +1422,11 @@
                         <div style="position:relative;width:100%;height:0;padding-bottom:75%;display:flex;align-items:center;justify-content:center;">
                             <img src="hummingbirdflower.png" alt="Hummingbird and Flower" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;">
                         </div>
+                    </div>
+                    <div class="hero-cta-mobile" style="text-align: center; margin-top: 2rem;">
+                        <a href="onboarding-express-startup.html" class="cta-button">
+                            Get Started
+                        </a>
                     </div>
                 </div>
             </div>
@@ -961,7 +1444,7 @@
                     </div>
                     <div class="renest-meteor-text">
                         <div class="stats-subtitle">
-                            <p>Below is the cumulative amount of money each year that goes unclaimed on student tax returns. Imagine what we can create together.</p>
+                            <p>Below is the cumulative amount of money each year that goes unclaimed on student tax returns. Just by saving more money, imagine what we can create together.</p>
                         </div>
                     </div>
                 </div>
@@ -986,18 +1469,137 @@
             </div>
         </section>
 
-
-
-        <!-- Featured Campaign Section -->
         
-
-        <!-- Search Campaigns Section -->
-        <!-- <section class="search-campaigns-section">
+        <section class="stories-section">
+            <div class="section-header">
+                <h2 class="section-title">How It Works</h2>
+                <p class="section-subtitle">
+                    Your journey from tax savings to startup success
+                </p>
+            </div>
             
-        </section> -->
+            <div class="stories-grid">
+                <div class="story-card">
+                    <div class="story-avatar">💰</div>
+                    <div class="story-quote">
+                        <strong>Step 1: Save & Contribute</strong><br>
+                        Sign up with Renest, discover your tax savings, and contribute $50+ to the startup funding pool.
+                    </div>
+                    <div class="story-author">Join the Community</div>
+                    <div class="story-school">Unlock Your Potential</div>
+                </div>
+                
+                <div class="story-card">
+                    <div class="story-avatar">🚀</div>
+                    <div class="story-quote">
+                        <strong>Step 2: Build or Join</strong><br>
+                        Register your startup with custom pages and videos, or find teams to join based on your skills.
+                    </div>
+                    <div class="story-author">Create Your Vision</div>
+                    <div class="story-school">Find Your Team</div>
+                </div>
+                
+                <div class="story-card">
+                    <div class="story-avatar">🏆</div>
+                    <div class="story-quote">
+                        <strong>Step 3: March Madness</strong><br>
+                        When we hit $50K, brackets begin! Vote head-to-head until we crown the champion startup.
+                    </div>
+                    <div class="story-author">Compete & Win</div>
+                    <div class="story-school">Get Funded</div>
+                </div>
+            </div>
+            
+                         <!-- Animated Bracket Section -->
+             <div style="margin-top: 4rem; text-align: center;">
+                 <h3 style="color: white; font-size: 2rem; margin-bottom: 2rem; font-family: 'Space Grotesk', sans-serif; text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);">
+                     🏆 Live Tournament Bracket
+                 </h3>
+                 
+                 <div class="tournament-stage" style="margin-bottom: 2rem;">
+                     <div class="stage-title" style="color: #00d4ff; font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; font-family: 'Space Grotesk', sans-serif;">
+                         Group 1 - Round Robin
+                     </div>
+                     
+                     <div class="startup-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; max-width: 1200px; margin: 0 auto; justify-items: center;">
+                         <div class="startup-card" data-startup="neural-tutor" data-prize="0">
+                             <div class="card-header">
+                                 <div class="startup-icon">🧠</div>
+                                 <div class="startup-name">Neural Tutor</div>
+                             </div>
+                             <div class="startup-desc">AI-powered learning</div>
+                             <div class="vote-count">Votes: 0</div>
+                             <div class="prize-display"></div>
+                         </div>
+                         
+                         <div class="startup-card" data-startup="eco-pack" data-prize="0">
+                             <div class="card-header">
+                                 <div class="startup-icon">🌱</div>
+                                 <div class="startup-name">EcoPack</div>
+                             </div>
+                             <div class="startup-desc">Biodegradable packaging</div>
+                             <div class="vote-count">Votes: 0</div>
+                             <div class="prize-display"></div>
+                         </div>
+                         
+                         <div class="startup-card" data-startup="health-sync" data-prize="0">
+                             <div class="card-header">
+                                 <div class="startup-icon">🏥</div>
+                                 <div class="startup-name">HealthSync</div>
+                             </div>
+                             <div class="startup-desc">Health monitoring</div>
+                             <div class="vote-count">Votes: 0</div>
+                             <div class="prize-display"></div>
+                         </div>
+                         
+                         <div class="startup-card" data-startup="smart-farm" data-prize="0">
+                             <div class="card-header">
+                                 <div class="startup-icon">🌾</div>
+                                 <div class="startup-name">SmartFarm</div>
+                             </div>
+                             <div class="startup-desc">IoT agriculture</div>
+                             <div class="vote-count">Votes: 0</div>
+                             <div class="prize-display"></div>
+                         </div>
+                     </div>
+                 </div>
+                 
+                 <div class="matchup-display" style="background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 20px; padding: 2rem; max-width: 800px; margin: 0 auto; backdrop-filter: blur(20px); display: none;">
+                     <div class="matchup-title" style="color: #00d4ff; font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; font-family: 'Space Grotesk', sans-serif;">
+                         Round 1
+                     </div>
+                     <div class="matchup-cards" style="display: flex; justify-content: center; align-items: center; gap: 2rem; flex-wrap: wrap;">
+                         <div class="startup-card matchup-card" style="width: 200px;">
+                             <div class="card-header">
+                                 <div class="startup-icon">🧠</div>
+                                 <div class="startup-name">Neural Tutor</div>
+                             </div>
+                             <div class="vote-count">Votes: 847</div>
+                         </div>
+                         
+                         <div class="vs-badge" style="color: white; font-size: 1.5rem; font-weight: 700;">VS</div>
+                         
+                         <div class="startup-card matchup-card" style="width: 200px;">
+                             <div class="card-header">
+                                 <div class="startup-icon">🌱</div>
+                                 <div class="startup-name">EcoPack</div>
+                             </div>
+                             <div class="vote-count">Votes: 623</div>
+                         </div>
+                     </div>
+                 </div>
+                 
+                 <div class="tournament-progress" style="margin-top: 2rem;">
+                     <button id="startTournament" class="tournament-btn" style="background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%); color: white; border: none; padding: 1rem 2rem; border-radius: 12px; font-weight: 700; cursor: pointer; transition: all 0.3s ease;">
+                         🚀 Start Tournament Animation
+                     </button>
+                 </div>
+             </div>
+        </section>
+
 
         <!-- Possibilities Section -->
-        <section class="possibilities-section">
+        <!-- <section class="possibilities-section">
             <div class="section-header">
                 <h2 class="section-title">Startup Categories</h2>
                 <p class="section-subtitle">
@@ -1055,72 +1657,35 @@
                         Any innovative startup idea that solves real problems and has market potential!
                     </div>
                 </div>
-            </div>
+            </div> -->
             
-            <div style="text-align: center; margin-top: 3rem;">
+            <!-- <div style="text-align: center; margin-top: 3rem;"> -->
                 <!-- <p style="color: rgba(255, 255, 255, 0.9); font-size: 1.125rem; margin-bottom: 1.5rem;">
                     <strong>Who can submit startups?</strong> Individual students, student teams, and student-led startup companies with innovative ideas.
                 </p> -->
-                <button class="cta-button" onclick="openModal()" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3);">
+                <!-- <button class="cta-button" onclick="openModal()" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3);">
                     Submit Your Startup
-                </button>
-            </div>
+                </button> -->
+            <!-- </div> -->
         </section>
 
-        <!-- Student Stories Section -->
-        <section class="stories-section">
-            <div class="section-header">
-                <h2 class="section-title">Startup Success Stories</h2>
-                <p class="section-subtitle">
-                    Hear from student startups that have won funding and launched successful companies
-                </p>
-            </div>
-            
-            <div class="stories-grid">
-                <div class="story-card">
-                    <div class="story-avatar">SC</div>
-                    <div class="story-quote">
-                        "Winning the startup competition gave us the funding to launch our AI tutoring platform. We now serve 10,000+ students."
-                    </div>
-                    <div class="story-author">Sarah Chen</div>
-                    <div class="story-school">Stanford Engineering</div>
-                </div>
-                
-                <div class="story-card">
-                    <div class="story-avatar">MJ</div>
-                    <div class="story-quote">
-                        "The competition funding helped us develop our sustainable packaging solution. We're now working with major retailers."
-                    </div>
-                    <div class="story-author">Marcus Johnson</div>
-                    <div class="story-school">MIT Business</div>
-                </div>
-                
-                <div class="story-card">
-                    <div class="story-avatar">AL</div>
-                    <div class="story-quote">
-                        "Our health tech startup received mentorship and funding. We've raised $2M in follow-on funding since winning."
-                    </div>
-                    <div class="story-author">Amanda Lee</div>
-                    <div class="story-school">UC Berkeley</div>
-                </div>
-            </div>
-        </section>
-
+        <!-- How It Works Section -->
+        
         <!-- Final CTA -->
-        <section class="cta-section">
+        <!-- <section class="cta-section">
             <button class="cta-button" onclick="openModal()">
-                Start Your Campaign
+                Get Started
             </button>
-            <!-- <p style="color: var(--text-secondary); margin-top: 1rem; font-size: 1rem;">
+            <p style="color: var(--text-secondary); margin-top: 1rem; font-size: 1rem;">
                 Ready to make your idea a reality? Join thousands of students who are already changing the world.
-            </p> -->
-        </section>
+            </p>
+        </section> -->
 
         <!-- Contact Modal -->
         <div class="modal-overlay" id="contactModal">
             <div class="modal">
                 <button class="close-modal" onclick="closeModal()">×</button>
-                <h3>Start Your Campaign</h3>
+                <h3>Enter</h3>
                 <p>Ready to create your campaign? Get in touch with us to get started.</p>
                 <div class="modal-buttons">
                     <a href="mailto:thomas@renesthorizons.com" class="modal-button primary">
@@ -1185,7 +1750,780 @@
                     closeModal();
                 }
             });
+
+            // Tournament Animation
+            const startBtn = document.getElementById('startTournament');
+            if (startBtn) {
+                startBtn.addEventListener('click', startTournament);
+            }
         });
+
+        // Tournament Data
+        const startups = [
+            { name: 'Neural Tutor', icon: '🧠', desc: 'AI-powered learning', votes: [847, 1234, 2847] },
+            { name: 'EcoPack', icon: '🌱', desc: 'Biodegradable packaging', votes: [623, 0, 0] },
+            { name: 'HealthSync', icon: '🏥', desc: 'Health monitoring', votes: [1156, 0, 0] },
+            { name: 'SmartFarm', icon: '🌾', desc: 'IoT agriculture', votes: [2156, 0, 0] },
+            { name: 'DataVault', icon: '🔒', desc: 'Secure data storage', votes: [945, 0, 0] },
+            { name: 'GreenTech', icon: '⚡', desc: 'Renewable energy', votes: [1345, 0, 0] },
+            { name: 'EduVR', icon: '🥽', desc: 'VR education', votes: [756, 0, 0] },
+            { name: 'FoodBot', icon: '🤖', desc: 'AI food delivery', votes: [1123, 0, 0] }
+        ];
+
+        let currentRound = 0;
+        let currentMatchup = 0;
+        let group1Winner = null;
+        let group1RunnerUp = null;
+
+        async function startTournament() {
+            const startBtn = document.getElementById('startTournament');
+            startBtn.disabled = true;
+            startBtn.textContent = '🏆 Tournament in Progress...';
+
+            try {
+                // Group 1 Round Robin
+                console.log('Starting Group 1 Round Robin...');
+                await showRoundTitle('Group 1 - Round Robin');
+                await runGroup1RoundRobin();
+                
+                // Cross-group matchups
+                console.log('Starting Cross-group matchups...');
+                await showRoundTitle('Head-to-Head Rounds');
+                const overallWinner = await runCrossGroupMatchups();
+                
+                // Finals
+                console.log('Starting Finals...');
+                await showRoundTitle('🏆 Finals');
+                const tournamentWinner = await runFinals(overallWinner);
+                
+                // Show final results
+                console.log('Showing final results...');
+                showFinalResults(tournamentWinner);
+            } catch (error) {
+                console.error('Tournament error:', error);
+                startBtn.disabled = false;
+                startBtn.textContent = '🚀 Start Tournament Animation';
+            }
+        }
+
+        async function runGroup1RoundRobin() {
+            const stageTitle = document.querySelector('.stage-title');
+            const startupGrid = document.querySelector('.startup-grid');
+            const matchupDisplay = document.querySelector('.matchup-display');
+            
+            // Show matchup display
+            matchupDisplay.style.display = 'block';
+            
+            const group1Startups = startups.slice(0, 4);
+            const matchups = [
+                [0, 1], [2, 3], [0, 2], [1, 3], [0, 3], [1, 2]
+            ];
+            
+            // Initialize vote tracking for group 1 startups
+            const voteTracker = {
+                'Neural Tutor': 0,
+                'EcoPack': 0,
+                'HealthSync': 0,
+                'SmartFarm': 0
+            };
+            
+            // Reset all cards to normal state
+            resetAllCards();
+            
+            for (let i = 0; i < matchups.length; i++) {
+                const [idx1, idx2] = matchups[i];
+                const startup1 = group1Startups[idx1];
+                const startup2 = group1Startups[idx2];
+                
+                // Update matchup display
+                updateMatchupDisplay(startup1, startup2);
+                
+                // Reset all highlights before starting new matchup
+                resetAllHighlights();
+                
+                // Highlight the two competing startups in the group grid
+                highlightCompetingStartups(startup1.name, startup2.name);
+                
+                // Simulate voting
+                await sleep(2000);
+                
+                // Determine winner (Neural Tutor always wins for demo)
+                const winner = startup1.name === 'Neural Tutor' ? startup1 : startup2;
+                const loser = startup1.name === 'Neural Tutor' ? startup2 : startup1;
+                
+                // Update vote counts in tracker
+                voteTracker[winner.name] += winner.votes[0];
+                voteTracker[loser.name] += loser.votes[0];
+                
+                // Animate votes in matchup display
+                updateMatchupVotes(winner.name, winner.votes[0], loser.name, loser.votes[0]);
+                
+                // Wait for animation to complete
+                await sleep(2000);
+                
+                // Update vote counts for both startups in the grid
+                updateVoteCount(winner.name, voteTracker[winner.name]);
+                updateVoteCount(loser.name, voteTracker[loser.name]);
+                
+                // Highlight winner and loser in group grid
+                highlightWinnerInGrid(winner.name);
+                highlightLoserInGrid(loser.name);
+                
+                // No prize money in group stage matchups - only at the end
+                
+                await sleep(1500);
+                
+                // Reset all highlights for next matchup
+                resetAllHighlights();
+                
+                // Shuffle cards by vote count (highest to lowest)
+                shuffleCardsByVotes(voteTracker);
+            }
+            
+            // Determine group 1 winner and runner-up based on final vote counts
+            const sortedStartups = Object.entries(voteTracker)
+                .sort(([,a], [,b]) => b - a)
+                .map(([name]) => name);
+            
+            group1Winner = group1Startups.find(s => s.name === sortedStartups[0]);
+            group1RunnerUp = group1Startups.find(s => s.name === sortedStartups[1]);
+            
+            console.log('Group 1 results:', { group1Winner, group1RunnerUp, sortedStartups });
+            
+            // Update stage title
+            stageTitle.textContent = `Group 1 Complete - ${group1Winner.name} Wins!`;
+            
+            // Add prize money with emojis
+            addPrizeMoney(group1Winner.name, 100, '🏆');
+            addPrizeMoney(group1RunnerUp.name, 50, '🥈');
+            
+            await sleep(2000);
+        }
+
+        async function runCrossGroupMatchups() {
+            console.log('runCrossGroupMatchups started');
+            console.log('group1RunnerUp:', group1RunnerUp);
+            
+            const stageTitle = document.querySelector('.stage-title');
+            const startupGrid = document.querySelector('.startup-grid');
+            const matchupDisplay = document.querySelector('.matchup-display');
+            
+            // Clear the group grid and show only head-to-head matchups
+            startupGrid.style.display = 'none';
+            
+            // Track overall winner
+            let overallWinner = null;
+            
+            // Round 1 - Use different startups from other groups
+            stageTitle.textContent = 'Round 1 - Group 1 Runner-up vs Group 2 Winner';
+            
+            // Update matchup title
+            document.querySelector('.matchup-title').textContent = 'Round 1';
+            
+            const group2Winner = { name: 'DataVault', icon: '🔒', desc: 'Secure data storage', votes: [945] };
+            
+            updateMatchupDisplay(group1RunnerUp, group2Winner);
+            await sleep(2000);
+            
+            // Animate votes
+            updateMatchupVotes(group1RunnerUp.name, 945, group2Winner.name, 623);
+            
+            // Wait for animation to complete
+            await sleep(2000);
+            
+            // Show winner/loser and add prize money
+            highlightWinnerInMatchup(group1RunnerUp.name);
+            highlightLoserInMatchup(group2Winner.name);
+            addPrizeMoney(group1RunnerUp.name, 75, '🏆');
+            overallWinner = group1RunnerUp;
+            
+            await sleep(1500);
+            
+            // Round 2 - Use different startup
+            stageTitle.textContent = 'Round 2';
+            document.querySelector('.matchup-title').textContent = 'Round 2';
+            const group3Winner = { name: 'GreenTech', icon: '⚡', desc: 'Renewable energy', votes: [1345] };
+            updateMatchupDisplay(group1RunnerUp, group3Winner);
+            await sleep(2000);
+            
+            updateMatchupVotes(group1RunnerUp.name, 1345, group3Winner.name, 945);
+            
+            // Wait for animation to complete
+            await sleep(2000);
+            
+            highlightWinnerInMatchup(group1RunnerUp.name);
+            highlightLoserInMatchup(group3Winner.name);
+            addPrizeMoney(group1RunnerUp.name, 100, '🏆');
+            
+            await sleep(1500);
+            
+            // Quarter Finals - Use different startup
+            stageTitle.textContent = 'Quarter Finals';
+            document.querySelector('.matchup-title').textContent = 'Quarter Finals';
+            const group4Winner = { name: 'EduVR', icon: '🥽', desc: 'VR education', votes: [756] };
+            updateMatchupDisplay(group1RunnerUp, group4Winner);
+            await sleep(2000);
+            
+            updateMatchupVotes(group1RunnerUp.name, 756, group4Winner.name, 623);
+            
+            // Wait for animation to complete
+            await sleep(2000);
+            
+            highlightWinnerInMatchup(group1RunnerUp.name);
+            highlightLoserInMatchup(group4Winner.name);
+            addPrizeMoney(group1RunnerUp.name, 125, '🏆');
+            
+            await sleep(1500);
+            
+            // Semi Finals - Use different startup
+            stageTitle.textContent = 'Semi Finals';
+            document.querySelector('.matchup-title').textContent = 'Semi Finals';
+            const group6Winner = { name: 'FoodBot', icon: '🤖', desc: 'AI food delivery', votes: [1345] };
+            updateMatchupDisplay(group1RunnerUp, group6Winner);
+            await sleep(2000);
+            
+            updateMatchupVotes(group1RunnerUp.name, 1123, group6Winner.name, 945);
+            
+            // Wait for animation to complete
+            await sleep(2000);
+            
+            highlightWinnerInMatchup(group1RunnerUp.name);
+            highlightLoserInMatchup(group6Winner.name);
+            addPrizeMoney(group1RunnerUp.name, 150, '🏆');
+            
+            await sleep(1500);
+            
+            console.log('runCrossGroupMatchups completed, returning:', overallWinner);
+            return overallWinner;
+        }
+
+        async function runFinals(overallWinner) {
+            const stageTitle = document.querySelector('.stage-title');
+            const startupGrid = document.querySelector('.startup-grid');
+            const matchupDisplay = document.querySelector('.matchup-display');
+            
+            // Hide matchup display and show final 4 grid
+            matchupDisplay.style.display = 'none';
+            startupGrid.style.display = 'grid';
+            
+            // Finals - Group of 4 with no repeats from group stage
+            stageTitle.textContent = '🏆 Finals - Top 4 Startups';
+            
+            const finalists = [
+                group1Winner, // Neural Tutor
+                overallWinner, // HealthSync (from head-to-head)
+                { name: 'GreenTech', icon: '⚡', desc: 'Renewable energy', votes: [1345] },
+                { name: 'EduVR', icon: '🥽', desc: 'VR education', votes: [756] }
+            ];
+            
+            // Update grid with finalists
+            updateFinalistsGrid(finalists);
+            
+            // Start finalists with +$500 base prize money
+            addPrizeMoney(group1Winner.name, 500, '🏆');
+            addPrizeMoney(overallWinner.name, 500, '🏆');
+            addPrizeMoney('GreenTech', 500, '🏆');
+            addPrizeMoney('EduVR', 500, '🏆');
+            
+            // Set base prize for finals
+            const finalistCards = document.querySelectorAll('.startup-grid .startup-card');
+            finalistCards.forEach(card => {
+                card.dataset.basePrize = '500';
+            });
+            
+            await sleep(2000);
+            
+            // Final round robin in group of 4 (no repeats)
+            const finalMatchups = [
+                [group1Winner, overallWinner],
+                [{ name: 'GreenTech', icon: '⚡', desc: 'Renewable energy', votes: [945] }, 
+                 { name: 'EduVR', icon: '🥽', desc: 'VR education', votes: [756] }],
+                [group1Winner, { name: 'GreenTech', icon: '⚡', desc: 'Renewable energy', votes: [945] }],
+                [overallWinner, { name: 'EduVR', icon: '🥽', desc: 'VR education', votes: [756] }]
+            ];
+            
+            // Reset vote tracker for finals based on actual finalists
+            window.finalsVoteTracker = {};
+            finalists.forEach(startup => {
+                window.finalsVoteTracker[startup.name] = 0;
+            });
+            
+            // Show matchup display for final round
+            matchupDisplay.style.display = 'block';
+            
+            for (let i = 0; i < finalMatchups.length; i++) {
+                const [startup1, startup2] = finalMatchups[i];
+                
+                updateMatchupDisplay(startup1, startup2);
+                
+                // Reset all highlights before starting new matchup
+                resetAllFinalsHighlights();
+                
+                // Highlight the two competing startups
+                highlightCompetingStartupsInFinals(startup1.name, startup2.name);
+                await sleep(2000);
+                
+                // Animate votes
+                updateMatchupVotes(startup1.name, startup1.votes[0], startup2.name, startup2.votes[0]);
+                
+                // Wait for animation to complete
+                await sleep(2000);
+                
+                // Neural Tutor always wins
+                const winner = startup1.name === 'Neural Tutor' ? startup1 : startup2;
+                const loser = startup1.name === 'Neural Tutor' ? startup2 : startup1;
+                
+                // Update vote totals in finals tracker
+                window.finalsVoteTracker[winner.name] += winner.votes[0];
+                window.finalsVoteTracker[loser.name] += loser.votes[0];
+                
+                // Update vote counts in the grid
+                updateVoteCount(winner.name, window.finalsVoteTracker[winner.name]);
+                updateVoteCount(loser.name, window.finalsVoteTracker[loser.name]);
+                
+                // Show winner/loser briefly
+                highlightWinnerInFinals(winner.name);
+                highlightLoserInFinals(loser.name);
+                
+                // No prize money in finals head-to-head matchups
+                
+                await sleep(1500);
+                
+                // Reset all highlights for next matchup
+                resetAllFinalsHighlights();
+            }
+            
+            // Reset all highlighting at the end of finals
+            resetAllFinalsHighlights();
+            
+            // Championship announcement with all prize money
+            stageTitle.textContent = '🏆 Neural Tutor - Grand Champion!';
+            
+            // Award all prize money immediately
+            // Reset champion's prize money to exactly $35,000
+            const championCard = document.querySelector(`[data-startup="${group1Winner.name.toLowerCase().replace(' ', '-')}"]`);
+            if (championCard) {
+                championCard.dataset.prize = '35000';
+                const prizeDisplay = championCard.querySelector('.prize-display');
+                if (prizeDisplay) {
+                    prizeDisplay.innerHTML = `🏆 $35,000`;
+                }
+            }
+            
+            addPrizeMoney('HealthSync', 1200, '🥈');
+            addPrizeMoney('GreenTech', 800, '🥉');
+            addPrizeMoney('EduVR', 600, '🏅');
+            
+            // Show grand champion popup
+            await showChampionPopup(group1Winner.name);
+            
+            // Ensure matchup display is hidden
+            matchupDisplay.style.display = 'none';
+            
+            await sleep(2000);
+            
+            return group1Winner; // Return the overall tournament winner
+        }
+
+        function showFinalResults(tournamentWinner) {
+            const stageTitle = document.querySelector('.stage-title');
+            stageTitle.textContent = `🏆 ${tournamentWinner.name} Wins $35,000!`;
+            
+            // Hide matchup display and reset button
+            document.querySelector('.matchup-display').style.display = 'none';
+            const startBtn = document.getElementById('startTournament');
+            startBtn.disabled = false;
+            startBtn.textContent = '🏆 Tournament Complete - Click to Restart';
+            
+            // Show final results card
+            const resultsCard = document.createElement('div');
+            resultsCard.style.cssText = `
+                background: rgba(0, 212, 255, 0.1); 
+                border: 1px solid rgba(0, 212, 255, 0.3); 
+                border-radius: 20px; 
+                padding: 2rem; 
+                max-width: 800px; 
+                margin: 2rem auto; 
+                backdrop-filter: blur(20px);
+            `;
+            resultsCard.innerHTML = `
+                <h4 style="color: #00d4ff; font-size: 1.5rem; margin-bottom: 1rem; font-family: 'Space Grotesk', sans-serif;">
+                    🏆 ${tournamentWinner.name} - Grand Champion!
+                </h4>
+                <p style="color: rgba(255, 255, 255, 0.9); line-height: 1.6; margin-bottom: 1rem;">
+                    This AI-powered learning platform revolutionizes education by creating personalized study plans that adapt to each student's learning style and pace.
+                </p>
+                <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-top: 1.5rem;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.5rem; color: #00d4ff;">🎯</div>
+                        <div style="color: white; font-weight: 600; font-size: 0.9rem;">Personalized Learning</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.5rem; color: #00d4ff;">⚡</div>
+                        <div style="color: white; font-weight: 600; font-size: 0.9rem;">AI-Powered</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.5rem; color: #00d4ff;">📈</div>
+                        <div style="color: white; font-weight: 600; font-size: 0.9rem;">Proven Results</div>
+                    </div>
+                </div>
+            `;
+            
+            document.querySelector('.tournament-stage').appendChild(resultsCard);
+        }
+
+        function updateMatchupDisplay(startup1, startup2) {
+            const matchupCards = document.querySelector('.matchup-cards');
+            matchupCards.innerHTML = `
+                <div class="startup-card matchup-card" style="width: 200px;">
+                    <div class="card-header">
+                        <div class="startup-icon">${startup1.icon}</div>
+                        <div class="startup-name">${startup1.name}</div>
+                    </div>
+                    <div class="vote-count">Votes: 0</div>
+                    <div class="vote-bar-container">
+                        <div class="vote-bar" data-votes="0"></div>
+                    </div>
+                </div>
+                
+                <div class="vs-badge">VS</div>
+                
+                <div class="startup-card matchup-card" style="width: 200px;">
+                    <div class="card-header">
+                        <div class="startup-icon">${startup2.icon}</div>
+                        <div class="startup-name">${startup2.name}</div>
+                    </div>
+                    <div class="vote-count">Votes: 0</div>
+                    <div class="vote-bar-container">
+                        <div class="vote-bar" data-votes="0"></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateVoteCount(startupName, votes) {
+            const cards = document.querySelectorAll('.startup-grid .startup-card');
+            cards.forEach(card => {
+                const cardName = card.querySelector('.startup-name').textContent;
+                if (cardName === startupName) {
+                    const voteCount = card.querySelector('.vote-count');
+                    voteCount.textContent = `Votes: ${votes}`;
+                }
+            });
+        }
+
+        function animateVoteCount(element, targetVotes) {
+            const startVotes = parseInt(element.textContent.replace('Votes: ', '')) || 0;
+            const duration = 1500; // 1.5 seconds for faster animation
+            const startTime = Date.now();
+            
+            function updateCount() {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const currentVotes = Math.floor(startVotes + (targetVotes - startVotes) * progress);
+                
+                element.textContent = `Votes: ${currentVotes}`;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(updateCount);
+                }
+            }
+            
+            updateCount();
+        }
+
+        function highlightWinner(startupName) {
+            const card = document.querySelector(`[data-startup="${startupName.toLowerCase().replace(' ', '-')}"]`);
+            if (card) {
+                card.classList.add('winner');
+                card.classList.remove('second-place', 'eliminated');
+            }
+        }
+
+        function highlightLoser(startupName) {
+            const card = document.querySelector(`[data-startup="${startupName.toLowerCase().replace(' ', '-')}"]`);
+            if (card) {
+                card.classList.add('eliminated');
+                card.classList.remove('winner', 'second-place');
+            }
+        }
+
+        function addPrizeMoney(startupName, amount, emoji = '💰') {
+            const cards = document.querySelectorAll('.startup-card');
+            cards.forEach(card => {
+                const cardName = card.querySelector('.startup-name').textContent;
+                if (cardName === startupName) {
+                    let prizeDisplay = card.querySelector('.prize-display');
+                    
+                    // Create prize display element if it doesn't exist
+                    if (!prizeDisplay) {
+                        prizeDisplay = document.createElement('div');
+                        prizeDisplay.className = 'prize-display';
+                        card.appendChild(prizeDisplay);
+                    }
+                    
+                    const currentPrize = parseInt(card.dataset.prize) || 0;
+                    const newPrize = currentPrize + amount;
+                    card.dataset.prize = newPrize;
+                    
+                    // Show prize money with animation
+                    if (amount >= 35000) {
+                        prizeDisplay.innerHTML = `🏆 $${newPrize.toLocaleString()}`;
+                    } else {
+                        prizeDisplay.innerHTML = `${emoji} +$${amount}`;
+                    }
+                    
+                    // Add a brief highlight animation
+                    card.style.transform = 'scale(1.05)';
+                    setTimeout(() => {
+                        card.style.transform = 'scale(1)';
+                    }, 300);
+                }
+            });
+        }
+
+        function updateFinalistsGrid(finalists) {
+            const startupGrid = document.querySelector('.startup-grid');
+            startupGrid.innerHTML = '';
+            
+            finalists.forEach(startup => {
+                const card = document.createElement('div');
+                card.className = 'startup-card';
+                card.dataset.startup = startup.name.toLowerCase().replace(' ', '-');
+                card.dataset.prize = '0';
+                
+                card.innerHTML = `
+                    <div class="card-header">
+                        <div class="startup-icon">${startup.icon}</div>
+                        <div class="startup-name">${startup.name}</div>
+                    </div>
+                    <div class="startup-desc">${startup.desc}</div>
+                    <div class="vote-count">Votes: 0</div>
+                    <div class="prize-display"></div>
+                `;
+                
+                startupGrid.appendChild(card);
+            });
+            
+            // Initialize vote tracking for finals based on actual finalists
+            window.finalsVoteTracker = {};
+            finalists.forEach(startup => {
+                window.finalsVoteTracker[startup.name] = 0;
+            });
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        async function showRoundTitle(title) {
+            const popup = document.createElement('div');
+            popup.className = 'round-title-popup';
+            popup.textContent = title;
+            document.body.appendChild(popup);
+            
+            await sleep(3000); // Wait for animation to complete
+            document.body.removeChild(popup);
+        }
+
+        async function showChampionPopup(championName) {
+            const popup = document.createElement('div');
+            popup.className = 'champion-popup';
+            popup.innerHTML = `
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🏆</div>
+                <div>GRAND CHAMPION</div>
+                <div style="font-size: 2rem; margin: 1rem 0;">${championName}</div>
+                <div style="font-size: 1.5rem; color: #1a1a2e;">$35,000</div>
+            `;
+            document.body.appendChild(popup);
+            
+            await sleep(4000); // Wait for animation to complete
+            document.body.removeChild(popup);
+        }
+
+        // New helper functions for better highlighting
+        function resetAllCards() {
+            const cards = document.querySelectorAll('.startup-card');
+            cards.forEach(card => {
+                card.classList.remove('winner', 'second-place', 'eliminated', 'competing');
+            });
+        }
+
+        function highlightCompetingStartups(startup1Name, startup2Name) {
+            const cards = document.querySelectorAll('.startup-grid .startup-card');
+            cards.forEach(card => {
+                const cardName = card.querySelector('.startup-name').textContent;
+                if (cardName === startup1Name || cardName === startup2Name) {
+                    card.classList.add('competing');
+                }
+            });
+        }
+
+        function resetCompetingHighlights() {
+            const cards = document.querySelectorAll('.startup-card');
+            cards.forEach(card => {
+                card.classList.remove('competing');
+            });
+        }
+
+        function resetAllHighlights() {
+            const cards = document.querySelectorAll('.startup-card');
+            cards.forEach(card => {
+                card.classList.remove('competing', 'winner', 'second-place', 'eliminated');
+            });
+        }
+
+        function highlightWinnerInGrid(startupName) {
+            const cards = document.querySelectorAll('.startup-grid .startup-card');
+            cards.forEach(card => {
+                const cardName = card.querySelector('.startup-name').textContent;
+                if (cardName === startupName) {
+                    card.classList.add('winner');
+                    card.classList.remove('second-place', 'eliminated', 'competing');
+                }
+            });
+        }
+
+        function highlightLoserInGrid(startupName) {
+            const cards = document.querySelectorAll('.startup-grid .startup-card');
+            cards.forEach(card => {
+                const cardName = card.querySelector('.startup-name').textContent;
+                if (cardName === startupName) {
+                    card.classList.add('eliminated');
+                    card.classList.remove('winner', 'second-place', 'competing');
+                }
+            });
+        }
+
+        function highlightWinnerInMatchup(startupName) {
+            const matchupCards = document.querySelectorAll('.matchup-card');
+            matchupCards.forEach(card => {
+                const cardName = card.querySelector('.startup-name').textContent;
+                if (cardName === startupName) {
+                    card.classList.add('winner');
+                    card.classList.remove('second-place', 'eliminated');
+                }
+            });
+        }
+
+        function highlightLoserInMatchup(startupName) {
+            const matchupCards = document.querySelectorAll('.matchup-card');
+            matchupCards.forEach(card => {
+                const cardName = card.querySelector('.startup-name').textContent;
+                if (cardName === startupName) {
+                    card.classList.add('eliminated');
+                    card.classList.remove('winner', 'second-place');
+                }
+            });
+        }
+
+        function highlightCompetingStartupsInFinals(startup1Name, startup2Name) {
+            const cards = document.querySelectorAll('.startup-grid .startup-card');
+            cards.forEach(card => {
+                const cardName = card.querySelector('.startup-name').textContent;
+                // Remove all competing highlights first
+                card.classList.remove('competing');
+                // Only add competing highlight to the two specified startups
+                if (cardName === startup1Name || cardName === startup2Name) {
+                    card.classList.add('competing');
+                }
+            });
+        }
+
+        function resetCompetingHighlightsInFinals() {
+            const cards = document.querySelectorAll('.startup-grid .startup-card');
+            cards.forEach(card => {
+                card.classList.remove('competing');
+            });
+        }
+
+        function highlightWinnerInFinals(startupName) {
+            const cards = document.querySelectorAll('.startup-grid .startup-card');
+            cards.forEach(card => {
+                const cardName = card.querySelector('.startup-name').textContent;
+                if (cardName === startupName) {
+                    card.classList.add('winner');
+                    card.classList.remove('second-place', 'eliminated', 'competing');
+                }
+            });
+        }
+
+        function highlightLoserInFinals(startupName) {
+            const cards = document.querySelectorAll('.startup-grid .startup-card');
+            cards.forEach(card => {
+                const cardName = card.querySelector('.startup-name').textContent;
+                if (cardName === startupName) {
+                    card.classList.add('eliminated');
+                    card.classList.remove('winner', 'second-place', 'competing');
+                }
+            });
+        }
+
+        function resetAllFinalsHighlights() {
+            const cards = document.querySelectorAll('.startup-grid .startup-card');
+            cards.forEach(card => {
+                card.classList.remove('winner', 'second-place', 'eliminated', 'competing');
+            });
+        }
+
+        function shuffleCardsByVotes(voteTracker) {
+            const startupGrid = document.querySelector('.startup-grid');
+            const cards = Array.from(startupGrid.children);
+            
+            // Sort cards by vote count (highest to lowest)
+            cards.sort((a, b) => {
+                const aName = a.querySelector('.startup-name').textContent;
+                const bName = b.querySelector('.startup-name').textContent;
+                const aVotes = voteTracker[aName] || 0;
+                const bVotes = voteTracker[bName] || 0;
+                return bVotes - aVotes;
+            });
+            
+            // Add shuffle animation class
+            cards.forEach(card => {
+                card.style.transition = 'all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                card.style.transform = 'scale(1.05)';
+            });
+            
+            // Reorder cards in the grid
+            cards.forEach(card => {
+                startupGrid.appendChild(card);
+            });
+            
+            // Reset animation after reordering
+            setTimeout(() => {
+                cards.forEach(card => {
+                    card.style.transform = 'scale(1)';
+                });
+            }, 100);
+        }
+
+        function updateMatchupVotes(winnerName, winnerVotes, loserName, loserVotes) {
+            const matchupCards = document.querySelectorAll('.matchup-card');
+            matchupCards.forEach(card => {
+                const cardName = card.querySelector('.startup-name').textContent;
+                const voteCount = card.querySelector('.vote-count');
+                const voteBar = card.querySelector('.vote-bar');
+                
+                if (cardName === winnerName) {
+                    // Animate winner votes
+                    animateVoteCount(voteCount, winnerVotes);
+                    if (voteBar) {
+                        const maxVotes = Math.max(winnerVotes, loserVotes);
+                        const percentage = maxVotes > 0 ? (winnerVotes / maxVotes) * 100 : 0;
+                        voteBar.style.width = `${percentage}%`;
+                    }
+                } else if (cardName === loserName) {
+                    // Animate loser votes
+                    animateVoteCount(voteCount, loserVotes);
+                    if (voteBar) {
+                        const maxVotes = Math.max(winnerVotes, loserVotes);
+                        const percentage = maxVotes > 0 ? (loserVotes / maxVotes) * 100 : 0;
+                        voteBar.style.width = `${percentage}%`;
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html> 
