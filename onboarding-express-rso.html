@@ -2111,16 +2111,21 @@
             
             // Handle enrolled months question dynamically with credit requirements
             if (question.id === 'enrolled_months') {
+                console.log('Processing enrolled months question. School:', chatData.school, 'SchoolFtCredits:', chatData.schoolFtCredits);
                 // Use ftcredits from school recognition if available
                 if (chatData.schoolFtCredits) {
                     // Calculate half-time credits (divide by 2)
                     const halfTimeCredits = Math.ceil(chatData.schoolFtCredits / 2);
                     question.message = `Which months were you enrolled in less than ${halfTimeCredits} credits? Red = enrolled in less than ${halfTimeCredits} credits.`;
-                    console.log('Using school ftcredits for enrollment question:', chatData.schoolFtCredits);
+                    console.log('Using school ftcredits for enrollment question:', chatData.schoolFtCredits, 'Half-time credits:', halfTimeCredits);
                 } else {
                     // Use original message if no ftcredits available
                     question.message = "Which months are you NOT enrolled as a student this year? (Most students are not enrolled during summer months)";
-                    console.log('No school ftcredits available, using default enrollment message');
+                    console.log('No school ftcredits available, using default enrollment message. School data:', {
+                        school: chatData.school,
+                        schoolFtCredits: chatData.schoolFtCredits,
+                        state: chatData.state
+                    });
                 }
             }
             
@@ -2190,7 +2195,12 @@
                     // Pre-populate chat data with available information
                     if (parsed.clubName) chatData.club = parsed.clubName;
                     if (parsed.clubId) chatData.clubId = parsed.clubId;
-                    if (parsed.school) chatData.school = parsed.school;
+                    if (parsed.school) {
+                        chatData.school = parsed.school;
+                        // Detect school state and ftcredits when school is loaded from localStorage
+                        console.log('School loaded from localStorage, detecting state and ftcredits...');
+                        await detectSchoolState(parsed.school);
+                    }
                     if (parsed.state) {
                         // Convert state name to state code if needed
                         const stateCode = convertStateNameToCode(parsed.state);
