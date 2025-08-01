@@ -1,0 +1,2529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Startup Competition Platform - Submit Ideas, Vote, Get Funded</title>
+    <!-- <script src="smartsupporting.js"></script> -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700;800;900&display=swap');
+        
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --accent: #7c3aed;
+            --accent-2: #8b5cf6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-light: #64748b;
+            --background: #ffffff;
+            --background-secondary: #f8fafc;
+            --border: rgba(15, 23, 42, 0.08);
+            --border-light: rgba(15, 23, 42, 0.05);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 12px 16px rgba(0, 0, 0, 0.12);
+            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.16);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Hero Section - Cream Background Rectangle */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            background: #FDF9F3;
+            margin: 0;
+            padding: 4rem 0;
+            color: var(--text-primary);
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 4rem;
+            align-items: center;
+            width: 100%;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-text {
+            z-index: 2;
+        }
+
+        .empowerment-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--background-secondary);
+            color: var(--text-primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-light);
+        }
+
+        .hero-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .hero-media {
+            position: relative;
+        }
+
+        .media-container {
+            position: relative;
+        }
+
+        /* Renest Meteor Section */
+        .renest-meteor-section {
+            background: var(--background);
+            padding: 4rem 0;
+            margin: 0;
+        }
+
+        .renest-meteor-content {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .renest-meteor-logo {
+            flex-shrink: 0;
+        }
+
+        .renest-meteor-text {
+            flex: 1;
+        }
+
+        .renest-meteor-stats {
+            width: 100%;
+            margin-top: 3rem;
+        }
+
+        .stats-subtitle {
+            text-align: center;
+            margin: 3rem 0 2rem 0;
+            width: 100%;
+            padding: 0 2rem;
+        }
+
+        .stats-subtitle p {
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-weight: 600;
+            max-width: 700px;
+            margin: 0 auto;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            width: 100%;
+        }
+
+        .renest-meteor-description {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .renest-meteor-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .stat-label {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            font-weight: 700;
+        }
+
+        .impact-highlight {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .impact-highlight h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .impact-highlight p {
+            font-size: 1.125rem;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+
+
+
+        /* Featured Campaign Section - Ocean Gradient Background */
+        .featured-campaign-section {
+            background: linear-gradient(135deg, #006994 0%, #1e3a8a 25%, #3b82f6 50%, #0ea5e9 75%, #06b6d4 100%);
+            padding: 6rem 0;
+            margin: 4rem 0;
+            position: relative;
+        }
+
+        .featured-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            color: white;
+        }
+
+        .featured-logo-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .featured-logo {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .featured-divider {
+            width: 2px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .featured-tagline {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .featured-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .featured-subtitle {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .featured-campaign-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            padding: 3rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            backdrop-filter: blur(20px);
+        }
+
+        .featured-campaign-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .featured-campaign-text h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .featured-campaign-creator {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .featured-campaign-description {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .featured-campaign-progress {
+            background: rgba(255, 255, 255, 0.2);
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .featured-campaign-progress-bar {
+            height: 100%;
+            background: white;
+            border-radius: 6px;
+            transition: width 0.3s ease;
+        }
+
+        .featured-campaign-stats {
+            display: flex;
+            justify-content: space-between;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+        }
+
+        .featured-campaign-cta {
+            text-align: center;
+        }
+
+        /* Search Campaigns Section - Straight with Rounded Corners */
+        .search-campaigns-section {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            padding: 6rem 0;
+            margin: 4rem 0;
+            position: relative;
+            border-radius: 40px;
+        }
+
+        .search-header {
+            margin-bottom: 4rem;
+            text-align: center;
+            color: white;
+        }
+
+        .search-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .search-subtitle {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .search-form {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: var(--shadow-lg);
+            backdrop-filter: blur(20px);
+        }
+
+        .search-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input {
+            padding: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: white;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .search-button {
+            background: white;
+            color: var(--primary);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .search-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Possibilities Section - Cool Dark Design */
+        .possibilities-section {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            padding: 6rem 0;
+            margin: 4rem 0;
+            position: relative;
+            border-radius: 40px;
+        }
+
+        .section-header {
+            margin-bottom: 4rem;
+            text-align: center;
+            color: white;
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .section-subtitle {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .possibilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .possibility-card {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 24px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-lg);
+            backdrop-filter: blur(20px);
+        }
+
+        .possibility-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-xl);
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .possibility-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .possibility-title {
+            font-size: 1.375rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1.25rem;
+        }
+
+        .possibility-description {
+            color: rgba(255, 255, 255, 0.95);
+            line-height: 1.7;
+            font-size: 1.05rem;
+        }
+
+        /* How It Works Section - Gaming Tech Aesthetic */
+        .stories-section {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%);
+            padding: 6rem 0;
+            margin: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stories-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .story-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(120, 219, 255, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .story-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(120, 219, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .story-card:hover::before {
+            left: 100%;
+        }
+
+        .story-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                0 20px 40px rgba(120, 219, 255, 0.2),
+                0 0 0 1px rgba(120, 219, 255, 0.5);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .story-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            margin: 0 auto 1rem auto;
+            box-shadow: 
+                0 8px 32px rgba(0, 212, 255, 0.3),
+                0 0 0 1px rgba(0, 212, 255, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .story-avatar::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        /* Startup Card Styles */
+        .startup-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(120, 219, 255, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+            width: 280px;
+            max-width: 100%;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .startup-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .startup-card:hover::before {
+            left: 100%;
+        }
+
+        .startup-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 
+                0 20px 40px rgba(0, 212, 255, 0.2),
+                0 0 0 1px rgba(0, 212, 255, 0.5);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .startup-card.winner {
+            border-color: rgba(0, 212, 255, 0.6);
+            box-shadow: 
+                0 8px 32px rgba(0, 212, 255, 0.3),
+                0 0 0 1px rgba(0, 212, 255, 0.4);
+            animation: winnerGlow 2s ease-in-out infinite alternate;
+        }
+
+        .startup-card.champion {
+            border-color: #ffd700;
+            box-shadow: 
+                0 8px 32px rgba(255, 215, 0, 0.4),
+                0 0 0 1px rgba(255, 215, 0, 0.6);
+            animation: championGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes winnerGlow {
+            0% { box-shadow: 0 8px 32px rgba(0, 212, 255, 0.3), 0 0 0 1px rgba(0, 212, 255, 0.4); }
+            100% { box-shadow: 0 8px 32px rgba(0, 212, 255, 0.5), 0 0 0 1px rgba(0, 212, 255, 0.7); }
+        }
+
+        @keyframes championGlow {
+            0% { box-shadow: 0 8px 32px rgba(255, 215, 0, 0.4), 0 0 0 1px rgba(255, 215, 0, 0.6); }
+            100% { box-shadow: 0 8px 32px rgba(255, 215, 0, 0.7), 0 0 0 1px rgba(255, 215, 0, 0.9); }
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .startup-icon {
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 16px rgba(0, 212, 255, 0.3);
+        }
+
+        .startup-name {
+            color: white;
+            font-weight: 700;
+            font-size: 1.125rem;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .startup-desc {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.875rem;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .vote-count {
+            color: #00d4ff;
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .prize-amount {
+            color: #ffd700;
+            font-weight: 700;
+            font-size: 1rem;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .vs-line {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vs-line::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+            animation: flowLine 2s ease-in-out infinite;
+        }
+
+        @keyframes flowLine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Tournament Animation Styles */
+        .startup-card.winner {
+            border-color: #10b981;
+            box-shadow: 
+                0 8px 32px rgba(16, 185, 129, 0.4),
+                0 0 0 1px rgba(16, 185, 129, 0.6);
+            animation: winnerGlow 1s ease-in-out infinite alternate;
+        }
+
+        .startup-card.second-place {
+            border-color: #f59e0b;
+            box-shadow: 
+                0 8px 32px rgba(245, 158, 11, 0.4),
+                0 0 0 1px rgba(245, 158, 11, 0.6);
+            animation: secondPlaceGlow 1s ease-in-out infinite alternate;
+        }
+
+        .startup-card.eliminated {
+            opacity: 0.3;
+            transform: scale(0.95);
+            transition: all 0.5s ease;
+        }
+
+        .startup-card.competing {
+            border-color: #ff6b9d;
+            box-shadow: 
+                0 8px 32px rgba(255, 107, 157, 0.4),
+                0 0 0 1px rgba(255, 107, 157, 0.6);
+            animation: competingPulse 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes competingPulse {
+            0% { box-shadow: 0 8px 32px rgba(255, 107, 157, 0.4), 0 0 0 1px rgba(255, 107, 157, 0.6); }
+            100% { box-shadow: 0 8px 32px rgba(255, 107, 157, 0.7), 0 0 0 1px rgba(255, 107, 157, 0.9); }
+        }
+
+        @keyframes winnerGlow {
+            0% { box-shadow: 0 8px 32px rgba(16, 185, 129, 0.4), 0 0 0 1px rgba(16, 185, 129, 0.6); }
+            100% { box-shadow: 0 8px 32px rgba(16, 185, 129, 0.7), 0 0 0 1px rgba(16, 185, 129, 0.9); }
+        }
+
+        @keyframes secondPlaceGlow {
+            0% { box-shadow: 0 8px 32px rgba(245, 158, 11, 0.4), 0 0 0 1px rgba(245, 158, 11, 0.6); }
+            100% { box-shadow: 0 8px 32px rgba(245, 158, 11, 0.7), 0 0 0 1px rgba(245, 158, 11, 0.9); }
+        }
+
+        .prize-display {
+            color: #ffd700;
+            font-weight: 700;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .tournament-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 212, 255, 0.4);
+        }
+
+        .matchup-card {
+            animation: matchupPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes matchupPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .vs-badge {
+            background: linear-gradient(135deg, #00d4ff 0%, #ff6b9d 100%);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 16px rgba(0, 212, 255, 0.3);
+        }
+
+        /* Vote Animation Styles */
+        .vote-bar-container {
+            background: rgba(255, 255, 255, 0.1);
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+            position: relative;
+        }
+
+        .vote-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00d4ff 0%, #ff6b9d 100%);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 1.5s ease-out;
+        }
+
+        .vote-count {
+            color: #00d4ff;
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .round-title-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #00d4ff 0%, #ff6b9d 100%);
+            color: white;
+            padding: 2rem 3rem;
+            border-radius: 20px;
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: 'Space Grotesk', sans-serif;
+            z-index: 1000;
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.4);
+            animation: roundTitlePop 3s ease-in-out forwards;
+        }
+
+        @keyframes roundTitlePop {
+            0% { 
+                opacity: 0; 
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+            20% { 
+                opacity: 1; 
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+            80% { 
+                opacity: 1; 
+                transform: translate(-50%, -50%) scale(1);
+            }
+            100% { 
+                opacity: 0; 
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+        }
+
+        .champion-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            color: #1a1a2e;
+            padding: 3rem 4rem;
+            border-radius: 30px;
+            font-size: 2.5rem;
+            font-weight: 900;
+            font-family: 'Space Grotesk', sans-serif;
+            z-index: 1000;
+            box-shadow: 
+                0 30px 60px rgba(255, 215, 0, 0.4),
+                0 0 0 3px rgba(255, 215, 0, 0.6);
+            animation: championPop 4s ease-in-out forwards;
+            text-align: center;
+        }
+
+        @keyframes championPop {
+            0% { 
+                opacity: 0; 
+                transform: translate(-50%, -50%) scale(0.3) rotate(-10deg);
+            }
+            20% { 
+                opacity: 1; 
+                transform: translate(-50%, -50%) scale(1.2) rotate(5deg);
+            }
+            40% { 
+                transform: translate(-50%, -50%) scale(1.1) rotate(-2deg);
+            }
+            60% { 
+                transform: translate(-50%, -50%) scale(1.05) rotate(1deg);
+            }
+            80% { 
+                opacity: 1; 
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+            }
+            100% { 
+                opacity: 0; 
+                transform: translate(-50%, -50%) scale(0.8) rotate(0deg);
+            }
+        }
+
+        .story-quote {
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .story-author {
+            font-weight: 600;
+            color: white;
+        }
+
+        .story-school {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.875rem;
+        }
+
+        /* CTA Section - Minimal with Subtle Curve */
+        .cta-section {
+            text-align: center;
+            padding: 6rem 0;
+            background: var(--background);
+            margin: 4rem 0;
+            position: relative;
+            border-radius: 0 0 60px 60px;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--primary);
+            color: white;
+            padding: 1.5rem 3rem;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: var(--shadow-xl);
+            background: var(--primary-dark);
+        }
+
+        .cta-button::after {
+            content: '→';
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .cta-button:hover::after {
+            transform: translateX(4px);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--background-secondary);
+            padding: 3rem 0;
+            margin-top: 4rem;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .footer-content {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .footer-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 24px;
+            padding: 3rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: var(--shadow-xl);
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.show .modal {
+            transform: scale(1);
+        }
+
+        .modal h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .modal p {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .modal-button {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .modal-button.primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .modal-button.primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .modal-button.secondary {
+            background: var(--background-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .modal-button.secondary:hover {
+            background: var(--border-light);
+            transform: translateY(-2px);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            background: var(--background-secondary);
+            color: var(--text-primary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+            
+            .featured-campaign-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .renest-meteor-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 2rem;
+            }
+
+            .stories-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .bracket-round {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .startup-card {
+                width: 100%;
+                max-width: 320px;
+            }
+
+            .vs-line {
+                width: 2px !important;
+                height: 40px !important;
+                margin: 0 !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-cta-desktop {
+                display: none !important;
+            }
+            
+            .hero-cta-mobile {
+                display: block !important;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .hero-cta-desktop {
+                display: block !important;
+            }
+            
+            .hero-cta-mobile {
+                display: none !important;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .startup-grid {
+                grid-template-columns: repeat(4, 1fr) !important;
+                max-width: 100% !important;
+                gap: 0.5rem !important;
+            }
+            
+            /* Mobile-optimized startup cards */
+            .startup-grid .startup-card {
+                width: 100% !important;
+                max-width: none !important;
+                padding: 0.75rem 0.5rem !important;
+                min-height: 80px !important;
+            }
+            
+            .startup-grid .card-header {
+                flex-direction: column !important;
+                gap: 0.25rem !important;
+                text-align: center !important;
+            }
+            
+            .startup-grid .startup-icon {
+                font-size: 1.5rem !important;
+                width: 40px !important;
+                height: 40px !important;
+                margin: 0 auto !important;
+            }
+            
+            .startup-grid .startup-name {
+                font-size: 0.75rem !important;
+                line-height: 1.2 !important;
+                margin: 0 !important;
+            }
+            
+            .startup-grid .startup-desc {
+                display: none !important;
+            }
+            
+            .startup-grid .vote-count {
+                font-size: 0.625rem !important;
+                margin: 0.25rem 0 0 0 !important;
+            }
+            
+            .startup-grid .prize-display {
+                font-size: 0.625rem !important;
+                margin: 0.25rem 0 0 0 !important;
+            }
+            
+            .hero-section {
+                min-height: auto;
+                padding: 4rem 1rem;
+                margin: 0;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.125rem;
+            }
+            
+            .renest-meteor-section {
+                padding: 3rem 1rem;
+            }
+            
+            .renest-meteor-content {
+                max-width: 100%;
+            }
+            
+            .how-it-works-section,
+            .featured-campaign-section,
+            .search-campaigns-section,
+            .possibilities-section,
+            .stories-section,
+            .cta-section {
+                padding: 3rem 1rem;
+                clip-path: none;
+                border-radius: 0;
+            }
+            
+            .search-inputs {
+                grid-template-columns: 1fr;
+            }
+            
+            .possibilities-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .possibility-card {
+                padding: 2rem 1.5rem;
+            }
+            
+            .stories-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .story-card {
+                padding: 2rem 1.5rem;
+            }
+            
+            .featured-campaign-card {
+                padding: 2rem 1.5rem;
+            }
+            
+            .featured-campaign-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .stat-card {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .startup-grid {
+                grid-template-columns: repeat(4, 1fr) !important;
+                max-width: 100% !important;
+                gap: 0.25rem !important;
+            }
+            
+            .startup-grid .startup-card {
+                padding: 0.5rem 0.25rem !important;
+                min-height: 70px !important;
+            }
+            
+            .startup-grid .startup-icon {
+                font-size: 1.25rem !important;
+                width: 32px !important;
+                height: 32px !important;
+            }
+            
+            .startup-grid .startup-name {
+                font-size: 0.625rem !important;
+            }
+            
+            .startup-grid .vote-count {
+                font-size: 0.5rem !important;
+            }
+            
+            .startup-grid .prize-display {
+                font-size: 0.5rem !important;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+            
+            .cta-button {
+                padding: 1.25rem 2rem;
+                font-size: 1.125rem;
+            }
+            
+            .possibility-card {
+                padding: 1.5rem 1rem;
+            }
+            
+            .story-card {
+                padding: 1.5rem 1rem;
+            }
+            
+            .featured-campaign-card {
+                padding: 1.5rem 1rem;
+            }
+            
+            .stat-card {
+                padding: 1.25rem;
+            }
+            
+            .modal {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <!-- <div class="empowerment-badge">
+                        ✨ Student Empowerment Platform
+                    </div> -->
+                    
+                    <h1 class="hero-title">From Idea <br>to Impact</h1>
+                    
+                    <p class="hero-subtitle">
+                        Renest hosts idea competitions where students submit creative projects, get sorted into brackets, and then compete for funding. The community votes to determine which ideas they want to bring to life.
+                    </p>
+                    
+                    <div class="hero-cta-desktop" style="text-align: left; margin-top: 2rem;">
+                        <a href="../onboarding-express-startup.html" class="cta-button">
+                            Get Started
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="hero-media">
+                    <div class="media-container">
+                        <div style="position:relative;width:100%;height:0;padding-bottom:75%;display:flex;align-items:center;justify-content:center;">
+                            <img src="hummingbirdflower.png" alt="Hummingbird and Flower" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;">
+                        </div>
+                    </div>
+                    <div class="hero-cta-mobile" style="text-align: center; margin-top: 2rem;">
+                        <a href="../onboarding-express-startup.html" class="cta-button">
+                            Get Started
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+
+        <!-- Renest Meteor Section -->
+        <section class="renest-meteor-section">
+            <div class="container">
+                <div class="renest-meteor-content">
+                    <div class="renest-meteor-logo">
+                        <img src="renestmeteor-cropped.png" alt="Renest Meteor Logo" style="max-width: 280px; width: 100%; height: auto;">
+                    </div>
+                    <div class="renest-meteor-text">
+                        <div class="stats-subtitle">
+                            <p>Below is the cumulative amount of money each year that goes unclaimed on student tax returns. Just by saving more money, imagine what we can create together.</p>
+                        </div>
+                    </div>
+                </div>
+               
+                <div class="renest-meteor-stats">
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">$3.9B</div>
+                            <div class="stat-label">Graduate Students</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">$11.2B</div>
+                            <div class="stat-label">Undergraduate Students</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">$14.4B</div>
+                            <div class="stat-label">Trade & Certificate Students</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+        <section class="stories-section">
+            <div class="section-header">
+                <h2 class="section-title">How It Works</h2>
+                <!-- <p class="section-subtitle">
+                    Your journey from tax savings to startup success
+                </p> -->
+            </div>
+            
+            <div class="stories-grid">
+                <div class="story-card">
+                    <div class="story-avatar">💰</div>
+                    <div class="story-quote">
+                        <strong>Step 1: Join the Community & Save</strong><br>
+                        Sign up with Renest, discover your tax savings, and contribute $50+ to the creative project funding pool.
+                    </div>
+                    <!-- <div class="story-author"></div> -->
+                    <!-- <div class="story-school">Unlock Your Potential</div> -->
+                </div>
+                
+                <div class="story-card">
+                    <div class="story-avatar">🚀</div>
+                    <div class="story-quote">
+                        <strong>Step 2: Build, Join, or View</strong><br>
+                        Submit your creative project with custom pages and videos, find teams to join, or explore the ideas and plan your vote.
+                    </div>
+                    <!-- <div class="story-author">Create Your Vision</div> -->
+                    <!-- <div class="story-school">Find Your Team</div> -->
+                </div>
+                
+                <div class="story-card">
+                    <div class="story-avatar">🏆</div>
+                    <div class="story-quote">
+                        <strong>Step 3: March Madness</strong><br>
+                        When we hit $50K, brackets begin! Vote head-to-head until we crown the champion project.
+                    </div>
+                    <!-- <div class="story-author">Compete & Win</div> -->
+                    <!-- <div class="story-school">Get Funded</div> -->
+                </div>
+            </div>
+            
+                         <!-- Animated Bracket Section -->
+             <div style="margin-top: 4rem; text-align: center;">
+                 <h3 style="color: white; font-size: 2rem; margin-bottom: 2rem; font-family: 'Space Grotesk', sans-serif; text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);">
+                     🏆 Live Tournament Bracket
+                 </h3>
+                 
+                 <div class="tournament-stage" style="margin-bottom: 2rem;">
+                     <div class="stage-title" style="color: #00d4ff; font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; font-family: 'Space Grotesk', sans-serif;">
+                         Group 1 - Round Robin
+                     </div>
+                     
+                     <div class="startup-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; max-width: 1200px; margin: 0 auto; justify-items: center;">
+                         <div class="startup-card" data-startup="campus-light-tunnel" data-prize="0">
+                             <div class="card-header">
+                                 <div class="startup-icon">🎨</div>
+                                 <div class="startup-name">Campus Light Tunnel</div>
+                             </div>
+                             <div class="startup-desc">Interactive LED art</div>
+                             <div class="vote-count">Votes: 0</div>
+                             <div class="prize-display"></div>
+                         </div>
+                         
+                         <div class="startup-card" data-startup="ocean-cleanup-drone" data-prize="0">
+                             <div class="card-header">
+                                 <div class="startup-icon">🔬</div>
+                                 <div class="startup-name">Ocean Cleanup Drone</div>
+                             </div>
+                             <div class="startup-desc">AI marine conservation</div>
+                             <div class="vote-count">Votes: 0</div>
+                             <div class="prize-display"></div>
+                         </div>
+                         
+                         <div class="startup-card" data-startup="student-housing-reform" data-prize="0">
+                             <div class="card-header">
+                                 <div class="startup-icon">🗳️</div>
+                                 <div class="startup-name">Student Housing Reform</div>
+                             </div>
+                             <div class="startup-desc">Campus policy advocacy</div>
+                             <div class="vote-count">Votes: 0</div>
+                             <div class="prize-display"></div>
+                         </div>
+                         
+                         <div class="startup-card" data-startup="indigenous-history-archive" data-prize="0">
+                             <div class="card-header">
+                                 <div class="startup-icon">📚</div>
+                                 <div class="startup-name">Indigenous History Archive</div>
+                             </div>
+                             <div class="startup-desc">Digital storytelling</div>
+                             <div class="vote-count">Votes: 0</div>
+                             <div class="prize-display"></div>
+                         </div>
+                     </div>
+                 </div>
+                 
+                 <div class="matchup-display" style="background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 20px; padding: 2rem; max-width: 800px; margin: 0 auto; backdrop-filter: blur(20px); display: none;">
+                     <div class="matchup-title" style="color: #00d4ff; font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; font-family: 'Space Grotesk', sans-serif;">
+                         Round 1
+                     </div>
+                     <div class="matchup-cards" style="display: flex; justify-content: center; align-items: center; gap: 2rem; flex-wrap: wrap;">
+                         <div class="startup-card matchup-card" style="width: 200px;">
+                             <div class="card-header">
+                                 <div class="startup-icon">🎨</div>
+                                 <div class="startup-name">Campus Light Tunnel</div>
+                             </div>
+                             <div class="vote-count">Votes: 847</div>
+                         </div>
+                         
+                         <div class="vs-badge" style="color: white; font-size: 1.5rem; font-weight: 700;">VS</div>
+                         
+                         <div class="startup-card matchup-card" style="width: 200px;">
+                             <div class="card-header">
+                                 <div class="startup-icon">🔬</div>
+                                 <div class="startup-name">Ocean Cleanup Drone</div>
+                             </div>
+                             <div class="vote-count">Votes: 623</div>
+                         </div>
+                     </div>
+                 </div>
+                 
+                 <div class="tournament-progress" style="margin-top: 2rem;">
+                     <button id="startTournament" class="tournament-btn" style="background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%); color: white; border: none; padding: 1rem 2rem; border-radius: 12px; font-weight: 700; cursor: pointer; transition: all 0.3s ease;">
+                         🚀 Start Tournament Animation
+                     </button>
+                 </div>
+             </div>
+        </section>
+
+
+        <!-- Possibilities Section -->
+        <!-- <section class="possibilities-section">
+            <div class="section-header">
+                <h2 class="section-title">Startup Categories</h2>
+                <p class="section-subtitle">
+                    Student startups compete across different categories and industries for funding and mentorship.
+                </p>
+            </div>
+            
+            <div class="possibilities-grid">
+                <div class="possibility-card">
+                    <div class="possibility-icon">💻</div>
+                    <div class="possibility-title">Tech & Software</div>
+                    <div class="possibility-description">
+                        AI, mobile apps, web platforms, SaaS solutions, and software innovations.
+                    </div>
+                </div>
+                <div class="possibility-card">
+                    <div class="possibility-icon">🌱</div>
+                    <div class="possibility-title">Sustainability</div>
+                    <div class="possibility-description">
+                        Clean energy, waste reduction, environmental tech, and green solutions.
+                    </div>
+                </div>
+                <div class="possibility-card">
+                    <div class="possibility-icon">🏥</div>
+                    <div class="possibility-title">Health Tech</div>
+                    <div class="possibility-description">
+                        Medical devices, health apps, telemedicine, and wellness innovations.
+                    </div>
+                </div>
+                <div class="possibility-card">
+                    <div class="possibility-icon">🎓</div>
+                    <div class="possibility-title">EdTech</div>
+                    <div class="possibility-description">
+                        Learning platforms, educational tools, and academic technology solutions.
+                    </div>
+                </div>
+                <div class="possibility-card">
+                    <div class="possibility-icon">🛒</div>
+                    <div class="possibility-title">E-commerce</div>
+                    <div class="possibility-description">
+                        Online marketplaces, retail innovations, and consumer products.
+                    </div>
+                </div>
+                <div class="possibility-card">
+                    <div class="possibility-icon">🚀</div>
+                    <div class="possibility-title">Hardware</div>
+                    <div class="possibility-description">
+                        IoT devices, robotics, electronics, and physical product innovations.
+                    </div>
+                </div>
+                <div class="possibility-card">
+                    <div class="possibility-icon">✨</div>
+                    <div class="possibility-title">Submit Your Idea</div>
+                    <div class="possibility-description">
+                        Any innovative startup idea that solves real problems and has market potential!
+                    </div>
+                </div>
+            </div> -->
+            
+            <!-- <div style="text-align: center; margin-top: 3rem;"> -->
+                <!-- <p style="color: rgba(255, 255, 255, 0.9); font-size: 1.125rem; margin-bottom: 1.5rem;">
+                    <strong>Who can submit startups?</strong> Individual students, student teams, and student-led startup companies with innovative ideas.
+                </p> -->
+                <!-- <button class="cta-button" onclick="openModal()" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3);">
+                    Submit Your Startup
+                </button> -->
+            <!-- </div> -->
+        </section>
+
+        <!-- How It Works Section -->
+        
+        <!-- Final CTA -->
+        <!-- <section class="cta-section">
+            <button class="cta-button" onclick="openModal()">
+                Get Started
+            </button>
+            <p style="color: var(--text-secondary); margin-top: 1rem; font-size: 1rem;">
+                Ready to make your idea a reality? Join thousands of students who are already changing the world.
+            </p>
+        </section> -->
+
+        <!-- Contact Modal -->
+        <div class="modal-overlay" id="contactModal">
+            <div class="modal">
+                <button class="close-modal" onclick="closeModal()">×</button>
+                <h3>Enter</h3>
+                <p>Ready to create your campaign? Get in touch with us to get started.</p>
+                <div class="modal-buttons">
+                    <a href="mailto:thomas@renesthorizons.com" class="modal-button primary">
+                        Email thomas@renesthorizons.com
+                    </a>
+                    <a href="https://calendly.com/renesthorizons" target="_blank" class="modal-button secondary">
+                        Schedule a Chat
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <h4 style="color: var(--text-primary); font-weight: 600; margin-bottom: 1rem; font-family: 'Space Grotesk', sans-serif;">Renest Meteor</h4>
+                    <p class="footer-text" style="font-size: 0.875rem; color: var(--text-light); margin-bottom: 1.5rem;">
+                        Platform facilitated by Renest, a tax preparation company for students.
+                    </p>
+                    <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+                        <a href="mailto:thomas@renesthorizons.com" class="footer-link">
+                            Contact Us
+                        </a>
+                        <a href="https://calendly.com/renesthorizons" target="_blank" class="footer-link">
+                            Schedule a Meeting
+                        </a>
+                        <a href="https://www.renesthorizons.com/taxes-share.html?utm_source=empowerment_platform" class="footer-link" target="_blank">
+                            Learn More About Renest
+                        </a>
+                    </div>
+                </div>
+                <div style="border-top: 1px solid var(--border-light); margin-top: 2rem; padding-top: 1rem; text-align: center;">
+                    <p style="color: var(--text-light); font-size: 0.875rem;">
+                        © 2025 Renest Horizons. All rights reserved.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function openModal() {
+            const modal = document.getElementById('contactModal');
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('contactModal');
+            modal.classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('contactModal');
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+
+            // Tournament Animation
+            const startBtn = document.getElementById('startTournament');
+            if (startBtn) {
+                startBtn.addEventListener('click', startTournament);
+            }
+        });
+
+        // Tournament Data
+        const startups = [
+            { name: 'Campus Light Tunnel', icon: '🎨', desc: 'Interactive LED art installation', votes: [847, 1234, 2847] },
+            { name: 'Ocean Cleanup Drone', icon: '🔬', desc: 'AI-powered marine conservation', votes: [623, 0, 0] },
+            { name: 'Student Housing Reform', icon: '🗳️', desc: 'Campus policy advocacy', votes: [1156, 0, 0] },
+            { name: 'Indigenous History Archive', icon: '📚', desc: 'Digital storytelling platform', votes: [2156, 0, 0] },
+            { name: 'Food Bank Network', icon: '🤝', desc: 'Campus hunger relief', votes: [945, 0, 0] },
+            { name: 'Solar Garden Project', icon: '🌿', desc: 'Renewable energy campus', votes: [1345, 0, 0] },
+            { name: 'Global Music Festival', icon: '🎭', desc: 'Cultural exchange event', votes: [756, 0, 0] },
+            { name: 'Mental Health App', icon: '💡', desc: 'Student wellness platform', votes: [1123, 0, 0] }
+        ];
+
+        let currentRound = 0;
+        let currentMatchup = 0;
+        let group1Winner = null;
+        let group1RunnerUp = null;
+
+        async function startTournament() {
+            const startBtn = document.getElementById('startTournament');
+            startBtn.disabled = true;
+            startBtn.textContent = '🏆 Tournament in Progress...';
+
+            try {
+                // Group 1 Round Robin
+                console.log('Starting Group 1 Round Robin...');
+                await showRoundTitle('Group 1 - Round Robin');
+                await runGroup1RoundRobin();
+                
+                // Cross-group matchups
+                console.log('Starting Cross-group matchups...');
+                await showRoundTitle('Head-to-Head Rounds');
+                const overallWinner = await runCrossGroupMatchups();
+                
+                // Finals
+                console.log('Starting Finals...');
+                await showRoundTitle('🏆 Finals');
+                const tournamentWinner = await runFinals(overallWinner);
+                
+                // Show final results
+                console.log('Showing final results...');
+                showFinalResults(tournamentWinner);
+            } catch (error) {
+                console.error('Tournament error:', error);
+                startBtn.disabled = false;
+                startBtn.textContent = '🚀 Start Tournament Animation';
+            }
+        }
+
+        async function runGroup1RoundRobin() {
+            const stageTitle = document.querySelector('.stage-title');
+            const startupGrid = document.querySelector('.startup-grid');
+            const matchupDisplay = document.querySelector('.matchup-display');
+            
+            // Show matchup display
+            matchupDisplay.style.display = 'block';
+            
+            const group1Startups = startups.slice(0, 4);
+            const matchups = [
+                [0, 1], [2, 3], [0, 2], [1, 3], [0, 3], [1, 2]
+            ];
+            
+            // Initialize vote tracking for group 1 startups
+            const voteTracker = {
+                'Campus Light Tunnel': 0,
+                'Ocean Cleanup Drone': 0,
+                'Student Housing Reform': 0,
+                'Indigenous History Archive': 0
+            };
+            
+            // Reset all cards to normal state
+            resetAllCards();
+            
+            for (let i = 0; i < matchups.length; i++) {
+                const [idx1, idx2] = matchups[i];
+                const startup1 = group1Startups[idx1];
+                const startup2 = group1Startups[idx2];
+                
+                // Update matchup display
+                updateMatchupDisplay(startup1, startup2);
+                
+                // Reset all highlights before starting new matchup
+                resetAllHighlights();
+                
+                // Highlight the two competing startups in the group grid
+                highlightCompetingStartups(startup1.name, startup2.name);
+                
+                // Simulate voting
+                await sleep(2000);
+                
+                // Determine winner (Campus Light Tunnel always wins for demo)
+                const winner = startup1.name === 'Campus Light Tunnel' ? startup1 : startup2;
+                const loser = startup1.name === 'Campus Light Tunnel' ? startup2 : startup1;
+                
+                // Update vote counts in tracker
+                voteTracker[winner.name] += winner.votes[0];
+                voteTracker[loser.name] += loser.votes[0];
+                
+                // Animate votes in matchup display
+                updateMatchupVotes(winner.name, winner.votes[0], loser.name, loser.votes[0]);
+                
+                // Wait for animation to complete
+                await sleep(2000);
+                
+                // Update vote counts for both startups in the grid
+                updateVoteCount(winner.name, voteTracker[winner.name]);
+                updateVoteCount(loser.name, voteTracker[loser.name]);
+                
+                // Highlight winner and loser in group grid
+                highlightWinnerInGrid(winner.name);
+                highlightLoserInGrid(loser.name);
+                
+                // No prize money in group stage matchups - only at the end
+                
+                await sleep(1500);
+                
+                // Reset all highlights for next matchup
+                resetAllHighlights();
+                
+                // Shuffle cards by vote count (highest to lowest)
+                shuffleCardsByVotes(voteTracker);
+            }
+            
+            // Determine group 1 winner and runner-up based on final vote counts
+            const sortedStartups = Object.entries(voteTracker)
+                .sort(([,a], [,b]) => b - a)
+                .map(([name]) => name);
+            
+            group1Winner = group1Startups.find(s => s.name === sortedStartups[0]);
+            group1RunnerUp = group1Startups.find(s => s.name === sortedStartups[1]);
+            
+            console.log('Group 1 results:', { group1Winner, group1RunnerUp, sortedStartups });
+            
+            // Update stage title
+            stageTitle.textContent = `Group 1 Complete - ${group1Winner.name} Wins!`;
+            
+            // Add prize money with emojis
+            addPrizeMoney(group1Winner.name, 100, '🏆');
+            addPrizeMoney(group1RunnerUp.name, 50, '🥈');
+            
+            await sleep(2000);
+        }
+
+        async function runCrossGroupMatchups() {
+            console.log('runCrossGroupMatchups started');
+            console.log('group1RunnerUp:', group1RunnerUp);
+            
+            const stageTitle = document.querySelector('.stage-title');
+            const startupGrid = document.querySelector('.startup-grid');
+            const matchupDisplay = document.querySelector('.matchup-display');
+            
+            // Clear the group grid and show only head-to-head matchups
+            startupGrid.style.display = 'none';
+            
+            // Track overall winner
+            let overallWinner = null;
+            
+            // Round 1 - Use different startups from other groups
+            stageTitle.textContent = 'Round 1 - Group 1 Runner-up vs Group 2 Winner';
+            
+            // Update matchup title
+            document.querySelector('.matchup-title').textContent = 'Round 1';
+            
+            const group2Winner = { name: 'Food Bank Network', icon: '🤝', desc: 'Campus hunger relief', votes: [945] };
+            
+            updateMatchupDisplay(group1RunnerUp, group2Winner);
+            await sleep(2000);
+            
+            // Animate votes
+            updateMatchupVotes(group1RunnerUp.name, 945, group2Winner.name, 623);
+            
+            // Wait for animation to complete
+            await sleep(2000);
+            
+            // Show winner/loser and add prize money
+            highlightWinnerInMatchup(group1RunnerUp.name);
+            highlightLoserInMatchup(group2Winner.name);
+            addPrizeMoney(group1RunnerUp.name, 75, '🏆');
+            overallWinner = group1RunnerUp;
+            
+            await sleep(1500);
+            
+            // Round 2 - Use different startup
+            stageTitle.textContent = 'Round 2';
+            document.querySelector('.matchup-title').textContent = 'Round 2';
+            const group3Winner = { name: 'Solar Garden Project', icon: '🌿', desc: 'Renewable energy campus', votes: [1345] };
+            updateMatchupDisplay(group1RunnerUp, group3Winner);
+            await sleep(2000);
+            
+            updateMatchupVotes(group1RunnerUp.name, 1345, group3Winner.name, 945);
+            
+            // Wait for animation to complete
+            await sleep(2000);
+            
+            highlightWinnerInMatchup(group1RunnerUp.name);
+            highlightLoserInMatchup(group3Winner.name);
+            addPrizeMoney(group1RunnerUp.name, 100, '🏆');
+            
+            await sleep(1500);
+            
+            // Quarter Finals - Use different startup
+            stageTitle.textContent = 'Quarter Finals';
+            document.querySelector('.matchup-title').textContent = 'Quarter Finals';
+            const group4Winner = { name: 'Global Music Festival', icon: '🎭', desc: 'Cultural exchange event', votes: [756] };
+            updateMatchupDisplay(group1RunnerUp, group4Winner);
+            await sleep(2000);
+            
+            updateMatchupVotes(group1RunnerUp.name, 756, group4Winner.name, 623);
+            
+            // Wait for animation to complete
+            await sleep(2000);
+            
+            highlightWinnerInMatchup(group1RunnerUp.name);
+            highlightLoserInMatchup(group4Winner.name);
+            addPrizeMoney(group1RunnerUp.name, 125, '🏆');
+            
+            await sleep(1500);
+            
+            // Semi Finals - Use different startup
+            stageTitle.textContent = 'Semi Finals';
+            document.querySelector('.matchup-title').textContent = 'Semi Finals';
+            const group6Winner = { name: 'Mental Health App', icon: '💡', desc: 'Student wellness platform', votes: [1345] };
+            updateMatchupDisplay(group1RunnerUp, group6Winner);
+            await sleep(2000);
+            
+            updateMatchupVotes(group1RunnerUp.name, 1123, group6Winner.name, 945);
+            
+            // Wait for animation to complete
+            await sleep(2000);
+            
+            highlightWinnerInMatchup(group1RunnerUp.name);
+            highlightLoserInMatchup(group6Winner.name);
+            addPrizeMoney(group1RunnerUp.name, 150, '🏆');
+            
+            await sleep(1500);
+            
+            console.log('runCrossGroupMatchups completed, returning:', overallWinner);
+            return overallWinner;
+        }
+
+        async function runFinals(overallWinner) {
+            const stageTitle = document.querySelector('.stage-title');
+            const startupGrid = document.querySelector('.startup-grid');
+            const matchupDisplay = document.querySelector('.matchup-display');
+            
+            // Hide matchup display and show final 4 grid
+            matchupDisplay.style.display = 'none';
+            startupGrid.style.display = 'grid';
+            
+            // Finals - Group of 4 with no repeats from group stage
+            stageTitle.textContent = '🏆 Finals - Top 4 Startups';
+            
+            const finalists = [
+                group1Winner, // Campus Light Tunnel
+                overallWinner, // Student Housing Reform (from head-to-head)
+                { name: 'Solar Garden Project', icon: '🌿', desc: 'Renewable energy campus', votes: [1345] },
+                { name: 'Global Music Festival', icon: '🎭', desc: 'Cultural exchange event', votes: [756] }
+            ];
+            
+            // Update grid with finalists
+            updateFinalistsGrid(finalists);
+            
+            // Start finalists with +$500 base prize money
+            addPrizeMoney(group1Winner.name, 500, '🏆');
+            addPrizeMoney(overallWinner.name, 500, '🏆');
+            addPrizeMoney('GreenTech', 500, '🏆');
+            addPrizeMoney('EduVR', 500, '🏆');
+            
+            // Set base prize for finals
+            const finalistCards = document.querySelectorAll('.startup-grid .startup-card');
+            finalistCards.forEach(card => {
+                card.dataset.basePrize = '500';
+            });
+            
+            await sleep(2000);
+            
+            // Final round robin in group of 4 (no repeats)
+            const finalMatchups = [
+                [group1Winner, overallWinner],
+                [{ name: 'Solar Garden Project', icon: '🌿', desc: 'Renewable energy campus', votes: [945] }, 
+                 { name: 'Global Music Festival', icon: '🎭', desc: 'Cultural exchange event', votes: [756] }],
+                [group1Winner, { name: 'Solar Garden Project', icon: '🌿', desc: 'Renewable energy campus', votes: [945] }],
+                [overallWinner, { name: 'Global Music Festival', icon: '🎭', desc: 'Cultural exchange event', votes: [756] }]
+            ];
+            
+            // Reset vote tracker for finals based on actual finalists
+            window.finalsVoteTracker = {};
+            finalists.forEach(startup => {
+                window.finalsVoteTracker[startup.name] = 0;
+            });
+            
+            // Show matchup display for final round
+            matchupDisplay.style.display = 'block';
+            
+            for (let i = 0; i < finalMatchups.length; i++) {
+                const [startup1, startup2] = finalMatchups[i];
+                
+                updateMatchupDisplay(startup1, startup2);
+                
+                // Reset all highlights before starting new matchup
+                resetAllFinalsHighlights();
+                
+                // Highlight the two competing startups
+                highlightCompetingStartupsInFinals(startup1.name, startup2.name);
+                await sleep(2000);
+                
+                // Animate votes
+                updateMatchupVotes(startup1.name, startup1.votes[0], startup2.name, startup2.votes[0]);
+                
+                // Wait for animation to complete
+                await sleep(2000);
+                
+                // Campus Light Tunnel always wins
+                const winner = startup1.name === 'Campus Light Tunnel' ? startup1 : startup2;
+                const loser = startup1.name === 'Campus Light Tunnel' ? startup2 : startup1;
+                
+                // Update vote totals in finals tracker
+                window.finalsVoteTracker[winner.name] += winner.votes[0];
+                window.finalsVoteTracker[loser.name] += loser.votes[0];
+                
+                // Update vote counts in the grid
+                updateVoteCount(winner.name, window.finalsVoteTracker[winner.name]);
+                updateVoteCount(loser.name, window.finalsVoteTracker[loser.name]);
+                
+                // Show winner/loser briefly
+                highlightLoserInFinals(winner.name);
+                highlightWinnerInFinals(loser.name);
+                
+                // No prize money in finals head-to-head matchups
+                
+                await sleep(1500);
+                
+                // Reset all highlights for next matchup
+                resetAllFinalsHighlights();
+            }
+            
+            // Reset all highlighting at the end of finals
+            resetAllFinalsHighlights();
+            
+            // Championship announcement with all prize money
+            stageTitle.textContent = '🏆 Campus Light Tunnel - Grand Champion!';
+            
+            // Award all prize money immediately
+            // Reset champion's prize money to exactly $35,000
+            const championCard = document.querySelector(`[data-startup="${group1Winner.name.toLowerCase().replace(' ', '-')}"]`);
+            if (championCard) {
+                championCard.dataset.prize = '35000';
+                const prizeDisplay = championCard.querySelector('.prize-display');
+                if (prizeDisplay) {
+                    prizeDisplay.innerHTML = `🏆 $35,000`;
+                }
+            }
+            
+            addPrizeMoney('Student Housing Reform', 2200, '🥈');
+            addPrizeMoney('Solar Garden Project', 1600, '🥉');
+            addPrizeMoney('Global Music Festival', 900, '🏅');
+            
+            // Show grand champion popup
+            await showChampionPopup(group1Winner.name);
+            
+            // Ensure matchup display is hidden
+            matchupDisplay.style.display = 'none';
+            
+            await sleep(2000);
+            
+            return group1Winner; // Return the overall tournament winner
+        }
+
+        function showFinalResults(tournamentWinner) {
+            const stageTitle = document.querySelector('.stage-title');
+            stageTitle.textContent = `🏆 ${tournamentWinner.name} Wins $35,000!`;
+            
+            // Hide matchup display and reset button
+            document.querySelector('.matchup-display').style.display = 'none';
+            const startBtn = document.getElementById('startTournament');
+            startBtn.disabled = false;
+            startBtn.textContent = '🏆 Tournament Complete - Click to Restart';
+            
+            // Show final results card
+            const resultsCard = document.createElement('div');
+            resultsCard.style.cssText = `
+                background: rgba(0, 212, 255, 0.1); 
+                border: 1px solid rgba(0, 212, 255, 0.3); 
+                border-radius: 20px; 
+                padding: 2rem; 
+                max-width: 800px; 
+                margin: 2rem auto; 
+                backdrop-filter: blur(20px);
+            `;
+            resultsCard.innerHTML = `
+                <h4 style="color: #00d4ff; font-size: 1.5rem; margin-bottom: 1rem; font-family: 'Space Grotesk', sans-serif;">
+                    🏆 ${tournamentWinner.name} - Grand Champion!
+                </h4>
+                <p style="color: rgba(255, 255, 255, 0.9); line-height: 1.6; margin-bottom: 1rem;">
+                    This interactive LED light tunnel transforms campus walkways into immersive art experiences that respond to student movement and create stunning visual displays that bring the community together.
+                </p>
+                <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-top: 1.5rem;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.5rem; color: #00d4ff;">🎨</div>
+                        <div style="color: white; font-weight: 600; font-size: 0.9rem;">Creative Expression</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.5rem; color: #00d4ff;">🤝</div>
+                        <div style="color: white; font-weight: 600; font-size: 0.9rem;">Community Building</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.5rem; color: #00d4ff;">✨</div>
+                        <div style="color: white; font-weight: 600; font-size: 0.9rem;">Innovation</div>
+                    </div>
+                </div>
+            `;
+            
+            document.querySelector('.tournament-stage').appendChild(resultsCard);
+        }
+
+        function updateMatchupDisplay(startup1, startup2) {
+            const matchupCards = document.querySelector('.matchup-cards');
+            matchupCards.innerHTML = `
+                <div class="startup-card matchup-card" style="width: 200px;">
+                    <div class="card-header">
+                        <div class="startup-icon">${startup1.icon}</div>
+                        <div class="startup-name">${startup1.name}</div>
+                    </div>
+                    <div class="vote-count">Votes: 0</div>
+                    <div class="vote-bar-container">
+                        <div class="vote-bar" data-votes="0"></div>
+                    </div>
+                </div>
+                
+                <div class="vs-badge">VS</div>
+                
+                <div class="startup-card matchup-card" style="width: 200px;">
+                    <div class="card-header">
+                        <div class="startup-icon">${startup2.icon}</div>
+                        <div class="startup-name">${startup2.name}</div>
+                    </div>
+                    <div class="vote-count">Votes: 0</div>
+                    <div class="vote-bar-container">
+                        <div class="vote-bar" data-votes="0"></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateVoteCount(startupName, votes) {
+            const cards = document.querySelectorAll('.startup-grid .startup-card');
+            cards.forEach(card => {
+                const cardName = card.querySelector('.startup-name').textContent;
+                if (cardName === startupName) {
+                    const voteCount = card.querySelector('.vote-count');
+                    voteCount.textContent = `Votes: ${votes}`;
+                }
+            });
+        }
+
+        function animateVoteCount(element, targetVotes) {
+            const startVotes = parseInt(element.textContent.replace('Votes: ', '')) || 0;
+            const duration = 1500; // 1.5 seconds for faster animation
+            const startTime = Date.now();
+            
+            function updateCount() {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const currentVotes = Math.floor(startVotes + (targetVotes - startVotes) * progress);
+                
+                element.textContent = `Votes: ${currentVotes}`;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(updateCount);
+                }
+            }
+            
+            updateCount();
+        }
+
+        function highlightWinner(startupName) {
+            const card = document.querySelector(`[data-startup="${startupName.toLowerCase().replace(' ', '-')}"]`);
+            if (card) {
+                card.classList.add('winner');
+                card.classList.remove('second-place', 'eliminated');
+            }
+        }
+
+        function highlightLoser(startupName) {
+            const card = document.querySelector(`[data-startup="${startupName.toLowerCase().replace(' ', '-')}"]`);
+            if (card) {
+                card.classList.add('eliminated');
+                card.classList.remove('winner', 'second-place');
+            }
+        }
+
+        function addPrizeMoney(startupName, amount, emoji = '💰') {
+            const cards = document.querySelectorAll('.startup-card');
+            cards.forEach(card => {
+                const cardName = card.querySelector('.startup-name').textContent;
+                if (cardName === startupName) {
+                    let prizeDisplay = card.querySelector('.prize-display');
+                    
+                    // Create prize display element if it doesn't exist
+                    if (!prizeDisplay) {
+                        prizeDisplay = document.createElement('div');
+                        prizeDisplay.className = 'prize-display';
+                        card.appendChild(prizeDisplay);
+                    }
+                    
+                    const currentPrize = parseInt(card.dataset.prize) || 0;
+                    const newPrize = currentPrize + amount;
+                    card.dataset.prize = newPrize;
+                    
+                    // Show prize money with animation
+                    if (amount >= 35000) {
+                        prizeDisplay.innerHTML = `🏆 $${newPrize.toLocaleString()}`;
+                    } else {
+                        prizeDisplay.innerHTML = `${emoji} +$${amount}`;
+                    }
+                    
+                    // Add a brief highlight animation
+                    card.style.transform = 'scale(1.05)';
+                    setTimeout(() => {
+                        card.style.transform = 'scale(1)';
+                    }, 300);
+                }
+            });
+        }
+
+        function updateFinalistsGrid(finalists) {
+            const startupGrid = document.querySelector('.startup-grid');
+            startupGrid.innerHTML = '';
+            
+            finalists.forEach(startup => {
+                const card = document.createElement('div');
+                card.className = 'startup-card';
+                card.dataset.startup = startup.name.toLowerCase().replace(' ', '-');
+                card.dataset.prize = '0';
+                
+                card.innerHTML = `
+                    <div class="card-header">
+                        <div class="startup-icon">${startup.icon}</div>
+                        <div class="startup-name">${startup.name}</div>
+                    </div>
+                    <div class="startup-desc">${startup.desc}</div>
+                    <div class="vote-count">Votes: 0</div>
+                    <div class="prize-display"></div>
+                `;
+                
+                startupGrid.appendChild(card);
+            });
+            
+            // Initialize vote tracking for finals based on actual finalists
+            window.finalsVoteTracker = {};
+            finalists.forEach(startup => {
+                window.finalsVoteTracker[startup.name] = 0;
+            });
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        async function showRoundTitle(title) {
+            const popup = document.createElement('div');
+            popup.className = 'round-title-popup';
+            popup.textContent = title;
+            document.body.appendChild(popup);
+            
+            await sleep(3000); // Wait for animation to complete
+            document.body.removeChild(popup);
+        }
+
+        async function showChampionPopup(championName) {
+            const popup = document.createElement('div');
+            popup.className = 'champion-popup';
+            popup.innerHTML = `
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🏆</div>
+                <div>GRAND CHAMPION</div>
+                <div style="font-size: 2rem; margin: 1rem 0;">${championName}</div>
+                <div style="font-size: 1.5rem; color: #1a1a2e;">$35,000</div>
+            `;
+            document.body.appendChild(popup);
+            
+            await sleep(4000); // Wait for animation to complete
+            document.body.removeChild(popup);
+        }
+
+        // New helper functions for better highlighting
+        function resetAllCards() {
+            const cards = document.querySelectorAll('.startup-card');
+            cards.forEach(card => {
+                card.classList.remove('winner', 'second-place', 'eliminated', 'competing');
+            });
+        }
+
+        function highlightCompetingStartups(startup1Name, startup2Name) {
+            const cards = document.querySelectorAll('.startup-grid .startup-card');
+            cards.forEach(card => {
+                const cardName = card.querySelector('.startup-name').textContent;
+                if (cardName === startup1Name || cardName === startup2Name) {
+                    card.classList.add('competing');
+                }
+            });
+        }
+
+        function resetCompetingHighlights() {
+            const cards = document.querySelectorAll('.startup-card');
+            cards.forEach(card => {
+                card.classList.remove('competing');
+            });
+        }
+
+        function resetAllHighlights() {
+            const cards = document.querySelectorAll('.startup-card');
+            cards.forEach(card => {
+                card.classList.remove('competing', 'winner', 'second-place', 'eliminated');
+            });
+        }
+
+        function highlightWinnerInGrid(startupName) {
+            const cards = document.querySelectorAll('.startup-grid .startup-card');
+            cards.forEach(card => {
+                const cardName = card.querySelector('.startup-name').textContent;
+                if (cardName === startupName) {
+                    card.classList.add('winner');
+                    card.classList.remove('second-place', 'eliminated', 'competing');
+                }
+            });
+        }
+
+        function highlightLoserInGrid(startupName) {
+            const cards = document.querySelectorAll('.startup-grid .startup-card');
+            cards.forEach(card => {
+                const cardName = card.querySelector('.startup-name').textContent;
+                if (cardName === startupName) {
+                    card.classList.add('eliminated');
+                    card.classList.remove('winner', 'second-place', 'competing');
+                }
+            });
+        }
+
+        function highlightWinnerInMatchup(startupName) {
+            const matchupCards = document.querySelectorAll('.matchup-card');
+            matchupCards.forEach(card => {
+                const cardName = card.querySelector('.startup-name').textContent;
+                if (cardName === startupName) {
+                    card.classList.add('winner');
+                    card.classList.remove('second-place', 'eliminated');
+                }
+            });
+        }
+
+        function highlightLoserInMatchup(startupName) {
+            const matchupCards = document.querySelectorAll('.matchup-card');
+            matchupCards.forEach(card => {
+                const cardName = card.querySelector('.startup-name').textContent;
+                if (cardName === startupName) {
+                    card.classList.add('eliminated');
+                    card.classList.remove('winner', 'second-place');
+                }
+            });
+        }
+
+        function highlightCompetingStartupsInFinals(startup1Name, startup2Name) {
+            const cards = document.querySelectorAll('.startup-grid .startup-card');
+            cards.forEach(card => {
+                const cardName = card.querySelector('.startup-name').textContent;
+                // Remove all competing highlights first
+                card.classList.remove('competing');
+                // Only add competing highlight to the two specified startups
+                if (cardName === startup1Name || cardName === startup2Name) {
+                    card.classList.add('competing');
+                }
+            });
+        }
+
+        function resetCompetingHighlightsInFinals() {
+            const cards = document.querySelectorAll('.startup-grid .startup-card');
+            cards.forEach(card => {
+                card.classList.remove('competing');
+            });
+        }
+
+        function highlightWinnerInFinals(startupName) {
+            const cards = document.querySelectorAll('.startup-grid .startup-card');
+            cards.forEach(card => {
+                const cardName = card.querySelector('.startup-name').textContent;
+                if (cardName === startupName) {
+                    card.classList.add('winner');
+                    card.classList.remove('second-place', 'eliminated', 'competing');
+                }
+            });
+        }
+
+        function highlightLoserInFinals(startupName) {
+            const cards = document.querySelectorAll('.startup-grid .startup-card');
+            cards.forEach(card => {
+                const cardName = card.querySelector('.startup-name').textContent;
+                if (cardName === startupName) {
+                    card.classList.add('eliminated');
+                    card.classList.remove('winner', 'second-place', 'competing');
+                }
+            });
+        }
+
+        function resetAllFinalsHighlights() {
+            const cards = document.querySelectorAll('.startup-grid .startup-card');
+            cards.forEach(card => {
+                card.classList.remove('winner', 'second-place', 'eliminated', 'competing');
+            });
+        }
+
+        function shuffleCardsByVotes(voteTracker) {
+            const startupGrid = document.querySelector('.startup-grid');
+            const cards = Array.from(startupGrid.children);
+            
+            // Sort cards by vote count (highest to lowest)
+            cards.sort((a, b) => {
+                const aName = a.querySelector('.startup-name').textContent;
+                const bName = b.querySelector('.startup-name').textContent;
+                const aVotes = voteTracker[aName] || 0;
+                const bVotes = voteTracker[bName] || 0;
+                return bVotes - aVotes;
+            });
+            
+            // Add shuffle animation class
+            cards.forEach(card => {
+                card.style.transition = 'all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                card.style.transform = 'scale(1.05)';
+            });
+            
+            // Reorder cards in the grid
+            cards.forEach(card => {
+                startupGrid.appendChild(card);
+            });
+            
+            // Reset animation after reordering
+            setTimeout(() => {
+                cards.forEach(card => {
+                    card.style.transform = 'scale(1)';
+                });
+            }, 100);
+        }
+
+        function updateMatchupVotes(winnerName, winnerVotes, loserName, loserVotes) {
+            const matchupCards = document.querySelectorAll('.matchup-card');
+            matchupCards.forEach(card => {
+                const cardName = card.querySelector('.startup-name').textContent;
+                const voteCount = card.querySelector('.vote-count');
+                const voteBar = card.querySelector('.vote-bar');
+                
+                if (cardName === winnerName) {
+                    // Animate winner votes
+                    animateVoteCount(voteCount, winnerVotes);
+                    if (voteBar) {
+                        const maxVotes = Math.max(winnerVotes, loserVotes);
+                        const percentage = maxVotes > 0 ? (winnerVotes / maxVotes) * 100 : 0;
+                        voteBar.style.width = `${percentage}%`;
+                    }
+                } else if (cardName === loserName) {
+                    // Animate loser votes
+                    animateVoteCount(voteCount, loserVotes);
+                    if (voteBar) {
+                        const maxVotes = Math.max(winnerVotes, loserVotes);
+                        const percentage = maxVotes > 0 ? (loserVotes / maxVotes) * 100 : 0;
+                        voteBar.style.width = `${percentage}%`;
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html> 
