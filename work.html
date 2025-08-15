@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Renest Horizons</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .hero-bg {
+            background-image: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+            position: relative;
+        }
+        
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.8) 70%);
+            pointer-events: none;
+        }
+        
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .impact-card {
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .impact-card:hover {
+            border-color: rgba(255,255,255,0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255,255,255,0.1);
+        }
+        
+        .parallax {
+            transform: translateY(0);
+            transition: transform 0.1s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-black text-white overflow-x-hidden">
+    <!-- Hero Section -->
+    <div id="hero" class="hero-bg min-h-screen relative">
+        <!-- Your background image placeholder - replace with your actual image -->
+        <div class="absolute inset-0 opacity-30" style="background: url('bhrenest.png') center/cover; background-size: cover; background-position: center;"></div>
+        <!-- Main Hero Content -->
+        <div class="relative z-10 min-h-screen flex flex-col">
+            <!-- Hero Text -->
+            <div class="flex-1 flex items-center justify-between px-8 md:px-16 lg:px-24 max-w-7xl mx-auto w-full">
+                <!-- Left Side - Brand Name -->
+                <div class="flex flex-col">
+                    <h1 class="text-6xl md:text-8xl lg:text-9xl font-thin tracking-wider text-white leading-none">
+                        RENEST
+                    </h1>
+                    <h1 class="text-6xl md:text-8xl lg:text-9xl font-thin tracking-wider text-white leading-none -mt-4 md:-mt-6">
+                        HORIZONS
+                    </h1>
+                    <div class="w-24 h-px bg-white mt-6 opacity-60"></div>
+                </div>
+                
+                <!-- Right Side - Tagline -->
+                <div class="text-right">
+                    <p class="text-xl md:text-3xl lg:text-4xl font-light text-white mb-2">
+                        personal savings,
+                    </p>
+                    <p class="text-xl md:text-3xl lg:text-4xl font-light text-white">
+                        collective power.
+                    </p>
+                    <div class="w-24 h-px bg-white mt-6 ml-auto opacity-60"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scroll Content -->
+    <div class="bg-black">
+        <!-- Main Explanation Section -->
+        <div class="px-8 md:px-16 lg:px-24 max-w-4xl mx-auto py-20">
+            <div class="fade-in-up text-center mb-16">
+                <h2 class="text-4xl md:text-6xl font-thin mb-8 leading-tight">
+                    <span class="text-white">$386</span>
+                    <span class="text-gray-400">Billion </span>
+                </h2>
+                <p class="text-xl md:text-2xl font-light text-gray-300 leading-relaxed mb-8">
+                    disappears each year from people's pockets because they don't know what they don't know.
+                </p>
+                
+                <!-- Example Section -->
+                <div class="bg-gray-900 border border-gray-700 rounded-lg p-8 mb-8 max-w-4xl mx-auto">
+                    <p class="text-lg md:text-xl font-light text-gray-300 mb-6 text-center">
+                        <span class="text-white font-medium">Example:</span> For students alone, literally one line of tax code they don't use is costing
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="text-center">
+                            <p class="text-3xl md:text-4xl font-bold text-white mb-2">$3.9B</p>
+                            <p class="text-sm md:text-base font-light text-gray-400">Graduate Students</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-3xl md:text-4xl font-bold text-white mb-2">$11.2B</p>
+                            <p class="text-sm md:text-base font-light text-gray-400">Undergraduate Students</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-3xl md:text-4xl font-bold text-white mb-2">$14.4B</p>
+                            <p class="text-sm md:text-base font-light text-gray-400">Trade & Certificate Students</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="w-32 h-px bg-white opacity-30 mx-auto mb-8"></div>
+                
+                <!-- New Big Text Section -->
+                <p class="text-2xl md:text-3xl lg:text-4xl font-light text-white leading-relaxed mb-8">
+                    Yes, billions of dollars, imagine the impact we could make together.
+                </p>
+                
+                <p class="text-lg md:text-xl font-light text-white">
+                    We find you what you're due and you commit a % to the impact on our platform.
+                </p>
+            </div>
+            
+            <!-- Impact List -->
+            <div class="fade-in-up mb-16">
+                <h3 class="text-2xl md:text-3xl font-light text-center mb-8 text-white">
+                    Choose Your Impact
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="impact-card p-6 text-center cursor-pointer">
+                        <p class="text-gray-300 hover:text-white transition-colors duration-300 font-light">
+                            Clean Water Access
+                        </p>
+                    </div>
+                    <div class="impact-card p-6 text-center cursor-pointer">
+                        <p class="text-gray-300 hover:text-white transition-colors duration-300 font-light">
+                            Education Funding
+                        </p>
+                    </div>
+                    <div class="impact-card p-6 text-center cursor-pointer">
+                        <p class="text-gray-300 hover:text-white transition-colors duration-300 font-light">
+                            Renewable Energy
+                        </p>
+                    </div>
+                    <div class="impact-card p-6 text-center cursor-pointer">
+                        <p class="text-gray-300 hover:text-white transition-colors duration-300 font-light">
+                            Healthcare Support
+                        </p>
+                    </div>
+                    <div class="impact-card p-6 text-center cursor-pointer">
+                        <p class="text-gray-300 hover:text-white transition-colors duration-300 font-light">
+                            Community Development
+                        </p>
+                    </div>
+                    <div class="impact-card p-6 text-center cursor-pointer">
+                        <p class="text-gray-300 hover:text-white transition-colors duration-300 font-light">
+                            Environmental Conservation
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Final Statement -->
+            <div class="fade-in-up text-center">
+                <p class="text-xl md:text-2xl font-light text-gray-300 leading-relaxed mb-4">
+                    We know what you don't,
+                </p>
+                <p class="text-xl md:text-2xl font-light text-white leading-relaxed mb-8">
+                    we find you the money you need to make your dreams possible
+                </p>
+                <p class="text-lg md:text-xl font-light text-gray-400 mb-12">
+                    and the impact on the world you want.
+                </p>
+                
+                <!-- Call to Action -->
+                <button class="group border border-white hover:bg-white hover:text-black transition-all duration-300 px-12 py-4">
+                    <span class="text-sm uppercase tracking-widest font-light">
+                        Get Started
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Smooth scroll reveal animations
+        function handleScrollAnimations() {
+            const elements = document.querySelectorAll('.fade-in-up');
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('visible');
+                }
+            });
+        }
+
+        // Parallax effect for background
+        function handleParallax() {
+            const scrolled = window.pageYOffset;
+            const hero = document.getElementById('hero');
+            const parallaxElement = hero.querySelector('.absolute');
+            
+            if (parallaxElement) {
+                parallaxElement.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
+        }
+
+        // Event listeners
+        window.addEventListener('scroll', () => {
+            handleScrollAnimations();
+            handleParallax();
+        });
+
+        // Initial check
+        handleScrollAnimations();
+    </script>
+</body>
+</html>
