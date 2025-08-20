@@ -1035,14 +1035,14 @@
         <div class="container">
             <div class="hero-content">
                 <div class="hero-text">
-                    <h1 class="main-headline">Work Today,<br> Get Paid Today</h1>
-                    <p class="sub-headline">Whether your paid bi-weekly or monthly, get paid more when you work, not later.</p>
+                    <h1 class="main-headline">Get Paid 25% More</h1>
+                    <p class="sub-headline">Turn $20 into $25. Choose gift cards over cash and instantly boost your buying power.</p>
                     
                     <!-- Desktop Email Form -->
                     <div class="hero-cta-desktop">
                         <div class="email-form-hero">
                             <input type="email" class="email-input-hero" placeholder="Enter your email" required>
-                            <button type="submit" class="submit-btn-hero">Learn More</button>
+                            <button type="submit" class="submit-btn-hero">Earn More Today</button>
                         </div>
                     </div>
                 </div>
@@ -1058,7 +1058,7 @@
                     <div class="hero-cta-mobile">
                         <div class="email-form-hero">
                             <input type="email" class="email-input-hero" placeholder="Enter your email" required>
-                            <button type="submit" class="submit-btn-hero">Learn More</button>
+                            <button type="submit" class="submit-btn-hero">Earn More Today</button>
                         </div>
                     </div>
                 </div>
@@ -1148,32 +1148,33 @@
                                 <div class="calculation-text" id="text3">Optimizing payment</div>
                             </div>
                             
-                            <!-- Step 3: Pay calculated -->
+                            <!-- Step 3: Gift card options -->
                             <div class="screen-step" id="step3">
-                                <div class="app-title">Nice! Here's your pay:</div>
-                                <div class="pay-amount">$198</div>
-                                <div class="step-subtitle">How would you like to receive it?</div>
-                                <div class="payment-buttons">
-                                    <button class="payment-btn venmo-btn" id="venmoBtn">💳 Venmo</button>
-                                    <button class="payment-btn bank-btn">🏦 Checking</button>
+                                <div class="app-title">Choose your gift card:</div>
+                                <div class="pay-amount">$198 earned</div>
+                                <div class="payment-buttons" style="flex-direction: column; gap: 8px; margin-top: 20px;">
+                                    <button class="payment-btn" id="chipotleBtn" style="background: linear-gradient(135deg, #E4002B 0%, #B8001F 100%); color: white; display: flex; align-items: center; gap: 8px; justify-content: center;">🌯 Chipotle (+25%)</button>
+                                    <button class="payment-btn" style="background: linear-gradient(135deg, #00704A 0%, #004B33 100%); color: white; display: flex; align-items: center; gap: 8px; justify-content: center;">☕ Starbucks (+25%)</button>
+                                    <button class="payment-btn" style="background: linear-gradient(135deg, #FF9900 0%, #E6880A 100%); color: white; display: flex; align-items: center; gap: 8px; justify-content: center;">📦 Amazon (+25%)</button>
                                 </div>
                             </div>
                             
-                            <!-- Step 4: Money delivered -->
+                            <!-- Step 4: Gift card boost -->
                             <div class="screen-step" id="step4">
-                                <div class="money-sent-animation">💸</div>
-                                <div class="success-message">Money Delivered!</div>
+                                <div class="app-title">Boosting your buying power...</div>
+                                <div class="pay-amount" style="font-size: 1.2rem; margin: 15px 0;">$198 → $247.50</div>
+                                <div class="money-sent-animation">🌯</div>
+                                <div class="success-message">Gift Card Added!</div>
                             </div>
                             
-                            <!-- Step 5: Venmo notification -->
+                            <!-- Step 5: Chipotle notification -->
                             <div class="screen-step" id="step5">
-                                <!-- <div class="step-subtitle" style="margin-bottom: 30px;">Your phone:</div> -->
-                                <div class="venmo-notification notification-slide">
+                                <div class="venmo-notification notification-slide" style="background: linear-gradient(135deg, #E4002B 0%, #B8001F 100%);">
                                     <div class="notification-header">
-                                        💰 Venmo
+                                        🌯 Chipotle
                                     </div>
-                                    <div class="notification-amount">You received $198.00</div>
-                                    <div class="notification-from">From: paidmore.ai</div>
+                                    <div class="notification-amount">Gift card added: $247.50</div>
+                                    <div class="notification-from">25% bonus applied!</div>
                                 </div>
                             </div>
                         </div>
@@ -1253,7 +1254,7 @@
             
             <form class="email-form" onsubmit="handleSubmit(event)">
                 <input type="email" class="email-input" placeholder="Enter your email" required>
-                <button type="submit" class="submit-btn">Learn More</button>
+                <button type="submit" class="submit-btn">Earn More Today</button>
             </form>
             
             <!-- <div class="benefits">
@@ -1321,18 +1322,18 @@
         }
         
         function highlightButton() {
-            const venmoBtn = document.getElementById('venmoBtn');
-            venmoBtn.style.transform = 'scale(1.05)';
-            venmoBtn.style.boxShadow = '0 15px 40px rgba(61,149,206,0.5)';
+            const chipotleBtn = document.getElementById('chipotleBtn');
+            chipotleBtn.style.transform = 'scale(1.05)';
+            chipotleBtn.style.boxShadow = '0 15px 40px rgba(228,0,43,0.5)';
             
             setTimeout(() => {
-                venmoBtn.style.transform = 'scale(0.95)';
+                chipotleBtn.style.transform = 'scale(0.95)';
                 setTimeout(() => {
-                    // Step 4: Show money delivered
+                    // Step 4: Show gift card boost
                     currentStep = 4;
                     showStep(currentStep);
                     
-                    // Step 5: Show Venmo notification
+                    // Step 5: Show Chipotle notification
                     setTimeout(() => {
                         currentStep = 5;
                         showStep(currentStep);
@@ -1454,9 +1455,11 @@
                         showStep(currentStep);
                         document.getElementById('hoursInput').value = '';
                         // Reset button styles
-                        const venmoBtn = document.getElementById('venmoBtn');
-                        venmoBtn.style.transform = '';
-                        venmoBtn.style.boxShadow = '';
+                        const chipotleBtn = document.getElementById('chipotleBtn');
+                        if (chipotleBtn) {
+                            chipotleBtn.style.transform = '';
+                            chipotleBtn.style.boxShadow = '';
+                        }
                         const enterBtn = document.getElementById('enterInfoBtn');
                         enterBtn.style.transform = '';
                         enterBtn.style.boxShadow = '';
