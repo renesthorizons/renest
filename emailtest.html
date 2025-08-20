@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Renest Platform – Taxes For Students, Done Better!</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.6;
+            color: #0f172a;
+            background-color: #F0E7D4;
+            margin: 0;
+            padding: 40px 20px;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            font-weight: 400;
+            letter-spacing: -0.005em;
+        }
+        
+        /* Main container - no white card, just content on beige */
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Header with logo and image */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .logo {
+            width: 80px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        
+        .hero-image {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            margin: 20px 0;
+            border-radius: 16px;
+        }
+        
+        .header-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 12px;
+            letter-spacing: -0.025em;
+            line-height: 1.2;
+        }
+        
+        .header-subtitle {
+            font-size: 18px;
+            color: #475569;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+        
+        /* Content section */
+        .content {
+            text-align: left;
+        }
+        
+        .greeting {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 24px;
+        }
+        
+        .text-block {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #475569;
+            margin-bottom: 20px;
+        }
+        
+        /* Bold highlights */
+        .highlight {
+            font-weight: 700;
+            color: #0f172a;
+        }
+        
+        /* Key points section with emojis */
+        .key-points {
+            margin: 30px 0;
+        }
+        
+        .point {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 12px;
+            border: 1px solid rgba(15, 23, 42, 0.08);
+        }
+        
+        .point-emoji {
+            font-size: 24px;
+            margin-right: 16px;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+        
+        .point-text {
+            font-size: 16px;
+            color: #475569;
+            line-height: 1.6;
+        }
+        
+        .point-highlight {
+            font-weight: 600;
+            color: #0f172a;
+        }
+        
+        /* Special styling for the last point (Renest solution) */
+        .point:last-child {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(147, 51, 234, 0.15) 50%, rgba(6, 182, 212, 0.15) 100%);
+            border: 3px solid rgba(59, 130, 246, 0.6);
+            box-shadow: 0 12px 32px rgba(59, 130, 246, 0.25), 0 8px 16px rgba(147, 51, 234, 0.2), 0 4px 8px rgba(6, 182, 212, 0.15);
+            transform: scale(1.03);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .point:last-child::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.15) 50%, transparent 70%);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+        
+        @keyframes shimmer {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+        
+        .point:last-child .point-emoji {
+            font-size: 36px;
+            filter: drop-shadow(0 4px 8px rgba(59, 130, 246, 0.4));
+        }
+        
+        .point:last-child .point-text {
+            font-weight: 700;
+            color: #1e293b;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .point:last-child .point-highlight {
+            color: #1d4ed8;
+            font-weight: 800;
+            text-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+        }
+        
+        /* CTA section */
+        .cta-section {
+            margin: 40px 0;
+            text-align: center;
+        }
+        
+        .cta-text {
+            font-size: 16px;
+            color: #475569;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+        
+        .cta-buttons {
+            margin-top: 24px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 16px 32px;
+            margin: 8px;
+            text-decoration: none;
+            border-radius: 16px;
+            font-weight: 600;
+            font-size: 16px;
+            letter-spacing: -0.005em;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            color: white;
+            box-shadow: 0 12px 16px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.06);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.8);
+            color: #2563eb;
+            border: 2px solid #2563eb;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+        }
+        
+        /* Footer */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+        }
+        
+        .signature {
+            font-size: 16px;
+            color: #475569;
+            margin-bottom: 20px;
+        }
+        
+        .signature-name {
+            font-weight: 600;
+            color: #0f172a;
+        }
+        
+        .footer-links {
+            font-size: 14px;
+            color: #64748b;
+        }
+        
+        .footer-links a {
+            color: #2563eb;
+            text-decoration: none;
+            margin: 0 12px;
+        }
+        
+        /* Mobile responsive */
+        @media only screen and (max-width: 600px) {
+            body {
+                padding: 20px 15px;
+            }
+            
+            .header-title {
+                font-size: 24px;
+            }
+            
+            .header-subtitle {
+                font-size: 16px;
+            }
+            
+            .hero-image {
+                max-width: 250px;
+            }
+            
+            .greeting {
+                font-size: 16px;
+            }
+            
+            .text-block {
+                font-size: 15px;
+            }
+            
+            .point {
+                padding: 12px;
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .point:last-child {
+                transform: scale(1.02);
+            }
+            
+            .point-emoji {
+                margin-right: 0;
+                margin-bottom: 8px;
+            }
+            
+            .point:last-child .point-emoji {
+                font-size: 40px;
+            }
+            
+            .btn {
+                display: block;
+                margin: 8px 0;
+                padding: 14px 24px;
+                font-size: 15px;
+            }
+        }
+        
+        /* Email client compatibility */
+        table {
+            border-collapse: collapse;
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+        
+        img {
+            border: 0;
+            height: auto;
+            line-height: 100%;
+            outline: none;
+            text-decoration: none;
+            -ms-interpolation-mode: bicubic;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header with logo and bonsai image -->
+        <div class="header">
+            <!-- <img src="https://www.renesthorizons.com/blogo2.png" alt="Renest Logo" class="logo"> -->
+            <h1 class="header-title">The Renest Platform</h1>
+            <!-- <p class="header-subtitle">The Renest Platform – Taxes For Students, Done Better!</p> -->
+            <img src="bonsai4.png" alt="Students collaborating" class="hero-image">
+        </div>
+        
+        <!-- Main content -->
+        <div class="content">
+            <div class="greeting">Hello!</div>
+            
+            <p class="text-block">
+                Thank you to everyone who showed interest in our startup! Whether you scanned a flyer, or heard about us from a friend, we are especially grateful to those that helped as we were building. We're excited to share the results with you!
+            </p>
+            
+            <p class="text-block">
+                Some of you have already used our first tool, but for those who haven't we are excited to announce a platform dedicated to helping students get the most out of their taxes, simply, securely and by maximizing their refund! 
+            </p>
+            
+            
+            <!-- Key points with emojis -->
+            <div class="key-points">
+                <div class="point">
+                    <div class="point-emoji">💰</div>
+                    <div class="point-text">
+                        An estimated 93% of students across the nation <span class="point-highlight">are overpaying on their taxes</span> because tax preparation companies aren't focused on student specific tax benefits and codes.
+                    </div>
+                </div>
+                
+                <div class="point">
+                    <div class="point-emoji">📋</div>
+                    <div class="point-text">
+                        Due to complexity and time-consuming nature of taxes, <span class="point-highlight">roughly 60% of students never file their taxes</span> and don't realize their refund could be hundreds or even thousands of dollars.
+                    </div>
+                </div>
+                
+                <div class="point">
+                    <div class="point-emoji">🚀</div>
+                    <div class="point-text">
+                        Renest transforms how students manage and file taxes, <span class="point-highlight">finding you money and unlocking benefits ahead of tax season</span>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="text-block">
+                Thank you to all who have provided us support and feedback along the way! We couldn't be more grateful!
+            </p>
+            
+            <!-- CTA section -->
+            <div class="cta-section">
+                <p class="cta-text">
+                    We would love to connect with you and find ways to better support you and your needs. If you'd like to learn more about our platform, where we want to go, or just want to chat, you can find time with us via calendly.
+                </p>
+                
+                <div class="cta-buttons">
+                    <a href="https://www.renesthorizons.com/taxes-45.html" class="btn btn-primary">Check Out Our Platform</a>
+                    <a href="https://calendly.com/renesthorizons/30min?month=2025-08" class="btn btn-secondary">Schedule a Chat</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <div class="signature">
+                Thank you and take care!<br>
+                <span class="signature-name">Thomas</span>
+            </div>
+            
+            <div class="footer-links">
+                <a href="https://www.renesthorizons.com/taxes-45.html">Platform</a> |
+                <a href="https://calendly.com/renesthorizons/30min?month=2025-08">Calendly</a> |
+                <a href="mailto:thomas@renesthorizons.com">Careers</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

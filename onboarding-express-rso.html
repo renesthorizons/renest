@@ -1770,6 +1770,9 @@
             chatData.quickEstimateEmail = email + '+quickestimate';
             chatData.email = email; // Also store without suffix for later use
             
+            // Submit email immediately to Google Form when they click join
+            submitInitialEmailToGoogleForm(email);
+            
             // Add user response to chat
             await addMessage('user', email);
             
@@ -3955,6 +3958,31 @@
              calculateAndDisplayBenefit();
          }
 
+        // Submit initial email to Google Form (when they click join)
+        function submitInitialEmailToGoogleForm(email) {
+            // Create the Google Form URL with just the email for initial submission
+            const baseUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSejmRtmObNrp3zgK7fKV2sLYpQdyg7vFQkOq_p6zPCQaLmnwg/formResponse?usp=pp_url';
+            const formUrl = `${baseUrl}&entry.869093761=${encodeURIComponent(email)}&entry.2044388299=initial_join`;
+            
+            // Submit using hidden iframe
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.setAttribute('src', formUrl);
+            document.body.appendChild(iframe);
+            
+            // Remove iframe after submission
+            setTimeout(() => {
+                if (document.body.contains(iframe)) {
+                    document.body.removeChild(iframe);
+                }
+            }, 1000);
+            
+            console.log('Initial email submitted to Google Form:', { 
+                email: email,
+                action: 'initial_join'
+            });
+        }
+
         // Submit to Google Form
         function submitToGoogleForm() {
             // Use quick estimate email if available, otherwise use regular email
@@ -4030,12 +4058,13 @@
                 }
             }, 1000);
             
-            console.log('Submitted to Google Form:', { 
+            console.log('Final submission to Google Form:', { 
                 email: chatData.email, 
                 finalCost: finalCost,
                 productSelection: productSelection,
                 includeInterestEarning: includeInterestEarning,
-                includeTaxFiling: includeTaxFiling
+                includeTaxFiling: includeTaxFiling,
+                action: 'final_onboarding_complete'
             });
         }
 
