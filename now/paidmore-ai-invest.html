@@ -1601,10 +1601,10 @@
                     
                     <!-- Desktop Email Form -->
                     <div class="hero-cta-desktop">
-                        <div class="email-form-hero">
+                        <form class="email-form-hero" onsubmit="handleSubmit(event)">
                             <input type="email" class="email-input-hero" placeholder="Enter your email" required>
                             <button type="submit" class="submit-btn-hero">Upgrade Your Pay</button>
-                        </div>
+                        </form>
                     </div>
                 </div>
                 
@@ -1617,10 +1617,10 @@
                     
                     <!-- Mobile Email Form -->
                     <div class="hero-cta-mobile">
-                        <div class="email-form-hero">
+                        <form class="email-form-hero" onsubmit="handleSubmit(event)">
                             <input type="email" class="email-input-hero" placeholder="Enter your email" required>
                             <button type="submit" class="submit-btn-hero">Upgrade Your Pay</button>
-                        </div>
+                        </form>
                     </div>
                 </div>
                     </div>
@@ -2325,7 +2325,9 @@
         // Handle form submission
         function handleSubmit(event) {
             event.preventDefault();
-            const email = event.target.querySelector('.email-input').value;
+            // Check if it's the hero form or bottom form
+            const emailInput = event.target.querySelector('.email-input') || event.target.querySelector('.email-input-hero');
+            const email = emailInput.value;
             
             // Submit to Google Form with 'invest' page type
             submitEmailToGoogleForm(email, 'invest');
