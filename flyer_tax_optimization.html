@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stop Overpaying Taxes - PaidMore.ai Tax Optimization</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Space+Grotesk:wght@600;700;800;900&display=swap');
+        
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #065f46 0%, #047857 50%, #059669 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .flyer {
+            width: 400px;
+            height: 600px;
+            background: linear-gradient(145deg, #0f172a, #1e293b, #334155);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            border: 2px solid #10b981;
+        }
+        
+        .flyer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 30%, rgba(16, 185, 129, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        
+        .header {
+            padding: 40px 30px 20px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .logo {
+            color: #10b981;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+        
+        .main-message {
+            color: white;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 30px;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .sub-message {
+            color: #a7f3d0;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            line-height: 1.4;
+        }
+        
+        .visual-demo {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 30px;
+            position: relative;
+        }
+        
+        .pay-comparison {
+            width: 100%;
+            margin-bottom: 25px;
+        }
+        
+        .pay-scenario {
+            padding: 16px;
+            border-radius: 16px;
+            margin-bottom: 15px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .employer-pay {
+            background: rgba(239, 68, 68, 0.2);
+            border: 2px solid rgba(239, 68, 68, 0.5);
+        }
+        
+        .true-pay {
+            background: rgba(16, 185, 129, 0.2);
+            border: 2px solid #10b981;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+            }
+            to {
+                box-shadow: 0 0 25px rgba(16, 185, 129, 0.6);
+            }
+        }
+        
+        .pay-label {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .employer-pay .pay-label {
+            color: #fca5a5;
+        }
+        
+        .true-pay .pay-label {
+            color: #6ee7b7;
+        }
+        
+        .pay-amount {
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 5px;
+        }
+        
+        .employer-pay .pay-amount {
+            color: #ef4444;
+            text-decoration: line-through;
+            opacity: 0.8;
+        }
+        
+        .true-pay .pay-amount {
+            color: #10b981;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .pay-explanation {
+            font-size: 12px;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+        
+        .employer-pay .pay-explanation {
+            color: #fca5a5;
+        }
+        
+        .true-pay .pay-explanation {
+            color: #a7f3d0;
+        }
+        
+        .difference-highlight {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 20px;
+            text-align: center;
+            font-weight: 800;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .difference-highlight::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        .difference-amount {
+            font-size: 20px;
+            margin-bottom: 3px;
+        }
+        
+        .difference-text {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        .loan-explanation {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 15px;
+            text-align: center;
+        }
+        
+        .loan-icon {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        
+        .loan-text {
+            color: #fca5a5;
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+        
+        .cta-section {
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .cta-button {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 16px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.5s;
+        }
+        
+        .cta-button:hover::before {
+            left: 100%;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(16, 185, 129, 0.6);
+        }
+        
+        .freedom-text {
+            color: #6ee7b7;
+            font-size: 14px;
+            font-weight: 700;
+            margin-top: 15px;
+        }
+        
+        .floating-icons {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .floating-icon {
+            position: absolute;
+            font-size: 18px;
+            opacity: 0.1;
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        .floating-icon:nth-child(1) {
+            top: 20%;
+            left: 15%;
+            animation-delay: 0s;
+        }
+        
+        .floating-icon:nth-child(2) {
+            top: 40%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+        
+        .floating-icon:nth-child(3) {
+            bottom: 25%;
+            left: 10%;
+            animation-delay: 4s;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-15px) rotate(3deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="flyer">
+        <div class="floating-icons">
+            <div class="floating-icon">💰</div>
+            <div class="floating-icon">🏦</div>
+            <div class="floating-icon">📊</div>
+        </div>
+        
+        <div class="header">
+            <div class="logo">paidmore.ai</div>
+            <h1 class="main-message">Stop Giving Uncle Sam<br>Free Loans</h1>
+            <p class="sub-message">Get your true pay today, not next April</p>
+        </div>
+        
+        <div class="visual-demo">
+            <div class="pay-comparison">
+                <div class="pay-scenario employer-pay">
+                    <div class="pay-label">🙁 What They Paid You</div>
+                    <div class="pay-amount">$198</div>
+                    <div class="pay-explanation">Overpaid taxes "to be safe"</div>
+                </div>
+                
+                <div class="pay-scenario true-pay">
+                    <div class="pay-label">🚀 What You Actually Earned</div>
+                    <div class="pay-amount">$231</div>
+                    <div class="pay-explanation">Your real after-tax amount</div>
+                </div>
+            </div>
+            
+            <div class="difference-highlight">
+                <div class="difference-amount">+$33 Missing</div>
+                <div class="difference-text">Every single paycheck</div>
+            </div>
+            
+            <div class="loan-explanation">
+                <div class="loan-icon">🏛️</div>
+                <div class="loan-text">That's YOUR money sitting in Washington earning them interest while you wait for a "refund"</div>
+            </div>
+        </div>
+        
+        <div class="cta-section">
+            <button class="cta-button">Get My Money</button>
+            <div class="freedom-text">💚 Your money, your timeline, your control</div>
+        </div>
+    </div>
+</body>
+</html>
