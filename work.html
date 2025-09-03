@@ -55,6 +55,116 @@
             transform: translateY(0);
             transition: transform 0.1s ease-out;
         }
+
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 2000;
+        }
+
+        .popup-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .popup {
+            background: #1a1a1a;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .popup-overlay.show .popup {
+            transform: scale(1);
+        }
+
+        .popup-title {
+            font-size: 1.8rem;
+            color: white;
+            margin-bottom: 1rem;
+            font-weight: 300;
+        }
+
+        .popup-message {
+            font-size: 1rem;
+            color: #d1d5db;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .popup-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-direction: column;
+        }
+
+        .popup-button {
+            padding: 0.875rem 1.5rem;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 300;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            background: transparent;
+            color: white;
+        }
+
+        .popup-button.primary {
+            border-color: white;
+        }
+
+        .popup-button.primary:hover {
+            background: white;
+            color: black;
+            transform: translateY(-2px);
+        }
+
+        .popup-button.secondary {
+            border-color: rgba(255,255,255,0.4);
+            color: #d1d5db;
+        }
+
+        .popup-button.secondary:hover {
+            border-color: white;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .close-popup {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-popup:hover {
+            color: white;
+        }
     </style>
 </head>
 <body class="bg-black text-white overflow-x-hidden">
@@ -144,38 +254,20 @@
             <!-- Impact List -->
             <div class="fade-in-up mb-16">
                 <h3 class="text-2xl md:text-3xl font-light text-center mb-8 text-white">
-                    Choose Your Impact
+                    Define Your Impact
                 </h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div class="impact-card p-6 text-center cursor-pointer">
-                        <p class="text-gray-300 hover:text-white transition-colors duration-300 font-light">
-                            Clean Water Access
-                        </p>
-                    </div>
-                    <div class="impact-card p-6 text-center cursor-pointer">
-                        <p class="text-gray-300 hover:text-white transition-colors duration-300 font-light">
-                            Education Funding
-                        </p>
-                    </div>
-                    <div class="impact-card p-6 text-center cursor-pointer">
-                        <p class="text-gray-300 hover:text-white transition-colors duration-300 font-light">
-                            Renewable Energy
-                        </p>
-                    </div>
-                    <div class="impact-card p-6 text-center cursor-pointer">
-                        <p class="text-gray-300 hover:text-white transition-colors duration-300 font-light">
-                            Healthcare Support
-                        </p>
-                    </div>
-                    <div class="impact-card p-6 text-center cursor-pointer">
-                        <p class="text-gray-300 hover:text-white transition-colors duration-300 font-light">
-                            Community Development
-                        </p>
-                    </div>
-                    <div class="impact-card p-6 text-center cursor-pointer">
-                        <p class="text-gray-300 hover:text-white transition-colors duration-300 font-light">
-                            Environmental Conservation
-                        </p>
+                <div class="max-w-2xl mx-auto">
+                    <div class="relative">
+                        <input type="text" 
+                               id="impactSearchBar" 
+                               class="w-full p-4 text-xl bg-transparent border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-white transition-colors duration-300" 
+                               placeholder="" 
+                               readonly>
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-4">
+                            <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -193,11 +285,47 @@
                 </p>
                 
                 <!-- Call to Action -->
-                <button class="group border border-white hover:bg-white hover:text-black transition-all duration-300 px-12 py-4">
-                    <span class="text-sm uppercase tracking-widest font-light">
-                        Get Started
-                    </span>
-                </button>
+                <div class="flex flex-col md:flex-row items-center justify-center gap-4 max-w-md mx-auto">
+                    <input type="email" 
+                           id="emailInput" 
+                           class="flex-1 w-full md:w-auto p-4 bg-transparent border border-white text-white placeholder-gray-400 focus:outline-none focus:border-gray-300 transition-colors duration-300" 
+                           placeholder="Enter your email">
+                    <button id="getStartedBtn" class="group border-2 border-orange-500 hover:bg-orange-500 hover:text-black transition-all duration-300 px-12 py-4 whitespace-nowrap relative overflow-hidden">
+                        <span class="text-sm uppercase tracking-widest font-light relative z-10">
+                            Get Started
+                        </span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-orange-600 via-red-500 to-orange-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer style="background: #111; border-top: 1px solid rgba(255,255,255,0.1); padding: 2rem 0; margin-top: 4rem;">
+        <div style="max-width: 4xl; margin: 0 auto; padding: 0 2rem;">
+            <div style="text-align: center; color: rgba(255,255,255,0.6); font-size: 0.875rem;">
+                <div style="margin-bottom: 1rem;">
+                    © 2025 Renest Horizons. All rights reserved.
+                </div>
+                <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+                    <a href="#" style="color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.3s ease; font-weight: 300;" onmouseover="this.style.color='rgba(255,255,255,0.8)'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">Privacy Policy</a>
+                    <a href="#" style="color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.3s ease; font-weight: 300;" onmouseover="this.style.color='rgba(255,255,255,0.8)'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">Terms of Use</a>
+                    <a href="mailto:thomas@renesthorizons.com" style="color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.3s ease; font-weight: 300;" onmouseover="this.style.color='rgba(255,255,255,0.8)'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Share Page Popup -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup">
+            <button class="close-popup" id="closePopup">&times;</button>
+            <h2 class="popup-title">Thank you for joining!</h2>
+            <p class="popup-message text-gray-300">Help us spread the word about Renest Horizons and the impact we can make together.</p>
+            <div class="popup-buttons">
+                <button class="popup-button primary" id="sharePageButton">Share This Page</button>
+                <a href="/" class="popup-button secondary">Learn More</a>
             </div>
         </div>
     </div>
@@ -235,6 +363,172 @@
 
         // Initial check
         handleScrollAnimations();
+
+        // Animated search bar functionality
+        const impactExamples = [
+            "Clean Water Access Projects",
+            "Education Funding Initiatives", 
+            "Renewable Energy Development",
+            "Healthcare Support Programs",
+            "Community Development Projects",
+            "Environmental Conservation",
+            "Mental Health Resources",
+            "Food Security Programs",
+            "Affordable Housing Projects",
+            "Digital Literacy Programs"
+        ];
+
+        let currentExampleIndex = 0;
+        const searchBar = document.getElementById('impactSearchBar');
+
+        function typeExample(text, callback) {
+            let i = 0;
+            searchBar.placeholder = '';
+            
+            function typeChar() {
+                if (i < text.length) {
+                    searchBar.placeholder += text.charAt(i);
+                    i++;
+                    setTimeout(typeChar, 50);
+                } else {
+                    setTimeout(callback, 2000);
+                }
+            }
+            typeChar();
+        }
+
+        function deleteExample(callback) {
+            let currentText = searchBar.placeholder;
+            
+            function deleteChar() {
+                if (currentText.length > 0) {
+                    currentText = currentText.slice(0, -1);
+                    searchBar.placeholder = currentText;
+                    setTimeout(deleteChar, 30);
+                } else {
+                    setTimeout(callback, 500);
+                }
+            }
+            deleteChar();
+        }
+
+        function cycleExamples() {
+            typeExample(impactExamples[currentExampleIndex], function() {
+                deleteExample(function() {
+                    currentExampleIndex = (currentExampleIndex + 1) % impactExamples.length;
+                    cycleExamples();
+                });
+            });
+        }
+
+        // Start the animation
+        setTimeout(cycleExamples, 1000);
+
+        // Email submission functionality
+        document.getElementById('getStartedBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('emailInput').value;
+            if (!email) {
+                alert('Please enter your email address');
+                return;
+            }
+
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address');
+                return;
+            }
+
+            // Format email as [email]+blackhole
+            const formattedEmail = encodeURIComponent(email + '+blackhole');
+            const baseUrl = 'https://docs.google.com/forms/d/e/1FAIpQLScZ04ro2nS9fPEclOjblV8kv-rTFxQNH1pMN_xy8H1gbGKQtQ/formResponse?usp=pp_url&entry.1358827248=';
+            const submitButton = this;
+            
+            // Disable the submit button and provide feedback
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<span class="text-sm uppercase tracking-widest font-light">Submitting...</span>';
+            
+            // Using a hidden iframe to submit the form without redirecting
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.setAttribute('src', baseUrl + formattedEmail);
+            document.body.appendChild(iframe);
+            
+            // Show success feedback
+            setTimeout(() => {
+                submitButton.innerHTML = '<span class="text-sm uppercase tracking-widest font-light relative z-10">✓ Submitted!</span>';
+                submitButton.style.backgroundColor = '#f97316'; // orange-500
+                submitButton.style.borderColor = '#f97316';
+                submitButton.style.color = 'black';
+                
+                // Clear the email input
+                document.getElementById('emailInput').value = '';
+                
+                // Show popup after brief delay
+                setTimeout(() => {
+                    document.getElementById('popupOverlay').classList.add('show');
+                }, 500);
+                
+                // Reset button after 3 seconds
+                setTimeout(() => {
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = '<span class="text-sm uppercase tracking-widest font-light relative z-10">Get Started</span><div class="absolute inset-0 bg-gradient-to-r from-orange-600 via-red-500 to-orange-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>';
+                    submitButton.style.backgroundColor = '';
+                    submitButton.style.borderColor = '';
+                    submitButton.style.color = '';
+                }, 3000);
+                
+                // Remove iframe after submission
+                document.body.removeChild(iframe);
+            }, 1000);
+        });
+
+        // Popup functionality
+        const popupOverlay = document.getElementById('popupOverlay');
+        const closePopup = document.getElementById('closePopup');
+        const sharePageButton = document.getElementById('sharePageButton');
+
+        // Close popup when clicking the X button
+        closePopup.addEventListener('click', function() {
+            popupOverlay.classList.remove('show');
+        });
+
+        // Close popup when clicking outside
+        popupOverlay.addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('show');
+            }
+        });
+
+        // Share page functionality
+        sharePageButton.addEventListener('click', function() {
+            const shareButton = this;
+            const originalText = shareButton.textContent;
+            
+            // Copy current URL to clipboard
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                // Visual feedback
+                shareButton.textContent = '✓ Link Copied!';
+                shareButton.style.background = 'white';
+                shareButton.style.color = 'black';
+                
+                // Reset button after 2 seconds
+                setTimeout(() => {
+                    shareButton.style.background = '';
+                    shareButton.style.color = '';
+                    shareButton.textContent = originalText;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                // Fallback - show a message
+                shareButton.textContent = 'Copy failed - try manually';
+                setTimeout(() => {
+                    shareButton.textContent = originalText;
+                }, 3000);
+            });
+        });
     </script>
 </body>
 </html>
