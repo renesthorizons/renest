@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Empowerment Platform - Fund Ideas, Shape the Future</title>
+    <title>RSO Fundraising Platform - Fund Your Events, Speakers, and Initiatives</title>
     <!-- <script src="smartsupporting.js"></script> -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700;800;900&display=swap');
@@ -105,13 +105,15 @@
         }
 
         .hero-cta-desktop {
+            text-align: center;
             margin-top: 2rem;
+            display: block;
         }
 
         .hero-cta-mobile {
-            display: none;
-            margin-top: 2rem;
             text-align: center;
+            margin-top: 2rem;
+            display: none;
         }
 
         .hero-media {
@@ -238,9 +240,9 @@
             font-size: 1.125rem;
             opacity: 0.95;
             line-height: 1.6;
-        }
+                }
 
-        /* How It Works Section - Animated Flow */
+        /* How It Works Section */
         .how-it-works-section {
             background: var(--background-secondary);
             padding: 6rem 0;
@@ -248,581 +250,426 @@
             position: relative;
         }
 
-        .how-it-works-content {
+        .how-it-works-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 2rem;
         }
 
-        .flow-animation {
-            position: relative;
-            min-height: 600px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2rem;
-        }
-
-        .story-trigger {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .story-button {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            color: white;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 50px;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.125rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow-lg);
-        }
-
-        .story-button:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-xl);
-        }
-
-        .story-button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .alex-circle {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            color: white;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 1.25rem;
-            box-shadow: var(--shadow-lg);
-            position: relative;
-            z-index: 10;
-        }
-
-        .alex-label {
-            font-size: 0.875rem;
-            opacity: 0.9;
-        }
-
-        .flow-line {
-            width: 3px;
-            height: 60px;
-            background: var(--border-light);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .flow-line-fill {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 0%;
-            background: linear-gradient(180deg, var(--primary) 0%, var(--accent) 100%);
-            transition: height 1s ease;
-        }
-
-        .get-started-button {
-            background: var(--primary);
-            color: white;
-            padding: 1.5rem 3rem;
-            border: none;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 1.25rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow-md);
-            position: relative;
-            z-index: 10;
-            opacity: 0;
-            transform: scale(0.8);
-        }
-
-        .get-started-button.show {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        .get-started-button.clicked {
-            transform: scale(0.9);
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.3);
-            background: var(--primary-dark);
-        }
-
-        .get-started-button.clicked::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 20px;
-            height: 20px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            animation: ripple 0.6s ease-out;
-        }
-
-        @keyframes ripple {
-            0% {
-                transform: translate(-50%, -50%) scale(0);
-                opacity: 1;
-            }
-            100% {
-                transform: translate(-50%, -50%) scale(3);
-                opacity: 0;
-            }
-        }
-
-        .card-container {
-            position: relative;
-            max-width: 400px;
-            margin: 0 auto;
-            min-height: 120px;
-        }
-
-        .alex-story-card {
+        .step-card {
             background: white;
-            color: var(--text-primary);
-            padding: 1.5rem;
-            border-radius: 16px;
-            text-align: left;
-            box-shadow: var(--shadow-md);
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.5s ease;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 5;
-            min-height: 160px;
             border: 1px solid var(--border-light);
-        }
-
-        .alex-story-card.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .alex-story-card.hide {
-            opacity: 0;
-            transform: translateY(-20px) scale(0.8);
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-
-        .story-line {
-            font-size: 0.875rem;
-            line-height: 1.5;
-            margin-bottom: 0.5rem;
-            opacity: 0;
-            transform: translateX(-20px);
-            transition: all 0.5s ease;
-            color: var(--text-primary);
-            visibility: hidden;
-        }
-
-        .story-line.show {
-            opacity: 1;
-            transform: translateX(0);
-            visibility: visible;
-        }
-
-        .story-line.highlight {
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        .story-line.indent {
-            margin-left: 1rem;
-            font-size: 0.8rem;
-            opacity: 0.8;
-            color: var(--text-secondary);
-        }
-
-        .savings-reveal {
-            background: var(--success);
-            color: white;
-            padding: 1rem 2rem;
             border-radius: 20px;
-            font-weight: 600;
+            padding: 2.5rem;
             text-align: center;
-            box-shadow: var(--shadow-md);
-            opacity: 0;
-            transform: translateY(20px) scale(0.8);
-            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 5;
-        }
-
-        .savings-reveal.show {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-
-        .logo-flash {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            border-radius: 20px;
-            padding: 2rem;
-            text-align: center;
-            box-shadow: var(--shadow-md);
-            opacity: 0;
-            transform: scale(0.8);
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .logo-flash.show {
-            animation: logoFlash 1.2s ease-out;
-        }
-
-        .logo-flash img {
-            max-width: 200px;
-            height: auto;
-        }
-
-        @keyframes logoFlash {
-            0% {
-                opacity: 0;
-                transform: scale(0.5);
-            }
-            15% {
-                opacity: 1;
-                transform: scale(1.2);
-            }
-            25% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            100% {
-                opacity: 0;
-                transform: scale(1);
-            }
-        }
-
-        .savings-reveal.enter {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            animation: savingsReveal 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-
-        @keyframes savingsReveal {
-            0% {
-                opacity: 0;
-                transform: translateY(20px) scale(0.5);
-            }
-            50% {
-                transform: translateY(-10px) scale(1.1);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        .savings-reveal {
-            background: var(--success);
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 20px;
-            font-weight: 600;
-            text-align: center;
-            box-shadow: var(--shadow-md);
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.5s ease;
-            position: relative;
-            z-index: 5;
-        }
-
-        .savings-reveal.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .savings-amount {
-            font-size: 2rem;
-            font-weight: 800;
-            margin-top: 0.5rem;
-        }
-
-        .impact-decision {
-            background: var(--primary);
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 20px;
-            font-weight: 600;
-            text-align: center;
-            box-shadow: var(--shadow-md);
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.5s ease;
-            position: relative;
-            z-index: 5;
-        }
-
-        .impact-decision.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .final-summary {
-            background: linear-gradient(135deg, var(--success) 0%, var(--primary) 100%);
-            color: white;
-            padding: 2rem;
-            border-radius: 20px;
-            font-weight: 600;
-            text-align: center;
-            box-shadow: var(--shadow-md);
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.5s ease;
-            position: relative;
-            z-index: 5;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .final-summary.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .final-summary h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            font-weight: 700;
-        }
-
-        .final-summary p {
-            font-size: 1.125rem;
-            line-height: 1.6;
-        }
-
-        .split-container {
-            display: flex;
-            justify-content: space-around;
-            width: 100%;
-            max-width: 800px;
-            margin-top: 2rem;
-            position: relative;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.5s ease;
-        }
-
-        .split-container.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .money-flow-lines {
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            width: 100%;
-            height: 60px;
-            transform: translateX(-50%);
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        .money-flow-lines.show {
-            opacity: 1;
-        }
-
-        .flow-line-1 {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            width: 2px;
-            height: 30px;
-            background: var(--primary);
-            transform: translateX(-50%);
-        }
-
-        .flow-line-1::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 120px;
-            height: 2px;
-            background: var(--primary);
-            transform: translateX(-50%);
-            animation: flowToBucket 1s ease-out 0.5s both;
-        }
-
-        .flow-line-2 {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            width: 2px;
-            height: 30px;
-            background: var(--primary);
-            transform: translateX(-50%);
-        }
-
-        .flow-line-2::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 120px;
-            height: 2px;
-            background: var(--primary);
-            transform: translateX(-50%);
-            animation: flowToBucket 1s ease-out 0.7s both;
-        }
-
-        .flow-line-3 {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            width: 2px;
-            height: 30px;
-            background: var(--primary);
-            transform: translateX(-50%);
-        }
-
-        .flow-line-3::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 120px;
-            height: 2px;
-            background: var(--primary);
-            transform: translateX(-50%);
-            animation: flowToBucket 1s ease-out 0.9s both;
-        }
-
-        .flow-line-4 {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            width: 2px;
-            height: 30px;
-            background: var(--primary);
-            transform: translateX(-50%);
-        }
-
-        .flow-line-4::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 120px;
-            height: 2px;
-            background: var(--primary);
-            transform: translateX(-50%);
-            animation: flowToBucket 1s ease-out 1.1s both;
-        }
-
-        .flow-line-5 {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            width: 2px;
-            height: 30px;
-            background: var(--primary);
-            transform: translateX(-50%);
-        }
-
-        .flow-line-5::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 120px;
-            height: 2px;
-            background: var(--primary);
-            transform: translateX(-50%);
-            animation: flowToBucket 1s ease-out 1.3s both;
-        }
-
-        @keyframes flowToBucket {
-            0% {
-                width: 0;
-                opacity: 0;
-            }
-            50% {
-                opacity: 1;
-            }
-            100% {
-                width: 120px;
-                opacity: 1;
-            }
-        }
-
-        .bucket {
-            background: white;
-            border: 2px solid var(--border-light);
-            border-radius: 16px;
-            padding: 1.5rem;
-            text-align: center;
-            width: 140px;
-            box-shadow: var(--shadow-md);
             transition: all 0.3s ease;
-            opacity: 0;
-            transform: translateY(20px);
+            box-shadow: var(--shadow-sm);
+            position: relative;
         }
 
-        .bucket.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .bucket:hover {
-            transform: translateY(-4px);
+        .step-card:hover {
+            transform: translateY(-8px);
             box-shadow: var(--shadow-lg);
             border-color: var(--primary);
         }
 
-        .bucket-icon {
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .step-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .step-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.375rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .step-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 1.05rem;
+        }
+
+        /* What Members See Section */
+        .members-section {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 6rem 0;
+            margin: 4rem 0;
+            position: relative;
+        }
+
+        .member-experience {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .member-preview {
+            min-width: 100%;
+            display: none;
+        }
+
+        .member-preview.active {
+            display: block;
+        }
+
+        .member-preview {
+            background: white;
+            border-radius: 24px;
+            box-shadow: var(--shadow-xl);
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+        }
+
+        .preview-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .preview-logo {
             font-size: 2rem;
+        }
+
+        .preview-header h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .preview-content {
+            padding: 2.5rem;
+        }
+
+        .club-description {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .club-description h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .club-description p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .fundraising-goal {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .fundraising-goal h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .fundraising-goal p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .renest-partnership {
+            margin-top: 0.5rem;
+        }
+
+        .partnership-badge {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.125rem 0.375rem;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .renest-partnership h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
             margin-bottom: 0.5rem;
         }
 
-        .bucket-title {
+        .renest-partnership p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+        }
+
+        .cta-section {
+            text-align: center;
+        }
+
+        .member-cta-button {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            margin: 0 auto;
+            width: fit-content;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3), 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .member-cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .member-cta-button:hover {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4), 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .member-cta-button:hover::before {
+            left: 100%;
+        }
+
+        .member-cta-button:active {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3), 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .cta-note {
+            color: var(--text-light);
+            font-size: 0.6rem;
+            margin: 0;
+        }
+
+        /* Member Contributions Section */
+        .member-contributions {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            max-height: 200px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) var(--border-light);
+        }
+
+        .member-contributions::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .member-contributions::-webkit-scrollbar-track {
+            background: var(--border-light);
+            border-radius: 3px;
+        }
+
+        .member-contributions::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        .member-contributions::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        .contributions-header {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .contribution-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+        }
+
+        .contribution-item:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .contribution-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+
+        .contribution-text {
+            flex: 1;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .contribution-name {
             font-weight: 600;
             color: var(--text-primary);
-            margin-bottom: 0.25rem;
-            font-size: 0.875rem;
         }
 
-        .bucket-amount {
+        .contribution-amount {
             color: var(--success);
-            font-weight: 700;
-            font-size: 1.125rem;
+            font-weight: 600;
         }
 
-        /* Animation delays for buckets */
-        .bucket:nth-child(1) { transition-delay: 0.1s; }
-        .bucket:nth-child(2) { transition-delay: 0.2s; }
-        .bucket:nth-child(3) { transition-delay: 0.3s; }
-        .bucket:nth-child(4) { transition-delay: 0.4s; }
-        .bucket:nth-child(5) { transition-delay: 0.5s; }
+        /* Carousel Navigation */
+        .carousel-nav {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            margin: 1.5rem 0 2rem 0;
+            padding: 1rem;
+        }
+
+        .carousel-instruction {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            box-shadow: var(--shadow-md);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .carousel-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .carousel-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.25rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .carousel-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.1);
+            box-shadow: var(--shadow-md);
+        }
+
+        .carousel-dots {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--border-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: var(--primary);
+            transform: scale(1.3);
+        }
+
+        .dot:hover {
+            background: var(--primary);
+            transform: scale(1.1);
+        }
 
         /* Featured Campaign Section - Ocean Gradient Background */
         .featured-campaign-section {
@@ -1054,7 +901,7 @@
         .section-header {
             margin-bottom: 4rem;
             text-align: center;
-            color: white;
+            color: var(--text-primary);
         }
 
         .section-title {
@@ -1062,15 +909,32 @@
             font-size: 2.5rem;
             font-weight: 800;
             margin-bottom: 1rem;
-            color: white;
+            color: var(--text-primary);
         }
 
         .section-subtitle {
             font-size: 1.25rem;
-            color: rgba(255, 255, 255, 0.9);
+            color: var(--text-secondary);
             max-width: 600px;
             margin: 0 auto;
             line-height: 1.6;
+        }
+
+        /* Override for dark backgrounds */
+        .possibilities-section .section-title {
+            color: white !important;
+        }
+
+        .possibilities-section .section-subtitle {
+            color: rgba(255, 255, 255, 0.9) !important;
+        }
+
+        .stories-section .section-title {
+            color: white !important;
+        }
+
+        .stories-section .section-subtitle {
+            color: rgba(255, 255, 255, 0.9) !important;
         }
 
         .possibilities-grid {
@@ -1388,22 +1252,30 @@
                 gap: 2rem;
             }
 
-            .flow-animation {
-                min-height: 800px;
+            .how-it-works-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
             }
 
-            .split-container {
-                flex-direction: column;
-                align-items: center;
-                gap: 1rem;
+            .step-card {
+                padding: 2rem 1.5rem;
             }
 
-            .bucket {
-                width: 200px;
+            .member-preview {
+                margin: 0;
             }
 
-            .split-line {
-                display: none;
+            .carousel-nav {
+                margin-top: 1.5rem;
+            }
+
+            .carousel-instruction {
+                font-size: 0.875rem;
+                padding: 0.5rem 1rem;
+            }
+
+            .preview-content {
+                padding: 2rem 1.5rem;
             }
 
             .stories-grid {
@@ -1496,6 +1368,51 @@
             .stat-card {
                 padding: 1.5rem;
             }
+
+            /* Mobile fixes for member preview cards */
+            .member-experience {
+                padding: 0;
+                max-width: 100%;
+            }
+
+            .member-preview {
+                margin: 0;
+                border-radius: 16px;
+            }
+
+            .preview-content {
+                padding: 1.5rem;
+            }
+
+            .preview-header {
+                padding: 1.5rem;
+            }
+
+            .club-description,
+            .fundraising-goal,
+            .renest-partnership {
+                margin-bottom: 1.5rem;
+                padding-bottom: 1.5rem;
+            }
+
+            .member-contributions {
+                max-height: 150px;
+                padding: 1rem;
+            }
+
+            .contribution-item {
+                padding: 0.5rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .contribution-text {
+                font-size: 0.85rem;
+            }
+
+            .member-cta-button {
+                padding: 0.875rem 1.5rem;
+                font-size: 0.95rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1531,6 +1448,56 @@
             .modal {
                 padding: 2rem 1.5rem;
             }
+
+            /* Extra small screen optimizations for member preview cards */
+            .preview-content {
+                padding: 1rem;
+            }
+
+            .preview-header {
+                padding: 1rem;
+            }
+
+            .preview-header h3 {
+                font-size: 1.25rem;
+            }
+
+            .club-description h4,
+            .fundraising-goal h4,
+            .renest-partnership h4 {
+                font-size: 1.125rem;
+            }
+
+            .club-description p,
+            .fundraising-goal p,
+            .renest-partnership p {
+                font-size: 0.95rem;
+            }
+
+            .member-contributions {
+                max-height: 120px;
+                padding: 0.75rem;
+            }
+
+            .contribution-item {
+                padding: 0.375rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .contribution-text {
+                font-size: 0.8rem;
+            }
+
+            .contribution-avatar {
+                width: 28px;
+                height: 28px;
+                font-size: 0.75rem;
+            }
+
+            .member-cta-button {
+                padding: 0.75rem 1.25rem;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -1544,15 +1511,14 @@
                         ✨ Student Empowerment Platform
                     </div> -->
                     
-                    <h1 class="hero-title">Choose What Your Taxes Do</h1>
+                    <h1 class="hero-title">Fund Your Events & Initiatives</h1>
                     
                     <p class="hero-subtitle">
-                        Renest is a platform unlocking the potential of smarter personal finances. Change more than just your own future, create and fund the ideas that will make it worth being a part of.
+                        Renest helps student organizations fund speakers, events, catering, and initiatives that enrich campus life and creates lasting impact for their members and beyond.
                     </p>
                     
-                    <!-- Desktop Get Started Button -->
                     <div class="hero-cta-desktop">
-                        <button class="cta-button" onclick="openGetStartedModal()">
+                        <button class="cta-button" onclick="openModal()">
                             Get Started
                         </button>
                     </div>
@@ -1564,10 +1530,8 @@
                             <img src="hummingbirdflower.png" alt="Hummingbird and Flower" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;">
                         </div>
                     </div>
-                    
-                    <!-- Mobile Get Started Button -->
                     <div class="hero-cta-mobile">
-                        <button class="cta-button" onclick="openGetStartedModal()">
+                        <button class="cta-button" onclick="openModal()">
                             Get Started
                         </button>
                     </div>
@@ -1587,7 +1551,7 @@
                     </div>
                     <div class="renest-meteor-text">
                         <div class="stats-subtitle">
-                            <p>Below is the cumulative amount of money each year that goes unclaimed on student tax returns, yes, that's billions. Imagine the impact we could make together.</p>
+                            <p>Below is the cumulative amount of money each year that goes unclaimed on student tax returns. With Renest, student orgs can help their members save more money while funding amazing campus experiences.</p>
                         </div>
                     </div>
                 </div>
@@ -1610,177 +1574,430 @@
                     </div>
                 </div>
             </div>
-        </section>
+                </section>
 
         <!-- How It Works Section -->
         <section class="how-it-works-section">
-            <div class="how-it-works-content">
-                <div class="story-trigger">
-                    <button class="story-button" id="storyButton" onclick="startAnimation()">Click to See Alex's Story</button>
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">How It Works</h2>
+                    <p class="section-subtitle">
+                        A simple three-step process that transforms tax savings into club funding
+                    </p>
                 </div>
                 
-                <div class="flow-animation">
-                    <!-- Alex Circle -->
-                    <div class="alex-circle">
-                        <div>Alex</div>
-                        <div class="alex-label">Student</div>
-                    </div>
-                    
-                    <!-- Flow Line -->
-                    <div class="flow-line">
-                        <div class="flow-line-fill" id="flowLineFill"></div>
-                    </div>
-                    
-                    <!-- Get Started Button -->
-                    <button class="get-started-button" id="getStartedButton">Get Started</button>
-                    
-                    <!-- Story Card and Savings Reveal Container -->
-                    <div class="card-container" id="cardContainer">
-                        <!-- Story Card -->
-                        <div class="alex-story-card" id="storyCard">
-                            <div class="story-line" id="storyLine1">Alex tells Renest a few things about herself:</div>
-                            <div class="story-line indent" id="storyLine2">School: University of Illinois at Urbana-Champaign</div>
-                            <div class="story-line indent" id="storyLine3">Projected income: $15,000</div>
-                            <div class="story-line indent" id="storyLine4">How much she spends on rent: $750/month</div>
-                            <div class="story-line highlight" id="storyLine5">Renest calculates the 529 benefits she is eligible for...</div>
-                        </div>
-                        
-                        <!-- Logo Flash -->
-                        <div class="logo-flash" id="logoFlash">
-                            <img src="renestmeteor-cropped.png" alt="Renest Meteor">
-                        </div>
-                        
-                        <!-- Savings Reveal -->
-                        <div class="savings-reveal" id="savingsReveal">
-                            <div>Renest uncovered</div>
-                            <div class="savings-amount">$500</div>
-                            <div>of savings for Alex</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Impact Decision -->
-                    <div class="impact-decision" id="impactDecision">
-                        Alex decides what impact they want to have with their unlocked funds
-                    </div>
-                    
-                    <!-- Split Container -->
-                    <div class="split-container" id="splitContainer">
-                        <div class="money-flow-lines" id="moneyFlowLines">
-                            <div class="flow-line-1"></div>
-                            <div class="flow-line-2"></div>
-                            <div class="flow-line-3"></div>
-                            <div class="flow-line-4"></div>
-                            <div class="flow-line-5"></div>
-                        </div>
-                        
-                        <!-- Buckets -->
-                        <div class="bucket" id="bucket1">
-                            <div class="bucket-icon">💰</div>
-                            <div class="bucket-title">Alex's Trip Fund</div>
-                            <div class="bucket-amount">$300</div>
-                        </div>
-                        
-                        <div class="bucket" id="bucket2">
-                            <div class="bucket-icon">🏥</div>
-                            <div class="bucket-title">Cancer Research Lab</div>
-                            <div class="bucket-amount">$50</div>
-                        </div>
-                        
-                        <div class="bucket" id="bucket3">
-                            <div class="bucket-icon">🍎</div>
-                            <div class="bucket-title">Campus Food Pantry</div>
-                            <div class="bucket-amount">$50</div>
-                        </div>
-                        
-                        <div class="bucket" id="bucket4">
-                            <div class="bucket-icon">⚖️</div>
-                            <div class="bucket-title">Legal Aid Clinic</div>
-                            <div class="bucket-amount">$50</div>
-                        </div>
-                        
-                        <div class="bucket" id="bucket5">
-                            <div class="bucket-icon">🌱</div>
-                            <div class="bucket-title">Solar Panel Project</div>
-                            <div class="bucket-amount">$50</div>
-                        </div>
-                    </div>
-                    
-                                        <!-- Final Summary -->
-                    <div class="final-summary" id="finalSummary">
-                        <h3>Alex's Impact</h3>
-                        <p>
-                            Alex didn't just save more for herself—she also joined others in empowering the causes she cares about. Her finances became an opportunity for personal growth and a positive impact on her community, <br><br> today and tomorrow.
+                <div class="how-it-works-grid">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <div class="step-icon">👥</div>
+                        <h3 class="step-title">Set Up Your Club</h3>
+                        <p class="step-description">
+                            A club representative registers your organization on the Renest platform.
                         </p>
-                       
                     </div>
-                    <div style="margin-top: 2rem;">
-                        <a href="onboarding-express-campaign.html" class="cta-button">
-                            Get Started
-                        </a>
+                    
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <div class="step-icon">🎯</div>
+                        <h3 class="step-title">Choose Your Fundraising Goal</h3>
+                        <p class="step-description">
+                            Decide what you want to fund: events, guest speakers, catering, equipment, or build your general club fund.
+                        </p>
                     </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <div class="step-icon">🔗</div>
+                        <h3 class="step-title">Share With Members</h3>
+                        <p class="step-description">
+                            Renest provides a custom link to share with your members. They save money on taxes and can contribute to your club.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- What Members See Section -->
+        <section class="members-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">What Your Members See</h2>
+                    <p class="section-subtitle">
+                        A compelling page that explains how they can support your club while saving money
+                    </p>
+                </div>
+                
+                <div class="member-experience">
+                    <div class="carousel-container">
+                        <div class="carousel-nav">
+                            <!-- <div class="carousel-instruction">
+                                <span>👆 Swipe to see more examples</span>
+                            </div> -->
+                            <div class="carousel-controls">
+                                <button class="carousel-btn prev" onclick="changeSlide(-1)">‹</button>
+                                <div class="carousel-dots">
+                                    <span class="dot active" onclick="goToSlide(0)"></span>
+                                    <span class="dot" onclick="goToSlide(1)"></span>
+                                    <span class="dot" onclick="goToSlide(2)"></span>
+                                    <span class="dot" onclick="goToSlide(3)"></span>
+                                    <span class="dot" onclick="goToSlide(4)"></span>
+                                </div>
+                                <button class="carousel-btn next" onclick="changeSlide(1)">›</button>
+                            </div>
+                        </div>
+                        <div class="carousel-track" id="carouselTrack">
+                            
+                            <!-- Rural Student Alliance Example -->
+                            <div class="member-preview active" data-slide="0">
+                                <div class="preview-header">
+                                    <div class="preview-logo">🏠</div>
+                                    <h3>Rural Student Alliance</h3>
+                                    <p style="margin: 0; font-size: 0.9rem; opacity: 0.8;">University of Chicago</p>
+                                </div>
+                                
+                                <div class="preview-content">
+                                    <div class="club-description">
+                                        <h4>About Our Club</h4>
+                                        <p>We connect rural students on campus, share our agricultural heritage, and create opportunities for students from farming and ranching backgrounds.</p>
+                                    </div>
+                                    
+                                    <div class="fundraising-goal">
+                                        <h4>🐂 Our Goal: Professional Bull Riding Trip</h4>
+                                        <p>Help us fund a trip to the Professional Bull Riding Championship. Your support covers tickets, transportation, and accommodations for this exciting experience.</p>
+                                    </div>
+                                    
+                                    <div class="renest-partnership">
+                                        <div class="partnership-badge">
+                                            <span>🤝</span>
+                                            <span>Partnership with Renest</span>
+                                        </div>
+                                        <h4>In order to fund our event, we partnered with Renest</h4>
+                                        <p>Renest helps you save money on your taxes. If you would like, you can allocate some of your savings to help our club - that would make all of our events possible! Thank you!</p>
+                                        
+                                        <div class="member-contributions">
+                                            <div class="contributions-header">Recent Contributions</div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">AK</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Anna Kim</span> has contributed <span class="contribution-amount">$45</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">MJ</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Marcus Johnson</span> has contributed <span class="contribution-amount">$32</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">SL</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Sarah Lee</span> has contributed <span class="contribution-amount">$28</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">A</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Anonymous</span> has contributed <span class="contribution-amount">$67</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">ER</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Emma Rodriguez</span> has contributed <span class="contribution-amount">$39</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <a href="../onboarding-express.html" class="member-cta-button" onclick="setClubInfo('Rural Student Alliance', 'rural_student_alliance', 'University of Chicago', 'Illinois')">
+                                            5 Questions to Estimate Your Savings
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Finance Club Example -->
+                            <div class="member-preview" data-slide="1">
+                                <div class="preview-header">
+                                    <div class="preview-logo">📈</div>
+                                    <h3>Finance & Investment Club</h3>
+                                    <p style="margin: 0; font-size: 0.9rem; opacity: 0.8;">New York University</p>
+                                </div>
+                                
+                                <div class="preview-content">
+                                    <div class="club-description">
+                                        <h4>About Our Club</h4>
+                                        <p>We teach financial literacy, practice real-world investing, and help students build wealth through hands-on experience with stock markets and investment strategies.</p>
+                                    </div>
+                                    
+                                    <div class="fundraising-goal">
+                                        <h4>💼 Our Goal: Student Investment Fund</h4>
+                                        <p>Help us create a $10,000 investment fund that our members will manage together. Each member gets to vote on investment decisions and learn real portfolio management skills.</p>
+                                    </div>
+                                    
+                                    <div class="renest-partnership">
+                                        <div class="partnership-badge">
+                                            <span>🤝</span>
+                                            <span>Partnership with Renest</span>
+                                        </div>
+                                        <h4>In order to fund our event, we partnered with Renest</h4>
+                                        <p>Renest helps you save money on your taxes. If you would like, you can allocate some of your savings to help our club - that would make all of our events possible! Thank you!</p>
+                                        
+                                        <div class="member-contributions">
+                                            <div class="contributions-header">Recent Contributions</div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">JP</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">James Patel</span> has contributed <span class="contribution-amount">$78</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">A</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Anonymous</span> has contributed <span class="contribution-amount">$92</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">NG</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Nina Garcia</span> has contributed <span class="contribution-amount">$65</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">RB</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Ryan Brooks</span> has contributed <span class="contribution-amount">$41</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">LM</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Lisa Martinez</span> has contributed <span class="contribution-amount">$56</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <a href="../onboarding-express.html" class="member-cta-button" onclick="setClubInfo('Finance & Investment Club', 'finance_investment_club', 'New York University', 'New York')">
+                                            5 Questions to Estimate Your Savings
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Baking Club Example -->
+                            <div class="member-preview" data-slide="2">
+                                <div class="preview-header">
+                                    <div class="preview-logo">🧁</div>
+                                    <h3>Baking Club</h3>
+                                    <p style="margin: 0; font-size: 0.9rem; opacity: 0.8;">University of Colorado Boulder</p>
+                                </div>
+                                
+                                <div class="preview-content">
+                                    <div class="club-description">
+                                        <h4>About Our Club</h4>
+                                        <p>We share our love of baking, learn new recipes, and create delicious treats for campus events. From cookies to cakes, we bring sweetness to student life.</p>
+                                    </div>
+                                    
+                                    <div class="fundraising-goal">
+                                        <h4>🍰 Our Goal: Baking Supplies & Ingredients</h4>
+                                        <p>Help us stock our baking supplies and ingredients for the semester. Your support covers flour, sugar, chocolate, baking tools, and ingredients for our weekly baking sessions and campus events.</p>
+                                    </div>
+                                    
+                                    <div class="renest-partnership">
+                                        <div class="partnership-badge">
+                                            <span>🤝</span>
+                                            <span>Partnership with Renest</span>
+                                        </div>
+                                        <h4>In order to fund our event, we partnered with Renest</h4>
+                                        <p>Renest helps you save money on your taxes. If you would like, you can allocate some of your savings to help our club - that would make all of our events possible! Thank you!</p>
+                                        
+                                        <div class="member-contributions">
+                                            <div class="contributions-header">Recent Contributions</div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">BC</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Bella Cooper</span> has contributed <span class="contribution-amount">$23</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">A</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Anonymous</span> has contributed <span class="contribution-amount">$31</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">TH</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Tom Harris</span> has contributed <span class="contribution-amount">$18</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">JL</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Jessica Liu</span> has contributed <span class="contribution-amount">$27</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">MD</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Mike Davis</span> has contributed <span class="contribution-amount">$22</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <a href="../onboarding-express.html" class="member-cta-button" onclick="setClubInfo('Baking Club', 'baking_club', 'University of Colorado Boulder', 'Colorado')">
+                                            5 Questions to Estimate Your Savings
+                                        </a>
+                                       
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Art Club Example -->
+                            <div class="member-preview" data-slide="3">
+                                <div class="preview-header">
+                                    <div class="preview-logo">🎨</div>
+                                    <h3>Art Collective</h3>
+                                    <p style="margin: 0; font-size: 0.8rem; opacity: 0.8;">University of Notre Dame</p>
+                                </div>
+                                
+                                <div class="preview-content">
+                                    <div class="club-description">
+                                        <h4>About Our Club</h4>
+                                        <p>We bring together student artists to create, collaborate, and showcase our work. From painting to sculpture, we celebrate creativity and make art accessible to everyone on campus.</p>
+                                    </div>
+                                    
+                                    <div class="fundraising-goal">
+                                        <h4>🖼️ Our Goal: Campus Art Installation</h4>
+                                        <p>Help us create a stunning art installation for the campus quad. Your support covers materials, tools, and installation costs for a piece that will beautify campus and showcase student talent for years to come.</p>
+                                    </div>
+                                    
+                                    <div class="renest-partnership">
+                                        <div class="partnership-badge">
+                                            <span>🤝</span>
+                                            <span>Partnership with Renest</span>
+                                        </div>
+                                        <h4>In order to fund our event, we partnered with Renest</h4>
+                                        <p>Renest helps you save money on your taxes. If you would like, you can allocate some of your savings to help our club - that would make all of our events possible! Thank you!</p>
+                                        
+                                        <div class="member-contributions">
+                                            <div class="contributions-header">Recent Contributions</div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">AC</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Alex Chen</span> has contributed <span class="contribution-amount">$89</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">A</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Anonymous</span> has contributed <span class="contribution-amount">$156</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">RK</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Rachel Kim</span> has contributed <span class="contribution-amount">$67</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">PT</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Priya Thompson</span> has contributed <span class="contribution-amount">$43</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">DL</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Daniel Lee</span> has contributed <span class="contribution-amount">$54</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <a href="../onboarding-express.html" class="member-cta-button" onclick="setClubInfo('Art Collective', 'art_collective', 'University of Notre Dame', 'Pennsylvania')">
+                                            5 Questions to Estimate Your Savings
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Social Club Example -->
+                            <div class="member-preview" data-slide="4">
+                                <div class="preview-header">
+                                    <div class="preview-logo">🚢</div>
+                                    <h3>Social Club</h3>
+                                    <p style="margin: 0; font-size: 0.9rem; opacity: 0.8;">Northwestern University</p>
+                                </div>
+                                
+                                <div class="preview-content">
+                                    <div class="club-description">
+                                        <h4>About Our Club</h4>
+                                        <p>We bring students together through fun social events, networking opportunities, and memorable experiences that create lasting friendships and connections.</p>
+                                    </div>
+                                    
+                                    <div class="fundraising-goal">
+                                        <h4>⛵ Our Goal: Boat Party on Biscayne Bay</h4>
+                                        <p>Help us rent a yacht for an epic boat party! Your support covers the boat rental, catering, DJ, and safety equipment for 50 students to enjoy an unforgettable evening on the water.</p>
+                                    </div>
+                                    
+                                    <div class="renest-partnership">
+                                        <div class="partnership-badge">
+                                            <span>🤝</span>
+                                            <span>Partnership with Renest</span>
+                                        </div>
+                                        <h4>In order to fund our event, we partnered with Renest</h4>
+                                        <p>Renest helps you save money on your taxes. If you would like, you can allocate some of your savings to help our club - that would make all of our events possible! Thank you!</p>
+                                        
+                                        <div class="member-contributions">
+                                            <div class="contributions-header">Recent Contributions</div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">SM</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Sophia Martinez</span> has contributed <span class="contribution-amount">$85</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">A</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Anonymous</span> has contributed <span class="contribution-amount">$120</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">CW</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Chris Wilson</span> has contributed <span class="contribution-amount">$67</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">KL</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Katie Lopez</span> has contributed <span class="contribution-amount">$93</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">JB</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Jordan Brown</span> has contributed <span class="contribution-amount">$74</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <a href="../onboarding-express.html" class="member-cta-button" onclick="setClubInfo('Social Club', 'social_club', 'Northwestern University', 'Illinois')">
+                                            5 Questions to Estimate Your Savings
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Carousel Navigation -->
+                        
+                    </div>
+                </div>
             </div>
         </section>
 
         <!-- Featured Campaign Section -->
-        <section class="featured-campaign-section">
-            <div class="featured-header">
-                <!-- <div class="featured-logo-section">
-                    <div class="featured-logo">R</div>
-                    <div class="featured-divider"></div>
-                    <div class="featured-tagline">Make an impact with your taxes</div>
-                </div> -->
-                <h2 class="featured-title">This Week's Featured Campaign</h2>
-                <!-- <p class="featured-subtitle">
-                    Save Our Oceans: Protecting Marine Life from Illegal Fishing
-                </p> -->
-            </div>
-            
-            <div class="featured-campaign-card">
-                <div class="featured-campaign-content">
-                    <div class="featured-campaign-text">
-                        <h3>Save Our Oceans</h3>
-                        <div class="featured-campaign-creator">Thomas Lloyd • UCSB Marine Biology</div>
-                        <div class="featured-campaign-description">
-                            Creating fish recovery sanctuaries to protect marine life from illegal fishing bycatch. Every $50 funds a week of patrols, saving hundreds of fish.
-                        </div>
-                        <div class="featured-campaign-progress">
-                            <div class="featured-campaign-progress-bar" style="width: 31%;"></div>
-                        </div>
-                        <div class="featured-campaign-stats">
-                            <span>$7,800 raised</span>
-                            <span>31% of $25,000 goal</span>
-                        </div>
-                        <div class="featured-campaign-cta">
-                            <a href="campaign-thomas-fish.html" class="cta-button" style="padding: 0.75rem 1.5rem; font-size: 1rem;">
-                                Support This Campaign
-                            </a>
-                        </div>
-                    </div>
-                    <div class="featured-campaign-media">
-                        <div class="media-container">
-                            <div style="position:relative;width:100%;height:0;padding-bottom:56.25%;overflow:hidden;border-radius:24px;background:#000;">
-                                <iframe src="https://www.youtube.com/embed/DFD3n344XJc?rel=0&modestbranding=1&autoplay=0&controls=1" title="Save Our Oceans" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"></iframe>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="search-header">
-                <!-- <h2 class="search-title">Search Campaigns</h2> -->
-                <!-- <p class="search-subtitle">
-                    Find other campaigns
-                </p> -->
-            </div>
-            
-            <form class="search-form">
-                <div class="search-inputs">
-                    <input type="text" class="search-input" placeholder="Keyword (e.g., 'Ocean', 'Robotics', 'Sustainability')">
-                    <input type="text" class="search-input" placeholder="Category (e.g., 'Environment', 'Education', 'Health')">
-                    <input type="text" class="search-input" placeholder="Location (e.g., 'New York', 'San Francisco', 'Online')">
-                </div>
-                <button type="submit" class="search-button">Search Campaigns</button>
-            </form>
-        </section>
+        
 
         <!-- Search Campaigns Section -->
         <!-- <section class="search-campaigns-section">
@@ -1790,68 +2007,80 @@
         <!-- Possibilities Section -->
         <section class="possibilities-section">
             <div class="section-header">
-                <h2 class="section-title">What's Possible</h2>
-                <p class="section-subtitle">
-                    Students, clubs, and organizations are creating campaigns for everything from environmental impact to political change.
-                </p>
+                <h2 class="section-title">Create Amazing Experiences and Possibilities</h2>
+                <!-- <p class="section-subtitle">
+                    Student organizations are using unlocked tax savings to create amazing campus experiences and events.
+                </p> -->
             </div>
             
             <div class="possibilities-grid">
                 <div class="possibility-card">
-                    <div class="possibility-icon">🌍</div>
-                    <div class="possibility-title">Environmental Impact</div>
+                    <div class="possibility-icon">🎤</div>
+                    <div class="possibility-title">Guest Speakers</div>
                     <div class="possibility-description">
-                        Conservation projects, renewable energy initiatives, sustainability programs.
+                        Industry experts, authors, activists, and thought leaders for workshops and talks.
                     </div>
                 </div>
                 <div class="possibility-card">
-                    <div class="possibility-icon">💡</div>
-                    <div class="possibility-title">Innovation & Technology</div>
+                    <div class="possibility-icon">🍕</div>
+                    <div class="possibility-title">Catering</div>
                     <div class="possibility-description">
-                        Research labs, hackathons, startups.
+                        Food and refreshments for meetings, workshops, and social events.
                     </div>
                 </div>
                 <div class="possibility-card">
-                    <div class="possibility-icon">🤝</div>
-                    <div class="possibility-title">Law & Politics</div>
+                    <div class="possibility-icon">🎉</div>
+                    <div class="possibility-title">Events</div>
                     <div class="possibility-description">
-                        Campaigns, advocacy initiatives, policy research.
+                        Festivals, conferences, competitions, and large-scale gatherings.
                     </div>
                 </div>
                 <div class="possibility-card">
-                    <div class="possibility-icon">🎓</div>
-                    <div class="possibility-title">Education Access</div>
+                    <div class="possibility-icon">📚</div>
+                    <div class="possibility-title">Workshop Materials</div>
                     <div class="possibility-description">
-                        Scholarships, tutoring programs, and educational resources that make learning accessible to all.
-                    </div>
-                </div>
-                <div class="possibility-card">
-                    <div class="possibility-icon">🏥</div>
-                    <div class="possibility-title">Health & Wellness</div>
-                    <div class="possibility-description">
-                        Mental health initiatives, fitness programs, and wellness resources that support student well-being.
+                        Supplies, equipment, and resources for educational workshops and training.
                     </div>
                 </div>
                 <div class="possibility-card">
                     <div class="possibility-icon">🎨</div>
-                    <div class="possibility-title">Arts & Culture</div>
+                    <div class="possibility-title">Creative Projects</div>
                     <div class="possibility-description">
-                        Creative projects, cultural events, artistic initiatives, performances.
+                        Art installations, performances, publications, and creative initiatives.
+                    </div>
+                </div>
+                <div class="possibility-card">
+                    <div class="possibility-icon">🌱</div>
+                    <div class="possibility-title">Community Service</div>
+                    <div class="possibility-description">
+                        Volunteer programs, charity events, and community outreach initiatives.
+                    </div>
+                </div>
+                <div class="possibility-card">
+                    <div class="possibility-icon">📈</div>
+                    <div class="possibility-title">Investment Fund</div>
+                    <div class="possibility-description">
+                        Student-managed investment portfolios, financial literacy programs, and trading competitions.
+                    </div>
+                </div>
+                <div class="possibility-card">
+                    <div class="possibility-icon">🏆</div>
+                    <div class="possibility-title">Scholarships</div>
+                    <div class="possibility-description">
+                        Merit-based scholarships, need-based grants, and financial aid opportunities.
                     </div>
                 </div>
                 <div class="possibility-card">
                     <div class="possibility-icon">✨</div>
                     <div class="possibility-title">Create Your Own...</div>
                     <div class="possibility-description">
-                        Group trip savings, investment fund, event fund, club fundraiser, art installation, or anything else you can imagine!
+                        Conference travel, equipment purchases, competition fees, or anything else your RSO needs!
                     </div>
                 </div>
             </div>
             
             <div style="text-align: center; margin-top: 3rem;">
-                <!-- <p style="color: rgba(255, 255, 255, 0.9); font-size: 1.125rem; margin-bottom: 1.5rem;">
-                    <strong>Who can create campaigns?</strong> Individuals, clubs, student government, academic departments, research teams, and campus organizations.
-                </p> -->
+                <!--  -->
                 <button class="cta-button" onclick="openModal()" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3);">
                     Create Your Own Campaign
                 </button>
@@ -1861,38 +2090,38 @@
         <!-- Student Stories Section -->
         <section class="stories-section">
             <div class="section-header">
-                <h2 class="section-title">Student Stories</h2>
+                <h2 class="section-title">Success Stories</h2>
                 <p class="section-subtitle">
-                    Hear from students who have successfully funded their campaigns and made a difference
+                    Hear from organizations that have successfully funded their events and initiatives
                 </p>
             </div>
             
             <div class="stories-grid">
                 <div class="story-card">
-                    <div class="story-avatar">T</div>
+                    <div class="story-avatar">CS</div>
                     <div class="story-quote">
-                        "Thanks to the support of fellow students, I was able to create ocean sanctuaries that are now protecting thousands of marine animals."
+                        "We hosted a tech summit with 300+ attendees and industry leaders. The unlocked tax savings made it all possible."
                     </div>
-                    <div class="story-author">Thomas Lloyd</div>
-                    <div class="story-school">UCSB Marine Biology</div>
+                    <div class="story-author">Computer Science Club</div>
+                    <div class="story-school">University of Michigan</div>
                 </div>
                 
                 <div class="story-card">
-                    <div class="story-avatar">A</div>
+                    <div class="story-avatar">ES</div>
                     <div class="story-quote">
-                        "The robotics lab we built is now helping 200+ students learn AI and automation. It's incredible to see the impact."
+                        "Our environmental festival brought together 500 students and featured 20 sustainability workshops."
                     </div>
-                    <div class="story-author">Ava Johnson</div>
-                    <div class="story-school">Indiana University Engineering</div>
+                    <div class="story-author">Environmental Society</div>
+                    <div class="story-school">UC Berkeley</div>
                 </div>
                 
                 <div class="story-card">
-                    <div class="story-avatar">H</div>
+                    <div class="story-avatar">AS</div>
                     <div class="story-quote">
-                        "Our plastic-free initiative has reduced campus waste by 60%. Students are leading the sustainability movement."
+                        "We funded guest speakers from NASA and SpaceX for our aerospace engineering symposium."
                     </div>
-                    <div class="story-author">Hannah Kim</div>
-                    <div class="story-school">NYU Environmental Science</div>
+                    <div class="story-author">Aerospace Society</div>
+                    <div class="story-school">MIT</div>
                 </div>
             </div>
         </section>
@@ -1919,23 +2148,6 @@
                     </a>
                     <a href="https://calendly.com/renesthorizons" target="_blank" class="modal-button secondary">
                         Schedule a Chat
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Get Started Modal -->
-        <div class="modal-overlay" id="getStartedModal">
-            <div class="modal">
-                <button class="close-modal" onclick="closeGetStartedModal()">×</button>
-                <h3>How would you like to make an impact ?</h3>
-                <!-- <p>Choose how you'd like to with your finances.</p> -->
-                <div class="modal-buttons">
-                    <button class="modal-button primary" onclick="closeGetStartedModal(); openModal();">
-                        Start Your Own Campaign
-                    </button>
-                    <a href="onboarding-express-campaign.html" class="modal-button secondary">
-                        Help Existing Campaigns
                     </a>
                 </div>
             </div>
@@ -1973,63 +2185,15 @@
     </footer>
 
     <script>
-        function resetAnimation() {
-            // Reset all elements to initial state
-            const flowLineFill = document.getElementById('flowLineFill');
-            const button = document.getElementById('getStartedButton');
-            const storyCard = document.getElementById('storyCard');
-            const storyLines = document.querySelectorAll('.story-line');
-            const logoFlash = document.getElementById('logoFlash');
-            const savingsReveal = document.getElementById('savingsReveal');
-            const impactDecision = document.getElementById('impactDecision');
-            const splitContainer = document.getElementById('splitContainer');
-            const moneyFlowLines = document.getElementById('moneyFlowLines');
-            const buckets = document.querySelectorAll('.bucket');
-            const finalSummary = document.getElementById('finalSummary');
-            const storyButton = document.getElementById('storyButton');
-            
-            flowLineFill.style.height = '0%';
-            button.classList.remove('clicked', 'show');
-            storyCard.classList.remove('show', 'hide');
-            storyLines.forEach(line => line.classList.remove('show'));
-            logoFlash.classList.remove('show');
-            savingsReveal.classList.remove('show');
-            impactDecision.classList.remove('show');
-            splitContainer.classList.remove('show');
-            moneyFlowLines.classList.remove('show');
-            buckets.forEach(bucket => bucket.classList.remove('show'));
-            finalSummary.classList.remove('show');
-            storyButton.disabled = false;
+        function setClubInfo(clubName, clubId, school, state) {
+            localStorage.setItem('renest_club_info', JSON.stringify({
+                clubName: clubName,
+                clubId: clubId,
+                school: school,
+                state: state
+            }));
         }
 
-        function scrollToElement(element, offset = 100) {
-            const elementPosition = element.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.pageYOffset - offset;
-            
-            // Only scroll if element is significantly out of view
-            if (Math.abs(elementPosition) > 200) {
-                // Use a very slow, gentle scroll
-                const startPosition = window.pageYOffset;
-                const distance = offsetPosition - startPosition;
-                const duration = 2000; // 2 seconds for very slow scroll
-                let start = null;
-                
-                function step(timestamp) {
-                    if (!start) start = timestamp;
-                    const progress = Math.min((timestamp - start) / duration, 1);
-                    // Use easeInOutQuad for very smooth movement
-                    const easeProgress = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-                    window.scrollTo(0, startPosition + distance * easeProgress);
-                    
-                    if (progress < 1) {
-                        requestAnimationFrame(step);
-                    }
-                }
-                
-                requestAnimationFrame(step);
-            }
-        }
-        
         function openModal() {
             const modal = document.getElementById('contactModal');
             modal.classList.add('show');
@@ -2042,162 +2206,67 @@
             document.body.style.overflow = 'auto';
         }
 
-        function openGetStartedModal() {
-            const modal = document.getElementById('getStartedModal');
-            modal.classList.add('show');
-            document.body.style.overflow = 'hidden';
+        // Carousel functionality
+        let currentSlide = 0;
+        let slides, dots;
+
+        function showSlide(n) {
+            if (!slides || !dots) return;
+            
+            // Hide all slides
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            // Remove active class from all dots
+            dots.forEach(dot => {
+                dot.classList.remove('active');
+            });
+            
+            // Show current slide and activate corresponding dot
+            if (slides[n]) slides[n].classList.add('active');
+            if (dots[n]) dots[n].classList.add('active');
+            
+            currentSlide = n;
         }
 
-        function closeGetStartedModal() {
-            const modal = document.getElementById('getStartedModal');
-            modal.classList.remove('show');
-            document.body.style.overflow = 'auto';
+        function changeSlide(direction) {
+            if (!slides) return;
+            
+            let newSlide = currentSlide + direction;
+            
+            if (newSlide >= slides.length) {
+                newSlide = 0;
+            } else if (newSlide < 0) {
+                newSlide = slides.length - 1;
+            }
+            
+            showSlide(newSlide);
+        }
+
+        function goToSlide(n) {
+            showSlide(n);
         }
 
         // Close modal when clicking outside
         document.addEventListener('DOMContentLoaded', function() {
-            const contactModal = document.getElementById('contactModal');
-            const getStartedModal = document.getElementById('getStartedModal');
-            
-            contactModal.addEventListener('click', function(e) {
-                if (e.target === contactModal) {
+            const modal = document.getElementById('contactModal');
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
                     closeModal();
                 }
             });
             
-            getStartedModal.addEventListener('click', function(e) {
-                if (e.target === getStartedModal) {
-                    closeGetStartedModal();
-                }
-            });
+            // Initialize carousel
+            slides = document.querySelectorAll('.member-preview');
+            dots = document.querySelectorAll('.dot');
+            showSlide(0);
+            
+            // Auto-advance carousel every 30 seconds
+            setInterval(() => {
+                changeSlide(1);
+            }, 30000);
         });
-
-        function startAnimation() {
-            // Disable the story button
-            const storyButton = document.getElementById('storyButton');
-            storyButton.disabled = true;
-            
-            // Reset first
-            resetAnimation();
-            
-            // Step 1: Line fills from Alex to button (0-1.5s)
-            setTimeout(() => {
-                const flowLineFill = document.getElementById('flowLineFill');
-                flowLineFill.style.height = '100%';
-            }, 500);
-            
-            // Step 1.5: Show button when line reaches it (1.5s)
-            setTimeout(() => {
-                const button = document.getElementById('getStartedButton');
-                button.classList.add('show');
-            }, 1500);
-            
-            // Step 2: Button clicks (2-2.5s)
-            setTimeout(() => {
-                const button = document.getElementById('getStartedButton');
-                button.classList.add('clicked');
-            }, 2000);
-            
-            // Step 2.5: Show story card (2.5s)
-            setTimeout(() => {
-                const storyCard = document.getElementById('storyCard');
-                storyCard.classList.add('show');
-                scrollToElement(storyCard);
-            }, 2500);
-            
-            // Step 2.6: Show first story line (3s)
-            setTimeout(() => {
-                const storyLine1 = document.getElementById('storyLine1');
-                storyLine1.classList.add('show');
-            }, 3000);
-            
-            // Step 2.7: Show second story line (4.5s) - 1.5s delay
-            setTimeout(() => {
-                const storyLine2 = document.getElementById('storyLine2');
-                storyLine2.classList.add('show');
-            }, 4500);
-            
-            // Step 2.8: Show third story line (6s) - 1.5s delay
-            setTimeout(() => {
-                const storyLine3 = document.getElementById('storyLine3');
-                storyLine3.classList.add('show');
-            }, 6000);
-            
-            // Step 2.9: Show fourth story line (7.5s) - 1.5s delay
-            setTimeout(() => {
-                const storyLine4 = document.getElementById('storyLine4');
-                storyLine4.classList.add('show');
-            }, 7500);
-            
-            // Step 2.10: Show fifth story line (9s) - 1.5s delay
-            setTimeout(() => {
-                const storyLine5 = document.getElementById('storyLine5');
-                storyLine5.classList.add('show');
-            }, 9000);
-            
-            // Step 3: Transform story card into logo flash, then savings reveal (11s)
-            setTimeout(() => {
-                const storyCard = document.getElementById('storyCard');
-                const logoFlash = document.getElementById('logoFlash');
-                const savingsReveal = document.getElementById('savingsReveal');
-                
-                // First, hide the story card with a bouncy exit
-                storyCard.classList.add('hide');
-                
-                // After story card exits, show logo flash
-                setTimeout(() => {
-                    logoFlash.classList.add('show');
-                }, 400);
-                
-                // After logo flash, reveal the savings card with exciting entrance
-                setTimeout(() => {
-                    logoFlash.classList.remove('show');
-                    setTimeout(() => {
-                        savingsReveal.classList.add('enter');
-                        scrollToElement(savingsReveal);
-                    }, 100);
-                }, 1600);
-            }, 11000);
-            
-            // Step 4: Show impact decision (14s)
-            setTimeout(() => {
-                const impactDecision = document.getElementById('impactDecision');
-                impactDecision.classList.add('show');
-            }, 14000);
-            
-            // Step 5: Show split container and money flow lines (15s)
-            setTimeout(() => {
-                const splitContainer = document.getElementById('splitContainer');
-                const moneyFlowLines = document.getElementById('moneyFlowLines');
-                splitContainer.classList.add('show');
-                moneyFlowLines.classList.add('show');
-                // Give more time to read the impact decision before scrolling
-                setTimeout(() => {
-                    scrollToElement(splitContainer);
-                }, 2000);
-            }, 15000);
-            
-            // Step 6: Show buckets with staggered timing (15.5-17s)
-            setTimeout(() => {
-                const buckets = document.querySelectorAll('.bucket');
-                buckets.forEach((bucket, index) => {
-                    setTimeout(() => {
-                        bucket.classList.add('show');
-                    }, index * 300);
-                });
-            }, 15500);
-            
-            // Step 7: Show final summary (18s)
-            setTimeout(() => {
-                const finalSummary = document.getElementById('finalSummary');
-                finalSummary.classList.add('show');
-            }, 18000);
-            
-            // Step 8: Re-enable story button (21s)
-            setTimeout(() => {
-                storyButton.disabled = false;
-            }, 21000);
-        }
     </script>
 </body>
 </html> 
