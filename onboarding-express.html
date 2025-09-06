@@ -1520,6 +1520,9 @@
                 assumedUtilities
             );
             
+            // Store estimated benefit globally for later use in submissions
+            window.globalEstimatedBenefit = estimatedSavings;
+            
             console.log('Quick estimate result:', estimatedSavings);
             
             // Create the quick estimate display
@@ -1646,47 +1649,71 @@
             chatData.quickEstimateEmail = email + '+quickestimate';
             chatData.email = email; // Also store without suffix for later use
             
-            // Submit email immediately to Google Form when they click join
-            submitInitialEmailToGoogleForm(email);
-            
-            // Add user response to chat
-            await addMessage('user', email);
-            
-            // Show confirmation message
-            await addMessage('bot', 'Great! We\'ll get more information so we can unlock your full benefit.');
-            
-            // Mark quick estimate as completed
-            chatData.quickEstimateCompleted = true;
-            
-            // Clear input area
-            clearInputArea();
-            
-            // Continue to next question
-            await processNextQuestion();
+            try {
+                // Submit email immediately to Google Form when they click join
+                // Include estimated benefit from global variable
+                await submitInitialEmailToGoogleForm(email, window.globalEstimatedBenefit);
+                
+                // Add user response to chat only after successful submission
+                await addMessage('user', email);
+                
+                // Show confirmation message
+                await addMessage('bot', 'Great! We\'ll get more information so we can unlock your full benefit.');
+                
+                // Mark quick estimate as completed
+                chatData.quickEstimateCompleted = true;
+                
+                // Clear input area
+                clearInputArea();
+                
+                // Continue to next question
+                await processNextQuestion();
+            } catch (error) {
+                console.error('Error submitting email:', error);
+                showError('There was an error submitting your email. Please try again.');
+            }
         }
         
         async function handleQuickEstimateContinue() {
-            // Get email if provided
+            // Get email
             const emailInput = document.getElementById('quick-estimate-email');
             const email = emailInput ? emailInput.value.trim() : '';
             
-            if (email) {
-                // Store email with +quickestimate suffix
-                chatData.quickEstimateEmail = email + '+quickestimate';
-                chatData.email = email; // Also store without suffix for later use
+            // Require email for "Get a More Accurate Estimate"
+            if (!email) {
+                showError('Please enter your email address to get a more accurate estimate');
+                return;
             }
             
-            // Mark quick estimate as completed
-            chatData.quickEstimateCompleted = true;
+            if (!/\S+@\S+\.\S+/.test(email)) {
+                showError('Please enter a valid email address');
+                return;
+            }
             
-            // Add user response to chat
-            await addMessage('user', 'Get a More Accurate Estimate');
+            // Store email with +quickestimate suffix
+            chatData.quickEstimateEmail = email + '+quickestimate';
+            chatData.email = email; // Also store without suffix for later use
             
-            // Clear input area
-            clearInputArea();
-            
-            // Continue to next question
-            await processNextQuestion();
+            try {
+                // Submit email immediately to Google Form when they click "Get a More Accurate Estimate"
+                // Include estimated benefit from global variable
+                await submitInitialEmailToGoogleForm(email, window.globalEstimatedBenefit);
+                
+                // Mark quick estimate as completed
+                chatData.quickEstimateCompleted = true;
+                
+                // Add user response to chat only after successful submission
+                await addMessage('user', 'Get a More Accurate Estimate');
+                
+                // Clear input area
+                clearInputArea();
+                
+                // Continue to next question
+                await processNextQuestion();
+            } catch (error) {
+                console.error('Error submitting email:', error);
+                showError('There was an error submitting your email. Please try again.');
+            }
         }
         
         async function handleOptionResponse(value, text, field) {
@@ -3703,27 +3730,43 @@
          }
 
         // Submit initial email to Google Form (when they click join)
-        function submitInitialEmailToGoogleForm(email) {
-            // Create the Google Form URL with just the email for initial submission
+        function submitInitialEmailToGoogleForm(email, estimatedBenefit) {
+            // Create the submission value with estimated benefit included
+            const submissionValue = `initial_join+${estimatedBenefit || 0}`;
+            
+            // Create the Google Form URL with email and estimated benefit
             const baseUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSejmRtmObNrp3zgK7fKV2sLYpQdyg7vFQkOq_p6zPCQaLmnwg/formResponse?usp=pp_url';
-            const formUrl = `${baseUrl}&entry.869093761=${encodeURIComponent(email)}&entry.2044388299=initial_join`;
+            const formUrl = `${baseUrl}&entry.869093761=${encodeURIComponent(email)}&entry.2044388299=${encodeURIComponent(submissionValue)}`;
             
-            // Submit using hidden iframe
-            const iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.setAttribute('src', formUrl);
-            document.body.appendChild(iframe);
-            
-            // Remove iframe after submission
-            setTimeout(() => {
-                if (document.body.contains(iframe)) {
-                    document.body.removeChild(iframe);
-                }
-            }, 1000);
-            
-            console.log('Initial email submitted to Google Form:', { 
-                email: email,
-                action: 'initial_join'
+            return new Promise((resolve, reject) => {
+                // Submit using hidden iframe
+                const iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                iframe.setAttribute('src', formUrl);
+                document.body.appendChild(iframe);
+                
+                // Handle load event to confirm submission
+                iframe.onload = () => {
+                    console.log('Initial email submitted to Google Form successfully:', { 
+                        email: email,
+                        estimatedBenefit: estimatedBenefit,
+                        action: submissionValue
+                    });
+                    resolve();
+                };
+                
+                // Handle error
+                iframe.onerror = () => {
+                    console.error('Error submitting to Google Form');
+                    reject(new Error('Form submission failed'));
+                };
+                
+                // Remove iframe after submission
+                setTimeout(() => {
+                    if (document.body.contains(iframe)) {
+                        document.body.removeChild(iframe);
+                    }
+                }, 2000);
             });
         }
 

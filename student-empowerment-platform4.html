@@ -1234,79 +1234,6 @@
             color: var(--text-primary);
         }
 
-        /* Form Focus States */
-        .campaign-form input:focus,
-        .campaign-form textarea:focus {
-            border-color: var(--primary) !important;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
-        }
-
-        .form-submit-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
-        }
-
-        .form-submit-button:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .form-submit-button.submitted {
-            background: #4CAF50 !important;
-        }
-
-        /* Success notification styles */
-        .success-notification {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            width: 300px;
-            background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            text-align: center;
-            box-shadow: var(--shadow-xl);
-            opacity: 0;
-            transition: all 0.3s ease;
-            z-index: 1000;
-            border: 1px solid var(--border-light);
-        }
-
-        .success-notification.show {
-            transform: translate(-50%, -50%) scale(1);
-            opacity: 1;
-        }
-
-        .success-notification .checkmark-icon {
-            width: 60px;
-            height: 60px;
-            background: #4CAF50;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1rem auto;
-            color: white;
-            font-size: 2rem;
-            font-weight: bold;
-        }
-
-        .success-notification h3 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .success-notification p {
-            color: var(--text-secondary);
-            font-size: 1rem;
-            line-height: 1.5;
-        }
-
         /* Responsive Design */
         @media (max-width: 1024px) {
             .hero-content {
@@ -1587,7 +1514,7 @@
                     <h1 class="hero-title">Fund Your Events & Initiatives</h1>
                     
                     <p class="hero-subtitle">
-                        Renest is a platform unlocking the potential of smarter personal finances. Change more than just your own future, create and fund the ideas that will make it worth being a part of.
+                        Renest helps student organizations fund speakers, events, catering, and initiatives that enrich campus life and creates lasting impact for their members and beyond.
                     </p>
                     
                     <div class="hero-cta-desktop">
@@ -1624,7 +1551,7 @@
                     </div>
                     <div class="renest-meteor-text">
                         <div class="stats-subtitle">
-                            <p>Below is the cumulative amount of money each year that Renest can unlock for students, yes, that's billions. Imagine the impact we could make together.</p>
+                            <p>Below is the cumulative amount of money each year that goes unclaimed on student tax returns. With Renest, student orgs can help their members save more money while funding amazing campus experiences.</p>
                         </div>
                     </div>
                 </div>
@@ -1649,108 +1576,505 @@
             </div>
                 </section>
 
-        <!-- Campaign Creation Form Section -->
-        <section class="campaign-form-section" style="background: var(--background-secondary); padding: 4rem 0; margin: 2rem 0;">
+        <!-- How It Works Section -->
+        <section class="how-it-works-section">
             <div class="container">
-                <div class="section-header" style="margin-bottom: 3rem;">
-                    <h2 class="section-title" style="color: var(--text-primary);">Tell us about your idea and we'll help you get started</h2>
-                    <p class="section-subtitle" style="color: var(--text-secondary);">
-                        We help individual students and student clubs/orgs secure funding
+                <div class="section-header">
+                    <h2 class="section-title">How It Works</h2>
+                    <p class="section-subtitle">
+                        A simple three-step process that transforms tax savings into club funding
                     </p>
                 </div>
                 
-                <div class="campaign-form-container" style="max-width: 600px; margin: 0 auto; background: white; border-radius: 20px; padding: 3rem; box-shadow: var(--shadow-lg); border: 1px solid var(--border-light);">
-                    <form class="campaign-form" id="campaignForm">
-                        <div class="form-group" style="margin-bottom: 2rem;">
-                            <label for="name" style="display: block; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem; font-size: 1rem;">Name *</label>
-                            <input type="text" id="name" name="name" required style="width: 100%; padding: 1rem; border: 2px solid var(--border-light); border-radius: 12px; font-size: 1rem; outline: none; transition: border-color 0.3s ease;" placeholder="Your name">
+                <div class="how-it-works-grid">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <div class="step-icon">👥</div>
+                        <h3 class="step-title">Set Up Your Club</h3>
+                        <p class="step-description">
+                            A club representative registers your organization on the Renest platform.
+                        </p>
                     </div>
                     
-                        <div class="form-group" style="margin-bottom: 2rem;">
-                            <label for="project" style="display: block; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem; font-size: 1rem;">What do you want to create? *</label>
-                            <textarea id="project" name="project" required style="width: 100%; padding: 1rem; border: 2px solid var(--border-light); border-radius: 12px; font-size: 1rem; outline: none; transition: border-color 0.3s ease; min-height: 120px; resize: vertical;" placeholder="Describe your project, event, or initiative..."></textarea>
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <div class="step-icon">🎯</div>
+                        <h3 class="step-title">Choose Your Fundraising Goal</h3>
+                        <p class="step-description">
+                            Decide what you want to fund: events, guest speakers, catering, equipment, or build your general club fund.
+                        </p>
                     </div>
                     
-                        <div class="form-group" style="margin-bottom: 2rem;">
-                            <label for="orgSize" style="display: block; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem; font-size: 1rem;">If you are part of an organization, how many people are you?</label>
-                            <input type="number" id="orgSize" name="orgSize" style="width: 100%; padding: 1rem; border: 2px solid var(--border-light); border-radius: 12px; font-size: 1rem; outline: none; transition: border-color 0.3s ease;" placeholder="Number of members (optional)">
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <div class="step-icon">🔗</div>
+                        <h3 class="step-title">Share With Members</h3>
+                        <p class="step-description">
+                            Renest provides a custom link to share with your members. They save money on taxes and can contribute to your club.
+                        </p>
                     </div>
-                        
-                        <div class="form-group" style="margin-bottom: 2rem;">
-                            <label for="budget" style="display: block; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem; font-size: 1rem;">If you already have an estimate of how much it'll cost, how much?</label>
-                            <input type="text" id="budget" name="budget" style="width: 100%; padding: 1rem; border: 2px solid var(--border-light); border-radius: 12px; font-size: 1rem; outline: none; transition: border-color 0.3s ease;" placeholder="Estimated budget (optional)">
-                </div>
-                
-                        <div class="form-group" style="margin-bottom: 2.5rem;">
-                            <label for="email" style="display: block; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem; font-size: 1rem;">Email *</label>
-                            <input type="email" id="email" name="email" required style="width: 100%; padding: 1rem; border: 2px solid var(--border-light); border-radius: 12px; font-size: 1rem; outline: none; transition: border-color 0.3s ease;" placeholder="your.email@example.com">
-                                </div>
-                        
-                        <button type="submit" class="form-submit-button" style="width: 100%; padding: 1.25rem; background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; box-shadow: var(--shadow-md);">
-                            Submit Campaign Idea
-                        </button>
-                    </form>
                 </div>
             </div>
         </section>
 
+        <!-- What Members See Section -->
+        <section class="members-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">What Your Members See</h2>
+                    <p class="section-subtitle">
+                        A compelling page that explains how they can support your club while saving money
+                    </p>
+                </div>
+                
+                <div class="member-experience">
+                    <div class="carousel-container">
+                        <div class="carousel-nav">
+                            <!-- <div class="carousel-instruction">
+                                <span>👆 Swipe to see more examples</span>
+                            </div> -->
+                            <div class="carousel-controls">
+                                <button class="carousel-btn prev" onclick="changeSlide(-1)">‹</button>
+                                <div class="carousel-dots">
+                                    <span class="dot active" onclick="goToSlide(0)"></span>
+                                    <span class="dot" onclick="goToSlide(1)"></span>
+                                    <span class="dot" onclick="goToSlide(2)"></span>
+                                    <span class="dot" onclick="goToSlide(3)"></span>
+                                    <span class="dot" onclick="goToSlide(4)"></span>
+                                </div>
+                                <button class="carousel-btn next" onclick="changeSlide(1)">›</button>
+                            </div>
+                        </div>
+                        <div class="carousel-track" id="carouselTrack">
+                            
+                            <!-- Rural Student Alliance Example -->
+                            <div class="member-preview active" data-slide="0">
+                                <div class="preview-header">
+                                    <div class="preview-logo">🏠</div>
+                                    <h3>Rural Student Alliance</h3>
+                                    <p style="margin: 0; font-size: 0.9rem; opacity: 0.8;">University of Chicago</p>
+                                </div>
+                                
+                                <div class="preview-content">
+                                    <div class="club-description">
+                                        <h4>About Our Club</h4>
+                                        <p>We connect rural students on campus, share our agricultural heritage, and create opportunities for students from farming and ranching backgrounds.</p>
+                                    </div>
+                                    
+                                    <div class="fundraising-goal">
+                                        <h4>🐂 Our Goal: Professional Bull Riding Trip</h4>
+                                        <p>Help us fund a trip to the Professional Bull Riding Championship. Your support covers tickets, transportation, and accommodations for this exciting experience.</p>
+                                    </div>
+                                    
+                                    <div class="renest-partnership">
+                                        <div class="partnership-badge">
+                                            <span>🤝</span>
+                                            <span>Partnership with Renest</span>
+                                        </div>
+                                        <h4>In order to fund our event, we partnered with Renest</h4>
+                                        <p>Renest helps you save money on your taxes. If you would like, you can allocate some of your savings to help our club - that would make all of our events possible! Thank you!</p>
+                                        
+                                        <div class="member-contributions">
+                                            <div class="contributions-header">Recent Contributions</div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">AK</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Anna Kim</span> has contributed <span class="contribution-amount">$45</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">MJ</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Marcus Johnson</span> has contributed <span class="contribution-amount">$32</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">SL</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Sarah Lee</span> has contributed <span class="contribution-amount">$28</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">A</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Anonymous</span> has contributed <span class="contribution-amount">$67</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">ER</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Emma Rodriguez</span> has contributed <span class="contribution-amount">$39</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <a href="onboarding-express.html" class="member-cta-button" onclick="setClubInfo('Rural Student Alliance', 'rural_student_alliance', 'University of Chicago', 'Illinois')">
+                                            5 Questions to Estimate Your Savings
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Finance Club Example -->
+                            <div class="member-preview" data-slide="1">
+                                <div class="preview-header">
+                                    <div class="preview-logo">📈</div>
+                                    <h3>Finance & Investment Club</h3>
+                                    <p style="margin: 0; font-size: 0.9rem; opacity: 0.8;">New York University</p>
+                                </div>
+                                
+                                <div class="preview-content">
+                                    <div class="club-description">
+                                        <h4>About Our Club</h4>
+                                        <p>We teach financial literacy, practice real-world investing, and help students build wealth through hands-on experience with stock markets and investment strategies.</p>
+                                    </div>
+                                    
+                                    <div class="fundraising-goal">
+                                        <h4>💼 Our Goal: Student Investment Fund</h4>
+                                        <p>Help us create a $10,000 investment fund that our members will manage together. Each member gets to vote on investment decisions and learn real portfolio management skills.</p>
+                                    </div>
+                                    
+                                    <div class="renest-partnership">
+                                        <div class="partnership-badge">
+                                            <span>🤝</span>
+                                            <span>Partnership with Renest</span>
+                                        </div>
+                                        <h4>In order to fund our event, we partnered with Renest</h4>
+                                        <p>Renest helps you save money on your taxes. If you would like, you can allocate some of your savings to help our club - that would make all of our events possible! Thank you!</p>
+                                        
+                                        <div class="member-contributions">
+                                            <div class="contributions-header">Recent Contributions</div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">JP</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">James Patel</span> has contributed <span class="contribution-amount">$78</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">A</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Anonymous</span> has contributed <span class="contribution-amount">$92</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">NG</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Nina Garcia</span> has contributed <span class="contribution-amount">$65</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">RB</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Ryan Brooks</span> has contributed <span class="contribution-amount">$41</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">LM</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Lisa Martinez</span> has contributed <span class="contribution-amount">$56</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <a href="onboarding-express.html" class="member-cta-button" onclick="setClubInfo('Finance & Investment Club', 'finance_investment_club', 'New York University', 'New York')">
+                                            5 Questions to Estimate Your Savings
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Baking Club Example -->
+                            <div class="member-preview" data-slide="2">
+                                <div class="preview-header">
+                                    <div class="preview-logo">🧁</div>
+                                    <h3>Baking Club</h3>
+                                    <p style="margin: 0; font-size: 0.9rem; opacity: 0.8;">University of Colorado Boulder</p>
+                                </div>
+                                
+                                <div class="preview-content">
+                                    <div class="club-description">
+                                        <h4>About Our Club</h4>
+                                        <p>We share our love of baking, learn new recipes, and create delicious treats for campus events. From cookies to cakes, we bring sweetness to student life.</p>
+                                    </div>
+                                    
+                                    <div class="fundraising-goal">
+                                        <h4>🍰 Our Goal: Baking Supplies & Ingredients</h4>
+                                        <p>Help us stock our baking supplies and ingredients for the semester. Your support covers flour, sugar, chocolate, baking tools, and ingredients for our weekly baking sessions and campus events.</p>
+                                    </div>
+                                    
+                                    <div class="renest-partnership">
+                                        <div class="partnership-badge">
+                                            <span>🤝</span>
+                                            <span>Partnership with Renest</span>
+                                        </div>
+                                        <h4>In order to fund our event, we partnered with Renest</h4>
+                                        <p>Renest helps you save money on your taxes. If you would like, you can allocate some of your savings to help our club - that would make all of our events possible! Thank you!</p>
+                                        
+                                        <div class="member-contributions">
+                                            <div class="contributions-header">Recent Contributions</div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">BC</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Bella Cooper</span> has contributed <span class="contribution-amount">$23</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">A</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Anonymous</span> has contributed <span class="contribution-amount">$31</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">TH</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Tom Harris</span> has contributed <span class="contribution-amount">$18</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">JL</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Jessica Liu</span> has contributed <span class="contribution-amount">$27</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">MD</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Mike Davis</span> has contributed <span class="contribution-amount">$22</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <a href="onboarding-express.html" class="member-cta-button" onclick="setClubInfo('Baking Club', 'baking_club', 'University of Colorado Boulder', 'Colorado')">
+                                            5 Questions to Estimate Your Savings
+                                        </a>
+                                       
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Art Club Example -->
+                            <div class="member-preview" data-slide="3">
+                                <div class="preview-header">
+                                    <div class="preview-logo">🎨</div>
+                                    <h3>Art Collective</h3>
+                                    <p style="margin: 0; font-size: 0.8rem; opacity: 0.8;">University of Notre Dame</p>
+                                </div>
+                                
+                                <div class="preview-content">
+                                    <div class="club-description">
+                                        <h4>About Our Club</h4>
+                                        <p>We bring together student artists to create, collaborate, and showcase our work. From painting to sculpture, we celebrate creativity and make art accessible to everyone on campus.</p>
+                                    </div>
+                                    
+                                    <div class="fundraising-goal">
+                                        <h4>🖼️ Our Goal: Campus Art Installation</h4>
+                                        <p>Help us create a stunning art installation for the campus quad. Your support covers materials, tools, and installation costs for a piece that will beautify campus and showcase student talent for years to come.</p>
+                                    </div>
+                                    
+                                    <div class="renest-partnership">
+                                        <div class="partnership-badge">
+                                            <span>🤝</span>
+                                            <span>Partnership with Renest</span>
+                                        </div>
+                                        <h4>In order to fund our event, we partnered with Renest</h4>
+                                        <p>Renest helps you save money on your taxes. If you would like, you can allocate some of your savings to help our club - that would make all of our events possible! Thank you!</p>
+                                        
+                                        <div class="member-contributions">
+                                            <div class="contributions-header">Recent Contributions</div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">AC</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Alex Chen</span> has contributed <span class="contribution-amount">$89</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">A</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Anonymous</span> has contributed <span class="contribution-amount">$156</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">RK</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Rachel Kim</span> has contributed <span class="contribution-amount">$67</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">PT</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Priya Thompson</span> has contributed <span class="contribution-amount">$43</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">DL</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Daniel Lee</span> has contributed <span class="contribution-amount">$54</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <a href="onboarding-express.html" class="member-cta-button" onclick="setClubInfo('Art Collective', 'art_collective', 'University of Notre Dame', 'Pennsylvania')">
+                                            5 Questions to Estimate Your Savings
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Social Club Example -->
+                            <div class="member-preview" data-slide="4">
+                                <div class="preview-header">
+                                    <div class="preview-logo">🚢</div>
+                                    <h3>Social Club</h3>
+                                    <p style="margin: 0; font-size: 0.9rem; opacity: 0.8;">Northwestern University</p>
+                                </div>
+                                
+                                <div class="preview-content">
+                                    <div class="club-description">
+                                        <h4>About Our Club</h4>
+                                        <p>We bring students together through fun social events, networking opportunities, and memorable experiences that create lasting friendships and connections.</p>
+                                    </div>
+                                    
+                                    <div class="fundraising-goal">
+                                        <h4>⛵ Our Goal: Boat Party on Biscayne Bay</h4>
+                                        <p>Help us rent a yacht for an epic boat party! Your support covers the boat rental, catering, DJ, and safety equipment for 50 students to enjoy an unforgettable evening on the water.</p>
+                                    </div>
+                                    
+                                    <div class="renest-partnership">
+                                        <div class="partnership-badge">
+                                            <span>🤝</span>
+                                            <span>Partnership with Renest</span>
+                                        </div>
+                                        <h4>In order to fund our event, we partnered with Renest</h4>
+                                        <p>Renest helps you save money on your taxes. If you would like, you can allocate some of your savings to help our club - that would make all of our events possible! Thank you!</p>
+                                        
+                                        <div class="member-contributions">
+                                            <div class="contributions-header">Recent Contributions</div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">SM</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Sophia Martinez</span> has contributed <span class="contribution-amount">$85</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">A</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Anonymous</span> has contributed <span class="contribution-amount">$120</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">CW</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Chris Wilson</span> has contributed <span class="contribution-amount">$67</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">KL</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Katie Lopez</span> has contributed <span class="contribution-amount">$93</span>
+                                                </div>
+                                            </div>
+                                            <div class="contribution-item">
+                                                <div class="contribution-avatar">JB</div>
+                                                <div class="contribution-text">
+                                                    <span class="contribution-name">Jordan Brown</span> has contributed <span class="contribution-amount">$74</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <a href="onboarding-express.html" class="member-cta-button" onclick="setClubInfo('Social Club', 'social_club', 'Northwestern University', 'Illinois')">
+                                            5 Questions to Estimate Your Savings
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Carousel Navigation -->
+                        
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Campaign Section -->
+        
+
+        <!-- Search Campaigns Section -->
+        <!-- <section class="search-campaigns-section">
+            
+        </section> -->
+
         <!-- Possibilities Section -->
         <section class="possibilities-section">
             <div class="section-header">
-                <h2 class="section-title">What's Possible</h2>
-                <p class="section-subtitle">
-                    Students, clubs, and organizations are creating campaigns for everything from environmental impact to political change.
-                </p>
+                <h2 class="section-title">Create Amazing Experiences and Possibilities</h2>
+                <!-- <p class="section-subtitle">
+                    Student organizations are using unlocked tax savings to create amazing campus experiences and events.
+                </p> -->
             </div>
             
             <div class="possibilities-grid">
                 <div class="possibility-card">
-                    <div class="possibility-icon">🌍</div>
-                    <div class="possibility-title">Environmental Impact</div>
+                    <div class="possibility-icon">🎤</div>
+                    <div class="possibility-title">Guest Speakers</div>
                     <div class="possibility-description">
-                        Conservation projects, renewable energy initiatives, sustainability programs.
+                        Industry experts, authors, activists, and thought leaders for workshops and talks.
                     </div>
                 </div>
                 <div class="possibility-card">
-                    <div class="possibility-icon">💡</div>
-                    <div class="possibility-title">Innovation & Technology</div>
+                    <div class="possibility-icon">🍕</div>
+                    <div class="possibility-title">Catering</div>
                     <div class="possibility-description">
-                        Research labs, hackathons, startups.
+                        Food and refreshments for meetings, workshops, and social events.
                     </div>
                 </div>
                 <div class="possibility-card">
-                    <div class="possibility-icon">🤝</div>
-                    <div class="possibility-title">Law & Politics</div>
+                    <div class="possibility-icon">🎉</div>
+                    <div class="possibility-title">Events</div>
                     <div class="possibility-description">
-                        Campaigns, advocacy initiatives, policy research.
+                        Festivals, conferences, competitions, and large-scale gatherings.
                     </div>
                 </div>
                 <div class="possibility-card">
-                    <div class="possibility-icon">🎓</div>
-                    <div class="possibility-title">Education Access</div>
+                    <div class="possibility-icon">📚</div>
+                    <div class="possibility-title">Workshop Materials</div>
                     <div class="possibility-description">
-                        Scholarships, tutoring programs, and educational resources that make learning accessible to all.
-                    </div>
-                </div>
-                <div class="possibility-card">
-                    <div class="possibility-icon">🏥</div>
-                    <div class="possibility-title">Health & Wellness</div>
-                    <div class="possibility-description">
-                        Mental health initiatives, fitness programs, and wellness resources that support student well-being.
+                        Supplies, equipment, and resources for educational workshops and training.
                     </div>
                 </div>
                 <div class="possibility-card">
                     <div class="possibility-icon">🎨</div>
-                    <div class="possibility-title">Arts & Culture</div>
+                    <div class="possibility-title">Creative Projects</div>
                     <div class="possibility-description">
-                        Creative projects, cultural events, artistic initiatives, performances.
+                        Art installations, performances, publications, and creative initiatives.
+                    </div>
+                </div>
+                <div class="possibility-card">
+                    <div class="possibility-icon">🌱</div>
+                    <div class="possibility-title">Community Service</div>
+                    <div class="possibility-description">
+                        Volunteer programs, charity events, and community outreach initiatives.
+                    </div>
+                </div>
+                <div class="possibility-card">
+                    <div class="possibility-icon">📈</div>
+                    <div class="possibility-title">Investment Fund</div>
+                    <div class="possibility-description">
+                        Student-managed investment portfolios, financial literacy programs, and trading competitions.
+                    </div>
+                </div>
+                <div class="possibility-card">
+                    <div class="possibility-icon">🏆</div>
+                    <div class="possibility-title">Scholarships</div>
+                    <div class="possibility-description">
+                        Merit-based scholarships, need-based grants, and financial aid opportunities.
                     </div>
                 </div>
                 <div class="possibility-card">
                     <div class="possibility-icon">✨</div>
                     <div class="possibility-title">Create Your Own...</div>
                     <div class="possibility-description">
-                        Group trip savings, investment fund, event fund, club fundraiser, art installation, or anything else you can imagine!
+                        Conference travel, equipment purchases, competition fees, or anything else your RSO needs!
                     </div>
                 </div>
             </div>
@@ -1763,6 +2087,54 @@
             </div>
         </section>
 
+        <!-- Student Stories Section -->
+        <section class="stories-section">
+            <div class="section-header">
+                <h2 class="section-title">Success Stories</h2>
+                <p class="section-subtitle">
+                    Hear from organizations that have successfully funded their events and initiatives
+                </p>
+            </div>
+            
+            <div class="stories-grid">
+                <div class="story-card">
+                    <div class="story-avatar">CS</div>
+                    <div class="story-quote">
+                        "We hosted a tech summit with 300+ attendees and industry leaders. The unlocked tax savings made it all possible."
+                    </div>
+                    <div class="story-author">Computer Science Club</div>
+                    <div class="story-school">University of Michigan</div>
+                </div>
+                
+                <div class="story-card">
+                    <div class="story-avatar">ES</div>
+                    <div class="story-quote">
+                        "Our environmental festival brought together 500 students and featured 20 sustainability workshops."
+                    </div>
+                    <div class="story-author">Environmental Society</div>
+                    <div class="story-school">UC Berkeley</div>
+                </div>
+                
+                <div class="story-card">
+                    <div class="story-avatar">AS</div>
+                    <div class="story-quote">
+                        "We funded guest speakers from NASA and SpaceX for our aerospace engineering symposium."
+                    </div>
+                    <div class="story-author">Aerospace Society</div>
+                    <div class="story-school">MIT</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final CTA -->
+        <section class="cta-section">
+            <button class="cta-button" onclick="openModal()">
+                Start Your Campaign
+            </button>
+            <!-- <p style="color: var(--text-secondary); margin-top: 1rem; font-size: 1rem;">
+                Ready to make your idea a reality? Join thousands of students who are already changing the world.
+            </p> -->
+        </section>
 
         <!-- Contact Modal -->
         <div class="modal-overlay" id="contactModal">
@@ -1779,13 +2151,6 @@
                     </a>
                 </div>
             </div>
-        </div>
-
-        <!-- Success Notification -->
-        <div class="success-notification" id="successNotification">
-            <div class="checkmark-icon">✓</div>
-            <h3>Thank you!</h3>
-            <p>Your campaign idea has been submitted. We'll be in touch soon!</p>
         </div>
     </div>
 
@@ -1841,69 +2206,66 @@
             document.body.style.overflow = 'auto';
         }
 
-        // Campaign form submission
-        document.addEventListener('DOMContentLoaded', function() {
-            const campaignForm = document.getElementById('campaignForm');
-            if (campaignForm) {
-                campaignForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    
-                    const formData = new FormData(this);
-                    const name = encodeURIComponent(formData.get('name'));
-                    const project = encodeURIComponent(formData.get('project'));
-                    const orgSize = encodeURIComponent(formData.get('orgSize') || '');
-                    const budget = encodeURIComponent(formData.get('budget') || '');
-                    const email = encodeURIComponent(formData.get('email'));
-                    
-                    // Google Form URL - you'll need to replace this with your actual Google Form URL
-                    const baseUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSe_YOUR_FORM_ID_HERE/formResponse?usp=pp_url';
-                    const submitUrl = `${baseUrl}&entry.NAME_ENTRY=${name}&entry.PROJECT_ENTRY=${project}&entry.ORGSIZE_ENTRY=${orgSize}&entry.BUDGET_ENTRY=${budget}&entry.EMAIL_ENTRY=${email}`;
-                    
-                    const submitButton = this.querySelector('.form-submit-button');
-                    const successNotification = document.getElementById('successNotification');
-                    
-                    // Disable the submit button
-                    submitButton.disabled = true;
-                    submitButton.classList.add('submitted');
-                    submitButton.textContent = 'Submitting...';
-                    
-                    // Using a hidden iframe to submit the form without redirecting
-                    const iframe = document.createElement('iframe');
-                    iframe.style.display = 'none';
-                    iframe.setAttribute('src', submitUrl);
-                    document.body.appendChild(iframe);
-                    
-                    // Show success notification after a brief delay
-                    setTimeout(() => {
-                        successNotification.classList.add('show');
-                        
-                        // Hide notification after 3 seconds
-                        setTimeout(() => {
-                            successNotification.classList.remove('show');
-                            // Reset form
-                            campaignForm.reset();
-                            submitButton.disabled = false;
-                            submitButton.classList.remove('submitted');
-                            submitButton.textContent = 'Submit Campaign Idea';
-                        }, 3000);
-                    }, 1000);
-                    
-                    // Remove iframe after submission
-                    setTimeout(() => {
-                        if (iframe.parentNode) {
-                            document.body.removeChild(iframe);
-                        }
-                    }, 2000);
-                });
-            }
+        // Carousel functionality
+        let currentSlide = 0;
+        let slides, dots;
 
-            // Close modal when clicking outside
+        function showSlide(n) {
+            if (!slides || !dots) return;
+            
+            // Hide all slides
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            // Remove active class from all dots
+            dots.forEach(dot => {
+                dot.classList.remove('active');
+            });
+            
+            // Show current slide and activate corresponding dot
+            if (slides[n]) slides[n].classList.add('active');
+            if (dots[n]) dots[n].classList.add('active');
+            
+            currentSlide = n;
+        }
+
+        function changeSlide(direction) {
+            if (!slides) return;
+            
+            let newSlide = currentSlide + direction;
+            
+            if (newSlide >= slides.length) {
+                newSlide = 0;
+            } else if (newSlide < 0) {
+                newSlide = slides.length - 1;
+            }
+            
+            showSlide(newSlide);
+        }
+
+        function goToSlide(n) {
+            showSlide(n);
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('DOMContentLoaded', function() {
             const modal = document.getElementById('contactModal');
             modal.addEventListener('click', function(e) {
                 if (e.target === modal) {
                     closeModal();
                 }
             });
+            
+            // Initialize carousel
+            slides = document.querySelectorAll('.member-preview');
+            dots = document.querySelectorAll('.dot');
+            showSlide(0);
+            
+            // Auto-advance carousel every 30 seconds
+            setInterval(() => {
+                changeSlide(1);
+            }, 30000);
         });
     </script>
 </body>
