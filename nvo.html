@@ -131,6 +131,201 @@
             letter-spacing: 0.1em;
         }
         
+        /* Research Section */
+        #research {
+            background: #ffffff;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .research-carousel {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .scrolling-container {
+            overflow: hidden;
+            width: 100%;
+        }
+        
+        .scrolling-track {
+            display: flex;
+            animation: scroll 30s linear infinite;
+            width: calc(350px * 9); /* 6 unique + 3 duplicates */
+        }
+        
+        .scrolling-track:hover {
+            animation-play-state: paused;
+        }
+        
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(calc(-350px * 6)); /* Move by 6 cards */
+            }
+        }
+        
+        .fact-card {
+            min-width: 320px;
+            margin-right: 30px;
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 30px 25px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .fact-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+        
+        .comparison {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+        }
+        
+        .tribal-stat, .modern-stat {
+            text-align: center;
+        }
+        
+        .tribal-stat .stat-number {
+            font-family: 'Libre Franklin', sans-serif;
+            font-weight: 800;
+            font-size: 36px;
+            color: #ff0000;
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+        
+        .modern-stat .stat-number {
+            font-family: 'Libre Franklin', sans-serif;
+            font-weight: 800;
+            font-size: 36px;
+            color: #000000;
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.3;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .vs {
+            font-family: 'Libre Franklin', sans-serif;
+            font-weight: 800;
+            font-size: 14px;
+            color: #333;
+            letter-spacing: 0.1em;
+        }
+        
+        .single-fact {
+            text-align: center;
+        }
+        
+        .fact-number {
+            font-family: 'Libre Franklin', sans-serif;
+            font-weight: 800;
+            font-size: 42px;
+            color: #ff0000;
+            line-height: 1;
+            margin-bottom: 15px;
+        }
+        
+        .fact-text {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .fact-text strong {
+            color: #000;
+            font-weight: 600;
+        }
+        
+        .comparison-list {
+            text-align: center;
+        }
+        
+        .list-title {
+            font-family: 'Libre Franklin', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .country-stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            font-size: 13px;
+            color: #666;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .country-stat:last-child {
+            border-bottom: none;
+        }
+        
+        .country-stat span {
+            font-family: 'Libre Franklin', sans-serif;
+            font-weight: 700;
+            color: #ff0000;
+        }
+        
+        /* GI Health Card Emphasis */
+        .gi-emphasis {
+            background: #ffffff;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .gi-emphasis:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+        
+        .fact-category {
+            font-family: 'Libre Franklin', sans-serif;
+            font-weight: 600;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #ff0000;
+            margin-bottom: 15px;
+        }
+        
+        .fact-insight {
+            font-family: 'Libre Franklin', sans-serif;
+            font-weight: 600;
+            font-size: 12px;
+            color: #ff0000;
+            margin-top: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-top: 1px solid rgba(255, 0, 0, 0.2);
+            padding-top: 15px;
+        }
+
         /* Biology Section */
         #biology {
             background: #ffffff;
@@ -591,6 +786,34 @@
                 gap: 40px;
             }
             
+            .fact-card {
+                min-width: 280px;
+                padding: 25px 20px;
+                margin-right: 20px;
+            }
+            
+            .scrolling-track {
+                width: calc(300px * 9);
+                animation: scroll 25s linear infinite;
+            }
+            
+            @keyframes scroll {
+                0% {
+                    transform: translateX(0);
+                }
+                100% {
+                    transform: translateX(calc(-300px * 6));
+                }
+            }
+            
+            .tribal-stat .stat-number,
+            .modern-stat .stat-number {
+                font-size: 28px;
+            }
+            
+            .fact-number {
+                font-size: 32px;
+            }
             
             .results-grid {
                 grid-template-columns: 1fr;
@@ -678,6 +901,145 @@
         </div>
     </section>
 
+    <section id="research">
+        <div class="container">
+            <h2>Based in Facts, Based on Logic</h2>
+            <p style="text-align: center; margin-bottom: 60px; max-width: 800px; margin-left: auto; margin-right: auto;">The Tsimane people of Bolivia have the healthiest hearts ever documented. Here's what we can learn from their hydration and lifestyle patterns.</p>
+            <!-- <p style="text-align: center; margin-bottom: 40px;"><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10271473/" target="_blank" style="color: #999; font-size: 12px; text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em;">See the research</a></p> -->
+            
+            <div class="research-carousel">
+                <div class="scrolling-container">
+                    <div class="scrolling-track" id="scrollingTrack">
+                        <!-- Card 1: Water from Food Comparison -->
+                        <div class="fact-card">
+                            <div class="comparison">
+                                <div class="tribal-stat">
+                                    <div class="stat-number">50%</div>
+                                    <div class="stat-label">Tsimane water from food</div>
+                                </div>
+                                <div class="vs">VS</div>
+                                <div class="modern-stat">
+                                    <div class="stat-number">18%</div>
+                                    <div class="stat-label">US water from food</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Heart Health -->
+                        <div class="fact-card">
+                            <div class="single-fact">
+                                <div class="fact-number">85%</div>
+                                <div class="fact-text">of Tsimane 40+ years old have<br><strong>perfect heart scores</strong></div>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: Elderly Health Comparison -->
+                        <div class="fact-card">
+                            <div class="comparison">
+                                <div class="tribal-stat">
+                                    <div class="stat-number">65%</div>
+                                    <div class="stat-label">Tsimane 75 yo + with perfect hearts</div>
+                                </div>
+                                <div class="vs">VS</div>
+                                <div class="modern-stat">
+                                    <div class="stat-number">3%</div>
+                                    <div class="stat-label">US adults with perfect hearts</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 4: GI Health -->
+                        <div class="fact-card gi-emphasis">
+                            <div class="single-fact">
+                                <div class="fact-category">GASTROINTESTINAL HEALTH</div>
+                                <div class="fact-number">8%</div>
+                                <div class="fact-text">reduced gastrointestinal illness for every<br><strong>1% more water from food</strong></div>
+                                <div class="fact-insight">More water from food = Better gut health</div>
+                            </div>
+                        </div>
+
+                        <!-- Card 5: Heart Disease Rate -->
+                        <div class="fact-card">
+                            <div class="single-fact">
+                                <div class="fact-number">5x</div>
+                                <div class="fact-text">lower heart disease in<br><strong>traditional populations</strong></div>
+                            </div>
+                        </div>
+
+                        <!-- Card 6: Global Water Comparison -->
+                        <div class="fact-card">
+                            <div class="comparison-list">
+                                <div class="list-title">Water from Food Globally:</div>
+                                <div class="country-stat">Tsimane: <span>50%</span></div>
+                                <div class="country-stat">Germany: <span style="color: black;">29%</span></div>
+                                <div class="country-stat">Australia: <span style="color: black;">25%</span></div>
+                                <div class="country-stat">USA: <span style="color: black;">18%</span></div>
+                            </div>
+                        </div>
+
+                        <!-- Card 7: Traditional vs Modern Disease -->
+                        <!-- <div class="fact-card">
+                            <div class="single-fact">
+                                <div class="fact-text">Before colonization:<br><strong>Indigenous peoples were generally healthy</strong><br><br>After processed foods:<br><strong>Chronic disease epidemic</strong></div>
+                            </div>
+                        </div> -->
+
+                        <!-- Card 8: Indigenous Health Decline -->
+                        <!-- <div class="fact-card">
+                            <div class="comparison">
+                                <div class="tribal-stat">
+                                    <div class="stat-number">3.2%</div>
+                                    <div class="stat-label">Indigenous children meet vegetable guidelines</div>
+                                </div>
+                                <div class="vs">VS</div>
+                                <div class="modern-stat">
+                                    <div class="stat-number">41%</div>
+                                    <div class="stat-label">Energy from junk food</div>
+                                </div>
+                            </div>
+                        </div> -->
+
+                        <!-- Duplicate cards for seamless loop -->
+                        <div class="fact-card">
+                            <div class="comparison">
+                                <div class="tribal-stat">
+                                    <div class="stat-number">50%</div>
+                                    <div class="stat-label">Tsimane water from food</div>
+                                </div>
+                                <div class="vs">VS</div>
+                                <div class="modern-stat">
+                                    <div class="stat-number">18%</div>
+                                    <div class="stat-label">US water from food</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="fact-card">
+                            <div class="single-fact">
+                                <div class="fact-number">85%</div>
+                                <div class="fact-text">of Tsimane 40+ have<br><strong>perfect heart scores</strong></div>
+                            </div>
+                        </div>
+
+                        <div class="fact-card">
+                            <div class="comparison">
+                                <div class="tribal-stat">
+                                    <div class="stat-number">65%</div>
+                                    <div class="stat-label">Tsimane 75+ with perfect hearts</div>
+                                </div>
+                                <div class="vs">VS</div>
+                                <div class="modern-stat">
+                                    <div class="stat-number">3%</div>
+                                    <div class="stat-label">US adults with perfect hearts</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="problem">
         <div class="container">
             <div class="content-split">
@@ -723,7 +1085,7 @@
 
     <section id="results">
         <div class="container">
-            <h2>Perform Better</h2>
+            <h2>Higher Quality of Life</h2>
             
             <div class="results-grid">
                 <div class="result-item">
@@ -995,6 +1357,7 @@
             
             alert(`Checkout Summary:\n\n${summary}\n\nTotal: $${totalPrice.toFixed(2)}\n\nPayment integration coming soon!`);
         }
+        
     </script>
 </body>
 </html>
