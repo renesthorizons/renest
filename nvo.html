@@ -106,6 +106,30 @@
             margin-top: 20px;
         }
         
+        .evolve-button {
+            display: inline-block;
+            padding: 20px 60px;
+            background: #000000;
+            color: #ffffff;
+            text-decoration: none;
+            font-family: 'Libre Franklin', sans-serif;
+            font-weight: 800;
+            font-size: 18px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-top: 40px;
+            transition: all 0.3s;
+            border: 2px solid #000000;
+            cursor: pointer;
+        }
+        
+        .evolve-button:hover {
+            background: #ffffff;
+            color: #000000;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
         /* Problem Section */
         #problem {
             background: #f8f8f8;
@@ -151,8 +175,8 @@
         
         .scrolling-track {
             display: flex;
-            animation: scroll 40s linear infinite;
-            width: calc(350px * 11); /* 8 unique + 3 duplicates */
+            animation: scroll 45s linear infinite;
+            width: calc(350px * 12); /* 9 unique + 3 duplicates */
         }
         
         .scrolling-track:hover {
@@ -164,7 +188,7 @@
                 transform: translateX(0);
             }
             100% {
-                transform: translateX(calc(-350px * 8)); /* Move by 8 cards */
+                transform: translateX(calc(-350px * 9)); /* Move by 9 cards */
             }
         }
         
@@ -874,8 +898,8 @@
             }
             
             .scrolling-track {
-                width: calc(300px * 11);
-                animation: scroll 35s linear infinite;
+                width: calc(300px * 12);
+                animation: scroll 40s linear infinite;
             }
             
             @keyframes scroll {
@@ -883,7 +907,7 @@
                     transform: translateX(0);
                 }
                 100% {
-                    transform: translateX(calc(-300px * 8));
+                    transform: translateX(calc(-300px * 9));
                 }
             }
             
@@ -983,6 +1007,7 @@
     <section id="hero">
         <div class="container">
             <h1>NON VEGAN<br>WATER</h1>
+            <button class="evolve-button" onclick="scrollToProducts()">HEALTHIER NOW</button>
             <!-- <div class="hero-product"></div> -->
             <!-- <p class="tagline">Stop overhydrating.</p> -->
             <!-- <div class="scroll-indicator">Scroll</div> -->
@@ -1092,6 +1117,14 @@
                             <div class="single-fact">
                                 <div class="fact-text">"It is much lower than in <strong>every other population where data exists</strong>"</div>
                                 <div class="quote-attribution">Dr. Michael Gurven</div>
+                            </div>
+                        </div>
+
+                        <!-- Card 11: Harvard Water Quote -->
+                        <div class="fact-card">
+                            <div class="single-fact">
+                                <div class="fact-text">"Water absorbed <strong>more slowly from food</strong> = better sustained hydration"</div>
+                                <div class="quote-attribution">Harvard Health</div>
                             </div>
                         </div>
 
@@ -1227,7 +1260,7 @@
 
     <section id="product">
         <div class="container">
-            <h2>Available Now</h2>
+            <h2>Healthier Now</h2>
             
             <div class="products-grid">
                 <div class="product-card">
@@ -1477,6 +1510,13 @@
             const summary = cart.map(item => `${item.quantity}x ${item.name} - $${(item.price * item.quantity).toFixed(2)}`).join('\n');
             
             alert(`Checkout Summary:\n\n${summary}\n\nTotal: $${totalPrice.toFixed(2)}\n\nPayment integration coming soon!`);
+        }
+        
+        function scrollToProducts() {
+            document.getElementById('product').scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
         }
         
     </script>
