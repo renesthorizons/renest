@@ -1504,14 +1504,224 @@
         });
         
         function proceedToCheckout() {
-            // This is where you'll integrate with your chosen payment processor
-            console.log('Proceeding to checkout with cart:', cart);
+            // Close cart dropdown
+            document.getElementById('cartDropdown').classList.remove('show');
             
-            // For now, show an alert with cart summary
+            // Show sold out modal
+            showSoldOutModal();
+        }
+        
+        function showSoldOutModal() {
+            // Generate SKUs for cart items
+            const skuList = cart.map(item => {
+                const sku = item.name.toUpperCase().replace(/\s+/g, '') + '-6PK';
+                return `${sku}: OUT OF STOCK`;
+            }).join('\n');
+            
+            // Create modal overlay
+            const modalOverlay = document.createElement('div');
+            modalOverlay.className = 'inventory-error-overlay';
+            modalOverlay.innerHTML = `
+                <div class="inventory-error-modal">
+                    <div class="system-header">
+                        <div class="system-title">INVENTORY SYSTEM ERROR</div>
+                        <div class="error-code">ERR_INV_001</div>
+                    </div>
+                    <div class="error-content">
+                        <div class="error-message">
+                            <div class="error-icon">⚠️</div>
+                            <div class="error-text">INVENTORY CHECK FAILED</div>
+                        </div>
+                        <div class="sku-list">
+                            <div class="sku-header">REQUESTED SKUs:</div>
+                            <div class="sku-items">${skuList}</div>
+                        </div>
+                        <div class="system-status">
+                            <div class="status-line">SYSTEM: INVENTORY_DB_OFFLINE</div>
+                            <div class="status-line">STATUS: OUT_OF_STOCK</div>
+                            <div class="status-line">TIMESTAMP: ${new Date().toISOString()}</div>
+                        </div>
+                        <div class="support-section">
+                            <div class="support-title">CUSTOMER SUPPORT</div>
+                            <form id="inventorySupportForm" class="support-form">
+                                <input type="email" id="supportEmail" placeholder="email" required>
+                                <button type="submit" class="support-submit">SUBMIT SUPPORT REQUEST</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Add styles
+            const style = document.createElement('style');
+            style.textContent = `
+                .inventory-error-overlay {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.7);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 10000;
+                }
+                .inventory-error-modal {
+                    background: #ffffff;
+                    border: 1px solid #ddd;
+                    border-radius: 4px;
+                    padding: 0;
+                    max-width: 400px;
+                    width: 90%;
+                    color: #333;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                }
+                .system-header {
+                    background: #f5f5f5;
+                    color: #333;
+                    padding: 12px 16px;
+                    border-bottom: 1px solid #ddd;
+                    font-size: 14px;
+                    font-weight: 600;
+                }
+                .error-content {
+                    padding: 20px;
+                }
+                .error-message {
+                    margin-bottom: 15px;
+                    padding: 10px;
+                    background: #f8f8f8;
+                    border-left: 3px solid #ff6b6b;
+                    font-size: 13px;
+                    color: #666;
+                }
+                .sku-list {
+                    margin-bottom: 15px;
+                    padding: 12px;
+                    background: #f9f9f9;
+                    border: 1px solid #eee;
+                    font-size: 12px;
+                }
+                .sku-header {
+                    font-size: 11px;
+                    color: #666;
+                    margin-bottom: 8px;
+                    font-weight: 600;
+                }
+                .sku-items {
+                    font-size: 11px;
+                    color: #888;
+                    white-space: pre-line;
+                    font-family: monospace;
+                }
+                .system-status {
+                    margin-bottom: 20px;
+                    padding: 12px;
+                    background: #f9f9f9;
+                    border: 1px solid #eee;
+                    font-size: 11px;
+                    color: #666;
+                }
+                .status-line {
+                    font-size: 10px;
+                    color: #888;
+                    margin-bottom: 3px;
+                    font-family: monospace;
+                }
+                .support-section {
+                    border-top: 1px solid #eee;
+                    padding-top: 15px;
+                }
+                .support-title {
+                    font-size: 13px;
+                    color: #333;
+                    margin-bottom: 8px;
+                    font-weight: 600;
+                }
+                .support-text {
+                    font-size: 12px;
+                    color: #666;
+                    margin-bottom: 12px;
+                }
+                .support-form input {
+                    width: 100%;
+                    padding: 8px;
+                    background: #fff;
+                    border: 1px solid #ddd;
+                    color: #333;
+                    font-size: 12px;
+                    margin-bottom: 8px;
+                    border-radius: 3px;
+                }
+                .support-form input:focus {
+                    outline: none;
+                    border-color: #999;
+                }
+                .support-submit {
+                    width: 100%;
+                    padding: 8px;
+                    background: #333;
+                    color: #ffffff;
+                    border: none;
+                    font-size: 11px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    border-radius: 3px;
+                }
+                .support-submit:hover {
+                    background: #555;
+                }
+            `;
+            document.head.appendChild(style);
+            document.body.appendChild(modalOverlay);
+            
+            // Handle form submission
+            document.getElementById('inventorySupportForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                submitInventorySupportForm();
+            });
+        }
+        
+        function submitInventorySupportForm() {
+            const email = document.getElementById('supportEmail').value;
+            const cartData = cart.map(item => `${item.quantity}x ${item.name}`).join(', ');
             const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const summary = cart.map(item => `${item.quantity}x ${item.name} - $${(item.price * item.quantity).toFixed(2)}`).join('\n');
             
-            alert(`Checkout Summary:\n\n${summary}\n\nTotal: $${totalPrice.toFixed(2)}\n\nPayment integration coming soon!`);
+            // Encode data for Google Form
+            const encodedEmail = encodeURIComponent(email);
+            const encodedCart = encodeURIComponent(cartData);
+            const encodedTotal = encodeURIComponent(`$${totalPrice.toFixed(2)}`);
+            
+            // Google Form URL with your form ID
+            const baseUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSdo--Wb3NevJS1mC794JLrNecbUtmXE2jWkMdyYc0KegMASEA/formResponse?usp=pp_url';
+            const formUrl = `${baseUrl}&entry.1409004548=${encodedEmail}&entry.770749609=${encodedCart}+${encodedTotal}`;
+            
+            // Submit using hidden iframe (same method as future.html)
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.setAttribute('src', formUrl);
+            document.body.appendChild(iframe);
+            
+            // Close modal immediately (no success message)
+            closeSoldOutModal();
+            
+            // Clear cart
+            cart = [];
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartDisplay();
+            
+            // Remove iframe after submission
+            setTimeout(() => {
+                document.body.removeChild(iframe);
+            }, 1000);
+        }
+        
+        function closeSoldOutModal() {
+            const modal = document.querySelector('.inventory-error-overlay');
+            if (modal) {
+                modal.remove();
+            }
         }
         
         function scrollToProducts() {
