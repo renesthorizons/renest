@@ -1389,7 +1389,7 @@
                                 <button class="color-option active" data-color="white" data-image="nvo/beerkoozie.png">White</button>
                                 <button class="color-option" data-color="black" data-image="nvo/beerkoozieblack.png">Black</button>
                             </div>
-                            <div class="product-price">$12.99</div>
+                            <div class="product-price">$4.99</div>
                         </div>
                         <div class="product-actions">
                             <div class="quantity-selector">
@@ -1436,7 +1436,7 @@
             },
             'koozie': {
                 name: 'Koozie',
-                price: 12.99,
+                price: 4.99,
                 description: 'Non vegan koozie.',
                 variants: {
                     'white': 'Koozie - White',
@@ -1626,8 +1626,195 @@
             // Close cart dropdown
             document.getElementById('cartDropdown').classList.remove('show');
             
-            // Show sold out modal
+            // Show email popup first
+            showEmailPopup();
+        }
+        
+        function showEmailPopup() {
+            // Create modal overlay
+            const modalOverlay = document.createElement('div');
+            modalOverlay.className = 'email-popup-overlay';
+            modalOverlay.innerHTML = `
+                <div class="email-popup-modal">
+                    <div class="email-popup-header">
+                        <h3>Enter Your Email To Get 15% Off Your First Order!</h3>
+                        <button class="email-popup-close" onclick="closeEmailPopup()">×</button>
+                    </div>
+                    <div class="email-popup-content">
+                        <form id="emailDiscountForm" class="email-popup-form">
+                            <input type="email" id="discountEmail" placeholder="Email" required>
+                            <button type="submit" class="email-popup-submit">Get Code</button>
+                        </form>
+                    </div>
+                </div>
+            `;
+            
+            // Add styles
+            const style = document.createElement('style');
+            style.textContent = `
+                .email-popup-overlay {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.7);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 10000;
+                }
+                .email-popup-modal {
+                    background: #ffffff;
+                    border-radius: 12px;
+                    padding: 0;
+                    max-width: 400px;
+                    width: 90%;
+                    color: #333;
+                    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+                    animation: emailPopupSlideIn 0.3s ease-out;
+                }
+                @keyframes emailPopupSlideIn {
+                    from {
+                        opacity: 0;
+                        transform: translateY(-20px) scale(0.95);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0) scale(1);
+                    }
+                }
+                .email-popup-header {
+                    background: #000000;
+                    color: #ffffff;
+                    padding: 20px;
+                    border-radius: 12px 12px 0 0;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+                .email-popup-header h3 {
+                    font-family: 'Libre Franklin', sans-serif;
+                    font-weight: 800;
+                    font-size: 18px;
+                    margin: 0;
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                }
+                .email-popup-close {
+                    background: none;
+                    border: none;
+                    color: #ffffff;
+                    font-size: 24px;
+                    cursor: pointer;
+                    padding: 0;
+                    width: 30px;
+                    height: 30px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 50%;
+                    transition: background 0.2s;
+                }
+                .email-popup-close:hover {
+                    background: rgba(255, 255, 255, 0.1);
+                }
+                .email-popup-content {
+                    padding: 30px;
+                }
+                .email-popup-content p {
+                    font-size: 16px;
+                    line-height: 1.5;
+                    margin-bottom: 20px;
+                    color: #666;
+                }
+                .email-popup-form {
+                    margin-bottom: 15px;
+                }
+                .email-popup-form input {
+                    width: 100%;
+                    padding: 12px 16px;
+                    border: 2px solid #e0e0e0;
+                    border-radius: 6px;
+                    font-size: 16px;
+                    margin-bottom: 15px;
+                    transition: border-color 0.3s;
+                    box-sizing: border-box;
+                }
+                .email-popup-form input:focus {
+                    outline: none;
+                    border-color: #000000;
+                }
+                .email-popup-submit {
+                    width: 100%;
+                    padding: 12px;
+                    background: #000000;
+                    color: #ffffff;
+                    border: none;
+                    border-radius: 6px;
+                    font-family: 'Libre Franklin', sans-serif;
+                    font-weight: 600;
+                    font-size: 14px;
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                    cursor: pointer;
+                    transition: background 0.3s;
+                }
+                .email-popup-submit:hover {
+                    background: #333333;
+                }
+                .email-popup-note {
+                    font-size: 12px;
+                    color: #999;
+                    text-align: center;
+                    margin: 0;
+                }
+            `;
+            document.head.appendChild(style);
+            document.body.appendChild(modalOverlay);
+            
+            // Handle form submission
+            document.getElementById('emailDiscountForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                submitEmailDiscount();
+            });
+        }
+        
+        function submitEmailDiscount() {
+            const email = document.getElementById('discountEmail').value;
+            const cartData = cart.map(item => `${item.quantity}x ${item.name}`).join(', ');
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            // Encode data for Google Form
+            const encodedEmail = encodeURIComponent(email);
+            const encodedCart = encodeURIComponent(cartData);
+            const encodedTotal = encodeURIComponent(`$${totalPrice.toFixed(2)}`);
+            
+            // Google Form URL with your form ID
+            const baseUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSdo--Wb3NevJS1mC794JLrNecbUtmXE2jWkMdyYc0KegMASEA/formResponse?usp=pp_url';
+            const formUrl = `${baseUrl}&entry.1409004548=${encodedEmail}&entry.770749609=${encodedCart}+${encodedTotal}`;
+            
+            // Submit using hidden iframe
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.setAttribute('src', formUrl);
+            document.body.appendChild(iframe);
+            
+            // Close email popup and show sold out modal
+            closeEmailPopup();
             showSoldOutModal();
+            
+            // Remove iframe after submission
+            setTimeout(() => {
+                document.body.removeChild(iframe);
+            }, 1000);
+        }
+        
+        function closeEmailPopup() {
+            const modal = document.querySelector('.email-popup-overlay');
+            if (modal) {
+                modal.remove();
+            }
         }
         
         function showSoldOutModal() {
