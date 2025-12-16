@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TraceCycle Buyer Assessment Survey</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #ecf0f1;
+            border-left: 4px solid #3498db;
+        }
+        .question {
+            margin: 25px 0;
+            padding: 15px;
+            background-color: #fafafa;
+            border-radius: 5px;
+        }
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        .option {
+            margin: 8px 0;
+            padding: 8px;
+        }
+        .option label {
+            cursor: pointer;
+            display: block;
+            padding: 5px;
+        }
+        .option input[type="radio"] {
+            margin-right: 10px;
+        }
+        .submit-btn {
+            background-color: #3498db;
+            color: white;
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 30px;
+            width: 100%;
+        }
+        .submit-btn:hover {
+            background-color: #2980b9;
+        }
+        .submit-btn:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+        .info {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+        }
+        .required {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TraceCycle Buyer Assessment Survey</h1>
+        <div class="info">
+            <p><strong>Instructions:</strong> Please answer all questions. When you're done, click "Generate CSV Download" to download your responses. Then email the CSV file to us.</p>
+        </div>
+
+        <form id="surveyForm">
+            <h2>Section 1: Side-Selling & Volume Loss</h2>
+            
+            <div class="question">
+                <div class="question-text">Q1. How many farmers sell to you?</div>
+                <div class="option"><label><input type="radio" name="q1" value="Less than 500 farmers" required> Less than 500 farmers</label></div>
+                <div class="option"><label><input type="radio" name="q1" value="500 to 1,500 farmers"> 500 to 1,500 farmers</label></div>
+                <div class="option"><label><input type="radio" name="q1" value="1,501 to 3,000 farmers"> 1,501 to 3,000 farmers</label></div>
+                <div class="option"><label><input type="radio" name="q1" value="3,001 to 5,000 farmers"> 3,001 to 5,000 farmers</label></div>
+                <div class="option"><label><input type="radio" name="q1" value="More than 5,000 farmers"> More than 5,000 farmers</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q2. Last year, you gave farmers training or loans or inputs. How many of these farmers stopped selling to you or now sell much less to you?</div>
+                <div class="option"><label><input type="radio" name="q2" value="0% to 5% stopped or reduced" required> 0% to 5% stopped or reduced</label></div>
+                <div class="option"><label><input type="radio" name="q2" value="6% to 15% stopped or reduced"> 6% to 15% stopped or reduced</label></div>
+                <div class="option"><label><input type="radio" name="q2" value="16% to 30% stopped or reduced"> 16% to 30% stopped or reduced</label></div>
+                <div class="option"><label><input type="radio" name="q2" value="31% to 50% stopped or reduced"> 31% to 50% stopped or reduced</label></div>
+                <div class="option"><label><input type="radio" name="q2" value="More than 50% stopped or reduced, or I do not know"> More than 50% stopped or reduced, or I do not know</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q3. Farmers say they sold 1000 kg to you. When it arrives at your factory, you receive less than 1000 kg. How much do you usually lose?</div>
+                <div class="option"><label><input type="radio" name="q3" value="Lose 0% to 2%" required> Lose 0% to 2%</label></div>
+                <div class="option"><label><input type="radio" name="q3" value="Lose 3% to 5%"> Lose 3% to 5%</label></div>
+                <div class="option"><label><input type="radio" name="q3" value="Lose 6% to 10%"> Lose 6% to 10%</label></div>
+                <div class="option"><label><input type="radio" name="q3" value="Lose 11% to 20%"> Lose 11% to 20%</label></div>
+                <div class="option"><label><input type="radio" name="q3" value="Lose more than 20%, or I do not know"> Lose more than 20%, or I do not know</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q4. Can you tell which farmers are selling to your competitors?</div>
+                <div class="option"><label><input type="radio" name="q4" value="Yes, our computer system shows us this" required> Yes, our computer system shows us this</label></div>
+                <div class="option"><label><input type="radio" name="q4" value="Yes, our field workers tell us when they hear about it"> Yes, our field workers tell us when they hear about it</label></div>
+                <div class="option"><label><input type="radio" name="q4" value="Sometimes we find out, but we do not check regularly"> Sometimes we find out, but we do not check regularly</label></div>
+                <div class="option"><label><input type="radio" name="q4" value="We rarely find out"> We rarely find out</label></div>
+                <div class="option"><label><input type="radio" name="q4" value="No, we cannot tell"> No, we cannot tell</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q5. A farmer stops selling to you after you gave them a loan or training. When do you usually learn about this?</div>
+                <div class="option"><label><input type="radio" name="q5" value="Within 1 to 2 weeks" required> Within 1 to 2 weeks</label></div>
+                <div class="option"><label><input type="radio" name="q5" value="Within 1 month"> Within 1 month</label></div>
+                <div class="option"><label><input type="radio" name="q5" value="Within 2 to 3 months"> Within 2 to 3 months</label></div>
+                <div class="option"><label><input type="radio" name="q5" value="After 6 months or longer"> After 6 months or longer</label></div>
+                <div class="option"><label><input type="radio" name="q5" value="We usually do not find out"> We usually do not find out</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q6. You spend money on farmer loans, training, and inputs each year. How much of this money is wasted on farmers who stop selling to you or sell to competitors?</div>
+                <div class="option"><label><input type="radio" name="q6" value="0% to 5% is wasted" required> 0% to 5% is wasted</label></div>
+                <div class="option"><label><input type="radio" name="q6" value="6% to 15% is wasted"> 6% to 15% is wasted</label></div>
+                <div class="option"><label><input type="radio" name="q6" value="16% to 30% is wasted"> 16% to 30% is wasted</label></div>
+                <div class="option"><label><input type="radio" name="q6" value="31% to 50% is wasted"> 31% to 50% is wasted</label></div>
+                <div class="option"><label><input type="radio" name="q6" value="More than 50% is wasted, or I do not know"> More than 50% is wasted, or I do not know</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q7. How often do you argue with farmers or cooperatives because the amount they say they sold does not match the amount you received?</div>
+                <div class="option"><label><input type="radio" name="q7" value="Less than once per month" required> Less than once per month</label></div>
+                <div class="option"><label><input type="radio" name="q7" value="1 to 3 times per month"> 1 to 3 times per month</label></div>
+                <div class="option"><label><input type="radio" name="q7" value="1 to 2 times per week"> 1 to 2 times per week</label></div>
+                <div class="option"><label><input type="radio" name="q7" value="3 to 5 times per week"> 3 to 5 times per week</label></div>
+                <div class="option"><label><input type="radio" name="q7" value="Every day or almost every day"> Every day or almost every day</label></div>
+            </div>
+
+            <h2>Section 2: Training and Loan Returns</h2>
+
+            <div class="question">
+                <div class="question-text">Q8. After you train farmers, how do you check if each farmer is doing what you taught them?</div>
+                <div class="option"><label><input type="radio" name="q8" value="We have records showing each farmer's results before and after training" required> We have records showing each farmer's results before and after training</label></div>
+                <div class="option"><label><input type="radio" name="q8" value="We visit some farmers to check"> We visit some farmers to check</label></div>
+                <div class="option"><label><input type="radio" name="q8" value="We check the total results for all farmers together, not each farmer"> We check the total results for all farmers together, not each farmer</label></div>
+                <div class="option"><label><input type="radio" name="q8" value="Our field workers tell us their opinions"> Our field workers tell us their opinions</label></div>
+                <div class="option"><label><input type="radio" name="q8" value="We do not check each farmer"> We do not check each farmer</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q9. When you decide which farmers get loans, what information do you look at?</div>
+                <div class="option"><label><input type="radio" name="q9" value="Computer records showing: how much each farmer sold, quality, how much they produce, if they paid back old loans" required> Computer records showing: how much each farmer sold, quality, how much they produce, if they paid back old loans</label></div>
+                <div class="option"><label><input type="radio" name="q9" value="Basic records of what farmers sold before"> Basic records of what farmers sold before</label></div>
+                <div class="option"><label><input type="radio" name="q9" value="Our field workers tell us which farmers are good"> Our field workers tell us which farmers are good</label></div>
+                <div class="option"><label><input type="radio" name="q9" value="First come first serve, or everyone gets the same"> First come first serve, or everyone gets the same</label></div>
+                <div class="option"><label><input type="radio" name="q9" value="We decide without looking at records"> We decide without looking at records</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q10. Can you make a list showing which farmers got better after your training and which farmers did not get better?</div>
+                <div class="option"><label><input type="radio" name="q10" value="Yes, we have this list with scores for all farmers" required> Yes, we have this list with scores for all farmers</label></div>
+                <div class="option"><label><input type="radio" name="q10" value="Yes, we have this for some farmers we watch closely"> Yes, we have this for some farmers we watch closely</label></div>
+                <div class="option"><label><input type="radio" name="q10" value="We have guesses from field workers"> We have guesses from field workers</label></div>
+                <div class="option"><label><input type="radio" name="q10" value="No, but we could make this list if we put our papers together"> No, but we could make this list if we put our papers together</label></div>
+                <div class="option"><label><input type="radio" name="q10" value="No, we do not have information to make this list"> No, we do not have information to make this list</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q11. You trained 100 farmers. How many of these 100 farmers actually do what you taught them?</div>
+                <div class="option"><label><input type="radio" name="q11" value="75 to 100 farmers" required> 75 to 100 farmers</label></div>
+                <div class="option"><label><input type="radio" name="q11" value="50 to 74 farmers"> 50 to 74 farmers</label></div>
+                <div class="option"><label><input type="radio" name="q11" value="25 to 49 farmers"> 25 to 49 farmers</label></div>
+                <div class="option"><label><input type="radio" name="q11" value="10 to 24 farmers"> 10 to 24 farmers</label></div>
+                <div class="option"><label><input type="radio" name="q11" value="Less than 10 farmers, or I do not know"> Less than 10 farmers, or I do not know</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q12. How do you track which farmers owe you money and if they are paying back their loans?</div>
+                <div class="option"><label><input type="radio" name="q12" value="Computer system that updates every day showing each farmer's loan" required> Computer system that updates every day showing each farmer's loan</label></div>
+                <div class="option"><label><input type="radio" name="q12" value="Spreadsheet we update every week"> Spreadsheet we update every week</label></div>
+                <div class="option"><label><input type="radio" name="q12" value="Spreadsheet we update every month or less often"> Spreadsheet we update every month or less often</label></div>
+                <div class="option"><label><input type="radio" name="q12" value="Paper books that we update sometimes"> Paper books that we update sometimes</label></div>
+                <div class="option"><label><input type="radio" name="q12" value="We do not have a good way to track this"> We do not have a good way to track this</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q13. A farmer does not pay back their loan. When do you find out?</div>
+                <div class="option"><label><input type="radio" name="q13" value="We know immediately, within a few days" required> We know immediately, within a few days</label></div>
+                <div class="option"><label><input type="radio" name="q13" value="Within a few weeks"> Within a few weeks</label></div>
+                <div class="option"><label><input type="radio" name="q13" value="Within 1 to 2 months"> Within 1 to 2 months</label></div>
+                <div class="option"><label><input type="radio" name="q13" value="After 3 months or longer"> After 3 months or longer</label></div>
+                <div class="option"><label><input type="radio" name="q13" value="We often do not find out"> We often do not find out</label></div>
+            </div>
+
+            <h2>Section 3: Proving Where Product Comes From</h2>
+
+            <div class="question">
+                <div class="question-text">Q14. In the past year, how many times did buyers ask you to prove which farms your product came from?</div>
+                <div class="option"><label><input type="radio" name="q14" value="Never" required> Never</label></div>
+                <div class="option"><label><input type="radio" name="q14" value="1 to 2 times"> 1 to 2 times</label></div>
+                <div class="option"><label><input type="radio" name="q14" value="3 to 5 times"> 3 to 5 times</label></div>
+                <div class="option"><label><input type="radio" name="q14" value="6 to 10 times"> 6 to 10 times</label></div>
+                <div class="option"><label><input type="radio" name="q14" value="More than 10 times"> More than 10 times</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q15. When buyers ask you to prove which farms your product came from, what can you give them?</div>
+                <div class="option"><label><input type="radio" name="q15" value="GPS map points for each farm and records showing what each farm sold" required> GPS map points for each farm and records showing what each farm sold</label></div>
+                <div class="option"><label><input type="radio" name="q15" value="Information about which cooperative or region it came from"> Information about which cooperative or region it came from</label></div>
+                <div class="option"><label><input type="radio" name="q15" value="Papers showing we buy from certified areas"> Papers showing we buy from certified areas</label></div>
+                <div class="option"><label><input type="radio" name="q15" value="Certification papers but cannot say which specific farms"> Certification papers but cannot say which specific farms</label></div>
+                <div class="option"><label><input type="radio" name="q15" value="Nothing specific, we can only tell them we promise it is good"> Nothing specific, we can only tell them we promise it is good</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q16. In the past year, did you lose sales because you could not prove which farms your product came from?</div>
+                <div class="option"><label><input type="radio" name="q16" value="No, never lost sales" required> No, never lost sales</label></div>
+                <div class="option"><label><input type="radio" name="q16" value="Maybe, but I am not sure"> Maybe, but I am not sure</label></div>
+                <div class="option"><label><input type="radio" name="q16" value="Yes, lost 1 sale"> Yes, lost 1 sale</label></div>
+                <div class="option"><label><input type="radio" name="q16" value="Yes, lost 2 to 3 sales"> Yes, lost 2 to 3 sales</label></div>
+                <div class="option"><label><input type="radio" name="q16" value="Yes, lost 4 or more sales, or this happens often"> Yes, lost 4 or more sales, or this happens often</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q17. You sell certified product (like Fairtrade, RSPO, Rainforest Alliance, Organic). Can you tell buyers which exact farms this certified product came from?</div>
+                <div class="option"><label><input type="radio" name="q17" value="Yes, we have GPS and records for each certified farm in each shipment" required> Yes, we have GPS and records for each certified farm in each shipment</label></div>
+                <div class="option"><label><input type="radio" name="q17" value="We can tell them which cooperatives, but not which individual farms"> We can tell them which cooperatives, but not which individual farms</label></div>
+                <div class="option"><label><input type="radio" name="q17" value="We can tell them the region"> We can tell them the region</label></div>
+                <div class="option"><label><input type="radio" name="q17" value="We have certification papers but cannot link to specific farms"> We have certification papers but cannot link to specific farms</label></div>
+                <div class="option"><label><input type="radio" name="q17" value="No, we cannot tell them which farms"> No, we cannot tell them which farms</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q18. Buyers pay you extra money for certified product. How do you make sure this extra money goes to the correct farmers who grew that certified product?</div>
+                <div class="option"><label><input type="radio" name="q18" value="Digital payment system with records for each farmer" required> Digital payment system with records for each farmer</label></div>
+                <div class="option"><label><input type="radio" name="q18" value="We track manually and keep payment receipts"> We track manually and keep payment receipts</label></div>
+                <div class="option"><label><input type="radio" name="q18" value="We give money to cooperatives and they give it to farmers"> We give money to cooperatives and they give it to farmers</label></div>
+                <div class="option"><label><input type="radio" name="q18" value="We include the extra money in the normal price we pay everyone"> We include the extra money in the normal price we pay everyone</label></div>
+                <div class="option"><label><input type="radio" name="q18" value="We do not have a system to track this"> We do not have a system to track this</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q19. If a buyer asks "Show me GPS map of every farm that grew the product in this shipment," how long does it take you to provide this?</div>
+                <div class="option"><label><input type="radio" name="q19" value="We can show them immediately, we have this ready" required> We can show them immediately, we have this ready</label></div>
+                <div class="option"><label><input type="radio" name="q19" value="A few hours"> A few hours</label></div>
+                <div class="option"><label><input type="radio" name="q19" value="1 to 3 days"> 1 to 3 days</label></div>
+                <div class="option"><label><input type="radio" name="q19" value="1 to 2 weeks"> 1 to 2 weeks</label></div>
+                <div class="option"><label><input type="radio" name="q19" value="We cannot provide this information"> We cannot provide this information</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q20. In the past year, did buyers threaten to stop buying from you because you could not prove where your product came from?</div>
+                <div class="option"><label><input type="radio" name="q20" value="No, never" required> No, never</label></div>
+                <div class="option"><label><input type="radio" name="q20" value="One buyer mentioned this concern"> One buyer mentioned this concern</label></div>
+                <div class="option"><label><input type="radio" name="q20" value="2 to 3 buyers mentioned this"> 2 to 3 buyers mentioned this</label></div>
+                <div class="option"><label><input type="radio" name="q20" value="Several buyers mentioned this"> Several buyers mentioned this</label></div>
+                <div class="option"><label><input type="radio" name="q20" value="Yes, and we lost buyers because of this"> Yes, and we lost buyers because of this</label></div>
+            </div>
+
+            <h2>Section 4: Planning Factory and Transport</h2>
+
+            <div class="question">
+                <div class="question-text">Q21. How many weeks before harvest starts can you correctly predict how much product will come?</div>
+                <div class="option"><label><input type="radio" name="q21" value="4 or more weeks before, and our prediction is correct" required> 4 or more weeks before, and our prediction is correct</label></div>
+                <div class="option"><label><input type="radio" name="q21" value="2 to 3 weeks before, prediction is close"> 2 to 3 weeks before, prediction is close</label></div>
+                <div class="option"><label><input type="radio" name="q21" value="1 week before, rough guess"> 1 week before, rough guess</label></div>
+                <div class="option"><label><input type="radio" name="q21" value="A few days before, rough guess"> A few days before, rough guess</label></div>
+                <div class="option"><label><input type="radio" name="q21" value="Cannot predict, we just wait and see what arrives"> Cannot predict, we just wait and see what arrives</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q22. Last year, how accurate was your harvest prediction compared to what actually arrived?</div>
+                <div class="option"><label><input type="radio" name="q22" value="90% to 100% accurate" required> 90% to 100% accurate</label></div>
+                <div class="option"><label><input type="radio" name="q22" value="75% to 89% accurate"> 75% to 89% accurate</label></div>
+                <div class="option"><label><input type="radio" name="q22" value="60% to 74% accurate"> 60% to 74% accurate</label></div>
+                <div class="option"><label><input type="radio" name="q22" value="40% to 59% accurate"> 40% to 59% accurate</label></div>
+                <div class="option"><label><input type="radio" name="q22" value="Less than 40% accurate, or did not make prediction"> Less than 40% accurate, or did not make prediction</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q23. During harvest, how often does your factory have too much product or too little product because you did not predict correctly?</div>
+                <div class="option"><label><input type="radio" name="q23" value="Rarely, our planning works well" required> Rarely, our planning works well</label></div>
+                <div class="option"><label><input type="radio" name="q23" value="A few days per season"> A few days per season</label></div>
+                <div class="option"><label><input type="radio" name="q23" value="About once per week"> About once per week</label></div>
+                <div class="option"><label><input type="radio" name="q23" value="Multiple times per week"> Multiple times per week</label></div>
+                <div class="option"><label><input type="radio" name="q23" value="All the time, always having problems"> All the time, always having problems</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q24. Can you tell which region will harvest first, which region will harvest second, etc.?</div>
+                <div class="option"><label><input type="radio" name="q24" value="Yes, we have dates for each region" required> Yes, we have dates for each region</label></div>
+                <div class="option"><label><input type="radio" name="q24" value="Yes, we have rough idea"> Yes, we have rough idea</label></div>
+                <div class="option"><label><input type="radio" name="q24" value="We know a little bit"> We know a little bit</label></div>
+                <div class="option"><label><input type="radio" name="q24" value="We guess based on last year"> We guess based on last year</label></div>
+                <div class="option"><label><input type="radio" name="q24" value="No, we cannot tell"> No, we cannot tell</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q25. Last harvest season, how much product went bad or was wasted because factory could not process it in time?</div>
+                <div class="option"><label><input type="radio" name="q25" value="0% to 2% wasted" required> 0% to 2% wasted</label></div>
+                <div class="option"><label><input type="radio" name="q25" value="3% to 5% wasted"> 3% to 5% wasted</label></div>
+                <div class="option"><label><input type="radio" name="q25" value="6% to 10% wasted"> 6% to 10% wasted</label></div>
+                <div class="option"><label><input type="radio" name="q25" value="11% to 20% wasted"> 11% to 20% wasted</label></div>
+                <div class="option"><label><input type="radio" name="q25" value="More than 20% wasted, or I do not know"> More than 20% wasted, or I do not know</label></div>
+            </div>
+
+            <h2>Section 5: Record Keeping Systems</h2>
+
+            <div class="question">
+                <div class="question-text">Q26. What do you use to keep records about farmers and what they sell?</div>
+                <div class="option"><label><input type="radio" name="q26" value="One computer system that connects everything in real-time" required> One computer system that connects everything in real-time</label></div>
+                <div class="option"><label><input type="radio" name="q26" value="Multiple computer programs (like Excel, databases, accounting software)"> Multiple computer programs (like Excel, databases, accounting software)</label></div>
+                <div class="option"><label><input type="radio" name="q26" value="Mostly Excel spreadsheets and some paper books"> Mostly Excel spreadsheets and some paper books</label></div>
+                <div class="option"><label><input type="radio" name="q26" value="Mix of paper books and simple spreadsheets"> Mix of paper books and simple spreadsheets</label></div>
+                <div class="option"><label><input type="radio" name="q26" value="Only paper books"> Only paper books</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q27. If I ask "Show me Farmer John's complete history: everything he sold, all quality grades, all training he received, all loans," how long does it take?</div>
+                <div class="option"><label><input type="radio" name="q27" value="A few seconds, we can see this on computer immediately" required> A few seconds, we can see this on computer immediately</label></div>
+                <div class="option"><label><input type="radio" name="q27" value="15 to 30 minutes, we need to open a few files"> 15 to 30 minutes, we need to open a few files</label></div>
+                <div class="option"><label><input type="radio" name="q27" value="1 to 3 hours, we need to look through many files"> 1 to 3 hours, we need to look through many files</label></div>
+                <div class="option"><label><input type="radio" name="q27" value="1 to 2 days, we need to search paper records"> 1 to 2 days, we need to search paper records</label></div>
+                <div class="option"><label><input type="radio" name="q27" value="Cannot provide complete history, we do not keep all this information"> Cannot provide complete history, we do not keep all this information</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q28. Where do you keep farmer information? (Select the main place)</div>
+                <div class="option"><label><input type="radio" name="q28" value="Computer system that automatically backs up" required> Computer system that automatically backs up</label></div>
+                <div class="option"><label><input type="radio" name="q28" value="Computer files that we manually copy for backup"> Computer files that we manually copy for backup</label></div>
+                <div class="option"><label><input type="radio" name="q28" value="Excel files on one computer"> Excel files on one computer</label></div>
+                <div class="option"><label><input type="radio" name="q28" value="Paper books in office"> Paper books in office</label></div>
+                <div class="option"><label><input type="radio" name="q28" value="Paper books in multiple locations, hard to find"> Paper books in multiple locations, hard to find</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q29. When farmers sell at a collection point, how is it recorded?</div>
+                <div class="option"><label><input type="radio" name="q29" value="Field worker uses tablet or phone, uploads to computer system immediately or when internet available" required> Field worker uses tablet or phone, uploads to computer system immediately or when internet available</label></div>
+                <div class="option"><label><input type="radio" name="q29" value="Field worker writes on paper, types into computer later same day"> Field worker writes on paper, types into computer later same day</label></div>
+                <div class="option"><label><input type="radio" name="q29" value="Field worker writes on paper, someone types into computer within a week"> Field worker writes on paper, someone types into computer within a week</label></div>
+                <div class="option"><label><input type="radio" name="q29" value="Field worker writes on paper, may or may not get typed into computer"> Field worker writes on paper, may or may not get typed into computer</label></div>
+                <div class="option"><label><input type="radio" name="q29" value="Field worker writes on paper, stays on paper"> Field worker writes on paper, stays on paper</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q30. How many different places do you write the same information? (Example: farmer name, amount sold, quality)</div>
+                <div class="option"><label><input type="radio" name="q30" value="One place only, computer system" required> One place only, computer system</label></div>
+                <div class="option"><label><input type="radio" name="q30" value="Two places (paper at collection point, then computer)"> Two places (paper at collection point, then computer)</label></div>
+                <div class="option"><label><input type="radio" name="q30" value="Three places (collection point paper, depot paper, computer)"> Three places (collection point paper, depot paper, computer)</label></div>
+                <div class="option"><label><input type="radio" name="q30" value="Four or more places"> Four or more places</label></div>
+                <div class="option"><label><input type="radio" name="q30" value="Many places, we write same information many times"> Many places, we write same information many times</label></div>
+            </div>
+
+            <h2>Section 6: Supplier Performance & Advanced Features</h2>
+
+            <div class="question">
+                <div class="question-text">Q31. Can you compare performance across different cooperatives you work with?</div>
+                <div class="option"><label><input type="radio" name="q31" value="Yes, we have data to rank cooperatives by productivity, quality, reliability" required> Yes, we have data to rank cooperatives by productivity, quality, reliability</label></div>
+                <div class="option"><label><input type="radio" name="q31" value="Yes, we have some comparison data"> Yes, we have some comparison data</label></div>
+                <div class="option"><label><input type="radio" name="q31" value="We have rough opinions but no data"> We have rough opinions but no data</label></div>
+                <div class="option"><label><input type="radio" name="q31" value="We treat all cooperatives the same"> We treat all cooperatives the same</label></div>
+                <div class="option"><label><input type="radio" name="q31" value="We do not track cooperative-level performance"> We do not track cooperative-level performance</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q32. Do you offer advance payments to farmers before harvest in exchange for guaranteed delivery?</div>
+                <div class="option"><label><input type="radio" name="q32" value="Yes, we do this systematically with tracking" required> Yes, we do this systematically with tracking</label></div>
+                <div class="option"><label><input type="radio" name="q32" value="Yes, we do this sometimes"> Yes, we do this sometimes</label></div>
+                <div class="option"><label><input type="radio" name="q32" value="We have tried this a few times"> We have tried this a few times</label></div>
+                <div class="option"><label><input type="radio" name="q32" value="We have considered this but do not do it"> We have considered this but do not do it</label></div>
+                <div class="option"><label><input type="radio" name="q32" value="No, we do not do advance payments"> No, we do not do advance payments</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q33. When you offer advance payments before harvest, how many farmers fail to deliver the product they promised?</div>
+                <div class="option"><label><input type="radio" name="q33" value="0% to 5% fail to deliver" required> 0% to 5% fail to deliver</label></div>
+                <div class="option"><label><input type="radio" name="q33" value="6% to 15% fail to deliver"> 6% to 15% fail to deliver</label></div>
+                <div class="option"><label><input type="radio" name="q33" value="16% to 30% fail to deliver"> 16% to 30% fail to deliver</label></div>
+                <div class="option"><label><input type="radio" name="q33" value="31% to 50% fail to deliver"> 31% to 50% fail to deliver</label></div>
+                <div class="option"><label><input type="radio" name="q33" value="More than 50% fail, or we do not track this"> More than 50% fail, or we do not track this</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q34. Can you identify your top-quality producers and pay them different prices than lower-quality producers?</div>
+                <div class="option"><label><input type="radio" name="q34" value="Yes, we have quality-based pricing for individual farmers" required> Yes, we have quality-based pricing for individual farmers</label></div>
+                <div class="option"><label><input type="radio" name="q34" value="We pay some bonuses for top quality"> We pay some bonuses for top quality</label></div>
+                <div class="option"><label><input type="radio" name="q34" value="We want to do this but cannot identify top producers"> We want to do this but cannot identify top producers</label></div>
+                <div class="option"><label><input type="radio" name="q34" value="Everyone gets same price regardless of quality"> Everyone gets same price regardless of quality</label></div>
+                <div class="option"><label><input type="radio" name="q34" value="We do not differentiate by quality"> We do not differentiate by quality</label></div>
+            </div>
+
+            <button type="submit" class="submit-btn">Generate CSV Download</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('surveyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get all form data
+            const formData = new FormData(this);
+            const data = {};
+            
+            // Collect all answers
+            for (let i = 1; i <= 34; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                data[`Q${i}`] = selected ? selected.value : '';
+            }
+            
+            // Create CSV content
+            let csv = 'Question,Answer\n';
+            for (let i = 1; i <= 34; i++) {
+                const answer = data[`Q${i}`] || 'Not answered';
+                csv += `Q${i},"${answer.replace(/"/g, '""')}"\n`;
+            }
+            
+            // Add timestamp
+            csv += `\nCompleted,${new Date().toISOString()}\n`;
+            
+            // Create download
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `TraceCycle_Buyer_Survey_${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            // Show success message
+            alert('CSV file downloaded! Please email it to us.');
+        });
+    </script>
+</body>
+</html>
+

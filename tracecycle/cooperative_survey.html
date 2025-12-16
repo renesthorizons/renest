@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TraceCycle Cooperative Assessment Survey</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #27ae60;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #ecf0f1;
+            border-left: 4px solid #27ae60;
+        }
+        .question {
+            margin: 25px 0;
+            padding: 15px;
+            background-color: #fafafa;
+            border-radius: 5px;
+        }
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        .option {
+            margin: 8px 0;
+            padding: 8px;
+        }
+        .option label {
+            cursor: pointer;
+            display: block;
+            padding: 5px;
+        }
+        .option input[type="radio"] {
+            margin-right: 10px;
+        }
+        .submit-btn {
+            background-color: #27ae60;
+            color: white;
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 30px;
+            width: 100%;
+        }
+        .submit-btn:hover {
+            background-color: #229954;
+        }
+        .submit-btn:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+        .info {
+            background-color: #e8f8f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #27ae60;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TraceCycle Cooperative Assessment Survey</h1>
+        <div class="info">
+            <p><strong>Instructions:</strong> Please answer all questions. When you're done, click "Generate CSV Download" to download your responses. Then email the CSV file to us.</p>
+        </div>
+
+        <form id="surveyForm">
+            <h2>Section 1: Certification and Audits</h2>
+            
+            <div class="question">
+                <div class="question-text">Q1. How many farmers are members of your cooperative?</div>
+                <div class="option"><label><input type="radio" name="q1" value="Less than 100 farmers" required> Less than 100 farmers</label></div>
+                <div class="option"><label><input type="radio" name="q1" value="100 to 500 farmers"> 100 to 500 farmers</label></div>
+                <div class="option"><label><input type="radio" name="q1" value="501 to 1,000 farmers"> 501 to 1,000 farmers</label></div>
+                <div class="option"><label><input type="radio" name="q1" value="1,001 to 3,000 farmers"> 1,001 to 3,000 farmers</label></div>
+                <div class="option"><label><input type="radio" name="q1" value="More than 3,000 farmers"> More than 3,000 farmers</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q2. What certifications does your cooperative have? (Select what fits best)</div>
+                <div class="option"><label><input type="radio" name="q2" value="We have 3 or more certifications (Fairtrade, RSPO, Rainforest Alliance, Organic, etc.)" required> We have 3 or more certifications (Fairtrade, RSPO, Rainforest Alliance, Organic, etc.)</label></div>
+                <div class="option"><label><input type="radio" name="q2" value="We have 2 certifications"> We have 2 certifications</label></div>
+                <div class="option"><label><input type="radio" name="q2" value="We have 1 certification"> We have 1 certification</label></div>
+                <div class="option"><label><input type="radio" name="q2" value="We are working to get first certification"> We are working to get first certification</label></div>
+                <div class="option"><label><input type="radio" name="q2" value="We have no certifications"> We have no certifications</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q3. When was your last certification audit?</div>
+                <div class="option"><label><input type="radio" name="q3" value="Within the last 3 months" required> Within the last 3 months</label></div>
+                <div class="option"><label><input type="radio" name="q3" value="4 to 6 months ago"> 4 to 6 months ago</label></div>
+                <div class="option"><label><input type="radio" name="q3" value="7 to 12 months ago"> 7 to 12 months ago</label></div>
+                <div class="option"><label><input type="radio" name="q3" value="More than 1 year ago"> More than 1 year ago</label></div>
+                <div class="option"><label><input type="radio" name="q3" value="Have not had audit yet"> Have not had audit yet</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q4. How many days did your team spend preparing for your last certification audit?</div>
+                <div class="option"><label><input type="radio" name="q4" value="1 to 2 days" required> 1 to 2 days</label></div>
+                <div class="option"><label><input type="radio" name="q4" value="3 to 5 days"> 3 to 5 days</label></div>
+                <div class="option"><label><input type="radio" name="q4" value="6 to 10 days"> 6 to 10 days</label></div>
+                <div class="option"><label><input type="radio" name="q4" value="11 to 20 days"> 11 to 20 days</label></div>
+                <div class="option"><label><input type="radio" name="q4" value="More than 20 days"> More than 20 days</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q5. During preparation for last audit, what was hardest?</div>
+                <div class="option"><label><input type="radio" name="q5" value="Nothing was hard, we were ready" required> Nothing was hard, we were ready</label></div>
+                <div class="option"><label><input type="radio" name="q5" value="Finding a few missing papers"> Finding a few missing papers</label></div>
+                <div class="option"><label><input type="radio" name="q5" value="Organizing all the member papers and records"> Organizing all the member papers and records</label></div>
+                <div class="option"><label><input type="radio" name="q5" value="Making GPS maps of member farms"> Making GPS maps of member farms</label></div>
+                <div class="option"><label><input type="radio" name="q5" value="We did not have most information auditor wanted"> We did not have most information auditor wanted</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q6. In your last audit, how many problems or warnings did the auditor find about your records or papers?</div>
+                <div class="option"><label><input type="radio" name="q6" value="None, clean audit" required> None, clean audit</label></div>
+                <div class="option"><label><input type="radio" name="q6" value="1 to 2 small problems"> 1 to 2 small problems</label></div>
+                <div class="option"><label><input type="radio" name="q6" value="3 to 5 problems"> 3 to 5 problems</label></div>
+                <div class="option"><label><input type="radio" name="q6" value="6 to 10 problems"> 6 to 10 problems</label></div>
+                <div class="option"><label><input type="radio" name="q6" value="More than 10 problems, or we failed audit"> More than 10 problems, or we failed audit</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q7. Can you quickly find these for any member: GPS map of their farm, certification status, training they completed, history of what they sold?</div>
+                <div class="option"><label><input type="radio" name="q7" value="Yes, all of this in one computer system" required> Yes, all of this in one computer system</label></div>
+                <div class="option"><label><input type="radio" name="q7" value="Yes, but in different files and papers, takes time"> Yes, but in different files and papers, takes time</label></div>
+                <div class="option"><label><input type="radio" name="q7" value="Some of it, takes 30 minutes to find everything"> Some of it, takes 30 minutes to find everything</label></div>
+                <div class="option"><label><input type="radio" name="q7" value="Very little, takes hours or days"> Very little, takes hours or days</label></div>
+                <div class="option"><label><input type="radio" name="q7" value="No, we do not have all of this information"> No, we do not have all of this information</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q8. For certification audit, you need to show GPS boundaries for all member farms. Do you have this?</div>
+                <div class="option"><label><input type="radio" name="q8" value="Yes, digital GPS maps for all members" required> Yes, digital GPS maps for all members</label></div>
+                <div class="option"><label><input type="radio" name="q8" value="Yes, for more than 75% of members"> Yes, for more than 75% of members</label></div>
+                <div class="option"><label><input type="radio" name="q8" value="Yes, for 50% to 75% of members"> Yes, for 50% to 75% of members</label></div>
+                <div class="option"><label><input type="radio" name="q8" value="Yes, for 25% to 50% of members"> Yes, for 25% to 50% of members</label></div>
+                <div class="option"><label><input type="radio" name="q8" value="Less than 25%, or we do not have GPS maps"> Less than 25%, or we do not have GPS maps</label></div>
+            </div>
+
+            <h2>Section 2: Finding Certified Members for Sales</h2>
+
+            <div class="question">
+                <div class="question-text">Q9. A buyer calls and says "I need 50 tons of certified product next week." How long does it take you to tell buyer which members can provide this?</div>
+                <div class="option"><label><input type="radio" name="q9" value="Immediately, we have this in computer" required> Immediately, we have this in computer</label></div>
+                <div class="option"><label><input type="radio" name="q9" value="A few hours"> A few hours</label></div>
+                <div class="option"><label><input type="radio" name="q9" value="1 to 2 days"> 1 to 2 days</label></div>
+                <div class="option"><label><input type="radio" name="q9" value="3 to 7 days"> 3 to 7 days</label></div>
+                <div class="option"><label><input type="radio" name="q9" value="More than a week, or we have to guess"> More than a week, or we have to guess</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q10. In the past year, how many times did you lose buyer opportunities because you could not quickly tell buyer which members could provide certified product?</div>
+                <div class="option"><label><input type="radio" name="q10" value="Never" required> Never</label></div>
+                <div class="option"><label><input type="radio" name="q10" value="Maybe 1 time, not sure"> Maybe 1 time, not sure</label></div>
+                <div class="option"><label><input type="radio" name="q10" value="1 to 2 times"> 1 to 2 times</label></div>
+                <div class="option"><label><input type="radio" name="q10" value="3 to 5 times"> 3 to 5 times</label></div>
+                <div class="option"><label><input type="radio" name="q10" value="More than 5 times"> More than 5 times</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q11. A buyer asks "I need deforestation-free product. Show me which member farms meet this requirement." Can you provide this information?</div>
+                <div class="option"><label><input type="radio" name="q11" value="Yes, immediately with GPS maps and deforestation data" required> Yes, immediately with GPS maps and deforestation data</label></div>
+                <div class="option"><label><input type="radio" name="q11" value="Yes, but takes us a few days to prepare"> Yes, but takes us a few days to prepare</label></div>
+                <div class="option"><label><input type="radio" name="q11" value="We can provide some information but not complete"> We can provide some information but not complete</label></div>
+                <div class="option"><label><input type="radio" name="q11" value="We would have to check each farm manually, takes weeks"> We would have to check each farm manually, takes weeks</label></div>
+                <div class="option"><label><input type="radio" name="q11" value="No, we do not have this information"> No, we do not have this information</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q12. You have different members with different certifications (some Fairtrade, some Organic, some RSPO, etc.). Can you immediately tell which member has which certification?</div>
+                <div class="option"><label><input type="radio" name="q12" value="Yes, our computer system shows this for each member" required> Yes, our computer system shows this for each member</label></div>
+                <div class="option"><label><input type="radio" name="q12" value="Yes, we keep a list we update regularly"> Yes, we keep a list we update regularly</label></div>
+                <div class="option"><label><input type="radio" name="q12" value="We have a list but it may not be current"> We have a list but it may not be current</label></div>
+                <div class="option"><label><input type="radio" name="q12" value="We have to check each member's papers individually"> We have to check each member's papers individually</label></div>
+                <div class="option"><label><input type="radio" name="q12" value="We do not track this well"> We do not track this well</label></div>
+            </div>
+
+            <h2>Section 3: Premium Payments to Farmers</h2>
+
+            <div class="question">
+                <div class="question-text">Q13. When buyers pay your cooperative extra money for certified product, how do you give this extra money to the correct members who grew that product?</div>
+                <div class="option"><label><input type="radio" name="q13" value="Digital payment system with record for each member" required> Digital payment system with record for each member</label></div>
+                <div class="option"><label><input type="radio" name="q13" value="We track manually and keep payment receipts"> We track manually and keep payment receipts</label></div>
+                <div class="option"><label><input type="radio" name="q13" value="We distribute equally to all members"> We distribute equally to all members</label></div>
+                <div class="option"><label><input type="radio" name="q13" value="We include in normal price"> We include in normal price</label></div>
+                <div class="option"><label><input type="radio" name="q13" value="We do not have clear system for this"> We do not have clear system for this</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q14. When certification auditors ask "Prove that premium money reached farmers," what can you show them?</div>
+                <div class="option"><label><input type="radio" name="q14" value="Digital payment records linked to specific members" required> Digital payment records linked to specific members</label></div>
+                <div class="option"><label><input type="radio" name="q14" value="Payment receipts or bank transfers"> Payment receipts or bank transfers</label></div>
+                <div class="option"><label><input type="radio" name="q14" value="Cooperative distribution records"> Cooperative distribution records</label></div>
+                <div class="option"><label><input type="radio" name="q14" value="Signed papers from members saying they received money"> Signed papers from members saying they received money</label></div>
+                <div class="option"><label><input type="radio" name="q14" value="General statements or estimates"> General statements or estimates</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q15. Last year, what percentage of premium money from buyers actually reached the members who grew that certified product?</div>
+                <div class="option"><label><input type="radio" name="q15" value="90% to 100% reached members" required> 90% to 100% reached members</label></div>
+                <div class="option"><label><input type="radio" name="q15" value="75% to 89% reached members"> 75% to 89% reached members</label></div>
+                <div class="option"><label><input type="radio" name="q15" value="50% to 74% reached members"> 50% to 74% reached members</label></div>
+                <div class="option"><label><input type="radio" name="q15" value="25% to 49% reached members"> 25% to 49% reached members</label></div>
+                <div class="option"><label><input type="radio" name="q15" value="Less than 25%, or I do not know"> Less than 25%, or I do not know</label></div>
+            </div>
+
+            <h2>Section 4: Member Disputes (Weighing, Quality, Payment)</h2>
+
+            <div class="question">
+                <div class="question-text">Q16. How many member complaints about weighing do you receive per month?</div>
+                <div class="option"><label><input type="radio" name="q16" value="0 to 2 complaints" required> 0 to 2 complaints</label></div>
+                <div class="option"><label><input type="radio" name="q16" value="3 to 5 complaints"> 3 to 5 complaints</label></div>
+                <div class="option"><label><input type="radio" name="q16" value="6 to 10 complaints"> 6 to 10 complaints</label></div>
+                <div class="option"><label><input type="radio" name="q16" value="11 to 20 complaints"> 11 to 20 complaints</label></div>
+                <div class="option"><label><input type="radio" name="q16" value="More than 20 complaints"> More than 20 complaints</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q17. Member says "I sold 100 kg but buyer says I sold 80 kg." What evidence do you have to check this?</div>
+                <div class="option"><label><input type="radio" name="q17" value="Digital records with photos, GPS, timestamps, both people's signatures" required> Digital records with photos, GPS, timestamps, both people's signatures</label></div>
+                <div class="option"><label><input type="radio" name="q17" value="Weighing slips and payment records"> Weighing slips and payment records</label></div>
+                <div class="option"><label><input type="radio" name="q17" value="Buyer's notes and member's word"> Buyer's notes and member's word</label></div>
+                <div class="option"><label><input type="radio" name="q17" value="Only what buyer says and what member says"> Only what buyer says and what member says</label></div>
+                <div class="option"><label><input type="radio" name="q17" value="No papers, we just talk to both people"> No papers, we just talk to both people</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q18. How many member complaints about quality grading do you receive per month? (Member thinks their product is good quality, buyer says it is poor quality)</div>
+                <div class="option"><label><input type="radio" name="q18" value="0 to 2 complaints" required> 0 to 2 complaints</label></div>
+                <div class="option"><label><input type="radio" name="q18" value="3 to 5 complaints"> 3 to 5 complaints</label></div>
+                <div class="option"><label><input type="radio" name="q18" value="6 to 10 complaints"> 6 to 10 complaints</label></div>
+                <div class="option"><label><input type="radio" name="q18" value="11 to 20 complaints"> 11 to 20 complaints</label></div>
+                <div class="option"><label><input type="radio" name="q18" value="More than 20 complaints"> More than 20 complaints</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q19. Member says "Buyer graded my product as poor quality, but it was good quality." What evidence do you have to check this?</div>
+                <div class="option"><label><input type="radio" name="q19" value="Photos taken at time of sale showing product quality" required> Photos taken at time of sale showing product quality</label></div>
+                <div class="option"><label><input type="radio" name="q19" value="Quality grading paper from that day"> Quality grading paper from that day</label></div>
+                <div class="option"><label><input type="radio" name="q19" value="General quality standards, but no proof of that specific product"> General quality standards, but no proof of that specific product</label></div>
+                <div class="option"><label><input type="radio" name="q19" value="Only what buyer says and what member says"> Only what buyer says and what member says</label></div>
+                <div class="option"><label><input type="radio" name="q19" value="No evidence"> No evidence</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q20. How many member complaints about payment do you receive per month? (Wrong amount paid, payment delayed, payment not received)</div>
+                <div class="option"><label><input type="radio" name="q20" value="0 to 2 complaints" required> 0 to 2 complaints</label></div>
+                <div class="option"><label><input type="radio" name="q20" value="3 to 5 complaints"> 3 to 5 complaints</label></div>
+                <div class="option"><label><input type="radio" name="q20" value="6 to 10 complaints"> 6 to 10 complaints</label></div>
+                <div class="option"><label><input type="radio" name="q20" value="11 to 20 complaints"> 11 to 20 complaints</label></div>
+                <div class="option"><label><input type="radio" name="q20" value="More than 20 complaints"> More than 20 complaints</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q21. Member says "I was not paid" or "I was paid wrong amount." What evidence do you have to check this?</div>
+                <div class="option"><label><input type="radio" name="q21" value="Digital payment records showing exactly what was paid and when" required> Digital payment records showing exactly what was paid and when</label></div>
+                <div class="option"><label><input type="radio" name="q21" value="Payment receipts signed by member"> Payment receipts signed by member</label></div>
+                <div class="option"><label><input type="radio" name="q21" value="Payment ledger showing who was paid"> Payment ledger showing who was paid</label></div>
+                <div class="option"><label><input type="radio" name="q21" value="Only what buyer says and what member says"> Only what buyer says and what member says</label></div>
+                <div class="option"><label><input type="radio" name="q21" value="No payment records"> No payment records</label></div>
+            </div>
+
+            <h2>Section 5: Member Performance Tracking</h2>
+
+            <div class="question">
+                <div class="question-text">Q22. Can you immediately tell me which 10 members sold the most product last year?</div>
+                <div class="option"><label><input type="radio" name="q22" value="Yes, computer shows this instantly" required> Yes, computer shows this instantly</label></div>
+                <div class="option"><label><input type="radio" name="q22" value="Yes, takes a few minutes to calculate from our records"> Yes, takes a few minutes to calculate from our records</label></div>
+                <div class="option"><label><input type="radio" name="q22" value="We can figure it out in a few hours"> We can figure it out in a few hours</label></div>
+                <div class="option"><label><input type="radio" name="q22" value="Would take us days to add up all records"> Would take us days to add up all records</label></div>
+                <div class="option"><label><input type="radio" name="q22" value="Cannot tell, we do not track individual amounts"> Cannot tell, we do not track individual amounts</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q23. Can you tell me which members produce the highest quality product?</div>
+                <div class="option"><label><input type="radio" name="q23" value="Yes, we score and rank all members by quality" required> Yes, we score and rank all members by quality</label></div>
+                <div class="option"><label><input type="radio" name="q23" value="Yes, we track quality for each member"> Yes, we track quality for each member</label></div>
+                <div class="option"><label><input type="radio" name="q23" value="We know generally based on field officer opinions"> We know generally based on field officer opinions</label></div>
+                <div class="option"><label><input type="radio" name="q23" value="Some obvious ones, but not tracked systematically"> Some obvious ones, but not tracked systematically</label></div>
+                <div class="option"><label><input type="radio" name="q23" value="No, all members treated the same"> No, all members treated the same</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q24. Do you know which members improved their production or quality after receiving training?</div>
+                <div class="option"><label><input type="radio" name="q24" value="Yes, we have before and after data for each member" required> Yes, we have before and after data for each member</label></div>
+                <div class="option"><label><input type="radio" name="q24" value="Yes, for some members"> Yes, for some members</label></div>
+                <div class="option"><label><input type="radio" name="q24" value="We know generally from field officers"> We know generally from field officers</label></div>
+                <div class="option"><label><input type="radio" name="q24" value="No specific tracking of individual improvement"> No specific tracking of individual improvement</label></div>
+                <div class="option"><label><input type="radio" name="q24" value="We do not track this"> We do not track this</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q25. Can you rank your members from most reliable to least reliable?</div>
+                <div class="option"><label><input type="radio" name="q25" value="Yes, we have reliability scores for all members" required> Yes, we have reliability scores for all members</label></div>
+                <div class="option"><label><input type="radio" name="q25" value="Yes, we know generally"> Yes, we know generally</label></div>
+                <div class="option"><label><input type="radio" name="q25" value="Some members we know are very reliable or very unreliable"> Some members we know are very reliable or very unreliable</label></div>
+                <div class="option"><label><input type="radio" name="q25" value="We treat all members the same"> We treat all members the same</label></div>
+                <div class="option"><label><input type="radio" name="q25" value="We do not track reliability"> We do not track reliability</label></div>
+            </div>
+
+            <h2>Section 6: Record Keeping</h2>
+
+            <div class="question">
+                <div class="question-text">Q26. What system do you use to keep information about members?</div>
+                <div class="option"><label><input type="radio" name="q26" value="One computer system with everything" required> One computer system with everything</label></div>
+                <div class="option"><label><input type="radio" name="q26" value="Multiple computer programs (Excel, databases, etc.)"> Multiple computer programs (Excel, databases, etc.)</label></div>
+                <div class="option"><label><input type="radio" name="q26" value="Mostly Excel and some paper books"> Mostly Excel and some paper books</label></div>
+                <div class="option"><label><input type="radio" name="q26" value="Mix of paper books and simple spreadsheets"> Mix of paper books and simple spreadsheets</label></div>
+                <div class="option"><label><input type="radio" name="q26" value="Only paper books"> Only paper books</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q27. If I ask for member John's complete information (farm size, certifications, sales history, training received), how long does it take to find all of this?</div>
+                <div class="option"><label><input type="radio" name="q27" value="A few seconds on computer" required> A few seconds on computer</label></div>
+                <div class="option"><label><input type="radio" name="q27" value="15 to 30 minutes, need to check a few places"> 15 to 30 minutes, need to check a few places</label></div>
+                <div class="option"><label><input type="radio" name="q27" value="1 to 3 hours, need to look through files"> 1 to 3 hours, need to look through files</label></div>
+                <div class="option"><label><input type="radio" name="q27" value="1 to 2 days, need to search many papers"> 1 to 2 days, need to search many papers</label></div>
+                <div class="option"><label><input type="radio" name="q27" value="Cannot provide complete information, we do not keep all of it"> Cannot provide complete information, we do not keep all of it</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q28. Where do you keep member information?</div>
+                <div class="option"><label><input type="radio" name="q28" value="Computer system with automatic backup" required> Computer system with automatic backup</label></div>
+                <div class="option"><label><input type="radio" name="q28" value="Computer files we copy for backup"> Computer files we copy for backup</label></div>
+                <div class="option"><label><input type="radio" name="q28" value="Excel files on one computer"> Excel files on one computer</label></div>
+                <div class="option"><label><input type="radio" name="q28" value="Paper books in office"> Paper books in office</label></div>
+                <div class="option"><label><input type="radio" name="q28" value="Paper books in multiple places, hard to find"> Paper books in multiple places, hard to find</label></div>
+            </div>
+
+            <h2>Section 7: Questions About Your MEMBERS' Experiences (Answer based on what you know about your members)</h2>
+
+            <div class="question">
+                <div class="question-text">Q29. When your members sell their product, do they receive a receipt or paper showing weight, quality, and price?</div>
+                <div class="option"><label><input type="radio" name="q29" value="Yes, all members get detailed receipt" required> Yes, all members get detailed receipt</label></div>
+                <div class="option"><label><input type="radio" name="q29" value="Most members get receipt"> Most members get receipt</label></div>
+                <div class="option"><label><input type="radio" name="q29" value="Some members get receipt"> Some members get receipt</label></div>
+                <div class="option"><label><input type="radio" name="q29" value="Very few members get receipt"> Very few members get receipt</label></div>
+                <div class="option"><label><input type="radio" name="q29" value="No, members do not get receipts"> No, members do not get receipts</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q30. Your members say they sold 100 kg. Buyer says they sold 80 kg. How many of your members have this problem each month?</div>
+                <div class="option"><label><input type="radio" name="q30" value="0 to 2 members" required> 0 to 2 members</label></div>
+                <div class="option"><label><input type="radio" name="q30" value="3 to 5 members"> 3 to 5 members</label></div>
+                <div class="option"><label><input type="radio" name="q30" value="6 to 10 members"> 6 to 10 members</label></div>
+                <div class="option"><label><input type="radio" name="q30" value="11 to 20 members"> 11 to 20 members</label></div>
+                <div class="option"><label><input type="radio" name="q30" value="More than 20 members"> More than 20 members</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q31. How often do your members disagree with buyer about quality grading?</div>
+                <div class="option"><label><input type="radio" name="q31" value="Rarely, less than once per month" required> Rarely, less than once per month</label></div>
+                <div class="option"><label><input type="radio" name="q31" value="1 to 3 times per month"> 1 to 3 times per month</label></div>
+                <div class="option"><label><input type="radio" name="q31" value="1 to 2 times per week"> 1 to 2 times per week</label></div>
+                <div class="option"><label><input type="radio" name="q31" value="3 to 5 times per week"> 3 to 5 times per week</label></div>
+                <div class="option"><label><input type="radio" name="q31" value="Very often, multiple times per week"> Very often, multiple times per week</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q32. How often do your members complain they were not paid correctly (wrong amount, not paid at all, paid late)?</div>
+                <div class="option"><label><input type="radio" name="q32" value="Rarely, less than once per month" required> Rarely, less than once per month</label></div>
+                <div class="option"><label><input type="radio" name="q32" value="1 to 3 times per month"> 1 to 3 times per month</label></div>
+                <div class="option"><label><input type="radio" name="q32" value="1 to 2 times per week"> 1 to 2 times per week</label></div>
+                <div class="option"><label><input type="radio" name="q32" value="3 to 5 times per week"> 3 to 5 times per week</label></div>
+                <div class="option"><label><input type="radio" name="q32" value="Very often, multiple times per week"> Very often, multiple times per week</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q33. When your members have disputes about weight, quality, or payment, can they prove their side?</div>
+                <div class="option"><label><input type="radio" name="q33" value="Yes, they have receipts and papers" required> Yes, they have receipts and papers</label></div>
+                <div class="option"><label><input type="radio" name="q33" value="Sometimes they have some papers"> Sometimes they have some papers</label></div>
+                <div class="option"><label><input type="radio" name="q33" value="Rarely have papers"> Rarely have papers</label></div>
+                <div class="option"><label><input type="radio" name="q33" value="Almost never have papers"> Almost never have papers</label></div>
+                <div class="option"><label><input type="radio" name="q33" value="Never have proof, only their word"> Never have proof, only their word</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q34. Do your members sell to buyers other than your cooperative's main buyers?</div>
+                <div class="option"><label><input type="radio" name="q34" value="No, all members only sell to our buyers" required> No, all members only sell to our buyers</label></div>
+                <div class="option"><label><input type="radio" name="q34" value="A few members sometimes sell elsewhere"> A few members sometimes sell elsewhere</label></div>
+                <div class="option"><label><input type="radio" name="q34" value="Some members regularly sell elsewhere"> Some members regularly sell elsewhere</label></div>
+                <div class="option"><label><input type="radio" name="q34" value="Many members sell to multiple buyers"> Many members sell to multiple buyers</label></div>
+                <div class="option"><label><input type="radio" name="q34" value="Most members sell to whoever offers best price"> Most members sell to whoever offers best price</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q35. Why do your members sell to other buyers? (Select main reason)</div>
+                <div class="option"><label><input type="radio" name="q35" value="They do not sell to other buyers" required> They do not sell to other buyers</label></div>
+                <div class="option"><label><input type="radio" name="q35" value="Other buyers are closer to their farm"> Other buyers are closer to their farm</label></div>
+                <div class="option"><label><input type="radio" name="q35" value="Other buyers pay faster"> Other buyers pay faster</label></div>
+                <div class="option"><label><input type="radio" name="q35" value="Other buyers pay more money"> Other buyers pay more money</label></div>
+                <div class="option"><label><input type="radio" name="q35" value="They do not trust our buyers' scales or payment"> They do not trust our buyers' scales or payment</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q36. Do your members know if they are certified (Fairtrade, RSPO, Organic, etc.)?</div>
+                <div class="option"><label><input type="radio" name="q36" value="Yes, all members know their certification status" required> Yes, all members know their certification status</label></div>
+                <div class="option"><label><input type="radio" name="q36" value="Most members know"> Most members know</label></div>
+                <div class="option"><label><input type="radio" name="q36" value="Some members know"> Some members know</label></div>
+                <div class="option"><label><input type="radio" name="q36" value="Very few members know"> Very few members know</label></div>
+                <div class="option"><label><input type="radio" name="q36" value="Members do not know if they are certified"> Members do not know if they are certified</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q37. Can your members prove to a new buyer that they are certified or that their farm is a certain size or that they produce good quality?</div>
+                <div class="option"><label><input type="radio" name="q37" value="Yes, members have ID cards or papers showing all this" required> Yes, members have ID cards or papers showing all this</label></div>
+                <div class="option"><label><input type="radio" name="q37" value="Members have some papers"> Members have some papers</label></div>
+                <div class="option"><label><input type="radio" name="q37" value="Members can get papers from cooperative if needed"> Members can get papers from cooperative if needed</label></div>
+                <div class="option"><label><input type="radio" name="q37" value="Members would have difficulty proving this"> Members would have difficulty proving this</label></div>
+                <div class="option"><label><input type="radio" name="q37" value="Members cannot prove this to new buyers"> Members cannot prove this to new buyers</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q38. Do buyers know which of your members are your best producers (highest quality, most reliable, best yield)?</div>
+                <div class="option"><label><input type="radio" name="q38" value="Yes, buyers track individual member performance" required> Yes, buyers track individual member performance</label></div>
+                <div class="option"><label><input type="radio" name="q38" value="Buyers know some top members"> Buyers know some top members</label></div>
+                <div class="option"><label><input type="radio" name="q38" value="Buyers know the cooperative overall, not individual members"> Buyers know the cooperative overall, not individual members</label></div>
+                <div class="option"><label><input type="radio" name="q38" value="Buyers do not know individual members"> Buyers do not know individual members</label></div>
+                <div class="option"><label><input type="radio" name="q38" value="All members get same treatment regardless of performance"> All members get same treatment regardless of performance</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q39. Your best members (highest quality, most reliable) - do they get any benefits compared to other members?</div>
+                <div class="option"><label><input type="radio" name="q39" value="Yes, they get better prices or priority services" required> Yes, they get better prices or priority services</label></div>
+                <div class="option"><label><input type="radio" name="q39" value="They get some recognition"> They get some recognition</label></div>
+                <div class="option"><label><input type="radio" name="q39" value="Everyone knows they are good but no special benefits"> Everyone knows they are good but no special benefits</label></div>
+                <div class="option"><label><input type="radio" name="q39" value="No difference in treatment"> No difference in treatment</label></div>
+                <div class="option"><label><input type="radio" name="q39" value="We do not identify who the best members are"> We do not identify who the best members are</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q40. In past year, how many of your members wanted to sell to a new buyer but could not prove their farm size, certification, or quality history?</div>
+                <div class="option"><label><input type="radio" name="q40" value="None, members can prove everything" required> None, members can prove everything</label></div>
+                <div class="option"><label><input type="radio" name="q40" value="1 to 5 members"> 1 to 5 members</label></div>
+                <div class="option"><label><input type="radio" name="q40" value="6 to 15 members"> 6 to 15 members</label></div>
+                <div class="option"><label><input type="radio" name="q40" value="16 to 30 members"> 16 to 30 members</label></div>
+                <div class="option"><label><input type="radio" name="q40" value="More than 30 members, or this is common problem"> More than 30 members, or this is common problem</label></div>
+            </div>
+
+            <h2>Section 8: Operational Efficiency & Advanced Features</h2>
+
+            <div class="question">
+                <div class="question-text">Q41. Can you show potential new buyers that your cooperative is well-organized with digital records and GPS-mapped farms?</div>
+                <div class="option"><label><input type="radio" name="q41" value="Yes, we can show them our digital system immediately" required> Yes, we can show them our digital system immediately</label></div>
+                <div class="option"><label><input type="radio" name="q41" value="Yes, we have some digital materials to show"> Yes, we have some digital materials to show</label></div>
+                <div class="option"><label><input type="radio" name="q41" value="We have some papers we can organize if given time"> We have some papers we can organize if given time</label></div>
+                <div class="option"><label><input type="radio" name="q41" value="We would struggle to demonstrate organization"> We would struggle to demonstrate organization</label></div>
+                <div class="option"><label><input type="radio" name="q41" value="No, we do not have materials to show buyers"> No, we do not have materials to show buyers</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q42. How long does it take your extension officers to complete paperwork after visiting farms?</div>
+                <div class="option"><label><input type="radio" name="q42" value="No paperwork needed, they enter data on tablet immediately" required> No paperwork needed, they enter data on tablet immediately</label></div>
+                <div class="option"><label><input type="radio" name="q42" value="Less than 30 minutes per visit"> Less than 30 minutes per visit</label></div>
+                <div class="option"><label><input type="radio" name="q42" value="30 minutes to 1 hour per visit"> 30 minutes to 1 hour per visit</label></div>
+                <div class="option"><label><input type="radio" name="q42" value="1 to 3 hours per visit"> 1 to 3 hours per visit</label></div>
+                <div class="option"><label><input type="radio" name="q42" value="More than 3 hours, or paperwork often does not get completed"> More than 3 hours, or paperwork often does not get completed</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q43. When members are at risk of losing certification (farm expansion into forest, child labor issues, etc.), how quickly do you find out?</div>
+                <div class="option"><label><input type="radio" name="q43" value="We get automatic alerts immediately" required> We get automatic alerts immediately</label></div>
+                <div class="option"><label><input type="radio" name="q43" value="We find out within a few weeks"> We find out within a few weeks</label></div>
+                <div class="option"><label><input type="radio" name="q43" value="We find out during our annual checks"> We find out during our annual checks</label></div>
+                <div class="option"><label><input type="radio" name="q43" value="We only find out when auditor discovers during audit"> We only find out when auditor discovers during audit</label></div>
+                <div class="option"><label><input type="radio" name="q43" value="We usually do not find out"> We usually do not find out</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q44. Do your members receive weather alerts, price information, or market updates?</div>
+                <div class="option"><label><input type="radio" name="q44" value="Yes, they receive regular SMS or phone alerts" required> Yes, they receive regular SMS or phone alerts</label></div>
+                <div class="option"><label><input type="radio" name="q44" value="Yes, they receive some information occasionally"> Yes, they receive some information occasionally</label></div>
+                <div class="option"><label><input type="radio" name="q44" value="They can ask for information if they want"> They can ask for information if they want</label></div>
+                <div class="option"><label><input type="radio" name="q44" value="No system for this"> No system for this</label></div>
+                <div class="option"><label><input type="radio" name="q44" value="Members have no access to this information"> Members have no access to this information</label></div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Q45. Do high-performing members get priority services (faster pickup, better inputs, first access to new programs)?</div>
+                <div class="option"><label><input type="radio" name="q45" value="Yes, we have clear priority system for top performers" required> Yes, we have clear priority system for top performers</label></div>
+                <div class="option"><label><input type="radio" name="q45" value="Yes, informally top members get better service"> Yes, informally top members get better service</label></div>
+                <div class="option"><label><input type="radio" name="q45" value="Some recognition but no real benefits"> Some recognition but no real benefits</label></div>
+                <div class="option"><label><input type="radio" name="q45" value="All members treated exactly the same"> All members treated exactly the same</label></div>
+                <div class="option"><label><input type="radio" name="q45" value="We do not identify high performers"> We do not identify high performers</label></div>
+            </div>
+
+            <button type="submit" class="submit-btn">Generate CSV Download</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('surveyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get all form data
+            const formData = new FormData(this);
+            const data = {};
+            
+            // Collect all answers
+            for (let i = 1; i <= 45; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                data[`Q${i}`] = selected ? selected.value : '';
+            }
+            
+            // Create CSV content
+            let csv = 'Question,Answer\n';
+            for (let i = 1; i <= 45; i++) {
+                const answer = data[`Q${i}`] || 'Not answered';
+                csv += `Q${i},"${answer.replace(/"/g, '""')}"\n`;
+            }
+            
+            // Add timestamp
+            csv += `\nCompleted,${new Date().toISOString()}\n`;
+            
+            // Create download
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `TraceCycle_Cooperative_Survey_${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            // Show success message
+            alert('CSV file downloaded! Please email it to us.');
+        });
+    </script>
+</body>
+</html>
+
