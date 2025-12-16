@@ -1241,6 +1241,16 @@
 
         function renderMembers() {
             const membersGrid = document.getElementById('membersGrid');
+            if (!membersGrid) {
+                console.error('membersGrid element not found');
+                return;
+            }
+            
+            if (!members || members.length === 0) {
+                membersGrid.innerHTML = '<div style="text-align: center; padding: 50px; color: #999;">No members found</div>';
+                return;
+            }
+            
             membersGrid.innerHTML = members.map(member => `
                 <div class="member-card">
                     <div class="member-header">
@@ -1601,14 +1611,17 @@
         // Make functions globally available
         window.showMemberDetails = showMemberDetails;
         window.addMember = addMember;
-        window.removeMember = removeMember;
         window.removeMemberById = removeMemberById;
         window.handleInsightAction = handleInsightAction;
         window.dismissInsight = dismissInsight;
         window.selectQuickOption = selectQuickOption;
 
         // Initialize on load
-        init();
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
     </script>
 </body>
 </html>
