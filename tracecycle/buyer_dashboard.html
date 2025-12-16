@@ -748,6 +748,446 @@
             transform: translateY(0);
         }
 
+        /* Map Styles */
+        .toggle-switch.active {
+            background: #ff6b35 !important;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
+            transition: transform 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(20px);
+        }
+
+        .coop-marker {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid #ff6b35;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: all 0.2s;
+        }
+
+        .coop-marker:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+        }
+
+        .crop-label {
+            position: absolute;
+            padding: 6px 10px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid #ff6b35;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #ff6b35;
+            pointer-events: auto;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        .yield-info {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid #2196f3;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 11px;
+            pointer-events: auto;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            min-width: 120px;
+        }
+
+        .yield-info-title {
+            font-weight: 600;
+            color: #2196f3;
+            margin-bottom: 4px;
+        }
+
+        .yield-info-value {
+            font-size: 10px;
+            color: #666;
+        }
+
+        .factory-marker {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: #2c3e50;
+            border: 4px solid white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .quality-price-info {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 11px;
+            pointer-events: auto;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            min-width: 140px;
+        }
+
+        .quality-price-title {
+            font-weight: 600;
+            color: #4caf50;
+            margin-bottom: 6px;
+        }
+
+        .quality-price-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+            font-size: 10px;
+        }
+
+        .quality-price-label {
+            color: #666;
+        }
+
+        .quality-price-value {
+            font-weight: 600;
+        }
+
+        .quality-price-value.high {
+            color: #4caf50;
+        }
+
+        .quality-price-value.medium {
+            color: #ff9800;
+        }
+
+        .quality-price-value.low {
+            color: #f44336;
+        }
+
+        .cert-badge-map {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            pointer-events: auto;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .cert-badge-map.eudr {
+            border-color: #2196f3;
+        }
+
+        .cert-badge-map.rainforest {
+            border-color: #4caf50;
+        }
+
+        .cert-badge-map.rspo {
+            border-color: #9c27b0;
+        }
+
+        .cert-badge-map.fairtrade {
+            border-color: #ff9800;
+        }
+
+        .quality-rating-badge {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            pointer-events: auto;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .quality-rating-badge.high {
+            border-color: #4caf50;
+            color: #4caf50;
+        }
+
+        .quality-rating-badge.medium {
+            border-color: #ff9800;
+            color: #ff9800;
+        }
+
+        .quality-rating-badge.low {
+            border-color: #f44336;
+            color: #f44336;
+        }
+
+        /* Supply Chain Insights Styles */
+        .supply-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .supply-alerts {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .supply-alert {
+            background: #fff3cd;
+            border-left: 4px solid #ff9800;
+            border-radius: 8px;
+            padding: 15px 20px;
+            display: flex;
+            align-items: start;
+            gap: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .supply-alert.urgent {
+            background: #ffebee;
+            border-left-color: #f44336;
+        }
+
+        .supply-alert-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .supply-alert-content {
+            flex: 1;
+        }
+
+        .supply-alert-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #d84315;
+        }
+
+        .supply-alert.urgent .supply-alert-title {
+            color: #c62828;
+        }
+
+        .supply-alert-message {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .supply-alert-details {
+            font-size: 12px;
+            color: #999;
+            margin-top: 8px;
+        }
+
+        .supply-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .supply-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #ff6b35;
+        }
+
+        .supply-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .supply-card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .supply-card-status {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .supply-card-status.in-transit {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .supply-card-status.delivered {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .supply-card-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .supply-info-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+        }
+
+        .supply-info-label {
+            color: #666;
+        }
+
+        .supply-info-value {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .supply-info-value.highlight {
+            color: #ff6b35;
+            font-size: 16px;
+        }
+
+        .purchase-sales-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .purchase-sales-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid #e0e0e0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .purchase-sales-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .purchase-sales-card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .purchase-sales-card-crop {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .purchase-sales-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .purchase-sales-metric {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .purchase-sales-metric-label {
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .purchase-sales-metric-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .purchase-sales-metric-value.positive {
+            color: #4caf50;
+        }
+
+        .purchase-sales-metric-value.negative {
+            color: #f44336;
+        }
+
+        .purchase-sales-return {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            border: 2px solid #4caf50;
+        }
+
+        .purchase-sales-return-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .purchase-sales-return-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #2e7d32;
+        }
+
+        .purchase-sales-return-subtitle {
+            font-size: 11px;
+            color: #666;
+            margin-top: 5px;
+        }
+
         /* Payment Modal */
         .payment-modal {
             display: none;
@@ -840,6 +1280,14 @@
                     <span class="module-icon">🔒</span>
                     <span>Product Securement</span>
                 </div>
+                <div class="module-nav-item" data-module="map">
+                    <span class="module-icon">🗺️</span>
+                    <span>View Map</span>
+                </div>
+                <div class="module-nav-item" data-module="supplychain">
+                    <span class="module-icon">📦</span>
+                    <span>Supply Chain Insights</span>
+                </div>
             </div>
         </div>
 
@@ -873,6 +1321,20 @@
                             <div class="module-card-title">Product Securement</div>
                             <div class="module-card-desc">
                                 Browse cooperatives, view available products, certifications, and secure supply with advance payments.
+                            </div>
+                        </div>
+                        <div class="module-card" onclick="openModule('map')">
+                            <div class="module-card-icon">🗺️</div>
+                            <div class="module-card-title">View Map</div>
+                            <div class="module-card-desc">
+                                Interactive map showing cooperative locations, crop types, yield insights, days until ready to sell, and factory locations.
+                            </div>
+                        </div>
+                        <div class="module-card" onclick="openModule('supplychain')">
+                            <div class="module-card-icon">📦</div>
+                            <div class="module-card-title">Supply Chain Insights</div>
+                            <div class="module-card-desc">
+                                Track product in transit, purchase prices, selling prices, predicted returns, and shipment discrepancies.
                             </div>
                         </div>
                     </div>
@@ -921,6 +1383,109 @@
                 <div class="module-view" id="secureView">
                     <div class="cooperatives-grid" id="cooperativesGrid">
                         <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Supply Chain Insights Module -->
+                <div class="module-view" id="supplychainView">
+                    <div class="section-title">Supply Chain Insights</div>
+                    
+                    <!-- Alerts Section -->
+                    <div class="supply-alerts" id="supplyAlerts" style="margin-bottom: 30px;">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                    
+                    <!-- In Transit Section -->
+                    <div class="supply-section">
+                        <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 15px; color: #2c3e50;">In Transit to Factory</h3>
+                        <div class="supply-grid" id="inTransitToFactory">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <!-- In Transit Out Section -->
+                    <div class="supply-section" style="margin-top: 30px;">
+                        <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 15px; color: #2c3e50;">In Transit Out of Factory</h3>
+                        <div class="supply-grid" id="inTransitOutFactory">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <!-- Purchase & Sales Section -->
+                    <div class="supply-section" style="margin-top: 30px;">
+                        <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 15px; color: #2c3e50;">Current Purchases & Sales</h3>
+                        <div class="purchase-sales-grid" id="purchaseSalesGrid">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Map Module -->
+                <div class="module-view" id="mapView">
+                    <div class="section-title">Cooperative & Factory Map</div>
+                    <div class="map-container" style="position: relative; width: 100%; height: 600px; border-radius: 12px; overflow: hidden; margin: 20px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                        <div class="satellite-view" id="buyerSatelliteView" style="width: 100%; height: 100%; background: linear-gradient(135deg, #8b7355 0%, #6b5d4f 50%, #4a5d4a 100%); position: relative; background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px), repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px), radial-gradient(circle at 20% 30%, rgba(139, 195, 74, 0.3) 0%, transparent 50%), radial-gradient(circle at 60% 50%, rgba(76, 175, 80, 0.4) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(139, 195, 74, 0.3) 0%, transparent 50%); background-size: 100% 100%, 100% 100%, 200px 200px, 300px 300px, 250px 250px;">
+                            <!-- Crop overlay -->
+                            <div class="map-overlay" id="buyerCropOverlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: none;"></div>
+                            
+                            <!-- Yield insights overlay -->
+                            <div class="map-overlay" id="buyerYieldOverlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: none;"></div>
+                            
+                            <!-- Factory location overlay -->
+                            <div class="map-overlay" id="buyerFactoryOverlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: none;"></div>
+                            
+                            <!-- Quality/Price overlay -->
+                            <div class="map-overlay" id="buyerQualityPriceOverlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: none;"></div>
+                            
+                            <!-- Certifications overlay -->
+                            <div class="map-overlay" id="buyerCertOverlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: none;"></div>
+                        </div>
+                        
+                        <!-- Map Legend -->
+                        <div class="map-legend" id="buyerMapLegend" style="position: absolute; bottom: 20px; left: 20px; background: white; border-radius: 8px; padding: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 100; max-width: 250px; display: none;">
+                            <div class="legend-title" style="font-size: 13px; font-weight: 600; margin-bottom: 10px; color: #333;">Legend</div>
+                            <div id="buyerLegendContent"></div>
+                        </div>
+                        
+                        <!-- Map Controls -->
+                        <div class="map-controls" style="position: absolute; top: 20px; right: 20px; background: white; border-radius: 8px; padding: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 100; min-width: 200px;">
+                            <div style="font-size: 14px; font-weight: 600; margin-bottom: 12px; color: #333;">Map Overlays</div>
+                            <div class="toggle-control" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f0f0f0;">
+                                <div style="font-size: 13px; color: #333; display: flex; align-items: center; gap: 8px;">
+                                    <span>🌾</span>
+                                    <span>Crop Types</span>
+                                </div>
+                                <div class="toggle-switch" id="buyerToggleCrops" onclick="toggleBuyerOverlay('crops')" style="position: relative; width: 44px; height: 24px; background: #ccc; border-radius: 12px; cursor: pointer; transition: background 0.3s;"></div>
+                            </div>
+                            <div class="toggle-control" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f0f0f0;">
+                                <div style="font-size: 13px; color: #333; display: flex; align-items: center; gap: 8px;">
+                                    <span>📊</span>
+                                    <span>Yield & Days Ready</span>
+                                </div>
+                                <div class="toggle-switch" id="buyerToggleYield" onclick="toggleBuyerOverlay('yield')" style="position: relative; width: 44px; height: 24px; background: #ccc; border-radius: 12px; cursor: pointer; transition: background 0.3s;"></div>
+                            </div>
+                            <div class="toggle-control" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f0f0f0;">
+                                <div style="font-size: 13px; color: #333; display: flex; align-items: center; gap: 8px;">
+                                    <span>⭐</span>
+                                    <span>Quality/Price</span>
+                                </div>
+                                <div class="toggle-switch" id="buyerToggleQualityPrice" onclick="toggleBuyerOverlay('qualityPrice')" style="position: relative; width: 44px; height: 24px; background: #ccc; border-radius: 12px; cursor: pointer; transition: background 0.3s;"></div>
+                            </div>
+                            <div class="toggle-control" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f0f0f0;">
+                                <div style="font-size: 13px; color: #333; display: flex; align-items: center; gap: 8px;">
+                                    <span>✅</span>
+                                    <span>Certifications</span>
+                                </div>
+                                <div class="toggle-switch" id="buyerToggleCert" onclick="toggleBuyerOverlay('cert')" style="position: relative; width: 44px; height: 24px; background: #ccc; border-radius: 12px; cursor: pointer; transition: background 0.3s;"></div>
+                            </div>
+                            <div class="toggle-control" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0;">
+                                <div style="font-size: 13px; color: #333; display: flex; align-items: center; gap: 8px;">
+                                    <span>🏭</span>
+                                    <span>Factory Location</span>
+                                </div>
+                                <div class="toggle-switch" id="buyerToggleFactory" onclick="toggleBuyerOverlay('factory')" style="position: relative; width: 44px; height: 24px; background: #ccc; border-radius: 12px; cursor: pointer; transition: background 0.3s;"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1248,7 +1813,9 @@
                 home: 'Dashboard',
                 harvest: 'Harvest Prediction',
                 roi: 'ROI Dashboard',
-                secure: 'Product Securement'
+                secure: 'Product Securement',
+                map: 'View Map',
+                supplychain: 'Supply Chain Insights'
             };
             topBar.innerHTML = `<div class="module-title">${titles[module]}</div>`;
 
@@ -1265,7 +1832,599 @@
                     renderROIPrograms();
                 } else if (module === 'secure') {
                     renderCooperativeCards();
+                } else if (module === 'map') {
+                    renderBuyerMap();
+                } else if (module === 'supplychain') {
+                    renderSupplyChainInsights();
                 }
+            }
+        }
+
+        // Supply Chain Data
+        const supplyChainData = {
+            inTransitToFactory: [
+                {
+                    id: 1,
+                    cooperative: 'Ghana Palm Cooperative',
+                    crop: 'Palm Oil',
+                    quantity: 150,
+                    unit: 'tons',
+                    purchasePrice: 2.50,
+                    expectedArrival: '2024-02-05',
+                    status: 'in-transit',
+                    daysRemaining: 3
+                },
+                {
+                    id: 2,
+                    cooperative: 'Ashanti Cocoa Coop',
+                    crop: 'Cocoa',
+                    quantity: 85,
+                    unit: 'tons',
+                    purchasePrice: 3.20,
+                    expectedArrival: '2024-02-08',
+                    status: 'in-transit',
+                    daysRemaining: 6
+                },
+                {
+                    id: 3,
+                    cooperative: 'Volta Cashew Collective',
+                    crop: 'Cashew',
+                    quantity: 45,
+                    unit: 'tons',
+                    purchasePrice: 4.10,
+                    expectedArrival: '2024-02-03',
+                    status: 'in-transit',
+                    daysRemaining: 1
+                }
+            ],
+            inTransitOutFactory: [
+                {
+                    id: 1,
+                    destination: 'European Distribution Center',
+                    crop: 'Processed Palm Oil',
+                    quantity: 120,
+                    unit: 'tons',
+                    sellingPrice: 3.80,
+                    expectedDelivery: '2024-02-12',
+                    status: 'in-transit',
+                    daysRemaining: 10
+                },
+                {
+                    id: 2,
+                    destination: 'US Market',
+                    crop: 'Processed Cocoa',
+                    quantity: 75,
+                    unit: 'tons',
+                    sellingPrice: 5.20,
+                    expectedDelivery: '2024-02-20',
+                    status: 'in-transit',
+                    daysRemaining: 18
+                }
+            ],
+            currentPurchases: [
+                {
+                    id: 1,
+                    cooperative: 'Ghana Palm Cooperative',
+                    crop: 'Palm Oil',
+                    quantity: 280,
+                    unit: 'tons',
+                    purchasePrice: 2.50,
+                    currentSellingPrice: 3.80,
+                    processingCost: 0.30
+                },
+                {
+                    id: 2,
+                    cooperative: 'Eastern Rubber Group',
+                    crop: 'Rubber',
+                    quantity: 95,
+                    unit: 'tons',
+                    purchasePrice: 2.80,
+                    currentSellingPrice: 4.20,
+                    processingCost: 0.25
+                },
+                {
+                    id: 3,
+                    cooperative: 'Central Mango Coop',
+                    crop: 'Mango',
+                    quantity: 65,
+                    unit: 'tons',
+                    purchasePrice: 1.90,
+                    currentSellingPrice: 2.80,
+                    processingCost: 0.20
+                }
+            ],
+            alerts: [
+                {
+                    id: 1,
+                    type: 'urgent',
+                    cooperative: 'Ghana Palm Cooperative',
+                    purchaseQuantity: 100,
+                    receivedQuantity: 85,
+                    unit: 'tons',
+                    discrepancy: 15,
+                    date: '2024-01-28',
+                    status: 'investigating'
+                },
+                {
+                    id: 2,
+                    type: 'warning',
+                    cooperative: 'Volta Cashew Collective',
+                    purchaseQuantity: 50,
+                    receivedQuantity: 47,
+                    unit: 'tons',
+                    discrepancy: 3,
+                    date: '2024-01-25',
+                    status: 'resolved'
+                }
+            ]
+        };
+
+        function renderSupplyChainInsights() {
+            renderSupplyAlerts();
+            renderInTransitToFactory();
+            renderInTransitOutFactory();
+            renderPurchaseSales();
+        }
+
+        function renderSupplyAlerts() {
+            const container = document.getElementById('supplyAlerts');
+            if (supplyChainData.alerts.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 20px; color: #999;">No alerts at this time</div>';
+                return;
+            }
+
+            container.innerHTML = supplyChainData.alerts.map(alert => {
+                const isUrgent = alert.type === 'urgent';
+                const discrepancyPercent = ((alert.discrepancy / alert.purchaseQuantity) * 100).toFixed(1);
+                
+                return `
+                    <div class="supply-alert ${isUrgent ? 'urgent' : ''}">
+                        <div class="supply-alert-icon">${isUrgent ? '⚠️' : '🔔'}</div>
+                        <div class="supply-alert-content">
+                            <div class="supply-alert-title">Shipment Discrepancy Detected</div>
+                            <div class="supply-alert-message">
+                                Shipment from <strong>${alert.cooperative}</strong> was listed at purchase at <strong>${alert.purchaseQuantity} ${alert.unit}</strong> but at receiving was <strong>${alert.receivedQuantity} ${alert.unit}</strong>. 
+                                Missing: <strong>${alert.discrepancy} ${alert.unit} (${discrepancyPercent}%)</strong>
+                            </div>
+                            <div class="supply-alert-details">
+                                Date: ${alert.date} | Status: ${alert.status.charAt(0).toUpperCase() + alert.status.slice(1)}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderInTransitToFactory() {
+            const container = document.getElementById('inTransitToFactory');
+            container.innerHTML = supplyChainData.inTransitToFactory.map(shipment => `
+                <div class="supply-card">
+                    <div class="supply-card-header">
+                        <div>
+                            <div class="supply-card-title">${shipment.cooperative}</div>
+                            <div style="font-size: 12px; color: #666; margin-top: 3px;">${shipment.crop}</div>
+                        </div>
+                        <span class="supply-card-status in-transit">In Transit</span>
+                    </div>
+                    <div class="supply-card-info">
+                        <div class="supply-info-row">
+                            <span class="supply-info-label">Quantity:</span>
+                            <span class="supply-info-value">${shipment.quantity} ${shipment.unit}</span>
+                        </div>
+                        <div class="supply-info-row">
+                            <span class="supply-info-label">Purchase Price:</span>
+                            <span class="supply-info-value">$${shipment.purchasePrice.toFixed(2)}/kg</span>
+                        </div>
+                        <div class="supply-info-row">
+                            <span class="supply-info-label">Expected Arrival:</span>
+                            <span class="supply-info-value">${shipment.expectedArrival}</span>
+                        </div>
+                        <div class="supply-info-row">
+                            <span class="supply-info-label">Days Remaining:</span>
+                            <span class="supply-info-value">${shipment.daysRemaining} days</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderInTransitOutFactory() {
+            const container = document.getElementById('inTransitOutFactory');
+            container.innerHTML = supplyChainData.inTransitOutFactory.map(shipment => `
+                <div class="supply-card">
+                    <div class="supply-card-header">
+                        <div>
+                            <div class="supply-card-title">${shipment.destination}</div>
+                            <div style="font-size: 12px; color: #666; margin-top: 3px;">${shipment.crop}</div>
+                        </div>
+                        <span class="supply-card-status in-transit">In Transit</span>
+                    </div>
+                    <div class="supply-card-info">
+                        <div class="supply-info-row">
+                            <span class="supply-info-label">Quantity:</span>
+                            <span class="supply-info-value">${shipment.quantity} ${shipment.unit}</span>
+                        </div>
+                        <div class="supply-info-row">
+                            <span class="supply-info-label">Selling Price:</span>
+                            <span class="supply-info-value highlight">$${shipment.sellingPrice.toFixed(2)}/kg</span>
+                        </div>
+                        <div class="supply-info-row">
+                            <span class="supply-info-label">Expected Delivery:</span>
+                            <span class="supply-info-value">${shipment.expectedDelivery}</span>
+                        </div>
+                        <div class="supply-info-row">
+                            <span class="supply-info-label">Days Remaining:</span>
+                            <span class="supply-info-value">${shipment.daysRemaining} days</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderPurchaseSales() {
+            const container = document.getElementById('purchaseSalesGrid');
+            container.innerHTML = supplyChainData.currentPurchases.map(purchase => {
+                // Convert tons to kg (1 ton = 1000 kg)
+                const quantityKg = purchase.quantity * 1000;
+                
+                // Calculate values
+                const totalPurchaseValue = quantityKg * purchase.purchasePrice;
+                const totalProcessingCost = quantityKg * purchase.processingCost;
+                const predictedReturn = quantityKg * purchase.currentSellingPrice;
+                const profit = predictedReturn - totalPurchaseValue - totalProcessingCost;
+                const profitMargin = ((profit / totalPurchaseValue) * 100);
+                
+                return `
+                    <div class="purchase-sales-card">
+                        <div class="purchase-sales-card-header">
+                            <div>
+                                <div class="purchase-sales-card-title">${purchase.cooperative}</div>
+                                <div class="purchase-sales-card-crop">${purchase.crop}</div>
+                            </div>
+                        </div>
+                        <div class="purchase-sales-metrics">
+                            <div class="purchase-sales-metric">
+                                <div class="purchase-sales-metric-label">Quantity Purchased</div>
+                                <div class="purchase-sales-metric-value">${purchase.quantity} ${purchase.unit}</div>
+                            </div>
+                            <div class="purchase-sales-metric">
+                                <div class="purchase-sales-metric-label">Purchase Price</div>
+                                <div class="purchase-sales-metric-value">$${purchase.purchasePrice.toFixed(2)}/kg</div>
+                            </div>
+                            <div class="purchase-sales-metric">
+                                <div class="purchase-sales-metric-label">Current Selling Price</div>
+                                <div class="purchase-sales-metric-value positive">$${purchase.currentSellingPrice.toFixed(2)}/kg</div>
+                            </div>
+                            <div class="purchase-sales-metric">
+                                <div class="purchase-sales-metric-label">Total Purchase Value</div>
+                                <div class="purchase-sales-metric-value">$${(totalPurchaseValue / 1000).toFixed(1)}K</div>
+                            </div>
+                        </div>
+                        <div class="purchase-sales-return">
+                            <div class="purchase-sales-return-label">Predicted Return</div>
+                            <div class="purchase-sales-return-value">$${(predictedReturn / 1000).toFixed(1)}K</div>
+                            <div class="purchase-sales-return-subtitle">Profit Margin: ${profitMargin.toFixed(1)}%</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Buyer Map Data
+        const buyerMapData = [
+            {
+                id: 1,
+                name: 'Ghana Palm Cooperative',
+                x: 15,
+                y: 20,
+                crop: 'Palm Oil',
+                yield: '12.5T',
+                daysUntilReady: 15,
+                location: 'Western Region',
+                qualityScore: 9.2,
+                priceScore: 7.8,
+                certifications: ['EUDR', 'Rainforest Alliance', 'RSPO']
+            },
+            {
+                id: 2,
+                name: 'Ashanti Cocoa Coop',
+                x: 45,
+                y: 30,
+                crop: 'Cocoa',
+                yield: '8.2T',
+                daysUntilReady: 22,
+                location: 'Ashanti Region',
+                qualityScore: 8.5,
+                priceScore: 8.2,
+                certifications: ['Fairtrade', 'Rainforest Alliance']
+            },
+            {
+                id: 3,
+                name: 'Volta Cashew Collective',
+                x: 25,
+                y: 55,
+                crop: 'Cashew',
+                yield: '5.8T',
+                daysUntilReady: 8,
+                location: 'Volta Region',
+                qualityScore: 7.3,
+                priceScore: 9.1,
+                certifications: ['EUDR']
+            },
+            {
+                id: 4,
+                name: 'Eastern Rubber Group',
+                x: 60,
+                y: 45,
+                crop: 'Rubber',
+                yield: '9.4T',
+                daysUntilReady: 30,
+                location: 'Eastern Region',
+                qualityScore: 8.8,
+                priceScore: 7.5,
+                certifications: ['RSPO', 'EUDR']
+            },
+            {
+                id: 5,
+                name: 'Central Mango Coop',
+                x: 35,
+                y: 70,
+                crop: 'Mango',
+                yield: '6.3T',
+                daysUntilReady: 12,
+                location: 'Central Region',
+                qualityScore: 6.9,
+                priceScore: 8.5,
+                certifications: ['Fairtrade']
+            }
+        ];
+
+        const factoryLocation = {
+            x: 50,
+            y: 50,
+            name: 'Main Processing Factory'
+        };
+
+        function renderBuyerMap() {
+            // Map is already rendered, just ensure overlays are reset
+            document.getElementById('buyerCropOverlay').style.display = 'none';
+            document.getElementById('buyerYieldOverlay').style.display = 'none';
+            document.getElementById('buyerFactoryOverlay').style.display = 'none';
+            document.getElementById('buyerQualityPriceOverlay').style.display = 'none';
+            document.getElementById('buyerCertOverlay').style.display = 'none';
+            document.getElementById('buyerToggleCrops').classList.remove('active');
+            document.getElementById('buyerToggleYield').classList.remove('active');
+            document.getElementById('buyerToggleFactory').classList.remove('active');
+            document.getElementById('buyerToggleQualityPrice').classList.remove('active');
+            document.getElementById('buyerToggleCert').classList.remove('active');
+            // Hide legend initially
+            updateBuyerLegend();
+        }
+
+        function toggleBuyerOverlay(type) {
+            const toggleMap = {
+                'crops': { toggleId: 'buyerToggleCrops', overlayId: 'buyerCropOverlay' },
+                'yield': { toggleId: 'buyerToggleYield', overlayId: 'buyerYieldOverlay' },
+                'qualityPrice': { toggleId: 'buyerToggleQualityPrice', overlayId: 'buyerQualityPriceOverlay' },
+                'cert': { toggleId: 'buyerToggleCert', overlayId: 'buyerCertOverlay' },
+                'factory': { toggleId: 'buyerToggleFactory', overlayId: 'buyerFactoryOverlay' }
+            };
+            
+            const config = toggleMap[type];
+            if (!config) return;
+            
+            const toggle = document.getElementById(config.toggleId);
+            const overlay = document.getElementById(config.overlayId);
+            
+            if (!toggle || !overlay) return;
+            
+            const isActive = toggle.classList.contains('active');
+            
+            if (isActive) {
+                toggle.classList.remove('active');
+                overlay.style.display = 'none';
+            } else {
+                toggle.classList.add('active');
+                overlay.style.display = 'block';
+                renderBuyerOverlay(type, overlay);
+            }
+            
+            // Update legend
+            updateBuyerLegend();
+        }
+
+        function updateBuyerLegend() {
+            const legend = document.getElementById('buyerMapLegend');
+            const legendContent = document.getElementById('buyerLegendContent');
+            const toggles = {
+                crops: document.getElementById('buyerToggleCrops'),
+                yield: document.getElementById('buyerToggleYield'),
+                qualityPrice: document.getElementById('buyerToggleQualityPrice'),
+                cert: document.getElementById('buyerToggleCert'),
+                factory: document.getElementById('buyerToggleFactory')
+            };
+            
+            const activeToggles = Object.entries(toggles).filter(([key, toggle]) => toggle && toggle.classList.contains('active'));
+            
+            if (activeToggles.length === 0) {
+                legend.style.display = 'none';
+                return;
+            }
+            
+            legend.style.display = 'block';
+            legendContent.innerHTML = '';
+            
+            activeToggles.forEach(([type]) => {
+                if (type === 'crops') {
+                    legendContent.innerHTML += `
+                        <div class="legend-item" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 12px; color: #666;">
+                            <div class="legend-color" style="width: 16px; height: 16px; border-radius: 3px; border: 2px solid #ff6b35; display: flex; align-items: center; justify-content: center; font-size: 10px;">🏢</div>
+                            <span>Cooperative Location</span>
+                        </div>
+                        <div class="legend-item" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 12px; color: #666;">
+                            <div class="legend-color" style="width: 16px; height: 16px; border-radius: 3px; border: 2px solid #ff6b35; color: #ff6b35; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600;">P</div>
+                            <span>Palm Oil</span>
+                        </div>
+                        <div class="legend-item" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 12px; color: #666;">
+                            <div class="legend-color" style="width: 16px; height: 16px; border-radius: 3px; border: 2px solid #8b6f47; color: #8b6f47; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600;">C</div>
+                            <span>Cocoa</span>
+                        </div>
+                        <div class="legend-item" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 12px; color: #666;">
+                            <div class="legend-color" style="width: 16px; height: 16px; border-radius: 3px; border: 2px solid #ff6b35; color: #ff6b35; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600;">M</div>
+                            <span>Mango</span>
+                        </div>
+                        <div class="legend-item" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 12px; color: #666;">
+                            <div class="legend-color" style="width: 16px; height: 16px; border-radius: 3px; border: 2px solid #ff6b35; color: #ff6b35; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600;">R</div>
+                            <span>Rubber</span>
+                        </div>
+                        <div class="legend-item" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 12px; color: #666;">
+                            <div class="legend-color" style="width: 16px; height: 16px; border-radius: 3px; border: 2px solid #ff6b35; color: #ff6b35; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600;">CS</div>
+                            <span>Cashew</span>
+                        </div>
+                    `;
+                } else if (type === 'yield') {
+                    legendContent.innerHTML += `
+                        <div class="legend-item" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 12px; color: #666;">
+                            <div class="legend-color" style="width: 16px; height: 16px; border-radius: 3px; border: 2px solid #2196f3; background: rgba(255, 255, 255, 0.95);"></div>
+                            <span>Yield & Days Ready Info</span>
+                        </div>
+                    `;
+                } else if (type === 'qualityPrice') {
+                    legendContent.innerHTML += `
+                        <div class="legend-item" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 12px; color: #666;">
+                            <div class="legend-color" style="width: 16px; height: 16px; border-radius: 3px; border: 2px solid #4caf50; background: rgba(255, 255, 255, 0.95);"></div>
+                            <span>Quality/Price Info</span>
+                        </div>
+                        <div class="legend-item" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 12px; color: #666;">
+                            <div class="legend-color" style="width: 16px; height: 16px; border-radius: 3px; border: 2px solid #4caf50; color: #4caf50; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600;">H</div>
+                            <span>High Score (≥8.5)</span>
+                        </div>
+                        <div class="legend-item" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 12px; color: #666;">
+                            <div class="legend-color" style="width: 16px; height: 16px; border-radius: 3px; border: 2px solid #ff9800; color: #ff9800; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600;">M</div>
+                            <span>Medium Score (7-8.4)</span>
+                        </div>
+                        <div class="legend-item" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 12px; color: #666;">
+                            <div class="legend-color" style="width: 16px; height: 16px; border-radius: 3px; border: 2px solid #f44336; color: #f44336; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600;">L</div>
+                            <span>Low Score (<7)</span>
+                        </div>
+                    `;
+                } else if (type === 'cert') {
+                    legendContent.innerHTML += `
+                        <div class="legend-item" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 12px; color: #666;">
+                            <div class="legend-color" style="width: 16px; height: 16px; border-radius: 50%; border: 2px solid #2196f3; display: flex; align-items: center; justify-content: center; font-size: 10px;">🌍</div>
+                            <span>EUDR</span>
+                        </div>
+                        <div class="legend-item" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 12px; color: #666;">
+                            <div class="legend-color" style="width: 16px; height: 16px; border-radius: 50%; border: 2px solid #4caf50; display: flex; align-items: center; justify-content: center; font-size: 10px;">🌳</div>
+                            <span>Rainforest Alliance</span>
+                        </div>
+                        <div class="legend-item" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 12px; color: #666;">
+                            <div class="legend-color" style="width: 16px; height: 16px; border-radius: 50%; border: 2px solid #9c27b0; display: flex; align-items: center; justify-content: center; font-size: 10px;">🌴</div>
+                            <span>RSPO</span>
+                        </div>
+                        <div class="legend-item" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 12px; color: #666;">
+                            <div class="legend-color" style="width: 16px; height: 16px; border-radius: 50%; border: 2px solid #ff9800; display: flex; align-items: center; justify-content: center; font-size: 10px;">🤝</div>
+                            <span>Fairtrade</span>
+                        </div>
+                    `;
+                } else if (type === 'factory') {
+                    legendContent.innerHTML += `
+                        <div class="legend-item" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 12px; color: #666;">
+                            <div class="legend-color" style="width: 16px; height: 16px; border-radius: 50%; background: #2c3e50; border: 2px solid white; display: flex; align-items: center; justify-content: center; font-size: 10px;">🏭</div>
+                            <span>Factory Location</span>
+                        </div>
+                    `;
+                }
+            });
+        }
+
+        function renderBuyerOverlay(type, container) {
+            container.innerHTML = '';
+            
+            if (type === 'crops') {
+                buyerMapData.forEach(coop => {
+                    const marker = document.createElement('div');
+                    marker.className = 'coop-marker';
+                    marker.style.left = coop.x + '%';
+                    marker.style.top = coop.y + '%';
+                    marker.textContent = '🏢';
+                    marker.title = coop.name;
+                    
+                    const label = document.createElement('div');
+                    label.className = 'crop-label';
+                    label.style.left = `calc(${coop.x}% + 60px)`;
+                    label.style.top = `calc(${coop.y}% + 10px)`;
+                    label.textContent = coop.crop;
+                    label.title = `${coop.name}: ${coop.crop}`;
+                    
+                    container.appendChild(marker);
+                    container.appendChild(label);
+                });
+            } else if (type === 'yield') {
+                buyerMapData.forEach(coop => {
+                    const info = document.createElement('div');
+                    info.className = 'yield-info';
+                    info.style.left = `calc(${coop.x}% + 60px)`;
+                    info.style.top = `calc(${coop.y}% + 10px)`;
+                    info.innerHTML = `
+                        <div class="yield-info-title">${coop.name}</div>
+                        <div class="yield-info-value">Yield: ${coop.yield}</div>
+                        <div class="yield-info-value">Ready in: ${coop.daysUntilReady} days</div>
+                    `;
+                    info.title = `${coop.name} - ${coop.location}`;
+                    container.appendChild(info);
+                });
+            } else if (type === 'qualityPrice') {
+                buyerMapData.forEach(coop => {
+                    const info = document.createElement('div');
+                    info.className = 'quality-price-info';
+                    info.style.left = `calc(${coop.x}% + 60px)`;
+                    info.style.top = `calc(${coop.y}% + 10px)`;
+                    
+                    const qualityClass = coop.qualityScore >= 8.5 ? 'high' : coop.qualityScore >= 7 ? 'medium' : 'low';
+                    const priceClass = coop.priceScore >= 8.5 ? 'high' : coop.priceScore >= 7 ? 'medium' : 'low';
+                    
+                    info.innerHTML = `
+                        <div class="quality-price-title">${coop.name}</div>
+                        <div class="quality-price-row">
+                            <span class="quality-price-label">Quality:</span>
+                            <span class="quality-price-value ${qualityClass}">${coop.qualityScore}/10</span>
+                        </div>
+                        <div class="quality-price-row">
+                            <span class="quality-price-label">Price Score:</span>
+                            <span class="quality-price-value ${priceClass}">${coop.priceScore}/10</span>
+                        </div>
+                    `;
+                    info.title = `${coop.name} - Quality: ${coop.qualityScore}/10, Price: ${coop.priceScore}/10`;
+                    container.appendChild(info);
+                });
+            } else if (type === 'cert') {
+                buyerMapData.forEach(coop => {
+                    coop.certifications.forEach((cert, index) => {
+                        const certBadge = document.createElement('div');
+                        certBadge.className = `cert-badge-map ${cert.toLowerCase().replace(/\s+/g, '')}`;
+                        certBadge.style.left = `calc(${coop.x}% + ${60 + (index * 35)}px)`;
+                        certBadge.style.top = `calc(${coop.y}% - 15px)`;
+                        
+                        const icons = {
+                            'eudr': '🌍',
+                            'rainforestalliance': '🌳',
+                            'rspo': '🌴',
+                            'fairtrade': '🤝'
+                        };
+                        certBadge.textContent = icons[cert.toLowerCase().replace(/\s+/g, '')] || '✅';
+                        certBadge.title = `${coop.name}: ${cert}`;
+                        container.appendChild(certBadge);
+                    });
+                });
+            } else if (type === 'factory') {
+                const factory = document.createElement('div');
+                factory.className = 'factory-marker';
+                factory.style.left = `calc(${factoryLocation.x}% - 30px)`;
+                factory.style.top = `calc(${factoryLocation.y}% - 30px)`;
+                factory.textContent = '🏭';
+                factory.title = factoryLocation.name;
+                container.appendChild(factory);
             }
         }
 
@@ -1694,6 +2853,7 @@
         window.showCoopPaymentModal = showCoopPaymentModal;
         window.viewCooperativeDetail = viewCooperativeDetail;
         window.selectQuickOption = selectQuickOption;
+        window.toggleBuyerOverlay = toggleBuyerOverlay;
 
         // Initialize on load
         init();

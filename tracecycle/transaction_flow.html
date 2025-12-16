@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TraceCycle - Transaction Flow</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .step-container {
+            display: none;
+            padding: 20px;
+            animation: fadeIn 0.3s;
+        }
+
+        .step-container.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: #e0e0e0;
+            margin: 20px 0;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #27ae60;
+            transition: width 0.3s;
+            border-radius: 2px;
+        }
+
+        .step-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .step-description {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .camera-viewport {
+            width: 100%;
+            height: 400px;
+            background: #000;
+            border-radius: 12px;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .camera-viewport::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.1) 75%),
+                        linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.1) 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            opacity: 0.3;
+        }
+
+        .camera-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            color: white;
+        }
+
+        .camera-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+
+        .camera-instruction {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .camera-subinstruction {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .qr-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 250px;
+            height: 250px;
+            border: 3px solid #27ae60;
+            border-radius: 12px;
+            box-shadow: 0 0 0 9999px rgba(0,0,0,0.5);
+        }
+
+        .qr-overlay::before,
+        .qr-overlay::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border: 4px solid #27ae60;
+        }
+
+        .qr-overlay::before {
+            top: -4px;
+            left: -4px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .qr-overlay::after {
+            bottom: -4px;
+            right: -4px;
+            border-left: none;
+            border-top: none;
+        }
+
+        .captured-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .farmer-info-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .farmer-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .farmer-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .farmer-details h3 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .farmer-details p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .info-item {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .cert-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .cert-badge {
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 11px;
+            font-weight: 600;
+            background: #4caf50;
+            color: white;
+        }
+
+        .transaction-form {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #27ae60;
+        }
+
+        .quality-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .quality-option {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quality-option:hover {
+            border-color: #27ae60;
+            background: #f0f9f4;
+        }
+
+        .quality-option.selected {
+            border-color: #27ae60;
+            background: #e8f5e9;
+        }
+
+        .quality-option.high {
+            border-color: #4caf50;
+        }
+
+        .quality-option.high.selected {
+            background: #e8f5e9;
+        }
+
+        .quality-option.medium {
+            border-color: #ff9800;
+        }
+
+        .quality-option.medium.selected {
+            background: #fff3e0;
+        }
+
+        .quality-option.low {
+            border-color: #f44336;
+        }
+
+        .quality-option.low.selected {
+            background: #ffebee;
+        }
+
+        .photo-upload-area {
+            border: 2px dashed #e0e0e0;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .photo-upload-area:hover {
+            border-color: #27ae60;
+            background: #f0f9f4;
+        }
+
+        .photo-upload-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .photo-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .photo-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 8px;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .agreement-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .agreement-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .agreement-item:last-child {
+            border-bottom: none;
+        }
+
+        .agreement-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .agreement-value {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .signature-area {
+            margin: 20px 0;
+        }
+
+        .signature-box {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+            min-height: 100px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 14px;
+        }
+
+        .signature-box.signed {
+            background: #f0f9f4;
+            border-color: #27ae60;
+            color: #27ae60;
+            font-weight: 600;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(39, 174, 96, 0.4);
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .btn-capture {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid #27ae60;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .receipt {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .receipt-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 2px dashed #e0e0e0;
+        }
+
+        .receipt-header h2 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .receipt-header p {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .receipt-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .receipt-item:last-child {
+            border-bottom: none;
+            font-weight: 600;
+            font-size: 18px;
+            margin-top: 10px;
+            padding-top: 15px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .receipt-label {
+            color: #666;
+        }
+
+        .receipt-value {
+            font-weight: 600;
+        }
+
+        .success-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .success-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .success-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #27ae60;
+        }
+
+        .success-message {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            padding: 0 10px;
+        }
+
+        .step-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .step-dot.active {
+            background: #27ae60;
+            transform: scale(1.3);
+        }
+
+        .step-dot.completed {
+            background: #27ae60;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>TraceCycle Transaction</h1>
+            <p>Secure Purchase Flow</p>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 14.3%;"></div>
+        </div>
+
+        <div class="step-indicator">
+            <div class="step-dot active" id="step1"></div>
+            <div class="step-dot" id="step2"></div>
+            <div class="step-dot" id="step3"></div>
+            <div class="step-dot" id="step4"></div>
+            <div class="step-dot" id="step5"></div>
+            <div class="step-dot" id="step6"></div>
+            <div class="step-dot" id="step7"></div>
+        </div>
+
+        <!-- Step 1: Scan QR Code -->
+        <div class="step-container active" id="step1Container">
+            <div class="step-title">Step 1: Scan QR Code</div>
+            <div class="step-description">Point your camera at the farmer's QR code to begin the transaction</div>
+            
+            <div class="camera-viewport" id="qrCamera">
+                <div class="qr-overlay"></div>
+                <div class="camera-content">
+                    <div class="camera-icon">📷</div>
+                    <div class="camera-instruction">Position QR code within frame</div>
+                    <div class="camera-subinstruction">Scanning...</div>
+                </div>
+                <button class="btn-capture" onclick="captureQR()">📸</button>
+            </div>
+
+            <button class="btn btn-secondary" onclick="simulateQRScan()">Use Example QR Code</button>
+        </div>
+
+        <!-- Step 2: Farmer Info -->
+        <div class="step-container" id="step2Container">
+            <div class="step-title">Step 2: Farmer Information</div>
+            <div class="step-description">Verify farmer details</div>
+            
+            <div class="farmer-info-card" id="farmerInfoCard">
+                <!-- Populated by JavaScript -->
+            </div>
+
+            <button class="btn btn-primary" onclick="nextStep()">Continue</button>
+        </div>
+
+        <!-- Step 3: Weight & Price -->
+        <div class="step-container" id="step3Container">
+            <div class="step-title">Step 3: Weight & Price</div>
+            <div class="step-description">Enter transaction details</div>
+            
+            <div class="transaction-form">
+                <div class="form-group">
+                    <label class="form-label">Weight (kg)</label>
+                    <input type="number" class="form-input" id="weightInput" placeholder="Enter weight" value="280" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Price per kg ($)</label>
+                    <input type="number" class="form-input" id="priceInput" placeholder="Enter price" value="2.50" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Total Amount</label>
+                    <div class="form-input" style="background: #f8f9fa; font-size: 20px; font-weight: 600; color: #27ae60;" id="totalAmount">
+                        $700.00
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="nextStep()">Continue</button>
+        </div>
+
+        <!-- Step 4: Quality Assessment -->
+        <div class="step-container" id="step4Container">
+            <div class="step-title">Step 4: Quality Assessment</div>
+            <div class="step-description">Select product quality grade</div>
+            
+            <div class="transaction-form">
+                <label class="form-label">Quality Grade</label>
+                <div class="quality-selector">
+                    <div class="quality-option high" onclick="selectQuality('High', this)">
+                        <div style="font-size: 24px; margin-bottom: 5px;">⭐</div>
+                        <div style="font-weight: 600;">High</div>
+                        <div style="font-size: 12px; color: #666;">A+ / A</div>
+                    </div>
+                    <div class="quality-option medium" onclick="selectQuality('Medium', this)">
+                        <div style="font-size: 24px; margin-bottom: 5px;">⭐</div>
+                        <div style="font-weight: 600;">Medium</div>
+                        <div style="font-size: 12px; color: #666;">B / B+</div>
+                    </div>
+                    <div class="quality-option low" onclick="selectQuality('Low', this)">
+                        <div style="font-size: 24px; margin-bottom: 5px;">⭐</div>
+                        <div style="font-weight: 600;">Low</div>
+                        <div style="font-size: 12px; color: #666;">C / D</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" id="qualityBtn" onclick="nextStep()" disabled>Continue</button>
+        </div>
+
+        <!-- Step 5: Take Photos -->
+        <div class="step-container" id="step5Container">
+            <div class="step-title">Step 5: Document Transaction</div>
+            <div class="step-description">Take photos of the product and transaction</div>
+            
+            <div id="photoSection">
+                <div class="photo-upload-area" onclick="openCamera('product')">
+                    <div class="photo-upload-icon">📷</div>
+                    <div style="font-weight: 600; margin-bottom: 5px;">Product Photo</div>
+                    <div style="font-size: 12px; color: #666;">Tap to take photo</div>
+                </div>
+            </div>
+
+            <div id="photosGrid" style="display: none;">
+                <div class="photo-grid" id="photosContainer"></div>
+            </div>
+
+            <button class="btn btn-primary" id="photosBtn" onclick="nextStep()" style="display: none;">Continue</button>
+        </div>
+
+        <!-- Step 6: Agreement & Signatures -->
+        <div class="step-container" id="step6Container">
+            <div class="step-title">Step 6: Confirm Agreement</div>
+            <div class="step-description">Review and confirm transaction details</div>
+            
+            <div class="agreement-section">
+                <div class="agreement-item">
+                    <span class="agreement-label">Farmer</span>
+                    <span class="agreement-value" id="agreeFarmer">Kwame Asante</span>
+                </div>
+                <div class="agreement-item">
+                    <span class="agreement-label">Weight</span>
+                    <span class="agreement-value" id="agreeWeight">280 kg</span>
+                </div>
+                <div class="agreement-item">
+                    <span class="agreement-label">Price per kg</span>
+                    <span class="agreement-value" id="agreePrice">$2.50</span>
+                </div>
+                <div class="agreement-item">
+                    <span class="agreement-label">Quality</span>
+                    <span class="agreement-value" id="agreeQuality">High (A+)</span>
+                </div>
+                <div class="agreement-item">
+                    <span class="agreement-label">Total Amount</span>
+                    <span class="agreement-value" id="agreeTotal" style="color: #27ae60; font-size: 20px;">$700.00</span>
+                </div>
+            </div>
+
+            <div class="signature-area">
+                <label class="form-label">Buyer Signature</label>
+                <div class="signature-box" id="buyerSignature" onclick="sign('buyer')">
+                    Tap to sign
+                </div>
+            </div>
+
+            <div class="signature-area">
+                <label class="form-label">Farmer Signature</label>
+                <div class="signature-box" id="farmerSignature" onclick="sign('farmer')">
+                    Tap to sign
+                </div>
+            </div>
+
+            <button class="btn btn-primary" id="agreementBtn" onclick="nextStep()" disabled>Confirm & Process Payment</button>
+        </div>
+
+        <!-- Step 7: Payment & Receipt -->
+        <div class="step-container" id="step7Container">
+            <div class="step-title">Step 7: Payment Processed</div>
+            <div class="step-description">Transaction completed successfully</div>
+            
+            <div class="success-screen">
+                <div class="success-icon">✅</div>
+                <div class="success-title">Payment Sent!</div>
+                <div class="success-message">
+                    $700.00 has been transferred to Kwame Asante<br>
+                    Receipt has been issued to both parties
+                </div>
+            </div>
+
+            <div class="receipt" id="receipt">
+                <div class="receipt-header">
+                    <h2>Transaction Receipt</h2>
+                    <p>TraceCycle #TC-2024-001523</p>
+                    <p style="margin-top: 5px;">Date: January 25, 2024 14:32</p>
+                </div>
+                <div class="receipt-item">
+                    <span class="receipt-label">Farmer:</span>
+                    <span class="receipt-value" id="receiptFarmer">Kwame Asante</span>
+                </div>
+                <div class="receipt-item">
+                    <span class="receipt-label">Location:</span>
+                    <span class="receipt-value">6.5244° N, 1.6139° W</span>
+                </div>
+                <div class="receipt-item">
+                    <span class="receipt-label">Weight:</span>
+                    <span class="receipt-value" id="receiptWeight">280 kg</span>
+                </div>
+                <div class="receipt-item">
+                    <span class="receipt-label">Price per kg:</span>
+                    <span class="receipt-value" id="receiptPrice">$2.50</span>
+                </div>
+                <div class="receipt-item">
+                    <span class="receipt-label">Quality:</span>
+                    <span class="receipt-value" id="receiptQuality">High (A+)</span>
+                </div>
+                <div class="receipt-item">
+                    <span class="receipt-label">Total Amount:</span>
+                    <span class="receipt-value" id="receiptTotal" style="color: #27ae60;">$700.00</span>
+                </div>
+                <div class="receipt-item">
+                    <span class="receipt-label">Payment Method:</span>
+                    <span class="receipt-value">Mobile Money</span>
+                </div>
+                <div class="receipt-item">
+                    <span class="receipt-label">Transaction ID:</span>
+                    <span class="receipt-value">MTN-20240125-1432-789456</span>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="resetFlow()">Start New Transaction</button>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 7;
+        let selectedQuality = null;
+        let photosTaken = [];
+        let farmerData = null;
+        let transactionData = {
+            weight: 280,
+            price: 2.50,
+            quality: null,
+            total: 700.00
+        };
+
+        // Mock farmer data
+        const mockFarmers = {
+            'FARMER-101': {
+                id: 101,
+                name: 'Kwame Asante',
+                initials: 'KA',
+                location: '6.5244° N, 1.6139° W',
+                certifications: ['Rainforest Alliance', 'EUDR', 'RSPO'],
+                farmSize: '5.2 hectares',
+                crop: 'Palm Oil',
+                totalVolume: 1250,
+                quality: 'High'
+            },
+            'FARMER-102': {
+                id: 102,
+                name: 'Ama Mensah',
+                initials: 'AM',
+                location: '6.5123° N, 1.6021° W',
+                certifications: ['Rainforest Alliance', 'EUDR'],
+                farmSize: '4.1 hectares',
+                crop: 'Palm Oil',
+                totalVolume: 980,
+                quality: 'High'
+            }
+        };
+
+        // Mock product images
+        const mockProductImages = [
+            'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjOGI1NzNhIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+UGFsbSBPaWwgUHJvZHVjdDwvdGV4dD48L3N2Zz4=',
+            'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZiNzAwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+UXVhbGl0eSBDaGVjayA8L3RleHQ+PC9zdmc+',
+            'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjNGNhZjUwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+V2VpZ2hpbmcgU2NhbGU8L3RleHQ+PC9zdmc+'
+        ];
+
+        function updateProgress() {
+            const progress = (currentStep / totalSteps) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            // Update step indicators
+            for (let i = 1; i <= totalSteps; i++) {
+                const dot = document.getElementById(`step${i}`);
+                if (i < currentStep) {
+                    dot.classList.add('completed');
+                    dot.classList.remove('active');
+                } else if (i === currentStep) {
+                    dot.classList.add('active');
+                    dot.classList.remove('completed');
+                } else {
+                    dot.classList.remove('active', 'completed');
+                }
+            }
+        }
+
+        function showStep(step) {
+            document.querySelectorAll('.step-container').forEach(container => {
+                container.classList.remove('active');
+            });
+            document.getElementById(`step${step}Container`).classList.add('active');
+            updateProgress();
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                showStep(currentStep);
+                
+                // Update receipt data when reaching step 7
+                if (currentStep === 7) {
+                    updateReceipt();
+                }
+            }
+        }
+
+        function simulateQRScan() {
+            // Simulate QR code scan
+            const qrCamera = document.getElementById('qrCamera');
+            qrCamera.innerHTML = `
+                <div class="camera-content">
+                    <div style="font-size: 60px; margin-bottom: 20px;">✓</div>
+                    <div class="camera-instruction">QR Code Scanned!</div>
+                    <div class="camera-subinstruction">Loading farmer information...</div>
+                </div>
+            `;
+            
+            setTimeout(() => {
+                farmerData = mockFarmers['FARMER-101'];
+                nextStep();
+                renderFarmerInfo();
+            }, 1500);
+        }
+
+        function captureQR() {
+            simulateQRScan();
+        }
+
+        function renderFarmerInfo() {
+            if (!farmerData) return;
+            
+            const card = document.getElementById('farmerInfoCard');
+            card.innerHTML = `
+                <div class="farmer-header">
+                    <div class="farmer-avatar">${farmerData.initials}</div>
+                    <div class="farmer-details">
+                        <h3>${farmerData.name}</h3>
+                        <p>📍 ${farmerData.location}</p>
+                    </div>
+                </div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Farm Size</div>
+                        <div class="info-value">${farmerData.farmSize}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Crop Type</div>
+                        <div class="info-value">${farmerData.crop}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Total Volume</div>
+                        <div class="info-value">${farmerData.totalVolume} kg</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Quality Rating</div>
+                        <div class="info-value">${farmerData.quality}</div>
+                    </div>
+                </div>
+                <div class="cert-badges">
+                    ${farmerData.certifications.map(cert => `<span class="cert-badge">${cert}</span>`).join('')}
+                </div>
+            `;
+        }
+
+        // Calculate total when weight or price changes
+        document.getElementById('weightInput')?.addEventListener('input', calculateTotal);
+        document.getElementById('priceInput')?.addEventListener('input', calculateTotal);
+
+        function calculateTotal() {
+            const weight = parseFloat(document.getElementById('weightInput').value) || 0;
+            const price = parseFloat(document.getElementById('priceInput').value) || 0;
+            const total = weight * price;
+            
+            transactionData.weight = weight;
+            transactionData.price = price;
+            transactionData.total = total;
+            
+            document.getElementById('totalAmount').textContent = `$${total.toFixed(2)}`;
+        }
+
+        function selectQuality(quality, element) {
+            selectedQuality = quality;
+            transactionData.quality = quality;
+            
+            document.querySelectorAll('.quality-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            
+            document.getElementById('qualityBtn').disabled = false;
+        }
+
+        function openCamera(type) {
+            const cameraViewport = document.createElement('div');
+            cameraViewport.className = 'camera-viewport';
+            cameraViewport.style.position = 'fixed';
+            cameraViewport.style.top = '0';
+            cameraViewport.style.left = '0';
+            cameraViewport.style.width = '100%';
+            cameraViewport.style.height = '100%';
+            cameraViewport.style.zIndex = '1000';
+            cameraViewport.style.borderRadius = '0';
+            
+            const labels = {
+                'product': 'Product',
+                'scale': 'Weighing Scale',
+                'farmer': 'Farmer'
+            };
+            
+            cameraViewport.innerHTML = `
+                <div class="camera-content">
+                    <div class="camera-icon">📷</div>
+                    <div class="camera-instruction">Taking ${labels[type]} Photo</div>
+                    <div class="camera-subinstruction">Position camera and tap capture</div>
+                </div>
+                <button class="btn-capture" onclick="capturePhoto('${type}', this.parentElement)">📸</button>
+                <button class="btn" style="position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); width: auto; background: rgba(0,0,0,0.5); color: white;" onclick="this.parentElement.remove()">Cancel</button>
+            `;
+            
+            document.body.appendChild(cameraViewport);
+        }
+
+        function capturePhoto(type, cameraElement) {
+            const photoIndex = photosTaken.length;
+            const mockImage = mockProductImages[photoIndex % mockProductImages.length];
+            
+            photosTaken.push({
+                type: type,
+                url: mockImage,
+                label: type === 'product' ? 'Product' : type === 'scale' ? 'Weighing Scale' : 'Farmer'
+            });
+            
+            cameraElement.remove();
+            renderPhotos();
+        }
+
+        function renderPhotos() {
+            const photoSection = document.getElementById('photoSection');
+            const photosGrid = document.getElementById('photosGrid');
+            const photosContainer = document.getElementById('photosContainer');
+            const photosBtn = document.getElementById('photosBtn');
+            
+            if (photosTaken.length === 0) {
+                photoSection.style.display = 'block';
+                photosGrid.style.display = 'none';
+                photosBtn.style.display = 'none';
+            } else {
+                photoSection.style.display = 'none';
+                photosGrid.style.display = 'block';
+                photosBtn.style.display = 'block';
+                
+                photosContainer.innerHTML = photosTaken.map((photo, index) => `
+                    <div class="photo-item">
+                        <img src="${photo.url}" alt="${photo.label}">
+                        <div class="photo-label">${photo.label}</div>
+                    </div>
+                `).join('');
+                
+                // Add option to take more photos
+                if (photosTaken.length < 3) {
+                    photosContainer.innerHTML += `
+                        <div class="photo-upload-area" onclick="openCamera('product')" style="height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <div style="font-size: 32px; margin-bottom: 10px;">➕</div>
+                            <div style="font-size: 12px; color: #666;">Add Photo</div>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        function sign(party) {
+            const signatureBox = document.getElementById(`${party}Signature`);
+            signatureBox.classList.add('signed');
+            signatureBox.textContent = '✓ Signed';
+            
+            // Check if both signed
+            const buyerSigned = document.getElementById('buyerSignature').classList.contains('signed');
+            const farmerSigned = document.getElementById('farmerSignature').classList.contains('signed');
+            
+            if (buyerSigned && farmerSigned) {
+                document.getElementById('agreementBtn').disabled = false;
+            }
+        }
+
+        function updateReceipt() {
+            document.getElementById('receiptFarmer').textContent = farmerData.name;
+            document.getElementById('receiptWeight').textContent = transactionData.weight + ' kg';
+            document.getElementById('receiptPrice').textContent = '$' + transactionData.price.toFixed(2);
+            document.getElementById('receiptQuality').textContent = transactionData.quality + ' (A+)';
+            document.getElementById('receiptTotal').textContent = '$' + transactionData.total.toFixed(2);
+            
+            // Update agreement section
+            document.getElementById('agreeFarmer').textContent = farmerData.name;
+            document.getElementById('agreeWeight').textContent = transactionData.weight + ' kg';
+            document.getElementById('agreePrice').textContent = '$' + transactionData.price.toFixed(2);
+            document.getElementById('agreeQuality').textContent = transactionData.quality + ' (A+)';
+            document.getElementById('agreeTotal').textContent = '$' + transactionData.total.toFixed(2);
+        }
+
+        function resetFlow() {
+            currentStep = 1;
+            selectedQuality = null;
+            photosTaken = [];
+            farmerData = null;
+            transactionData = {
+                weight: 280,
+                price: 2.50,
+                quality: null,
+                total: 700.00
+            };
+            
+            // Reset form
+            document.getElementById('weightInput').value = 280;
+            document.getElementById('priceInput').value = 2.50;
+            document.getElementById('totalAmount').textContent = '$700.00';
+            document.getElementById('qualityBtn').disabled = true;
+            document.querySelectorAll('.quality-option').forEach(opt => opt.classList.remove('selected'));
+            document.getElementById('buyerSignature').classList.remove('signed');
+            document.getElementById('buyerSignature').textContent = 'Tap to sign';
+            document.getElementById('farmerSignature').classList.remove('signed');
+            document.getElementById('farmerSignature').textContent = 'Tap to sign';
+            document.getElementById('agreementBtn').disabled = true;
+            
+            // Reset camera view
+            const qrCamera = document.getElementById('qrCamera');
+            qrCamera.innerHTML = `
+                <div class="qr-overlay"></div>
+                <div class="camera-content">
+                    <div class="camera-icon">📷</div>
+                    <div class="camera-instruction">Position QR code within frame</div>
+                    <div class="camera-subinstruction">Scanning...</div>
+                </div>
+                <button class="btn-capture" onclick="captureQR()">📸</button>
+            `;
+            
+            renderPhotos();
+            showStep(1);
+        }
+
+        // Initialize
+        updateProgress();
+    </script>
+</body>
+</html>
+

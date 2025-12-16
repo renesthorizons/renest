@@ -663,6 +663,556 @@
             margin-top: 15px;
         }
 
+        /* Module Selection Screen */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .module-card {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .module-card:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            transform: translateY(-4px);
+        }
+
+        .module-card-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .module-card-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .module-card-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Certifications Module */
+        .cert-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .cert-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.2s;
+            border-left: 4px solid #27ae60;
+        }
+
+        .cert-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            transform: translateY(-2px);
+        }
+
+        .cert-card.eudr {
+            border-left-color: #2196f3;
+        }
+
+        .cert-card.rainforest {
+            border-left-color: #4caf50;
+        }
+
+        .cert-card.rspo {
+            border-left-color: #9c27b0;
+        }
+
+        .cert-card.fairtrade {
+            border-left-color: #ff9800;
+        }
+
+        .cert-card.organic {
+            border-left-color: #8bc34a;
+        }
+
+        .cert-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 20px;
+        }
+
+        .cert-name {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .cert-status {
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .cert-status.active {
+            background: #4caf50;
+            color: white;
+        }
+
+        .cert-status.pending {
+            background: #ff9800;
+            color: white;
+        }
+
+        .cert-status.not-started {
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        .cert-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .cert-stat {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .cert-stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .cert-stat-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #27ae60;
+        }
+
+        .cert-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .cert-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .cert-btn-primary {
+            background: #27ae60;
+            color: white;
+        }
+
+        .cert-btn-primary:hover {
+            background: #229954;
+        }
+
+        .cert-btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+            border: 1px solid #e0e0e0;
+        }
+
+        .cert-btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        /* Map Module */
+        .map-container {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .satellite-view {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #8b7355 0%, #6b5d4f 50%, #4a5d4a 100%);
+            position: relative;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px),
+                radial-gradient(circle at 20% 30%, rgba(139, 195, 74, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 60% 50%, rgba(76, 175, 80, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(139, 195, 74, 0.3) 0%, transparent 50%);
+            background-size: 100% 100%, 100% 100%, 200px 200px, 300px 300px, 250px 250px;
+        }
+
+        .map-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .farm-boundary {
+            position: absolute;
+            border: 3px solid #27ae60;
+            background: rgba(39, 174, 96, 0.1);
+            border-radius: 8px;
+            pointer-events: auto;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .farm-boundary:hover {
+            background: rgba(39, 174, 96, 0.2);
+            border-color: #229954;
+            transform: scale(1.02);
+        }
+
+        .farm-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(39, 174, 96, 0.9);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        .cert-overlay {
+            position: absolute;
+            border: 2px solid;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            pointer-events: auto;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .cert-overlay.eudr {
+            border-color: #2196f3;
+        }
+
+        .cert-overlay.rainforest {
+            border-color: #4caf50;
+        }
+
+        .cert-overlay.rspo {
+            border-color: #9c27b0;
+        }
+
+        .cert-overlay.fairtrade {
+            border-color: #ff9800;
+        }
+
+        .crop-overlay {
+            position: absolute;
+            padding: 6px 10px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid #27ae60;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #27ae60;
+            pointer-events: auto;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        .insight-marker {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            pointer-events: auto;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .insight-marker.fertilizer {
+            background: #ff9800;
+            color: white;
+        }
+
+        .insight-marker.water {
+            background: #2196f3;
+            color: white;
+        }
+
+        .insight-marker.pest {
+            background: #f44336;
+            color: white;
+        }
+
+        .map-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 100;
+            min-width: 200px;
+        }
+
+        .map-control-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #333;
+        }
+
+        .toggle-control {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .toggle-control:last-child {
+            border-bottom: none;
+        }
+
+        .toggle-label {
+            font-size: 13px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background: #ccc;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .toggle-switch.active {
+            background: #27ae60;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
+            transition: transform 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(20px);
+        }
+
+        .map-legend {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 100;
+            max-width: 250px;
+        }
+
+        .legend-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            border: 1px solid #ddd;
+        }
+
+        .farm-popup {
+            position: absolute;
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            z-index: 200;
+            min-width: 200px;
+            display: none;
+        }
+
+        .farm-popup.active {
+            display: block;
+        }
+
+        .farm-popup-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .farm-popup-info {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .quality-rating-badge {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            pointer-events: auto;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .quality-rating-badge.high {
+            border-color: #4caf50;
+            color: #4caf50;
+        }
+
+        .quality-rating-badge.medium {
+            border-color: #ff9800;
+            color: #ff9800;
+        }
+
+        .quality-rating-badge.low {
+            border-color: #f44336;
+            color: #f44336;
+        }
+
+        .training-marker {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid #2196f3;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 11px;
+            pointer-events: auto;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            min-width: 180px;
+            max-width: 220px;
+        }
+
+        .training-marker-title {
+            font-weight: 600;
+            color: #2196f3;
+            margin-bottom: 6px;
+            font-size: 12px;
+        }
+
+        .training-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .training-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .training-name {
+            font-size: 10px;
+            color: #666;
+            flex: 1;
+        }
+
+        .training-roi {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        .training-roi.positive {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .training-roi.negative {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .training-roi.neutral {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
         /* Right Sidebar - Chat */
         .chat-sidebar {
             width: 380px;
@@ -848,17 +1398,23 @@
                 <p>Cooperative Dashboard</p>
             </div>
             <div class="nav-menu">
-                <div class="nav-item active" data-page="members">
-                    👥 Members
+                <div class="nav-item active" data-page="home">
+                    🏠 Home
+                </div>
+                <div class="nav-item" data-page="certifications">
+                    ✅ Start Certifications
+                </div>
+                <div class="nav-item" data-page="members">
+                    👥 See Members
+                </div>
+                <div class="nav-item" data-page="map">
+                    🗺️ View Map
                 </div>
                 <div class="nav-item" data-page="insights">
                     ⚠️ Actionable Insights
                 </div>
                 <div class="nav-item" data-page="analytics">
                     📊 Analytics
-                </div>
-                <div class="nav-item" data-page="certifications">
-                    ✅ Certifications
                 </div>
                 <div class="nav-item" data-page="payments">
                     💰 Payments
@@ -892,8 +1448,52 @@
                 </div>
             </div>
             <div class="content-area">
+                <!-- Home / Module Selection Page -->
+                <div class="page active" id="homePage">
+                    <div class="modules-grid">
+                        <div class="module-card" onclick="switchPage('certifications')">
+                            <div class="module-card-icon">✅</div>
+                            <div class="module-card-title">Start Certifications</div>
+                            <div class="module-card-desc">
+                                Manage and track member certifications including EUDR, Rainforest Alliance, RSPO, Fairtrade, and Organic. Start new certification processes and monitor compliance.
+                            </div>
+                        </div>
+                        <div class="module-card" onclick="switchPage('members')">
+                            <div class="module-card-icon">👥</div>
+                            <div class="module-card-title">See Members</div>
+                            <div class="module-card-desc">
+                                View all cooperative members, their farm details, certifications, transaction history, and performance metrics. Add new members or manage existing ones.
+                            </div>
+                        </div>
+                        <div class="module-card" onclick="switchPage('map')">
+                            <div class="module-card-icon">🗺️</div>
+                            <div class="module-card-title">View Map of Co-Op</div>
+                            <div class="module-card-desc">
+                                Interactive satellite map showing farm boundaries, certifications, crop types, and actionable insights like fertilizer needs, water requirements, and pest control alerts.
+                            </div>
+                        </div>
+                        <div class="module-card" onclick="switchPage('insights')">
+                            <div class="module-card-icon">⚠️</div>
+                            <div class="module-card-title">Actionable Insights</div>
+                            <div class="module-card-desc">
+                                Get alerts and recommendations for urgent actions like weather warnings, certification deadlines, payment issues, and compliance requirements.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Certifications Page -->
+                <div class="page" id="certificationsPage">
+                    <div class="page-header">
+                        <div class="page-title">Certifications</div>
+                    </div>
+                    <div class="cert-grid" id="certificationsGrid">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+
                 <!-- Members Page -->
-                <div class="page active" id="membersPage">
+                <div class="page" id="membersPage" style="display: none;">
                     <div class="page-header">
                         <div class="page-title">Members</div>
                         <div class="action-buttons">
@@ -902,6 +1502,105 @@
                     </div>
                     <div class="members-grid" id="membersGrid">
                         <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Map Page -->
+                <div class="page" id="mapPage">
+                    <div class="page-header">
+                        <div class="page-title">Cooperative Map</div>
+                    </div>
+                    <div class="map-container">
+                        <div class="satellite-view" id="satelliteView">
+                            <!-- Farm boundaries overlay -->
+                            <div class="map-overlay" id="farmOverlay" style="display: none;">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                            
+                            <!-- Certification overlay -->
+                            <div class="map-overlay" id="certOverlay" style="display: none;">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                            
+                            <!-- Crop type overlay -->
+                            <div class="map-overlay" id="cropOverlay" style="display: none;">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                            
+                            <!-- Actionable insights overlay -->
+                            <div class="map-overlay" id="insightsOverlay" style="display: none;">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                            
+                            <!-- Quality rating overlay -->
+                            <div class="map-overlay" id="qualityOverlay" style="display: none;">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                            
+                            <!-- Trainings overlay -->
+                            <div class="map-overlay" id="trainingsOverlay" style="display: none;">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                        </div>
+                        
+                        <!-- Map Controls -->
+                        <div class="map-controls">
+                            <div class="map-control-title">Map Overlays</div>
+                            <div class="toggle-control">
+                                <div class="toggle-label">
+                                    <span>🏞️</span>
+                                    <span>Farm Outlines</span>
+                                </div>
+                                <div class="toggle-switch" id="toggleFarms" onclick="toggleOverlay('farms')"></div>
+                            </div>
+                            <div class="toggle-control">
+                                <div class="toggle-label">
+                                    <span>✅</span>
+                                    <span>Certifications</span>
+                                </div>
+                                <div class="toggle-switch" id="toggleCerts" onclick="toggleOverlay('certs')"></div>
+                            </div>
+                            <div class="toggle-control">
+                                <div class="toggle-label">
+                                    <span>🌾</span>
+                                    <span>Crop Types</span>
+                                </div>
+                                <div class="toggle-switch" id="toggleCrops" onclick="toggleOverlay('crops')"></div>
+                            </div>
+                            <div class="toggle-control">
+                                <div class="toggle-label">
+                                    <span>⭐</span>
+                                    <span>Product Quality Rating</span>
+                                </div>
+                                <div class="toggle-switch" id="toggleQuality" onclick="toggleOverlay('quality')"></div>
+                            </div>
+                            <div class="toggle-control">
+                                <div class="toggle-label">
+                                    <span>🎓</span>
+                                    <span>Trainings & ROI</span>
+                                </div>
+                                <div class="toggle-switch" id="toggleTrainings" onclick="toggleOverlay('trainings')"></div>
+                            </div>
+                            <div class="toggle-control">
+                                <div class="toggle-label">
+                                    <span>⚠️</span>
+                                    <span>Actionable Insights</span>
+                                </div>
+                                <div class="toggle-switch" id="toggleInsights" onclick="toggleOverlay('insights')"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Map Legend -->
+                        <div class="map-legend" id="mapLegend" style="display: none;">
+                            <div class="legend-title">Legend</div>
+                            <div id="legendContent"></div>
+                        </div>
+                        
+                        <!-- Farm Popup -->
+                        <div class="farm-popup" id="farmPopup">
+                            <div class="farm-popup-title" id="popupTitle"></div>
+                            <div class="farm-popup-info" id="popupInfo"></div>
+                        </div>
                     </div>
                 </div>
 
@@ -945,32 +1644,6 @@
                     </div>
                 </div>
 
-                <!-- Certifications Page -->
-                <div class="page" id="certificationsPage">
-                    <h1 style="margin-bottom: 20px;">Certifications</h1>
-                    <div class="analytics-grid">
-                        <div class="analytics-card">
-                            <h3>Rainforest Alliance</h3>
-                            <div class="analytics-value">142</div>
-                            <div class="analytics-change">members certified</div>
-                        </div>
-                        <div class="analytics-card">
-                            <h3>EUDR Compliant</h3>
-                            <div class="analytics-value">98</div>
-                            <div class="analytics-change">members certified</div>
-                        </div>
-                        <div class="analytics-card">
-                            <h3>RSPO</h3>
-                            <div class="analytics-value">87</div>
-                            <div class="analytics-change">members certified</div>
-                        </div>
-                        <div class="analytics-card">
-                            <h3>Fairtrade</h3>
-                            <div class="analytics-value">65</div>
-                            <div class="analytics-change">members certified</div>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- Payments Page -->
                 <div class="page" id="paymentsPage">
@@ -1230,13 +1903,608 @@
                 location: "All regions",
                 date: "2024-02-01",
                 actions: ["Send reminder SMS", "Follow up calls", "Extend enrollment"]
+            },
+            {
+                id: 6,
+                title: "Fertilizer Needed - Kwame Asante",
+                description: "Kwame Asante's farm requires fertilizer application to maintain optimal crop yield. Soil analysis indicates nutrient deficiency that could impact harvest quality.",
+                priority: "warning",
+                affectedMembers: ["Kwame Asante"],
+                location: "6.5244° N, 1.6139° W",
+                date: "2024-01-30",
+                actions: ["Schedule fertilizer delivery", "Arrange soil testing"],
+                isFarmerSpecific: true
+            },
+            {
+                id: 7,
+                title: "Water Management Needed - Ama Mensah",
+                description: "Ama Mensah's farm requires improved water management. Irrigation system needs attention to ensure adequate water supply for optimal crop growth.",
+                priority: "warning",
+                affectedMembers: ["Ama Mensah"],
+                location: "6.5123° N, 1.6021° W",
+                date: "2024-01-30",
+                actions: ["Inspect irrigation system", "Schedule maintenance"],
+                isFarmerSpecific: true
+            },
+            {
+                id: 8,
+                title: "Pest Control Required - Kofi Boateng",
+                description: "Kofi Boateng's farm shows signs of pest infestation. Immediate pest control measures needed to prevent crop damage and yield loss.",
+                priority: "urgent",
+                affectedMembers: ["Kofi Boateng"],
+                location: "6.4987° N, 1.5890° W",
+                date: "2024-01-29",
+                actions: ["Schedule pest control treatment", "Arrange field inspection"],
+                isFarmerSpecific: true
+            },
+            {
+                id: 9,
+                title: "Fertilizer and Water Needed - Nana Adjei",
+                description: "Nana Adjei's farm requires both fertilizer application and water management improvements. Combined intervention needed to address nutrient and irrigation issues.",
+                priority: "warning",
+                affectedMembers: ["Nana Adjei"],
+                location: "6.5050° N, 1.6000° W",
+                date: "2024-01-30",
+                actions: ["Schedule fertilizer delivery", "Inspect irrigation system"],
+                isFarmerSpecific: true
+            },
+            {
+                id: 10,
+                title: "Pest Control Required - Efua Asiedu",
+                description: "Efua Asiedu's farm requires urgent pest control intervention. Pest activity detected that could significantly impact crop yield if not addressed promptly.",
+                priority: "urgent",
+                affectedMembers: ["Efua Asiedu"],
+                location: "6.5100° N, 1.5950° W",
+                date: "2024-01-29",
+                actions: ["Schedule pest control treatment", "Arrange field inspection"],
+                isFarmerSpecific: true
+            },
+            {
+                id: 11,
+                title: "Water Management Needed - Yaw Mensah",
+                description: "Yaw Mensah's farm requires water management improvements. Irrigation efficiency needs to be addressed to ensure adequate water supply.",
+                priority: "warning",
+                affectedMembers: ["Yaw Mensah"],
+                location: "6.5050° N, 1.6000° W",
+                date: "2024-01-30",
+                actions: ["Inspect irrigation system", "Schedule maintenance"],
+                isFarmerSpecific: true
+            }
+        ];
+
+        // Certifications Data
+        const certifications = [
+            {
+                id: 'eudr',
+                name: 'EUDR (EU Deforestation Regulation)',
+                status: 'active',
+                certifiedMembers: 98,
+                totalMembers: 245,
+                description: 'EU regulation requiring proof that products are deforestation-free. Essential for exporting to European markets.',
+                requirements: ['GPS farm boundaries', 'Deforestation-free verification', 'Supply chain documentation'],
+                nextAudit: '2024-03-15',
+                icon: '🌍'
+            },
+            {
+                id: 'rainforest',
+                name: 'Rainforest Alliance',
+                status: 'active',
+                certifiedMembers: 142,
+                totalMembers: 245,
+                description: 'Certification promoting sustainable farming practices, environmental protection, and social responsibility.',
+                requirements: ['Sustainable farming practices', 'Environmental protection', 'Worker welfare standards'],
+                nextAudit: '2024-04-20',
+                icon: '🌳'
+            },
+            {
+                id: 'rspo',
+                name: 'RSPO (Roundtable on Sustainable Palm Oil)',
+                status: 'active',
+                certifiedMembers: 87,
+                totalMembers: 245,
+                description: 'Global standard for sustainable palm oil production. Required by many major buyers.',
+                requirements: ['No deforestation', 'No peat development', 'No exploitation', 'Traceability'],
+                nextAudit: '2024-05-10',
+                icon: '🌴'
+            },
+            {
+                id: 'fairtrade',
+                name: 'Fairtrade',
+                status: 'active',
+                certifiedMembers: 65,
+                totalMembers: 245,
+                description: 'Ensures fair prices, decent working conditions, and sustainable farming practices for farmers.',
+                requirements: ['Fair pricing', 'Democratic organization', 'Environmental standards', 'Social development'],
+                nextAudit: '2024-06-05',
+                icon: '🤝'
+            },
+            {
+                id: 'organic',
+                name: 'Organic',
+                status: 'pending',
+                certifiedMembers: 32,
+                totalMembers: 245,
+                description: 'Certification for organic farming practices without synthetic pesticides or fertilizers.',
+                requirements: ['No synthetic chemicals', 'Organic inputs only', 'Soil health management', 'Biodiversity protection'],
+                nextAudit: '2024-07-12',
+                icon: '🌿'
+            }
+        ];
+
+        // Map Data - using percentage-based positioning
+        const farmLocations = [
+            {
+                id: 101,
+                name: 'Kwame Asante',
+                x: 5,
+                y: 8,
+                width: 18,
+                height: 16,
+                certifications: ['EUDR', 'Rainforest Alliance', 'RSPO'],
+                crop: 'Palm Oil',
+                insights: ['fertilizer'],
+                qualityRating: 'High',
+                trainings: [
+                    { name: 'Sustainable Farming', roi: '+24%' },
+                    { name: 'Quality Control', roi: '+18%' }
+                ]
+            },
+            {
+                id: 102,
+                name: 'Ama Mensah',
+                x: 30,
+                y: 10,
+                width: 16,
+                height: 15,
+                certifications: ['EUDR', 'Rainforest Alliance'],
+                crop: 'Palm Oil',
+                insights: ['water'],
+                qualityRating: 'High',
+                trainings: [
+                    { name: 'Sustainable Farming', roi: '+15%' }
+                ]
+            },
+            {
+                id: 103,
+                name: 'Kofi Boateng',
+                x: 55,
+                y: 5,
+                width: 15,
+                height: 13,
+                certifications: ['RSPO'],
+                crop: 'Palm Oil',
+                insights: ['pest'],
+                qualityRating: 'Medium',
+                trainings: []
+            },
+            {
+                id: 104,
+                name: 'Yaa Osei',
+                x: 10,
+                y: 35,
+                width: 18,
+                height: 16,
+                certifications: ['EUDR', 'Rainforest Alliance', 'Fairtrade'],
+                crop: 'Palm Oil',
+                insights: [],
+                qualityRating: 'High',
+                trainings: [
+                    { name: 'Sustainable Farming', roi: '+28%' },
+                    { name: 'Quality Control', roi: '+22%' },
+                    { name: 'Post-Harvest', roi: '+19%' }
+                ]
+            },
+            {
+                id: 105,
+                name: 'Nana Adjei',
+                x: 38,
+                y: 38,
+                width: 16,
+                height: 14,
+                certifications: ['RSPO', 'EUDR'],
+                crop: 'Palm Oil',
+                insights: ['fertilizer', 'water'],
+                qualityRating: 'Medium',
+                trainings: [
+                    { name: 'Quality Control', roi: '+8%' }
+                ]
+            },
+            {
+                id: 106,
+                name: 'Kojo Appiah',
+                x: 62,
+                y: 42,
+                width: 15,
+                height: 12,
+                certifications: ['Rainforest Alliance'],
+                crop: 'Cocoa',
+                insights: [],
+                qualityRating: 'High',
+                trainings: [
+                    { name: 'Sustainable Farming', roi: '+20%' },
+                    { name: 'Post-Harvest', roi: '+16%' }
+                ]
+            },
+            {
+                id: 107,
+                name: 'Efua Asiedu',
+                x: 15,
+                y: 65,
+                width: 17,
+                height: 15,
+                certifications: ['Fairtrade'],
+                crop: 'Cocoa',
+                insights: ['pest'],
+                qualityRating: 'Low',
+                trainings: [
+                    { name: 'Sustainable Farming', roi: '-5%' }
+                ]
+            },
+            {
+                id: 108,
+                name: 'Yaw Mensah',
+                x: 42,
+                y: 68,
+                width: 15,
+                height: 13,
+                certifications: ['EUDR'],
+                crop: 'Palm Oil',
+                insights: ['water'],
+                qualityRating: 'Medium',
+                trainings: [
+                    { name: 'Quality Control', roi: '+12%' }
+                ]
             }
         ];
 
         function init() {
+            renderCertifications();
             renderMembers();
             renderInsights();
+            renderMap();
             setupEventListeners();
+        }
+
+        function renderMap() {
+            // Farm boundaries will be rendered when toggle is activated
+        }
+
+        function toggleOverlay(type) {
+            const toggleMap = {
+                'farms': { toggleId: 'toggleFarms', overlayId: 'farmOverlay' },
+                'certs': { toggleId: 'toggleCerts', overlayId: 'certOverlay' },
+                'crops': { toggleId: 'toggleCrops', overlayId: 'cropOverlay' },
+                'quality': { toggleId: 'toggleQuality', overlayId: 'qualityOverlay' },
+                'trainings': { toggleId: 'toggleTrainings', overlayId: 'trainingsOverlay' },
+                'insights': { toggleId: 'toggleInsights', overlayId: 'insightsOverlay' }
+            };
+            
+            const config = toggleMap[type];
+            if (!config) return;
+            
+            const toggle = document.getElementById(config.toggleId);
+            const overlay = document.getElementById(config.overlayId);
+            
+            if (!toggle || !overlay) {
+                console.error(`Toggle or overlay not found: ${type}`, { toggle, overlay });
+                return;
+            }
+            
+            const isActive = toggle.classList.contains('active');
+            
+            if (isActive) {
+                toggle.classList.remove('active');
+                overlay.style.display = 'none';
+            } else {
+                toggle.classList.add('active');
+                overlay.style.display = 'block';
+                renderOverlay(type, overlay);
+            }
+            
+            // Update legend
+            updateLegend();
+        }
+
+        function renderOverlay(type, container) {
+            container.innerHTML = '';
+            
+            if (type === 'farms') {
+                farmLocations.forEach(farm => {
+                    const boundary = document.createElement('div');
+                    boundary.className = 'farm-boundary';
+                    boundary.style.left = farm.x + '%';
+                    boundary.style.top = farm.y + '%';
+                    boundary.style.width = farm.width + '%';
+                    boundary.style.height = farm.height + '%';
+                    boundary.onclick = (e) => showFarmPopup(farm, e);
+                    
+                    const label = document.createElement('div');
+                    label.className = 'farm-label';
+                    label.textContent = farm.name.split(' ')[0];
+                    boundary.appendChild(label);
+                    
+                    container.appendChild(boundary);
+                });
+            } else if (type === 'certs') {
+                farmLocations.forEach(farm => {
+                    farm.certifications.forEach((cert, index) => {
+                        const certMarker = document.createElement('div');
+                        certMarker.className = `cert-overlay ${cert.toLowerCase().replace(/\s+/g, '')}`;
+                        // Position relative to farm boundary
+                        certMarker.style.left = `calc(${farm.x}% + ${farm.width}% - ${15 + (index * 35)}px)`;
+                        certMarker.style.top = `calc(${farm.y}% - 15px)`;
+                        
+                        const icons = {
+                            'eudr': '🌍',
+                            'rainforestalliance': '🌳',
+                            'rspo': '🌴',
+                            'fairtrade': '🤝'
+                        };
+                        certMarker.textContent = icons[cert.toLowerCase().replace(/\s+/g, '')] || '✅';
+                        certMarker.title = cert;
+                        container.appendChild(certMarker);
+                    });
+                });
+            } else if (type === 'crops') {
+                farmLocations.forEach(farm => {
+                    const cropLabel = document.createElement('div');
+                    cropLabel.className = 'crop-overlay';
+                    cropLabel.style.left = `calc(${farm.x}% + ${farm.width / 2}% - 40px)`;
+                    cropLabel.style.top = `calc(${farm.y}% + ${farm.height / 2}%)`;
+                    cropLabel.textContent = farm.crop;
+                    cropLabel.title = `${farm.name}: ${farm.crop}`;
+                    container.appendChild(cropLabel);
+                });
+            } else if (type === 'quality') {
+                farmLocations.forEach(farm => {
+                    const qualityBadge = document.createElement('div');
+                    qualityBadge.className = `quality-rating-badge ${farm.qualityRating.toLowerCase()}`;
+                    qualityBadge.style.left = `calc(${farm.x}% + ${farm.width / 2}% - 50px)`;
+                    qualityBadge.style.top = `calc(${farm.y}% + ${farm.height / 2}%)`;
+                    qualityBadge.textContent = `⭐ ${farm.qualityRating}`;
+                    qualityBadge.title = `${farm.name}: ${farm.qualityRating} Quality`;
+                    container.appendChild(qualityBadge);
+                });
+            } else if (type === 'trainings') {
+                farmLocations.forEach(farm => {
+                    if (farm.trainings && farm.trainings.length > 0) {
+                        const trainingMarker = document.createElement('div');
+                        trainingMarker.className = 'training-marker';
+                        trainingMarker.style.left = `calc(${farm.x}% + ${farm.width}% + 10px)`;
+                        trainingMarker.style.top = `calc(${farm.y}% + 5px)`;
+                        trainingMarker.title = `${farm.name} - Training ROI`;
+                        
+                        let trainingHTML = `<div class="training-marker-title">${farm.name}</div>`;
+                        farm.trainings.forEach(training => {
+                            const roiValue = parseFloat(training.roi);
+                            const roiClass = roiValue > 15 ? 'positive' : roiValue > 0 ? 'neutral' : 'negative';
+                            trainingHTML += `
+                                <div class="training-item">
+                                    <span class="training-name">${training.name}</span>
+                                    <span class="training-roi ${roiClass}">${training.roi}</span>
+                                </div>
+                            `;
+                        });
+                        trainingMarker.innerHTML = trainingHTML;
+                        container.appendChild(trainingMarker);
+                    }
+                });
+            } else if (type === 'insights') {
+                farmLocations.forEach(farm => {
+                    farm.insights.forEach((insight, index) => {
+                        const marker = document.createElement('div');
+                        marker.className = `insight-marker ${insight}`;
+                        marker.style.left = `calc(${farm.x}% + ${10 + (index * 50)}px)`;
+                        marker.style.top = `calc(${farm.y}% + ${farm.height}% - 30px)`;
+                        
+                        const icons = {
+                            'fertilizer': '🌱',
+                            'water': '💧',
+                            'pest': '🐛'
+                        };
+                        marker.textContent = icons[insight] || '⚠️';
+                        marker.title = `${farm.name}: ${insight.charAt(0).toUpperCase() + insight.slice(1)} needed`;
+                        marker.onclick = () => alert(`${farm.name} needs ${insight} intervention`);
+                        container.appendChild(marker);
+                    });
+                });
+            }
+        }
+
+        function updateLegend() {
+            const legend = document.getElementById('mapLegend');
+            const legendContent = document.getElementById('legendContent');
+            const toggles = {
+                farms: document.getElementById('toggleFarms'),
+                certs: document.getElementById('toggleCerts'),
+                crops: document.getElementById('toggleCrops'),
+                quality: document.getElementById('toggleQuality'),
+                trainings: document.getElementById('toggleTrainings'),
+                insights: document.getElementById('toggleInsights')
+            };
+            
+            const activeToggles = Object.entries(toggles).filter(([key, toggle]) => toggle.classList.contains('active'));
+            
+            if (activeToggles.length === 0) {
+                legend.style.display = 'none';
+                return;
+            }
+            
+            legend.style.display = 'block';
+            legendContent.innerHTML = '';
+            
+            activeToggles.forEach(([type]) => {
+                if (type === 'farms') {
+                    legendContent.innerHTML += `
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: rgba(39, 174, 96, 0.3); border-color: #27ae60;"></div>
+                            <span>Farm Boundaries</span>
+                        </div>
+                    `;
+                } else if (type === 'certs') {
+                    legendContent.innerHTML += `
+                        <div class="legend-item">
+                            <div class="legend-color" style="border-color: #2196f3;">🌍</div>
+                            <span>EUDR</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="border-color: #4caf50;">🌳</div>
+                            <span>Rainforest Alliance</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="border-color: #9c27b0;">🌴</div>
+                            <span>RSPO</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="border-color: #ff9800;">🤝</div>
+                            <span>Fairtrade</span>
+                        </div>
+                    `;
+                } else if (type === 'crops') {
+                    legendContent.innerHTML += `
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: white; border-color: #27ae60; color: #27ae60; display: flex; align-items: center; justify-content: center; font-size: 10px;">P</div>
+                            <span>Palm Oil</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: white; border-color: #8b6f47; color: #8b6f47; display: flex; align-items: center; justify-content: center; font-size: 10px;">C</div>
+                            <span>Cocoa</span>
+                        </div>
+                    `;
+                } else if (type === 'quality') {
+                    legendContent.innerHTML += `
+                        <div class="legend-item">
+                            <div class="legend-color" style="border-color: #4caf50; color: #4caf50; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600;">⭐</div>
+                            <span>High Quality</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="border-color: #ff9800; color: #ff9800; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600;">⭐</div>
+                            <span>Medium Quality</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="border-color: #f44336; color: #f44336; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600;">⭐</div>
+                            <span>Low Quality</span>
+                        </div>
+                    `;
+                } else if (type === 'trainings') {
+                    legendContent.innerHTML += `
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #e8f5e9; border-color: #2e7d32; color: #2e7d32; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600;">+</div>
+                            <span>High ROI (>15%)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #fff3e0; border-color: #f57c00; color: #f57c00; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600;">+</div>
+                            <span>Medium ROI (0-15%)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #ffebee; border-color: #c62828; color: #c62828; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600;">-</div>
+                            <span>Negative ROI</span>
+                        </div>
+                    `;
+                } else if (type === 'insights') {
+                    legendContent.innerHTML += `
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #ff9800; border: none;">🌱</div>
+                            <span>Fertilizer Needed</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #2196f3; border: none;">💧</div>
+                            <span>Water Needed</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #f44336; border: none;">🐛</div>
+                            <span>Pest Control Needed</span>
+                        </div>
+                    `;
+                }
+            });
+        }
+
+        function showFarmPopup(farm, event) {
+            const popup = document.getElementById('farmPopup');
+            const title = document.getElementById('popupTitle');
+            const info = document.getElementById('popupInfo');
+            
+            // Stop event propagation to prevent closing immediately
+            event.stopPropagation();
+            
+            title.textContent = farm.name;
+            info.innerHTML = `
+                <strong>Crop:</strong> ${farm.crop}<br>
+                <strong>Certifications:</strong> ${farm.certifications.join(', ')}<br>
+                ${farm.insights.length > 0 ? `<strong>Needs:</strong> ${farm.insights.map(i => i.charAt(0).toUpperCase() + i.slice(1)).join(', ')}` : ''}
+            `;
+            
+            const mapContainer = document.querySelector('.map-container');
+            const rect = mapContainer.getBoundingClientRect();
+            popup.style.left = (event.clientX - rect.left - 100) + 'px';
+            popup.style.top = (event.clientY - rect.top - 80) + 'px';
+            popup.classList.add('active');
+            
+            // Close popup when clicking elsewhere
+            const closePopup = (e) => {
+                if (!popup.contains(e.target) && !e.target.closest('.farm-boundary')) {
+                    popup.classList.remove('active');
+                    document.removeEventListener('click', closePopup);
+                }
+            };
+            
+            setTimeout(() => {
+                document.addEventListener('click', closePopup);
+            }, 100);
+        }
+
+        function renderCertifications() {
+            const grid = document.getElementById('certificationsGrid');
+            grid.innerHTML = certifications.map(cert => {
+                const percentage = Math.round((cert.certifiedMembers / cert.totalMembers) * 100);
+                const statusClass = cert.status === 'active' ? 'active' : cert.status === 'pending' ? 'pending' : 'not-started';
+                
+                return `
+                    <div class="cert-card ${cert.id}">
+                        <div class="cert-header">
+                            <div>
+                                <div class="cert-name">${cert.icon} ${cert.name}</div>
+                                <div style="font-size: 13px; color: #666; margin-top: 5px;">${cert.description}</div>
+                            </div>
+                            <span class="cert-status ${statusClass}">${cert.status.toUpperCase()}</span>
+                        </div>
+                        <div class="cert-stats">
+                            <div class="cert-stat">
+                                <div class="cert-stat-label">Certified Members</div>
+                                <div class="cert-stat-value">${cert.certifiedMembers}</div>
+                            </div>
+                            <div class="cert-stat">
+                                <div class="cert-stat-label">Coverage</div>
+                                <div class="cert-stat-value">${percentage}%</div>
+                            </div>
+                        </div>
+                        <div style="margin: 15px 0; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                            <div style="font-size: 12px; color: #666; margin-bottom: 8px; font-weight: 600;">Key Requirements:</div>
+                            <ul style="font-size: 12px; color: #666; margin-left: 20px; line-height: 1.8;">
+                                ${cert.requirements.map(req => `<li>${req}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div style="font-size: 12px; color: #666; margin: 15px 0;">
+                            <strong>Next Audit:</strong> ${cert.nextAudit}
+                        </div>
+                        <div class="cert-actions">
+                            <button class="cert-btn cert-btn-primary" onclick="startCertification('${cert.id}')">Start Certification</button>
+                            <button class="cert-btn cert-btn-secondary" onclick="viewCertDetails('${cert.id}')">View Details</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function startCertification(certId) {
+            const cert = certifications.find(c => c.id === certId);
+            alert(`Starting ${cert.name} certification process.\n\nThis would open a wizard to:\n- Select members to certify\n- Collect required documentation\n- Schedule GPS mapping\n- Set up audit preparation`);
+        }
+
+        function viewCertDetails(certId) {
+            const cert = certifications.find(c => c.id === certId);
+            alert(`Certification Details: ${cert.name}\n\nCertified Members: ${cert.certifiedMembers}/${cert.totalMembers} (${Math.round((cert.certifiedMembers / cert.totalMembers) * 100)}%)\n\nNext Audit: ${cert.nextAudit}\n\nRequirements:\n${cert.requirements.map(r => `• ${r}`).join('\n')}`);
         }
 
         function renderMembers() {
@@ -1306,6 +2574,9 @@
                         ${insight.actions.map(action => `
                             <button class="insight-btn insight-btn-primary" onclick="handleInsightAction('${action}', ${insight.id})">${action}</button>
                         `).join('')}
+                        <button class="insight-btn insight-btn-primary" onclick="sendSMSToFarmers(${insight.id})" style="background: #2196f3;">
+                            📱 ${insight.affectedMembers.length === 1 ? 'Send SMS to Farmer' : 'Send SMS to Farmers'}
+                        </button>
                         <button class="insight-btn insight-btn-secondary" onclick="dismissInsight(${insight.id})">Dismiss</button>
                     </div>
                 </div>
@@ -1318,9 +2589,6 @@
                 item.addEventListener('click', () => {
                     const page = item.dataset.page;
                     switchPage(page);
-                    
-                    document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-                    item.classList.add('active');
                 });
             });
 
@@ -1375,8 +2643,21 @@
         function switchPage(pageId) {
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
+                page.style.display = 'none';
             });
-            document.getElementById(`${pageId}Page`).classList.add('active');
+            
+            // Update navigation active state
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`[data-page="${pageId}"]`)?.classList.add('active');
+            
+            // Show the page
+            const pageElement = document.getElementById(`${pageId}Page`);
+            if (pageElement) {
+                pageElement.classList.add('active');
+                pageElement.style.display = 'block';
+            }
         }
 
         function showMemberDetails(memberId) {
@@ -1504,6 +2785,25 @@
             alert(`Action: ${action}\n\nFor insight: ${insight.title}\n\nThis would trigger the appropriate workflow (e.g., send SMS, generate forms, schedule meetings).`);
         }
 
+        function sendSMSToFarmers(insightId) {
+            const insight = actionableInsights.find(i => i.id === insightId);
+            const affectedCount = insight.affectedMembers.length;
+            const memberList = insight.affectedMembers.join(', ');
+            
+            const message = `Send SMS Alert to ${affectedCount} ${affectedCount === 1 ? 'Farmer' : 'Farmers'}\n\n` +
+                          `Insight: ${insight.title}\n\n` +
+                          `Affected Members: ${memberList}\n\n` +
+                          `Location: ${insight.location}\n\n` +
+                          `This will send an SMS notification to all affected farmers about: ${insight.description}\n\n` +
+                          `Would you like to proceed?`;
+            
+            if (confirm(message)) {
+                alert(`✅ SMS notifications sent successfully to ${affectedCount} ${affectedCount === 1 ? 'farmer' : 'farmers'}!\n\n` +
+                      `Message sent about: ${insight.title}\n\n` +
+                      `Recipients: ${memberList}`);
+            }
+        }
+
         function dismissInsight(insightId) {
             const index = actionableInsights.findIndex(i => i.id === insightId);
             if (index > -1) {
@@ -1615,6 +2915,11 @@
         window.handleInsightAction = handleInsightAction;
         window.dismissInsight = dismissInsight;
         window.selectQuickOption = selectQuickOption;
+        window.switchPage = switchPage;
+        window.startCertification = startCertification;
+        window.viewCertDetails = viewCertDetails;
+        window.toggleOverlay = toggleOverlay;
+        window.sendSMSToFarmers = sendSMSToFarmers;
 
         // Initialize on load
         if (document.readyState === 'loading') {
