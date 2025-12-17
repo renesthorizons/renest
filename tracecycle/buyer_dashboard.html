@@ -114,6 +114,7 @@
         .content-area {
             flex: 1;
             overflow-y: auto;
+            overflow-x: hidden;
             padding: 25px;
         }
 
@@ -162,6 +163,9 @@
         /* Module Views */
         .module-view {
             display: none;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
         }
 
         .module-view.active {
@@ -427,6 +431,8 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
             gap: 20px;
+            width: 100%;
+            max-width: 100%;
         }
 
         .coop-card {
@@ -435,6 +441,8 @@
             padding: 25px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             transition: all 0.2s;
+            max-width: 100%;
+            box-sizing: border-box;
         }
 
         .coop-card:hover {
@@ -1055,6 +1063,8 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
+            width: 100%;
+            max-width: 100%;
         }
 
         .supply-card {
@@ -1062,6 +1072,8 @@
             border-radius: 8px;
             padding: 20px;
             border-left: 4px solid #ff6b35;
+            max-width: 100%;
+            box-sizing: border-box;
         }
 
         .supply-card-header {
@@ -1188,6 +1200,8 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 20px;
+            width: 100%;
+            max-width: 100%;
         }
 
         .purchase-sales-card {
@@ -1196,6 +1210,8 @@
             padding: 25px;
             border: 2px solid #e0e0e0;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            max-width: 100%;
+            box-sizing: border-box;
         }
 
         .purchase-sales-card-header {
@@ -1378,9 +1394,27 @@
         }
 
         /* Responsive adjustments */
+        @media (max-width: 1400px) {
+            .cooperatives-grid {
+                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            }
+            .purchase-sales-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+        }
+
         @media (max-width: 1200px) {
             .modules-grid {
                 grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+            .cooperatives-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+            .purchase-sales-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            .supply-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             }
         }
 
@@ -1437,13 +1471,20 @@
                 grid-template-columns: 1fr;
             }
 
+            .cooperatives-grid,
+            .purchase-sales-grid,
+            .supply-grid {
+                grid-template-columns: 1fr !important;
+            }
+
             .region-card,
             .program-card,
             .coop-card,
             .farmer-card,
             .roi-card,
             .module-card,
-            .supply-card {
+            .supply-card,
+            .purchase-sales-card {
                 padding: 18px;
             }
 
