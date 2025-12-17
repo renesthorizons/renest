@@ -361,6 +361,81 @@
             background: #e3f2fd;
         }
 
+        .insight-item.highlight-insight {
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.35);
+            border-radius: 10px;
+            transition: box-shadow 0.4s;
+        }
+
+        .insight-section {
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 14px;
+            background: white;
+            overflow: hidden;
+        }
+
+        .insight-section-header {
+            width: 100%;
+            background: #f8f9fa;
+            border: none;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .insight-section-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .insight-section-toggle {
+            font-size: 14px;
+            color: #666;
+            transition: transform 0.2s;
+        }
+
+        .insight-section.open .insight-section-toggle {
+            transform: rotate(180deg);
+        }
+
+        .insight-section-body {
+            display: none;
+            padding: 12px;
+            background: white;
+        }
+
+        .insight-section.open .insight-section-body {
+            display: block;
+        }
+
+        .insight-filters {
+            display: flex;
+            gap: 8px;
+        }
+
+        .insight-filter-btn {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            background: #f8f9fa;
+            cursor: pointer;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .insight-filter-btn.active {
+            background: #27ae60;
+            color: white;
+            border-color: #27ae60;
+        }
+
         .insight-header {
             display: flex;
             justify-content: space-between;
@@ -989,16 +1064,19 @@
             color: white;
         }
 
+        .map-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
         .map-controls {
-            position: absolute;
-            top: 20px;
-            right: 20px;
+            position: static;
             background: white;
             border-radius: 8px;
             padding: 15px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 100;
-            min-width: 200px;
+            min-width: 0;
         }
 
         .map-control-title {
@@ -1060,15 +1138,12 @@
         }
 
         .map-legend {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
+            position: static;
             background: white;
             border-radius: 8px;
             padding: 15px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 100;
-            max-width: 250px;
+            max-width: 350px;
         }
 
         .legend-title {
@@ -1161,6 +1236,35 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.2);
             min-width: 180px;
             max-width: 220px;
+        }
+
+        .mobile-plus {
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: #2196f3;
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        .mobile-detail {
+            position: absolute;
+            background: rgba(255,255,255,0.97);
+            border: 2px solid #2196f3;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 11px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            width: 180px;
+            z-index: 5;
+            display: none;
         }
 
         .training-marker-title {
@@ -1387,6 +1491,192 @@
         .send-btn:active {
             transform: translateY(0);
         }
+
+        /* Floating Chat Toggle (mobile) */
+        .chat-toggle-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            color: white;
+            font-size: 22px;
+            box-shadow: 0 10px 20px rgba(39, 174, 96, 0.35);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 140;
+            cursor: pointer;
+        }
+
+        .chat-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            display: none;
+            z-index: 130;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+            .members-grid {
+                grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-container {
+                flex-direction: column;
+                height: auto;
+                min-height: 100vh;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: sticky;
+                top: 0;
+                z-index: 90;
+            }
+
+            .nav-menu {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                gap: 8px;
+                padding: 10px;
+            }
+
+            .nav-item {
+                border-left: none;
+                border-radius: 8px;
+                background: #f8f9fa;
+            }
+
+            .nav-item.active {
+                border-left: none;
+                background: #e8f5e9;
+            }
+
+            .main-content {
+                height: auto;
+            }
+
+            .content-area {
+                padding: 16px;
+                overflow: visible;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .members-grid,
+            .info-grid,
+            .cert-grid,
+            .insights-grid,
+            .map-overlay-grid,
+            .home-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            .member-card,
+            .insight-card,
+            .cert-card,
+            .training-card,
+            .module-card,
+            .actionable-card {
+                padding: 18px;
+            }
+
+            .member-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .member-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .map-container {
+                height: 460px !important;
+            }
+
+            .chat-sidebar {
+                position: fixed;
+                top: 0;
+                right: 0;
+                height: 100%;
+                max-width: 420px;
+                width: 100%;
+                transform: translateX(100%);
+                transition: transform 0.3s ease, opacity 0.3s ease;
+                z-index: 140;
+                display: none;
+            }
+
+            .chat-sidebar.mobile-visible {
+                display: flex;
+                transform: translateX(0);
+            }
+
+            .chat-toggle-btn {
+                display: flex;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-header h1 {
+                font-size: 18px;
+            }
+
+            .page-title {
+                font-size: 20px;
+            }
+
+            .section-title {
+                font-size: 18px;
+            }
+
+            .map-container {
+                height: 340px !important;
+            }
+
+            .stat-mini-value {
+                font-size: 16px;
+            }
+
+            .member-stat-value {
+                font-size: 14px;
+            }
+
+            /* Map overlay sizing */
+            .insight-marker {
+                width: 28px;
+                height: 28px;
+                font-size: 14px;
+            }
+
+            .training-marker {
+                padding: 8px 10px;
+                font-size: 10px;
+                min-width: 140px;
+                max-width: 170px;
+            }
+
+            .training-marker-title {
+                font-size: 11px;
+            }
+
+            .training-item {
+                margin-bottom: 4px;
+                padding-bottom: 4px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1429,7 +1719,7 @@
         <div class="main-content">
             <div class="top-bar">
                 <div class="coop-info">
-                    <h2>Ghana Palm Cooperative</h2>
+                    <h2>Ghana Farm Cooperative</h2>
                     <p>Western Region, Ghana</p>
                 </div>
                 <div class="stats-bar">
@@ -1486,6 +1776,9 @@
                 <div class="page" id="certificationsPage">
                     <div class="page-header">
                         <div class="page-title">Certifications</div>
+                        <div class="action-buttons">
+                            <button class="btn btn-secondary" onclick="goToCertificationInsights()">See Required Actions</button>
+                        </div>
                     </div>
                     <div class="cert-grid" id="certificationsGrid">
                         <!-- Populated by JavaScript -->
@@ -1510,40 +1803,7 @@
                     <div class="page-header">
                         <div class="page-title">Cooperative Map</div>
                     </div>
-                    <div class="map-container">
-                        <div class="satellite-view" id="satelliteView">
-                            <!-- Farm boundaries overlay -->
-                            <div class="map-overlay" id="farmOverlay" style="display: none;">
-                                <!-- Populated by JavaScript -->
-                            </div>
-                            
-                            <!-- Certification overlay -->
-                            <div class="map-overlay" id="certOverlay" style="display: none;">
-                                <!-- Populated by JavaScript -->
-                            </div>
-                            
-                            <!-- Crop type overlay -->
-                            <div class="map-overlay" id="cropOverlay" style="display: none;">
-                                <!-- Populated by JavaScript -->
-                            </div>
-                            
-                            <!-- Actionable insights overlay -->
-                            <div class="map-overlay" id="insightsOverlay" style="display: none;">
-                                <!-- Populated by JavaScript -->
-                            </div>
-                            
-                            <!-- Quality rating overlay -->
-                            <div class="map-overlay" id="qualityOverlay" style="display: none;">
-                                <!-- Populated by JavaScript -->
-                            </div>
-                            
-                            <!-- Trainings overlay -->
-                            <div class="map-overlay" id="trainingsOverlay" style="display: none;">
-                                <!-- Populated by JavaScript -->
-                            </div>
-                        </div>
-                        
-                        <!-- Map Controls -->
+                    <div class="map-section">
                         <div class="map-controls">
                             <div class="map-control-title">Map Overlays</div>
                             <div class="toggle-control">
@@ -1589,17 +1849,51 @@
                                 <div class="toggle-switch" id="toggleInsights" onclick="toggleOverlay('insights')"></div>
                             </div>
                         </div>
-                        
+
+                        <div class="map-container">
+                            <div class="satellite-view" id="satelliteView">
+                                <!-- Farm boundaries overlay -->
+                                <div class="map-overlay" id="farmOverlay" style="display: none;">
+                                    <!-- Populated by JavaScript -->
+                                </div>
+                                
+                                <!-- Certification overlay -->
+                                <div class="map-overlay" id="certOverlay" style="display: none;">
+                                    <!-- Populated by JavaScript -->
+                                </div>
+                                
+                                <!-- Crop type overlay -->
+                                <div class="map-overlay" id="cropOverlay" style="display: none;">
+                                    <!-- Populated by JavaScript -->
+                                </div>
+                                
+                                <!-- Actionable insights overlay -->
+                                <div class="map-overlay" id="insightsOverlay" style="display: none;">
+                                    <!-- Populated by JavaScript -->
+                                </div>
+                                
+                                <!-- Quality rating overlay -->
+                                <div class="map-overlay" id="qualityOverlay" style="display: none;">
+                                    <!-- Populated by JavaScript -->
+                                </div>
+                                
+                                <!-- Trainings overlay -->
+                                <div class="map-overlay" id="trainingsOverlay" style="display: none;">
+                                    <!-- Populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <!-- Farm Popup -->
+                            <div class="farm-popup" id="farmPopup">
+                                <div class="farm-popup-title" id="popupTitle"></div>
+                                <div class="farm-popup-info" id="popupInfo"></div>
+                            </div>
+                        </div>
+
                         <!-- Map Legend -->
                         <div class="map-legend" id="mapLegend" style="display: none;">
                             <div class="legend-title">Legend</div>
                             <div id="legendContent"></div>
-                        </div>
-                        
-                        <!-- Farm Popup -->
-                        <div class="farm-popup" id="farmPopup">
-                            <div class="farm-popup-title" id="popupTitle"></div>
-                            <div class="farm-popup-info" id="popupInfo"></div>
                         </div>
                     </div>
                 </div>
@@ -1608,6 +1902,10 @@
                 <div class="page" id="insightsPage">
                     <div class="page-header">
                         <div class="page-title">Actionable Insights</div>
+                        <div class="insight-filters">
+                            <button class="insight-filter-btn active" id="insightFilterAll">All</button>
+                            <button class="insight-filter-btn" id="insightFilterUrgent">Urgent</button>
+                        </div>
                     </div>
                     <div class="insights-list" id="insightsList">
                         <!-- Populated by JavaScript -->
@@ -1745,6 +2043,8 @@
                 <button class="send-btn" id="sendBtn">Send</button>
             </div>
         </div>
+        <div class="chat-overlay" id="chatOverlay" onclick="toggleChatSidebar(false)"></div>
+        <button class="chat-toggle-btn" id="chatToggleBtn" aria-label="Open chat">💬</button>
     </div>
 
     <!-- Member Detail Modal -->
@@ -1972,6 +2272,8 @@
             }
         ];
 
+        let insightFilter = 'all';
+
         // Certifications Data
         const certifications = [
             {
@@ -2163,10 +2465,35 @@
             renderInsights();
             renderMap();
             setupEventListeners();
+            handleChatResponsive();
         }
 
         function renderMap() {
             // Farm boundaries will be rendered when toggle is activated
+        }
+
+        function toggleChatSidebar(forceState) {
+            const sidebar = document.getElementById('chatSidebar');
+            const overlay = document.getElementById('chatOverlay');
+            const shouldShow = forceState !== undefined ? forceState : !sidebar.classList.contains('mobile-visible');
+
+            if (shouldShow) {
+                sidebar.classList.add('mobile-visible');
+                if (overlay) overlay.style.display = 'block';
+            } else {
+                sidebar.classList.remove('mobile-visible');
+                if (overlay) overlay.style.display = 'none';
+            }
+        }
+
+        function handleChatResponsive() {
+            const sidebar = document.getElementById('chatSidebar');
+            const overlay = document.getElementById('chatOverlay');
+
+            if (window.innerWidth > 1024) {
+                sidebar.classList.remove('mobile-visible');
+                if (overlay) overlay.style.display = 'none';
+            }
         }
 
         function toggleOverlay(type) {
@@ -2205,8 +2532,65 @@
             updateLegend();
         }
 
+        function openInsightSection(sectionId) {
+            const section = document.querySelector(`.insight-section[data-section="${sectionId}"]`);
+            if (!section) return;
+            section.classList.add('open');
+            const body = document.getElementById(`sectionBody-${sectionId}`);
+            const toggle = document.getElementById(`sectionToggle-${sectionId}`);
+            if (body) body.style.display = 'block';
+            if (toggle) toggle.textContent = '▲';
+        }
+
+        function closeInsightSection(sectionId) {
+            const section = document.querySelector(`.insight-section[data-section="${sectionId}"]`);
+            if (!section) return;
+            section.classList.remove('open');
+            const body = document.getElementById(`sectionBody-${sectionId}`);
+            const toggle = document.getElementById(`sectionToggle-${sectionId}`);
+            if (body) body.style.display = 'none';
+            if (toggle) toggle.textContent = '▼';
+        }
+
+        function toggleInsightSection(sectionId) {
+            const section = document.querySelector(`.insight-section[data-section="${sectionId}"]`);
+            if (!section) return;
+            if (section.classList.contains('open')) {
+                closeInsightSection(sectionId);
+            } else {
+                openInsightSection(sectionId);
+            }
+        }
+
+        function setInsightFilter(filter) {
+            insightFilter = filter;
+            document.querySelectorAll('.insight-filter-btn').forEach(btn => btn.classList.remove('active'));
+            if (filter === 'urgent') {
+                document.getElementById('insightFilterUrgent')?.classList.add('active');
+            } else {
+                document.getElementById('insightFilterAll')?.classList.add('active');
+            }
+            renderInsights();
+        }
+
+        function goToCertificationInsights() {
+            switchPage('insights');
+            setTimeout(() => {
+                document.querySelectorAll('.insight-section').forEach(sec => closeInsightSection(sec.dataset.section));
+                openInsightSection('cert');
+                const target = document.querySelector('.insight-item[data-category="cert"]');
+                const section = document.querySelector('.insight-section[data-section="cert"]');
+                if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                if (target) {
+                    target.classList.add('highlight-insight');
+                    setTimeout(() => target.classList.remove('highlight-insight'), 2000);
+                }
+            }, 150);
+        }
+
         function renderOverlay(type, container) {
             container.innerHTML = '';
+            container.style.pointerEvents = 'auto';
             
             if (type === 'farms') {
                 farmLocations.forEach(farm => {
@@ -2256,37 +2640,102 @@
                     container.appendChild(cropLabel);
                 });
             } else if (type === 'quality') {
-                farmLocations.forEach(farm => {
-                    const qualityBadge = document.createElement('div');
-                    qualityBadge.className = `quality-rating-badge ${farm.qualityRating.toLowerCase()}`;
-                    qualityBadge.style.left = `calc(${farm.x}% + ${farm.width / 2}% - 50px)`;
-                    qualityBadge.style.top = `calc(${farm.y}% + ${farm.height / 2}%)`;
-                    qualityBadge.textContent = `⭐ ${farm.qualityRating}`;
-                    qualityBadge.title = `${farm.name}: ${farm.qualityRating} Quality`;
-                    container.appendChild(qualityBadge);
+                const isMobile = window.innerWidth <= 768;
+                farmLocations.forEach((farm, idx) => {
+                    if (isMobile) {
+                        const plus = document.createElement('div');
+                        plus.className = 'mobile-plus';
+                        plus.style.left = `calc(${farm.x}% + ${farm.width / 2}% - 10px)`;
+                        plus.style.top = `calc(${farm.y}% + ${farm.height / 2}% - 10px)`;
+                        plus.textContent = '+';
+                        const detailId = `quality-detail-${idx}`;
+
+                        const detail = document.createElement('div');
+                        detail.className = 'mobile-detail';
+                        detail.id = detailId;
+                        detail.style.left = `calc(${farm.x}% + ${farm.width / 2}% + 14px)`;
+                        detail.style.top = `calc(${farm.y}% + ${farm.height / 2}% - 10px)`;
+                        detail.innerHTML = `
+                            <div style="font-weight:700; margin-bottom:6px;">${farm.name}</div>
+                            <div>Rating: ${farm.qualityRating}</div>
+                            <div style="margin-top:4px; color:#555;">Product quality status for this farm.</div>
+                        `;
+
+                        plus.onclick = () => {
+                            container.querySelectorAll('.mobile-detail').forEach(d => d.style.display = 'none');
+                            detail.style.display = 'block';
+                        };
+
+                        container.appendChild(plus);
+                        container.appendChild(detail);
+                    } else {
+                        const qualityBadge = document.createElement('div');
+                        qualityBadge.className = `quality-rating-badge ${farm.qualityRating.toLowerCase()}`;
+                        qualityBadge.style.left = `calc(${farm.x}% + ${farm.width / 2}% - 50px)`;
+                        qualityBadge.style.top = `calc(${farm.y}% + ${farm.height / 2}%)`;
+                        qualityBadge.textContent = `⭐ ${farm.qualityRating}`;
+                        qualityBadge.title = `${farm.name}: ${farm.qualityRating} Quality`;
+                        container.appendChild(qualityBadge);
+                    }
                 });
             } else if (type === 'trainings') {
-                farmLocations.forEach(farm => {
+                const isMobile = window.innerWidth <= 768;
+                farmLocations.forEach((farm, idx) => {
                     if (farm.trainings && farm.trainings.length > 0) {
-                        const trainingMarker = document.createElement('div');
-                        trainingMarker.className = 'training-marker';
-                        trainingMarker.style.left = `calc(${farm.x}% + ${farm.width}% + 10px)`;
-                        trainingMarker.style.top = `calc(${farm.y}% + 5px)`;
-                        trainingMarker.title = `${farm.name} - Training ROI`;
-                        
-                        let trainingHTML = `<div class="training-marker-title">${farm.name}</div>`;
-                        farm.trainings.forEach(training => {
-                            const roiValue = parseFloat(training.roi);
-                            const roiClass = roiValue > 15 ? 'positive' : roiValue > 0 ? 'neutral' : 'negative';
-                            trainingHTML += `
-                                <div class="training-item">
-                                    <span class="training-name">${training.name}</span>
-                                    <span class="training-roi ${roiClass}">${training.roi}</span>
-                                </div>
-                            `;
-                        });
-                        trainingMarker.innerHTML = trainingHTML;
-                        container.appendChild(trainingMarker);
+                        if (isMobile) {
+                            const plus = document.createElement('div');
+                            plus.className = 'mobile-plus';
+                            plus.style.left = `calc(${farm.x}% + ${farm.width}% - 10px)`;
+                            plus.style.top = `calc(${farm.y}% + 5px)`;
+                            plus.textContent = '+';
+                            const detailId = `training-detail-${idx}`;
+
+                            const detail = document.createElement('div');
+                            detail.className = 'mobile-detail';
+                            detail.id = detailId;
+                            detail.style.left = `calc(${farm.x}% + ${farm.width}% + 14px)`;
+                            detail.style.top = `calc(${farm.y}% + 5px)`;
+                            let trainingHTML = `<div class="training-marker-title" style="margin-bottom:4px;">${farm.name}</div>`;
+                            farm.trainings.forEach(training => {
+                                const roiValue = parseFloat(training.roi);
+                                const roiClass = roiValue > 15 ? 'positive' : roiValue > 0 ? 'neutral' : 'negative';
+                                trainingHTML += `
+                                    <div class="training-item" style="margin-bottom:4px; padding-bottom:4px;">
+                                        <span class="training-name">${training.name}</span>
+                                        <span class="training-roi ${roiClass}">${training.roi}</span>
+                                    </div>
+                                `;
+                            });
+                            detail.innerHTML = trainingHTML;
+
+                            plus.onclick = () => {
+                                container.querySelectorAll('.mobile-detail').forEach(d => d.style.display = 'none');
+                                detail.style.display = 'block';
+                            };
+
+                            container.appendChild(plus);
+                            container.appendChild(detail);
+                        } else {
+                            const trainingMarker = document.createElement('div');
+                            trainingMarker.className = 'training-marker';
+                            trainingMarker.style.left = `calc(${farm.x}% + ${farm.width}% + 10px)`;
+                            trainingMarker.style.top = `calc(${farm.y}% + 5px)`;
+                            trainingMarker.title = `${farm.name} - Training ROI`;
+                            
+                            let trainingHTML = `<div class="training-marker-title">${farm.name}</div>`;
+                            farm.trainings.forEach(training => {
+                                const roiValue = parseFloat(training.roi);
+                                const roiClass = roiValue > 15 ? 'positive' : roiValue > 0 ? 'neutral' : 'negative';
+                                trainingHTML += `
+                                    <div class="training-item">
+                                        <span class="training-name">${training.name}</span>
+                                        <span class="training-roi ${roiClass}">${training.roi}</span>
+                                    </div>
+                                `;
+                            });
+                            trainingMarker.innerHTML = trainingHTML;
+                            container.appendChild(trainingMarker);
+                        }
                     }
                 });
             } else if (type === 'insights') {
@@ -2556,31 +3005,81 @@
                 return priorityOrder[a.priority] - priorityOrder[b.priority];
             });
 
-            insightsList.innerHTML = sortedInsights.map(insight => `
-                <div class="insight-item ${insight.priority}">
-                    <div class="insight-header">
-                        <div>
-                            <div class="insight-title">${insight.title}</div>
-                            <div class="insight-description">${insight.description}</div>
+            const filtered = sortedInsights.filter(insight => {
+                return insightFilter === 'urgent' ? insight.priority === 'urgent' : true;
+            });
+
+            const sections = [
+                { id: 'cert', title: 'Certifications & Audits', items: [] },
+                { id: 'risk', title: 'Weather & Risk Alerts', items: [] },
+                { id: 'operations', title: 'Operations & Payments', items: [] },
+                { id: 'training', title: 'Training & Engagement', items: [] },
+                { id: 'farm', title: 'Farm-Level Actions', items: [] },
+                { id: 'general', title: 'Other Insights', items: [] }
+            ];
+
+            const categorizeInsight = (insight) => {
+                if (/certification|audit|eudr/i.test(insight.title) || /certification|audit|eudr/i.test(insight.description)) return 'cert';
+                if (/flood|weather|storm|rain/i.test(insight.title)) return 'risk';
+                if (/payment|premium|bank|payout/i.test(insight.title)) return 'operations';
+                if (/training|enrollment|program/i.test(insight.title)) return 'training';
+                if (insight.isFarmerSpecific) return 'farm';
+                return 'general';
+            };
+
+            filtered.forEach(insight => {
+                const category = categorizeInsight(insight);
+                const section = sections.find(s => s.id === category) || sections.find(s => s.id === 'general');
+                if (section) section.items.push(insight);
+            });
+
+            const renderInsightItem = (insight, category) => {
+                const primaryAction = insight.actions && insight.actions.length ? insight.actions[0] : null;
+                const smsLabel = insight.affectedMembers.length === 1 ? 'Send SMS to Farmer' : 'Send SMS to Farmers';
+                return `
+                    <div class="insight-item ${insight.priority}" data-category="${category}">
+                        <div class="insight-header">
+                            <div>
+                                <div class="insight-title">${insight.title}</div>
+                                <div class="insight-description">${insight.description}</div>
+                            </div>
+                            <span class="insight-priority ${insight.priority}">${insight.priority.toUpperCase()}</span>
                         </div>
-                        <span class="insight-priority ${insight.priority}">${insight.priority.toUpperCase()}</span>
+                        <div class="insight-meta">
+                            <span>📍 ${insight.location}</span>
+                            <span>📅 Due: ${insight.date}</span>
+                            <span>👥 Affects: ${insight.affectedMembers.length} ${insight.affectedMembers.length === 1 ? 'member' : 'members'}</span>
+                        </div>
+                        <div class="insight-actions">
+                            ${primaryAction ? `<button class="insight-btn insight-btn-primary" onclick="handleInsightAction('${primaryAction}', ${insight.id})">${primaryAction}</button>` : ''}
+                            <button class="insight-btn insight-btn-primary" onclick="sendSMSToFarmers(${insight.id})" style="background: #2196f3;">
+                                📱 ${smsLabel}
+                            </button>
+                        </div>
                     </div>
-                    <div class="insight-meta">
-                        <span>📍 ${insight.location}</span>
-                        <span>📅 Due: ${insight.date}</span>
-                        <span>👥 Affects: ${insight.affectedMembers.length} ${insight.affectedMembers.length === 1 ? 'member' : 'members'}</span>
-                    </div>
-                    <div class="insight-actions">
-                        ${insight.actions.map(action => `
-                            <button class="insight-btn insight-btn-primary" onclick="handleInsightAction('${action}', ${insight.id})">${action}</button>
-                        `).join('')}
-                        <button class="insight-btn insight-btn-primary" onclick="sendSMSToFarmers(${insight.id})" style="background: #2196f3;">
-                            📱 ${insight.affectedMembers.length === 1 ? 'Send SMS to Farmer' : 'Send SMS to Farmers'}
+                `;
+            };
+
+            const sectionHtml = sections
+                .filter(sec => sec.items.length > 0)
+                .map(sec => `
+                    <div class="insight-section" data-section="${sec.id}">
+                        <button class="insight-section-header" onclick="toggleInsightSection('${sec.id}')">
+                            <div class="insight-section-title">${sec.title} (${sec.items.length})</div>
+                            <div class="insight-section-toggle" id="sectionToggle-${sec.id}">▼</div>
                         </button>
-                        <button class="insight-btn insight-btn-secondary" onclick="dismissInsight(${insight.id})">Dismiss</button>
+                        <div class="insight-section-body" id="sectionBody-${sec.id}">
+                            ${sec.items.map(item => renderInsightItem(item, sec.id)).join('')}
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `).join('');
+
+            insightsList.innerHTML = sectionHtml;
+
+            const firstSection = sections.find(sec => sec.items.length > 0);
+            if (firstSection) {
+                openInsightSection(firstSection.id);
+            }
         }
 
         function setupEventListeners() {
@@ -2605,8 +3104,19 @@
 
             // Chat
             document.getElementById('minimizeChat').addEventListener('click', () => {
-                document.getElementById('chatSidebar').classList.toggle('minimized');
+                if (window.innerWidth <= 1024) {
+                    toggleChatSidebar(false);
+                } else {
+                    document.getElementById('chatSidebar').classList.toggle('minimized');
+                }
             });
+
+            const chatToggleBtn = document.getElementById('chatToggleBtn');
+            if (chatToggleBtn) {
+                chatToggleBtn.addEventListener('click', () => toggleChatSidebar());
+            }
+
+            window.addEventListener('resize', handleChatResponsive);
 
             document.getElementById('sendBtn').addEventListener('click', handleChatMessage);
             document.getElementById('chatInput').addEventListener('keypress', (e) => {
@@ -2638,6 +3148,12 @@
                     quickOptions.classList.remove('show');
                 }
             });
+
+            // Insights filters
+            const filterAll = document.getElementById('insightFilterAll');
+            const filterUrgent = document.getElementById('insightFilterUrgent');
+            if (filterAll) filterAll.addEventListener('click', () => setInsightFilter('all'));
+            if (filterUrgent) filterUrgent.addEventListener('click', () => setInsightFilter('urgent'));
         }
 
         function switchPage(pageId) {
@@ -2658,6 +3174,11 @@
                 pageElement.classList.add('active');
                 pageElement.style.display = 'block';
             }
+
+            // Scroll to top on page change
+            const content = document.querySelector('.content-area');
+            if (content) content.scrollTop = 0;
+            window.scrollTo({ top: 0, behavior: 'instant' });
         }
 
         function showMemberDetails(memberId) {
@@ -2920,6 +3441,9 @@
         window.viewCertDetails = viewCertDetails;
         window.toggleOverlay = toggleOverlay;
         window.sendSMSToFarmers = sendSMSToFarmers;
+        window.toggleChatSidebar = toggleChatSidebar;
+        window.goToCertificationInsights = goToCertificationInsights;
+        window.toggleInsightSection = toggleInsightSection;
 
         // Initialize on load
         if (document.readyState === 'loading') {

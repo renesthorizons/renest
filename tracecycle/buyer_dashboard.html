@@ -753,6 +753,32 @@
             background: #ff6b35 !important;
         }
 
+        .toggle-control {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            gap: 12px;
+        }
+
+        .toggle-label {
+            font-size: 13px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background: #ccc;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
         .toggle-switch::after {
             content: '';
             position: absolute;
@@ -768,6 +794,13 @@
 
         .toggle-switch.active::after {
             transform: translateX(20px);
+        }
+
+        .legend-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
         }
 
         .coop-marker {
@@ -1084,6 +1117,68 @@
             color: #2c3e50;
         }
 
+        /* Mobile map inline expanders */
+        .mobile-plus {
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: #2196f3;
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            z-index: 5;
+        }
+
+        .mobile-detail {
+            position: absolute;
+            background: rgba(255,255,255,0.97);
+            border: 2px solid #2196f3;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 11px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            width: 180px;
+            z-index: 6;
+            display: none;
+        }
+        /* Map layout */
+        .map-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .map-controls {
+            position: static;
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 0;
+        }
+
+        .map-control-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #333;
+        }
+
+        .map-legend {
+            position: static;
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            max-width: 350px;
+        }
+
         .supply-info-value.highlight {
             color: #ff6b35;
             font-size: 16px;
@@ -1252,6 +1347,180 @@
         .btn-modal-secondary {
             background: #e0e0e0;
             color: #333;
+        }
+
+        /* Floating Chat Toggle (mobile) */
+        .chat-toggle-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            color: white;
+            font-size: 22px;
+            box-shadow: 0 10px 20px rgba(255, 107, 53, 0.35);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 140;
+            cursor: pointer;
+        }
+
+        .chat-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            display: none;
+            z-index: 130;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+            .modules-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-container {
+                flex-direction: column;
+                height: auto;
+                min-height: 100vh;
+            }
+
+            .sidebar {
+                width: 100%;
+                flex-direction: column;
+                position: sticky;
+                top: 0;
+                z-index: 90;
+            }
+
+            .module-nav {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                padding: 10px;
+                gap: 8px;
+            }
+
+            .module-nav-item {
+                border-left: none;
+                border-radius: 8px;
+                background: #f8f9fa;
+                padding: 12px 14px;
+            }
+
+            .module-nav-item.active {
+                border-left: none;
+                background: #e3f2fd;
+            }
+
+            .main-content {
+                height: auto;
+            }
+
+            .content-area {
+                padding: 16px;
+                overflow: visible;
+            }
+
+            .top-bar {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .modules-grid,
+            .harvest-regions {
+                grid-template-columns: 1fr;
+            }
+
+            .region-card,
+            .program-card,
+            .coop-card,
+            .farmer-card,
+            .roi-card,
+            .module-card,
+            .supply-card {
+                padding: 18px;
+            }
+
+            .map-container {
+                height: 460px !important;
+            }
+
+            .chat-sidebar {
+                position: fixed;
+                top: 0;
+                right: 0;
+                height: 100%;
+                max-width: 420px;
+                width: 100%;
+                transform: translateX(100%);
+                transition: transform 0.3s ease, opacity 0.3s ease;
+                z-index: 140;
+                display: none;
+            }
+
+            .chat-sidebar.mobile-visible {
+                display: flex;
+                transform: translateX(0);
+            }
+
+            .chat-toggle-btn {
+                display: flex;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-header h1 {
+                font-size: 18px;
+            }
+
+            .module-title {
+                font-size: 20px;
+            }
+
+            .section-title {
+                font-size: 18px;
+            }
+
+            .top-bar {
+                align-items: flex-start;
+            }
+
+            .map-container {
+                height: 360px !important;
+            }
+
+            .harvest-data .crop-row {
+                flex-wrap: wrap;
+            }
+
+            .quality-price-info,
+            .yield-info {
+                width: 70%;
+                padding: 10px;
+                font-size: 12px;
+            }
+
+            .quality-price-title {
+                font-size: 13px;
+            }
+
+            .quality-price-row {
+                font-size: 12px;
+            }
+
+            .yield-info-title {
+                font-size: 13px;
+            }
+
+            .yield-info-value {
+                font-size: 12px;
+            }
         }
     </style>
 </head>
@@ -1423,68 +1692,70 @@
                 <!-- Map Module -->
                 <div class="module-view" id="mapView">
                     <div class="section-title">Cooperative & Factory Map</div>
-                    <div class="map-container" style="position: relative; width: 100%; height: 600px; border-radius: 12px; overflow: hidden; margin: 20px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-                        <div class="satellite-view" id="buyerSatelliteView" style="width: 100%; height: 100%; background: linear-gradient(135deg, #8b7355 0%, #6b5d4f 50%, #4a5d4a 100%); position: relative; background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px), repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px), radial-gradient(circle at 20% 30%, rgba(139, 195, 74, 0.3) 0%, transparent 50%), radial-gradient(circle at 60% 50%, rgba(76, 175, 80, 0.4) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(139, 195, 74, 0.3) 0%, transparent 50%); background-size: 100% 100%, 100% 100%, 200px 200px, 300px 300px, 250px 250px;">
-                            <!-- Crop overlay -->
-                            <div class="map-overlay" id="buyerCropOverlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: none;"></div>
-                            
-                            <!-- Yield insights overlay -->
-                            <div class="map-overlay" id="buyerYieldOverlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: none;"></div>
-                            
-                            <!-- Factory location overlay -->
-                            <div class="map-overlay" id="buyerFactoryOverlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: none;"></div>
-                            
-                            <!-- Quality/Price overlay -->
-                            <div class="map-overlay" id="buyerQualityPriceOverlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: none;"></div>
-                            
-                            <!-- Certifications overlay -->
-                            <div class="map-overlay" id="buyerCertOverlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: none;"></div>
-                        </div>
-                        
-                        <!-- Map Legend -->
-                        <div class="map-legend" id="buyerMapLegend" style="position: absolute; bottom: 20px; left: 20px; background: white; border-radius: 8px; padding: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 100; max-width: 250px; display: none;">
-                            <div class="legend-title" style="font-size: 13px; font-weight: 600; margin-bottom: 10px; color: #333;">Legend</div>
-                            <div id="buyerLegendContent"></div>
-                        </div>
-                        
+                    <div class="map-section">
                         <!-- Map Controls -->
-                        <div class="map-controls" style="position: absolute; top: 20px; right: 20px; background: white; border-radius: 8px; padding: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 100; min-width: 200px;">
-                            <div style="font-size: 14px; font-weight: 600; margin-bottom: 12px; color: #333;">Map Overlays</div>
-                            <div class="toggle-control" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f0f0f0;">
-                                <div style="font-size: 13px; color: #333; display: flex; align-items: center; gap: 8px;">
+                        <div class="map-controls">
+                            <div class="map-control-title">Map Overlays</div>
+                            <div class="toggle-control" style="border-bottom: 1px solid #f0f0f0;">
+                                <div class="toggle-label">
                                     <span>🌾</span>
                                     <span>Crop Types</span>
                                 </div>
-                                <div class="toggle-switch" id="buyerToggleCrops" onclick="toggleBuyerOverlay('crops')" style="position: relative; width: 44px; height: 24px; background: #ccc; border-radius: 12px; cursor: pointer; transition: background 0.3s;"></div>
+                                <div class="toggle-switch" id="buyerToggleCrops" onclick="toggleBuyerOverlay('crops')"></div>
                             </div>
-                            <div class="toggle-control" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f0f0f0;">
-                                <div style="font-size: 13px; color: #333; display: flex; align-items: center; gap: 8px;">
+                            <div class="toggle-control" style="border-bottom: 1px solid #f0f0f0;">
+                                <div class="toggle-label">
                                     <span>📊</span>
                                     <span>Yield & Days Ready</span>
                                 </div>
-                                <div class="toggle-switch" id="buyerToggleYield" onclick="toggleBuyerOverlay('yield')" style="position: relative; width: 44px; height: 24px; background: #ccc; border-radius: 12px; cursor: pointer; transition: background 0.3s;"></div>
+                                <div class="toggle-switch" id="buyerToggleYield" onclick="toggleBuyerOverlay('yield')"></div>
                             </div>
-                            <div class="toggle-control" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f0f0f0;">
-                                <div style="font-size: 13px; color: #333; display: flex; align-items: center; gap: 8px;">
+                            <div class="toggle-control" style="border-bottom: 1px solid #f0f0f0;">
+                                <div class="toggle-label">
                                     <span>⭐</span>
                                     <span>Quality/Price</span>
                                 </div>
-                                <div class="toggle-switch" id="buyerToggleQualityPrice" onclick="toggleBuyerOverlay('qualityPrice')" style="position: relative; width: 44px; height: 24px; background: #ccc; border-radius: 12px; cursor: pointer; transition: background 0.3s;"></div>
+                                <div class="toggle-switch" id="buyerToggleQualityPrice" onclick="toggleBuyerOverlay('qualityPrice')"></div>
                             </div>
-                            <div class="toggle-control" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f0f0f0;">
-                                <div style="font-size: 13px; color: #333; display: flex; align-items: center; gap: 8px;">
+                            <div class="toggle-control" style="border-bottom: 1px solid #f0f0f0;">
+                                <div class="toggle-label">
                                     <span>✅</span>
                                     <span>Certifications</span>
                                 </div>
-                                <div class="toggle-switch" id="buyerToggleCert" onclick="toggleBuyerOverlay('cert')" style="position: relative; width: 44px; height: 24px; background: #ccc; border-radius: 12px; cursor: pointer; transition: background 0.3s;"></div>
+                                <div class="toggle-switch" id="buyerToggleCert" onclick="toggleBuyerOverlay('cert')"></div>
                             </div>
-                            <div class="toggle-control" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0;">
-                                <div style="font-size: 13px; color: #333; display: flex; align-items: center; gap: 8px;">
+                            <div class="toggle-control">
+                                <div class="toggle-label">
                                     <span>🏭</span>
                                     <span>Factory Location</span>
                                 </div>
-                                <div class="toggle-switch" id="buyerToggleFactory" onclick="toggleBuyerOverlay('factory')" style="position: relative; width: 44px; height: 24px; background: #ccc; border-radius: 12px; cursor: pointer; transition: background 0.3s;"></div>
+                                <div class="toggle-switch" id="buyerToggleFactory" onclick="toggleBuyerOverlay('factory')"></div>
                             </div>
+                        </div>
+
+                        <div class="map-container" style="position: relative; width: 100%; height: 600px; border-radius: 12px; overflow: hidden; margin: 12px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                            <div class="satellite-view" id="buyerSatelliteView" style="width: 100%; height: 100%; background: linear-gradient(135deg, #8b7355 0%, #6b5d4f 50%, #4a5d4a 100%); position: relative; background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px), repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px), radial-gradient(circle at 20% 30%, rgba(139, 195, 74, 0.3) 0%, transparent 50%), radial-gradient(circle at 60% 50%, rgba(76, 175, 80, 0.4) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(139, 195, 74, 0.3) 0%, transparent 50%); background-size: 100% 100%, 100% 100%, 200px 200px, 300px 300px, 250px 250px;">
+                                <!-- Crop overlay -->
+                                <div class="map-overlay" id="buyerCropOverlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: none;"></div>
+                                
+                                <!-- Yield insights overlay -->
+                                <div class="map-overlay" id="buyerYieldOverlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: none;"></div>
+                                
+                                <!-- Factory location overlay -->
+                                <div class="map-overlay" id="buyerFactoryOverlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: none;"></div>
+                                
+                                <!-- Quality/Price overlay -->
+                                <div class="map-overlay" id="buyerQualityPriceOverlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: none;"></div>
+                                
+                                <!-- Certifications overlay -->
+                                <div class="map-overlay" id="buyerCertOverlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: none;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Map Legend -->
+                        <div class="map-legend" id="buyerMapLegend" style="display: none;">
+                            <div class="legend-title">Legend</div>
+                            <div id="buyerLegendContent"></div>
                         </div>
                     </div>
                 </div>
@@ -1520,6 +1791,8 @@
                 <button class="send-btn" id="sendBtn">Send</button>
             </div>
         </div>
+        <div class="chat-overlay" id="chatOverlay" onclick="toggleChatSidebar(false)"></div>
+        <button class="chat-toggle-btn" id="chatToggleBtn" aria-label="Open chat">💬</button>
     </div>
 
     <!-- Payment Modal -->
@@ -1729,11 +2002,18 @@
 
         let currentModule = 'home';
 
+        function scrollToTop() {
+            const content = document.getElementById('contentArea');
+            if (content) content.scrollTop = 0;
+            window.scrollTo({ top: 0, behavior: 'instant' });
+        }
+
         function init() {
             setupEventListeners();
             renderHarvestData();
             renderROIPrograms();
             renderCooperativeCards();
+            handleChatResponsive();
         }
 
         function setupEventListeners() {
@@ -1747,8 +2027,19 @@
 
             // Chat
             document.getElementById('minimizeChat').addEventListener('click', () => {
-                document.getElementById('chatSidebar').classList.toggle('minimized');
+                if (window.innerWidth <= 1024) {
+                    toggleChatSidebar(false);
+                } else {
+                    document.getElementById('chatSidebar').classList.toggle('minimized');
+                }
             });
+
+            const chatToggleBtn = document.getElementById('chatToggleBtn');
+            if (chatToggleBtn) {
+                chatToggleBtn.addEventListener('click', () => toggleChatSidebar());
+            }
+
+            window.addEventListener('resize', handleChatResponsive);
 
             document.getElementById('sendBtn').addEventListener('click', handleChatMessage);
             document.getElementById('chatInput').addEventListener('keypress', (e) => {
@@ -1838,6 +2129,9 @@
                     renderSupplyChainInsights();
                 }
             }
+
+            // Scroll to top when switching modules
+            scrollToTop();
         }
 
         // Supply Chain Data
@@ -2201,6 +2495,30 @@
             updateBuyerLegend();
         }
 
+        function toggleChatSidebar(forceState) {
+            const sidebar = document.getElementById('chatSidebar');
+            const overlay = document.getElementById('chatOverlay');
+            const shouldShow = forceState !== undefined ? forceState : !sidebar.classList.contains('mobile-visible');
+
+            if (shouldShow) {
+                sidebar.classList.add('mobile-visible');
+                if (overlay) overlay.style.display = 'block';
+            } else {
+                sidebar.classList.remove('mobile-visible');
+                if (overlay) overlay.style.display = 'none';
+            }
+        }
+
+        function handleChatResponsive() {
+            const sidebar = document.getElementById('chatSidebar');
+            const overlay = document.getElementById('chatOverlay');
+
+            if (window.innerWidth > 1024) {
+                sidebar.classList.remove('mobile-visible');
+                if (overlay) overlay.style.display = 'none';
+            }
+        }
+
         function toggleBuyerOverlay(type) {
             const toggleMap = {
                 'crops': { toggleId: 'buyerToggleCrops', overlayId: 'buyerCropOverlay' },
@@ -2340,6 +2658,7 @@
 
         function renderBuyerOverlay(type, container) {
             container.innerHTML = '';
+            container.style.pointerEvents = 'auto';
             
             if (type === 'crops') {
                 buyerMapData.forEach(coop => {
@@ -2349,54 +2668,116 @@
                     marker.style.top = coop.y + '%';
                     marker.textContent = '🏢';
                     marker.title = coop.name;
-                    
+                    container.appendChild(marker);
+
                     const label = document.createElement('div');
                     label.className = 'crop-label';
                     label.style.left = `calc(${coop.x}% + 60px)`;
                     label.style.top = `calc(${coop.y}% + 10px)`;
                     label.textContent = coop.crop;
                     label.title = `${coop.name}: ${coop.crop}`;
-                    
-                    container.appendChild(marker);
                     container.appendChild(label);
                 });
             } else if (type === 'yield') {
-                buyerMapData.forEach(coop => {
-                    const info = document.createElement('div');
-                    info.className = 'yield-info';
-                    info.style.left = `calc(${coop.x}% + 60px)`;
-                    info.style.top = `calc(${coop.y}% + 10px)`;
-                    info.innerHTML = `
-                        <div class="yield-info-title">${coop.name}</div>
-                        <div class="yield-info-value">Yield: ${coop.yield}</div>
-                        <div class="yield-info-value">Ready in: ${coop.daysUntilReady} days</div>
-                    `;
-                    info.title = `${coop.name} - ${coop.location}`;
-                    container.appendChild(info);
+                const isMobile = window.innerWidth <= 768;
+                buyerMapData.forEach((coop, idx) => {
+                    if (isMobile) {
+                        const plus = document.createElement('div');
+                        plus.className = 'mobile-plus';
+                        plus.style.left = `calc(${coop.x}% + 40px)`;
+                        plus.style.top = `calc(${coop.y}% - 10px)`;
+                        plus.textContent = '+';
+                        const detailId = `yield-detail-${idx}`;
+
+                        const detail = document.createElement('div');
+                        detail.className = 'mobile-detail';
+                        detail.id = detailId;
+                        detail.style.left = `calc(${coop.x}% + 70px)`;
+                        detail.style.top = `calc(${coop.y}% - 10px)`;
+                        detail.innerHTML = `
+                            <div style="font-weight:700; margin-bottom:6px;">${coop.name}</div>
+                            <div>Yield: ${coop.yield}</div>
+                            <div>Ready in: ${coop.daysUntilReady} days</div>
+                            <div style="margin-top:4px; color:#555;">${coop.location}</div>
+                        `;
+
+                        plus.onclick = () => {
+                            container.querySelectorAll('.mobile-detail').forEach(d => d.style.display = 'none');
+                            detail.style.display = 'block';
+                        };
+
+                        container.appendChild(plus);
+                        container.appendChild(detail);
+                    } else {
+                        const info = document.createElement('div');
+                        info.className = 'yield-info';
+                        info.style.left = `calc(${coop.x}% + 60px)`;
+                        info.style.top = `calc(${coop.y}% + 10px)`;
+                        info.innerHTML = `
+                            <div class="yield-info-title">${coop.name}</div>
+                            <div class="yield-info-value">Yield: ${coop.yield}</div>
+                            <div class="yield-info-value">Ready in: ${coop.daysUntilReady} days</div>
+                        `;
+                        info.title = `${coop.name} - ${coop.location}`;
+                        container.appendChild(info);
+                    }
                 });
             } else if (type === 'qualityPrice') {
-                buyerMapData.forEach(coop => {
-                    const info = document.createElement('div');
-                    info.className = 'quality-price-info';
-                    info.style.left = `calc(${coop.x}% + 60px)`;
-                    info.style.top = `calc(${coop.y}% + 10px)`;
-                    
-                    const qualityClass = coop.qualityScore >= 8.5 ? 'high' : coop.qualityScore >= 7 ? 'medium' : 'low';
-                    const priceClass = coop.priceScore >= 8.5 ? 'high' : coop.priceScore >= 7 ? 'medium' : 'low';
-                    
-                    info.innerHTML = `
-                        <div class="quality-price-title">${coop.name}</div>
-                        <div class="quality-price-row">
-                            <span class="quality-price-label">Quality:</span>
-                            <span class="quality-price-value ${qualityClass}">${coop.qualityScore}/10</span>
-                        </div>
-                        <div class="quality-price-row">
-                            <span class="quality-price-label">Price Score:</span>
-                            <span class="quality-price-value ${priceClass}">${coop.priceScore}/10</span>
-                        </div>
-                    `;
-                    info.title = `${coop.name} - Quality: ${coop.qualityScore}/10, Price: ${coop.priceScore}/10`;
-                    container.appendChild(info);
+                const isMobile = window.innerWidth <= 768;
+                buyerMapData.forEach((coop, idx) => {
+                    if (isMobile) {
+                        const plus = document.createElement('div');
+                        plus.className = 'mobile-plus';
+                        plus.style.left = `calc(${coop.x}% + 40px)`;
+                        plus.style.top = `calc(${coop.y}% - 10px)`;
+                        plus.textContent = '+';
+                        const detailId = `qp-detail-${idx}`;
+
+                        const qualityClass = coop.qualityScore >= 8.5 ? 'high' : coop.qualityScore >= 7 ? 'medium' : 'low';
+                        const priceClass = coop.priceScore >= 8.5 ? 'high' : coop.priceScore >= 7 ? 'medium' : 'low';
+
+                        const detail = document.createElement('div');
+                        detail.className = 'mobile-detail';
+                        detail.id = detailId;
+                        detail.style.left = `calc(${coop.x}% + 70px)`;
+                        detail.style.top = `calc(${coop.y}% - 10px)`;
+                        detail.innerHTML = `
+                            <div style="font-weight:700; margin-bottom:6px;">${coop.name}</div>
+                            <div>Quality: <span class="quality-price-value ${qualityClass}">${coop.qualityScore}/10</span></div>
+                            <div>Price Score: <span class="quality-price-value ${priceClass}">${coop.priceScore}/10</span></div>
+                            <div style="margin-top:4px; color:#555;">${coop.location}</div>
+                        `;
+
+                        plus.onclick = () => {
+                            container.querySelectorAll('.mobile-detail').forEach(d => d.style.display = 'none');
+                            detail.style.display = 'block';
+                        };
+
+                        container.appendChild(plus);
+                        container.appendChild(detail);
+                    } else {
+                        const info = document.createElement('div');
+                        info.className = 'quality-price-info';
+                        info.style.left = `calc(${coop.x}% + 60px)`;
+                        info.style.top = `calc(${coop.y}% + 10px)`;
+                        
+                        const qualityClass = coop.qualityScore >= 8.5 ? 'high' : coop.qualityScore >= 7 ? 'medium' : 'low';
+                        const priceClass = coop.priceScore >= 8.5 ? 'high' : coop.priceScore >= 7 ? 'medium' : 'low';
+                        
+                        info.innerHTML = `
+                            <div class="quality-price-title">${coop.name}</div>
+                            <div class="quality-price-row">
+                                <span class="quality-price-label">Quality:</span>
+                                <span class="quality-price-value ${qualityClass}">${coop.qualityScore}/10</span>
+                            </div>
+                            <div class="quality-price-row">
+                                <span class="quality-price-label">Price Score:</span>
+                                <span class="quality-price-value ${priceClass}">${coop.priceScore}/10</span>
+                            </div>
+                        `;
+                        info.title = `${coop.name} - Quality: ${coop.qualityScore}/10, Price: ${coop.priceScore}/10`;
+                        container.appendChild(info);
+                    }
                 });
             } else if (type === 'cert') {
                 buyerMapData.forEach(coop => {
@@ -2854,6 +3235,7 @@
         window.viewCooperativeDetail = viewCooperativeDetail;
         window.selectQuickOption = selectQuickOption;
         window.toggleBuyerOverlay = toggleBuyerOverlay;
+        window.toggleChatSidebar = toggleChatSidebar;
 
         // Initialize on load
         init();
