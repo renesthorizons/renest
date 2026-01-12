@@ -86,6 +86,33 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
+        }
+
+        .menu-button {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+            color: #333;
+            z-index: 100;
+        }
+
+        .menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+        }
+
+        .menu-overlay.active {
+            display: block;
         }
 
         .coop-info h2 {
@@ -1617,52 +1644,98 @@
             }
         }
 
-        @media (max-width: 1024px) {
-            .dashboard-container {
-                flex-direction: column;
-                height: auto;
-                min-height: 100vh;
-            }
+         @media (max-width: 1024px) {
+             .dashboard-container {
+                 flex-direction: column;
+                 height: auto;
+                 min-height: 100vh;
+             }
 
-            .sidebar {
-                width: 100%;
-                position: sticky;
-                top: 0;
-                z-index: 90;
-            }
+             .menu-button {
+                 display: block;
+             }
 
-            .nav-menu {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-                gap: 8px;
-                padding: 10px;
-            }
+             .sidebar {
+                 position: fixed;
+                 top: 0;
+                 left: -100%;
+                 width: 280px;
+                 height: 100vh;
+                 z-index: 999;
+                 transition: left 0.3s ease;
+                 box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+                 overflow-y: auto;
+             }
 
-            .nav-item {
-                border-left: none;
-                border-radius: 8px;
-                background: #f8f9fa;
-            }
+             .sidebar.menu-open {
+                 left: 0;
+             }
 
-            .nav-item.active {
-                border-left: none;
-                background: #e8f5e9;
-            }
+             .nav-menu {
+                 display: flex;
+                 flex-direction: column;
+                 padding: 20px 0;
+             }
 
-            .main-content {
-                height: auto;
-            }
+             .nav-menu {
+                 display: grid;
+                 grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                 gap: 8px;
+                 padding: 10px;
+             }
 
-            .content-area {
-                padding: 16px;
-                overflow: visible;
-            }
+             .nav-item {
+                 border-left: none;
+                 border-radius: 8px;
+                 background: #f8f9fa;
+             }
 
-            .page-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
+             .nav-item.active {
+                 border-left: none;
+                 background: #e8f5e9;
+             }
+
+             .main-content {
+                 height: auto;
+             }
+
+             .content-area {
+                 padding: 16px;
+                 overflow: visible;
+             }
+
+             .page-header {
+                 flex-direction: column;
+                 align-items: flex-start;
+                 gap: 10px;
+             }
+
+             .top-bar {
+                 flex-wrap: nowrap;
+                 padding: 12px 16px;
+                 gap: 12px;
+             }
+
+             .coop-info {
+                 flex: 1;
+                 min-width: 0;
+             }
+
+             .coop-info h2 {
+                 font-size: 18px;
+                 margin-bottom: 2px;
+             }
+
+             .coop-info p {
+                 font-size: 12px;
+                 white-space: nowrap;
+                 overflow: hidden;
+                 text-overflow: ellipsis;
+             }
+
+             .stats-bar {
+                 display: none;
+             }
 
             .members-grid,
             .info-grid,
@@ -1835,6 +1908,7 @@
         <!-- Main Content -->
         <div class="main-content">
             <div class="top-bar">
+                <button class="menu-button" id="menuButton" aria-label="Toggle menu">☰</button>
                 <div class="coop-info">
                     <h2>Ghana Farm Cooperative</h2>
                     <p>Western Region, Ghana</p>
@@ -1854,6 +1928,7 @@
                     </div>
                 </div>
             </div>
+            <div class="menu-overlay" id="menuOverlay"></div>
             <div class="content-area">
                 <!-- Home / Module Selection Page -->
                 <div class="page active" id="homePage">
@@ -3206,8 +3281,35 @@
                 item.addEventListener('click', () => {
                     const page = item.dataset.page;
                     switchPage(page);
+                    closeMobileMenu();
                 });
             });
+
+            // Mobile menu functionality
+            const menuButton = document.getElementById('menuButton');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const sidebar = document.querySelector('.sidebar');
+
+            function openMobileMenu() {
+                sidebar.classList.add('menu-open');
+                menuOverlay.classList.add('active');
+            }
+
+            function closeMobileMenu() {
+                sidebar.classList.remove('menu-open');
+                menuOverlay.classList.remove('active');
+            }
+
+            menuButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (sidebar.classList.contains('menu-open')) {
+                    closeMobileMenu();
+                } else {
+                    openMobileMenu();
+                }
+            });
+
+            menuOverlay.addEventListener('click', closeMobileMenu);
 
             // Close modal
             document.getElementById('closeModal').addEventListener('click', () => {
@@ -3285,6 +3387,14 @@
                 item.classList.remove('active');
             });
             document.querySelector(`[data-page="${pageId}"]`)?.classList.add('active');
+            
+            // Close mobile menu if open
+            if (window.innerWidth <= 1024) {
+                const sidebar = document.querySelector('.sidebar');
+                const menuOverlay = document.getElementById('menuOverlay');
+                if (sidebar) sidebar.classList.remove('menu-open');
+                if (menuOverlay) menuOverlay.classList.remove('active');
+            }
             
             // Show the page
             const pageElement = document.getElementById(`${pageId}Page`);

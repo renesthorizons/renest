@@ -92,6 +92,33 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
+        }
+
+        .menu-button {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+            color: #333;
+            z-index: 100;
+        }
+
+        .menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+        }
+
+        .menu-overlay.active {
+            display: block;
         }
 
         .module-title {
@@ -1425,35 +1452,48 @@
                 min-height: 100vh;
             }
 
+            .menu-button {
+                display: block;
+            }
+
             .sidebar {
-                width: 100%;
-                flex-direction: column;
-                position: sticky;
+                position: fixed;
                 top: 0;
-                z-index: 90;
+                left: -100%;
+                width: 280px;
+                height: 100vh;
+                z-index: 999;
+                transition: left 0.3s ease;
+                box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+                overflow-y: auto;
+            }
+
+            .sidebar.menu-open {
+                left: 0;
             }
 
             .module-nav {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-                padding: 10px;
-                gap: 8px;
+                display: flex;
+                flex-direction: column;
+                padding: 20px 0;
+                gap: 0;
             }
 
             .module-nav-item {
-                border-left: none;
-                border-radius: 8px;
-                background: #f8f9fa;
-                padding: 12px 14px;
+                border-left: 4px solid transparent;
+                border-radius: 0;
+                background: transparent;
+                padding: 15px 20px;
             }
 
             .module-nav-item.active {
-                border-left: none;
+                border-left-color: #2196f3;
                 background: #e3f2fd;
             }
 
             .main-content {
                 height: auto;
+                width: 100%;
             }
 
             .content-area {
@@ -1604,10 +1644,12 @@
         <!-- Main Content -->
         <div class="main-content">
             <div class="top-bar">
+                <button class="menu-button" id="menuButton" aria-label="Toggle menu">☰</button>
                 <div id="topBarContent">
                     <div class="module-title">Dashboard</div>
                 </div>
             </div>
+            <div class="menu-overlay" id="menuOverlay"></div>
             <div class="content-area" id="contentArea">
                 <!-- Module Selection Screen -->
                 <div class="module-view active" id="homeView">
@@ -2063,8 +2105,35 @@
                 item.addEventListener('click', () => {
                     const module = item.dataset.module;
                     openModule(module);
+                    closeMobileMenu();
                 });
             });
+
+            // Mobile menu functionality
+            const menuButton = document.getElementById('menuButton');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const sidebar = document.querySelector('.sidebar');
+
+            function openMobileMenu() {
+                sidebar.classList.add('menu-open');
+                menuOverlay.classList.add('active');
+            }
+
+            function closeMobileMenu() {
+                sidebar.classList.remove('menu-open');
+                menuOverlay.classList.remove('active');
+            }
+
+            menuButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (sidebar.classList.contains('menu-open')) {
+                    closeMobileMenu();
+                } else {
+                    openMobileMenu();
+                }
+            });
+
+            menuOverlay.addEventListener('click', closeMobileMenu);
 
             // Chat
             document.getElementById('minimizeChat').addEventListener('click', () => {
@@ -2133,6 +2202,14 @@
             document.querySelectorAll('.module-nav-item').forEach(item => {
                 item.classList.toggle('active', item.dataset.module === module);
             });
+
+            // Close mobile menu if open
+            if (window.innerWidth <= 1024) {
+                const sidebar = document.querySelector('.sidebar');
+                const menuOverlay = document.getElementById('menuOverlay');
+                if (sidebar) sidebar.classList.remove('menu-open');
+                if (menuOverlay) menuOverlay.classList.remove('active');
+            }
 
             // Update views
             document.querySelectorAll('.module-view').forEach(view => {
