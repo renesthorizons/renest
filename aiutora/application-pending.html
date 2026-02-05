@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Pending - Aiutora</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Work+Sans:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cream: #FAF8F3;
+            --charcoal: #2A2A2A;
+            --soft-gray: #8B8B8B;
+            --gold: #C9A961;
+            --whisper: #E8E5DD;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: var(--cream);
+            color: var(--charcoal);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        .status-container {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            padding: 4rem 3rem;
+            border: 1px solid var(--whisper);
+            text-align: center;
+        }
+        
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+            margin-bottom: 2rem;
+        }
+        
+        .status-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: var(--gold);
+            color: white;
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+            margin-bottom: 2rem;
+        }
+        
+        .status-message {
+            color: var(--soft-gray);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+        
+        .timeline {
+            text-align: left;
+            margin: 3rem 0;
+            padding: 2rem;
+            background: var(--cream);
+        }
+        
+        .timeline-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: flex-start;
+        }
+        
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .timeline-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--gold);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.8rem;
+        }
+        
+        .timeline-icon.pending {
+            background: var(--whisper);
+            color: var(--soft-gray);
+        }
+        
+        .timeline-content h3 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+            font-weight: 500;
+        }
+        
+        .timeline-content p {
+            font-size: 0.85rem;
+            color: var(--soft-gray);
+        }
+        
+        .application-id {
+            font-family: monospace;
+            background: var(--cream);
+            padding: 0.5rem 1rem;
+            margin: 2rem 0;
+            font-size: 0.9rem;
+        }
+        
+        .action-buttons {
+            margin-top: 2rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            margin: 0.5rem;
+            text-decoration: none;
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: var(--charcoal);
+            color: var(--cream);
+        }
+        
+        .btn-primary:hover {
+            background: var(--gold);
+            color: var(--charcoal);
+        }
+        
+        .btn-secondary {
+            border: 1px solid var(--whisper);
+            color: var(--charcoal);
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--gold);
+        }
+        
+        @media (max-width: 768px) {
+            .status-container {
+                padding: 2rem 1.5rem;
+            }
+            
+            .btn {
+                display: block;
+                margin: 0.5rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="status-container">
+        <div class="logo">Aiutora</div>
+        
+        <div class="status-icon">⏳</div>
+        
+        <h1>Application Under Review</h1>
+        
+        <div class="status-badge">PENDING APPROVAL</div>
+        
+        <p class="status-message">
+            Thank you for your interest in becoming an Aiutora facilitator. Your application has been received and is currently under review by our team.
+        </p>
+        
+        <div class="application-id">
+            Application ID: <strong id="applicationId">Loading...</strong>
+        </div>
+        
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-icon">✓</div>
+                <div class="timeline-content">
+                    <h3>Application Submitted</h3>
+                    <p id="submittedDate">Just now</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-icon pending">2</div>
+                <div class="timeline-content">
+                    <h3>Under Review</h3>
+                    <p>We'll review your application within 2-3 business days</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-icon pending">3</div>
+                <div class="timeline-content">
+                    <h3>Decision</h3>
+                    <p>You'll receive an email with our decision</p>
+                </div>
+            </div>
+        </div>
+        
+        <p class="status-message">
+            <strong>What happens next?</strong><br>
+            Our team will carefully review your application, experience, and qualifications. If approved, you'll receive login credentials and can start accepting requests from AI agents. We'll notify you via email within 2-3 business days.
+        </p>
+        
+        <div class="action-buttons">
+            <a href="/" class="btn btn-primary">Return Home</a>
+            <a href="mailto:support@aiutora.com" class="btn btn-secondary">Contact Support</a>
+        </div>
+    </div>
+
+    <script>
+        // Get application ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const applicationId = urlParams.get('id');
+        
+        if (applicationId) {
+            document.getElementById('applicationId').textContent = applicationId;
+        } else {
+            document.getElementById('applicationId').textContent = 'Not found';
+        }
+        
+        // Set submission date
+        document.getElementById('submittedDate').textContent = new Date().toLocaleString();
+    </script>
+</body>
+</html>
