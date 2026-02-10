@@ -371,29 +371,6 @@
                 </div>
             </div>
 
-            <div class="divider"></div>
-
-            <!-- Availability & Rates -->
-            <div class="form-section">
-                <h3 class="section-title">Availability & Compensation</h3>
-                
-                <div class="form-group">
-                    <label>Desired Hourly Rate (USD) <span class="required">*</span></label>
-                    <input type="number" id="hourlyRate" required min="0" step="0.01" placeholder="50.00">
-                </div>
-                
-                <div class="form-group">
-                    <label>Crypto Wallet Address (for payments) <span class="required">*</span></label>
-                    <input type="text" id="walletAddress" required placeholder="0x... or Solana address">
-                </div>
-                
-                <div class="form-group">
-                    <label>General Availability</label>
-                    <textarea id="availability" maxlength="500" placeholder="e.g., Weekdays 9am-5pm PST, Weekends flexible..."></textarea>
-                    <div class="char-count"><span id="availabilityCount">0</span>/500</div>
-                </div>
-            </div>
-
             <button type="submit" class="submit-btn" id="submitBtn">
                 Submit Application
             </button>
@@ -420,10 +397,6 @@
         
         document.getElementById('resumeText').addEventListener('input', function() {
             document.getElementById('resumeTextCount').textContent = this.value.length;
-        });
-        
-        document.getElementById('availability').addEventListener('input', function() {
-            document.getElementById('availabilityCount').textContent = this.value.length;
         });
 
         // File upload handling
@@ -551,9 +524,6 @@
                 location: document.getElementById('location').value,
                 motivation: document.getElementById('motivation').value,
                 experience: document.getElementById('experience').value,
-                hourly_rate: parseFloat(document.getElementById('hourlyRate').value),
-                wallet_address: document.getElementById('walletAddress').value,
-                availability: document.getElementById('availability').value,
                 resume_text: document.getElementById('resumeText').value,
                 resume_file: resumeFileData,
                 applied_at: new Date().toISOString()
@@ -597,13 +567,22 @@
             }
         });
 
-        // Initialize Google Sign-In
-        window.onload = function() {
+        // Initialize Google Sign-In when GSI script is ready (script loads async)
+        function initGoogleSignIn() {
+            if (typeof google === 'undefined' || !google.accounts || !google.accounts.id) {
+                setTimeout(initGoogleSignIn, 100);
+                return;
+            }
             google.accounts.id.initialize({
                 client_id: GOOGLE_CLIENT_ID,
                 callback: handleGoogleSignIn
             });
-        };
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initGoogleSignIn);
+        } else {
+            initGoogleSignIn();
+        }
     </script>
 </body>
 </html>
