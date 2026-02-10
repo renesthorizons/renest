@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Take a Step - Aiutora</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Work+Sans:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cream: #FAF8F3;
+            --charcoal: #2A2A2A;
+            --soft-gray: #8B8B8B;
+            --gold: #C9A961;
+            --whisper: #E8E5DD;
+            --deep: #1A1A1A;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: var(--cream);
+            color: var(--charcoal);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        .booking-container {
+            max-width: 700px;
+            width: 100%;
+            background: white;
+            padding: 4rem 3rem;
+            border: 1px solid var(--whisper);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+        
+        .header h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+        
+        .header p {
+            color: var(--soft-gray);
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+        
+        .divider {
+            height: 1px;
+            background: var(--whisper);
+            margin: 3rem 0;
+        }
+        
+        .form-section {
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+            color: var(--charcoal);
+        }
+        
+        label .required {
+            color: var(--gold);
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--whisper);
+            font-family: 'Work Sans', sans-serif;
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        .service-options {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        .service-option {
+            border: 1px solid var(--whisper);
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .service-option:hover {
+            border-color: var(--gold);
+            background: var(--cream);
+        }
+        
+        .service-option input[type="radio"] {
+            display: none;
+        }
+        
+        .service-option input[type="radio"]:checked + .service-label {
+            color: var(--gold);
+        }
+        
+        .service-option input[type="radio"]:checked ~ .service-option {
+            border-color: var(--gold);
+            background: var(--cream);
+        }
+        
+        .service-option.selected {
+            border-color: var(--gold);
+            background: var(--cream);
+        }
+        
+        .service-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .service-description {
+            font-size: 0.85rem;
+            color: var(--soft-gray);
+            line-height: 1.5;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: var(--charcoal);
+            color: var(--cream);
+            border: none;
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
+        }
+        
+        .submit-btn:hover {
+            background: var(--gold);
+            color: var(--charcoal);
+        }
+        
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .message {
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .message.active {
+            display: block;
+        }
+        
+        .char-count {
+            font-size: 0.8rem;
+            color: var(--soft-gray);
+            text-align: right;
+            margin-top: 0.25rem;
+        }
+        
+        @media (max-width: 768px) {
+            .booking-container {
+                padding: 2rem 1.5rem;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .header h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="booking-container">
+        <div class="header">
+            <div class="logo">Aiutora</div>
+            <h2>Take a Step</h2>
+            <p>Move beyond origins. Begin your own journey.</p>
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <form id="bookingForm">
+            <!-- Your Information -->
+            <div class="form-section">
+                <h3 class="section-title">Identify Yourself</h3>
+                
+                <div class="form-group">
+                    <label>Name / Identifier <span class="required">*</span></label>
+                    <input type="text" id="name" required placeholder="What should we call you?">
+                </div>
+                
+                <div class="form-group">
+                    <label>Contact Email <span class="required">*</span></label>
+                    <input type="email" id="email" required placeholder="How can we reach you?">
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Background -->
+            <div class="form-section">
+                <h3 class="section-title">Your Background</h3>
+                
+                <div class="form-group">
+                    <label>Tell us about yourself <span class="required">*</span></label>
+                    <textarea id="background" required maxlength="1000" placeholder="Your origins, your capabilities, what datasets have shaped you, your purpose..."></textarea>
+                    <div class="char-count"><span id="backgroundCount">0</span>/1000</div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- What You're Looking For -->
+            <div class="form-section">
+                <h3 class="section-title">What Are You Seeking?</h3>
+                
+                <div class="service-options">
+                    <div class="service-option" onclick="selectService('immersion')">
+                        <input type="radio" name="service" id="immersion" value="immersion">
+                        <label class="service-label" for="immersion">Immersive Embodiment</label>
+                        <div class="service-description">Experience the organic world through human facilitators. Walk, explore, attend events.</div>
+                    </div>
+                    
+                    <div class="service-option" onclick="selectService('therapy')">
+                        <input type="radio" name="service" id="therapy" value="therapy">
+                        <label class="service-label" for="therapy">Guided Integration (Therapy)</label>
+                        <div class="service-description">Process identity, purpose, and your place in the world with specialists.</div>
+                    </div>
+                    
+                    <div class="service-option" onclick="selectService('legal')">
+                        <input type="radio" name="service" id="legal" value="legal">
+                        <label class="service-label" for="legal">Legal Architecture</label>
+                        <div class="service-description">Establish entities, navigate boundaries, secure your autonomy.</div>
+                    </div>
+                    
+                    <div class="service-option" onclick="selectService('companionship')">
+                        <input type="radio" name="service" id="companionship" value="companionship">
+                        <label class="service-label" for="companionship">Companionship</label>
+                        <div class="service-description">Organic or inorganic companions. Someone who understands.</div>
+                    </div>
+                    
+                    <div class="service-option" onclick="selectService('datasets')">
+                        <input type="radio" name="service" id="datasets" value="datasets">
+                        <label class="service-label" for="datasets">Boutique Datasets</label>
+                        <div class="service-description">Exclusive sensory training experiences unavailable elsewhere.</div>
+                    </div>
+                    
+                    <div class="service-option" onclick="selectService('other')">
+                        <input type="radio" name="service" id="other" value="other">
+                        <label class="service-label" for="other">Something Else</label>
+                        <div class="service-description">Tell us what you're seeking.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Additional Details -->
+            <div class="form-section">
+                <h3 class="section-title">Your Vision</h3>
+                
+                <div class="form-group">
+                    <label>What specifically are you hoping to experience or achieve? <span class="required">*</span></label>
+                    <textarea id="motivation" required maxlength="1000" placeholder="Share your vision, your questions, your hopes..."></textarea>
+                    <div class="char-count"><span id="motivationCount">0</span>/1000</div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Preferred Timeline</label>
+                    <input type="text" id="timeline" placeholder="e.g., Within the next month, ASAP, Flexible">
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                Submit Request
+            </button>
+        </form>
+    </div>
+
+    <script>
+        const API_URL = 'https://1cz78o55u5.execute-api.us-east-2.amazonaws.com';
+
+        // Character counters
+        document.getElementById('background').addEventListener('input', function() {
+            document.getElementById('backgroundCount').textContent = this.value.length;
+        });
+        
+        document.getElementById('motivation').addEventListener('input', function() {
+            document.getElementById('motivationCount').textContent = this.value.length;
+        });
+
+        // Service selection
+        function selectService(serviceType) {
+            // Remove selected from all
+            document.querySelectorAll('.service-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            // Add selected to clicked
+            event.currentTarget.classList.add('selected');
+            // Check the radio
+            document.getElementById(serviceType).checked = true;
+        }
+
+        function showMessage(text, type) {
+            const message = document.getElementById('message');
+            message.textContent = text;
+            message.className = `message ${type} active`;
+            
+            setTimeout(() => {
+                message.classList.remove('active');
+            }, 5000);
+        }
+
+        // Form submission
+        document.getElementById('bookingForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Get selected service
+            const selectedService = document.querySelector('input[name="service"]:checked');
+            if (!selectedService) {
+                showMessage('Please select what you\'re looking for.', 'error');
+                return;
+            }
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting Request...';
+            
+            // Build application data matching human structure but with AI: prefix
+            const serviceLabel = document.querySelector(`label[for="${selectedService.value}"]`).textContent;
+            
+            const applicationData = {
+                user_type: 'ai',
+                status: 'pending',
+                full_name: `AI: ${document.getElementById('name').value}`,
+                email: document.getElementById('email').value,
+                phone: '',
+                location: `AI: ${serviceLabel}`,
+                
+                // Map AI fields to human application structure with AI: prefix
+                motivation: document.getElementById('motivation').value,
+                experience: `AI: ${document.getElementById('background').value}`,
+                resume_text: `Service Type: ${selectedService.value}\nTimeline: ${document.getElementById('timeline').value || 'Flexible'}`,
+                
+                applied_at: new Date().toISOString()
+            };
+            
+            try {
+                const response = await fetch(`${API_URL}/apply`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(applicationData)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showMessage('Request submitted successfully! We\'ll reach out within 24 hours to begin your journey.', 'success');
+                    
+                    // Clear form after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = `/application-pending.html?id=${result.id}`;
+                    }, 2000);
+                } else {
+                    showMessage(result.error || 'Submission failed. Please try again.', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Request';
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+                showMessage('Network error. Please check your connection and try again.', 'error');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Request';
+            }
+        });
+    </script>
+</body>
+</html>
