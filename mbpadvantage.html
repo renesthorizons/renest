@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The MBP Advantage — MBP² Sciences</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy: #0b1a2e;
+  --gold: #c9a84c;
+  --sage-light: #4d9a87;
+  --cream: #f8f5ef;
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --mono: 'DM Mono', monospace;
+}
+
+body {
+  font-family: var(--mono);
+  background: var(--navy);
+  color: var(--cream);
+  min-height: 100vh;
+}
+
+/* ── NAV ── */
+.page-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.75rem 3.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(16px);
+  background: rgba(11,26,46,0.95);
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+}
+.logo {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  color: var(--cream);
+  text-decoration: none;
+}
+.logo .brand-sup {
+  font-size: 0.65em;
+  color: var(--gold);
+  vertical-align: super;
+  line-height: 0;
+}
+.back-btn {
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(248,245,239,0.5);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--mono);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.back-btn::before { content: '←'; }
+.back-btn:hover { color: var(--gold); }
+.nav-contact {
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  color: rgba(248,245,239,0.45);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-contact:hover { color: var(--gold); }
+.nav-right-group {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+}
+
+/* ── CONTENT ── */
+.page-content {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 4.5rem 3.5rem 8rem;
+}
+
+/* ── HERO ── */
+.page-eyebrow {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  color: rgba(201,168,76,0.7);
+}
+.page-title {
+  font-family: var(--serif);
+  font-size: clamp(2.5rem, 5vw, 3.8rem);
+  font-weight: 300;
+  line-height: 1.08;
+  color: var(--cream);
+  margin-bottom: 1.25rem;
+}
+.page-title em { color: var(--gold); font-style: italic; }
+.page-intro {
+  font-size: 0.83rem;
+  color: rgba(248,245,239,0.6);
+  max-width: 540px;
+  line-height: 1.8;
+  margin-bottom: 3.5rem;
+}
+
+/* ── STATS STRIP ── */
+.stats-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: rgba(201,168,76,0.15);
+  margin-bottom: 4rem;
+}
+.stat-item {
+  padding: 1.5rem 1.25rem;
+  background: var(--navy);
+  text-align: center;
+}
+.stat-number {
+  font-family: var(--serif);
+  font-size: 2.4rem;
+  font-weight: 300;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 0.4rem;
+}
+.stat-label {
+  font-size: 0.55rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(248,245,239,0.5);
+  line-height: 1.4;
+}
+
+/* ── SECTION HEADINGS ── */
+.section-rule {
+  height: 1px;
+  background: rgba(248,245,239,0.08);
+  margin: 3.5rem 0 2.5rem;
+}
+.section-heading {
+  font-size: 0.56rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(201,168,76,0.65);
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.section-heading::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(201,168,76,0.15);
+}
+
+/* ── ADVANTAGE ITEMS ── */
+.adv-list { list-style: none; }
+.adv-item {
+  display: grid;
+  grid-template-columns: 3.5rem 1fr;
+  gap: 1.5rem;
+  padding: 2rem 0;
+  border-bottom: 1px solid rgba(248,245,239,0.07);
+  align-items: start;
+}
+.adv-num {
+  font-size: 0.5rem;
+  letter-spacing: 0.2em;
+  color: rgba(201,168,76,0.4);
+  padding-top: 0.2rem;
+  line-height: 1;
+}
+.adv-body {}
+.adv-tag {
+  font-size: 0.5rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(201,168,76,0.55);
+  margin-bottom: 0.5rem;
+}
+.adv-title {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: 300;
+  color: var(--cream);
+  line-height: 1.25;
+  margin-bottom: 0.65rem;
+}
+.adv-desc {
+  font-size: 0.72rem;
+  color: rgba(248,245,239,0.58);
+  line-height: 1.75;
+  max-width: 680px;
+}
+.adv-desc strong {
+  color: rgba(248,245,239,0.8);
+  font-weight: 400;
+}
+
+/* ── CAPABILITIES GRID ── */
+.caps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 0.4rem 1.25rem;
+  margin-top: 0.5rem;
+}
+.caps-item {
+  font-size: 0.7rem;
+  color: rgba(248,245,239,0.6);
+  padding: 0.35rem 0;
+  border-bottom: 1px solid rgba(248,245,239,0.06);
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+.caps-item::before {
+  content: '·';
+  color: rgba(201,168,76,0.45);
+  flex-shrink: 0;
+}
+
+/* ── PAGE CTA ── */
+.page-cta {
+  margin-top: 3rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid rgba(248,245,239,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.page-cta-text {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 300;
+  color: var(--cream);
+}
+.cta-link {
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.85rem 1.75rem;
+  text-decoration: none;
+  border: 1px solid;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+.cta-link.cta-gold { color: var(--gold); border-color: rgba(201,168,76,0.5); }
+.cta-link.cta-gold:hover { background: var(--gold); color: var(--navy); }
+
+@media (max-width: 900px) {
+  .stats-strip { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .page-nav { padding: 1.25rem 1.5rem; }
+  .logo { font-size: 1rem; }
+  .page-content { padding: 2.5rem 1.25rem 5rem; }
+  .page-intro { max-width: 100%; }
+  .stats-strip { grid-template-columns: 1fr 1fr; margin-bottom: 2.5rem; }
+  .stat-number { font-size: 2rem; }
+  .adv-item { grid-template-columns: 1fr; gap: 0.6rem; padding: 1.5rem 0; }
+  .adv-num { display: none; }
+  .adv-title { font-size: 1.15rem; }
+  .section-rule { margin: 2rem 0 1.75rem; }
+  .caps-grid { grid-template-columns: 1fr 1fr; }
+  .page-cta { flex-direction: column; align-items: flex-start; }
+  .cta-link { width: 100%; text-align: center; display: block; padding: 1rem; }
+}
+@media (max-width: 480px) {
+  .stats-strip { grid-template-columns: 1fr 1fr; }
+  .caps-grid { grid-template-columns: 1fr; }
+  .page-title { font-size: 2.2rem; }
+}
+</style>
+</head>
+<body>
+
+<nav class="page-nav">
+  <a href="mbp2_website.html" class="back-btn">Home</a>
+  <a href="mbp2_website.html" class="logo">MBP<sup class="brand-sup">2</sup> Sciences</a>
+  <div class="nav-right-group">
+    <a href="mailto:contact@mbp2sciences.com" class="nav-contact">Get in touch</a>
+  </div>
+</nav>
+
+<div class="page-content">
+
+  <p class="page-eyebrow">Why MBP²</p>
+  <h1 class="page-title">The MBP<br><em>Advantage</em></h1>
+  <p class="page-intro">
+    Twenty-five years of science-first operation has produced a set of capabilities that no commercial CRO — and no other academic core — can fully replicate. These are not marketing claims. They are structural facts about what MBP² Sciences has built and what it can do for your project.
+  </p>
+
+  <!-- STATS -->
+  <div class="stats-strip">
+    <div class="stat-item">
+      <div class="stat-number">25</div>
+      <div class="stat-label">Years in operation<br>Est. 1999</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">285</div>
+      <div class="stat-label">Peer-reviewed<br>publications supported</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">120</div>
+      <div class="stat-label">NIH grants<br>supported</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">600</div>
+      <div class="stat-label">Active projects<br>per year</div>
+    </div>
+  </div>
+
+  <!-- DIFFERENTIATORS -->
+  <div class="section-heading">What no competitor can match</div>
+
+  <ul class="adv-list">
+
+    <li class="adv-item">
+      <div class="adv-num">01</div>
+      <div class="adv-body">
+        <div class="adv-tag">Integration</div>
+        <div class="adv-title">The only true one-roof integrated platform in the world</div>
+        <div class="adv-desc">When MBP opened in 1999, services spanning genome engineering, cryopreservation, phenotyping, vivarium, and repository were unavailable <strong>under one roof</strong> anywhere in the world. That has not changed. No other organisation offers the full arc from <strong>CRISPR design → model production → phenotyping → colony management → biobanking → informatics</strong> under a single scientific team with a single project manager. MBP coordinates ~600 active projects per year across all five divisions simultaneously.</div>
+      </div>
+    </li>
+
+    <li class="adv-item">
+      <div class="adv-num">02</div>
+      <div class="adv-body">
+        <div class="adv-tag">Unique Facility</div>
+        <div class="adv-title">The only gnotobiotic resource center on campus</div>
+        <div class="adv-desc">MBP operates the only <strong>Gnotobiotic Mouse Resource Center</strong> on the UC Davis campus, with flexible film isolators, semi-rigid isolators, and individually ventilated isolated cages for germ-free and gnotobiotic mice. <strong>No commercial CRO offers gnotobiotic services as a standard offering.</strong> This is an essential, unbridgeable gap for any serious microbiome, immune reconstitution, or colonisation research programme.</div>
+      </div>
+    </li>
+
+    <li class="adv-item">
+      <div class="adv-num">03</div>
+      <div class="adv-body">
+        <div class="adv-tag">Biosafety</div>
+        <div class="adv-title">ABSL3 access — infectious disease in live mouse models</div>
+        <div class="adv-desc">MBP has a formal MOU giving it access to the campus <strong>ABSL3 facility</strong> — a Cornerstone-certified, fully-contained concrete facility. This means MBP can work with BSL3 pathogens in live mouse models. <strong>No commercial CRO routinely offers this.</strong> It is essential for infectious disease research including HIV, emerging pathogens, and vaccine development studies where animal-level biosafety is non-negotiable.</div>
+      </div>
+    </li>
+
+    <li class="adv-item">
+      <div class="adv-num">04</div>
+      <div class="adv-body">
+        <div class="adv-tag">National Designation</div>
+        <div class="adv-title">MMRRC — the largest federally designated national bioarchive</div>
+        <div class="adv-desc">MBP hosts the <strong>largest of the four national Mutant Mouse Resource and Research Centers</strong> — a federally designated national bioarchive housing thousands of mouse strains. This is not a capability that can be purchased or built. It is a 25-year institutional designation that carries access to strains, scientific credibility, and NIH visibility that no commercial company has. The MMRRC is a unique scientific asset available exclusively through MBP.</div>
+      </div>
+    </li>
+
+    <li class="adv-item">
+      <div class="adv-num">05</div>
+      <div class="adv-body">
+        <div class="adv-tag">First Mover</div>
+        <div class="adv-title">One of the first academic NAM Testing Centers in the United States</div>
+        <div class="adv-desc">MBP is positioned as one of the first academic <strong>NAM (New Approach Methodology) Testing Centers</strong> in the US — offering NAM validation with the academic rigor and regulatory-grade data packages that FDA submission requires. No standard CRO is positioned as a NAM validation centre with this level of institutional credibility. This is an entirely new service category where <strong>MBP has first-mover status and unmatched infrastructure</strong> for bridging in vitro findings to in vivo benchmarks.</div>
+      </div>
+    </li>
+
+    <li class="adv-item">
+      <div class="adv-num">06</div>
+      <div class="adv-body">
+        <div class="adv-tag">Scientific Authorship</div>
+        <div class="adv-title">Staff who originate techniques — not just execute them</div>
+        <div class="adv-desc">MBP scientists actively develop and publish new approaches — <strong>CRISPR-EZ, zygote electroporation protocols, oocyte vitrification</strong> — that then become standard services adopted across the field. At most facilities, scientists execute protocols. At MBP, <strong>scientists invent them.</strong> The scientific literature treats MBP protocols as reference standards. That credibility cannot be bought or contracted.</div>
+      </div>
+    </li>
+
+    <li class="adv-item">
+      <div class="adv-num">07</div>
+      <div class="adv-body">
+        <div class="adv-tag">Proof of Capability</div>
+        <div class="adv-title">The HIV mouse model — doing what others cannot</div>
+        <div class="adv-desc">MBP generated a mouse model that can be <strong>infected with HIV</strong> — something described at the time as "impossible to achieve until now." This required combining CRISPR editing of multiple human receptor genes with complex, multi-generational breeding strategies. <strong>No commercial CRO has successfully done this.</strong> It demonstrates that MBP takes on projects that others decline or genuinely cannot execute, and delivers.</div>
+      </div>
+    </li>
+
+    <li class="adv-item">
+      <div class="adv-num">08</div>
+      <div class="adv-body">
+        <div class="adv-tag">Data Infrastructure</div>
+        <div class="adv-title">Bespoke informatics — millions of data points, full traceability</div>
+        <div class="adv-desc">MBP has an in-house division of four programmers maintaining a <strong>custom LIMS</strong> tracking millions of data points annually across 40+ procedures. Where most organisations rely on off-the-shelf platforms, MBP's bespoke system supports <strong>data traceability, reproducibility documentation, and audit trails</strong> at a level that matters for regulatory submissions, GLP-adjacent work, and any study where scientific defensibility is required.</div>
+      </div>
+    </li>
+
+    <li class="adv-item">
+      <div class="adv-num">09</div>
+      <div class="adv-body">
+        <div class="adv-tag">Third-Party Validation</div>
+        <div class="adv-title">285 publications and 120 NIH grants — independently verified quality</div>
+        <div class="adv-desc">Over five years, MBP services have supported <strong>285 peer-reviewed publications and 120 NIH grants</strong> — a scale unmatched by any single core facility. Each publication that cites MBP services is an independent, third-party validation of the scientific quality of the output — the kind of track record that matters when a regulatory submission or grant renewal depends on reproducible, publication-grade data.</div>
+      </div>
+    </li>
+
+    <li class="adv-item">
+      <div class="adv-num">10</div>
+      <div class="adv-body">
+        <div class="adv-tag">Institutional Embedding</div>
+        <div class="adv-title">NCI-rated "exceptional" — UC Davis Comprehensive Cancer Center</div>
+        <div class="adv-desc">MBP is formally embedded in the <strong>UC Davis Comprehensive Cancer Center</strong> as the Mouse Biology Shared Resource with an NCI rating of <strong>"exceptional"</strong> — the highest possible. Cancer Center members receive subsidised rates through the CCSG. This creates a scientifically credible oncology pipeline, access to Cancer Center investigators, and institutional accountability that a commercial CRO cannot replicate.</div>
+      </div>
+    </li>
+
+  </ul>
+
+  <div class="section-rule"></div>
+
+  <!-- CAPABILITIES -->
+  <div class="section-heading">Full service capabilities</div>
+  <p style="font-size:0.72rem; color:rgba(248,245,239,0.45); margin-bottom:1.5rem; line-height:1.7;">
+    The comprehensive capabilities of a world-class mouse biology platform — from genome engineering and cryopreservation through phenotyping, colony management, and regulatory support.
+  </p>
+
+  <div class="caps-grid">
+    <div class="caps-item">CRISPR knockout &amp; knockin</div>
+    <div class="caps-item">Conditional allele generation</div>
+    <div class="caps-item">Base editing &amp; prime editing</div>
+    <div class="caps-item">AAV-CRISPR delivery</div>
+    <div class="caps-item">Pronuclear microinjection</div>
+    <div class="caps-item">Blastocyst injection</div>
+    <div class="caps-item">ES cell gene targeting</div>
+    <div class="caps-item">Sperm cryopreservation &amp; recovery</div>
+    <div class="caps-item">Embryo cryopreservation &amp; recovery</div>
+    <div class="caps-item">Rederivation &amp; health rederivation</div>
+    <div class="caps-item">Behavioural phenotyping</div>
+    <div class="caps-item">Metabolic phenotyping</div>
+    <div class="caps-item">Cardiovascular phenotyping</div>
+    <div class="caps-item">Pathology &amp; histology</div>
+    <div class="caps-item">Imaging (X-ray, Aperio)</div>
+    <div class="caps-item">PDX tumour modelling</div>
+    <div class="caps-item">PK/PD studies</div>
+    <div class="caps-item">Toxicology studies</div>
+    <div class="caps-item">Genotyping (PCR / qPCR)</div>
+    <div class="caps-item">SNP speed congenics</div>
+    <div class="caps-item">Colony management &amp; breeding</div>
+    <div class="caps-item">Barrier &amp; SPF vivarium housing</div>
+    <div class="caps-item">Gnotobiotic / germ-free housing</div>
+    <div class="caps-item">ABSL3 infectious disease studies</div>
+    <div class="caps-item">Import &amp; export coordination</div>
+    <div class="caps-item">Project management &amp; consultation</div>
+    <div class="caps-item">AAALAC-accredited throughout</div>
+    <div class="caps-item">NCI Cancer Center shared resource</div>
+    <div class="caps-item">Multi-year operating history</div>
+    <div class="caps-item">Global client base</div>
+  </div>
+
+  <div class="page-cta">
+    <div class="page-cta-text">Ready to put this to work?</div>
+    <a href="mailto:contact@mbp2sciences.com" class="cta-link cta-gold">Contact us →</a>
+  </div>
+
+</div>
+</body>
+</html>

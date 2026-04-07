@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MBP² Sciences</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy: #0b1a2e;
+  --gold: #c9a84c;
+  --sage: #3d7a6a;
+  --sage-light: #4d9a87;
+  --cream: #f8f5ef;
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --mono: 'DM Mono', monospace;
+}
+
+body {
+  font-family: var(--mono);
+  background: var(--navy);
+  color: var(--cream);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  color: var(--cream);
+  line-height: 1;
+}
+.logo .brand-sup {
+  font-family: var(--serif);
+  font-size: 0.65em;
+  font-weight: 300;
+  color: var(--gold);
+  vertical-align: super;
+  line-height: 0;
+  letter-spacing: 0;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem 3.5rem;
+  flex-shrink: 0;
+}
+.nav-right {
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(248,245,239,0.35);
+}
+
+main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 0;
+  position: relative;
+}
+
+/* ── CALLOUT ── */
+.home-callout {
+  position: absolute;
+  top: 2.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  text-align: center;
+  padding: 1.35rem 2.5rem 1.5rem;
+  background: rgba(11,26,46,0.88);
+  border: 1px solid rgba(201,168,76,0.22);
+  backdrop-filter: blur(16px);
+  width: max-content;
+  max-width: min(580px, 88vw);
+  pointer-events: none;
+}
+.callout-years {
+  font-size: 0.5rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(201,168,76,0.7);
+  margin-top: 0.55rem;
+}
+.callout-headline {
+  font-family: var(--serif);
+  font-size: clamp(1.05rem, 1.8vw, 1.45rem);
+  font-weight: 300;
+  color: rgba(248,245,239,0.88);
+  line-height: 1.4;
+}
+.callout-headline em { font-style: italic; color: var(--gold); }
+
+.door-divider {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 1px; height: 55%;
+  background: linear-gradient(to bottom, transparent, rgba(248,245,239,0.07) 30%, rgba(248,245,239,0.07) 70%, transparent);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.door {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 3.5rem;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.4s;
+}
+
+.door-mouse {
+  background: rgba(255,255,255,0.015);
+  border-right: 1px solid rgba(201,168,76,0.1);
+}
+.door-mouse:hover { background: rgba(201,168,76,0.05); }
+.door-mouse::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+.door-mouse:hover::before { transform: scaleX(1); }
+
+.door-nams { background: rgba(61,122,106,0.05); }
+.door-nams:hover { background: rgba(61,122,106,0.1); }
+.door-nams::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  background: var(--sage-light);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+.door-nams:hover::before { transform: scaleX(1); }
+
+.door-index {
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(248,245,239,0.25);
+  margin-bottom: auto;
+}
+
+.door-title {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 3.2vw, 3rem);
+  font-weight: 300;
+  line-height: 1.1;
+  color: var(--cream);
+  margin-bottom: 1rem;
+}
+.door-mouse .door-title em { font-style: italic; color: var(--gold); }
+.door-nams .door-title em { font-style: italic; color: var(--sage-light); }
+
+.door-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 1.5rem;
+}
+.tag {
+  font-size: 0.52rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid;
+}
+.door-mouse .tag { border-color: rgba(201,168,76,0.28); color: rgba(201,168,76,0.65); }
+.door-nams .tag { border-color: rgba(77,154,135,0.32); color: rgba(77,154,135,0.75); }
+
+.door-cta {
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(248,245,239,0.35);
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.door-cta::after { content: '→'; }
+.door-mouse:hover .door-cta { color: var(--gold); }
+.door-nams:hover .door-cta { color: var(--sage-light); }
+
+footer {
+  padding: 1.25rem 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(248,245,239,0.06);
+  flex-shrink: 0;
+}
+.footer-note {
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(248,245,239,0.25);
+}
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+.footer-contact, .footer-adv {
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  color: rgba(248,245,239,0.4);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-contact:hover { color: var(--gold); }
+.footer-adv:hover { color: var(--gold); }
+
+@media (max-width: 768px) {
+  body { height: auto; overflow: auto; }
+  nav { padding: 1.25rem 1.5rem; }
+  .nav-right { display: none; }
+  main { grid-template-columns: 1fr; }
+  /* callout becomes a static full-width strip above the doors */
+  .home-callout {
+    position: static;
+    transform: none;
+    left: auto; top: auto;
+    grid-column: 1 / -1;
+    width: 100%; max-width: 100%;
+    border: none;
+    border-bottom: 1px solid rgba(201,168,76,0.18);
+    backdrop-filter: none;
+    background: rgba(11,26,46,0.7);
+    padding: 1.5rem;
+    text-align: left;
+    pointer-events: auto;
+  }
+  .callout-headline { font-size: 1.15rem; line-height: 1.45; }
+  .callout-years { margin-bottom: 0.5rem; }
+  .door { min-height: 44vh; padding: 2rem 1.5rem; }
+  .door-title { font-size: 2rem; }
+  .door-divider { display: none; }
+  footer { padding: 1.25rem 1.5rem; flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+  .footer-links { flex-direction: column; gap: 0.6rem; }
+}
+@media (max-width: 480px) {
+  .door-tags { display: none; }
+  .door { min-height: 38vh; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">MBP<sup class="brand-sup">2</sup> Sciences</div>
+  <div class="nav-right">Davis, California</div>
+</nav>
+
+<main>
+  <div class="door-divider"></div>
+
+  <!-- CALLOUT BOX — floats above the doors, centred -->
+  <div class="home-callout">
+    <!-- <p class="callout-headline">From your first gene edit to your <em>final phenotype</em> —<br>every step under one roof, one team, one guarantee.</p> -->
+    <p class="callout-headline">Everything between your idea and your success — handled</p>
+    <div class="callout-years">MBP Est. 1999</div>
+  </div>
+
+  <a class="door door-mouse" href="mouse_services.html">
+    <!-- <div class="door-index">01</div> -->
+    <h2 class="door-title">Mouse Model<br><em>Services</em></h2>
+    <div class="door-tags">
+      <span class="tag">CRISPR</span>
+      <span class="tag">Phenotyping</span>
+      <span class="tag">Cryopreservation</span>
+      <span class="tag">IVF</span>
+      <span class="tag">Colony Management</span>
+      <span class="tag">Genotyping</span>
+    </div>
+    <div class="door-cta">Enter</div>
+  </a>
+
+  <a class="door door-nams" href="nam_validation.html">
+    <!-- <div class="door-index">02</div> -->
+    <h2 class="door-title">NAM Validation<br><em>&amp; Testing</em></h2>
+    <div class="door-tags">
+      <span class="tag">Organoids</span>
+      <span class="tag">Organ-on-Chip</span>
+      <span class="tag">In silico</span>
+      <span class="tag">FDA Bridging</span>
+      <span class="tag">Benchmarking</span>
+    </div>
+    <div class="door-cta">Enter</div>
+  </a>
+</main>
+
+<footer>
+  <div class="footer-note">MBP² Sciences</div>
+  <div class="footer-links">
+    <a href="mbpadvantage.html" class="footer-adv">The MBP Advantage →</a>
+    <a href="mailto:contact@mbp2sciences.com" class="footer-contact">contact@mbp2sciences.com</a>
+  </div>
+</footer>
+
+</body>
+</html>
