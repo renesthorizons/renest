@@ -54,10 +54,28 @@ nav {
   flex-shrink: 0;
 }
 .nav-right {
-  font-size: 0.62rem;
-  letter-spacing: 0.18em;
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 1rem;
+  align-items: center;
+}
+.mini-stat {
+  text-align: right;
+  min-width: 86px;
+}
+.mini-stat-number {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  color: var(--gold);
+  line-height: 1;
+}
+.mini-stat-text {
+  font-size: 0.46rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(248,245,239,0.35);
+  color: rgba(248,245,239,0.45);
+  line-height: 1.3;
+  margin-top: 0.2rem;
 }
 
 main {
@@ -231,9 +249,9 @@ footer {
 @media (max-width: 768px) {
   body { height: auto; overflow: auto; }
   nav { padding: 1.25rem 1.5rem; }
-  .nav-right { display: none; }
+  .nav-right { grid-template-columns: 1fr; gap: 0.35rem; }
+  .mini-stat { min-width: 0; }
   main { grid-template-columns: 1fr; }
-  /* callout becomes a static full-width strip above the doors */
   .home-callout {
     position: static;
     transform: none;
@@ -266,35 +284,44 @@ footer {
 
 <nav>
   <div class="logo">MBP<sup class="brand-sup">2</sup> Sciences</div>
-  <div class="nav-right">Davis, California</div>
+  <div class="nav-right">
+    <div class="mini-stat">
+      <div class="mini-stat-number">25</div>
+      <div class="mini-stat-text">Years in operation<br>Est. 1999</div>
+    </div>
+    <div class="mini-stat">
+      <div class="mini-stat-number">120</div>
+      <div class="mini-stat-text">NIH grants<br>supported</div>
+    </div>
+    <div class="mini-stat">
+      <div class="mini-stat-number">600</div>
+      <div class="mini-stat-text">Active projects<br>per year</div>
+    </div>
+  </div>
 </nav>
 
 <main>
   <div class="door-divider"></div>
 
-  <!-- CALLOUT BOX — floats above the doors, centred -->
   <div class="home-callout">
-    <!-- <p class="callout-headline">From your first gene edit to your <em>final phenotype</em> —<br>every step under one roof, one team, one guarantee.</p> -->
     <p class="callout-headline">Everything between your idea and your success — handled</p>
     <div class="callout-years">MBP Est. 1999</div>
   </div>
 
-  <a class="door door-mouse" href="mouse_services.html">
-    <!-- <div class="door-index">01</div> -->
+  <a class="door door-mouse" href="mouse_home.html">
     <h2 class="door-title">Mouse Model<br><em>Services</em></h2>
     <div class="door-tags">
+      <span class="tag">Vivarium</span>
       <span class="tag">CRISPR</span>
       <span class="tag">Phenotyping</span>
       <span class="tag">Cryopreservation</span>
-      <span class="tag">IVF</span>
-      <span class="tag">Colony Management</span>
+      <span class="tag">Veterinary Care</span>
       <span class="tag">Genotyping</span>
     </div>
     <div class="door-cta">Enter</div>
   </a>
 
-  <a class="door door-nams" href="nam_validation.html">
-    <!-- <div class="door-index">02</div> -->
+  <a class="door door-nams" href="nam_home.html">
     <h2 class="door-title">NAM Validation<br><em>&amp; Testing</em></h2>
     <div class="door-tags">
       <span class="tag">Organoids</span>

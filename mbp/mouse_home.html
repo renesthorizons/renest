@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mouse Model Services — MBP² Sciences</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy: #0b1a2e;
+  --gold: #c9a84c;
+  --cream: #f8f5ef;
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --mono: 'DM Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--mono);
+  background: var(--navy);
+  color: var(--cream);
+  min-height: 100vh;
+}
+
+/* ── NAV ── */
+.page-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.75rem 3.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(16px);
+  background: rgba(11,26,46,0.95);
+  border-bottom: 1px solid rgba(201,168,76,0.12);
+}
+.logo {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  color: var(--cream);
+  text-decoration: none;
+}
+.logo .brand-sup { font-size: 0.65em; color: var(--gold); vertical-align: super; line-height: 0; }
+.back-btn {
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(248,245,239,0.5);
+  background: none; border: none; cursor: pointer;
+  font-family: var(--mono);
+  display: flex; align-items: center; gap: 0.5rem;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.back-btn::before { content: '←'; }
+.back-btn:hover { color: var(--gold); }
+.nav-right-group { display: flex; align-items: center; }
+.nav-stats {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 1rem;
+  align-items: center;
+}
+.mini-stat {
+  text-align: right;
+  min-width: 86px;
+}
+.mini-stat-number {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  color: var(--gold);
+  line-height: 1;
+}
+.mini-stat-text {
+  font-size: 0.46rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(248,245,239,0.45);
+  line-height: 1.3;
+  margin-top: 0.2rem;
+}
+
+/* ── HERO ── */
+.hero {
+  padding: 7rem 3.5rem 5rem;
+  max-width: 960px;
+  margin: 0 auto;
+}
+.hero-eyebrow {
+  font-size: 0.55rem; letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(201,168,76,0.65);
+  margin-bottom: 1.5rem;
+}
+.hero-title {
+  font-family: var(--serif);
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  font-weight: 300; line-height: 1.0;
+  color: var(--cream); margin-bottom: 2rem;
+}
+.hero-title em { font-style: italic; color: var(--gold); }
+.hero-sub {
+  font-size: 0.85rem; color: rgba(248,245,239,0.55);
+  max-width: 460px; line-height: 1.85; margin-bottom: 3.5rem;
+}
+.hero-cta {
+  display: inline-flex; align-items: center; gap: 0.75rem;
+  font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase;
+  padding: 1rem 2.25rem;
+  border: 1px solid rgba(201,168,76,0.55);
+  color: var(--gold); text-decoration: none;
+  transition: background 0.22s, color 0.22s;
+}
+.hero-cta:hover { background: var(--gold); color: var(--navy); }
+.hero-cta::after { content: '↓'; margin-left: 0.25rem; }
+
+/* ── DIVIDER ── */
+.section-rule {
+  height: 1px; background: rgba(248,245,239,0.07);
+  max-width: 960px; margin: 0 auto;
+}
+
+/* ── PILLARS ── */
+.pillars { max-width: 960px; margin: 0 auto; padding: 5rem 3.5rem; }
+.pillar-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: rgba(201,168,76,0.12);
+}
+.pillar { background: var(--navy); padding: 2.5rem 2rem; }
+.pillar-num {
+  font-size: 0.5rem; letter-spacing: 0.2em;
+  color: rgba(201,168,76,0.4); margin-bottom: 1.5rem;
+}
+.pillar-title {
+  font-family: var(--serif); font-size: 1.55rem;
+  font-weight: 300; color: var(--cream); line-height: 1.15;
+}
+.pillar-title em { font-style: italic; color: var(--gold); }
+
+/* ── CUSTOM STRIP ── */
+.custom-strip { max-width: 960px; margin: 0 auto; padding: 0 3.5rem 4rem; }
+.custom-box {
+  border: 1px solid rgba(201,168,76,0.2);
+  padding: 2.25rem 2.5rem;
+  background: rgba(201,168,76,0.04);
+}
+.custom-headline {
+  font-family: var(--serif);
+  font-size: clamp(1.4rem, 2.5vw, 1.9rem);
+  font-weight: 300; color: var(--cream); line-height: 1.25;
+}
+.custom-headline em { font-style: italic; color: var(--gold); }
+.custom-body {
+  font-size: 0.72rem; color: rgba(248,245,239,0.45);
+  line-height: 1.75; margin-top: 0.65rem;
+}
+
+/* ── SERVICES SECTION ── */
+.services-section {
+  max-width: 960px; margin: 0 auto;
+  padding: 0 3.5rem 7rem;
+}
+.services-intro {
+  padding: 3rem 0 2rem;
+  border-top: 1px solid rgba(201,168,76,0.15);
+}
+.services-intro-label {
+  font-size: 0.52rem; letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(201,168,76,0.55); margin-bottom: 0.5rem;
+}
+.services-intro-title {
+  font-family: var(--serif);
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 300; color: var(--cream);
+}
+.services-intro-title em { font-style: italic; color: var(--gold); }
+
+/* params */
+.project-params {
+  display: flex; flex-wrap: wrap;
+  gap: 0.75rem; margin-bottom: 1.75rem;
+  align-items: flex-end; margin-top: 2rem;
+}
+.param-field { display: flex; flex-direction: column; gap: 0.4rem; min-width: 120px; }
+.param-field label {
+  font-size: 0.55rem; letter-spacing: 0.14em;
+  text-transform: uppercase; color: rgba(248,245,239,0.65);
+}
+.param-input-wrap {
+  display: flex; align-items: stretch;
+  border: 1px solid rgba(201,168,76,0.5);
+  background: rgba(11,26,46,0.8);
+  transition: border-color 0.2s;
+}
+.param-input-wrap:focus-within { border-color: var(--gold); }
+.param-unit {
+  font-size: 0.62rem; color: rgba(248,245,239,0.55);
+  padding: 0 0.65rem; white-space: nowrap;
+  border-left: 1px solid rgba(201,168,76,0.25);
+  display: flex; align-items: center;
+  background: rgba(201,168,76,0.07);
+}
+.param-field input {
+  width: 4.5rem; background: transparent; border: none;
+  color: var(--cream); font-family: var(--mono);
+  font-size: 0.85rem; padding: 0.55rem 0.6rem; min-width: 0;
+}
+.param-field input:focus { outline: none; }
+
+/* live quote */
+.live-quote {
+  display: flex; align-items: baseline; gap: 1.5rem;
+  padding: 1.5rem 1.75rem;
+  border: 1px solid rgba(201,168,76,0.45);
+  background: rgba(201,168,76,0.1);
+  margin-bottom: 2rem; flex-wrap: wrap;
+}
+.lq-label {
+  font-size: 0.55rem; letter-spacing: 0.18em;
+  text-transform: uppercase; color: rgba(248,245,239,0.6); flex-shrink: 0;
+}
+.lq-value {
+  font-family: var(--serif); font-size: 2.6rem;
+  font-weight: 300; color: var(--gold); line-height: 1;
+  transition: opacity 0.15s;
+}
+.live-quote.lq-empty .lq-value { color: rgba(248,245,239,0.2); }
+
+/* search */
+.chip-search-wrap { position: relative; margin-bottom: 1rem; }
+.chip-search {
+  width: 100%; background: rgba(11,26,46,0.85);
+  border: 1px solid rgba(201,168,76,0.45);
+  color: var(--cream); font-family: var(--mono);
+  font-size: 0.8rem;
+  padding: 0.7rem 2.5rem 0.7rem 2.75rem;
+  transition: border-color 0.2s;
+}
+.chip-search:focus { outline: none; border-color: var(--gold); }
+.chip-search::placeholder { color: rgba(248,245,239,0.35); }
+.chip-search-icon {
+  position: absolute; left: 0.85rem; top: 50%;
+  transform: translateY(-50%);
+  color: rgba(248,245,239,0.45); font-size: 1rem; pointer-events: none;
+}
+.chip-search-clear {
+  position: absolute; right: 0.85rem; top: 50%;
+  transform: translateY(-50%);
+  color: rgba(248,245,239,0.4); cursor: pointer;
+  font-size: 1.1rem; line-height: 1; display: none;
+  background: none; border: none; font-family: var(--mono);
+  transition: color 0.15s;
+}
+.chip-search-clear:hover { color: var(--gold); }
+.chip-search-clear.visible { display: block; }
+.chip-no-results {
+  font-size: 0.72rem; color: rgba(248,245,239,0.45);
+  padding: 0.75rem 0 1rem; display: none;
+}
+
+/* chips grid */
+.scope-chips {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+  gap: 0.5rem; margin-bottom: 0.5rem;
+}
+.chip {
+  font-size: 0.7rem; letter-spacing: 0.05em;
+  padding: 0.65rem 1rem;
+  border: 1px solid rgba(201,168,76,0.42);
+  color: rgba(248,245,239,0.72);
+  cursor: pointer; transition: all 0.18s;
+  background: rgba(201,168,76,0.03);
+  font-family: var(--mono); text-align: left;
+  user-select: none; line-height: 1.3;
+}
+.chip:hover {
+  border-color: rgba(201,168,76,0.8);
+  color: rgba(248,245,239,0.95);
+  background: rgba(201,168,76,0.07);
+}
+.chip.selected {
+  background: rgba(201,168,76,0.16);
+  border-color: var(--gold); color: var(--gold);
+}
+.chips-featured .chip {
+  border-color: rgba(201,168,76,0.55);
+  background: rgba(201,168,76,0.06);
+}
+
+/* chip group label */
+.chips-group-label {
+  font-size: 0.5rem; letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(201,168,76,0.55);
+  margin-bottom: 0.65rem; margin-top: 0.25rem;
+}
+
+/* more toggle */
+.more-toggle {
+  display: flex; align-items: center; gap: 0.6rem;
+  margin: 0.75rem 0 0.65rem;
+  cursor: pointer; font-size: 0.58rem;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: rgba(248,245,239,0.45);
+  background: none; border: none; font-family: var(--mono);
+  padding: 0.2rem 0; transition: color 0.18s; user-select: none;
+}
+.more-toggle:hover { color: var(--gold); }
+.more-toggle .toggle-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 1.2rem; height: 1.2rem;
+  border: 1px solid rgba(201,168,76,0.4);
+  font-size: 0.85rem; line-height: 1;
+  color: rgba(201,168,76,0.65);
+  transition: transform 0.22s, color 0.18s; flex-shrink: 0;
+}
+.more-toggle.open .toggle-icon { transform: rotate(45deg); color: var(--gold); }
+.more-toggle.open { color: rgba(248,245,239,0.6); }
+.chips-more { display: none; }
+.chips-more.visible { display: grid; }
+
+/* custom callout */
+.custom-callout {
+  margin-top: 1.25rem; padding: 1.1rem 1.35rem;
+  border: 1px solid rgba(201,168,76,0.18);
+  background: rgba(201,168,76,0.04);
+  display: flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap;
+}
+.custom-callout-label {
+  font-size: 0.5rem; letter-spacing: 0.18em;
+  text-transform: uppercase; color: rgba(201,168,76,0.5); flex-shrink: 0;
+}
+.custom-callout-text { font-size: 0.7rem; color: rgba(248,245,239,0.48); line-height: 1.6; }
+
+/* scope action */
+.scope-action {
+  display: flex; align-items: center; gap: 1.25rem;
+  margin-top: 1.5rem; flex-wrap: wrap;
+}
+.scope-count {
+  font-size: 0.62rem; letter-spacing: 0.1em;
+  color: rgba(248,245,239,0.45); transition: color 0.2s;
+}
+.scope-count.has-selection { color: var(--gold); }
+.scope-submit {
+  font-size: 0.62rem; letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.8rem 1.75rem; border: 1px solid;
+  cursor: pointer; font-family: var(--mono);
+  background: none; transition: background 0.2s, color 0.2s;
+  opacity: 0.4; pointer-events: none;
+}
+.scope-submit.active { opacity: 1; pointer-events: auto; }
+.cta-gold { color: var(--gold); border-color: rgba(201,168,76,0.5); }
+.cta-gold.active:hover { background: var(--gold); color: var(--navy); }
+
+/* contact cta */
+.page-cta {
+  margin-top: 3rem; padding-top: 2.5rem;
+  border-top: 1px solid rgba(248,245,239,0.1);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 2rem; flex-wrap: wrap;
+}
+.page-cta-text {
+  font-family: var(--serif); font-size: 1.6rem;
+  font-weight: 300; color: var(--cream);
+}
+.cta-link {
+  font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 0.85rem 1.75rem; text-decoration: none; border: 1px solid;
+  transition: background 0.2s, color 0.2s; white-space: nowrap;
+}
+.cta-link.cta-gold { color: var(--gold); border-color: rgba(201,168,76,0.5); }
+.cta-link.cta-gold:hover { background: var(--gold); color: var(--navy); }
+
+/* footer */
+footer {
+  padding: 1.25rem 3.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+  border-top: 1px solid rgba(248,245,239,0.06);
+  max-width: 960px; margin: 0 auto;
+}
+.footer-note {
+  font-size: 0.55rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: rgba(248,245,239,0.22);
+}
+.footer-contact {
+  font-size: 0.58rem; letter-spacing: 0.1em;
+  color: rgba(248,245,239,0.38); text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-contact:hover { color: var(--gold); }
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+}
+.footer-adv {
+  font-size: 0.58rem; letter-spacing: 0.1em;
+  color: rgba(248,245,239,0.38); text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-adv:hover { color: var(--gold); }
+
+@media (max-width: 900px) {
+  .nav-stats { grid-template-columns: 1fr; gap: 0.35rem; }
+  .mini-stat { min-width: 0; }
+}
+@media (max-width: 768px) {
+  .page-nav { padding: 1.25rem 1.5rem; }
+  .hero { padding: 4rem 1.5rem 3rem; }
+  .pillars { padding: 3rem 1.5rem; }
+  .pillar-grid { grid-template-columns: 1fr; }
+  .custom-strip { padding: 0 1.5rem 3rem; }
+  .services-section { padding: 0 1.5rem 5rem; }
+  .project-params { flex-direction: column; gap: 0.6rem; }
+  .param-field { min-width: 0; width: 100%; flex-direction: row; align-items: center; justify-content: space-between; }
+  .param-field label { white-space: nowrap; margin-right: 0.75rem; }
+  .param-input-wrap { flex: 1; }
+  .param-field input { width: 100%; min-width: 0; padding: 0.7rem 0.6rem; font-size: 1rem; }
+  .chip { min-height: 44px; display: flex; align-items: center; }
+  .chip-search { padding: 0.8rem 2.5rem 0.8rem 2.75rem; font-size: 0.85rem; min-height: 44px; }
+  .scope-submit { min-height: 44px; width: 100%; justify-content: center; }
+  .scope-action { flex-direction: column; align-items: stretch; gap: 0.75rem; }
+  .scope-chips { grid-template-columns: 1fr 1fr; }
+  .live-quote { padding: 1.25rem; gap: 1rem; }
+  .lq-value { font-size: 2rem; }
+  .page-cta { flex-direction: column; align-items: flex-start; }
+  .cta-link { width: 100%; text-align: center; display: block; padding: 1rem; }
+  footer { padding: 1.25rem 1.5rem; }
+}
+@media (max-width: 480px) {
+  .scope-chips { grid-template-columns: 1fr; }
+  .param-field { flex-direction: column; align-items: flex-start; }
+  .param-input-wrap { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<nav class="page-nav">
+  <a href="index.html" class="back-btn">MBP²</a>
+  <a href="index.html" class="logo">MBP<sup class="brand-sup">2</sup> Sciences</a>
+  <div class="nav-right-group">
+    <div class="nav-stats">
+      <div class="mini-stat">
+        <div class="mini-stat-number">25</div>
+        <div class="mini-stat-text">Years in operation<br>Est. 1999</div>
+      </div>
+      <div class="mini-stat">
+        <div class="mini-stat-number">120</div>
+        <div class="mini-stat-text">NIH grants<br>supported</div>
+      </div>
+      <div class="mini-stat">
+        <div class="mini-stat-number">600</div>
+        <div class="mini-stat-text">Active projects<br>per year</div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <p class="hero-eyebrow">Mouse Model Services</p>
+  <h1 class="hero-title"><br> The backbone for <em> your success</em></h1>
+  <p class="hero-sub">
+    Full vivarium. Expert veterinary staff. Comprehensive phenotyping. 
+    Everything a team needs without building it themselves. Clear, fast, dependable.
+  </p>
+  <a href="#services" class="hero-cta">Build your project</a>
+</div>
+
+<div class="section-rule"></div>
+
+<div class="pillars">
+  <div class="pillar-grid">
+    <div class="pillar">
+      <div class="pillar-num">01</div>
+      <div class="pillar-title">Vivarium &amp;<br><em>Facilities</em></div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-num">02</div>
+      <div class="pillar-title">Comprehensive<br><em>Phenotyping</em></div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-num">03</div>
+      <div class="pillar-title">Genetic<br><em>Engineering</em></div>
+    </div>
+  </div>
+</div>
+
+<div class="custom-strip">
+  <div class="custom-box">
+    <div class="custom-headline">We are fully customizable to your needs<br><em>at all stages.</em></div>
+    <p class="custom-body">Select any combination of services below — or tell us your endpoint and we'll design the study.</p>
+  </div>
+</div>
+
+<!-- ── SERVICE SELECTOR ── -->
+<div class="services-section" id="services">
+  <div class="services-intro">
+    <p class="services-intro-label">Build your project</p>
+    <h2 class="services-intro-title">Select services.<br><em>Get an estimate.</em></h2>
+  </div>
+
+  <div class="project-params">
+    <div class="param-field">
+      <label for="mouse-timeline-months">Timeline</label>
+      <div class="param-input-wrap">
+        <input type="number" id="mouse-timeline-months" min="1" max="24" value="3" />
+        <span class="param-unit">months</span>
+      </div>
+    </div>
+    <div class="param-field">
+      <label for="mouse-avg-mice">Avg. mice</label>
+      <div class="param-input-wrap">
+        <input type="number" id="mouse-avg-mice" min="0" step="1" value="10" />
+        <span class="param-unit">animals</span>
+      </div>
+    </div>
+    <div class="param-field">
+      <label for="mouse-cryo-years">Cryo storage</label>
+      <div class="param-input-wrap">
+        <input type="number" id="mouse-cryo-years" min="0" step="0.5" value="1" />
+        <span class="param-unit">years</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="live-quote lq-empty" id="mouse-live-quote">
+    <span class="lq-label">Estimated project cost</span>
+    <span class="lq-value" id="mouse-quote-total">—</span>
+  </div>
+
+  <div class="chip-search-wrap">
+    <span class="chip-search-icon">⌕</span>
+    <input type="text" class="chip-search" id="mouse-search" placeholder="Search services…" autocomplete="off" />
+    <button class="chip-search-clear" id="mouse-search-clear" aria-label="Clear search">×</button>
+  </div>
+  <p class="chip-no-results" id="mouse-no-results">No services match your search.</p>
+
+  <div id="mouse-chips">
+    <!-- <p class="chips-group-label" id="featured-label">Vivarium · Veterinary · Phenotyping</p> -->
+    <div class="scope-chips chips-featured" id="chips-featured-grid">
+      <button type="button" class="chip" data-quote-key="barrier_housing">Barrier vivarium housing</button>
+      <button type="button" class="chip" data-quote-key="spf_housing">SPF vivarium housing</button>
+      <button type="button" class="chip" data-quote-key="germfree_housing">Gnotobiotic / germ-free housing</button>
+      <button type="button" class="chip" data-quote-key="colony_mgmt">Colony management</button>
+      <button type="button" class="chip" data-quote-key="rederivation">Rederivation</button>
+      <button type="button" class="chip" data-quote-key="pheno_behaviour">Behavioural phenotyping</button>
+      <button type="button" class="chip" data-quote-key="pheno_metabolic">Metabolic phenotyping</button>
+      <button type="button" class="chip" data-quote-key="pheno_cardio">Cardiovascular phenotyping</button>
+      <button type="button" class="chip" data-quote-key="pathology">Pathology &amp; histology</button>
+      <button type="button" class="chip" data-quote-key="imaging">Imaging</button>
+      <button type="button" class="chip" data-quote-key="genotyping">Genotyping (PCR / qPCR)</button>
+      <button type="button" class="chip" data-quote-key="crispr_ko">CRISPR knockout</button>
+    </div>
+
+    <button type="button" class="more-toggle" id="more-toggle">
+      <span class="toggle-icon">+</span>
+      More services
+    </button>
+
+    <div class="scope-chips chips-more" id="chips-more-grid">
+      <button type="button" class="chip" data-quote-key="crispr_ki">CRISPR knockin / SNP</button>
+      <button type="button" class="chip" data-quote-key="conditional">Conditional allele</button>
+      <button type="button" class="chip" data-quote-key="base_prime">Base or prime editing</button>
+      <button type="button" class="chip" data-quote-key="aav_crispr">AAV-CRISPR delivery</button>
+      <button type="button" class="chip" data-quote-key="pronuclear">Pronuclear microinjection</button>
+      <button type="button" class="chip" data-quote-key="blastocyst">Blastocyst injection</button>
+      <button type="button" class="chip" data-quote-key="es_targeting">ES cell gene targeting</button>
+      <button type="button" class="chip" data-quote-key="sperm_cryo">Sperm cryopreservation</button>
+      <button type="button" class="chip" data-quote-key="embryo_cryo">Embryo cryopreservation</button>
+      <button type="button" class="chip" data-quote-key="sperm_recovery">Sperm cryorecovery (IVF)</button>
+      <button type="button" class="chip" data-quote-key="embryo_recovery">Embryo cryorecovery</button>
+      <button type="button" class="chip" data-quote-key="snp_congenics">SNP speed congenics</button>
+      <button type="button" class="chip" data-quote-key="pdx">PDX tumour modelling</button>
+      <button type="button" class="chip" data-quote-key="pkpd">PK/PD studies</button>
+      <button type="button" class="chip" data-quote-key="tox">Toxicology studies</button>
+      <button type="button" class="chip" data-quote-key="import_c">Import coordination</button>
+      <button type="button" class="chip" data-quote-key="export_c">Export coordination</button>
+      <button type="button" class="chip" data-quote-key="consultation">Project consultation</button>
+    </div>
+
+    <div class="custom-callout">
+      <span class="custom-callout-label">Custom</span>
+      <span class="custom-callout-text">Not seeing exactly what you need? Every study is custom-designed around your endpoints — no protocol is off the table.</span>
+    </div>
+  </div>
+
+  <div class="scope-action">
+    <span class="scope-count" id="mouse-count">0 services selected</span>
+    <button class="scope-submit cta-gold" id="mouse-submit">Request a quote →</button>
+  </div>
+
+  <div class="page-cta">
+    <div class="page-cta-text">Have a question first?</div>
+    <a href="mailto:contact@mbp2sciences.com" class="cta-link cta-gold">Contact us →</a>
+  </div>
+</div>
+
+<footer>
+  <span class="footer-note">MBP² Sciences · Davis, California</span>
+  <div class="footer-links">
+    <a href="mbpadvantage.html" class="footer-adv">The MBP Advantage →</a>
+    <a href="mailto:contact@mbp2sciences.com" class="footer-contact">contact@mbp2sciences.com</a>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var DAYS_PER_MONTH = 30;
+
+  var SERVICES = [
+    { id: 'crispr_zygote', mbp: 7329 + 3413, kind: 'once' },
+    { id: 'pronuclear',    mbp: 13163 + 3413, kind: 'once' },
+    { id: 'blastocyst',    mbp: 6234 + 3455,  kind: 'once' },
+    { id: 'es_hr',         mbp: 8139,          kind: 'once' },
+    { id: 'es_crispr',     mbp: 5632,          kind: 'once' },
+    { id: 'grna_design',   mbp: 647,           kind: 'once' },
+    { id: 'hdr_design',    mbp: 3078,          kind: 'once' },
+    { id: 'grna_qc',       mbp: 867,           kind: 'once' },
+    { id: 'reaction_mix',  mbp: 209,           kind: 'once' },
+    { id: 'vector_prep',   mbp: 1210,          kind: 'vectorPass', passPer: 7.42 },
+    { id: 'sperm_cryo',    mbp: 913,           kind: 'once' },
+    { id: 'embryo_cryo',   mbp: 4664 + 2149,  kind: 'once' },
+    { id: 'sperm_recovery',mbp: 4540 + 2542,  kind: 'once' },
+    { id: 'embryo_recovery',mbp: 2368 + 1109, kind: 'once' },
+    { id: 'rederivation',  mbp: 4586 + 2542,  kind: 'once' },
+    { id: 'cryo_storage',  mbp: 256,           kind: 'cryoYears' },
+    { id: 'pcr_sample',    mbp: 21.99,         kind: 'perUnit' },
+    { id: 'pcr_dev',       mbp: 836,           kind: 'once' },
+    { id: 'qpcr_allele',   mbp: 17.28,         kind: 'perUnit' },
+    { id: 'qpcr_dev',      mbp: 715,           kind: 'once' },
+    { id: 'snp',           mbp: 54.99 + 175.26,kind: 'perUnit' },
+    { id: 'es_screen',     mbp: 742,           kind: 'once' },
+    { id: 'shirpa',        mbp: 37.70,         kind: 'perUnit' },
+    { id: 'open_field',    mbp: 92.69,         kind: 'perUnit' },
+    { id: 'morris',        mbp: 1720,          kind: 'once' },
+    { id: 'startle',       mbp: 42.42,         kind: 'perUnit' },
+    { id: 'blood',         mbp: 73.84,         kind: 'perUnit' },
+    { id: 'necropsy',      mbp: 83.26,         kind: 'perUnit' },
+    { id: 'xray',          mbp: 53.41,         kind: 'perUnit' },
+    { id: 'aperio',        mbp: 180.67,        kind: 'perUnit' },
+    { id: 'pdx_maint',     mbp: 1442,          kind: 'perUnit' },
+    { id: 'pdx_implant',   mbp: 2075,          kind: 'once' },
+    { id: 'pheno_pm',      mbp: 252.93,        kind: 'once' },
+    { id: 'spf_diem',      mbp: 2.56,          kind: 'perMouseDay' },
+    { id: 'breeding',      mbp: 0.86,          kind: 'perMouseDayBreeding' },
+    { id: 'germfree',      mbp: 524.71,        kind: 'perUnit' },
+    { id: 'bubble_setup',  mbp: 2680 + 569,   kind: 'once' },
+    { id: 'bubble_maint',  mbp: 878,           kind: 'once' },
+    { id: 'import_c',      mbp: 281.21,        kind: 'once' },
+    { id: 'export_c',      mbp: 210.51,        kind: 'once' },
+  ];
+
+  var SERVICE_BY_ID = new Map(SERVICES.map(function (s) { return [s.id, s]; }));
+
+  var MOUSE_QUOTE_MAP = {
+    crispr_ko:       [{ id: 'crispr_zygote', qty: 1 }],
+    crispr_ki:       [{ id: 'crispr_zygote', qty: 1 }],
+    conditional:     [{ id: 'es_hr', qty: 1 }],
+    base_prime:      [{ id: 'es_crispr', qty: 1 }, { id: 'grna_design', qty: 1 }, { id: 'hdr_design', qty: 1 }],
+    aav_crispr:      [{ id: 'vector_prep', qty: 1, pass: 1 }, { id: 'grna_design', qty: 1 }, { id: 'reaction_mix', qty: 1 }],
+    pronuclear:      [{ id: 'pronuclear', qty: 1 }],
+    blastocyst:      [{ id: 'blastocyst', qty: 1 }],
+    es_targeting:    [{ id: 'es_hr', qty: 1 }],
+    sperm_cryo:      [{ id: 'sperm_cryo', qty: 1 }],
+    embryo_cryo:     [{ id: 'embryo_cryo', qty: 1 }],
+    sperm_recovery:  [{ id: 'sperm_recovery', qty: 1 }],
+    embryo_recovery: [{ id: 'embryo_recovery', qty: 1 }],
+    rederivation:    [{ id: 'rederivation', qty: 1 }],
+    pheno_behaviour: [{ id: 'shirpa', qty: 6 }, { id: 'open_field', qty: 6 }, { id: 'morris', qty: 1 }, { id: 'startle', qty: 6 }],
+    pheno_metabolic: [{ id: 'blood', qty: 12 }, { id: 'open_field', qty: 12 }, { id: 'pheno_pm', qty: 1 }],
+    pheno_cardio:    [{ id: 'blood', qty: 12 }, { id: 'pheno_pm', qty: 1 }],
+    pathology:       [{ id: 'necropsy', qty: 8 }, { id: 'aperio', qty: 8 }],
+    imaging:         [{ id: 'xray', qty: 6 }, { id: 'aperio', qty: 6 }],
+    pdx:             [{ id: 'pdx_implant', qty: 1 }, { id: 'pdx_maint', qty: 1 }],
+    pkpd:            [{ id: 'pheno_pm', qty: 1 }],
+    tox:             [{ id: 'pheno_pm', qty: 1 }],
+    genotyping:      [{ id: 'pcr_dev', qty: 1 }, { id: 'qpcr_dev', qty: 1 }, { id: 'pcr_sample', qty: 24 }, { id: 'qpcr_allele', qty: 12 }],
+    snp_congenics:   [{ id: 'snp', qty: 6 }, { id: 'es_screen', qty: 1 }],
+    colony_mgmt:     [{ id: 'breeding', qty: 1 }],
+    barrier_housing: [{ id: 'spf_diem', qty: 1 }],
+    spf_housing:     [{ id: 'spf_diem', qty: 1 }],
+    germfree_housing:[{ id: 'bubble_setup', qty: 1 }, { id: 'bubble_maint', qty: 1 }, { id: 'germfree', qty: 2 }],
+    import_c:        [{ id: 'import_c', qty: 1 }],
+    export_c:        [{ id: 'export_c', qty: 1 }],
+    consultation:    [],
+  };
+
+  var CRYO_CHIP_KEYS = ['sperm_cryo', 'embryo_cryo', 'sperm_recovery', 'embryo_recovery', 'rederivation'];
+
+  function fmt(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
+  function getMonths()    { var v = parseInt(document.getElementById('mouse-timeline-months').value, 10); return Math.min(24, Math.max(1, isNaN(v) ? 3 : v)); }
+  function getMice()      { var v = parseFloat(document.getElementById('mouse-avg-mice').value); return Math.max(0, isNaN(v) ? 0 : v); }
+  function getCryoYears() { var v = parseFloat(document.getElementById('mouse-cryo-years').value); return Math.max(0, isNaN(v) ? 0 : v); }
+
+  function lineAmount(s, qty, pass) {
+    var days = getMonths() * DAYS_PER_MONTH;
+    var mice = getMice();
+    switch (s.kind) {
+      case 'once':               return s.mbp * qty;
+      case 'perUnit':            return s.mbp * qty;
+      case 'perMouseDay':
+      case 'perMouseDayBreeding':return s.mbp * mice * days;
+      case 'vectorPass':         return (s.mbp + s.passPer * (pass || 1)) * qty;
+      case 'cryoYears':          return s.mbp * getCryoYears();
+      default:                   return s.mbp * qty;
+    }
+  }
+
+  function mergeContributions(rows) {
+    var acc = new Map();
+    rows.forEach(function (c) {
+      var s = SERVICE_BY_ID.get(c.id); if (!s) return;
+      var qty = c.qty != null ? c.qty : 1;
+      var pass = c.pass != null ? c.pass : 0;
+      var prev = acc.get(c.id);
+      if (!prev) { acc.set(c.id, { qty: qty, pass: pass }); return; }
+      if (s.kind === 'perMouseDay' || s.kind === 'perMouseDayBreeding') return;
+      prev.qty += qty;
+      if (s.kind === 'vectorPass') prev.pass = (prev.pass || 0) + pass;
+    });
+    return acc;
+  }
+
+  function compute() {
+    var chips = document.querySelectorAll('#mouse-chips .chip.selected');
+    var keys = Array.from(chips).map(function (c) { return c.getAttribute('data-quote-key'); }).filter(Boolean);
+    if (!keys.length) return 0;
+    var rows = [];
+    keys.forEach(function (k) { var b = MOUSE_QUOTE_MAP[k]; if (!b) return; b.forEach(function (i) { rows.push(i); }); });
+    if (keys.some(function (k) { return CRYO_CHIP_KEYS.indexOf(k) >= 0; }) && getCryoYears() > 0) {
+      rows.push({ id: 'cryo_storage', qty: 1 });
+    }
+    var merged = mergeContributions(rows);
+    var total = 0;
+    merged.forEach(function (val, id) { var s = SERVICE_BY_ID.get(id); if (!s) return; total += lineAmount(s, val.qty, val.pass); });
+    return total;
+  }
+
+  function updateQuote() {
+    var widget = document.getElementById('mouse-live-quote');
+    var el = document.getElementById('mouse-quote-total');
+    var chips = document.querySelectorAll('#mouse-chips .chip.selected');
+    if (!chips.length) { widget.classList.add('lq-empty'); el.textContent = '—'; return; }
+    widget.classList.remove('lq-empty');
+    el.textContent = fmt(compute());
+  }
+
+  function updateCount() {
+    var chips = document.querySelectorAll('#mouse-chips .chip.selected');
+    var n = chips.length;
+    var countEl = document.getElementById('mouse-count');
+    var submitEl = document.getElementById('mouse-submit');
+    countEl.textContent = n === 0 ? '0 services selected' : n === 1 ? '1 service selected' : n + ' services selected';
+    countEl.classList.toggle('has-selection', n > 0);
+    submitEl.classList.toggle('active', n > 0);
+  }
+
+  // More toggle
+  var moreToggle = document.getElementById('more-toggle');
+  var moreGrid   = document.getElementById('chips-more-grid');
+  var moreOpen   = false;
+  moreToggle.addEventListener('click', function () {
+    moreOpen = !moreOpen;
+    moreGrid.classList.toggle('visible', moreOpen);
+    moreToggle.classList.toggle('open', moreOpen);
+    moreToggle.childNodes.forEach(function (n) {
+      if (n.nodeType === 3) n.textContent = moreOpen ? '\u00a0Fewer services' : '\u00a0More services';
+    });
+  });
+
+  // Chip click
+  document.getElementById('mouse-chips').addEventListener('click', function (e) {
+    var chip = e.target.closest('.chip'); if (!chip) return;
+    chip.classList.toggle('selected');
+    updateCount(); updateQuote();
+  });
+
+  // Params
+  ['mouse-timeline-months','mouse-avg-mice','mouse-cryo-years'].forEach(function (id) {
+    document.getElementById(id).addEventListener('input', function () {
+      if (id === 'mouse-timeline-months') { var m = parseInt(this.value, 10); if (!isNaN(m)) this.value = Math.min(24, Math.max(1, m)); }
+      updateQuote();
+    });
+  });
+
+  // Search
+  var searchInput   = document.getElementById('mouse-search');
+  var searchClear   = document.getElementById('mouse-search-clear');
+  var noResults     = document.getElementById('mouse-no-results');
+  var featuredLabel = document.getElementById('featured-label');
+
+  function filterChips() {
+    var q = searchInput.value.toLowerCase().trim();
+    var chips = document.querySelectorAll('#mouse-chips .chip');
+    var visible = 0;
+    var isSearching = q.length > 0;
+    if (isSearching) {
+      moreGrid.classList.add('visible');
+      featuredLabel.style.display = 'none';
+      moreToggle.style.display = 'none';
+    } else {
+      if (!moreOpen) moreGrid.classList.remove('visible');
+      featuredLabel.style.display = '';
+      moreToggle.style.display = '';
+    }
+    chips.forEach(function (c) {
+      var show = !q || c.textContent.toLowerCase().includes(q);
+      c.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    searchClear.classList.toggle('visible', isSearching);
+    noResults.style.display = (isSearching && visible === 0) ? 'block' : 'none';
+  }
+
+  searchInput.addEventListener('input', filterChips);
+  searchClear.addEventListener('click', function () { searchInput.value = ''; filterChips(); searchInput.focus(); });
+
+  // Submit
+  document.getElementById('mouse-submit').addEventListener('click', function () {
+    var chips = document.querySelectorAll('#mouse-chips .chip.selected');
+    var services = Array.from(chips).map(function (c) { return c.textContent.trim(); }).join(', ');
+    var est = compute();
+    var extra = est > 0 ? '\n\nEstimated project cost: ' + fmt(est) + ' (' + getMonths() + ' months, ' + getMice() + ' avg. mice)\nRough estimate — confirm with a formal quote.\n' : '';
+    var body = 'Hello,\n\nI am interested in the following services:\n\n' + services + extra + '\nPlease contact me to discuss scope and pricing.\n\n';
+    window.location.href = 'mailto:contact@mbp2sciences.com?subject=' + encodeURIComponent('Mouse Model Services — Project Scope') + '&body=' + encodeURIComponent(body);
+  });
+
+})();
+</script>
+</body>
+</html>

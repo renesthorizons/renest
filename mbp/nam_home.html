@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NAM Center — MBP² Sciences</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #091a16;
+  --navy: #0b1a2e;
+  --sage-light: #4d9a87;
+  --cream: #f8f5ef;
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --mono: 'DM Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--mono);
+  background: var(--bg);
+  color: var(--cream);
+  min-height: 100vh;
+}
+
+/* ── NAV ── */
+.page-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.75rem 3.5rem; position: sticky; top: 0; z-index: 10;
+  backdrop-filter: blur(16px);
+  background: rgba(9,26,22,0.96);
+  border-bottom: 1px solid rgba(77,154,135,0.15);
+}
+.logo {
+  font-family: var(--serif); font-size: 1.1rem; font-weight: 300;
+  letter-spacing: 0.06em; color: var(--cream); text-decoration: none;
+}
+.logo .brand-sup { font-size: 0.65em; color: var(--sage-light); vertical-align: super; line-height: 0; }
+.back-btn {
+  font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase;
+  color: rgba(248,245,239,0.5); background: none; border: none; cursor: pointer;
+  font-family: var(--mono); display: flex; align-items: center; gap: 0.5rem;
+  text-decoration: none; transition: color 0.2s;
+}
+.back-btn::before { content: '←'; }
+.back-btn:hover { color: var(--sage-light); }
+.nav-right-group { display: flex; align-items: center; }
+.nav-stats {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 1rem;
+  align-items: center;
+}
+.mini-stat {
+  text-align: right;
+  min-width: 86px;
+}
+.mini-stat-number {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  color: var(--sage-light);
+  line-height: 1;
+}
+.mini-stat-text {
+  font-size: 0.46rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(248,245,239,0.45);
+  line-height: 1.3;
+  margin-top: 0.2rem;
+}
+
+/* ── HERO ── */
+.hero { padding: 7rem 3.5rem 5rem; max-width: 960px; margin: 0 auto; }
+.hero-eyebrow { font-size: 0.55rem; letter-spacing: 0.24em; text-transform: uppercase; color: rgba(77,154,135,0.7); margin-bottom: 1.5rem; }
+.hero-title { font-family: var(--serif); font-size: clamp(3rem, 6vw, 5.5rem); font-weight: 300; line-height: 1.0; color: var(--cream); margin-bottom: 2rem; }
+.hero-title em { font-style: italic; color: var(--sage-light); }
+.hero-sub { font-size: 0.85rem; color: rgba(248,245,239,0.52); max-width: 460px; line-height: 1.85; margin-bottom: 3.5rem; }
+.hero-cta {
+  display: inline-flex; align-items: center; gap: 0.75rem;
+  font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase;
+  padding: 1rem 2.25rem; border: 1px solid rgba(77,154,135,0.5);
+  color: var(--sage-light); text-decoration: none;
+  transition: background 0.22s, color 0.22s;
+}
+.hero-cta:hover { background: var(--sage-light); color: var(--navy); }
+.hero-cta::after { content: '↓'; margin-left: 0.25rem; }
+
+/* ── SECTION RULE ── */
+.section-rule { height: 1px; background: rgba(248,245,239,0.06); max-width: 960px; margin: 0 auto; }
+
+/* ── JOURNEY ── */
+.journey { max-width: 960px; margin: 0 auto; padding: 5rem 3.5rem 5rem; }
+.journey-header { font-size: 0.52rem; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(248,245,239,0.28); margin-bottom: 3rem; }
+
+.phase-block { margin-bottom: 2.5rem; }
+
+/* Phase label — bigger so it's easy to read */
+.phase-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 0.85rem;
+  display: flex; align-items: center; gap: 0.85rem;
+}
+.phase-num { color: var(--sage-light); font-size: 0.75rem; }
+.phase-name { color: rgba(248,245,239,0.55); font-size: 0.72rem; letter-spacing: 0.1em; }
+.phase-label::after { content: ''; flex: 1; height: 1px; background: rgba(77,154,135,0.2); }
+
+/* Flow row */
+.phase-flow {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1px; background: rgba(77,154,135,0.15);
+}
+.flow-step {
+  background: var(--bg); padding: 1.75rem 1.5rem; position: relative;
+}
+.step-n { font-size: 0.52rem; letter-spacing: 0.16em; color: rgba(77,154,135,0.5); margin-bottom: 0.6rem; }
+.step-title { font-family: var(--serif); font-size: 1.35rem; font-weight: 300; color: var(--cream); line-height: 1.2; margin-bottom: 0.5rem; }
+.step-body { font-size: 0.72rem; color: rgba(248,245,239,0.48); line-height: 1.65; }
+
+/* Highlighted final step */
+.flow-step-final {
+  background:
+    radial-gradient(circle at 85% 15%, rgba(77,154,135,0.28), rgba(77,154,135,0.06) 45%, rgba(9,26,22,0.95) 100%);
+  border: 1px solid rgba(200,110,255,0.95);
+  box-shadow:
+    inset 0 0 0 1px rgba(200,110,255,0.45),
+    0 0 18px rgba(200,110,255,0.5),
+    0 0 34px rgba(171,71,255,0.35);
+  transform: translateY(-2px);
+}
+.flow-step-final .step-n { color: rgba(77,154,135,0.85); }
+.flow-step-final .step-title { color: #7fe0c5; }
+.flow-step-final .step-body { color: rgba(248,245,239,0.7); }
+
+/* ── SERVICES SECTION ── */
+.services-section { max-width: 960px; margin: 0 auto; padding: 0 3.5rem 7rem; }
+.services-intro { padding: 3rem 0 2rem; border-top: 1px solid rgba(77,154,135,0.18); }
+.services-intro-label { font-size: 0.52rem; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(77,154,135,0.6); margin-bottom: 0.5rem; }
+.services-intro-title { font-family: var(--serif); font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 300; color: var(--cream); }
+.services-intro-title em { font-style: italic; color: var(--sage-light); }
+
+/* params */
+.project-params { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.75rem; align-items: flex-end; margin-top: 2rem; }
+.param-field { display: flex; flex-direction: column; gap: 0.4rem; min-width: 130px; }
+.param-field label { font-size: 0.55rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(248,245,239,0.65); }
+.param-input-wrap {
+  display: flex; align-items: stretch;
+  border: 1px solid rgba(77,154,135,0.5);
+  background: rgba(9,26,22,0.85); transition: border-color 0.2s;
+}
+.param-input-wrap:focus-within { border-color: var(--sage-light); }
+.param-unit { font-size: 0.62rem; color: rgba(248,245,239,0.55); padding: 0 0.65rem; white-space: nowrap; border-left: 1px solid rgba(77,154,135,0.22); display: flex; align-items: center; background: rgba(77,154,135,0.08); }
+.param-field input { width: 4.5rem; background: transparent; border: none; color: var(--cream); font-family: var(--mono); font-size: 0.85rem; padding: 0.55rem 0.6rem; min-width: 0; }
+.param-field input:focus { outline: none; }
+
+/* live quote */
+.live-quote {
+  display: flex; align-items: baseline; gap: 1.5rem;
+  padding: 1.5rem 1.75rem;
+  border: 1px solid rgba(77,154,135,0.45);
+  background: rgba(77,154,135,0.1);
+  margin-bottom: 2rem; flex-wrap: wrap;
+}
+.lq-label { font-size: 0.55rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(248,245,239,0.6); flex-shrink: 0; }
+.lq-value { font-family: var(--serif); font-size: 2.6rem; font-weight: 300; color: var(--sage-light); line-height: 1; transition: opacity 0.15s; }
+.live-quote.lq-empty .lq-value { color: rgba(248,245,239,0.2); }
+
+/* search */
+.chip-search-wrap { position: relative; margin-bottom: 1rem; }
+.chip-search { width: 100%; background: rgba(9,26,22,0.9); border: 1px solid rgba(77,154,135,0.48); color: var(--cream); font-family: var(--mono); font-size: 0.8rem; padding: 0.7rem 2.5rem 0.7rem 2.75rem; transition: border-color 0.2s; }
+.chip-search:focus { outline: none; border-color: var(--sage-light); }
+.chip-search::placeholder { color: rgba(248,245,239,0.35); }
+.chip-search-icon { position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%); color: rgba(248,245,239,0.45); font-size: 1rem; pointer-events: none; }
+.chip-search-clear { position: absolute; right: 0.85rem; top: 50%; transform: translateY(-50%); color: rgba(248,245,239,0.4); cursor: pointer; font-size: 1.1rem; line-height: 1; display: none; background: none; border: none; font-family: var(--mono); transition: color 0.15s; }
+.chip-search-clear:hover { color: var(--sage-light); }
+.chip-search-clear.visible { display: block; }
+.chip-no-results { font-size: 0.72rem; color: rgba(248,245,239,0.45); padding: 0.75rem 0 1rem; display: none; }
+
+/* chips */
+.scope-chips { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 0.5rem; margin-bottom: 1.5rem; }
+.chip {
+  font-size: 0.7rem; letter-spacing: 0.05em; padding: 0.65rem 1rem;
+  border: 1px solid rgba(77,154,135,0.42); color: rgba(248,245,239,0.72);
+  cursor: pointer; transition: all 0.18s; background: rgba(77,154,135,0.04);
+  font-family: var(--mono); text-align: left; user-select: none; line-height: 1.3;
+}
+.chip:hover { border-color: rgba(77,154,135,0.8); color: rgba(248,245,239,0.95); background: rgba(77,154,135,0.09); }
+.chip.selected { background: rgba(77,154,135,0.18); border-color: var(--sage-light); color: var(--sage-light); }
+
+/* scope action */
+.scope-action { display: flex; align-items: center; gap: 1.25rem; margin-top: 1.5rem; flex-wrap: wrap; }
+.scope-count { font-size: 0.62rem; letter-spacing: 0.1em; color: rgba(248,245,239,0.45); transition: color 0.2s; }
+.scope-count.has-selection { color: var(--sage-light); }
+.scope-submit { font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; padding: 0.8rem 1.75rem; border: 1px solid; cursor: pointer; font-family: var(--mono); background: none; transition: background 0.2s, color 0.2s; opacity: 0.4; pointer-events: none; }
+.scope-submit.active { opacity: 1; pointer-events: auto; }
+.cta-sage { color: var(--sage-light); border-color: rgba(77,154,135,0.5); }
+.cta-sage.active:hover { background: var(--sage-light); color: var(--navy); }
+
+/* contact cta */
+.page-cta { margin-top: 3rem; padding-top: 2.5rem; border-top: 1px solid rgba(248,245,239,0.1); display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+.page-cta-text { font-family: var(--serif); font-size: 1.6rem; font-weight: 300; color: var(--cream); }
+.cta-link { font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; padding: 0.85rem 1.75rem; text-decoration: none; border: 1px solid; transition: background 0.2s, color 0.2s; white-space: nowrap; }
+.cta-link.cta-sage { color: var(--sage-light); border-color: rgba(77,154,135,0.5); }
+.cta-link.cta-sage:hover { background: var(--sage-light); color: var(--navy); }
+
+/* footer */
+footer { padding: 1.25rem 3.5rem; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid rgba(248,245,239,0.06); max-width: 960px; margin: 0 auto; }
+.footer-note { font-size: 0.55rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(248,245,239,0.22); }
+.footer-contact { font-size: 0.58rem; letter-spacing: 0.1em; color: rgba(248,245,239,0.38); text-decoration: none; transition: color 0.2s; }
+.footer-contact:hover { color: var(--sage-light); }
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+}
+.footer-adv {
+  font-size: 0.58rem; letter-spacing: 0.1em;
+  color: rgba(248,245,239,0.38); text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-adv:hover { color: var(--sage-light); }
+
+@media (max-width: 900px) {
+  .nav-stats { grid-template-columns: 1fr; gap: 0.35rem; }
+  .mini-stat { min-width: 0; }
+  .phase-flow { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 768px) {
+  .page-nav { padding: 1.25rem 1.5rem; }
+  .hero { padding: 4rem 1.5rem 3rem; }
+  .journey { padding: 3rem 1.5rem; }
+  .services-section { padding: 0 1.5rem 5rem; }
+  .project-params { flex-direction: column; gap: 0.6rem; }
+  .param-field { min-width: 0; width: 100%; flex-direction: row; align-items: center; justify-content: space-between; }
+  .param-field label { white-space: nowrap; margin-right: 0.75rem; }
+  .param-input-wrap { flex: 1; }
+  .param-field input { width: 100%; min-width: 0; padding: 0.7rem 0.6rem; font-size: 1rem; }
+  .chip { min-height: 44px; display: flex; align-items: center; }
+  .chip-search { padding: 0.8rem 2.5rem 0.8rem 2.75rem; font-size: 0.85rem; min-height: 44px; }
+  .scope-submit { min-height: 44px; width: 100%; justify-content: center; }
+  .scope-action { flex-direction: column; align-items: stretch; gap: 0.75rem; }
+  .scope-chips { grid-template-columns: 1fr 1fr; }
+  .live-quote { padding: 1.25rem; gap: 1rem; }
+  .lq-value { font-size: 2rem; }
+  .page-cta { flex-direction: column; align-items: flex-start; }
+  .cta-link { width: 100%; text-align: center; display: block; padding: 1rem; }
+  footer { padding: 1.25rem 1.5rem; }
+}
+@media (max-width: 480px) {
+  .phase-flow { grid-template-columns: 1fr; }
+  .scope-chips { grid-template-columns: 1fr; }
+  .param-field { flex-direction: column; align-items: flex-start; }
+  .param-input-wrap { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<nav class="page-nav">
+  <a href="index.html" class="back-btn">MBP²</a>
+  <a href="index.html" class="logo">MBP<sup class="brand-sup">2</sup> Sciences</a>
+  <div class="nav-right-group">
+    <div class="nav-stats">
+      <div class="mini-stat">
+        <div class="mini-stat-number">25</div>
+        <div class="mini-stat-text">Years in operation<br>Est. 1999</div>
+      </div>
+      <div class="mini-stat">
+        <div class="mini-stat-number">120</div>
+        <div class="mini-stat-text">NIH grants<br>supported</div>
+      </div>
+      <div class="mini-stat">
+        <div class="mini-stat-number">600</div>
+        <div class="mini-stat-text">Active projects<br>per year</div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <p class="hero-eyebrow">NAM Center</p>
+  <h1 class="hero-title">Your model.<br><em>Validated.</em></h1>
+  <p class="hero-sub">
+    From first development to full regulatory validation — 
+    we run the studies that turn your NAM into a trusted, actionable tool.
+  </p>
+  <a href="#services" class="hero-cta">Begin a study</a>
+</div>
+
+<div class="section-rule"></div>
+
+<div class="journey">
+  <!-- <p class="journey-header">The validation pathway</p> -->
+
+  <div class="phase-block">
+    <div class="phase-label">
+      <!-- <span class="phase-num">Phase 1</span> -->
+      <span class="phase-name">NAM Development Validation</span>
+    </div>
+    <div class="phase-flow">
+      <div class="flow-step">
+        <div class="step-n">01</div>
+        <div class="step-title">Your NAM</div>
+        <p class="step-body">You are developing a new paradigm, an Organ-on-chip, organoid, in silico etc., We take care of validation at any stage.</p>
+      </div>
+      <div class="flow-step">
+        <div class="step-n">02</div>
+        <div class="step-title">Study Design</div>
+        <p class="step-body">We co-design the validation — or you tell us what data you need.</p>
+      </div>
+      <div class="flow-step">
+        <div class="step-n">03</div>
+        <div class="step-title">Execution</div>
+        <p class="step-body">We run the studies and return clean, structured data.</p>
+      </div>
+      <div class="flow-step flow-step-final">
+        <div class="step-n">04</div>
+        <div class="step-title">Validated NAM</div>
+        <p class="step-body">Ready for drug discovery, licensing, or further development.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase-block">
+    <div class="phase-label">
+      <!-- <span class="phase-num">Phase 2</span> -->
+      <span class="phase-name">Drug &amp; Biopharmaceutical Testing</span>
+    </div>
+    <div class="phase-flow">
+      <div class="flow-step">
+        <div class="step-n">01</div>
+        <div class="step-title">Drug Candidate</div>
+        <p class="step-body">A drug is being tested using your validated NAM. We make sure the drug has no unintended effects on other systems.</p>
+      </div>
+      <div class="flow-step">
+        <div class="step-n">02</div>
+        <div class="step-title">Efficacy</div>
+        <p class="step-body">We confirm the drug performs across all intended endpoints.</p>
+      </div>
+      <div class="flow-step">
+        <div class="step-n">03</div>
+        <div class="step-title">Systemic Safety</div>
+        <p class="step-body">No unexpected off-target effects — confirmed across systems.</p>
+      </div>
+      <div class="flow-step flow-step-final">
+        <div class="step-n">04</div>
+        <div class="step-title">Approval Ready</div>
+        <p class="step-body">Your NAM and Drug Fully validated. Data package structured for FDA submission.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── SERVICE SELECTOR ── -->
+<div class="services-section" id="services">
+  <div class="services-intro">
+    <p class="services-intro-label">Design your study</p>
+    <h2 class="services-intro-title">Select services.<br><em>Get an estimate.</em></h2>
+  </div>
+
+  <div class="project-params">
+    <div class="param-field">
+      <label for="nams-timeline-months">Timeline</label>
+      <div class="param-input-wrap">
+        <input type="number" id="nams-timeline-months" min="1" max="24" value="6" />
+        <span class="param-unit">months</span>
+      </div>
+    </div>
+    <div class="param-field">
+      <label for="nams-compounds">Compounds / models</label>
+      <div class="param-input-wrap">
+        <input type="number" id="nams-compounds" min="1" step="1" value="3" />
+        <span class="param-unit">compounds</span>
+      </div>
+    </div>
+    <div class="param-field">
+      <label for="nams-animals">Avg. animals (in vivo)</label>
+      <div class="param-input-wrap">
+        <input type="number" id="nams-animals" min="0" step="1" value="8" />
+        <span class="param-unit">animals</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="live-quote lq-empty" id="nams-live-quote">
+    <span class="lq-label">Estimated study cost</span>
+    <span class="lq-value" id="nams-quote-total">—</span>
+  </div>
+
+  <div class="chip-search-wrap">
+    <span class="chip-search-icon">⌕</span>
+    <input type="text" class="chip-search" id="nams-search" placeholder="Search services…" autocomplete="off" />
+    <button class="chip-search-clear" id="nams-search-clear" aria-label="Clear search">×</button>
+  </div>
+  <p class="chip-no-results" id="nams-no-results">No services match your search.</p>
+
+  <div class="scope-chips" id="nams-chips">
+    <button type="button" class="chip" data-quote-key="in_vivo_bench">In vivo benchmarking</button>
+    <button type="button" class="chip" data-quote-key="tox_bridging">Toxicology bridging study</button>
+    <button type="button" class="chip" data-quote-key="safety_pharm">Safety pharmacology</button>
+    <button type="button" class="chip" data-quote-key="pkpd_val">PK/PD validation</button>
+    <button type="button" class="chip" data-quote-key="dose_response">Dose-response characterisation</button>
+    <button type="button" class="chip" data-quote-key="efficacy_comp">Efficacy comparison</button>
+    <button type="button" class="chip" data-quote-key="humanised_dev">Humanised model co-development</button>
+    <button type="button" class="chip" data-quote-key="patient_ki">Patient allele knock-in</button>
+    <button type="button" class="chip" data-quote-key="disease_model">Disease model generation</button>
+    <button type="button" class="chip" data-quote-key="microbiome_val">Microbiome model validation</button>
+    <button type="button" class="chip" data-quote-key="gnotobiotic">Gnotobiotic / germ-free studies</button>
+    <button type="button" class="chip" data-quote-key="pathology">Pathology &amp; histology</button>
+    <button type="button" class="chip" data-quote-key="behavioural">Behavioural endpoints</button>
+    <button type="button" class="chip" data-quote-key="metabolic">Metabolic endpoints</button>
+    <button type="button" class="chip" data-quote-key="fda_ind">FDA IND submission support</button>
+    <button type="button" class="chip" data-quote-key="study_design_consult">Study design consultation</button>
+  </div>
+
+  <div class="scope-action">
+    <span class="scope-count" id="nams-count">0 services selected</span>
+    <button class="scope-submit cta-sage" id="nams-submit">Request a study design →</button>
+  </div>
+
+  <div class="page-cta">
+    <div class="page-cta-text">Start a validation study</div>
+    <a href="mailto:contact@mbp2sciences.com" class="cta-link cta-sage">Contact us →</a>
+  </div>
+</div>
+
+<footer>
+  <span class="footer-note">MBP² Sciences · Davis, California</span>
+  <div class="footer-links">
+    <a href="mbpadvantage.html" class="footer-adv">The MBP Advantage →</a>
+    <a href="mailto:contact@mbp2sciences.com" class="footer-contact">contact@mbp2sciences.com</a>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var DAYS = 30;
+
+  var NAM_SERVICES = [
+    { id: 'nc57',          rate: 56.56,   kind: 'perAnimal'    },
+    { id: 'nblood',        rate: 73.84,   kind: 'perAnimal'    },
+    { id: 'nnecropsy',     rate: 83.26,   kind: 'perAnimal'    },
+    { id: 'naperiimg',     rate: 180.67,  kind: 'perAnimal'    },
+    { id: 'nshirpa',       rate: 37.70,   kind: 'perAnimal'    },
+    { id: 'nopen_field',   rate: 92.69,   kind: 'perAnimal'    },
+    { id: 'nmorris',       rate: 1720,    kind: 'once'         },
+    { id: 'nstartle',      rate: 42.42,   kind: 'perAnimal'    },
+    { id: 'nxray',         rate: 53.41,   kind: 'perAnimal'    },
+    { id: 'nspf_diem',     rate: 2.56,    kind: 'perAnimalDay' },
+    { id: 'nbreeding',     rate: 0.86,    kind: 'perAnimalDay' },
+    { id: 'ngermfree',     rate: 524.71,  kind: 'perAnimal'    },
+    { id: 'nbubble',       rate: 3249,    kind: 'once'         },
+    { id: 'nbubble_m',     rate: 878,     kind: 'once'         },
+    { id: 'npdx_impl',     rate: 2075,    kind: 'once'         },
+    { id: 'npdx_maint',    rate: 1442,    kind: 'perAnimal'    },
+    { id: 'npheno_pm',     rate: 252.93,  kind: 'once'         },
+    { id: 'ames',          rate: 8300,    kind: 'perCompound'  },
+    { id: 'skin_irr',      rate: 4280,    kind: 'perCompound'  },
+    { id: 'eye_irr',       rate: 3520,    kind: 'perCompound'  },
+    { id: 'hclat',         rate: 8900,    kind: 'perCompound'  },
+    { id: 'keratinosens',  rate: 7400,    kind: 'perCompound'  },
+    { id: 'phototox',      rate: 5600,    kind: 'perCompound'  },
+    { id: 'organ_chip',    rate: 9285,    kind: 'perCompound'  },
+    { id: 'org_intestinal',rate: 4838,    kind: 'perCompound'  },
+    { id: 'org_lung',      rate: 2419,    kind: 'perCompound'  },
+    { id: 'org_brain',     rate: 1748,    kind: 'perCompound'  },
+    { id: 'org_screen',    rate: 5000,    kind: 'perCompound'  },
+    { id: 'in_silico',     rate: 3500,    kind: 'perCompound'  },
+    { id: 'pbpk',          rate: 35000,   kind: 'once'         },
+    { id: 'adme_panel',    rate: 3500,    kind: 'perCompound'  },
+    { id: 'pre_ind',       rate: 100000,  kind: 'once'         },
+    { id: 'ind_support',   rate: 150000,  kind: 'once'         },
+    { id: 'reg_consult',   rate: 8000,    kind: 'once'         },
+    { id: 'study_design',  rate: 4000,    kind: 'once'         },
+  ];
+
+  var SVC = new Map(NAM_SERVICES.map(function (s) { return [s.id, s]; }));
+
+  var MAP = {
+    in_vivo_bench:        [{ id: 'nc57', qty: 1 }, { id: 'nspf_diem', qty: 1 }, { id: 'nblood', qty: 3 }, { id: 'nnecropsy', qty: 1 }, { id: 'naperiimg', qty: 2 }, { id: 'npheno_pm', qty: 1 }],
+    tox_bridging:         [{ id: 'ames', qty: 1 }, { id: 'skin_irr', qty: 1 }, { id: 'eye_irr', qty: 1 }, { id: 'phototox', qty: 1 }, { id: 'nc57', qty: 1 }, { id: 'nspf_diem', qty: 1 }, { id: 'nblood', qty: 2 }, { id: 'nnecropsy', qty: 1 }],
+    safety_pharm:         [{ id: 'hclat', qty: 1 }, { id: 'keratinosens', qty: 1 }, { id: 'in_silico', qty: 1 }, { id: 'nshirpa', qty: 1 }, { id: 'nopen_field', qty: 1 }, { id: 'nblood', qty: 2 }, { id: 'nc57', qty: 1 }, { id: 'nspf_diem', qty: 1 }],
+    pkpd_val:             [{ id: 'adme_panel', qty: 1 }, { id: 'pbpk', qty: 1 }, { id: 'nblood', qty: 4 }, { id: 'nc57', qty: 1 }, { id: 'nspf_diem', qty: 1 }],
+    dose_response:        [{ id: 'org_screen', qty: 1 }, { id: 'organ_chip', qty: 1 }, { id: 'naperiimg', qty: 1 }],
+    efficacy_comp:        [{ id: 'organ_chip', qty: 1 }, { id: 'nc57', qty: 1 }, { id: 'nspf_diem', qty: 1 }, { id: 'nblood', qty: 2 }, { id: 'nopen_field', qty: 1 }, { id: 'nnecropsy', qty: 1 }, { id: 'naperiimg', qty: 2 }],
+    humanised_dev:        [{ id: 'org_intestinal', qty: 1 }, { id: 'org_lung', qty: 1 }, { id: 'organ_chip', qty: 1 }, { id: 'in_silico', qty: 1 }, { id: 'reg_consult', qty: 1 }],
+    patient_ki:           [{ id: 'org_intestinal', qty: 1 }, { id: 'in_silico', qty: 1 }, { id: 'npheno_pm', qty: 1 }],
+    disease_model:        [{ id: 'org_intestinal', qty: 1 }, { id: 'org_lung', qty: 1 }, { id: 'org_brain', qty: 1 }, { id: 'npheno_pm', qty: 1 }],
+    microbiome_val:       [{ id: 'nbubble', qty: 1 }, { id: 'nbubble_m', qty: 1 }, { id: 'ngermfree', qty: 1 }, { id: 'nspf_diem', qty: 1 }, { id: 'nblood', qty: 2 }, { id: 'nnecropsy', qty: 1 }],
+    gnotobiotic:          [{ id: 'nbubble', qty: 1 }, { id: 'nbubble_m', qty: 1 }, { id: 'ngermfree', qty: 1 }, { id: 'nspf_diem', qty: 1 }],
+    pathology:            [{ id: 'nnecropsy', qty: 1 }, { id: 'naperiimg', qty: 3 }, { id: 'nblood', qty: 1 }],
+    behavioural:          [{ id: 'nshirpa', qty: 1 }, { id: 'nopen_field', qty: 1 }, { id: 'nmorris', qty: 1 }, { id: 'nstartle', qty: 1 }],
+    metabolic:            [{ id: 'nblood', qty: 3 }, { id: 'nopen_field', qty: 1 }, { id: 'nxray', qty: 1 }],
+    fda_ind:              [{ id: 'pre_ind', qty: 1 }, { id: 'ind_support', qty: 1 }],
+    study_design_consult: [{ id: 'reg_consult', qty: 1 }, { id: 'study_design', qty: 1 }],
+  };
+
+  function fmt(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
+  function getMonths()    { var v = parseInt(document.getElementById('nams-timeline-months').value, 10); return Math.min(24, Math.max(1, isNaN(v) ? 6 : v)); }
+  function getCompounds() { var v = parseInt(document.getElementById('nams-compounds').value, 10); return Math.max(1, isNaN(v) ? 1 : v); }
+  function getAnimals()   { var v = parseInt(document.getElementById('nams-animals').value, 10); return Math.max(0, isNaN(v) ? 0 : v); }
+
+  function compute() {
+    var chips = document.querySelectorAll('#nams-chips .chip.selected');
+    var keys = Array.from(chips).map(function (c) { return c.getAttribute('data-quote-key'); }).filter(Boolean);
+    if (!keys.length) return 0;
+    var c = getCompounds(), a = getAnimals(), days = getMonths() * DAYS;
+    var acc = new Map();
+    keys.forEach(function (k) {
+      var bundle = MAP[k]; if (!bundle) return;
+      bundle.forEach(function (item) {
+        var s = SVC.get(item.id); if (!s) return;
+        var prev = acc.get(item.id) || 0;
+        acc.set(item.id, s.kind === 'perAnimalDay' ? Math.max(prev, item.qty || 1) : prev + (item.qty || 1));
+      });
+    });
+    var total = 0;
+    acc.forEach(function (qty, id) {
+      var s = SVC.get(id); if (!s) return;
+      switch (s.kind) {
+        case 'perCompound':  total += s.rate * c * qty; break;
+        case 'perAnimal':    total += s.rate * a * qty; break;
+        case 'perAnimalDay': total += s.rate * a * days; break;
+        case 'once':         total += s.rate; break;
+      }
+    });
+    return total;
+  }
+
+  function updateQuote() {
+    var widget = document.getElementById('nams-live-quote');
+    var el = document.getElementById('nams-quote-total');
+    var chips = document.querySelectorAll('#nams-chips .chip.selected');
+    if (!chips.length) { widget.classList.add('lq-empty'); el.textContent = '—'; return; }
+    widget.classList.remove('lq-empty');
+    el.textContent = fmt(compute());
+  }
+
+  function updateCount() {
+    var chips = document.querySelectorAll('#nams-chips .chip.selected');
+    var n = chips.length;
+    var countEl = document.getElementById('nams-count');
+    var submitEl = document.getElementById('nams-submit');
+    countEl.textContent = n === 0 ? '0 services selected' : n === 1 ? '1 service selected' : n + ' services selected';
+    countEl.classList.toggle('has-selection', n > 0);
+    submitEl.classList.toggle('active', n > 0);
+  }
+
+  document.getElementById('nams-chips').addEventListener('click', function (e) {
+    var chip = e.target.closest('.chip'); if (!chip) return;
+    chip.classList.toggle('selected');
+    updateCount(); updateQuote();
+  });
+
+  ['nams-timeline-months','nams-compounds','nams-animals'].forEach(function (id) {
+    document.getElementById(id).addEventListener('input', function () {
+      if (id === 'nams-timeline-months') { var m = parseInt(this.value, 10); if (!isNaN(m)) this.value = Math.min(24, Math.max(1, m)); }
+      updateQuote();
+    });
+  });
+
+  var searchInput = document.getElementById('nams-search');
+  var searchClear = document.getElementById('nams-search-clear');
+  var noResults   = document.getElementById('nams-no-results');
+
+  function filterChips() {
+    var q = searchInput.value.toLowerCase().trim();
+    var chips = document.querySelectorAll('#nams-chips .chip');
+    var visible = 0;
+    chips.forEach(function (c) {
+      var show = !q || c.textContent.toLowerCase().includes(q);
+      c.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    searchClear.classList.toggle('visible', q.length > 0);
+    noResults.style.display = (q && visible === 0) ? 'block' : 'none';
+  }
+
+  searchInput.addEventListener('input', filterChips);
+  searchClear.addEventListener('click', function () { searchInput.value = ''; filterChips(); searchInput.focus(); });
+
+  document.getElementById('nams-submit').addEventListener('click', function () {
+    var chips = document.querySelectorAll('#nams-chips .chip.selected');
+    var services = Array.from(chips).map(function (c) { return c.textContent.trim(); }).join(', ');
+    var est = compute();
+    var extra = est > 0 ? '\n\nEstimated study cost: ' + fmt(est) + ' (' + getMonths() + ' months, ' + getCompounds() + ' compounds, ' + getAnimals() + ' avg. animals)\nRough estimate — confirm with a formal quote.\n' : '';
+    var body = 'Hello,\n\nI am interested in the following services:\n\n' + services + extra + '\nPlease contact me to discuss scope and pricing.\n\n';
+    window.location.href = 'mailto:contact@mbp2sciences.com?subject=' + encodeURIComponent('NAM Validation Study — Project Scope') + '&body=' + encodeURIComponent(body);
+  });
+
+})();
+</script>
+</body>
+</html>
